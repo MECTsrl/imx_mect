@@ -1,5 +1,5 @@
 # imx_mect
-Linux Kernel and LTIB GNU RootFS for MECT operator panels based on i.MX:
+Linux Kernel and LTIB GNU RootFS for MECT operator panels based on i.MX28:
 
 - with on board I/O:
 [TPAC1007] (http://www.mect.it/en/products/control-and-automation/operator-panels-with-plcpac/tpac1007/),

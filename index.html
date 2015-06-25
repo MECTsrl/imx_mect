@@ -31,7 +31,8 @@
           <p><img src="http://www.mect.it/dati/immagini/Sviluppo%20Mect%20Suite%20con%20link_960_563_imx_mect.png" alt="Sviluppo_software"></p>
 
 <h3>
-<a id="imx-mect" class="anchor" href="#imx-mect" aria-hidden="true"><span class="octicon octicon-link"></span></a>Imx Mect</h3>
+<a id="imx_mect-part-of-mect-suite-sdk" class="anchor" href="#imx_mect-part-of-mect-suite-sdk" aria-hidden="true"><span class="octicon octicon-link"></span></a>imx_mect (part of <a href="http://www.mect.it/en/github/">Mect Suite SDK</a>
+</h3>
 
 <p>Linux Kernel and LTIB GNU RootFS for MECT operator panels based on i.MX28:</p>
 
@@ -44,6 +45,29 @@
 <a href="http://www.mect.it/en/products/control-and-automation/operator-panels/tp1043/">TP1043</a>,
 <a href="http://www.mect.it/en/products/control-and-automation/operator-panels/tp1057/">TP1057</a>,
 <a href="http://www.mect.it/en/products/control-and-automation/operator-panels/tp1070/">TP1070</a></p></li>
+</ul>
+
+<p>Everything is tested on Ubuntu10.10 i686 (<a href="http://old-releases.ubuntu.com/releases/maverick/">http://old-releases.ubuntu.com/releases/maverick/</a>)</p>
+
+<ul>
+<li><p>Install CodeSourcery <a href="http://www.codesourcery.com/sgpp/lite/arm/portal/package8742/public/arm-none-linux-gnueabi/arm-2011.03-41-arm-none-linux-gnueabi.bin">Sourcery G++ Lite for ARM GNU Linux 2011.3.0.41</a></p></li>
+<li><p>Install ltib <a href="http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=i.MX281&amp;fpsp=1&amp;tab=Design_Tools_Tab#">L2.6.35_1.1.0_ER_SOURCE</a></p></li>
+<li><p>Download <a href="https://download.qt.io/archive/qt/4.8/4.8.5/qt-everywhere-opensource-src-4.8.5.tar.gz">qt-everywhere-opensource-src-4.8.5.tar.gz</a> into /opt/freescale/</p></li>
+<li>
+<p>Apply the Mect patches as follows</p>
+
+<ul>
+<li>in /opt/freescale/ checkout the packages from <a href="https://github.com/MECTsrl/imx%5C_mect/opt%5C_freescale/">https://github.com/MECTsrl/imx\_mect/opt\_freescale/</a>
+</li>
+<li>in ${HOME}/ltib/ checkout the specs and configurations from <a href="https://github.com/MECTsrl/imx%5C_mect/home%5C_ltib/">https://github.com/MECTsrl/imx\_mect/home\_ltib/</a>
+</li>
+</ul>
+</li>
+<li><p>Build LTIB as usual, obtaining the 3 files:
+imx28_ivt_linux.sb
+rootfs.tar.bz2
+local.tar.bz2
+available at <a href="http://www.mect.it/download/MectSuite%5C_1.3.1%5C_Extra/Kernel+RootFS%5C_rel5.3rc2%5C_SourceryGCC/TPAC1007%5C_480x272/">http://www.mect.it/download/MectSuite\_1.3.1\_Extra/Kernel+RootFS\_rel5.3rc2\_SourceryGCC/TPAC1007\_480x272/</a></p></li>
 </ul>
         </section>
 

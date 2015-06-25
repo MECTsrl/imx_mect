@@ -1,0 +1,14 @@
+i
+This patch fixes relink problems by removing "-L /usr/lib" (libdir):
+
+--- gst-ffmpeg-0.10.3/ltmain.sh.orig	2007-08-26 10:36:39.000000000 -0700
++++ gst-ffmpeg-0.10.3/ltmain.sh	2008-01-17 18:40:34.000000000 -0800
+@@ -2817,7 +2817,7 @@ EOF
+ 	      fi
+ 	    else
+ 	      # We cannot seem to hardcode it, guess we'll fake it.
+-	      add_dir="-L$libdir"
++	      #add_dir="-L$libdir"
+ 	      # Try looking first in the location we're being installed to.
+ 	      if test -n "$inst_prefix_dir"; then
+ 		case $libdir in

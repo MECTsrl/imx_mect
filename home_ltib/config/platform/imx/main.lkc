@@ -1,0 +1,260 @@
+# constants (forced values)
+config CONFIG_TITLE
+    string
+    default PLATFORM_COMMENT
+
+config PLATFORM_COMMENT
+    string
+    default "Freescale iMX27 ADS Board" if PLATFORM = "imx27ads"
+    default "Freescale iMX31 ADS Board" if PLATFORM = "imx31ads"
+    default "Freescale iMX25 3-Stack Board" if PLATFORM = "imx25_3stack"
+    default "Freescale iMX233/stmp3780 Based Boards" if PLATFORM = "imx233"
+    default "Freescale iMX28 Based Boards" if PLATFORM= "imx28"
+    default "Freescale iMX31 3-Stack Board" if PLATFORM = "imx31_3stack"
+    default "Freescale iMX35 3-Stack Board" if PLATFORM = "imx35_3stack"
+    default "Freescale iMX37 3-Stack Board" if PLATFORM = "imx37_3stack"
+    default "Freescale iMX51 3-Stack Board" if PLATFORM = "imx51_3stack"
+    default "Freescale iMX5x Based Boards" if PLATFORM = "imx51"
+    default "Freescale iMX reference boards"
+
+config VENDOR
+    string
+    default "Freescale"
+
+config PLATFORM
+    string Platform
+    default imx
+    help
+        Indicates the platform selected from preconfigs.  Please don't change
+        in this session
+
+config PLATFORM_SUBDIR
+    string
+    default imx
+
+config GNUTARCH
+    string
+    default arm
+
+config LINTARCH
+    string
+    default arm
+
+config CFGHOST
+    string
+    default arm-linux
+
+config ARMEABI_ARCH
+    bool
+    default y
+
+config VFP_ARCH
+    bool
+    default n if PLATFORM = "imx27ads" 
+    default n if PLATFORM = "imx25_3stack"
+    default n if PLATFORM = "imx233"
+    default n if PLATFORM = "imx28"
+    default y
+
+# capabilities if different from defaults.lkc
+
+source ../../userspace/endian.lkc
+source ../../userspace/libc_type.lkc
+source ../../userspace/toolchain.lkc
+
+comment "Choose your bootloader for U-Boot"
+choice
+    prompt "bootloader"
+    default BOOTLOADER_NONE
+    help
+        This menu will let you choose the bootloader to use with your board.
+        If you don't want to build a bootloaders, select "Don't build..."
+
+    config BOOTLOADER_U_BOOT
+        bool "u-boot"
+    config BOOTLOADER_GIT
+        bool "u-boot-git"
+    config U_BOOT_DIR_BUILD
+        bool "u-boot local directory build"
+    config BOOTLOADER_NONE
+        bool "Don't build the bootloader"
+endchoice 
+
+comment "Choose your board for u-boot"
+choice
+    prompt "board"
+        default BOARD_MX51_BBG
+    depends on PLATFORM = "imx51"
+    help
+        This menu will let you choose the board you use.
+
+    config BOARD_MX51_BBG
+        bool "mx51_bbg"
+    config BOARD_MX51_3STACK
+        bool "mx51_3stack"
+    config BOARD_MX53_EVK
+        bool "mx53_evk"
+    config BOARD_MX53_ARD
+        bool "mx53_ard"
+    config BOARD_MX53_SMD
+        bool "mx53_smd"
+    config BOARD_MX53_LOCO
+        bool "mx53_loco"
+    config BOARD_MX50_ARM2
+        bool "mx50_arm2"
+    config BOARD_MX50_ARM2_LPDDR2
+        bool "mx50_arm2_lpddr2"
+    config BOARD_MX50_ARM2_DDR2
+        bool "mx50_arm2_ddr2"
+    config BOARD_MX50_RDP
+        bool "mx50_rdp"
+endchoice
+
+source ../../userspace/u-boot-dir-build.lkc
+    
+config PKG_U_BOOT
+    string
+    default "u-boot" if BOOTLOADER_U_BOOT
+    default "u-boot-git" if BOOTLOADER_GIT
+    default "u-boot-dir-build" if U_BOOT_DIR_BUILD
+    default "" if BOOTLOADER_NONE
+    
+config PKG_U_BOOT_CONFIG_TYPE
+    string
+    default "mx25_3stack_config" if ( PLATFORM = "imx25_3stack" && !PKG_KERNEL_UPDATER )
+    default "mx25_3stack_mfg_config" if ( PLATFORM = "imx25_3stack" && PKG_KERNEL_UPDATER )
+    default "mx23_evk_config" if PLATFORM = "imx233"
+    default "mx28_evk_config" if PLATFORM= "imx28"
+    default "mx31ads_config" if PLATFORM = "imx31ads"
+    default "mx31_3stack_config" if PLATFORM = "imx31_3stack"
+    default "mx35_3stack_config" if (PLATFORM = "imx35_3stack" && !PKG_KERNEL_UPDATER)
+    default "mx35_3stack_mfg_config" if (PLATFORM = "imx35_3stack" && PKG_KERNEL_UPDATER)
+    default "mx37_3stack_config" if PLATFORM = "imx37_3stack"
+    default "mx51_3stack_config" if PLATFORM = "imx51_3stack"
+    default "mx51_3stack_config" if ( PLATFORM = "imx51" && BOARD_MX51_3STACK )
+    default "mx51_bbg_config"	 if ( PLATFORM = "imx51" && BOARD_MX51_BBG && !PKG_KERNEL_UPDATER )
+    default "mx51_bbg_mfg_config" if( PLATFORM = "imx51" && BOARD_MX51_BBG && PKG_KERNEL_UPDATER )
+    default "mx53_evk_config" if ( PLATFORM = "imx51" && BOARD_MX53_EVK && !PKG_KERNEL_UPDATER )
+    default "mx53_evk_mfg_config" if( PLATFORM = "imx51" && BOARD_MX53_EVK && PKG_KERNEL_UPDATER )
+    default "mx53_ard_config" if ( PLATFORM = "imx51" && BOARD_MX53_ARD && !PKG_KERNEL_UPDATER )
+    default "mx53_ard_mfg_config" if ( PLATFORM = "imx51" && BOARD_MX53_ARD && PKG_KERNEL_UPDATER )
+    default "mx53_smd_config" if ( PLATFORM = "imx51" && BOARD_MX53_SMD && !PKG_KERNEL_UPDATER )
+    default "mx53_smd_mfg_config" if ( PLATFORM = "imx51" && BOARD_MX53_SMD && PKG_KERNEL_UPDATER )
+    default "mx53_loco_config" if ( PLATFORM = "imx51" && BOARD_MX53_LOCO && !PKG_KERNEL_UPDATER )
+    default "mx53_loco_mfg_config" if ( PLATFORM = "imx51" && BOARD_MX53_LOCO &&PKG_KERNEL_UPDATER )
+    default "mx50_arm2_config" if( PLATFORM = "imx51" && BOARD_MX50_ARM2 && !PKG_KERNEL_UPDATER )
+    default "mx50_arm2_lpddr2_config" if( PLATFORM = "imx51" && BOARD_MX50_ARM2_LPDDR2 && !PKG_KERNEL_UPDATER )
+    default "mx50_arm2_ddr2_config" if( PLATFORM = "imx51" && BOARD_MX50_ARM2_DDR2 && !PKG_KERNEL_UPDATER )
+    default "mx50_arm2_mfg_config" if( PLATFORM = "imx51" && BOARD_MX50_ARM2 && PKG_KERNEL_UPDATER )
+    default "mx50_rdp_config" if( PLATFORM = "imx51" && BOARD_MX50_RDP && !PKG_KERNEL_UPDATER )
+    default "mx50_rdp_mfg_config" if( PLATFORM = "imx51" && BOARD_MX50_RDP && PKG_KERNEL_UPDATER )
+
+config PKG_U_BOOT_BUILD_ARGS
+    string
+    default "OPTFLAGS=-Os" if !PKG_U_BOOT_CW
+
+config SYSCFG_KTARG
+    string
+    default "uImage"
+
+config SYSCFG_BOOT_KERNEL
+    string
+    default "arch/arm/boot/uImage arch/arm/boot/zImage"
+
+comment "Choose your Kernel"
+choice
+    prompt "kernel"
+    default KERNEL_35
+    help
+        This menu will let you choose the kernel to use with your board.
+        If you don't want to build a kernel, unselect this option.
+
+    config KERNEL_35
+        bool "Linux 2.6.35-imx"
+        help
+            This is the 2.6.35 kernel and patches for MXC and i.MX platforms.
+    
+    config KERNEL_35_IPIPE
+        bool "Linux 2.6.35-ipipe"
+        help
+            This is the 2.6.35 kernel and patches for: MXC and i.MX platforms plus Xenomai and Adeos for IMX28.
+    config KERNEL_31
+        bool "Linux 2.6.31-imx"
+        help
+            This is the 2.6.31 kernel and patches for MXC and i.MX platforms.
+    config KERNEL_28
+        bool "Linux 2.6.28-imx"
+        help
+            This is the 2.6.28 kernel and patches for MXC and i.MX platforms.
+    config KERNEL_GIT
+        bool "linux-2.6-imx.git"
+        help
+            Build using a git clone of the kernel sources
+    config KERNEL_DIR_BUILD
+        bool "Local Linux directory build"
+        help
+            Build using a local copy of the kernel sources
+    config KERNEL_NONE
+        bool "Dont build the Linux kernel"
+        help
+            Select this if you dont want to build the kernel
+endchoice
+
+source ../../userspace/kernel_dir_build.lkc
+
+config PKG_KERNEL
+    string
+    default "kernel-2.6.35"         if KERNEL_35
+    default "kernel-2.6.35_ipipe"   if KERNEL_35_IPIPE
+    default "kernel-2.6.31"         if KERNEL_31
+    default "kernel-2.6.28"         if KERNEL_28
+    default "kernel-git"            if KERNEL_GIT
+    default "kernel26-dir-build"    if KERNEL_DIR_BUILD
+
+config PKG_KERNEL_WANT_HEADERS
+    depends ! KERNEL_NONE
+    bool "Include kernel headers"
+    help
+        Selecting this will copy kernel headers to rootfs/usr/src/linux/include
+
+config PKG_KERNEL_WANT_CF
+    depends ! KERNEL_NONE
+    bool "Configure the kernel"
+    default n
+
+config PKG_KERNEL_LEAVESRC
+    depends ! KERNEL_NONE
+    bool "Leave the sources after building"
+    default n
+    help
+        This option leaves the build source tree in rpm/BUILD in place
+
+config PKG_KERNEL_UPDATER
+    bool "Build mfg firmware"
+    default n
+
+config PKG_KERNEL_PRECONFIG
+    string
+    default "imx27ads_defconfig" if PLATFORM = "imx27ads" 
+    default "imx31ads_defconfig" if PLATFORM = "imx31ads" 
+    default "imx25_3stack_defconfig" if (PLATFORM = "imx25_3stack" && !PKG_KERNEL_UPDATER)
+    default "imx25_updater_defconfig" if (PLATFORM = "imx25_3stack" && PKG_KERNEL_UPDATER)
+    default "imx23evk_defconfig" if (PLATFORM = "imx233" && !PKG_KERNEL_UPDATER)
+    default "imx23evk_updater_defconfig" if (PLATFORM = "imx233" && PKG_KERNEL_UPDATER)
+    default "imx28_mect_ipipe_defconfig" if (PLATFORM = "imx28" && !PKG_KERNEL_UPDATER && KERNEL_35_IPIPE)
+    default "imx28evk_defconfig" if (PLATFORM = "imx28" && !PKG_KERNEL_UPDATER)
+    default "imx28evk_updater_defconfig" if (PLATFORM = "imx28" && PKG_KERNEL_UPDATER)
+    default "mx3_defconfig" if PLATFORM = "imx31_3stack"
+    default "mx3_defconfig" if (PLATFORM = "imx35_3stack" && !PKG_KERNEL_UPDATER)
+    default "mx3_updater_defconfig" if (PLATFORM = "imx35_3stack" && PKG_KERNEL_UPDATER)
+    default "imx37_3stack_defconfig" if PLATFORM = "imx37_3stack" 
+    default "imx51_3stack_defconfig" if PLATFORM = "imx51_3stack" 
+    default "imx5_defconfig" if (PLATFORM = "imx51" && !PKG_KERNEL_UPDATER)
+    default "imx5_updater_defconfig" if (PLATFORM = "imx51" && PKG_KERNEL_UPDATER)
+    default "linux-kernel-dir-build.config" if KERNEL_DIR_BUILD
+
+source ../../userspace/distro.lkc
+source ../../userspace/packages.lkc
+source ../../userspace/sysconfig.lkc
+source ../../userspace/deployment.lkc
+source ../../userspace/defaults.lkc

@@ -1,0 +1,30 @@
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c linux-2.6.35.3.modified/arch/arm/mach-mx28/mx28evk_pins.c
+--- linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c	2012-11-26 11:27:07.021731176 +0100
++++ linux-2.6.35.3.modified/arch/arm/mach-mx28/mx28evk_pins.c	2012-11-23 14:11:18.039743220 +0100
+@@ -1396,7 +1396,7 @@
+ 	gpio_request(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), "ENET_PWR");
+ 
+ #if defined CONFIG_MECT_VAL01
+-	gpio_direction_output(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), 1);
++	gpio_direction_output(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), 0);
+ 
+ #elif defined CONFIG_MECT_ELE01 || defined CONFIG_MECT_TPAC1006 || defined CONFIG_MECT_U295
+ 	gpio_direction_output(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), 0);
+@@ -1424,7 +1424,7 @@
+ {
+ 	int i;
+ #if defined CONFIG_MECT_VAL01
+-	gpio_direction_output(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), 0);
++	gpio_direction_output(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), 1);
+ 
+ #elif defined CONFIG_MECT_ELE01 || defined CONFIG_MECT_TPAC1006 || defined CONFIG_MECT_U295
+ 	gpio_direction_output(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), 1);
+@@ -1452,7 +1452,7 @@
+ 	int i;
+ 
+ #if defined CONFIG_MECT_VAL01
+-	gpio_direction_output(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), 1);
++	gpio_direction_output(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), 0);
+ 
+ #elif defined CONFIG_MECT_ELE01 || defined CONFIG_MECT_TPAC1006 || defined CONFIG_MECT_U295
+ 	gpio_direction_output(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), 0);

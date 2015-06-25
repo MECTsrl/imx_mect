@@ -1,0 +1,20 @@
+20071101, Stuart Hughes <stuarth at freescale dot com>
+
+This fixes a build failure on uclibc (va_copy).  It also fixes the 
+SEGV that was happening on powerpc platforms cause by my earlier patch.
+
+These changes were extracted from rsync-3.0.0pre4
+
+
+diff --exclude CVS -uNr rsync-2.6.5/lib/snprintf.c rsync-2.6.5.modified/lib/snprintf.c
+--- rsync-2.6.5/lib/snprintf.c	2005-02-21 17:02:53.000000000 +0000
++++ rsync-2.6.5.modified/lib/snprintf.c	2007-11-01 14:09:19.000000000 +0000
+@@ -146,7 +146,7 @@
+ #endif
+ 
+ #ifndef VA_COPY
+-#ifdef HAVE_VA_COPY
++#if defined HAVE_VA_COPY || defined va_copy
+ #define VA_COPY(dest, src) va_copy(dest, src)
+ #else
+ #ifdef HAVE___VA_COPY

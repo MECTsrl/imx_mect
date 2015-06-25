@@ -1,0 +1,13 @@
+diff --exclude CVS --exclude .git -uNr iproute2-2.6.37-050330/misc/Makefile iproute2-2.6.37-050330.modified/misc/Makefile
+--- iproute2-2.6.37-050330/misc/Makefile	2011-01-07 18:54:30.000000000 +0100
++++ iproute2-2.6.37-050330.modified/misc/Makefile	2011-10-04 15:09:48.193156000 +0200
+@@ -1,7 +1,8 @@
+ SSOBJ=ss.o ssfilter.o
+ LNSTATOBJ=lnstat.o lnstat_util.o
+ 
+-TARGETS=ss nstat ifstat rtacct arpd lnstat
++#TARGETS=ss nstat ifstat rtacct arpd lnstat
++TARGETS=ss nstat ifstat rtacct lnstat
+ 
+ include ../Config
+ 

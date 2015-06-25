@@ -1,0 +1,17 @@
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/arch/arm/mach-mx28/include/mach/lcdif.h linux-2.6.35.3.modified/arch/arm/mach-mx28/include/mach/lcdif.h
+--- linux-2.6.35.3/arch/arm/mach-mx28/include/mach/lcdif.h	2013-03-27 11:32:44.342533939 +0100
++++ linux-2.6.35.3.modified/arch/arm/mach-mx28/include/mach/lcdif.h	2013-03-27 11:22:34.963375888 +0100
+@@ -225,7 +225,11 @@
+ 	val &= ~(BM_LCDIF_VDCTRL0_VSYNC_POL |
+ 		 BM_LCDIF_VDCTRL0_HSYNC_POL |
+ 		 BM_LCDIF_VDCTRL0_ENABLE_POL | BM_LCDIF_VDCTRL0_DOTCLK_POL);
+-	val |= BM_LCDIF_VDCTRL0_ENABLE_POL | BM_LCDIF_VDCTRL0_DOTCLK_POL;
++#if defined(CONFIG_FB_MXS_LCD_TM043) && defined(CONFIG_ARCH_MX28)
++	val |= BM_LCDIF_VDCTRL0_ENABLE_POL; // data need to be read on a high->low clock transition
++#else
++	val |= BM_LCDIF_VDCTRL0_ENABLE_POL | BM_LCDIF_VDCTRL0_DOTCLK_POL; //data need to be read on a low->high clock transition
++#endif
+ 	__raw_writel(val, REGS_LCDIF_BASE + HW_LCDIF_VDCTRL0);
+ 
+ 	val = __raw_readl(REGS_LCDIF_BASE + HW_LCDIF_VDCTRL0);
+

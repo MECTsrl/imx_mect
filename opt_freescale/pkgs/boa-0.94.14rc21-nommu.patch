@@ -1,0 +1,61 @@
+Thu Aug 24 2006 Stuart Hughes <stuarth@freescale.com>
+
+This is a patch to adapt the boa web server to build and operate correctly
+on platforms without an MMU.
+
+diff --exclude CVS -uNr boa-0.94.14rc21/src/boa.c boa-0.94.14rc21.modified/src/boa.c
+--- boa-0.94.14rc21/src/boa.c	2005-02-22 14:11:29.000000000 +0000
++++ boa-0.94.14rc21.modified/src/boa.c	2006-08-24 14:16:06.000000000 +0100
+@@ -89,9 +89,22 @@
+     init_signals();
+     build_needs_escape();
+ 
++    if (strcmp(argv[0], "boa_d") == 0)
++        do_fork = 0;
++
+     /* background ourself */
+     if (do_fork) {
++#ifdef __uClinux__
++        if( pid = vfork() ) {
++            _exit(EXIT_SUCCESS);
++        }
++        argv[0] = "boa_d";
++        execvp(argv[0], argv);
++        fprintf(stderr, "Error trying to execvp %s\n", argv[0]);
++        _exit(EXIT_SUCCESS);
++#else
+         pid = fork();
++#endif
+     } else {
+         pid = getpid();
+     }
+diff --exclude CVS -uNr boa-0.94.14rc21/src/cgi.c boa-0.94.14rc21.modified/src/cgi.c
+--- boa-0.94.14rc21/src/cgi.c	2005-02-22 14:11:29.000000000 +0000
++++ boa-0.94.14rc21.modified/src/cgi.c	2006-08-24 13:33:32.000000000 +0100
+@@ -445,7 +445,11 @@
+         }
+     }
+ 
++#ifdef __uClinux__
++    child_pid = vfork();
++#else
+     child_pid = fork();
++#endif
+     switch (child_pid) {
+     case -1:
+         /* fork unsuccessful */
+diff --exclude CVS -uNr boa-0.94.14rc21/src/sublog.c boa-0.94.14rc21.modified/src/sublog.c
+--- boa-0.94.14rc21/src/sublog.c	2005-02-22 14:11:29.000000000 +0000
++++ boa-0.94.14rc21.modified/src/sublog.c	2006-08-24 13:33:57.000000000 +0100
+@@ -48,7 +48,11 @@
+      * filedes[1] is for writing. */
+     if (pipe(pipe_fds) == -1)
+         return -1;
++#ifdef __uClinux__
++    pid = vfork();
++#else
+     pid = fork();
++#endif
+     if (pid == 0) {             /* child */
+         close(pipe_fds[1]);
+         if (pipe_fds[0] != 0) {

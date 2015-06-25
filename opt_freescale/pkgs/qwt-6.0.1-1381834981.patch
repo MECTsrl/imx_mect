@@ -1,0 +1,98 @@
+diff --exclude CVS --exclude .git -uNr qwt-6.0.1/qwtconfig.pri qwt-6.0.1.modified/qwtconfig.pri
+--- qwt-6.0.1/qwtconfig.pri	2011-08-01 16:33:53.000000000 +0200
++++ qwt-6.0.1.modified/qwtconfig.pri	2013-10-15 12:54:00.931410565 +0200
+@@ -19,7 +19,7 @@
+ QWT_INSTALL_PREFIX = $$[QT_INSTALL_PREFIX]
+ 
+ unix {
+-    QWT_INSTALL_PREFIX    = /usr/local/qwt-$$QWT_VERSION
++    QWT_INSTALL_PREFIX    = /usr/
+ }
+ 
+ win32 {
+@@ -79,7 +79,7 @@
+ # export a plot to a SVG document
+ ######################################################################
+ 
+-QWT_CONFIG     += QwtSvg
++#QWT_CONFIG     += QwtSvg
+ 
+ ######################################################################
+ # You can use the MathML renderer of the Qt solutions package to 
+diff --exclude CVS --exclude .git -uNr qwt-6.0.1/src/qwt_plot_svgitem.cpp qwt-6.0.1.modified/src/qwt_plot_svgitem.cpp
+--- qwt-6.0.1/src/qwt_plot_svgitem.cpp	2011-08-01 16:33:53.000000000 +0200
++++ qwt-6.0.1.modified/src/qwt_plot_svgitem.cpp	2013-10-15 11:44:25.530415987 +0200
+@@ -13,7 +13,12 @@
+ #include "qwt_legend_item.h"
+ #include "qwt_painter.h"
+ #include <qpainter.h>
++#ifndef QWT_NO_SVG
++#ifdef QT_SVG_LIB
+ #include <qsvgrenderer.h>
++#endif
++#endif
++
+ 
+ class QwtPlotSvgItem::PrivateData
+ {
+@@ -23,7 +28,11 @@
+     }
+ 
+     QRectF boundingRect;
+-    QSvgRenderer renderer;
++#ifndef QWT_NO_SVG
++#ifdef QT_SVG_LIB
++QSvgRenderer renderer;
++#endif
++#endif
+ };
+ 
+ /*!
+@@ -117,6 +126,8 @@
+ {
+     return d_data->boundingRect;
+ }
++#ifndef QWT_NO_SVG
++#ifdef QT_SVG_LIB
+ 
+ //! \return Renderer used to render the SVG data
+ const QSvgRenderer &QwtPlotSvgItem::renderer() const
+@@ -129,7 +140,8 @@
+ {
+     return d_data->renderer;
+ }
+-
++#endif
++#endif
+ /*!
+   Draw the SVG item
+ 
+diff --exclude CVS --exclude .git -uNr qwt-6.0.1/src/qwt_plot_svgitem.h qwt-6.0.1.modified/src/qwt_plot_svgitem.h
+--- qwt-6.0.1/src/qwt_plot_svgitem.h	2011-08-01 16:33:52.000000000 +0200
++++ qwt-6.0.1.modified/src/qwt_plot_svgitem.h	2013-10-15 11:38:01.202416093 +0200
+@@ -14,7 +14,12 @@
+ #include "qwt_plot_item.h"
+ #include <qstring.h>
+ 
++#ifndef QWT_NO_SVG
++#ifdef QT_SVG_LIB
+ class QSvgRenderer;
++#endif
++#endif
++
+ class QByteArray;
+ 
+ /*!
+@@ -43,8 +48,12 @@
+     virtual int rtti() const;
+ 
+ protected:
++#ifndef QWT_NO_SVG
++#ifdef QT_SVG_LIB
+     const QSvgRenderer &renderer() const;
+     QSvgRenderer &renderer();
++#endif
++#endif
+ 
+     void render( QPainter *painter,
+         const QRectF &viewBox, const QRectF &rect ) const;

@@ -1,0 +1,10 @@
+diff --exclude CVS --exclude .git -uNr imx-bootlets-src-11.01.00/linux_prep/cmdlines/iMX28_EVK.txt imx-bootlets-src-11.01.00.modified/linux_prep/cmdlines/iMX28_EVK.txt
+--- imx-bootlets-src-11.01.00/linux_prep/cmdlines/iMX28_EVK.txt	2010-11-04 08:35:38.000000000 +0100
++++ imx-bootlets-src-11.01.00.modified/linux_prep/cmdlines/iMX28_EVK.txt	2011-09-12 17:29:06.506805996 +0200
+@@ -1 +1,4 @@
+-console=ttyAM0,115200 root=/dev/mmcblk0p3 rw rootwait
++-e noinitrd console=ttyAM0,115200 ubi.mtd=1 root=ubi0:rootfs0 rootfstype=ubifs ro gpmi
++noinitrd console=ttyAM0,115200 ubi.mtd=1 root=ubi0:rootfs0 rootfstype=ubifs rw gpmi
++noinitrd console=ttyAM0,115200 fec_mac=00:08:02:6B:A3:1A root=/dev/nfs nfsroot=10.193.100.213:/data/rootfs_home/rootfs_mx28 rw ip=dhcp rootwait gpmi
++noinitrd console=ttyAM0,115200 root=/dev/ram0 rdinit=/sbin/init fec_mac=00:08:02:6B:A3:1A gpmi
+

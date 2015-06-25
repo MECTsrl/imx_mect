@@ -1,0 +1,12 @@
+diff --exclude CVS --exclude .git -uNr mtd-utils/ubi-utils/old-utils/Makefile mtd-utils.modified/ubi-utils/old-utils/Makefile
+--- mtd-utils/ubi-utils/old-utils/Makefile	2010-01-15 18:12:24.000000000 +0100
++++ mtd-utils.modified/ubi-utils/old-utils/Makefile	2014-12-05 14:26:35.811906785 +0100
+@@ -4,7 +4,7 @@
+ 
+ KERNELHDR := ../../include
+ 
+-CFLAGS ?= -O2 -g -Werror
++CFLAGS ?= -O2 -g #-Werror
+ CPPFLAGS := -I./inc -I./src -I$(KERNELHDR) \
+ 	-std=gnu99 -DPACKAGE_VERSION=\"1.0\" $(CPPFLAGS)
+ 

@@ -1,0 +1,21 @@
+Stuart Hughes, stuarth@freescale.com, 22nd June 2005
+
+This patch fixes the following error for uclibc toolchains:
+
+gcc -c sysdeputil.c -O2 -Wall -W -Wshadow  -idirafter dummyinc
+In file included from sysdeputil.c:169:
+/opt/mtwk/usr/local/uclibc/ppc_nofpu/powerpc-linux-uclibc/sys-include/sys/sendfile.h:34: error: parse error before "extern"
+sysdeputil.c: In function `do_sendfile':
+sysdeputil.c:641: warning: implicit declaration of function `sendfile'
+
+
++++ vsftpd-2.0.3.modified/sysdeputil.c	2005-06-22 09:17:59.000000000 -0500
+@@ -158,7 +158,7 @@
+ #include <linux/capability.h>
+ #include <errno.h>
+ #include <syscall.h>
+-_syscall2(int, capset, cap_user_header_t, header, const cap_user_data_t, data)
++_syscall2(int, capset, cap_user_header_t, header, const cap_user_data_t, data);
+ /* Gross HACK to avoid warnings - linux headers overlap glibc headers */
+ #undef __NFDBITS
+ #undef __FDMASK

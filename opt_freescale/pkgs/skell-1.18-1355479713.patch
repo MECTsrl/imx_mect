@@ -1,0 +1,424 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/S10setup skell-1.18.modified/etc/rc.d/init.d/S10setup
+--- skell-1.18/etc/rc.d/init.d/S10setup	2012-12-14 11:08:33.591324929 +0100
++++ skell-1.18.modified/etc/rc.d/init.d/S10setup	2012-12-14 11:01:09.925269453 +0100
+@@ -1,180 +1,40 @@
+ #!/bin/sh
+-#
+-# Load a new setup from USB or reset the PLC/CAN configurations.
+-#
+-
+-countsys=0
+-
+-mntdir=/tmp/mnt
+-
+-[ -d $mntdir ] || { mntdir=/tmp/mnt; /bin/mkdir $mntdir; }
+-[ -d $mntdir ] || exit 1
+-sleep 2
+-dmesg > $mntdir/log
+-logfile=$mntdir/update.log
+ 
+ start() {
+-    
+-    echo -n "Checking for configuration USB key...  "
+-    sleep 1
+-    echo "" | tee $logfile
+-	usb_string=`awk '/sd[a-z]: sd[a-z]/ ' < $mntdir/log`
+-	if [ -z "$usb_string" ]; then
+-		usb_string=`awk '/sd[a-z]:/ ' < $mntdir/log`
+-	fi
+-
+-	echo "Found scsi device: $usb_string" | tee -a $logfile
+-
+-	if [ -n "$usb_string" ]; then
+-		mntpoint=`echo $usb_string |  awk '{split($0,a,":"); print a[1]'}`
+-		#echo "tentative dev=$mntpoint"
+-		if /bin/mount -orw /dev/$mntpoint $mntdir 2>/dev/null; then
+-			usbdev=/dev/$mntpoint
+-			echo "current mount point is $usbdev" | tee -a $logfile
+-		else
+-			#echo "going to loop...."
+-			usb_ok=0		
+-			for i in 2 3 4 5 6 7 8 9
+-			do
+-				#echo "loop number $i"
+-				if [ $usb_ok -eq 0 ]; then
+-					mntpoint=`echo $usb_string |  awk '{split($0,a," "); print a['$i']'}`
+-					#echo $mntpoint
+-					if [ -n "$mntpoint" ]; then
+-						if /bin/mount -orw /dev/$mntpoint $mntdir 2>/dev/null; then
+-							usbdev=/dev/$mntpoint
+-							usb_ok=1
+-							echo "mounted scsi device in $mntpoint" | tee -a $logfile
+-						fi
+-					else
+-						echo "no valid usb mountpoint found" | tee -a $logfile
+-						break;
+-					fi
+-				else
+-					break;
+-				fi
+-			done
+-		fi
+-
+-	else
+-		echo "no usb key found in dmesg" | tee -a $logfile
+-		echo "exit from configuration script" 	| tee -a $logfile
+-		return
+-	fi
+-
+-    echo -n "Starting the configuration process...  "
+-    if [ -f $mntdir/reset.conf ]; then
+-		echo " Resetting all!" | tee -a $logfile
+-        /bin/mount -orw,remount $mntdir 2>/dev/null || { echo ""; echo "Cannot mount the USB device RW.  Aborting device reset." | tee -a $logfile; return; }
+-        /bin/rm -f $mntdir/reset.conf
+-
+-        # Just remove all configuration files
+-        /bin/rm -f /local/etc/sysconfig/errors
+-        /bin/rm -f /local/etc/sysconfig/history
+-        /bin/rm -f /local/etc/sysconfig/mantainance
+-
+-		#Eventually add other configuration files to be removed for reset operations
+-		echo " Reset done!" | tee -a $logfile
+ 
+-	else if [ `ls $mntdir | grep sysupdate_ | wc -l` -eq  1 ]; then
+-    
+-		echo " Found one sysupdate!" | tee -a $logfile
+-		countsys=1
+-		sysupdatename=`ls $mntdir | grep sysupdate_`
+-		/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process." | tee -a $logfile; return; }	
+-		/usr/bin/dos2unix $mntdir/$sysupdatename 2>&1 | tee -a $logfile
+-		/bin/sh $mntdir/$sysupdatename 2>&1 | tee -a $logfile
+-		echo " Update '$mntdir/$sysupdatename' applied!!!" | tee -a $logfile
+-		/local/root/application -v | tee -a $logfile
+-		killall application
+-
+-    else if [ -f $mntdir/sysupdate.sh ] && [ $countsys -eq 0 ]; then
+-    	echo " Performing standard sysupdate!" | tee -a $logfile
+-    	/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process."; return; }
+-		/usr/bin/dos2unix $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
+-        /bin/sh $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
+-		echo " Update '$mntdir/sysupdate.sh' applied!!!" | tee -a $logfile
+-    else
+-        # Perform any other configurations
+-		/bin/mount -orw,remount $mntdir 2>/dev/null || { echo ""; echo "Cannot mount the USB device RW. Configuration files will be not deleted."; }
+-
+-		if [ -f $mntdir/database.txt ]; then
+-			echo " Found the database list file '$mntdir/database.txt'" | tee -a $logfile
+-			/usr/bin/dos2unix $mntdir/database.txt 2>&1 | tee -a $logfile
+-			if [ -f $mntdir/`cat $mntdir/database.txt` ]; then
+-				echo " Found database file '$mntdir/`cat $mntdir/database.txt`'" | tee -a $logfile
+-				/bin/cp $mntdir/`cat $mntdir/database.txt` /local/etc/sysconfig/val01.sqlite 2>&1 | tee -a $logfile
+-				/bin/cp /local/etc/sysconfig/val01.sqlite /local/etc/sysconfig/val01.sqlite.factory 2>&1 | tee -a $logfile
+-				echo " Database '$mntdir/`cat $mntdir/database.txt`' updated!" | tee -a $logfile
+-			else
+-				echo "Error: cannot found database file $mntdir/`cat database.txt`.  Aborting update process."
+-			fi
+-		else
+-        	if [ -f $mntdir/val01.sqlite ]; then
+-				echo " Found database file ' $mntdir/val01.sqlite'" | tee -a $logfile
+-            	/bin/cp $mntdir/val01.sqlite /local/etc/sysconfig 2>&1 | tee -a $logfile
+-				/bin/cp /local/etc/sysconfig/val01.sqlite /local/etc/sysconfig/val01.sqlite.factory 2>&1 | tee -a $logfile
+-				echo " Database '$mntdir/val01.sqlite' updated!" | tee -a $logfile
+-    	    fi
+-		fi
+-       
+-        if [ -f $mntdir/application.conf ]; then
+-			echo " Found a new configuration file '$mntdir/application.conf'" | tee -a $logfile
+-			/usr/bin/dos2unix $mntdir/application.conf 2>&1 | tee -a $logfile
+-            /bin/cp $mntdir/application.conf /local/etc/sysconfig 2>&1 | tee -a $logfile
+-			echo " Configuration file '$mntdir/application.conf' updated!" | tee -a $logfile
+-        fi
+-        if [ -f $mntdir/net.conf ]; then
+-			echo " Found a new network configuration file '$mntdir/net.conf'" | tee -a $logfile
+-			/usr/bin/dos2unix $mntdir/net.conf 2>&1 | tee -a $logfile
+-            /bin/cp $mntdir/net.conf /local/etc/sysconfig 2>&1 | tee -a $logfile
+-			echo " Network configuration file '$mntdir/net.conf' updated!" | tee -a $logfile
+-        fi
+-        if [ -f $mntdir/autoexec ]; then
+-			echo " Found a new autoexec file file '$mntdir/autoexec'" | tee -a $logfile
+-			/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting autoexec update process."; return; }
+-            /usr/bin/dos2unix $mntdir/autoexec 2>&1 | tee -a $logfile
+-			/bin/cp $mntdir/autoexec /usr/bin/autoexec 2>&1 | tee -a $logfile
+-			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
+-			echo " Autoexec file '$mntdir/autoexec' updated!" | tee -a $logfile
+-        fi
+-
+-	    if [ -f $mntdir/licence.txt ]; then
+-			echo " Found licence file..."
+-            /bin/cp $mntdir/licence.txt /local/etc/sysconfig/hw.info 2>&1 | tee -a $logfile
+-			echo " Licence applyed"
+-        fi
+-    fi
+-    fi
+-    fi
+-    #Sync for ubifs
+-    /bin/sync
+-    /bin/umount $mntdir
+- 
+-    echo "  Done."
++if [ -x /usr/bin/S10setup ]; then
++	echo -n "Starting 'S10setup'... "
++	start-stop-daemon  -S -b -q -x /usr/bin/S10setup
++	echo "Done."
++fi
+ }
++
+ stop() {
+-    :
++echo -n "Shutting down 'S10setup'... "
++start-stop-daemon  -K -q -x /usr/bin/S10setup
++echo "Done."
+ }
++
+ restart() {
+-        stop
+-        start
+-}	
++stop
++sleep 1
++start
++}
+ 
+ case "$1" in
+-  start)
+-        start
+-        ;;
+-  stop)
+-        stop
+-        ;;
+-  restart|reload)
+-        restart
+-        ;;
+-  *)
+-        echo $"Usage: $0 {start|stop|restart}"
++start)
++    start
++;;
++stop)
++    stop
++;;
++restart)
++    restart
++;;
++*)
++  echo $"Usage: $0 {start|stop|restart}"
+         exit 1
++    ;;
++    
+ esac
+ 
+-exit $?
+-
+diff --exclude CVS --exclude .git -uNr skell-1.18/usr/bin/S10setup skell-1.18.modified/usr/bin/S10setup
+--- skell-1.18/usr/bin/S10setup	1970-01-01 01:00:00.000000000 +0100
++++ skell-1.18.modified/usr/bin/S10setup	2012-12-14 11:03:34.341024936 +0100
+@@ -0,0 +1,167 @@
++#!/bin/sh
++#
++# Load a new setup from USB or reset the PLC/CAN configurations.
++#
++
++countsys=0
++
++mntdir=/tmp/mnt
++
++[ -d $mntdir ] || { mntdir=/tmp/mnt; /bin/mkdir $mntdir; }
++[ -d $mntdir ] || exit 1
++sleep 2
++dmesg > $mntdir/log
++logfile=$mntdir/update.log
++
++    
++    echo -n "Checking for configuration USB key...  "
++    sleep 1
++    echo "" | tee $logfile
++	usb_string=`awk '/sd[a-z]: sd[a-z]/ ' < $mntdir/log`
++	if [ -z "$usb_string" ]; then
++		usb_string=`awk '/sd[a-z]:/ ' < $mntdir/log`
++	fi
++
++	echo "Found scsi device: $usb_string" | tee -a $logfile
++
++	if [ -n "$usb_string" ]; then
++		mntpoint=`echo $usb_string |  awk '{split($0,a,":"); print a[1]'}`
++		#echo "tentative dev=$mntpoint"
++		if /bin/mount -orw /dev/$mntpoint $mntdir 2>/dev/null; then
++			usbdev=/dev/$mntpoint
++			echo "current mount point is $usbdev" | tee -a $logfile
++		else
++			#echo "going to loop...."
++			usb_ok=0		
++			for i in 2 3 4 5 6 7 8 9
++			do
++				#echo "loop number $i"
++				if [ $usb_ok -eq 0 ]; then
++					mntpoint=`echo $usb_string |  awk '{split($0,a," "); print a['$i']'}`
++					#echo $mntpoint
++					if [ -n "$mntpoint" ]; then
++						if /bin/mount -orw /dev/$mntpoint $mntdir 2>/dev/null; then
++							usbdev=/dev/$mntpoint
++							usb_ok=1
++							echo "mounted scsi device in $mntpoint" | tee -a $logfile
++						fi
++					else
++						echo "no valid usb mountpoint found" | tee -a $logfile
++						break;
++					fi
++				else
++					break;
++				fi
++			done
++		fi
++
++	else
++		echo "no usb key found in dmesg" | tee -a $logfile
++		echo "exit from configuration script" 	| tee -a $logfile
++		return
++	fi
++
++    echo -n "Starting the configuration process...  "
++    if [ -f $mntdir/reset.conf ]; then
++		echo " Resetting all!" | tee -a $logfile
++        /bin/mount -orw,remount $mntdir 2>/dev/null || { echo ""; echo "Cannot mount the USB device RW.  Aborting device reset." | tee -a $logfile; return; }
++        /bin/rm -f $mntdir/reset.conf
++
++        # Just remove all configuration files
++        /bin/rm -f /local/etc/sysconfig/errors
++        /bin/rm -f /local/etc/sysconfig/history
++        /bin/rm -f /local/etc/sysconfig/mantainance
++
++		#Eventually add other configuration files to be removed for reset operations
++		echo " Reset done!" | tee -a $logfile
++
++	else if [ `ls $mntdir | grep sysupdate_ | wc -l` -eq  1 ]; then
++    
++		echo " Found one sysupdate!" | tee -a $logfile
++		countsys=1
++		sysupdatename=`ls $mntdir | grep sysupdate_`
++		/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process." | tee -a $logfile; return; }	
++		/usr/bin/dos2unix $mntdir/$sysupdatename 2>&1 | tee -a $logfile
++		/bin/sh $mntdir/$sysupdatename 2>&1 | tee -a $logfile
++		echo " Update '$mntdir/$sysupdatename' applied!!!" | tee -a $logfile
++		/local/root/application -v | tee -a $logfile
++		killall application
++
++    else if [ -f $mntdir/sysupdate.sh ] && [ $countsys -eq 0 ]; then
++    	echo " Performing standard sysupdate!" | tee -a $logfile
++    	/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process."; return; }
++		/usr/bin/dos2unix $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
++        /bin/sh $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
++		echo " Update '$mntdir/sysupdate.sh' applied!!!" | tee -a $logfile
++    else
++        # Perform any other configurations
++		/bin/mount -orw,remount $mntdir 2>/dev/null || { echo ""; echo "Cannot mount the USB device RW. Configuration files will be not deleted."; }
++
++		if [ -f $mntdir/database.txt ]; then
++			echo " Found the database list file '$mntdir/database.txt'" | tee -a $logfile
++			i=0
++			for db in `cat $mntdir/databases.txt`;
++			do
++				i=`expr $i + 1`
++				if [ -f $mntdir/$db ]
++				then
++					echo " Found database file '$mntdir/`cat $mntdir/database.txt`'" | tee -a $logfile
++					/bin/cp $mntdir/$db /local/etc/sysconfig/val01_$i.sqlite 2>&1 | tee -a $logfile
++					/bin/cp $mntdir/$db /local/etc/sysconfig/val01_$i.sqlite.factory 2>&1 | tee -a $logfile
++					echo " Database '$mntdir/$db' updated!" | tee -a $logfile
++				else
++					echo "Error: cannot found database file '$mntdir/$db'.  Aborting update process."
++					return
++				fi
++			done
++			if [ "$i" -eq "1" ]
++			then
++				/bin/cp /local/etc/sysconfig/val01_$i.sqlite /local/etc/sysconfig/val01.sqlite
++				/bin/cp /local/etc/sysconfig/val01_$i.sqlite.factory /local/etc/sysconfig/val01.sqlite.factory
++			fi
++		else
++        	if [ -f $mntdir/val01.sqlite ]; then
++				echo " Found database file ' $mntdir/val01.sqlite'" | tee -a $logfile
++            	/bin/cp $mntdir/val01.sqlite /local/etc/sysconfig 2>&1 | tee -a $logfile
++				/bin/cp /local/etc/sysconfig/val01.sqlite /local/etc/sysconfig/val01.sqlite.factory 2>&1 | tee -a $logfile
++				echo " Database '$mntdir/val01.sqlite' updated!" | tee -a $logfile
++    	    fi
++		fi
++       
++        if [ -f $mntdir/application.conf ]; then
++			echo " Found a new configuration file '$mntdir/application.conf'" | tee -a $logfile
++			/usr/bin/dos2unix $mntdir/application.conf 2>&1 | tee -a $logfile
++            /bin/cp $mntdir/application.conf /local/etc/sysconfig 2>&1 | tee -a $logfile
++			echo " Configuration file '$mntdir/application.conf' updated!" | tee -a $logfile
++        fi
++        if [ -f $mntdir/net.conf ]; then
++			echo " Found a new network configuration file '$mntdir/net.conf'" | tee -a $logfile
++			/usr/bin/dos2unix $mntdir/net.conf 2>&1 | tee -a $logfile
++            /bin/cp $mntdir/net.conf /local/etc/sysconfig 2>&1 | tee -a $logfile
++			echo " Network configuration file '$mntdir/net.conf' updated!" | tee -a $logfile
++        fi
++        if [ -f $mntdir/autoexec ]; then
++			echo " Found a new autoexec file file '$mntdir/autoexec'" | tee -a $logfile
++			/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting autoexec update process."; return; }
++            /usr/bin/dos2unix $mntdir/autoexec 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/autoexec /usr/bin/autoexec 2>&1 | tee -a $logfile
++			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
++			echo " Autoexec file '$mntdir/autoexec' updated!" | tee -a $logfile
++        fi
++
++	    if [ -f $mntdir/licence.txt ]; then
++			echo " Found licence file..."
++            /bin/cp $mntdir/licence.txt /local/etc/sysconfig/hw.info 2>&1 | tee -a $logfile
++			echo " Licence applyed"
++        fi
++    fi
++    fi
++    fi
++    #Sync for ubifs
++    /bin/sync
++    /bin/umount $mntdir
++ 
++    echo "  Done."
++
++exit $?
++
+diff --exclude CVS --exclude .git -uNr skell-1.18/usr/bin/autoexec skell-1.18.modified/usr/bin/autoexec
+--- skell-1.18/usr/bin/autoexec	1970-01-01 01:00:00.000000000 +0100
++++ skell-1.18.modified/usr/bin/autoexec	2012-12-14 11:04:36.350005523 +0100
+@@ -0,0 +1,38 @@
++#!/bin/sh
++CLCKSRC=`cat /sys/devices/platform/mxs-persistent.0/CLOCKSOURCE`
++XTL32MHZ_PWR=`cat /sys/devices/platform/mxs-persistent.0/XTAL32MHZ_PWRUP`
++
++if [ $XTL32MHZ_PWR -eq 0 ]; then 
++	echo -n 1 > /sys/devices/platform/mxs-persistent.0/XTAL32MHZ_PWRUP
++fi
++
++if [ $CLCKSRC -eq 0 ]; then 
++	echo -n 1 > /sys/devices/platform/mxs-persistent.0/CLOCKSOURCE
++fi 
++
++
++if [ -x /local/root/application ]; then
++
++	if [-e /local/etc/sysconfig/brightness ]
++	then
++		source /local/etc/sysconfig/brightness
++	else
++		echo 70 > /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness
++	fi
++	echo "setting brightness level at `cat /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness`"
++
++	echo -n "Starting 'brightness'..."
++	/local/root/application & 
++	/local/root/hmi 127.0.0.1 34901 -qws
++	echo "Done."
++
++fi
++
++if [ -x /local/root/fcrts ]; then
++
++	/local/root/fcrts & 
++	/local/root/hmi -qws
++	echo "Done."
++
++fi
++

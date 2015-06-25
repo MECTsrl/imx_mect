@@ -1,0 +1,14 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/Makefile skell-1.18.modified/Makefile
+--- skell-1.18/Makefile	2015-01-09 18:52:45.028882999 +0100
++++ skell-1.18.modified/Makefile	2015-01-09 18:47:14.428883008 +0100
+@@ -24,6 +24,10 @@
+ 	rm -rf root
+ 	mkdir -p local/root
+ 	ln -s local/root
++	mkdir local/root/sqldrivers
++	cd local/root
++	ln -s /usr/lib/libqsqlite.so
++	ln -s /usr/lib/libqsqlmysql.so
+ 	#test -L control || test -d control && rm -rf control
+ 	rm -rf control
+ 	mkdir -p local/control

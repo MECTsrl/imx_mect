@@ -1,0 +1,118 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/S10setup skell-1.18.modified/etc/rc.d/init.d/S10setup
+--- skell-1.18/etc/rc.d/init.d/S10setup	1970-01-01 01:00:00.000000000 +0100
++++ skell-1.18.modified/etc/rc.d/init.d/S10setup	2012-03-21 16:07:49.822058054 +0100
+@@ -0,0 +1,114 @@
++#!/bin/sh
++#
++# Load a new setup from USB or reset the PLC/CAN configurations.
++#
++countsys=0
++
++mntdir=/tmp/mnt
++[ -d $mntdir ] || { mntdir=/tmp/mnt; /bin/mkdir $mntdir; }
++[ -d $mntdir ] || exit 1
++
++start() {
++    
++    
++    echo -n "Checking for configuration USB key...  "
++    sleep 1
++    if /bin/mount -oro /dev/sda1 $mntdir 2>/dev/null; then
++        usbdev=/dev/sda1
++    else
++        /bin/mount -oro /dev/sda $mntdir 2>/dev/null || { echo "  USB device not found."; return; }
++        usbdev=/dev/sda
++    fi
++
++    if [ -n "$usbdev" ]; then
++        echo "Done."
++    else
++        echo "Not found."	
++        return
++    fi
++    
++
++    echo -n "Starting the configuration process...  "
++    if [ -f $mntdir/reset.conf ]; then
++        /bin/mount -orw,remount $mntdir 2>/dev/null || { echo ""; echo "Cannot mount the USB device RW.  Aborting device reset."; return; }
++        /bin/rm -f $mntdir/reset.conf
++
++        # Just remove all configuration files
++        /bin/rm -f /local/etc/sysconfig/application.conf
++        /bin/rm -f /local/etc/sysconfig/brightness
++        /bin/rm -f /local/etc/sysconfig/errors
++        /bin/rm -f /local/etc/sysconfig/history
++        /bin/rm -f /local/etc/sysconfig/mainteinance
++        /bin/rm -f /local/etc/sysconfig/pointercal
++	#Eventually add other configuration files to be removed for reset operations
++
++     else if [ `ls $mntdir | grep sysupdate_ | wc -l` -eq  1 ]; then
++    
++	echo " Found ONE sysupdate!"
++	countsys=1
++	sysupdatename=`ls $mntdir | grep sysupdate_`
++	/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process."; return; }	
++        /bin/sh $mntdir/$sysupdatename
++	echo "$mntdir/$sysupdatename applied!!!"
++
++    else if [ -f $mntdir/sysupdate.sh ] && [ $countsys -eq 0 ]; then
++    	echo " PERFORMING STANDARD sysupdate!"
++    	/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process."; return; }
++        /bin/sh $mntdir/sysupdate.sh
++
++
++
++    else
++        # Perform any other configurations
++	/bin/mount -orw,remount $mntdir 2>/dev/null || { echo ""; echo "Cannot mount the USB device RW. Configuration files will be not deleted."; }
++       
++        if [ -f $mntdir/application.conf ]; then
++            /bin/cp $mntdir/application.conf /local/etc/sysconfig
++
++            /bin/rm -f $mntdir/application.conf
++        fi
++        if [ -f $mntdir/net.conf ]; then
++            /bin/cp $mntdir/net.conf /local/etc/sysconfig
++
++            /bin/rm -f $mntdir/net.conf
++        fi
++        if [ -f $mntdir/autoexec ]; then
++	    /bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting autoexec update process."; return; }
++            /bin/cp $mntdir/autoexec /usr/bin/autoexec
++	    /bin/mount -oro,remount / 2>/dev/null
++            /bin/rm -f $mntdir/autoexec
++        fi
++
++    fi
++    fi
++    fi
++
++    /bin/umount $mntdir
++ 
++    echo "  Done."
++}	
++stop() {
++    :
++}
++restart() {
++        stop
++        start
++}	
++
++case "$1" in
++  start)
++        start
++        ;;
++  stop)
++        stop
++        ;;
++  restart|reload)
++        restart
++        ;;
++  *)
++        echo $"Usage: $0 {start|stop|restart}"
++        exit 1
++esac
++
++exit $?
++

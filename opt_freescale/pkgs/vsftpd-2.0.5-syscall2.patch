@@ -1,0 +1,32 @@
+Steve Papacharalambous <stevep@freescale.com> 14May07:
+Patch to fix build errors when using a toolchain/root file system built with
+kernel headers >= 2.6.18  The syscall macros were removed from linux/unistd.h
+Build errors:
+[snip]
+gcc -c sysdeputil.c -O2 -Wall -W -Wshadow  -idirafter dummyinc
+sysdeputil.c:162: error: expected declaration specifiers or '...' before 'capset'
+sysdeputil.c:162: error: expected declaration specifiers or '...' before 'header'
+sysdeputil.c:162: error: expected declaration specifiers or '...' before 'data'
+sysdeputil.c:162: warning: data definition has no type or storage class
+sysdeputil.c:162: warning: type defaults to 'int' in declaration of '_syscall2'
+sysdeputil.c: In function 'do_checkcap':
+sysdeputil.c:516: warning: implicit declaration of function 'capset'
+make: *** [sysdeputil.o] Error 1
+[/snip]
+Patch originated by Steve Papacharalambous.
+--- vsftpd-2.0.5/sysdeputil.c	Mon May 14 14:18:31 2007
++++ vsftpd-2.0.5.modified/sysdeputil.c	Mon May 14 14:18:17 2007
+@@ -155,11 +155,11 @@
+ #include <sys/capability.h>
+ 
+ #if defined(VSF_SYSDEP_HAVE_CAPABILITIES) && !defined(VSF_SYSDEP_HAVE_LIBCAP)
+-#include <linux/unistd.h>
++#include <unistd.h>
+ #include <linux/capability.h>
+ #include <errno.h>
+ #include <syscall.h>
+-_syscall2(int, capset, cap_user_header_t, header, const cap_user_data_t, data);
++#define capset(head,data) syscall(__NR_capset,head,data)
+ /* Gross HACK to avoid warnings - linux headers overlap glibc headers */
+ #undef __NFDBITS
+ #undef __FDMASK

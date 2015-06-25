@@ -1,0 +1,57 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/S10setup skell-1.18.modified/etc/rc.d/init.d/S10setup
+--- skell-1.18/etc/rc.d/init.d/S10setup	2012-03-29 18:51:32.251292004 +0200
++++ skell-1.18.modified/etc/rc.d/init.d/S10setup	2012-03-29 18:49:29.455292006 +0200
+@@ -34,12 +34,10 @@
+         /bin/rm -f $mntdir/reset.conf
+ 
+         # Just remove all configuration files
+-        /bin/rm -f /local/etc/sysconfig/application.conf
+-        /bin/rm -f /local/etc/sysconfig/brightness
+         /bin/rm -f /local/etc/sysconfig/errors
+         /bin/rm -f /local/etc/sysconfig/history
+-        /bin/rm -f /local/etc/sysconfig/mainteinance
+-        /bin/rm -f /local/etc/sysconfig/pointercal
++        /bin/rm -f /local/etc/sysconfig/mantainance
++
+ 	#Eventually add other configuration files to be removed for reset operations
+ 
+      else if [ `ls $mntdir | grep sysupdate_ | wc -l` -eq  1 ]; then
+@@ -48,12 +46,14 @@
+ 	countsys=1
+ 	sysupdatename=`ls $mntdir | grep sysupdate_`
+ 	/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process."; return; }	
+-        /bin/sh $mntdir/$sysupdatename
++	/usr/bin/dos2unix $mntdir/$sysupdatename   
++	/bin/sh $mntdir/$sysupdatename
+ 	echo "$mntdir/$sysupdatename applied!!!"
+ 
+     else if [ -f $mntdir/sysupdate.sh ] && [ $countsys -eq 0 ]; then
+     	echo " PERFORMING STANDARD sysupdate!"
+     	/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process."; return; }
++	/usr/bin/dos2unix $mntdir/sysupdate.sh
+         /bin/sh $mntdir/sysupdate.sh
+ 
+ 
+@@ -63,18 +63,21 @@
+ 	/bin/mount -orw,remount $mntdir 2>/dev/null || { echo ""; echo "Cannot mount the USB device RW. Configuration files will be not deleted."; }
+        
+         if [ -f $mntdir/application.conf ]; then
++	    /usr/bin/dos2unix $mntdir/application.conf
+             /bin/cp $mntdir/application.conf /local/etc/sysconfig
+ 
+             /bin/rm -f $mntdir/application.conf
+         fi
+         if [ -f $mntdir/net.conf ]; then
++	    /usr/bin/dos2unix $mntdir/net.conf
+             /bin/cp $mntdir/net.conf /local/etc/sysconfig
+ 
+             /bin/rm -f $mntdir/net.conf
+         fi
+         if [ -f $mntdir/autoexec ]; then
+ 	    /bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting autoexec update process."; return; }
+-            /bin/cp $mntdir/autoexec /usr/bin/autoexec
++            /usr/bin/dos2unix $mntdir/autoexec
++	    /bin/cp $mntdir/autoexec /usr/bin/autoexec
+ 	    /bin/mount -oro,remount / 2>/dev/null
+             /bin/rm -f $mntdir/autoexec
+         fi

@@ -1,0 +1,18 @@
+Steve Papacharalambous <stevep@freescale.com> 14jun07:
+
+This patch fixes relink problems by removing "-L /usr/lib" (libdir):
+
+
+diff --exclude CVS -uNr gst-plugins-bad-0.10.4/ltmain.sh gst-plugins-bad-0.10.4.modified/ltmain.sh
+--- gst-plugins-bad-0.10.4/ltmain.sh	Mon Jun 19 20:29:20 2006
++++ gst-plugins-bad-0.10.4.modified/ltmain.sh	Thu Jun 14 17:01:04 2007
+@@ -2764,7 +2764,8 @@
+ 	      fi
+ 	    else
+ 	      # We cannot seem to hardcode it, guess we'll fake it.
+-	      add_dir="-L$libdir"
++              # stevep: 14jun07: comment this out as it breaks cross compiling.
++	      # add_dir="-L$libdir"
+ 	      # Try looking first in the location we're being installed to.
+ 	      if test -n "$inst_prefix_dir"; then
+ 		case $libdir in

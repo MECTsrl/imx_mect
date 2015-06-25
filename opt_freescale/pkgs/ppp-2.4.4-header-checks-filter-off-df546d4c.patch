@@ -1,0 +1,50 @@
+From df546d4c5fa7d73d4dff981a0f4b23d28a41b7c2 Mon Sep 17 00:00:00 2001
+From: Michael Barkowski <michael.barkowski@freescale.com>
+Date: Fri, 17 Aug 2007 12:05:11 -0400
+Subject: [PATCH] pppd: no header check in Makefile and FILTER off
+
+FILTER off by default.
+Don't check for existence of header files in a Makefile
+---
+ pppd/Makefile.linux |    6 +-----
+ 1 files changed, 1 insertions(+), 5 deletions(-)
+
+diff --git a/pppd/Makefile.linux b/pppd/Makefile.linux
+index af8f6c6..d757ad9 100644
+--- a/pppd/Makefile.linux
++++ b/pppd/Makefile.linux
+@@ -48,7 +48,7 @@ MPPE=y
+ # Uncomment the next line to include support for PPP packet filtering.
+ # This requires that the libpcap library and headers be installed
+ # and that the kernel driver support PPP packet filtering.
+-FILTER=y
++# FILTER=y
+ 
+ # Uncomment the next line to enable multilink PPP (enabled by default)
+ # Linux distributions: Please leave multilink ENABLED in your builds
+@@ -117,10 +117,8 @@ CFLAGS   += -DHAS_SHADOW
+ #LIBS     += -lshadow $(LIBS)
+ endif
+ 
+-ifneq ($(wildcard /usr/include/crypt.h),)
+ CFLAGS  += -DHAVE_CRYPT_H=1
+ LIBS	+= -lcrypt
+-endif
+ 
+ ifdef NEEDDES
+ ifndef USE_CRYPT
+@@ -169,11 +167,9 @@ LIBS	+= -ldl
+ endif
+ 
+ ifdef FILTER
+-ifneq ($(wildcard /usr/include/pcap-bpf.h),)
+ LIBS    += -lpcap
+ CFLAGS  += -DPPP_FILTER
+ endif
+-endif
+ 
+ ifdef HAVE_INET6
+      PPPDSRCS += ipv6cp.c eui64.c
+-- 
+1.5.2.3
+

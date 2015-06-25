@@ -17,16 +17,16 @@ Everything is tested on Ubuntu10.10 i686 (http://old-releases.ubuntu.com/release
 
 - Install ltib [L2.6.35\_1.1.0\_ER\_SOURCE] (http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=i.MX281&fpsp=1&tab=Design_Tools_Tab#)
 
-- download [qt-everywhere-opensource-src-4.8.5.tar.gz] (https://download.qt.io/archive/qt/4.8/4.8.5/qt-everywhere-opensource-src-4.8.5.tar.gz) into /opt/freescale/
+- Download [qt-everywhere-opensource-src-4.8.5.tar.gz] (https://download.qt.io/archive/qt/4.8/4.8.5/qt-everywhere-opensource-src-4.8.5.tar.gz) into /opt/freescale/
 
 - Apply the Mect patches as follows
 
-  in /opt/freescale/ checkout the packages from https://github.com/MECTsrl/imx\_mect/opt\_freescale/
-  in ${HOME}/ltib/ checkout the specs and configurations from https://github.com/MECTsrl/imx\_mect/home\_ltib/
+  - in /opt/freescale/ checkout the packages from https://github.com/MECTsrl/imx\_mect/opt\_freescale/
+  - in ${HOME}/ltib/ checkout the specs and configurations from https://github.com/MECTsrl/imx\_mect/home\_ltib/
 
-- Build LTIB as usual, obaining the 3 files:
+- Build LTIB as usual, obtaining the 3 files:
     imx28\_ivt\_linux.sb
     rootfs.tar.bz2
     local.tar.bz2
-  avaliable at http://www.mect.it/download/MectSuite\_1.3.1\_Extra/Kernel+RootFS\_rel5.3rc2\_SourceryGCC/TPAC1007\_480x272/
+  available at http://www.mect.it/download/MectSuite\_1.3.1\_Extra/Kernel+RootFS\_rel5.3rc2\_SourceryGCC/TPAC1007\_480x272/
 

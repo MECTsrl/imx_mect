@@ -25,8 +25,8 @@ Everything is tested on Ubuntu10.10 i686 (http://old-releases.ubuntu.com/release
   - in ${HOME}/ltib/ checkout the specs and configurations from https://github.com/MECTsrl/imx\_mect/home\_ltib/
 
 - Build LTIB as usual, obtaining the 3 files:
-    imx28\_ivt\_linux.sb
-    rootfs.tar.bz2
-    local.tar.bz2
+    - imx28\_ivt\_linux.sb
+    - rootfs.tar.bz2
+    - local.tar.bz2
   available at http://www.mect.it/download/MectSuite\_1.3.1\_Extra/Kernel+RootFS\_rel5.3rc2\_SourceryGCC/TPAC1007\_480x272/
 

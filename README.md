@@ -19,7 +19,7 @@ Everything is tested on Ubuntu10.10 i686 (http://old-releases.ubuntu.com/release
 
 - Download [qt-everywhere-opensource-src-4.8.5.tar.gz] (https://download.qt.io/archive/qt/4.8/4.8.5/qt-everywhere-opensource-src-4.8.5.tar.gz) into /opt/freescale/
 
-- Apply the Mect patches as follows
+- Apply the Mect patches as follows:
 
   - in /opt/freescale/ checkout the packages from https://github.com/MECTsrl/imx\_mect/opt\_freescale/
   - in ${HOME}/ltib/ checkout the specs and configurations from https://github.com/MECTsrl/imx\_mect/home\_ltib/

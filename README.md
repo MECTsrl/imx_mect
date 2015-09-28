@@ -28,5 +28,5 @@ Everything is tested on Ubuntu10.10 i686 (http://old-releases.ubuntu.com/release
     - imx28\_ivt\_linux.sb
     - rootfs.tar.bz2
     - local.tar.bz2
-  available at http://www.mect.it/download/MectSuite\_1.3.1\_Extra/Kernel+RootFS\_rel5.3rc2\_SourceryGCC/TPAC1007\_480x272/
+  available at [MECT download] (http://www.mect.it/download/MectSuite_1.3.1_Extra/Kernel+RootFS_rel5.3rc2_SourceryGCC/TPAC1007_480x272/)
 

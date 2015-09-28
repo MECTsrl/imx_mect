@@ -21,7 +21,7 @@ Everything is tested on Ubuntu10.10 i686 (http://old-releases.ubuntu.com/release
 
 - Apply the Mect patches as follows:
 
-  - in /opt/freescale/ checkout the packages from https://github.com/MECTsrl/imx\_mect/opt\_freescale/
+  - in /opt/freescale/ checkout the packages from https://github.com/MECTsrl/imx/mect/opt/freescale/
   - in ${HOME}/ltib/ checkout the specs and configurations from https://github.com/MECTsrl/imx\_mect/home\_ltib/
 
 - Build LTIB as usual, obtaining the 3 files:

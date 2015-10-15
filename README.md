@@ -1,32 +1,42 @@
-# imx_mect
-Linux Kernel and LTIB GNU RootFS for MECT operator panels based on i.MX28:
+# LTIB installation for MECT operator panels based on Freescale i.MX28 processors
+
+Downloads, configures and installs LTIB image build environment and Codesurcery target toolchain for MECT operator panels based on Freescale i.MX28 processors:
 
 - with on board I/O:
 [TPAC1007] (http://www.mect.it/en/products/control-and-automation/operator-panels-with-plcpac/tpac1007/),
 [TPAC1006] (http://www.mect.it/en/products/control-and-automation/operator-panels-with-plcpac/tpac1006/),
 [TPAC1008] (http://www.mect.it/en/products/control-and-automation/operator-panels-with-plcpac/tpac1008/)
-
 - only RTU:
 [TP1043] (http://www.mect.it/en/products/control-and-automation/operator-panels/tp1043/),
 [TP1057] (http://www.mect.it/en/products/control-and-automation/operator-panels/tp1057/),
 [TP1070] (http://www.mect.it/en/products/control-and-automation/operator-panels/tp1070/)
 
-Everything is tested on Ubuntu10.10 i686 (http://old-releases.ubuntu.com/releases/maverick/)
+## Build instructions
 
-- Install CodeSourcery [Sourcery G++ Lite for ARM GNU Linux 2011.3.0.41] (http://www.codesourcery.com/sgpp/lite/arm/portal/package8742/public/arm-none-linux-gnueabi/arm-2011.03-41-arm-none-linux-gnueabi.bin)
+LTIB should be installed by an unprivileged user. However, it requires root privileges for some operations.
 
-- Install ltib [L2.6.35\_1.1.0\_ER\_SOURCE] (http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=i.MX281&fpsp=1&tab=Design_Tools_Tab#)
+Build prerequisites:
 
-- Download [qt-everywhere-opensource-src-4.8.5.tar.gz] (https://download.qt.io/archive/qt/4.8/4.8.5/qt-everywhere-opensource-src-4.8.5.tar.gz) into /opt/freescale/
+- a working (minimal) Ubuntu 14.04 LTS installation
+- the top-level Makefile in this repository
+- GNU make from Ubuntu repositories
+- passwordless sudo enabled for the user that performs the build
 
-- Apply the Mect patches as follows:
+Build steps:
 
-  - in /opt/freescale/ checkout the packages from https://github.com/MECTsrl/imx/mect/opt/freescale/
-  - in ${HOME}/ltib/ checkout the specs and configurations from [home\_ltib](https://github.com/MECTsrl/imx_mect/home_ltib/)
+1. install the **make utility**: *apt-get install make*
+1. enable the build user for passwordless sudo: edit */etc/sudoers* and append a line as follows **<user name> ALL=(ALL) NOPASSWD: ALL**
+1. create the top-level directory for LTIB installation with R/W permissions for the user, e.g.: mkdir ~/imx_mect
+1. download the top-level Makefile from this repository in the top-level directory that was created in the previous step
+1. install the toolchain, LTIB and create the target image files: **make -C ~/imx_mect/Makefile clean all**
+1. create the target images for TPAC 1007 in *~/imx_mect/images-all/tpac_1007*: **make -C ~/imx_mect/Makefile tpac_1007**
 
-- Build LTIB as usual, obtaining the 3 files:
-    - imx28\_ivt\_linux.sb
-    - rootfs.tar.bz2
-    - local.tar.bz2
-  available at [MECT download] (http://www.mect.it/download/MectSuite_1.3.1_Extra/Kernel+RootFS_rel5.3rc2_SourceryGCC/TPAC1007_480x272/)
+## Main build steps
 
+The main steps of the build process are:
+
+- check and update the host environment
+- download LTIB, toolchain for cross-compilation, Qt, and their configuration and patches
+- install and patch LTIB
+- installation of the toolchain for cross-compilation and Qt
+- build image for the target

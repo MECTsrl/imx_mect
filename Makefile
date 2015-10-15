@@ -25,13 +25,13 @@ LTIBSPECDIR = $(LTIBDIR)/dist/lfs-5.1
 TMPDIR = $(CURDIR)/tmp
 # Archive repository
 FTPURL = http://www.mect.it/archive
-# Hardcoded Freecale directory
+# Hardcoded Freescale directory
 FSDIR = /opt/freescale
 # RPM archive
 RPMDIR = $(CURDIR)/ltib/rpm/RPMS/arm
 # Root file system top-level directory
 IMGDIR = $(CURDIR)/images-all
-# Draft diretory for rpmbuild
+# Draft directory for rpmbuild
 TMPRPMDIR = /tmp/rpm-$(TARGET_UNIX_NAME)
 
 
@@ -580,7 +580,8 @@ ltibpatch: downloads
 	test -d $(LTIBDIR)
 	cd $(LTIBDIR); cp $(FTPDIR)/$(LTIB_UBUNTU_12_04_PATCH) .
 	cd $(LTIBDIR); patch -p1 < $(FTPDIR)/$(LTIB_UBUNTU_URL_PATHCH)
-	cd $(LTIBDIR); sh ./$(LTIB_UBUNTU_12_04_PATCH) $(FTPURL); rm -f $(LTIB_UBUNTU_12_04_PATCH)
+	cd $(LTIBDIR); sh ./$(LTIB_UBUNTU_12_04_PATCH) $(FTPURL)
+	cd $(LTIBDIR); rm -f $(LTIB_UBUNTU_12_04_PATCH)
 	cd $(LTIBDIR); for p in \
 			$(LTIB_CONFIG_PATCH) \
 			$(LTIB_DEPR_AND_ZLIB_PATCH) \

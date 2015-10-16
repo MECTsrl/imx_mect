@@ -1,0 +1,42 @@
+--- ltib/dist/lfs-5.1/merge/merge.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib.new/dist/lfs-5.1/merge/merge.spec	2015-10-12 11:08:51.000000000 +0200
+@@ -13,6 +13,16 @@
+ # We have assume the user knows merge file dependencies.
+ Autoreqprov     : no
+ 
++
++%Package rfs
++Summary         : Trimmed merge for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++merge package contents restricted to just the files that are
++needed at run time on the target.
++
++
+ %Description
+ Detects the presence of of merge directory in the top level of the root
+ file system builder directory, and if it is present creates a rpm containing
+@@ -40,10 +50,20 @@
+     fi
+ done
+ 
++cd %{_builddir}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++%attr(0777, root, root) %{pfx}/etc/ltib-release
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+ %attr(0777, root, root) %{pfx}/etc/ltib-release
+-%{pfx}/*

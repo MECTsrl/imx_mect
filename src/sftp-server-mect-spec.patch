@@ -1,0 +1,107 @@
+--- ltib/dist/lfs-5.1/sftp-server/sftp-server.spec	1970-01-01 01:00:00.000000000 +0100
++++ ltib.new/dist/lfs-5.1/sftp-server/sftp-server.spec	2015-10-12 10:46:10.498469000 +0200
+@@ -0,0 +1,104 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : Just the sftp-server executable from OpenSSH
++Name            : sftp-server
++Version         : 4.3p2
++Release         : 1
++License         : BSD
++Vendor          : Avid Technology
++Packager        : Fritz Mueller
++Group           : Applications/Internet
++Source          : openssh-4.3p2.tar.gz
++Source1         : openssl-0.9.8g.tar.gz
++Patch0          : openssl-md4_size_t.patch
++Patch1          : openssl-md5_size_t.patch
++Patch2          : openssl-sha_size_t.patch
++Patch3          : openssl-0.9.8g-lib64.patch
++Patch4          : openssl-0.9.8g-ripemd_size_t.patch
++Patch5          : openssl-0.9.8g-sec.patch
++Patch6          : openssl-0.9.8g-cryptodev.patch
++Patch7          : openssh-4.3p2-static-sftp-server.patch
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed sftp-server for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++sftp-server package contents restricted to just the files that
++are needed at run time on the target.
++
++
++%Description
++%{summary}
++
++%Prep
++%setup -T -c
++%setup -T -D -a 0
++%setup -T -D -a 1
++%patch7 -p1
++cd openssl-0.9.8g
++%patch0 -p1
++%patch1 -p1
++%patch2 -p1
++%patch3 -p1
++%patch4 -p1
++%patch5 -p1
++%patch6 -p1
++
++
++%Build
++cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g
++case $ENDIAN in
++    big)
++        XTRA_OPTS="-DB_ENDIAN"
++        ;;
++    little)
++        XTRA_OPTS="-DL_ENDIAN"
++        ;;
++    *)
++        echo "Please set the ENDIAN environment variable to big|little"
++        ;;
++esac
++case "$LINTARCH" in
++    arm|m68k*)
++       OSSL_ARCH="linux-generic32"
++       ;;
++    powerpc*)
++       OSSL_ARCH="linux-ppc"
++       ;;
++    *)
++       OSSL_ARCH="linux-$LINTARCH"
++       ;;
++esac
++./Configure $OSSL_ARCH --prefix=%{_prefix} shared no-asm $XTRA_OPTS --with-cryptodev 
++make -j`grep -c ^processor /proc/cpuinfo` build_crypto
++
++cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssh-4.3p2
++LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-zlib=$DEV_IMAGE/usr --with-ssl-dir=$RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g --with-ldflags="-L$RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g" --config-cache
++make -j`grep -c ^processor /proc/cpuinfo` sysconfdir=%{_sysconfdir}/ssh sftp-server
++
++%Install
++rm -rf $RPM_BUILD_ROOT
++cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssh-4.3p2
++make -j1 install-sftp-server sysconfdir=%{_sysconfdir}/ssh DESTDIR=$RPM_BUILD_ROOT/%{pfx}
++cd -
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p
++' all_files.lst > rfs_files.lst
++
++%Clean
++rm -rf $RPM_BUILD_ROOT
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)

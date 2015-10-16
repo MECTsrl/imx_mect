@@ -1,0 +1,70 @@
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/arch/arm/boot/compressed/lib1funcs.S linux-2.6.35.3.modified/arch/arm/bootdiff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/char/mxs-buzzer.c linux-2.6.35.3.modified/drivers/char/mxs-buzzer.c
+--- linux-2.6.35.3/drivers/char/mxs-buzzer.c	2011-10-11 14:57:56.388793595 +0200
++++ linux-2.6.35.3.modified/drivers/char/mxs-buzzer.c	2011-10-11 12:57:53.599699997 +0200
+@@ -16,7 +16,7 @@
+ #include <asm/io.h>	//include __raw_writel 
+ #include <asm/system.h>
+ 
+-#include "mxs-buzzer.h"
++#include <linux/mxs-buzzer.h>
+ 
+ static int buzzer_open(struct inode *inode, struct file *file);
+ static int buzzer_ioctl(struct inode *inode, struct file *file, unsigned int cmd, unsigned long arg);
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/char/mxs-buzzer.h linux-2.6.35.3.modified/drivers/char/mxs-buzzer.h
+--- linux-2.6.35.3/drivers/char/mxs-buzzer.h	2011-10-11 14:57:56.388793595 +0200
++++ linux-2.6.35.3.modified/drivers/char/mxs-buzzer.h	1970-01-01 01:00:00.000000000 +0100
+@@ -1,19 +0,0 @@
+-#ifndef MXS_BUZZER_H_INCLUDED
+-#define MXS_BUZZER_H_INCLUDED
+-
+-#ifdef __KERNEL__
+-#include <asm/ioctl.h>
+-#else
+-#include <sys/ioctl.h>
+-#endif
+-
+-#define BUZZER_VER "1.0"
+-#define BUZZER_DATE "2011-09"
+-#define BUZZER_MAJOR 35
+-#define BUZZER_MINOR 0
+-#define BUZZER_DEVICE_NAME "buzzer"
+-
+-#define BUZZER_MAGIC 'b'
+-#define BUZZER_BEEP _IO(BUZZER_MAGIC, 0)
+-
+-#endif
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/include/linux/Kbuild linux-2.6.35.3.modified/include/linux/Kbuild
+--- linux-2.6.35.3/include/linux/Kbuild	2011-10-11 14:57:40.348777624 +0200
++++ linux-2.6.35.3.modified/include/linux/Kbuild	2011-10-11 14:44:40.938445759 +0200
+@@ -414,3 +414,7 @@
+ objhdr-y += version.h
+ header-y += wimax.h
+ header-y += wimax/
++
++## i.MX28 Mect Board specific files
++header-y += mxs-buzzer.h
++
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/include/linux/mxs-buzzer.h linux-2.6.35.3.modified/include/linux/mxs-buzzer.h
+--- linux-2.6.35.3/include/linux/mxs-buzzer.h	1970-01-01 01:00:00.000000000 +0100
++++ linux-2.6.35.3.modified/include/linux/mxs-buzzer.h	2011-10-10 14:06:04.806252003 +0200
+@@ -0,0 +1,19 @@
++#ifndef MXS_BUZZER_H_INCLUDED
++#define MXS_BUZZER_H_INCLUDED
++
++#ifdef __KERNEL__
++#include <asm/ioctl.h>
++#else
++#include <sys/ioctl.h>
++#endif
++
++#define BUZZER_VER "1.0"
++#define BUZZER_DATE "2011-09"
++#define BUZZER_MAJOR 35
++#define BUZZER_MINOR 0
++#define BUZZER_DEVICE_NAME "buzzer"
++
++#define BUZZER_MAGIC 'b'
++#define BUZZER_BEEP _IO(BUZZER_MAGIC, 0)
++
++#endif
+

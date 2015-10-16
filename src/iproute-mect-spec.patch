@@ -1,0 +1,72 @@
+--- ltib/dist/lfs-5.1/iproute/iproute.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib.new/dist/lfs-5.1/iproute/iproute.spec	2015-10-12 10:46:10.550468000 +0200
+@@ -3,16 +3,31 @@
+ 
+ Summary         : Advanced IP routing and network device configuration tools
+ Name            : iproute
+-Version         : 2.6.38
+-Release         : 1
++Version         : 2.6.37
++Release         : 050330
+ License         : GPL
+ Vendor          : Freescale
+ Packager        : Jaksa Djordjevic, Stuart Hughes
+ Group           : Applications/System
+-Source          : %{name}2-%{version}.tar.bz2
+-Patch0          : iproute2-do-not-build-arpd.patch
++Source          : %{name}2-%{version}-%{release}.tar.bz2
++Patch0          : iproute-2.6.11-socket_h_warning.patch
++Patch1          : iproute2-paretonormal-overflow.patch
++Patch2          : iproute-2.6.37-1317825720.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++# iproute-2.6.37-1317825720.patch : exclude arpd from compilation cause db_185.h problems
++
++
++%Package rfs
++Summary         : Trimmed iproute for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++iproute package contents restricted to just the files that
++are needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -22,8 +37,10 @@
+ capabilities of the Linux kernel.
+ 
+ %Prep
+-%setup -n %{name}2-%{version}
++%setup -n %{name}2-%{version}-%{release}
+ %patch0 -p1
++%patch1 -p0
++%patch2 -p1
+ 
+ %Build
+ 
+@@ -33,9 +50,19 @@
+ rm -rf $RPM_BUILD_ROOT
+ make -j1 install SBINDIR=%{base}/sbin DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+ 
++cd %{_builddir}/%{name}2-%{version}-%{release}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/share/doc, d;
++    \,^%{pfx}/share/man, d;
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*

@@ -1,0 +1,23 @@
+diff -aurN orig/patch-ltib-ubuntu12.04.sh new/patch-ltib-ubuntu12.04.sh
+--- orig/patch-ltib-ubuntu12.04.sh	2015-10-15 23:43:01.198863845 +0200
++++ new/patch-ltib-ubuntu12.04.sh	2015-10-15 23:42:10.862825286 +0200
+@@ -1,10 +1,16 @@
+ #!/usr/bin/env bash
+ 
++url="$1"
++test -n "$url"
++
+ # get the patch tarball and untar it
+-wget -O ubuntu-ltib-patch.tgz https://community.freescale.com/servlet/JiveServlet/downloadBody/93454-102-1-2824/ubuntu-ltib-patch.tgz
+-tar -xzvf ubuntu-ltib-patch.tgz
++wget -O ubuntu-ltib-patch.tgz ${url}/ubuntu-ltib-patch.tgz
++tar xzvf ubuntu-ltib-patch.tgz
++rm -f ubuntu-ltib-patch.tgz
+ 
+-# execute the script which do the patching
++# Execute the script which does the patching.
+ ltibDir=`pwd`
+ cd ubuntu-ltib-patch
+ ./install-patches.sh $ltibDir
++cd -
++rm -rf ubuntu-ltib-patch

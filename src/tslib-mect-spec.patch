@@ -1,0 +1,72 @@
+--- ltib/dist/lfs-5.1/tslib/tslib.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib.new/dist/lfs-5.1/tslib/tslib.spec	2015-10-12 10:46:10.866464000 +0200
+@@ -13,9 +13,21 @@
+ Patch2          : tslib-1.0-mx-pre_gen-2.patch
+ Patch3          : tslib-1.0-mx-pre_config.patch
+ Patch4          : tslib-1.0-glibc-2.7.x-open-O_CREAT-lack-parameter.patch
+-Patch5          : tslib-1.0-change-input-raw.c-to-support-multi-touch.patch
++Patch5          : tslib-1.0-1394538963.patch
++Patch6          : tslib-1.0-1417198155.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed tslib for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++tslib package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -35,13 +47,14 @@
+ if [ `echo ${LIBC_VERSION} | cut -d '.' -f 1` -eq 2 -a `echo ${LIBC_VERSION} | cut -d '.' -f 2` -ge 7 ]; then
+ %patch4 -p1
+ fi
+-%patch5 -p1
+ 
+ touch aclocal.m4
+ sleep 1
+ find . -name Makefile.in | xargs touch
+ sleep 1
+ touch configure
++%patch5 -p1
++%patch6 -p1
+ 
+ %Build
+ #sed -i s/AS_HELP_STRING/AC_HELP_STRING/ configure.ac
+@@ -54,16 +67,26 @@
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+ make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+-rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
+-rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/ts/*.la
++
+ # Remove unused platform binaries
+ for so in arctic2.so collie.so corgi.so h3600.so mk712.so; do
+ 	rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/usr/lib/ts/$so
+ done
+ 
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_libdir}/pkgconfig, d;
++    \,^%{pfx}%{_includedir}, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*

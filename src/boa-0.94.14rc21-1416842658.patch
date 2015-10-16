@@ -1,0 +1,12 @@
+diff --exclude CVS --exclude .git -uNr boa-0.94.14rc21/src/config.c boa-0.94.14rc21.modified/src/config.c
+--- boa-0.94.14rc21/src/config.c	2005-02-22 15:11:29.000000000 +0100
++++ boa-0.94.14rc21.modified/src/config.c	2014-11-24 15:20:35.381218755 +0100
+@@ -537,7 +537,7 @@
+     }
+     tempdir = getenv("TMP");
+     if (tempdir == NULL)
+-        tempdir = "/tmp";
++        tempdir = "/dev/shm";
+ 
+     if (single_post_limit < 0) {
+         fprintf(stderr, "Invalid value for single_post_limit: %d\n",

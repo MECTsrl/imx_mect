@@ -1,0 +1,41 @@
+--- ltib/dist/lfs-5.1/kernel/kernel-common.tmpl	2013-01-09 04:58:38.000000000 +0100
++++ ltib.new/dist/lfs-5.1/kernel/kernel-common.tmpl	2015-10-12 10:46:10.482469000 +0200
+@@ -182,10 +182,10 @@
+ #
+ # build the kernel and optionally the modules
+ #
+-make $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" $SYSCFG_KTARG
++make -j`grep -c ^processor /proc/cpuinfo` $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" $SYSCFG_KTARG
+ if grep -q '^CONFIG_MODULES=' $KBOUT/.config
+ then
+-    make $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" modules
++    make -j`grep -c ^processor /proc/cpuinfo` $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" modules
+ fi
+ 
+ # cscope index
+@@ -333,6 +333,13 @@
+     fi
+ fi
+ 
++cd %{_builddir}/%{pkg_name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/boot, d;
++    \,^%{pfx}%{_prefix}/src, d;
++' all_files.lst > rfs_files.lst
++cd -
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+@@ -341,6 +348,9 @@
+     rm -f $RPM_BUILD_DIR/linux
+ fi
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*

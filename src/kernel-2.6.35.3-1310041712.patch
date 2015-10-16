@@ -1,0 +1,34 @@
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/net/fec.c linux-2.6.35.3.modified/drivers/net/fec.c
+--- linux-2.6.35.3/drivers/net/fec.c	2011-07-07 14:29:40.422878482 +0200
++++ linux-2.6.35.3.modified/drivers/net/fec.c	2011-07-07 13:49:11.952090870 +0200
+@@ -121,8 +121,10 @@
+ #if defined(CONFIG_FEC_1588) && defined(CONFIG_ARCH_MX28)
+ #define FEC_DEFAULT_IMASK (FEC_ENET_TXF | FEC_ENET_RXF | FEC_ENET_MII | \
+ 				FEC_ENET_TS_AVAIL | FEC_ENET_TS_TIMER)
++#define FEC_STOP_IMASK (FEC_ENET_MII)
+ #else
+ #define FEC_DEFAULT_IMASK (FEC_ENET_TXF | FEC_ENET_RXF | FEC_ENET_MII)
++#define FEC_STOP_IMASK (FEC_ENET_MII)
+ #endif
+ 
+ /* The FEC stores dest/src/type, data, and checksum for receive packets.
+@@ -1408,6 +1410,9 @@
+ 	/* Whack a reset.  We should wait for this. */
+ 	writel(1, fep->hwp + FEC_ECNTRL);
+ 	udelay(10);
++        
++        /* Reactivate the controller to get the IRQs */
++        writel(0x00000002, fep->hwp + FEC_ECNTRL); 
+ 
+ #ifdef CONFIG_ARCH_MXS
+ 	/* Check MII or RMII */
+@@ -1423,7 +1428,7 @@
+ 	writel(fep->phy_speed, fep->hwp + FEC_MII_SPEED);
+ 	if (fep->ptimer_present)
+ 		fec_ptp_stop(fep->ptp_priv);
+-	writel(FEC_DEFAULT_IMASK, fep->hwp + FEC_IMASK);
++	writel(FEC_STOP_IMASK, fep->hwp + FEC_IMASK);
+ 
+ 	netif_stop_queue(dev);
+ 	fep->link = 0;
+

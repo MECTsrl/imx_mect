@@ -1,0 +1,36 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell-1.18.modified/etc/rc.d/init.d/autoexec
+--- skell-1.18/etc/rc.d/init.d/autoexec	2015-05-14 10:03:35.416089622 +0200
++++ skell-1.18.modified/etc/rc.d/init.d/autoexec	2015-05-14 10:01:16.776091497 +0200
+@@ -17,6 +17,16 @@
+ export QT_QWS_FONTDIR=/usr/lib/fonts
+ export POINTERCAL_FILE=$TSLIB_CALIBFILE
+ 
++# set the brightness
++if [ -e $LOCAL_ETC_DIR/brightness ]
++then
++	source $LOCAL_ETC_DIR/brightness
++else
++	echo 70 > /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness
++fi
++echo "setting brightness level at `cat /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness`"
++
++# if necessary calibrate the touch screen
+ if [ ! -e $TSLIB_CALIBFILE ]; then
+ 	echo -n "Starting 'calibration'... "
+ 	/usr/bin/ts_calibrate
+@@ -46,15 +56,6 @@
+ 	echo "done."
+ fi 
+ 
+-# set the brightness
+-if [ -e $LOCAL_ETC_DIR/brightness ]
+-then
+-	source $LOCAL_ETC_DIR/brightness
+-else
+-	echo 70 > /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness
+-fi
+-echo "setting brightness level at `cat /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness`"
+-
+ # if date is equal 1970 statr the set time tool
+ if [ `date '+%Y'` -eq "1970" ]; then                          
+ 	echo "setting time ..."  

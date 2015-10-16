@@ -1,0 +1,385 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/S10setup skell-1.18.modified/etc/rc.d/init.d/S10setup
+--- skell-1.18/etc/rc.d/init.d/S10setup	2015-04-10 17:39:11.238030879 +0200
++++ skell-1.18.modified/etc/rc.d/init.d/S10setup	2015-04-10 16:23:09.401127735 +0200
+@@ -9,166 +9,229 @@
+ 
+ LOCAL_ETC_DIR="/local/etc/sysconfig"
+ 
+-[ -d $mntdir ] || { mntdir=/tmp/mnt; /bin/mkdir $mntdir; }
+-[ -d $mntdir ] || exit 1
+ logfile=$mntdir/update.log
+ UPDATE_DESCR_FILE=/local/kindofupdate.lck
+   
+ start() {
+- 
+ 	rm -f $UPDATE_DESCR_FILE
+-    echo -n "Checking for configuration USB key...  "
+-    echo "" | tee $logfile
++	echo -n "Checking for configuration USB key...  "
+ 	if [ -e /sys/block/sda/sda1 ]
+ 	then
++		[ -d $mntdir ] || { mntdir=/tmp/mnt; /bin/mkdir $mntdir; }
++		[ -d $mntdir ] || exit 1
+ 		echo "Found scsi device: $usb_string" | tee -a $logfile
+-		if /bin/mount -orw /dev/sda1 $mntdir 2>/dev/null; then
++		if /bin/mount -orw /dev/sda1 $mntdir 2>$logfile
++		then
++			rm -f $logfile
+ 			usbdev=/dev/sda1
+ 			echo "current mount point is $usbdev" | tee -a $logfile
++			/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
++			if [ -x /local/flash/root/splash ]
++			then
++				# ts variable
++				export TSLIB_CONFFILE=/usr/etc/ts.conf
++				export TSLIB_PLUGINDIR=/usr/lib/ts
++				export TSLIB_TSDEVICE=/dev/input/ts0
++				export TSLIB_CONSOLEDEVICE=none
++				export TSLIB_CALIBFILE=$LOCAL_ETC_DIR/pointercal
++			
++				# qt variable
++				export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
++				export QT_QWS_FONTDIR=/usr/lib/fonts
++				export POINTERCAL_FILE=$TSLIB_CALIBFILE
++			
++				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Found an update...</h1>" --dimension 12 >/dev/null 2>&1 &
++			fi
++		else
++			if [ -x /local/flash/root/splash ]
++			then
++				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Sysupdate status:</h1><BR>`cat $logfile`" --dimension 12 >/dev/null 2>&1
++			fi
+ 		fi
+ 	else
+-		echo "no usb key found in dmesg" | tee -a $logfile
+-		#echo "exit from configuration script" 	| tee -a $logfile
+-		#return
++		echo "no usb key found in dmesg"
++		echo "exit from configuration script"
++		return
+ 	fi
+ 
+-    echo -n "Starting the configuration process...  "
+-    if [ -f $mntdir/reset.conf ]; then
++	echo -n "Starting the configuration process...  "
++	if [ -f $mntdir/reset.conf ]
++	then
+ 		echo " Resetting all!" | tee -a $logfile
+-        /bin/mount -orw,remount $mntdir 2>/dev/null || { echo ""; echo "Cannot mount the USB device RW.  Aborting device reset." | tee -a $logfile; return; }
+-        /bin/rm -f $mntdir/reset.conf
+-
+-        # Just apply factory defaults
+-	FACTORY_DATA="/local/factory_data.tar.gz"
+-	if [ -e $FACTORY_DATA ]
+-	then
+-	tar xzf /local/$FACTORY_DATA -C /
+-	if [ $? == 0 ]
+-	then
+-		chown root:root -R /local
+-		#reset also network configuration and put factory_test with exe permission
+-		chmod +x /local/root/factory_test
+-		sed -i /IPADDR0/d  "$LOCAL_ETC_DIR/net.conf"
+-		sed -i /NETMASK0/d  "$LOCAL_ETC_DIR/net.conf"
+-		sed -i /GATEWAY0/d  "$LOCAL_ETC_DIR/net.conf"
+-		sed -i /NAMESERVER01/d  "$LOCAL_ETC_DIR/net.conf"
+-		sed -i /NAMESERVER02/d  "$LOCAL_ETC_DIR/net.conf"
+-		sed -i '2i\IPADDR0=192.168.5.211' "$LOCAL_ETC_DIR/net.conf"
+-		sed -i '3i\NETMASK0=255.255.255.0' "$LOCAL_ETC_DIR/net.conf"
+-		sed -i '4i\GATEWAY0=192.168.5.10' "$LOCAL_ETC_DIR/net.conf"
+-		sed -i '5i\NAMESERVER01=' "$LOCAL_ETC_DIR/net.conf"
+-		sed -i '6i\NAMESERVER02=' "$LOCAL_ETC_DIR/net.conf"
+-
+-		echo "The target has been reset." | tee -a $logfile
+-		echo "RESET" >> $UPDATE_DESCR_FILE
+-	else
+-		echo "Error in restoring defaults" | tee -a $logfile
+-	fi
+-	sync
+-	else
+-	echo "Error missing factory data" | tee -a $logfile
+-	fi
++		/bin/mount -orw,remount $mntdir 2>/dev/null || { echo ""; echo "Cannot mount the USB device RW.  Aborting device reset." | tee -a $logfile; return; }
++		/bin/rm -f $mntdir/reset.conf
+ 
++		# Just apply factory defaults
++		FACTORY_DATA="/local/factory_data.tar.gz"
++		if [ -e $FACTORY_DATA ]
++		then
++			tar xzf /local/$FACTORY_DATA -C /
++			if [ $? == 0 ]
++			then
++				chown root:root -R /local
++				#reset also network configuration and put factory_test with exe permission
++				chmod +x /local/root/factory_test
++				sed -i /IPADDR0/d  "$LOCAL_ETC_DIR/net.conf"
++				sed -i /NETMASK0/d  "$LOCAL_ETC_DIR/net.conf"
++				sed -i /GATEWAY0/d  "$LOCAL_ETC_DIR/net.conf"
++				sed -i /NAMESERVER01/d  "$LOCAL_ETC_DIR/net.conf"
++				sed -i /NAMESERVER02/d  "$LOCAL_ETC_DIR/net.conf"
++				sed -i '2i\IPADDR0=192.168.5.211' "$LOCAL_ETC_DIR/net.conf"
++				sed -i '3i\NETMASK0=255.255.255.0' "$LOCAL_ETC_DIR/net.conf"
++				sed -i '4i\GATEWAY0=192.168.5.10' "$LOCAL_ETC_DIR/net.conf"
++				sed -i '5i\NAMESERVER01=' "$LOCAL_ETC_DIR/net.conf"
++				sed -i '6i\NAMESERVER02=' "$LOCAL_ETC_DIR/net.conf"
++
++				echo "The target has been reset." | tee -a $logfile
++				echo "RESET" >> $UPDATE_DESCR_FILE
++			else
++				echo "Error in restoring defaults" | tee -a $logfile
++			fi
++		else
++			echo "Error missing factory data" | tee -a $logfile
++		fi
+ 
+ 		#Eventually add other configuration files to be removed for reset operations
+ 		echo " Reset done!" | tee -a $logfile
+ 
+-    else if [ `ls /local | grep sysupdate | wc -l` -eq  1 ]; then
+-    
++	elif [ `ls /local | grep sysupdate | wc -l` -gt  1 ]
++	then
++
++		echo "Error multiple sysupdate file." | tee -a $logfile
++
++	elif [ `ls /local | grep sysupdate | wc -l` -eq  1 ]
++	then
++	
+ 		echo " Found one sysupdate!" | tee -a $logfile
+ 		countsys=1
+ 		sysupdatename=`ls /local | grep sysupdate`
+ 		/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process." | tee -a $logfile; return; }	
+ 		/usr/bin/dos2unix /local/$sysupdatename 2>&1 | tee -a $logfile
+ 		/bin/sh /local/$sysupdatename 2>&1 | tee -a $logfile
+-		echo " Update '/local/$sysupdatename' applied!!!" | tee -a $logfile
+-		rm -f /local/$sysupdatename
+-		echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
++		
++		if [ $? == 0 ]
++		then
++			echo " Update '/local/$sysupdatename' applied!!!" | tee -a $logfile
++			rm -f /local/$sysupdatename
++			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
++		else
++			echo " Cannot update '/local/$sysupdatename'." | tee -a $logfile
++		fi
+  
+-	else if [ `ls $mntdir | grep sysupdate_ | wc -l` -eq  1 ]; then
+-    
++	elif [ `ls $mntdir | grep sysupdate_ | wc -l` -gt  1 ]
++	then
++
++		echo "Error multiple sysupdate file." | tee -a $logfile
++
++	elif [ `ls $mntdir | grep sysupdate_ | wc -l` -eq  1 ]
++	then
++	
+ 		echo " Found one sysupdate!" | tee -a $logfile
+ 		countsys=1
+ 		sysupdatename=`ls $mntdir | grep sysupdate_`
+ 		/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process." | tee -a $logfile; return; }	
+ 		/usr/bin/dos2unix $mntdir/$sysupdatename 2>&1 | tee -a $logfile
+ 		/bin/sh $mntdir/$sysupdatename 2>&1 | tee -a $logfile
+-		echo " Update '$mntdir/$sysupdatename' applied!!!" | tee -a $logfile
+-		echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
++		if [ $? == 0 ]
++		then
++			echo " Update '$mntdir/$sysupdatename' applied!!!" | tee -a $logfile
++			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
++		else
++			echo " Cannot update '/local/$sysupdatename'." | tee -a $logfile
++		fi
++
++	elif [ -f $mntdir/sysupdate.sh ] && [ $countsys -eq 0 ]
++	then
+ 
+-    else if [ -f $mntdir/sysupdate.sh ] && [ $countsys -eq 0 ]; then
+-    	echo " Performing standard sysupdate!" | tee -a $logfile
+-    	/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process."; return; }
++		echo " Performing standard sysupdate!" | tee -a $logfile
++		/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process."; return; }
+ 		/usr/bin/dos2unix $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
+-        /bin/sh $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
+-		echo " Update '$mntdir/sysupdate.sh' applied!!!" | tee -a $logfile
+-		echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
+-    else
+-        # Perform any other configurations
++		/bin/sh $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
++		if [ $? == 0 ]
++		then
++			echo " Update '$mntdir/sysupdate.sh' applied!!!" | tee -a $logfile
++			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
++		else
++			echo " Cannot update '$mntdir/sysupdate.sh'." | tee -a $logfile
++		fi
++
++	else
++		# Perform any other configurations
+ 		/bin/mount -orw,remount $mntdir 2>/dev/null || { echo ""; echo "Cannot mount the USB device RW. Configuration files will be not deleted."; }
+-       
+-        if [ -f $mntdir/application.conf ]; then
++	   
++		if [ -f $mntdir/application.conf ]
++		then
+ 			echo " Found a new configuration file '$mntdir/application.conf'" | tee -a $logfile
+ 			/usr/bin/dos2unix $mntdir/application.conf 2>&1 | tee -a $logfile
+-            /bin/cp $mntdir/application.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/application.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
+ 			echo " Configuration file '$mntdir/application.conf' updated!" | tee -a $logfile
+ 			echo "APPLICATION CONF" >> $UPDATE_DESCR_FILE
+-        fi
+-        if [ -f $mntdir/atn01.conf ]; then
++		fi
++		if [ -f $mntdir/atn01.conf ]
++		then
+ 			echo " Found a new configuration file '$mntdir/atn01.conf'" | tee -a $logfile
+ 			/usr/bin/dos2unix $mntdir/atn01.conf 2>&1 | tee -a $logfile
+-            /bin/cp $mntdir/atn01.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/atn01.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
+ 			echo " Configuration file '$mntdir/atn01.conf' updated!" | tee -a $logfile
+ 			echo "ATN01 CONF" >> $UPDATE_DESCR_FILE
+-        fi
+-        if [ -f $mntdir/Crosstable.csv ]; then
++		fi
++		if [ -f $mntdir/Crosstable.csv ]
++		then
+ 			echo " Found a new configuration file '$mntdir/Crosstable.csv'" | tee -a $logfile
+ 			/usr/bin/dos2unix $mntdir/Crosstable.csv 2>&1 | tee -a $logfile
+-            /bin/cp $mntdir/Crosstable.csv $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/Crosstable.csv $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
+ 			echo " Configuration file '$mntdir/Crosstable.csv' updated!" | tee -a $logfile
+ 			echo "CROSSTABLE" >> $UPDATE_DESCR_FILE
+-        fi
+-        if [ -f $mntdir/Commpar.csv ]; then
++		fi
++		if [ -f $mntdir/Commpar.csv ]
++		then
+ 			echo " Found a new configuration file '$mntdir/Commpar.csv'" | tee -a $logfile
+ 			/usr/bin/dos2unix $mntdir/Commpar.csv 2>&1 | tee -a $logfile
+-            /bin/cp $mntdir/Commpar.csv $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/Commpar.csv $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
+ 			echo " Configuration file '$mntdir/Commpar.csv' updated!" | tee -a $logfile
+ 			echo "COMMPAR" >> $UPDATE_DESCR_FILE
+-        fi
+-        if [ -f $mntdir/Alarms.csv ]; then
++		fi
++		if [ -f $mntdir/Alarms.csv ]
++		then
+ 			echo " Found a new configuration file '$mntdir/Alarms.csv'" | tee -a $logfile
+ 			/usr/bin/dos2unix $mntdir/Alarms.csv 2>&1 | tee -a $logfile
+-            /bin/cp $mntdir/Alarms.csv $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/Alarms.csv $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
+ 			echo " Configuration file '$mntdir/Alarms.csv' updated!" | tee -a $logfile
+ 			echo "ALARMS" >> $UPDATE_DESCR_FILE
+-        fi
+-        if [ -f $mntdir/net.conf ]; then
++		fi
++		if [ -f $mntdir/net.conf ]
++		then
+ 			echo " Found a new network configuration file '$mntdir/net.conf'" | tee -a $logfile
+ 			/usr/bin/dos2unix $mntdir/net.conf 2>&1 | tee -a $logfile
+-            /bin/cp $mntdir/net.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/net.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
+ 			echo " Network configuration file '$mntdir/net.conf' updated!" | tee -a $logfile
+ 			echo "NETWORK" >> $UPDATE_DESCR_FILE
+-        fi
+-        if [ -f $mntdir/autoexec ]; then
++		fi
++		if [ -f $mntdir/autoexec ]
++		then
+ 			echo " Found a new autoexec file file '$mntdir/autoexec'" | tee -a $logfile
+ 			/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting autoexec update process."; return; }
+-            /usr/bin/dos2unix $mntdir/autoexec 2>&1 | tee -a $logfile
++			/usr/bin/dos2unix $mntdir/autoexec 2>&1 | tee -a $logfile
+ 			/bin/cp $mntdir/autoexec /usr/bin/autoexec 2>&1 | tee -a $logfile
+ 			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
+ 			echo " Autoexec file '$mntdir/autoexec' updated!" | tee -a $logfile
+ 			echo "AUTOEXEC" >> $UPDATE_DESCR_FILE
+-        fi
+-    fi
+-    fi
+-    fi
+-    fi
+-    #Sync for ubifs
+-    /bin/sync
+-	if [ -n "$usb_string" ]; then
+-    	/bin/umount $mntdir
++		fi
++	fi
++	#Sync for ubifs
++	/bin/sync
++	if [ -n "$usb_string" ]
++	then
++		/bin/umount $mntdir
+ 	fi
+  
+-    echo "  Done."
++	if [ -x /local/flash/root/splash ]
++	then
++		/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Sysupdate status:</h1><BR>`cat $logfile`" --dimension 12 >/dev/null 2>&1
++	fi
++
++	/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
++	echo "  Done."
+ }
+ 
+ stop() {
+@@ -185,19 +248,19 @@
+ 
+ case "$1" in
+ start)
+-    start
++	start
+ ;;
+ stop)
+-    stop
++	stop
+ ;;
+ restart)
+-    restart
++	restart
+ ;;
+ *)
+   echo $"Usage: $0 {start|stop|restart}"
+-        exit 1
+-    ;;
+-    
++		exit 1
++	;;
++	
+ esac
+ 
+ 
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/filesystems skell-1.18.modified/etc/rc.d/init.d/filesystems
+--- skell-1.18/etc/rc.d/init.d/filesystems	2015-04-10 17:39:11.218020878 +0200
++++ skell-1.18.modified/etc/rc.d/init.d/filesystems	2015-04-10 17:32:48.962990422 +0200
+@@ -11,10 +11,17 @@
+ if [ "$1" = "start" ]
+ then
+     echo Mounting filesystems
+-    if [ "$TMPFS" = "tmpfs" ]
++    if [ `echo $RAMDIRS | grep -c dev` -eq 1 ]
+     then
+-        mount -n -t $TMPFS shm /dev/shm
++    	echo "dev is a temporary file system"
++	    mkdir -p /dev/shm && mount -n -t $TMPFS shm /dev/shm
++	    mkdir -p /dev/pts && mount -n -t devpts devpts /dev/pts
++    else
++    	echo "dev is not a temporary file system"
++	    mount -n -o remount -w %root% / && mkdir -p /dev/shm
++	    mkdir -p /dev/pts && mount -n -t devpts devpts /dev/pts
+     fi
++    
+     if [ -n "$TMPFS" ]
+     then
+         mount -n -t $TMPFS rwfs /mnt/rwfs -o size=$TMPFS_SIZE
+@@ -50,10 +57,5 @@
+ #    then
+ #        rm -f /etc/mtab
+ #    fi
+-#    ln -s /proc/mounts /etc/mtab
+-    if [ ! -d /dev/pts ]
+-    then
+-        mkdir /dev/pts
+-    fi
+     mount -a
+ fi

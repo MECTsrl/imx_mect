@@ -1,0 +1,25 @@
+diff -Naur xenomai-2.6.0_orig/include/asm-arm/hal.h xenomai-2.6.0_imx28/include/asm-arm/hal.h
+--- xenomai-2.6.0_orig/include/asm-arm/hal.h	2011-11-02 18:02:29.000000000 +0100
++++ xenomai-2.6.0_imx28/include/asm-arm/hal.h	2012-05-24 17:07:54.462877129 +0200
+@@ -58,6 +58,9 @@
+ #elif defined(CONFIG_ARCH_MXC)
+ #define RTHAL_TIMER_DEVICE	"mxc_timer1"
+ #define RTHAL_CLOCK_DEVICE	"mxc_timer1"
++#elif defined(CONFIG_ARCH_MXS)
++#define RTHAL_TIMER_DEVICE	"mxs tick timer "
++#define RTHAL_CLOCK_DEVICE	"mxs clock source"
+ #elif defined(CONFIG_ARCH_OMAP3)
+ #ifdef CONFIG_ARCH_OMAP4
+ #error "xenomai does not support multi-omap configuration"
+diff -Naur xenomai-2.6.0_orig/ksrc/arch/arm/hal.c xenomai-2.6.0_imx28/ksrc/arch/arm/hal.c
+--- xenomai-2.6.0_orig/ksrc/arch/arm/hal.c	2011-10-18 20:17:18.000000000 +0200
++++ xenomai-2.6.0_imx28/ksrc/arch/arm/hal.c	2012-06-08 16:22:08.317607587 +0200
+@@ -148,6 +148,8 @@
+ 	do_div(sum_sq, RTHAL_CALIBRATE_LOOPS * RTHAL_CALIBRATE_LOOPS);
+ 	result = sum + int_sqrt(sum_sq - sum * sum) + 1;
+ 
++	printk("rthal_timer_calibrate: cpu=%luHz, timer=%luHz, clock=%luHz, jiffy=%luticks, tsc_lat=%lu, result=%lu\n",
++		rthal_cpufreq_arg, rthal_timerfreq_arg, rthal_clockfreq_arg, __ipipe_mach_ticks_per_jiffy, tsc_lat, result);
+ 	return result;
+ }
+ 

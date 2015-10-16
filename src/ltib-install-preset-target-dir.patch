@@ -1,0 +1,21 @@
+diff -urN L2.6.35_1.1.0_130130_source/install L2.6.35_1.1.0_130130_source-mect/install
+--- L2.6.35_1.1.0_130130_source/install	2013-01-30 11:22:46.000000000 +0100
++++ L2.6.35_1.1.0_130130_source-mect/install	2015-08-12 14:50:58.573390601 +0200
+@@ -98,16 +98,11 @@
+ $tdir/$tag
+ TXT
+ 
+-while(1){
+-    print "\nWhere do you want to install LTIB ? ($tdir)\n";
+-    chomp($line = <STDIN>);
+-    $tdir = $line if $line;
++    $tdir = "../..";
+     warn("Cannot install into $isodir\n"), next if $tdir eq $isodir;
+     warn("Directory $tdir/$tag already exists\n"), next if -d "$tdir/$tag";
+     print "Making target directory $tdir/$tag\n";
+     system("$echo mkdir -p $tdir/$tag") == 0 or next;
+-    last;
+-}
+ 
+ print "Installing LTIB to $tdir/$tag\n";
+ system("$echo tar -C $tdir -zxvf $isodir/ltib.tar.gz") == 0 or die;

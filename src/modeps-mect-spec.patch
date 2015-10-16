@@ -1,0 +1,41 @@
+--- ltib/dist/lfs-5.1/sysconfig/modeps.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib.new/dist/lfs-5.1/sysconfig/modeps.spec	2015-10-12 10:46:10.830464000 +0200
+@@ -10,6 +10,17 @@
+ Group           : System Environment/Base
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed modeps for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++modeps package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -32,10 +43,18 @@
+     fi
+ fi
+ 
++cd %{_builddir}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+ 
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)

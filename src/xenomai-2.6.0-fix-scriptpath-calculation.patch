@@ -1,0 +1,13 @@
+diff -aurN xenomai-2.6.0-unmodified/scripts/prepare-kernel.sh xenomai-2.6.0/scripts/prepare-kernel.sh
+--- xenomai-2.6.0-unmodified/scripts/prepare-kernel.sh	2015-08-19 11:19:13.800657511 +0200
++++ xenomai-2.6.0/scripts/prepare-kernel.sh	2015-08-19 11:26:36.996640564 +0200
+@@ -220,8 +220,7 @@
+ # Infere the location of the Xenomai source tree from
+ # the path of the current script.
+ 
+-script_path=`type -p $0`
+-xenomai_root=`dirname $script_path`/..
++xenomai_root=$(cd $(dirname $0); pwd -P)/..
+ xenomai_root=`cd $xenomai_root && pwd`
+ 
+ # Check the Linux tree

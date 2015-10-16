@@ -1,0 +1,11 @@
+--- ltib/dist/lfs-5.1/sparse/sparse.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib.new/dist/lfs-5.1/sparse/sparse.spec	2015-10-12 10:46:10.198472000 +0200
+@@ -9,7 +9,7 @@
+ URL		: http://kernel.org/pub/software/devel/sparse/
+ Source0		: %{name}-%{version}.tar.gz
+ Patch0          : %{name}-%{version}-array-fix.patch
+-Patch1          : %{name}-%{version}-remove-duplicated-member.patch
++Patch1          : %{name}-%{version}-fixlabel.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
+ 

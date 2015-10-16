@@ -1,0 +1,182 @@
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/arch/arm/configs/imx28evk_defconfig linux-2.6.35.3.modified/arch/arm/configs/imx28evk_defconfig
+--- linux-2.6.35.3/arch/arm/configs/imx28evk_defconfig	2011-07-07 10:50:40.300090873 +0200
++++ linux-2.6.35.3.modified/arch/arm/configs/imx28evk_defconfig	2011-07-06 18:19:51.642287822 +0200
+@@ -849,7 +849,7 @@
+ CONFIG_KEYBOARD_ATKBD=y
+ # CONFIG_KEYBOARD_QT2160 is not set
+ # CONFIG_KEYBOARD_LKKBD is not set
+-# CONFIG_KEYBOARD_GPIO is not set
++CONFIG_KEYBOARD_GPIO=y
+ # CONFIG_KEYBOARD_TCA6416 is not set
+ # CONFIG_KEYBOARD_MATRIX is not set
+ # CONFIG_KEYBOARD_LM8323 is not set
+@@ -859,7 +859,7 @@
+ # CONFIG_KEYBOARD_STOWAWAY is not set
+ # CONFIG_KEYBOARD_SUNKBD is not set
+ # CONFIG_KEYBOARD_XTKBD is not set
+-CONFIG_KEYBOARD_MXS=y
++# CONFIG_KEYBOARD_MXS is not set
+ CONFIG_INPUT_MOUSE=y
+ CONFIG_MOUSE_PS2=y
+ CONFIG_MOUSE_PS2_ALPS=y
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/arch/arm/configs/imx28evk_updater_defconfig linux-2.6.35.3.modified/arch/arm/configs/imx28evk_updater_defconfig
+--- linux-2.6.35.3/arch/arm/configs/imx28evk_updater_defconfig	2011-07-07 10:50:30.276090874 +0200
++++ linux-2.6.35.3.modified/arch/arm/configs/imx28evk_updater_defconfig	2011-07-06 18:20:33.141527875 +0200
+@@ -663,7 +663,7 @@
+ CONFIG_KEYBOARD_ATKBD=y
+ # CONFIG_KEYBOARD_QT2160 is not set
+ # CONFIG_KEYBOARD_LKKBD is not set
+-# CONFIG_KEYBOARD_GPIO is not set
++CONFIG_KEYBOARD_GPIO=y
+ # CONFIG_KEYBOARD_TCA6416 is not set
+ # CONFIG_KEYBOARD_MATRIX is not set
+ # CONFIG_KEYBOARD_MAX7359 is not set
+@@ -672,7 +672,7 @@
+ # CONFIG_KEYBOARD_STOWAWAY is not set
+ # CONFIG_KEYBOARD_SUNKBD is not set
+ # CONFIG_KEYBOARD_XTKBD is not set
+-CONFIG_KEYBOARD_MXS=y
++# CONFIG_KEYBOARD_MXS is not set
+ CONFIG_INPUT_MOUSE=y
+ CONFIG_MOUSE_PS2=y
+ CONFIG_MOUSE_PS2_ALPS=y
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/arch/arm/mach-mx28/device.c linux-2.6.35.3.modified/arch/arm/mach-mx28/device.c
+--- linux-2.6.35.3/arch/arm/mach-mx28/device.c	2011-07-07 10:50:40.304090873 +0200
++++ linux-2.6.35.3.modified/arch/arm/mach-mx28/device.c	2011-07-07 10:10:13.044090873 +0200
+@@ -49,6 +49,7 @@
+ #include "device.h"
+ #include "mx28evk.h"
+ #include "mx28_pins.h"
++#include "linux/gpio_keys.h"
+ 
+ #if defined(CONFIG_SERIAL_MXS_DUART) || \
+ 	defined(CONFIG_SERIAL_MXS_DUART_MODULE)
+@@ -1027,6 +1028,51 @@
+ 	pdev->dev.platform_data = &mxs_kbd_data;
+ 	mxs_add_device(pdev, 3);
+ }
++#elif defined(CONFIG_KEYBOARD_GPIO) || defined(CONFIG_KEYBOARD_GPIO)
++
++#define GPIO_BUTTON(gpio_num, ev_code, act_low, descr, wake)    \
++{                                                               \
++        .gpio           = gpio_num,                             \
++        .type           = EV_KEY,                               \
++        .code           = ev_code,                              \
++        .active_low     = act_low,                              \
++        .desc           = "btn " descr,                         \
++        .wakeup         = wake,                                 \
++}
++
++static struct gpio_keys_button gpio_mect_buttons[] = {
++        GPIO_BUTTON(MXS_PIN_TO_GPIO(PINID_SSP3_SCK), KEY_F1, 1, "T1", 0),
++        GPIO_BUTTON(MXS_PIN_TO_GPIO(PINID_SSP1_DATA0), KEY_F2, 1, "T2", 0),
++        GPIO_BUTTON(MXS_PIN_TO_GPIO(PINID_SSP3_SS0), KEY_F3, 1, "T3", 0),
++        GPIO_BUTTON(MXS_PIN_TO_GPIO(PINID_SSP2_MOSI), KEY_F4, 1, "T4", 0),
++        GPIO_BUTTON(MXS_PIN_TO_GPIO(PINID_SSP2_MISO), KEY_F5, 1, "T5", 0),
++        GPIO_BUTTON(MXS_PIN_TO_GPIO(PINID_SSP2_SCK), KEY_F6, 1, "T6", 0),
++        GPIO_BUTTON(MXS_PIN_TO_GPIO(PINID_SSP2_SS0), KEY_F7, 1, "T7", 0),
++        GPIO_BUTTON(MXS_PIN_TO_GPIO(PINID_SSP2_SS2), KEY_F8, 1, "T8", 0),
++        GPIO_BUTTON(MXS_PIN_TO_GPIO(PINID_SSP3_MOSI), KEY_F9, 1, "T9", 0),
++        GPIO_BUTTON(MXS_PIN_TO_GPIO(PINID_SSP3_MISO), KEY_F10, 1, "T10", 0),
++};
++
++static struct gpio_keys_platform_data gpio_button_data = {
++        .buttons        = gpio_mect_buttons,
++        .nbuttons       = ARRAY_SIZE(gpio_mect_buttons),
++};
++
++static void __init mx28_init_kbd(void)
++{
++	struct platform_device *pdev;
++	pdev = mxs_get_device("gpio-keys", 0);
++	if (pdev == NULL || IS_ERR(pdev))
++	{
++		printk(KERN_INFO "gpio-keys mxs_get_device fail\n");
++		return;
++	}
++	pdev->resource = 0;
++	pdev->num_resources = 0;
++	pdev->dev.platform_data = &gpio_button_data;
++
++	mxs_add_device(pdev, 3);
++}
+ #else
+ static void __init mx28_init_kbd(void)
+ {
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c linux-2.6.35.3.modified/arch/arm/mach-mx28/mx28evk_pins.c
+--- linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c	2011-07-07 10:50:36.624090874 +0200
++++ linux-2.6.35.3.modified/arch/arm/mach-mx28/mx28evk_pins.c	2011-07-06 11:30:52.693907849 +0200
+@@ -1228,4 +1228,10 @@
+ 		mx28evk_init_pin_group(mx28evk_eth_pins,
+ 						ARRAY_SIZE(mx28evk_eth_pins));
+ #endif
++
++#if defined(CONFIG_GPIO_KEYPAD) || defined(CONFIG_GPIO_KEYPAD)
++	mx28evk_init_pin_group(mx28evk_keypad_pins,
++					ARRAY_SIZE(mx28evk_keypad_pins));
++#endif
++
+ }
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/arch/arm/plat-mxs/device.c linux-2.6.35.3.modified/arch/arm/plat-mxs/device.c
+--- linux-2.6.35.3/arch/arm/plat-mxs/device.c	2011-07-07 10:50:40.304090873 +0200
++++ linux-2.6.35.3.modified/arch/arm/plat-mxs/device.c	2011-07-07 09:47:06.971548570 +0200
+@@ -298,6 +298,16 @@
+ };
+ #endif
+ 
++#if defined(CONFIG_KEYBOARD_GPIO) || defined(CONFIG_KEYBOARD_GPIO_MODULE)
++static struct platform_device gpio_kbd = {
++	.name = "gpio-keys",
++	.id = 0,
++	.dev = {
++		.release = mxs_nop_release,
++		},
++};
++#endif
++
+ #if defined(CONFIG_TOUCHSCREEN_MXS) || defined(CONFIG_TOUCHSCREEN_MXS_MODULE)
+ static struct platform_device mxs_ts = {
+ 	.name = "mxs-ts",
+@@ -667,6 +677,14 @@
+ 	 },
+ #endif
+ 
++#if defined(CONFIG_KEYBOARD_GPIO) || defined(CONFIG_KEYBOARD_GPIO_MODUE)
++	{
++	 .name = "gpio-keys",
++	 .size = 1,
++	 .pdev = &gpio_kbd,
++	 },
++#endif
++
+ #if defined(CONFIG_TOUCHSCREEN_MXS) || defined(CONFIG_TOUCHSCREEN_MXS_MODULE)
+ 	{
+ 	 .name = "mxs-ts",
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/input/keyboard/gpio_keys.c linux-2.6.35.3.modified/drivers/input/keyboard/gpio_keys.c
+--- linux-2.6.35.3/drivers/input/keyboard/gpio_keys.c	2010-08-20 20:55:55.000000000 +0200
++++ linux-2.6.35.3.modified/drivers/input/keyboard/gpio_keys.c	2011-07-07 10:11:54.896090821 +0200
+@@ -348,10 +348,14 @@
+ 	BUG_ON(irq != gpio_to_irq(button->gpio));
+ 
+ 	if (button->debounce_interval)
++	{
+ 		mod_timer(&bdata->timer,
+ 			jiffies + msecs_to_jiffies(button->debounce_interval));
++	}
+ 	else
++	{
+ 		schedule_work(&bdata->work);
++	}
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -391,7 +395,7 @@
+ 		goto fail3;
+ 	}
+ 
+-	irqflags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING;
++	irqflags = /* IRQF_TRIGGER_RISING | */ IRQF_TRIGGER_FALLING;
+ 	/*
+ 	 * If platform has specified that the button can be disabled,
+ 	 * we don't want it to share the interrupt line.
+

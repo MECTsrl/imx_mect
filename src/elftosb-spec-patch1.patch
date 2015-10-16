@@ -1,0 +1,18 @@
+--- ltib.original/dist/lfs-5.1/elftosb/elftosb.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/elftosb/elftosb.spec	2015-08-27 12:23:34.981681890 +0200
+@@ -9,6 +9,7 @@
+ Packager        : Frank Li
+ Group           : System Environment/Libraries
+ Source          : %{name}-%{version}-%{release}.tar.gz
++Patch1		: elftosb-missing-lm.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
+ Autoreq		: no
+@@ -19,6 +20,7 @@
+ 
+ %Prep
+ %setup -n %{name}-%{version}-%{release}
++%patch1 -p1
+ 
+ %Build
+ make

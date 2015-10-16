@@ -1,0 +1,115 @@
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/mtd/nand/gpmi-nfc/gpmi-nfc-hal-v1.c linux-2.6.35.3.modified/drivers/mtd/nand/gpmi-nfc/gpmi-nfc-hal-v1.c
+--- linux-2.6.35.3/drivers/mtd/nand/gpmi-nfc/gpmi-nfc-hal-v1.c	2014-09-08 09:05:38.811851245 +0200
++++ linux-2.6.35.3.modified/drivers/mtd/nand/gpmi-nfc/gpmi-nfc-hal-v1.c	2014-09-05 16:40:50.883657022 +0200
+@@ -80,6 +80,10 @@
+ 	unsigned int         ecc_strength;
+ 	unsigned int         page_size;
+ 
++ 	unsigned int gf_len; //it corresponds to GALOIS FIELD that for IMX28 is 13 cfr kernel 3.16 gpmi-nand.c
++	unsigned int erase_threshold;
++
++
+ 	/* We make the abstract choices in a common function. */
+ 	if (gpmi_nfc_set_geometry(this))
+ 		return !0;
+@@ -91,6 +95,9 @@
+ 	ecc_strength  = nfc->ecc_strength >> 1;
+ 	page_size     = nfc->page_size_in_bytes;
+ 
++	gf_len	      = 13;
++	erase_threshold = gf_len / 2;
++
+ 	/* Enable the clock. */
+ 	clk_enable(resources->clock);
+ 
+@@ -118,6 +125,14 @@
+ 		BF_BCH_FLASH0LAYOUT1_DATAN_SIZE(block_size) ,
+ 		resources->bch_regs + HW_BCH_FLASH0LAYOUT1);
+ 
++	/* Set the tolerance for bitflips when reading erased blocks. */
++	if (erase_threshold > nfc->ecc_strength)
++		erase_threshold = nfc->ecc_strength;
++
++	__raw_writel(erase_threshold & BM_BCH_MODE_ERASE_THRESHOLD,
++		resources->bch_regs + HW_BCH_MODE);
++	printk("INFO: Patched to deal with bitflips in erased regions\n");
++
+ 	/* Set *all* chip selects to use layout 0. */
+ 	__raw_writel(0, resources->bch_regs + HW_BCH_LAYOUTSELECT);
+ 
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/mtd/nand/gpmi-nfc/gpmi-nfc-mil.c linux-2.6.35.3.modified/drivers/mtd/nand/gpmi-nfc/gpmi-nfc-mil.c
+--- linux-2.6.35.3/drivers/mtd/nand/gpmi-nfc/gpmi-nfc-mil.c	2014-09-08 09:05:38.863851241 +0200
++++ linux-2.6.35.3.modified/drivers/mtd/nand/gpmi-nfc/gpmi-nfc-mil.c	2014-09-05 16:00:56.326974712 +0200
+@@ -568,6 +568,34 @@
+ 	p[1] = (p[1] & mask) | (from_oob >> (8 - bit));
+ }
+ 
++
++ 
++/*
++* Count the number of 0 bits in a supposed to be
++* erased region and correct them. Return the number
++* of bitflips or zero when the region was correct.
++*/
++static unsigned int erased_sector_bitflips(unsigned char *data,
++					unsigned int chunk,
++					struct nfc_geometry *geo)
++{
++	unsigned int flip_bits = 0;
++	int i;
++	int base = geo->ecc_chunk_size_in_bytes * chunk;
++
++	/* Count bitflips */
++	for (i = 0; i < geo->ecc_chunk_size_in_bytes; i++)
++		flip_bits += hweight8(~data[base + i]);
++
++	/* Correct bitflips by 0xFF'ing this chunk. */
++	if (flip_bits)
++		memset(&data[base], 0xFF, geo->ecc_chunk_size_in_bytes);
++
++	return flip_bits;
++}
++
++
++
+ /**
+  * mil_ecc_read_page() - MTD Interface ecc.read_page().
+  *
+@@ -592,6 +620,7 @@
+ 	unsigned int            failed;
+ 	unsigned int            corrected;
+ 	int                     error = 0;
++	int 			flips;
+ 
+ 	DEBUG(MTD_DEBUG_LEVEL2, "[gpmi_nfc ecc_read_page]\n");
+ 
+@@ -633,14 +662,27 @@
+ 					nfc_geo->auxiliary_status_offset;
+ 
+ 	for (i = 0; i < nfc_geo->ecc_chunk_count; i++, status++) {
+-		if ((*status == 0x00) || (*status == 0xff))
++		if (*status == 0x00)
+ 			continue;
+ 
+ 		if (*status == 0xfe) {
+ 			failed++;
+ 			continue;
+ 		}
+-		corrected += *status;
++		/* 
++		 * The number of bitflips are either counted in software
++		 * in case of an erased chunk or otherwise reported by
++		 * the BCH block.
++		 */
++
++		if (*status == 0xff)
++			flips = erased_sector_bitflips(payload_virt, i,
++							       nfc_geo);
++		else
++			flips = *status;
++
++		corrected += flips;
++		//corrected += *status;
+ 	}
+ 
+ 	/*

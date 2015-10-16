@@ -1,0 +1,396 @@
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c linux-2.6.35.3.modified/arch/arm/mach-mx28/mx28evk_pins.c
+--- linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c	2011-10-07 16:47:56.871494876 +0200
++++ linux-2.6.35.3.modified/arch/arm/mach-mx28/mx28evk_pins.c	2011-10-07 15:57:06.492740888 +0200
+@@ -424,7 +424,7 @@
+ 	 .strength = PAD_8MA,
+ 	 .voltage = PAD_3_3V,
+ 	 .drive	= 1,
+-	 },
++	 },	 
+ #elif defined(CONFIG_FB_MXS) || defined(CONFIG_FB_MXS_MODULE)
+ 	{
+ 	 .name  = "LCD_D00",
+@@ -667,6 +667,18 @@
+ 	 .drive	= 1,
+ 	 },
+ #endif
++
++#if defined(CONFIG_MXS_BUZZER) && defined(CONFIG_ARCH_MX28)
++	{
++	 .name = "BUZZER",
++	 .id = PINID_PWM3,
++	 .fun = PIN_FUN1,
++	 .strength = PAD_8MA,
++	 .voltage = PAD_3_3V,
++	 .drive	= 1,
++	 },
++#endif
++
+ #if defined(CONFIG_MMC_MXS) || defined(CONFIG_MMC_MXS_MODULE)
+ 	/* Configurations of SSP0 SD/MMC port pins */
+ 	{
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/char/Kconfig linux-2.6.35.3.modified/drivers/char/Kconfig
+--- linux-2.6.35.3/drivers/char/Kconfig	2011-10-07 16:47:48.115494876 +0200
++++ linux-2.6.35.3.modified/drivers/char/Kconfig	2011-10-07 11:46:58.909586880 +0200
+@@ -224,6 +224,13 @@
+ 	  This driver can also be built as a module. The module will be called
+ 	  mxser. If you want to do that, say M here.
+ 
++config MXS_BUZZER
++	tristate "Buzzer support for IMX28"
++	depends on ARCH_MX28
++	default n
++	help
++	  Say Y here if you want to have a buzzer char device /dev/buzzer
++	  
+ config ISI
+ 	tristate "Multi-Tech multiport card support (EXPERIMENTAL)"
+ 	depends on SERIAL_NONSTANDARD && PCI
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/char/Makefile linux-2.6.35.3.modified/drivers/char/Makefile
+--- linux-2.6.35.3/drivers/char/Makefile	2011-10-07 16:47:48.115494876 +0200
++++ linux-2.6.35.3.modified/drivers/char/Makefile	2011-10-07 12:22:17.625586880 +0200
+@@ -35,6 +35,7 @@
+ obj-$(CONFIG_DIGIEPCA)		+= epca.o
+ obj-$(CONFIG_SPECIALIX)		+= specialix.o
+ obj-$(CONFIG_MOXA_INTELLIO)	+= moxa.o
++obj-$(CONFIG_MXS_BUZZER)	+= mxs-buzzer.o
+ obj-$(CONFIG_A2232)		+= ser_a2232.o generic_serial.o
+ obj-$(CONFIG_ATARI_DSP56K)	+= dsp56k.o
+ obj-$(CONFIG_MOXA_SMARTIO)	+= mxser.o
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/char/mxs-buzzer.c linux-2.6.35.3.modified/drivers/char/mxs-buzzer.c
+--- linux-2.6.35.3/drivers/char/mxs-buzzer.c	1970-01-01 01:00:00.000000000 +0100
++++ linux-2.6.35.3.modified/drivers/char/mxs-buzzer.c	2011-10-07 16:22:20.051494878 +0200
+@@ -0,0 +1,218 @@
++#include <linux/init.h>
++#include <linux/delay.h>
++#include <linux/clk.h>
++#include <linux/slab.h>
++#include <linux/cdev.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/types.h>
++#include <linux/fcntl.h>
++#include <linux/errno.h>
++#include <linux/fs.h>
++#include <linux/unistd.h>
++#include <mach/regs-pwm.h>
++#include <mach/system.h>
++#include <asm/uaccess.h>
++#include <asm/io.h>	//include __raw_writel 
++#include <asm/system.h>
++
++#include "mxs-buzzer.h"
++
++static int buzzer_open(struct inode *inode, struct file *file);
++static int buzzer_ioctl(struct inode *inode, struct file *file, unsigned int cmd, unsigned long arg);
++static int buzzer_close(struct inode *inode, struct file *file);
++
++
++struct buzzer_dev {
++	struct timer_list bz_timer; /*timer to stop the buzzer after duration */
++	struct clk *bz_pwm; /* clock that control the pwm */
++	struct cdev bz_cdev; /* char device structure for buzzer*/
++	dev_t bz_dev;
++	int bz_has_opened;
++};
++
++struct buzzer_dev *buzzer = NULL;
++
++static const struct file_operations buzzer_fops ={
++	.read = NULL,
++	.write = NULL,
++	.open = buzzer_open,
++	.ioctl = buzzer_ioctl,
++	.release = buzzer_close,
++};
++
++/******************************************************************************************* 
++Open function 
++********************************************************************************************/  
++
++static int buzzer_open(struct inode *inode, struct file *file)  
++{  
++	struct buzzer_dev *buzzer; 
++	int ret = 0;
++	buzzer = container_of(inode->i_cdev, struct buzzer_dev, bz_cdev);  
++
++	if(buzzer->bz_has_opened) 
++		return -EBUSY;  
++
++	buzzer->bz_pwm = clk_get(NULL, "pwm");
++	if (IS_ERR(buzzer->bz_pwm)) {
++		ret = PTR_ERR(buzzer->bz_pwm );
++		return ret;
++	}
++	clk_enable(buzzer->bz_pwm);
++
++        file->private_data = buzzer;
++        buzzer->bz_has_opened++;   //Ensure that only one process use the device only once  
++
++   
++ 	return 0;  
++}  
++ 
++/******************************************************************************************* 
++Release function 
++********************************************************************************************/ 
++static int buzzer_close(struct inode *inode,struct file *file)
++{	
++	int ret;
++	struct buzzer_dev *buzzer = file->private_data;
++	
++	clk_disable(buzzer->bz_pwm);
++	clk_put(buzzer->bz_pwm);
++
++	ret = del_timer(&(buzzer->bz_timer));
++  	if (ret) 
++		printk(KERN_WARNING "The timer is still in use...\n");
++	
++	buzzer->bz_has_opened--;   
++
++	return 0;
++}
++
++/******************************************************************************************* 
++Ioctl function 
++********************************************************************************************/ 
++static void buzzer_stop(unsigned long data)
++{
++	__raw_writel(BF_PWM_ACTIVEn_INACTIVE(0) | /* having 0 set for both inactive and active shut up the pwm*/
++		     BF_PWM_ACTIVEn_ACTIVE(0),
++		     REGS_PWM_BASE + HW_PWM_ACTIVEn(3));
++	__raw_writel(BF_PWM_PERIODn_CDIV(5) |	/* divide by ??? */
++		     BF_PWM_PERIODn_INACTIVE_STATE(2) |	/* low */
++		     BF_PWM_PERIODn_ACTIVE_STATE(3) |	/* high */
++		     BF_PWM_PERIODn_PERIOD(599),
++		     REGS_PWM_BASE + HW_PWM_PERIODn(3));
++	__raw_writel(BM_PWM_CTRL_PWM3_ENABLE, REGS_PWM_BASE + HW_PWM_CTRL_CLR);	
++	
++}
++static int buzzer_beep(struct buzzer_dev *buzzer, unsigned int duration)
++{
++	int ret=0;
++	
++	setup_timer(&(buzzer->bz_timer), buzzer_stop, 0 );
++
++  	ret = mod_timer( &(buzzer->bz_timer), jiffies + msecs_to_jiffies(duration) );
++  	if (ret) 
++		printk(KERN_INFO "Error in mod_timer\n");	
++
++	
++	__raw_writel(BF_PWM_ACTIVEn_INACTIVE(50) |
++		     BF_PWM_ACTIVEn_ACTIVE(0),
++		     REGS_PWM_BASE + HW_PWM_ACTIVEn(3));
++
++
++	__raw_writel(BF_PWM_PERIODn_CDIV(5) |	/* divide by ??? */
++		     BF_PWM_PERIODn_INACTIVE_STATE(2) |	/* low */
++		     BF_PWM_PERIODn_ACTIVE_STATE(3) |	/* high */
++		     BF_PWM_PERIODn_PERIOD(599),
++		     REGS_PWM_BASE + HW_PWM_PERIODn(3));
++	__raw_writel(BM_PWM_CTRL_PWM3_ENABLE, REGS_PWM_BASE + HW_PWM_CTRL_SET);
++
++	return ret;
++}
++
++static int buzzer_ioctl( __attribute__ ((unused)) struct inode *inode,struct file *file,unsigned int cmd,unsigned long arg)
++{
++	int ret = -ENOTTY;
++	struct buzzer_dev *buzzer = file->private_data;
++	
++    if (_IOC_TYPE(cmd) != BUZZER_MAGIC)
++        return -ENOTTY;
++
++    if ((_IOC_DIR(cmd) & _IOC_READ) && (!access_ok(VERIFY_WRITE, (void *)arg, _IOC_SIZE(cmd))))
++        return -EFAULT;
++
++    if ((_IOC_DIR(cmd) & _IOC_WRITE) && (!access_ok(VERIFY_READ, (void *)arg, _IOC_SIZE(cmd))))
++        return -EFAULT;
++
++    switch (cmd) {
++        case BUZZER_BEEP:
++            buzzer_beep(buzzer, (unsigned int)arg);
++            ret = 0;
++            break;
++	default:
++	printk(KERN_WARNING "%s: unknown commmand %d\n", __func__, cmd);
++   }
++   return ret;	
++	
++}
++
++
++/*********************************************************************************
++The module_init and module_cleanup function
++*********************************************************************************/
++int buzzer_init(void)
++{
++	int ret;
++	dev_t dev;
++	
++
++	/*requesting mejor and minor to the kernel*/
++	dev = MKDEV(BUZZER_MAJOR, BUZZER_MINOR);
++	ret = register_chrdev_region(dev, 0, "buzzer");
++
++	if(ret < 0)
++	{
++		printk(KERN_WARNING "BUZZER: can't get major %d\n",BUZZER_MAJOR);
++		return ret;
++	}
++	/*allocating memory for my device*/	
++	buzzer = kzalloc(sizeof(struct buzzer_dev), GFP_KERNEL);
++	/*init the cdev structure beside memory allocation*/
++	cdev_init(&(buzzer->bz_cdev), &buzzer_fops);
++	
++	buzzer->bz_cdev.owner=THIS_MODULE;
++	buzzer->bz_dev = dev;
++	buzzer->bz_has_opened = 0;
++	/*registering the char device with the kernel*/
++        ret = cdev_add(&(buzzer->bz_cdev),buzzer->bz_dev,1);
++
++       if( ret < 0 )
++       {
++		printk(KERN_WARNING "Error registering device driver for buzzer\n");
++		unregister_chrdev_region(buzzer->bz_dev,1);
++		kfree(buzzer);
++		return ret;
++       }
++
++       printk(KERN_INFO "Buzzer successfully registered!\n");
++
++
++
++	return 0;
++}
++void buzzer_exit(void)
++{
++	unregister_chrdev_region(buzzer->bz_dev,1);
++	cdev_del(&(buzzer->bz_cdev));
++	kfree(buzzer);
++	printk(KERN_INFO "BUZZER EXIT!\n");
++}
++
++module_init(buzzer_init);
++module_exit(buzzer_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Mect srl");
++
++
++
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/char/mxs-buzzer.h linux-2.6.35.3.modified/drivers/char/mxs-buzzer.h
+--- linux-2.6.35.3/drivers/char/mxs-buzzer.h	1970-01-01 01:00:00.000000000 +0100
++++ linux-2.6.35.3.modified/drivers/char/mxs-buzzer.h	2011-10-07 15:39:40.816740877 +0200
+@@ -0,0 +1,19 @@
++#ifndef MXS_BUZZER_H_INCLUDED
++#define MXS_BUZZER_H_INCLUDED
++
++#ifdef __KERNEL__
++#include <asm/ioctl.h>
++#else
++#include <sys/ioctl.h>
++#endif
++
++#define BUZZER_VER "1.0"
++#define BUZZER_DATE "2011-09"
++#define BUZZER_MAJOR 35
++#define BUZZER_MINOR 0
++#define BUZZER_DEVICE_NAME "buzzer"
++
++#define BUZZER_MAGIC 'b'
++#define BUZZER_BEEP _IO(BUZZER_MAGIC, 0)
++
++#endif
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/input/keyboard/gpio_keys.c linux-2.6.35.3.modified/drivers/input/keyboard/gpio_keys.c
+--- linux-2.6.35.3/drivers/input/keyboard/gpio_keys.c	2011-10-07 16:47:56.815494878 +0200
++++ linux-2.6.35.3.modified/drivers/input/keyboard/gpio_keys.c	2011-09-30 11:52:20.489566766 +0200
+@@ -26,6 +26,8 @@
+ #include <linux/workqueue.h>
+ #include <linux/gpio.h>
+ 
++#undef KBD_DEBUG 
++
+ struct gpio_button_data {
+ 	struct gpio_keys_button *button;
+ 	struct input_dev *input;
+@@ -320,15 +322,29 @@
+ 	struct input_dev *input = bdata->input;
+ 	unsigned int type = button->type ?: EV_KEY;
+ 	int state = (gpio_get_value(button->gpio) ? 1 : 0) ^ button->active_low;
++	
+ 
++#ifdef KBD_DEBUG
++	printk("MONICA %s: get_value %d \n", __func__, gpio_get_value(button->gpio));	
++	printk("MONICA %s: button->gpio %d button->active_low %d\n", __func__, button->gpio, button->active_low);
++	printk("MONICA %s: state %d \n", __func__, state);
++#endif
+ 	input_event(input, type, button->code, !!state);
+ 	input_sync(input);
++	
++	/* Patch to emulate the other interrupt*/
++	input_event(input, type, button->code, !state);
++	input_sync(input);
++	
+ }
+ 
+ static void gpio_keys_work_func(struct work_struct *work)
+ {
+ 	struct gpio_button_data *bdata =
+ 		container_of(work, struct gpio_button_data, work);
++#ifdef KBD_DEBUG
++	printk("MONICA %s: ENTER\n", __func__);
++#endif		
+ 
+ 	gpio_keys_report_event(bdata);
+ }
+@@ -345,6 +361,10 @@
+ 	struct gpio_button_data *bdata = dev_id;
+ 	struct gpio_keys_button *button = bdata->button;
+ 
++#ifdef KBD_DEBUG
++	printk("MONICA KBD event %s\n", __func__);
++#endif
++
+ 	BUG_ON(irq != gpio_to_irq(button->gpio));
+ 
+ 	if (button->debounce_interval)
+@@ -394,8 +414,9 @@
+ 			button->gpio, error);
+ 		goto fail3;
+ 	}
+-
+-	irqflags = /* IRQF_TRIGGER_RISING | */ IRQF_TRIGGER_FALLING;
++         // modifica funzionante su eva board
++	// irqflags = /* IRQF_TRIGGER_RISING | */ IRQF_TRIGGER_FALLING;
++         irqflags =  IRQF_TRIGGER_RISING; /* | IRQF_TRIGGER_FALLING; */
+ 	/*
+ 	 * If platform has specified that the button can be disabled,
+ 	 * we don't want it to share the interrupt line.
+@@ -420,12 +441,17 @@
+ 
+ static int __devinit gpio_keys_probe(struct platform_device *pdev)
+ {
++
+ 	struct gpio_keys_platform_data *pdata = pdev->dev.platform_data;
+ 	struct gpio_keys_drvdata *ddata;
+ 	struct device *dev = &pdev->dev;
+ 	struct input_dev *input;
+ 	int i, error;
+ 	int wakeup = 0;
++	
++#ifdef KBD_DEBUG
++	printk("MONICA %s: ENTER\n", __func__);
++#endif	
+ 
+ 	ddata = kzalloc(sizeof(struct gpio_keys_drvdata) +
+ 			pdata->nbuttons * sizeof(struct gpio_button_data),
+@@ -568,6 +594,9 @@
+ 	struct gpio_keys_drvdata *ddata = platform_get_drvdata(pdev);
+ 	struct gpio_keys_platform_data *pdata = pdev->dev.platform_data;
+ 	int i;
++#ifdef KBD_DEBUG
++	printk("MONICA %s: ENTER\n", __func__);
++#endif		
+ 
+ 	for (i = 0; i < pdata->nbuttons; i++) {

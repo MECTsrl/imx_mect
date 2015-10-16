@@ -1,0 +1,20 @@
+diff -aurN ubuntu-ltib-patch.orig/install-patches.sh ubuntu-ltib-patch/install-patches.sh
+--- ubuntu-ltib-patch.orig/install-patches.sh	2012-09-28 22:55:20.000000000 +0200
++++ ubuntu-ltib-patch/install-patches.sh	2015-10-16 00:18:15.038426634 +0200
+@@ -78,9 +78,13 @@
+ cp mux_server.spec ${ltibSpec}/mux_server/mux_server.spec
+ echo "Done"
+ 
+-# Create link to libraries if on 64-bit host and they do not exist
+-if uname -a|grep -sq 'x86_64'; then
+-	if [ ! -e /usr/include/sys ]; then
++# Create a link to the libraries if they do not exist.
++if uname -m | grep -sq 'x86_64'; then
++	if ! test -e /usr/include/sys; then
+ 		sudo ln -s /usr/include/x86_64-linux-gnu/sys /usr/include/sys
+ 	fi
++else
++	if ! test -e /usr/include/sys; then
++		sudo ln -s /usr/include/i386-linux-gnu/sys /usr/include/sys
++	fi
+ fi

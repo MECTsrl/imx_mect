@@ -1,0 +1,167 @@
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/power/mxs/linux.c linux-2.6.35.3.modified/drivers/power/mxs/linux.c
+--- linux-2.6.35.3/drivers/power/mxs/linux.c	2011-10-13 10:44:27.741599998 +0200
++++ linux-2.6.35.3.modified/drivers/power/mxs/linux.c	2011-10-13 09:47:15.662498000 +0200
+@@ -32,6 +32,7 @@
+ #include <linux/proc_fs.h>
+ #include <linux/interrupt.h>
+ #include <asm/fiq.h>
++#include <linux/pwrsignal.h>
+ 
+ enum application_5v_status{
+ 	_5v_connected_verified,
+@@ -120,7 +121,50 @@
+ #define is_usb_online()	\
+ 		(ddi_power_Get5vPresentFlag() ? (!!fsl_is_usb_plugged()) : 0)
+ 
++#ifdef PWRFAIL_SIGNAL
+ 
++struct dentry *file;
++int pid;
++
++struct siginfo pwr_sig_info;
++struct task_struct *t;
++
++static ssize_t write_pid(struct file *file, const char __user *buf,
++		size_t count, loff_t *ppos)
++{
++	char mybuf[10];
++
++	/* read the value from user space */
++	if(count > 10)
++		return -EINVAL;
++	copy_from_user(mybuf, buf, count);
++	sscanf(mybuf, "%d", &pid);
++	printk(KERN_INFO "pid = %d\n", pid);
++
++	memset(&pwr_sig_info, 0, sizeof(struct siginfo));
++	pwr_sig_info.si_signo = SIGPWRFAIL;
++	pwr_sig_info.si_code = SI_QUEUE;	// this is bit of a trickery: SI_QUEUE is normally used by sigqueue from user space,
++	// and kernel space should use SI_KERNEL. But if SI_KERNEL is used the real_time data 
++	// is not delivered to the user space signal handler function. 
++	pwr_sig_info.si_int = 1234;  		//real time signals may have 32 bits of data.
++
++	rcu_read_lock();
++	t = find_task_by_vpid(pid);  //find the task_struct associated with this pid
++	if(t == NULL){
++		printk("no such pid\n");
++		rcu_read_unlock();
++		return -ENODEV;
++	}
++	rcu_read_unlock();
++
++	return count;
++}
++
++static const struct file_operations my_fops = {
++	.write = write_pid,
++};
++
++#endif
+ 
+ void init_protection(struct mxs_info *info)
+ {
+@@ -307,9 +351,9 @@
+ 				dev_dbg(info->dev,
+ 					"5v disconnection handled\n");
+ 
+-				__raw_writel(__raw_readl(REGS_POWER_BASE +
++				__raw_writel((__raw_readl(REGS_POWER_BASE +
+ 				HW_POWER_5VCTRL) &
+-				(~BM_POWER_5VCTRL_CHARGE_4P2_ILIMIT)
++				(~BM_POWER_5VCTRL_CHARGE_4P2_ILIMIT))
+ 				| (0x20 << BP_POWER_5VCTRL_CHARGE_4P2_ILIMIT),
+ 				REGS_POWER_BASE + HW_POWER_5VCTRL);
+ 
+@@ -756,6 +800,16 @@
+ 		 */
+ 		/* ddi_power_enable_vddio_interrupt(false); */
+ 
++#ifdef PWRFAIL_SIGNAL
++		if (pid > 0)
++		{
++			/* send the signal */
++			if (send_sig_info(SIGPWRFAIL, &pwr_sig_info, t) < 0) {
++				printk(KERN_INFO "error sending signal to pid %d\n", pid);
++			}
++		}
++#endif
++
+ 		ddi_power_disable_5v_connection_irq();
+ 		dev_dbg(info->dev, "new 5v disconnection detected\n");
+ 		info->sm_new_5v_disconnection_jiffies = jiffies;
+@@ -1126,10 +1180,12 @@
+ 
+ static int __init mxs_bat_init(void)
+ {
++#ifdef CONFIG_MXS_VBUS_CURRENT_DRAW
+ 	struct clk *cpu, *pll0;
++#endif
++	int ret;
+ 
+ #ifdef POWER_FIQ
+-	int ret;
+ 	ret = claim_fiq(&power_fiq);
+ 	if (ret) {
+ 		pr_err("Can't claim fiq");
+@@ -1193,13 +1249,23 @@
+ 	cpu = clk_get(NULL, "cpu");
+ 	pll0 = clk_get(NULL, "ref_cpu");
+ 	clk_set_parent(cpu, pll0);
++	ret = platform_driver_register(&mxs_batdrv);
++#endif
++#ifdef PWRFAIL_SIGNAL
++	/* only root can write to this file (no read) */
++	file = debugfs_create_file("signalconfpid", 0200, NULL, NULL, &my_fops);
++	pid = 0;
+ #endif
+-	return platform_driver_register(&mxs_batdrv);
++	return ret;
+ }
+ 
+ static void __exit mxs_bat_exit(void)
+ {
+ 	platform_driver_unregister(&mxs_batdrv);
++#ifdef PWRFAIL_SIGNAL
++	if (file)
++		debugfs_remove(file);
++#endif
+ }
+ #ifdef CONFIG_MXS_VBUS_CURRENT_DRAW
+ 	fs_initcall(mxs_bat_init);
+@@ -1211,3 +1277,4 @@
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Steve Longerbeam <stevel@embeddedalley.com>");
+ MODULE_DESCRIPTION("Linux glue to MXS battery state machine");
++
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/include/linux/Kbuild linux-2.6.35.3.modified/include/linux/Kbuild
+--- linux-2.6.35.3/include/linux/Kbuild	2011-10-13 10:44:33.402768001 +0200
++++ linux-2.6.35.3.modified/include/linux/Kbuild	2011-10-13 09:40:16.168348621 +0200
+@@ -417,4 +417,5 @@
+ 
+ ## i.MX28 Mect Board specific files
+ header-y += mxs-buzzer.h
++header-y += pwrsignal.h
+ 
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/include/linux/pwrsignal.h linux-2.6.35.3.modified/include/linux/pwrsignal.h
+--- linux-2.6.35.3/include/linux/pwrsignal.h	1970-01-01 01:00:00.000000000 +0100
++++ linux-2.6.35.3.modified/include/linux/pwrsignal.h	2011-10-13 09:38:34.295312000 +0200
+@@ -0,0 +1,18 @@
++#ifndef PWR_SIGNAL_H_INCLUDED
++#define PWR_SIGNAL_H_INCLUDED
++
++#ifdef __KERNEL__
++#include <asm/siginfo.h>    //siginfo
++#include <linux/rcupdate.h> //rcu_read_lock
++#include <linux/sched.h>    //find_task_by_pid_type
++#include <linux/rcupdate.h> //rcu_read_lock
++#include <linux/debugfs.h>
++#include <linux/uaccess.h>
++#endif
++
++#define PWRFAIL_SIGNAL
++#define DBGFS_ROOT    "/sys/kernel/debug/"
++#define PID_FILE    "signalconfpid"
++#define SIGPWRFAIL  44
++
++#endif
+

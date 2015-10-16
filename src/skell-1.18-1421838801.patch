@@ -1,0 +1,34 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell-1.18.modified/etc/rc.d/init.d/autoexec
+--- skell-1.18/etc/rc.d/init.d/autoexec	2015-01-21 12:13:21.990611002 +0100
++++ skell-1.18.modified/etc/rc.d/init.d/autoexec	2015-01-20 17:07:48.960552144 +0100
+@@ -71,9 +71,6 @@
+ 	echo "Done."
+ fi
+ 
+-# clean the frame buffer
+-dd if=/dev/zero of=/dev/fb0
+-
+ # if factory test is preset and executable, start it
+ if [ -x $LOCAL_ROOT_DIR/factory_test ]
+ then
+@@ -87,6 +84,8 @@
+ elif [ -x $LOCAL_ROOT_DIR/fcrts ]
+ then
+ 	echo "Starting applications."
++	dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
++
+ 	$LOCAL_ROOT_DIR/fcrts > /dev/null 2>&1 & 
+ 	if [ -x $LOCAL_ROOT_DIR/safe_hmi ]; then 
+ 		sleep 2
+@@ -109,8 +108,9 @@
+ stop() {
+ echo -n "Shutting down 'autoexec'... "
+ killall -q keyGenerator factory_test chooser safe_hmi fcrts hmi 
+-# clean the frame buffer
+-dd if=/dev/zero of=/dev/fb0
++sleep 1
++killall -9 -q keyGenerator factory_test chooser safe_hmi fcrts hmi 
++dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
+ echo "Done."
+ }
+ 

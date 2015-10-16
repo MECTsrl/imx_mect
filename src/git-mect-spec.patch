@@ -1,0 +1,11 @@
+--- ltib/dist/lfs-5.1/git/git.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib.new/dist/lfs-5.1/git/git.spec	2015-10-12 10:46:10.446469000 +0200
+@@ -27,7 +27,7 @@
+ config_opts='ac_cv_c_c99_format=yes ac_cv_fread_reads_directories=no ac_cv_snprintf_returns_bogus=no' 
+ eval $config_opts \
+ ./configure  --prefix=%{_prefix} --host=$CFGHOST
+-make
++make -j`grep -c ^processor /proc/cpuinfo`
+ 
+ 
+ %Install

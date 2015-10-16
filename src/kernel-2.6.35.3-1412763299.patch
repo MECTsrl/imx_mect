@@ -1,0 +1,13 @@
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/arch/arm/mach-mx28/clock.c linux-2.6.35.3.modified/arch/arm/mach-mx28/clock.c
+--- linux-2.6.35.3/arch/arm/mach-mx28/clock.c	2014-10-08 12:16:35.639590050 +0200
++++ linux-2.6.35.3.modified/arch/arm/mach-mx28/clock.c	2014-10-07 12:00:44.003188854 +0200
+@@ -1936,6 +1936,8 @@
+ 		ssp_clk[0].parent = &ref_xtal_clk;
+ 	if (reg & BM_CLKCTRL_CLKSEQ_BYPASS_GPMI)
+ 		gpmi_clk.parent = &ref_xtal_clk;
++	else
++		gpmi_clk.parent = &ref_gpmi_clk;
+ 	if (reg & BM_CLKCTRL_CLKSEQ_BYPASS_SAIF1)
+ 		saif_clk[1].parent = &ref_xtal_clk;
+ 	if (reg & BM_CLKCTRL_CLKSEQ_BYPASS_SAIF0)
+

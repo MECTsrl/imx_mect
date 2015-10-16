@@ -1,0 +1,321 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/Makefile skell-1.18.modified/Makefile
+--- skell-1.18/Makefile	2015-01-20 10:17:47.591538986 +0100
++++ skell-1.18.modified/Makefile	2015-01-20 09:20:26.078479003 +0100
+@@ -15,33 +15,44 @@
+ 	mkdir -p $(DESTDIR)/lib/modules
+ 	mkdir -p $(DESTDIR)/
+ 	ln -s /proc/mounts $(DESTDIR)/dev/mtab
+-	chmod 755 $(DESTDIR)/etc/rc.d/init.d/*
++	chmod 755 $(DESTDIR)/etc/rc.d/init.d/*
+ 	chmod 2777 $(DESTDIR)/var/ftp/pub
+ 	chmod 1777 $(DESTDIR)/tmp
+ 	chmod 777  $(DESTDIR)/var/tmp
+-	cd $(DESTDIR)
++	#clean the actual local dir
++	mv $(DESTDIR)/local $(DESTDIR)/local_ori
++	# prepare the dir tree for the flash
++	mkdir -p $(DESTDIR)/local/sd_card
++	#mkdir -p $(DESTDIR)/local/flash
++	mv $(DESTDIR)/local_ori $(DESTDIR)/local/flash
++	mkdir -p $(DESTDIR)/local/flash/control
++	mkdir -p $(DESTDIR)/local/flash/data
++	mkdir -p $(DESTDIR)/local/flash/etc/sysconfig
++	mkdir -p $(DESTDIR)/local/flash/root
++	# prepare the dir tree for to point to the flash
++	cd $(DESTDIR)/local && ln -s flash/control control
++	cd $(DESTDIR)/local && ln -s flash/data data
++	cd $(DESTDIR)/local && ln -s flash/etc etc
++	cd $(DESTDIR)/local && ln -s flash/root root
+ 	#test -L root || test -d root && rm -rf root
+-	rm -rf root
+-	mkdir -p local/root
+-	ln -s local/root
+-	mkdir local/root/sqldrivers
+-	cd local/root
+-	ln -s /usr/lib/libqsqlite.so
+-	ln -s /usr/lib/libqsqlmysql.so
++	rm -rf $(DESTDIR)/root
++	cd $(DESTDIR) && ln -s local/root
++	mkdir -p $(DESTDIR)/local/root/sqldrivers
++	cd $(DESTDIR)/local/root/sqldrivers && ln -sf /usr/lib/libqsqlite.so
++	cd $(DESTDIR)/local/root/sqldrivers && ln -sf /usr/lib/libqsqlmysql.so
+ 	#test -L control || test -d control && rm -rf control
+-	rm -rf control
+-	mkdir -p local/control
+-	ln -s local/control
++	cd $(DESTDIR) && ln -s local/control
+ 	#test -L home || test -d home && rm -rf home
+-	rm -rf home
+-	mkdir -p local/home
+-	ln -s local/home
+-	mkdir -p local/etc/sysconfig/ppp
+-	rm -rf etc/ppp
+-	ln -s /local/etc/sysconfig/ppp etc/ppp
+-	mkdir -p local/etc/sysconfig/chatscripts
+-	rm -rf etc/chatscripts
+-	ln -s /local/etc/sysconfig/chatscripts etc/chatscripts
++	rm -rf $(DESTDIR)/home
++	mkdir -p $(DESTDIR)/local/home
++	cd $(DESTDIR) && ln -s local/home
++	mkdir -p $(DESTDIR)/local/etc/sysconfig/ppp
++	rm -rf $(DESTDIR)/etc/ppp
++	cd $(DESTDIR)/etc && ln -s /local/etc/sysconfig/ppp ppp
++	cd $(DESTDIR)
++	mkdir -p $(DESTDIR)/local/etc/sysconfig/chatscripts
++	rm -rf $(DESTDIR)/etc/chatscripts
++	cd $(DESTDIR)/etc ln -s /local/etc/sysconfig/chatscripts chatscripts
+ 
+ 	cd $(RPM_BUILD_DIR)/skell-1.18
+ 	#cd -
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/profile skell-1.18.modified/etc/profile
+--- skell-1.18/etc/profile	2015-01-20 10:17:47.587536986 +0100
++++ skell-1.18.modified/etc/profile	2015-01-20 09:43:38.070126979 +0100
+@@ -27,21 +27,5 @@
+ export POINTERCAL_FILE=$TSLIB_CALIBFILE
+ 
+ # application variables
+-if [ -e /local/path.conf ]
+-then
+-	export LOCAL_ETC_DIR=`grep BaseEtcDir /local/path.conf | awk '{print $2}'`
+-else
+-	export LOCAL_ETC_DIR=""
+-fi
+-
+-if [ "$LOCAL_ETC_DIR" == "" ]
+-then
+-	export LOCAL_ETC_DIR=/local/etc/sysconfig
+-fi
+-
+-if [ $LOCAL_ETC_DIR == "/local/etc/sysconfig" ]
+-then
+-	export LOCAL_ROOT_DIR=/local/root
+-else
+-	export LOCAL_ROOT_DIR=/local/sd_card/root
+-fi
++export LOCAL_ETC_DIR=/local/etc/sysconfig
++export LOCAL_ROOT_DIR=/local/root
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/S10setup skell-1.18.modified/etc/rc.d/init.d/S10setup
+--- skell-1.18/etc/rc.d/init.d/S10setup	2015-01-20 10:17:47.587536986 +0100
++++ skell-1.18.modified/etc/rc.d/init.d/S10setup	2015-01-20 09:41:40.775508985 +0100
+@@ -7,11 +7,7 @@
+ 
+ mntdir=/tmp/mnt
+ 
+-LOCAL_ETC_DIR=`grep BaseEtcDir /local/path.conf | awk '{print $2}'`
+-if [ "$LOCAL_ETC_DIR" == "" ]
+-then
+-	LOCAL_ETC_DIR="/local/etc/sysconfig"
+-fi
++LOCAL_ETC_DIR="/local/etc/sysconfig"
+ 
+ [ -d $mntdir ] || { mntdir=/tmp/mnt; /bin/mkdir $mntdir; }
+ [ -d $mntdir ] || exit 1
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell-1.18.modified/etc/rc.d/init.d/autoexec
+--- skell-1.18/etc/rc.d/init.d/autoexec	2015-01-20 10:17:47.587536986 +0100
++++ skell-1.18.modified/etc/rc.d/init.d/autoexec	2015-01-20 10:11:41.831751044 +0100
+@@ -1,28 +1,7 @@
+ #!/bin/sh
+ 
+-if [ -e /local/path.conf ]
+-then
+-	LOCAL_ETC_DIR=`grep BaseEtcDir /local/path.conf | awk '{print $2}'`
+-else
+-	LOCAL_ETC_DIR=""
+-fi
+-
+-if [ "$LOCAL_ETC_DIR" == "" ]
+-then
+-	LOCAL_ETC_DIR="/local/etc/sysconfig"
+-fi
+-
+-if [ $LOCAL_ETC_DIR == "/local/etc/sysconfig" ]
+-then
+-	LOCAL_ROOT_DIR="/local/root"
+-else
+-	LOCAL_ROOT_DIR="/local/sd_card/root"
+-fi
+-
+-echo "-------------------------------------------"
+-echo LOCAL_ROOT_DIR: $LOCAL_ROOT_DIR
+-echo LOCAL_ETC_DIR: $LOCAL_ETC_DIR
+-echo "-------------------------------------------"
++LOCAL_ETC_DIR="/local/etc/sysconfig"
++LOCAL_ROOT_DIR="/local/root"
+ 
+ start() {
+ 
+@@ -92,6 +71,9 @@
+ 	echo "Done."
+ fi
+ 
++# clean the frame buffer
++dd if=/dev/zero of=/dev/fb0
++
+ # if factory test is preset and executable, start it
+ if [ -x $LOCAL_ROOT_DIR/factory_test ]
+ then
+@@ -127,6 +109,8 @@
+ stop() {
+ echo -n "Shutting down 'autoexec'... "
+ killall -q keyGenerator factory_test chooser safe_hmi fcrts hmi 
++# clean the frame buffer
++dd if=/dev/zero of=/dev/fb0
+ echo "Done."
+ }
+ 
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/network skell-1.18.modified/etc/rc.d/init.d/network
+--- skell-1.18/etc/rc.d/init.d/network	2015-01-20 10:17:47.587536986 +0100
++++ skell-1.18.modified/etc/rc.d/init.d/network	2015-01-20 09:43:06.586393023 +0100
+@@ -1,14 +1,8 @@
+ #!/bin/sh
+ 
+ # the net info shouldn't be moved with sdcard data 
+-LOCAL_ETC_DIR=`grep BaseEtcDir /local/path.conf | awk '{print $2}'`
+-if [ "$LOCAL_ETC_DIR" == "" ]
+-then
+-	LOCAL_ETC_DIR="/local/etc/sysconfig"
+-fi
+-
+-LOCAL_CONFIGFILE=$LOCAL_ETC_DIR/net.conf
+-CONFIGFILE=/local/etc/sysconfig/net.conf
++LOCAL_CONFIGFILE=/local/etc/sysconfig/net.conf
++CONFIGFILE=/local/flash/etc/sysconfig/net.conf
+ 
+ if [ ! -x /sbin/ifconfig ]
+ then
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/sdcheck skell-1.18.modified/etc/rc.d/init.d/sdcheck
+--- skell-1.18/etc/rc.d/init.d/sdcheck	2015-01-20 10:17:47.587536986 +0100
++++ skell-1.18.modified/etc/rc.d/init.d/sdcheck	2015-01-20 10:07:34.481856955 +0100
+@@ -58,56 +58,90 @@
+ if [ "$SD_MODE" == "storage" ]
+ then
+ 	echo "storage mode"
+-	echo "BaseEtcDir: /local/etc/sysconfig" > /local/path.conf
+-	echo "BaseDataDir: /local/sd_card/data" >> /local/path.conf
+-	echo "/local/path.conf updated"
+-	if [ "`readlink /control`" != "/local/control" ] || [ "`readlink /root`" != "/local/root" ]
+-	then
+-		mount -orw,remount / 2>/dev/null
+-		cd / 2>/dev/null
+-		rm /control 2>/dev/null
+-		ln -s /local/control /control 2>/dev/null
+-		rm /root 2>/dev/null
+-		ln -s /local/root /root 2>/dev/null
+-		cd - 2>/dev/null
+-		mount -oro,remount / 2>/dev/null
+-		echo "update link"
++	cd /local 2>/dev/null
++
++	if [ "`readlink data`" != "sd_card/data" ]
++	then
++		rm -f data 2>/dev/null
++		ln -s sd_card/data 2>/dev/null
++	fi
++
++	if [ "`readlink control`" != "flash/control" ]
++	then
++		rm -f control 2>/dev/null
++		ln -s /local/flash/control control 2>/dev/null
+ 	fi
++
++	if [ "`readlink root`" != "flash/root" ]
++	then
++		rm root 2>/dev/null
++		ln -s /local/flash/root root 2>/dev/null
++	fi
++
++	if [ "`readlink etc`" != "flash/etc" ]
++	then
++		rm etc 2>/dev/null
++		ln -s /local/flash/etc etc 2>/dev/null
++	fi
++
++	echo "update link"
+ elif [ "$SD_MODE" == "application" ]
+ then
+ 	echo "application mode"
+-	echo "BaseEtcDir: /local/sd_card/etc/sysconfig" > /local/path.conf
+-	echo "BaseDataDir: /local/sd_card/data" >> /local/path.conf
+-	echo "/local/path.conf updated"
+-	if [ "`readlink /control`" != "/local/sd_card/control" ] || [ "`readlink /root`" != "/local/sd_card/root" ]
+-	then
+-		mount -orw,remount / 2>/dev/null
+-		cd / 2>/dev/null
+-		rm /control 2>/dev/null
+-		ln -s /local/sd_card/control /control 2>/dev/null
+-		rm /root 2>/dev/null
+-		ln -s /local/sd_card/root /root 2>/dev/null
+-		cd - 2>/dev/null
+-		mount -oro,remount / 2>/dev/null
+-		echo "update link"
++	cd /local 2>/dev/null
++
++	if [ "`readlink data`" != "sd_card/data" ]
++	then
++		rm -f data 2>/dev/null
++		ln -s sd_card/data 2>/dev/null
++	fi
++
++	if [ "`readlink control`" != "sd_card/control" ]
++	then
++		rm -f control 2>/dev/null
++		ln -s /local/sd_card/control control 2>/dev/null
+ 	fi
++
++	if [ "`readlink root`" != "sd_card/root" ]
++	then
++		rm root 2>/dev/null
++		ln -s /local/sd_card/root root 2>/dev/null
++	fi
++
++	if [ "`readlink etc`" != "sd_card/etc" ]
++	then
++		rm etc 2>/dev/null
++		ln -s /local/sd_card/etc etc 2>/dev/null
++	fi
++	echo "update link"
+ else
+ 	echo "all-in-flash mode"
+-	echo "BaseEtcDir: /local/etc/sysconfig" > /local/path.conf
+-	echo "BaseDataDir: /local/data" >> /local/path.conf
+-	echo "/local/path.conf updated"
+-	if [ "`readlink /control`" != "/local/control" ] || [ "`readlink /root`" != "/local/root" ]
+-	then
+-		mount -orw,remount / 2>/dev/null
+-		cd / 2>/dev/null
+-		rm /control 2>/dev/null
+-		ln -s /local/control /control 2>/dev/null
+-		rm /root 2>/dev/null
+-		ln -s /local/root /root 2>/dev/null
+-		cd - 2>/dev/null
+-		mount -oro,remount / 2>/dev/null
+-		echo "update link"
++	cd /local 2>/dev/null
++
++	if [ "`readlink data`" != "flash/data" ]
++	then
++		rm -f data 2>/dev/null
++		ln -s flash/data 2>/dev/null
++	fi
++
++	if [ "`readlink control`" != "flash/control" ]
++	then
++		rm -f control 2>/dev/null
++		ln -s /local/flash/control control 2>/dev/null
++	fi
++
++	if [ "`readlink root`" != "flash/root" ]
++	then
++		rm root 2>/dev/null
++		ln -s /local/flash/root root 2>/dev/null
++	fi
++
++	if [ "`readlink etc`" != "flash/etc" ]
++	then
++		rm etc 2>/dev/null
++		ln -s /local/flash/etc etc 2>/dev/null
+ 	fi
++	echo "update link"
+ fi
+ 
+ }

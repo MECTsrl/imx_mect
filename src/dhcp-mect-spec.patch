@@ -1,0 +1,71 @@
+--- ltib/dist/lfs-5.1/dhcp/dhcp.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib.new/dist/lfs-5.1/dhcp/dhcp.spec	2015-10-12 10:46:10.734466000 +0200
+@@ -10,6 +10,7 @@
+ Packager        : John Faith
+ Group           : Applications/Internet
+ Source          : dhcp-3.0.3b1.tgz
++URL             : http://www.isc.org/sw/dhcp/
+ Patch1          : dhcp-3.0.3b1-sip.patch
+ Patch2          : dhcp-3.0.3b1-defaults.patch
+ Patch3          : dhcp-3.0.3b1-types.patch
+@@ -17,7 +18,17 @@
+ Patch5          : dhcp-3.0.3b1-compat-with-linux-3.0.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
+-URL             : http://www.isc.org/sw/dhcp/
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed dhcp for root file system requirements.
++Group           : Applications/Internet
++AutoReqProv     : no
++%Description rfs
++dhcp package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -32,14 +43,15 @@
+ 
+ %Build
+ ./configure
+-make
++make -j`grep -c ^processor /proc/cpuinfo`
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-make install prefix=$RPM_BUILD_ROOT/%{pfx}
+-mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/share
+-mv $RPM_BUILD_ROOT/%{pfx}/usr/man  $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/share
+-chmod 755 $RPM_BUILD_ROOT/%{pfx}/%base/sbin/dhclient-script
++make install prefix=$RPM_BUILD_ROOT%{pfx}
++
++mkdir -p $RPM_BUILD_ROOT%{pfx}%{_prefix}/share
++mv $RPM_BUILD_ROOT%{pfx}%{_prefix}/man  $RPM_BUILD_ROOT%{pfx}%{_prefix}/share
++chmod 755 $RPM_BUILD_ROOT%{pfx}/%base/sbin/dhclient-script
+ 
+ for i in %pfx/%base/etc/test %pfx/%base/etc/rc.d \
+          %pfx/%base/sbin/S30dhclient %pfx/%_prefix/local
+@@ -86,10 +98,18 @@
+      done
+ fi
+ 
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_prefix}/share/man, d;
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+ 
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)

@@ -1,0 +1,11 @@
+--- ltib/dist/lfs-5.1/texinfo/texinfo.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib.new/dist/lfs-5.1/texinfo/texinfo.spec	2015-10-12 10:46:10.406470000 +0200
+@@ -31,7 +31,7 @@
+ else
+               ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
+ fi
+-make
++make -j`grep -c ^processor /proc/cpuinfo`
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT

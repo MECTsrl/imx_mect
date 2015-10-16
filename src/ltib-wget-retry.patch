@@ -1,0 +1,22 @@
+--- ltib/ltib	2015-10-16 12:19:07.401525995 +0200
++++ ltib.change/ltib	2013-01-09 04:58:38.000000000 +0100
+@@ -78,7 +78,7 @@
+     proxy        => "",
+     force_md5get => "",
+     quiet        => "",
++    wget_opts    => "--passive-ftp -nc --tries=5 --timeout=30 --progress=dot:mega",
+-    wget_opts    => "--passive-ftp -nc --tries=1 --timeout=12 -nv",
+     configured   => "",
+     pre_install_deps   => "
+             glibc           2.2.4
+--- ltib/bin/Ltibutils.pm	2015-10-16 12:19:51.164977346 +0200
++++ ltib.change/bin/Ltibutils.pm	2015-10-15 15:05:17.730588214 +0200
+@@ -410,7 +410,7 @@
+     my($dest, $pxys, $wget_opts, $pxmode, $url) = @_;
+     return system_nb(<<TXT) == 0;
+ cd $dest
++$pxys wget $wget_opts --proxy=$pxmode $url
+-$pxys wget $wget_opts --proxy=$pxmode $url 2>&1
+ cd - >/dev/null
+ TXT
+ }

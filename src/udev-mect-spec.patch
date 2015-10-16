@@ -1,0 +1,95 @@
+--- ltib/dist/lfs-5.1/udev/udev.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib.new/dist/lfs-5.1/udev/udev.spec	2015-10-12 10:46:10.870464000 +0200
+@@ -25,12 +25,9 @@
+ Patch13         : udev-117-mxc-ipu-dev-privilege.patch
+ Patch14         : udev-117-mxc-vpu.patch
+ Patch15         : udev-117-chg-to-attrs.patch
+-Patch16         : udev-117-add_p1003_egalax.patch
+-Patch17         : udev-117-add-galcore-and-asrc.patch
+-Patch18	        : udev-117-change-mxc-galcore-to-galcore.patch
+-
+ BuildRoot	: %{_tmppath}/%{name}
+ Prefix		: %{pfx}
++AutoReqProv     : no
+ 
+ # List of extra things to build, which must be
+ # passed to make at build time and install time.
+@@ -38,6 +35,16 @@
+ # it once.
+ %define extras "extras/volume_id extras/path_id extras/usb_id extras/firmware"
+ 
++
++%Package rfs
++Summary         : Trimmed udev for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++udev package contents restricted to just the files that are
++needed at run time on the target.
++
++
+ %Description
+ %{summary}
+ 
+@@ -59,17 +66,14 @@
+ %patch13 -p1
+ %patch14 -p1
+ %patch15 -p1
+-%patch16 -p1
+-%patch17 -p1
+-%patch18 -p1
+ 
+ %Build
+ make EXTRAS=%{extras}
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-make install EXTRAS=%{extras} DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+-install -m 644 etc/udev/packages/40-alsa.rules $RPM_BUILD_ROOT/%{pfx}/etc/udev/rules.d
++make install EXTRAS=%{extras} DESTDIR=$RPM_BUILD_ROOT%{pfx}
++install -m 644 etc/udev/packages/40-alsa.rules $RPM_BUILD_ROOT%{pfx}/etc/udev/rules.d
+ 
+ # To avoid duplication removed as skell installs this and all the
+ # other init scripts.
+@@ -78,12 +82,12 @@
+ 
+ if [ "$PKG_UDEV_WANT_IMX" = "y" ]
+ then
+-	install -m 644 etc/udev/ltib/??-imx*.rules $RPM_BUILD_ROOT/%{pfx}/etc/udev/rules.d
++	install -m 644 etc/udev/ltib/??-imx*.rules $RPM_BUILD_ROOT%{pfx}/etc/udev/rules.d
+ fi
+ 
+ if [ "$PKG_UDEV_WANT_AUTOMOUNT" = "y" ]
+ then
+-	install -m 644 etc/udev/ltib/65-automount.rules $RPM_BUILD_ROOT/%{pfx}/etc/udev/rules.d
++	install -m 644 etc/udev/ltib/65-automount.rules $RPM_BUILD_ROOT%{pfx}/etc/udev/rules.d
+ fi
+ 
+ if [ "$PKG_UDEV_WANT_NON_RAID" = "y" ]
+@@ -95,13 +99,23 @@
+ 	# capacity incorrectly.
+ 
+ 	perl -pi -e 's/vol_id /vol_id --skip-raid /' \
+-		$RPM_BUILD_ROOT/%{pfx}/etc/udev/rules.d/*
++		$RPM_BUILD_ROOT%{pfx}/etc/udev/rules.d/*
+ fi
+ 
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_libdir}/pkgconfig, d;
++    \,^%{pfx}%{_mandir}, d;
++    \,^%{pfx}%{_includedir}, d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*

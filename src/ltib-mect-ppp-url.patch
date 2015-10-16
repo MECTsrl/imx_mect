@@ -1,0 +1,11 @@
+--- ltib.original/.ltibrc	2013-01-09 04:58:38.000000000 +0100
++++ ltib/.ltibrc	2015-09-13 19:29:15.179079000 +0200
+@@ -48,7 +48,7 @@
+ 
+ # The URL of the PPP (Private Package Pool) private code repository
+ %ppp_url
+-http://auslxsc01.am.freescale.net/ppp/
++http://www.mect.it/archive/
+ 
+ # The URL of the GPP (Global Package Pool) master code repository
+ %gpp_url

@@ -1,0 +1,59 @@
+--- ltib/dist/lfs-5.1/zip30/zip30.spec	1970-01-01 01:00:00.000000000 +0100
++++ ltib.new/dist/lfs-5.1/zip30/zip30.spec	2015-10-12 10:46:10.698466000 +0200
+@@ -0,0 +1,56 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : A file compression utility.
++Name            : zip
++Version         : 3.0.0
++Release         : 0
++License         : BSD
++Vendor          : Mect srl
++Packager        : Monica Donno
++Group           : Applications/File
++Source          : %{name}-%{version}.tar.bz2
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed zip for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++zip package contents restricted to just the files that are
++needed at run time on the target.
++
++
++%Description
++%{summary}
++
++%Prep
++%setup
++
++%Build
++make -f unix/Makefile generic_gcc
++
++
++%Install
++rm -rf $RPM_BUILD_ROOT
++make -f unix/Makefile install PREFIX=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
++$TOOLCHAIN_PATH/bin/${TOOLCHAIN_PREFIX}strip --strip-unneeded $RPM_BUILD_ROOT/%{pfx}%{_prefix}/bin/zip
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p
++' all_files.lst > rfs_files.lst
++
++%Clean
++rm -rf $RPM_BUILD_ROOT
++
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)

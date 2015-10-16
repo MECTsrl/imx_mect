@@ -1,0 +1,171 @@
+--- ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib.new/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-10-12 10:46:10.662467000 +0200
+@@ -10,12 +10,22 @@
+ Group		: System Environment/Base
+ BuildRoot	: %{_tmppath}/%{name}
+ Prefix		: %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed sysconfig for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++sysconfig package contents restricted to just the files that
++are needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+ 
+ %Prep
+-#%setup
+ 
+ %Build
+ 
+@@ -63,6 +73,36 @@
+ then
+     boa=boa
+ fi
++if [ "$SYSCFG_START_VSFTPD" = "y" ]
++then
++    vsftpd=vsftpd
++fi
++if [ "$SYSCFG_START_TELNET" = "y" ]
++then
++    telnetd=telnetd
++	mkdir -p $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/init.d
++cat <<'EOF' > $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/init.d/telnetd
++#!/bin/sh
++
++if [ ! -x /usr/sbin/telnetd ]
++then
++	exit 0
++fi
++
++if [ "$1" = "stop" -o "$1" = "restart" ]
++then
++	echo "Stopping the telnet daemon: "
++	killall telnetd
++fi
++
++if [ "$1" = "start" -o "$1" = "restart" ]
++then
++	echo "Starting the telnet daemon: "
++	/usr/sbin/telnetd
++fi
++EOF
++	chmod +x $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/init.d/telnetd
++fi
+ if [ "$SYSCFG_SETTIME" = "y" ]
+ then
+     settime=settime
+@@ -91,14 +131,24 @@
+ then
+         fslgnome=fslgnome
+ fi
++if [ "$SYSCFG_START_AUTOEXEC" = "y" ]
++then
++        autoexec=autoexec
++	sdcheck=sdcheck
++	usbmode=usbmode
++fi
+ 
++if [ "$SYSCFG_START_S10SETUP" = "y" ]
++then
++        S10setup=S10setup
++fi
+ cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc.conf
+-all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems syslog network inetd portmap dropbear sshd boa smb dhcpd settime fslgnome watchdog bluetooth gtk2 pango"
+-all_services_r="pango gtk2 bluetooth watchdog fslgnome settime dhcpd smb boa sshd dropbear portmap inetd network syslog filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
++all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems sdcheck syslog network inetd portmap dropbear sshd boa vsftpd smb dhcpd settime fslgnome watchdog bluetooth gtk2 pango telnetd usbmode S10setup autoexec"
++all_services_r="autoexec S10setup usbmode telnetd pango gtk2 bluetooth watchdog fslgnome settime dhcpd smb boa vsftpd sshd dropbear portmap inetd network syslog sdcheck filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
+ 
+-cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $syslog $network $inetd $portmap $dropbear $sshd $boa $smb $dhcpd $settime $fslgnome $watchdog $bluetooth $gtk2 $pango"
++cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $sdcheck $usbmode $autoexec $syslog $network $inetd $portmap $dropbear $sshd $boa $vsftpd $smb $dhcpd $settime $fslgnome $watchdog $bluetooth $gtk2 $pango $telnetd $S10setup"
+ 
+-cfg_services_r="$pango $gtk2 $bluetooth $watchdog $fslgnome $settime $dhcpd $smb $boa $sshd $dropbear $portmap $inetd $network $syslog filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys"
++cfg_services_r="$autoexec $S10setup $usbmode $pango $gtk2 $bluetooth $watchdog $fslgnome $settime $dhcpd $smb $boa $vsftpd $sshd $dropbear $portmap $inetd $network $syslog $sdcheck filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys $telnetd"
+ 
+ export HOSTNAME="${SYSCFG_HOSTNAME:-$PLATFORM}"
+ export NTP_SERVER="$SYSCFG_NTP_SERVER"
+@@ -154,57 +204,10 @@
+     else
+ 	sys_login="::respawn:-/bin/sh"
+     fi
+-
+-    cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc_mxc.S
+-#!/bin/bash
+-#
+-if grep -sq ttymxc0 /proc/cmdline; then
+-	/sbin/getty -L ttymxc0 115200 vt100
+-elif grep -sq ttymxc1 /proc/cmdline; then
+-	/sbin/getty -L ttymxc1 115200 vt100
+-elif grep -sq ttymxc2 /proc/cmdline; then
+-	/sbin/getty -L ttymxc2 115200 vt100
+-elif grep -sq ttymxc3 /proc/cmdline; then
+-	/sbin/getty -L ttymxc3 115200 vt100
+-else
+-	sleep 100000
+-fi
+-EOF
+-chmod +x $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc_mxc.S
+-
+-cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc_gpu.S
+-#!/bin/bash
+-CPUREV=\$(cat /proc/cpuinfo | grep Revision | awk '{print \$3}' | awk '{print substr(\$0,1,2)}')
+-FILEVG=/usr/lib/libOpenVG.so
+-FILEVG3D=/usr/lib/libOpenVG_3D.so
+-FILEVG355=/usr/lib/libOpenVG_355.so
+-if  [ -e \$FILEVG3D ] && [ -e \$FILEVG355 ]
+-then
+-  if  [ \$CPUREV == "61" ] || [ \$CPUREV == "63" ] || [ \$CPUREV == "60" ] && [ -e  \$FILEVG ]
+-  then
+-        rm -f \$FILEVG
+-  fi
+-  if [ \$CPUREV == "61" ]
+-  then
+-        ln -s \$FILEVG3D \$FILEVG
+-  fi
+-  if [ \$CPUREV == "63" ]
+-  then
+-        ln -s \$FILEVG355 \$FILEVG
+-  fi
+-  if [ \$CPUREV == "60" ]
+-  then
+-        ln -s \$FILEVG355 \$FILEVG
+-  fi
+-fi
+-EOF
+-chmod +x $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc_gpu.S
+-
+     cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/inittab
+ # see busybox-1.00rc2/examples/inittab for more examples
+ ::sysinit:/etc/rc.d/rcS
+ $sys_login
+-::sysinit:/etc/rc.d/rc_gpu.S
+ ::ctrlaltdel:/sbin/reboot
+ ::shutdown:/etc/rc.d/rcS stop
+ ::restart:/sbin/init
+@@ -308,9 +311,18 @@
+     ln -s /sbin/init $RPM_BUILD_ROOT/%{pfx}/init
+ fi
+ 
++cd %{_builddir}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++	p;
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*

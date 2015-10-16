@@ -1,0 +1,11 @@
+diff -aurN new/patch-ltib-ubuntu12.04.sh sys/patch-ltib-ubuntu12.04.sh
+--- new/patch-ltib-ubuntu12.04.sh	2015-10-15 23:42:10.862825286 +0200
++++ sys/patch-ltib-ubuntu12.04.sh	2015-10-16 00:07:32.815207336 +0200
+@@ -11,6 +11,7 @@
+ # Execute the script which does the patching.
+ ltibDir=`pwd`
+ cd ubuntu-ltib-patch
++patch -p1 < ../ubuntu-ltib-patch-include-sys-i386.patch
+ ./install-patches.sh $ltibDir
+ cd -
+ rm -rf ubuntu-ltib-patch

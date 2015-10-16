@@ -1,0 +1,274 @@
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/arch/arm/mach-mx28/Kconfig linux-2.6.35.3.modified/arch/arm/mach-mx28/Kconfig
+--- linux-2.6.35.3/arch/arm/mach-mx28/Kconfig	2012-02-14 13:56:06.634687765 +0100
++++ linux-2.6.35.3.modified/arch/arm/mach-mx28/Kconfig	2012-02-14 12:49:29.286687806 +0100
+@@ -23,3 +23,11 @@
+ 	depends on ARCH_MX28
+ 	help
+ 	  Say Y to select mDDR memory
++
++config MECT_CUSTOMIZATION
++	bool "Mect customization for i.mx28 evk board"
++	depends on MACH_MX28EVK
++	default y
++	help
++	  Say Y to select the Mect modification (can, ethernet, rs485) 
++		
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/arch/arm/mach-mx28/device.c linux-2.6.35.3.modified/arch/arm/mach-mx28/device.c
+--- linux-2.6.35.3/arch/arm/mach-mx28/device.c	2012-02-14 13:56:14.558687766 +0100
++++ linux-2.6.35.3.modified/arch/arm/mach-mx28/device.c	2012-02-14 13:04:49.270688900 +0100
+@@ -1032,12 +1032,13 @@
+ 
+ #define GPIO_BUTTON(gpio_num, ev_code, act_low, descr, wake)    \
+ {                                                               \
+-        .gpio           = gpio_num,                             \
+-        .type           = EV_KEY,                               \
+-        .code           = ev_code,                              \
+-        .active_low     = act_low,                              \
+-        .desc           = "btn " descr,                         \
+-        .wakeup         = wake,                                 \
++        .gpio              = gpio_num,                          \
++        .type              = EV_KEY,                            \
++        .code              = ev_code,                           \
++        .active_low        = act_low,                           \
++        .desc              = "btn " descr,                      \
++        .wakeup            = wake,                              \
++        .debounce_interval = 50,                                \
+ }
+ 
+ static struct gpio_keys_button gpio_mect_buttons[] = {
+@@ -1139,10 +1140,22 @@
+ 	static int pwdn;
+ 	if (en) {
+ 		if (!pwdn++)
++		{
++#ifdef CONFIG_MECT_CUSTOMIZATION
++			gpio_set_value(MXS_PIN_TO_GPIO(PINID_SSP1_CMD), 0);
++#else
+ 			gpio_set_value(MXS_PIN_TO_GPIO(PINID_SSP1_CMD), 1);
++#endif
++		}
+ 	} else {
+ 		if (!--pwdn)
++		{
++#ifdef CONFIG_MECT_CUSTOMIZATION
++			gpio_set_value(MXS_PIN_TO_GPIO(PINID_SSP1_CMD), 1);
++#else
+ 			gpio_set_value(MXS_PIN_TO_GPIO(PINID_SSP1_CMD), 0);
++#endif
++		}
+ 	}
+ }
+ 
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c linux-2.6.35.3.modified/arch/arm/mach-mx28/mx28evk_pins.c
+--- linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c	2012-02-14 13:56:14.654687766 +0100
++++ linux-2.6.35.3.modified/arch/arm/mach-mx28/mx28evk_pins.c	2012-02-14 13:05:14.118687766 +0100
+@@ -1369,7 +1369,11 @@
+ {
+ 	/* pwr */
+ 	gpio_request(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), "ENET_PWR");
++#ifdef CONFIG_MECT_CUSTOMIZATION
++	gpio_direction_output(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), 1);
++#else
+ 	gpio_direction_output(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), 0);
++#endif
+ 
+ 	/* reset phy */
+ 	gpio_request(MXS_PIN_TO_GPIO(PINID_ENET0_RX_CLK), "PHY_RESET");
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/input/keyboard/gpio_keys.c linux-2.6.35.3.modified/drivers/input/keyboard/gpio_keys.c
+--- linux-2.6.35.3/drivers/input/keyboard/gpio_keys.c	2012-02-14 13:56:14.658687766 +0100
++++ linux-2.6.35.3.modified/drivers/input/keyboard/gpio_keys.c	2012-02-09 12:45:47.856478151 +0100
+@@ -321,30 +321,46 @@
+ 	struct gpio_keys_button *button = bdata->button;
+ 	struct input_dev *input = bdata->input;
+ 	unsigned int type = button->type ?: EV_KEY;
+-	int state = (gpio_get_value(button->gpio) ? 1 : 0) ^ button->active_low;
+-	
++	int level = (gpio_get_value(button->gpio) ? 1 : 0);
++	int state = level ^ button->active_low;
+ 
++	if (level)
++	{
+ #ifdef KBD_DEBUG
+-	printk("MONICA %s: get_value %d \n", __func__, gpio_get_value(button->gpio));	
++		printk("MONICA %s: gpio HIGH, set IRQ at edge FALLING\n", __func__);	
++#endif
++		set_irq_type(gpio_to_irq(button->gpio), IRQ_TYPE_EDGE_FALLING);
++	}
++	else
++	{
++#ifdef KBD_DEBUG
++		printk("MONICA %s: gpio LOW, set IRQ at edge RISING\n", __func__);	
++#endif
++		set_irq_type(gpio_to_irq(button->gpio), IRQ_TYPE_EDGE_RISING);
++	}
++
++#ifdef KBD_DEBUG
++	printk("MONICA %s: get_value %d \n", __func__, level);	
+ 	printk("MONICA %s: button->gpio %d button->active_low %d\n", __func__, button->gpio, button->active_low);
+ 	printk("MONICA %s: state %d \n", __func__, state);
+ #endif
+ 	input_event(input, type, button->code, !!state);
+ 	input_sync(input);
+-	
++#if 0	
+ 	/* Patch to emulate the other interrupt*/
+ 	input_event(input, type, button->code, !state);
+ 	input_sync(input);
+-	
++#endif
+ }
+ 
+ static void gpio_keys_work_func(struct work_struct *work)
+ {
+-	struct gpio_button_data *bdata =
+-		container_of(work, struct gpio_button_data, work);
++	struct gpio_button_data *bdata = container_of(work, struct gpio_button_data, work);
++	struct gpio_keys_button *button = bdata->button;
++
+ #ifdef KBD_DEBUG
+ 	printk("MONICA %s: ENTER\n", __func__);
+-#endif		
++#endif
+ 
+ 	gpio_keys_report_event(bdata);
+ }
+@@ -362,7 +378,7 @@
+ 	struct gpio_keys_button *button = bdata->button;
+ 
+ #ifdef KBD_DEBUG
+-	printk("MONICA KBD event %s\n", __func__);
++	printk("MONICA KBD event %s debounce %d\n", __func__,button->debounce_interval);
+ #endif
+ 
+ 	BUG_ON(irq != gpio_to_irq(button->gpio));
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/serial/mxs-auart.c linux-2.6.35.3.modified/drivers/serial/mxs-auart.c
+--- linux-2.6.35.3/drivers/serial/mxs-auart.c	2012-02-14 13:56:14.598687766 +0100
++++ linux-2.6.35.3.modified/drivers/serial/mxs-auart.c	2012-02-14 13:06:49.470687766 +0100
+@@ -48,12 +48,10 @@
+ #define MXS_AUART_MAJOR	242
+ #define MXS_AUART_RX_THRESHOLD 16
+ 
+-#define MECT_RTS_MANAGEMENT
+-
+-#ifdef MECT_RTS_MANAGEMENT
++#ifdef CONFIG_MECT_CUSTOMIZATION
+ //for ewk board
+-//#define MECT_RTS_TX_ACTIVE_LOW
+-//#define MECT_RTS_MANAGEMENT_DBG
++#define MECT_RTS_TX_ACTIVE_LOW
++//#define CONFIG_MECT_CUSTOMIZATION_DBG
+ #endif
+ 
+ static struct uart_driver auart_driver;
+@@ -147,12 +145,12 @@
+ 	}
+ 	if (uart_circ_empty(&(s->port.state->xmit)))
+ 	{
+-#ifdef MECT_RTS_MANAGEMENT_DBG
++#ifdef CONFIG_MECT_CUSTOMIZATION_DBG
+ 		printk(KERN_INFO "%s: uart_circ_empty\n", __func__);
+ #endif
+ 		__raw_writel(BM_UARTAPP_INTR_TXIEN,
+ 				s->port.membase + HW_UARTAPP_INTR_CLR);
+-#ifdef MECT_RTS_MANAGEMENT
++#ifdef CONFIG_MECT_CUSTOMIZATION
+ 		/*
+ 		 *      Finally, wait for transmitter to become empty
+ 		 *      and restore the RTS
+@@ -163,7 +161,7 @@
+ 				status = __raw_readl(s->port.membase + HW_UARTAPP_STAT);
+ 			} while (status & BM_UARTAPP_STAT_BUSY);
+ 		}
+-#ifdef MECT_RTS_MANAGEMENT_DBG
++#ifdef CONFIG_MECT_CUSTOMIZATION_DBG
+ 		printk(KERN_INFO "%s: Release RTS\n", __func__);
+ #endif
+ #ifdef MECT_RTS_TX_ACTIVE_LOW
+@@ -490,24 +488,24 @@
+ 	struct mxs_auart_port *s = to_auart_port(u);
+ 
+ 	u32 ctrl = __raw_readl(u->membase + HW_UARTAPP_CTRL2);
+-#ifdef MECT_RTS_MANAGEMENT_DBG
++#ifdef CONFIG_MECT_CUSTOMIZATION_DBG
+ 	printk(KERN_INFO "EGB %s - mctrl %d\n", __func__, mctrl);
+ 	printk(KERN_INFO "EGB %s - get RTS %d\n", __func__,  mxs_auart_get_mctrl(u));
+ #endif
+ 
+ 	ctrl &= ~BM_UARTAPP_CTRL2_RTS;
+-#ifdef MECT_RTS_MANAGEMENT
++#ifdef CONFIG_MECT_CUSTOMIZATION
+ 	if ((mctrl & TIOCM_RTS) == TIOCM_RTS)
+ #else
+ 	if (mctrl & TIOCM_RTS)
+ #endif
+ 	{
+ 		ctrl |= BM_UARTAPP_CTRL2_RTS;
+-#ifdef MECT_RTS_MANAGEMENT_DBG
++#ifdef CONFIG_MECT_CUSTOMIZATION_DBG
+ 				printk(KERN_INFO "EGB %s - RTS 1\n", __func__);
+ #endif
+ 	}
+-#ifdef MECT_RTS_MANAGEMENT_DBG
++#ifdef CONFIG_MECT_CUSTOMIZATION_DBG
+ 	else
+ 	{
+ 				printk(KERN_INFO "EGB %s - RTS 0\n", __func__);
+@@ -797,11 +795,11 @@
+ static void mxs_auart_start_tx(struct uart_port *u)
+ {
+ 	struct mxs_auart_port *s = to_auart_port(u);
+-#ifdef MECT_RTS_MANAGEMENT_DBG
++#ifdef CONFIG_MECT_CUSTOMIZATION_DBG
+ 	printk(KERN_INFO "%s: ENTER", __func__);
+ 	printk(KERN_INFO "%s: Occupy RTS\n", __func__);
+ #endif
+-#ifdef MECT_RTS_MANAGEMENT
++#ifdef CONFIG_MECT_CUSTOMIZATION
+ 	/* RTS set */
+ #ifdef MECT_RTS_TX_ACTIVE_LOW
+ 	mxs_auart_set_mctrl(&s->port, 0);
+@@ -814,14 +812,14 @@
+ 	__raw_writel(BM_UARTAPP_CTRL2_TXE, u->membase + HW_UARTAPP_CTRL2_SET);
+ 
+ 	mxs_auart_tx_chars(s);
+-#ifdef MECT_RTS_MANAGEMENT_DBG
++#ifdef CONFIG_MECT_CUSTOMIZATION_DBG
+ 	printk (KERN_INFO "EGB: %s - EXIT", __func__);
+ #endif
+ }
+ 
+ static void mxs_auart_stop_tx(struct uart_port *u)
+ {
+-#ifdef MECT_RTS_MANAGEMENT_DBG
++#ifdef CONFIG_MECT_CUSTOMIZATION_DBG
+ 	printk (KERN_INFO ".... EGB: %s - ENTER", __func__);
+ #endif
+ 	__raw_writel(BM_UARTAPP_CTRL2_TXE, u->membase + HW_UARTAPP_CTRL2_CLR);
+diff --exclude CVS --exclude .git -uNr linux-2.6.35.3/drivers/video/mxs/lcd_tm043.c linux-2.6.35.3.modified/drivers/video/mxs/lcd_tm043.c
+--- linux-2.6.35.3/drivers/video/mxs/lcd_tm043.c	2012-02-14 13:56:14.634687766 +0100
++++ linux-2.6.35.3.modified/drivers/video/mxs/lcd_tm043.c	2012-02-08 16:39:42.978618001 +0100
+@@ -207,7 +207,8 @@
+ 	clk_put(pwm_clk);
+ }
+ 
+-static int values[] = { 0, 4, 9, 14, 20, 27, 35, 45, 57, 75, 100 };
++//static int values[] = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
++ static int values[] = { 25, 32, 40, 48, 53, 63, 70, 78, 88, 93, 100 };
+ 
+ static int power[] = {
+ 	0, 1500, 3600, 6100, 10300,
+@@ -251,10 +252,10 @@
+ 	    (data->regulator, bl_to_power(intensity), bl_to_power(intensity)))
+ 		return -EBUSY;
+ 
+-	scaled_int = values[intensity / 10];
+-	if (scaled_int < 100) {
++	scaled_int = values[intensity / 10] * 4;
++	if (scaled_int < 100 * 4) {
+ 		int rem = intensity - 10 * (intensity / 10);	/* r = i % 10; */
+-		scaled_int += rem * (values[intensity / 10 + 1] -
++		scaled_int += 4 * rem * (values[intensity / 10 + 1] -
+ 				     values[intensity / 10]) / 10;
+ 	}
+ 	__raw_writel(BF_PWM_ACTIVEn_INACTIVE(scaled_int) |
+

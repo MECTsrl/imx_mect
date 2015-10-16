@@ -1,0 +1,11 @@
+--- elftosb-2.6.35.3-1.1.0/makefile.rules	2010-09-20 15:28:03.000000000 +0200
++++ elftosb-2.6.35.3-1.1.0.new/makefile.rules	2015-08-27 12:11:59.137665188 +0200
+@@ -101,7 +101,7 @@
+ 	keygen.o
+ 
+ 
+-LIBS =     -lstdc++
++LIBS =     -lstdc++ -lm
+ 
+ 
+ ifeq ("${UNAMES}", "Linux")

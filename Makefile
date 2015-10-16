@@ -14,7 +14,7 @@ USER_NAME = "Embedded developer"
 HOST_NAME = "development.localdomain"
 
 # Download the archives here.
-FTPDIR = $(CURDIR)/ftp
+FTPDIR = $(CURDIR)/downloads
 # LTIB is installed here.
 LTIBDIR = $(CURDIR)/ltib
 # LTIB rootfs is created here.
@@ -117,6 +117,9 @@ LTIB_CONFIG_PATCH = ltib-config.patch
 # LTIB fix deprecated warning and missing zlib (MECT patch)
 LTIB_DEPR_AND_ZLIB_PATCH = ltib-deprecated+zlib.patch
 
+# LTIB change wget options for download and log (MECT patch)
+LTIB_WGET_OPTIONS_PATCH = ltib-wget-retry.patch
+
 # LTIB rpm-fs spec file (MECT patch)
 LTIB_RPM_FS_SPEC_PATCH = rpm-fs-mect-spec.patch
 
@@ -128,9 +131,6 @@ LTIB_TEXINFO_SPEC_PATCH = texinfo-mect-spec.patch
 
 # LTIB pkgconfig spec file (MECT patch)
 LTIB_PKGCONFIG_SPEC_PATCH = pkgconfig-mect-spec.patch
-
-# LTIB sparse spec file (MECT patch)
-LTIB_SPARSE_SPEC_PATCH = sparse-mect-spec.patch
 
 # LTIB git spec file (MECT patch)
 LTIB_GIT_SPEC_PATCH = git-mect-spec.patch
@@ -307,11 +307,11 @@ DOWNLOADS := \
 	$(LTIB_UBUNTU_INCLUDE_SYS_PATHCH) \
 	$(LTIB_CONFIG_PATCH) \
 	$(LTIB_DEPR_AND_ZLIB_PATCH) \
+	$(LTIB_WGET_OPTIONS_PATCH) \
 	$(LTIB_RPM_FS_SPEC_PATCH) \
 	$(LTIB_BISON_SPEC_PATCH) \
 	$(LTIB_TEXINFO_SPEC_PATCH) \
 	$(LTIB_PKGCONFIG_SPEC_PATCH) \
-	$(LTIB_SPARSE_SPEC_PATCH) \
 	$(LTIB_GIT_SPEC_PATCH) \
 	$(LTIB_U_BOOT_SPEC_PATCH) \
 	$(LTIB_U_BOOT_TEMPLATE_SPEC_PATCH) \
@@ -415,12 +415,14 @@ all: env downloads ltib
 .PHONY: env
 env:
 	@for p in $(UTILS); do which $$p; done
-	@sudo -kn which sudo > /dev/null 2>&1 || { echo "*** Error: user \"$$USER\" must be allowed to sudo without password."; exit 1; }
 	if test -d $(LTIBDIR); then \
-		echo "*** Error: Destination directory $(LTIBDIR) exists. Will not overwrite, aborting."; \
+		echo "*** Error: Destination directory $(LTIBDIR) exists, will not overwrite."; \
+		echo "Hint: To continue an interupted installation try running LTIB directly:"; \
+		echo "          cd $(LTIBDIR); ./ltib"; \
+		echo "Aborting."; \
 		exit 1; \
 	fi
-	-sudo apt-get -y update
+	-sudo apt-get update
 	sudo apt-get install $(PACKAGES)
 
 # Initial downloads (toolchain, LTIB, LTIB patches, spec files patches, ...)
@@ -467,12 +469,12 @@ ltibpatch: downloads
 	cd $(LTIBDIR); for p in \
 			$(LTIB_CONFIG_PATCH) \
 			$(LTIB_DEPR_AND_ZLIB_PATCH) \
+			$(LTIB_WGET_OPTIONS_PATCH) \
 			$(LTIB_U_BOOT_SPEC_PATCH) \
 			$(LTIB_RPM_FS_SPEC_PATCH) \
 			$(LTIB_BISON_SPEC_PATCH) \
 			$(LTIB_TEXINFO_SPEC_PATCH) \
 			$(LTIB_PKGCONFIG_SPEC_PATCH) \
-			$(LTIB_SPARSE_SPEC_PATCH) \
 			$(LTIB_GIT_SPEC_PATCH) \
 			$(LTIB_U_BOOT_TEMPLATE_SPEC_PATCH) \
 			$(LTIB_MERGE_PATCH) \

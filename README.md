@@ -58,8 +58,7 @@ The main steps of the Makefile-driven build process are:
 - download LTIB, toolchain for cross-compilation, Qt, and their configurations and patches
 - install and patch LTIB
 - install the toolchain for cross-compilation, compile and install Qt
-- build the image for the target
-
+- build the image for the target  
   The build process automatically downloads source archives and packages, when needed.  
   If one of the downloads fail, the build can be resumed by restarting manually LTIB:
 

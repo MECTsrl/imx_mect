@@ -581,11 +581,11 @@ tpac_1007_rfs: $(RFSPKGS_TPAC_1007)
 .PHONY: tpac_1007_lfs
 tpac_1007_lfs: LFSDIR := tpac_1007/localfs
 tpac_1007_lfs:
-	sudo rm -rf $(IMGDIR)/$(LFSDIR)
-	mkdir -p $(IMGDIR)/$(LFSDIR)/var/lib/rpm $(IMGDIR)/$(LFSDIR)/tmp/ltib
-	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(IMGDIR)/$(LFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --force --excludedocs --define '_tmppath /tmp/ltib' $(LFSPKGS_TPAC_1007)
-	du -sh --apparent-size $(IMGDIR)/$(LFSDIR)
-	cd $(IMGDIR)/$(LFSDIR); BZIP2=-9 tar cjf ../localfs.tar.bz2 *
+	#sudo rm -rf $(IMGDIR)/$(LFSDIR)
+	#mkdir -p $(IMGDIR)/$(LFSDIR)/var/lib/rpm $(IMGDIR)/$(LFSDIR)/tmp/ltib
+	#sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(IMGDIR)/$(LFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --force --excludedocs --define '_tmppath /tmp/ltib' $(LFSPKGS_TPAC_1007)
+	#du -sh --apparent-size $(IMGDIR)/$(LFSDIR)
+	#cd $(IMGDIR)/$(LFSDIR); BZIP2=-9 tar cjf ../localfs.tar.bz2 *
 
 
 .PHONY: clean

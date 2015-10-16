@@ -32,7 +32,7 @@ RPMDIR = $(CURDIR)/ltib/rpm/RPMS/arm
 # Root file system top-level directory
 IMGDIR = $(CURDIR)/images-all
 # Draft directory for rpmbuild
-TMPRPMDIR = /tmp/rpm-$(TARGET_UNIX_NAME)
+TMPRPMDIR = /tmp/rpm-$(USER)
 
 
 # Extension of the MD5 checksums for the downloads.

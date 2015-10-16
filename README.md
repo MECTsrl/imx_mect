@@ -52,7 +52,7 @@ Build steps:
 
 ## Main build steps
 
-The main steps of the Makefile-driven build process are:
+The main steps of the Makefile-driven build flow are:
 
 - check and update the host environment
 - download LTIB, toolchain for cross-compilation, Qt, and their configurations and patches

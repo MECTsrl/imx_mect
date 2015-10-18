@@ -14,7 +14,7 @@ USER_NAME = "Embedded developer"
 HOST_NAME = "development.localdomain"
 
 # Download the archives here.
-FTPDIR = $(CURDIR)/downloads
+FTPDIR = $(CURDIR)/src
 # LTIB is installed here.
 LTIBDIR = $(CURDIR)/ltib
 # LTIB rootfs is created here.
@@ -27,6 +27,8 @@ TMPDIR = $(CURDIR)/tmp
 FTPURL = http://www.mect.it/archive
 # Hardcoded Freescale directory
 FSDIR = /opt/freescale
+# LPP location
+LPPDIR = $(FSDIR)/pkgs
 # RPM archive
 RPMDIR = $(CURDIR)/ltib/rpm/RPMS/arm
 # Root file system top-level directory
@@ -167,7 +169,7 @@ LTIB_LIBSOCKETCAN_SPEC_PATCH = libsocketcan-mect-spec.patch
 
 # qwt
 QWT_VERSION = 6.1.0
-LTIB_QWT_SPEC_PATCH = qwt-mect-$(QWT_VERSION)-spec.patch
+LTIB_QWT_SPEC_PATCH = qwt-mect-6.1.0-spec.patch
 
 # LTIB fix boot_stream spec (MECT patch)
 LTIB_BOOT_STREAM_SPEC_PATCH = boot_stream-mect-spec.patch
@@ -181,11 +183,11 @@ LTIB_BOA_SPEC_PATCH = boa-mect-spec.patch
 # LTIB qt spec file (MECT patch)
 QT_INSTALL_DIR = /opt/Trolltech
 QT_VERSION = 4.8.5
-LTIB_QT_SPEC_PATCH = qt-embedded-mect-$(QT_VERSION)-spec.patch
-LTIB_QT_ARCH = qt-everywhere-opensource-src-$(QT_VERSION).tar.gz
-LTIB_QT_PATCH1 = qt-everywhere-opensource-src-$(QT_VERSION)-1394522957.patch
-LTIB_QT_PATCH2 = qt-everywhere-opensource-src-$(QT_VERSION)-1420823826.patch
-LTIB_QT_PATCH3 = qt-everywhere-opensource-src-$(QT_VERSION)-1420823825.patch
+LTIB_QT_SPEC_PATCH = qt-embedded-mect-4.8.5-spec.patch
+LTIB_QT_ARCH = qt-everywhere-opensource-src-4.8.5.tar.gz
+LTIB_QT_PATCH1 = qt-everywhere-opensource-src-4.8.5-1394522957.patch
+LTIB_QT_PATCH2 = qt-everywhere-opensource-src-4.8.5-1420823826.patch
+LTIB_QT_PATCH3 = qt-everywhere-opensource-src-4.8.5-1420823825.patch
 
 # LTIB iproute spec file (MECT patch)
 LTIB_IPROUTE_SPEC_PATCH = iproute-mect-spec.patch
@@ -283,91 +285,35 @@ LTIB_UNZIP_SPEC_PATCH = unzip-mect-spec.patch
 # LTIB zlib spec file (MECT patch)
 LTIB_ZLIB_SPEC_PATCH = zlib-mect-spec.patch
 
-# MECT dropbear host key
-MECT_DROPBEAR_HOST_KEY = dropbear_rsa_host_key
-MECT_DROPBEAR_HOST_KEY_DIR = etc/dropbear
-
 
 # Extra packages to copy in $(LTIBPKGDIR)
-FSPKG := \
+FSPKG_DL := \
 	$(LTIB_QT_ARCH) \
-	$(LTIB_QT_PATCH1) \
 	$(LTIB_QT_PATCH2) \
+
+FSPKG := \
+	$(LTIB_QT_PATCH1) \
 	$(LTIB_QT_PATCH3) \
+
+FSPKG := $(FSPKG) $(FSPKG_DL)
+
 
 FSPKGMD5 := $(FSPKG:%=%.$(MD5EXT))
 FSPKG := $(FSPKG) $(FSPKGMD5)
 FSPKG := $(FSPKG:%=$(FTPDIR)/%)
 
+
 DOWNLOADS := \
 	$(CSXCARCH) \
 	$(LTIB_EVKARCH) \
-	$(LTIBINST_TARGETDIR_PATHCH) \
-	$(LTIB_UBUNTU_URL_PATHCH) \
-	$(LTIB_UBUNTU_INCLUDE_SYS_PATHCH) \
-	$(LTIB_CONFIG_PATCH) \
-	$(LTIB_DEPR_AND_ZLIB_PATCH) \
-	$(LTIB_WGET_OPTIONS_PATCH) \
-	$(LTIB_RPM_FS_SPEC_PATCH) \
-	$(LTIB_BISON_SPEC_PATCH) \
-	$(LTIB_TEXINFO_SPEC_PATCH) \
-	$(LTIB_PKGCONFIG_SPEC_PATCH) \
-	$(LTIB_GIT_SPEC_PATCH) \
-	$(LTIB_U_BOOT_SPEC_PATCH) \
-	$(LTIB_U_BOOT_TEMPLATE_SPEC_PATCH) \
-	$(LTIB_MERGE_PATCH) \
-	$(LTIB_KERNEL_SPEC_PATCH) \
-	$(LTIB_KERNEL_TEMPLATE_SPEC_PATCH) \
-	$(LTIB_MECT_PPP_PATCH) \
 	$(LTIB_UBUNTU_12_04_PATCH) \
-	$(LTIB_UBUNTU_12_04_PATCH_INCLUDE_SYS_PATCH) \
-	$(LTIB_ELFTOSB_SPEC_PATCH) \
-	$(LTIB_SFTP_SERVER_SPEC_PATCH) \
-	$(LTIB_LIBSOCKETCAN_SPEC_PATCH) \
-	$(LTIB_QWT_SPEC_PATCH) \
-	$(LTIB_BOOT_STREAM_SPEC_PATCH) \
-	$(LTIB_BASE_LIBS_SPEC_PATCH) \
-	$(LTIB_BOA_SPEC_PATCH) \
-	$(LTIB_QT_SPEC_PATCH) \
-	$(LTIB_IPROUTE_SPEC_PATCH) \
-	$(LTIB_SKELL_SPEC_PATCH) \
-	$(LTIB_SYSCONFIG_SPEC_PATCH) \
-	$(LTIB_XENOMAI_SPEC_PATCH) \
-	$(LTIB_ZIP30_SPEC_PATCH) \
-	$(LTIB_BUSYBOX_SPEC_PATCH) \
-	$(LTIB_BZIP2_SPEC_PATCH) \
-	$(LTIB_CANTEST_SPEC_PATCH) \
-	$(LTIB_DHCP_SPEC_PATCH) \
-	$(LTIB_DROPBEAR_SPEC_PATCH) \
-	$(LTIB_E2FSPROGS_SPEC_PATCH) \
-	$(LTIB_EXPAT_SPEC_PATCH) \
-	$(LTIB_FAKE_SPEC_PATCH) \
-	$(LTIB_FONTCONFIG_SPEC_PATCH) \
-	$(LTIB_FREETYPE_SPEC_PATCH) \
-	$(LTIB_GLIB2_SPEC_PATCH) \
-	$(LTIB_HOTPLUG_SPEC_PATCH) \
-	$(LTIB_IMX_SPEC_PATCH) \
-	$(LTIB_LIBTERMCAP_SPEC_PATCH) \
-	$(LTIB_LIBUSB_SPEC_PATCH) \
-	$(LTIB_LZO_SPEC_PATCH) \
-	$(LTIB_MODEPS_SPEC_PATCH) \
-	$(LTIB_MTD_SPEC_PATCH) \
-	$(LTIB_MYSQL_SPEC_PATCH) \
-	$(LTIB_NCURSES_SPEC_PATCH) \
-	$(LTIB_PPP_SPEC_PATCH) \
-	$(LTIB_RSYNC_SPEC_PATCH) \
-	$(LTIB_SQLITE_SPEC_PATCH) \
-	$(LTIB_TSLIB_SPEC_PATCH) \
-	$(LTIB_UDEV_SPEC_PATCH) \
-	$(LTIB_UNZIP_SPEC_PATCH) \
-	$(LTIB_ZLIB_SPEC_PATCH) \
-	$(MECT_DROPBEAR_HOST_KEY) \
+	$(FSPKG_DL) \
 
 DLMD5 := $(DOWNLOADS:%=%.$(MD5EXT))
 DOWNLOADS := $(DOWNLOADS) $(DLMD5)
 DOWNLOADS := $(DOWNLOADS:%=$(FTPDIR)/%)
 
-DOWNLOADS := $(DOWNLOADS) $(FSPKG)
+DOWNLOADS := $(DOWNLOADS)
 
 
 UTILS = \
@@ -430,7 +376,7 @@ env:
 downloads: $(FTPDIR) downloads_fc $(DOWNLOADS)
 
 $(FTPDIR):
-	mkdir -p $(FTPDIR)
+	test -d $@
 
 # Remove the existing MD5s to force the download of the changed archives (if any).
 .PHONY: downloads_fc
@@ -530,6 +476,7 @@ ltibbuild: hosttools
 	sudo rm -rf $(FSDIR)/rootfs
 	sudo mkdir -p $(FSDIR)/rootfs
 	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') $(FSDIR)
+	sed -i "s,^%ldirs$$,\0\n$(FTPDIR)," $(LTIBDIR)/.ltibrc
 	cd $(LTIBDIR); PATH=/usr/lib/ccache:$$PATH GIT_AUTHOR_NAME=$(USER_NAME) GIT_AUTHOR_EMAIL=$(TARGET_UNIX_NAME)@$(HOST_NAME) GIT_COMMITTER_NAME=$(USER_NAME) GIT_COMMITTER_EMAIL=$(TARGET_UNIX_NAME)@$(HOST_NAME) ./ltib
 
 # Set up the host tools.
@@ -592,7 +539,7 @@ tpac_1007_lfs:
 
 .PHONY: clean
 clean:
-	sudo rm -rf $(LTIBDIR) $(TMPDIR) $(CSXCUNPACK) $(CSXCDIR) $(FSDIR) $(TMPRPMDIR) $(FTPDIR) $(QT_INSTALL_DIR)
+	sudo rm -rf $(LTIBDIR) $(TMPDIR) $(CSXCUNPACK) $(CSXCDIR) $(FSDIR) $(TMPRPMDIR) $(QT_INSTALL_DIR)
 
 
 

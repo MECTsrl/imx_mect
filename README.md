@@ -15,28 +15,28 @@ The build downloads, configures and installs LTIB image build environment and Co
 
 LTIB should be installed by an unprivileged user. However, it requires root privileges for some operations.
 
-Build prerequisites:
+### Build prerequisites
 
 - a working (minimal) Ubuntu 14.04 LTS
-- the top-level Makefile in this repository
+- a clone of this directory
 - GNU make from Ubuntu repositories
-- sudo enabled for the user that builds (optionally passwordless)
+- sudo enabled for the user that performs the build (optionally without a password)
 
-Build steps:
+### Build steps
 
 1. install the *make* utility from the Linux distribution:
 
         apt-get install make
 
-1. enable the build user for (passwordless) sudo: edit */etc/sudoers* and append a line as follows:
+1. enable the build user for sudo (optionally without a password): edit */etc/sudoers* and append a line as follows:
 
         <user name> ALL=(ALL:ALL) ALL
 
-   or passwordless:
+   or without a password (security risk):
 
         <user name> ALL=(ALL) NOPASSWD: ALL
 
-1. create the build directory for LTIB with read and write permissions for the build user. Assuming the name of the directory is *imx_mect* in the home of the build user:
+1. create the LTIB build directory with read and write permissions for the user that performs the build. E.g., assuming that the name of the directory is *imx_mect* in the home of the build user:
 
         mkdir ~/imx_mect
 
@@ -49,17 +49,16 @@ Build steps:
 
         make -C ~/imx_mect/Makefile tpac_1007
 
+## Main steps of the automatic build
 
-## Main build steps
+The Makefile-driven build flow does in sequence:
 
-The main steps of the Makefile-driven build flow are:
-
-- check and update the host environment
-- download LTIB, toolchain for cross-compilation, Qt, and their configurations and patches
-- install and patch LTIB
-- install the toolchain for cross-compilation, compile and install Qt
-- build the image for the target  
-  The build process automatically downloads source archives and packages, when needed.  
-  If one of the downloads fail, the build can be resumed by restarting manually LTIB:
+- checks and updates the host environment
+- downloads LTIB, toolchain for cross-compilation, Qt, and their configurations and patches
+- installs and patch LTIB
+- installs the toolchain for cross-compilation, compiles and installs Qt
+- builds the image for the target.  
+  The build process automatically downloads the source archives and packages, as they are needed.  
+  If any of these downloads fails, the build is aborted. It can be resumed by restarting manually the build of the target image using LTIB:
 
         cd ~/imx_mect/ltib; ./ltib

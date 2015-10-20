@@ -13,7 +13,7 @@ The build downloads, configures and installs the LTIB image build environment an
 
 ## Build instructions
 
-LTIB is installed by an unprivileged user but it requires root privileges for some operations.
+LTIB is built and installed as an unprivileged user but it requires root privileges for some operations.
 
 ### Build prerequisites
 
@@ -37,22 +37,24 @@ LTIB is installed by an unprivileged user but it requires root privileges for so
 
         <user name> ALL=(ALL) NOPASSWD: ALL
 
-1. Create the LTIB build directory with read and write permissions for the user that performs the build.  
-   E.g., assuming that the name of the directory is *imx_mect* in the home of the build user:
+1. Create the LTIB build directory with read and write permissions for the user that performs the build. E.g., assuming that the name of the directory is *imx_mect* in the home directory of the build user:
 
-        mkdir ~/imx_mect
+        mkdir -p ~/imx_mect
 
 1. Clone this repository in the build directory created in the previous step (copy-paste the appropriate *clone URL* from the GitHub site):
 
+        cd ~/imx_mect
         git clone <clone URL>
 
 1. Install the toolchain and LTIB, and create the target image files:
 
-        make -C ~/imx_mect/Makefile clean all
+        cd ~/imx_mect
+        make clean all
 
 1. Create the target images for TPAC 1007 in *~/imx_mect/images-all/tpac_1007*:
 
-        make -C ~/imx_mect/Makefile tpac_1007
+        cd ~/imx_mect
+        make tpac_1007
 
 ## Main steps of the automatic build
 
@@ -66,4 +68,5 @@ The Makefile-driven build flow does in sequence:
   The build process automatically downloads the source archives and packages, as they are needed.  
   If any of these downloads fails, the build is aborted. It can be resumed by restarting manually the build of the target image using LTIB:
 
-        cd ~/imx_mect/ltib; ./ltib
+        cd ~/imx_mect/ltib
+        ./ltib

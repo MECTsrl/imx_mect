@@ -1,0 +1,8 @@
+* Fri 28 Nov 2014 Emiliano Bergamaschini <ebergamaschini@mect.it> -- revision 46
+- add full screen
+
+* Fri 20 Jun 2014 Monica Donno <mdonno@mect.it> -- revision 69
+- Adjusted ui to fit also 5.7 displays
+
+* Wed 15 May 2013 Emiliano Bergamaschini <ebergamaschini@mect.it> -- revision 46
+- Add this program that ask and set the system time and date

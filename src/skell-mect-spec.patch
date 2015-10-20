@@ -1,6 +1,6 @@
---- ltib.unpacked/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/skell/skell.spec	2015-10-19 22:46:23.129552749 +0200
-@@ -9,15 +9,69 @@
+--- ltib/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib.new/dist/lfs-5.1/skell/skell.spec	2015-10-21 00:46:04.527048017 +0200
+@@ -9,15 +9,70 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -65,6 +65,7 @@
 +%Package local
 +Summary         : Skeleton for local file system.
 +Group           : Applications/File
++Prefix          : %{pfx}/local
 +AutoReqProv     : no
 +%Description local
 +Basic contents of the local file system.
@@ -72,7 +73,7 @@
  
  %Description
  %{summary}
-@@ -31,24 +85,67 @@
+@@ -31,24 +86,67 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1

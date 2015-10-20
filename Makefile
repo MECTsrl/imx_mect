@@ -355,7 +355,7 @@ PACKAGES = \
 
 
 .PHONY: all
-all: env downloads ltib
+all: env downloads ltib projects
 
 # Set up the build environment.
 .PHONY: env
@@ -503,6 +503,13 @@ qt:
 	-sudo rpm --force-debian --root / --dbpath /tmp/rpm-$(USER)/rpmdb -e --allmatches --nodeps --define '_tmppath $(LTIBDIR)/tmp' qt-embedded 2>/dev/null
 	sudo rpm --force-debian --root / --dbpath /tmp/rpm-$(USER)/rpmdb --ignorearch -ivh --force --nodeps --excludedocs --define '_tmppath $(LTIBDIR)/tmp' /tmp/rpm-$(USER)/RPMS/arm/qt-embedded-$(QT_VERSION)-*.arm.rpm
 	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') /tmp/rpm-$(USER)
+
+
+# Build the local projects.
+.PHONY: projects
+projects:
+	make -C projects clean all
+
 
 # Rules to build target root file systems
 #

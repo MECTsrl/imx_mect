@@ -10,8 +10,7 @@ RPMDIR := $(CURDIR)/../ltib/rpm
 
 LFSDIR := $(RFSDIR)/../../images-all/$(TARGET)/localfs
 LDIR := $(CURDIR)/localfs
-RPMROOTDIR := $(CURDIR)/rpmbuild_root
-RPMTMPDIR := $(CURDIR)/tmp/rpm
+RPMROOTDIR := $(CURDIR)/rpm
 
 SMP_FLAG := -j$(shell grep -c ^processor /proc/cpuinfo)
 
@@ -23,7 +22,7 @@ export PATH := /usr/lib/ccache:/opt/CodeSourcery/bin:/opt/Trolltech/bin:$(PATH)
 # Build/deploy all projects
 
 .PHONY: all
-all: local_prepare setup_time splash cgic_work ATCMControl_runtime_system factory_data
+all: local_prepare setup_time splash cgic_work ATCMControl_runtime_system factory_data localfs_rpm
 
 
 
@@ -185,69 +184,37 @@ factory_data_clean:
 
 # ##########################
 #
-# localfs_patch
+# localfs_rpm
 #
 
-.PHONY: localfs_patch
-localfs_patch: localfs_patch_clean localfs_patch_build localfs_patch_install localfs_patch_rpm
+.PHONY: localfs_rpm
+localfs_rpm: localfs_rpm_clean localfs_rpm_build localfs_rpm_install
 
-.PHONY: localfs_patch_build
-localfs_patch_build: PRJDIR := $(CURDIR)/atn01/file_system/local
-localfs_patch_build:
+.PHONY: localfs_rpm_build
+localfs_rpm_build: PRJDIR := $(CURDIR)
+localfs_rpm_build:
 	test -n $(PRJDIR)
 	mkdir -p $(LFSDIR)
 
-.PHONY: localfs_patch_install
-localfs_patch_install: PRJDIR := $(CURDIR)/atn01/file_system/local
-localfs_patch_install:
+.PHONY: localfs_rpm_install
+localfs_rpm_install: PRJDIR := $(CURDIR)
+localfs_rpm_install:
 	test -n $(PRJDIR)
-	tar cjvf $(LFSDIR)/../local_patch.tar.bz2 --exclude=.svn -C $(PRJDIR) .
+	tar cjvf $(LFSDIR)/../local.tar.bz2 --exclude=.svn -C $(LDIR) .
+	rm -rf $(RPMTMPDIR)/{*,.??*}
+	install -D -m 644 $(LFSDIR)/../local.tar.bz2 $(RPMROOTDIR)/SOURCES/local.tar.bz2
+	rpmbuild --define '_topdir $(RPMROOTDIR)' --dbpath $(RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(RPMROOTDIR)/RPMS' -bb --clean --rmsource $(RPMROOTDIR)/SPECS/local.spec
 
-.PHONY: localfs_patch_rpm
-localfs_patch_rpm: PRJDIR := $(CURDIR)/atn01/file_system/local
-localfs_patch_rpm:
-	test -n $(PRJDIR)
-	rm -rf $(RPMROOTDIR); mkdir -p $(RPMROOTDIR)/SOURCES
-	rm -rf $(RPMTMPDIR); mkdir -p $(RPMTMPDIR)
-	cp $(LFSDIR)/../local_patch.tar.bz2 $(RPMROOTDIR)/SOURCES
-	rpmbuild --define '_topdir $(RPMROOTDIR)' --dbpath $(RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(RPMTMPDIR)/RPMS' -bb --clean --rmsource rpm_specs/local.spec
-
-.PHONY: localfs_patch_clean
-localfs_patch_clean: PRJDIR := $(CURDIR)/atn01/file_system/local
-localfs_patch_clean:
+.PHONY: localfs_rpm_clean
+localfs_rpm_clean: PRJDIR := $(CURDIR)
+localfs_rpm_clean:
 	test -n $(PRJDIR)
 
-# ##########################
-#
-# splashscreen
-#
-
-.PHONY: splashscreen
-splashscreen: splashscreen_clean splashscreen_build splashscreen_install
-
-.PHONY: splashscreen_build
-splashscreen_build: PRJDIR := $(CURDIR)/qt_atcm/qt_templates/ATCM-template-project/config
-splashscreen_build:
-	test -n $(PRJDIR)
-
-.PHONY: splashscreen_install
-splashscreen_install: PRJDIR := $(CURDIR)/qt_atcm/qt_templates/ATCM-template-project/config
-splashscreen_install:
-	test -n $(PRJDIR)
-	install -D -m 0644 $(PRJDIR)/splash.png $(LDIR)/etc/sysconfig/img/splash.png
-	install -D -m 0644 $(PRJDIR)/systool.png $(LDIR)/etc/sysconfig/img/systool.png
-
-.PHONY: splashscreen_clean
-splashscreen_clean: PRJDIR := $(CURDIR)/qt_atcm/qt_templates/ATCM-template-project/config
-splashscreen_clean:
-	test -n $(PRJDIR)
 
 
 # ##########################
-#
 # Utils
 
 .PHONY: clean
 clean: ATCMControl_runtime_system_clean cgic_work_clean factory_data_clean local_prepare_clean setup_time_clean splash_clean
 	sudo rm -rf $(LFSDIR) $(LDIR)
-

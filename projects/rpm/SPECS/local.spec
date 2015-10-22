@@ -3,7 +3,7 @@
 Summary         : Application files for the embedded root filesystem
 Name            : local
 Version         : 1.0
-Release         : 1
+Release         : 1_%{rel}
 License         : GPL
 Vendor          : MECT
 Packager        : Mihai Lazarescu

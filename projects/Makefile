@@ -1,5 +1,5 @@
 TARGET := tpac_1007
-RELEASE := rel5.3rc2
+RELEASE := 6.6rc0
 TOOLCHAIN_FLAG := SOURCERY_GCC=1
 TOOLCHAIN := codesourcery
 
@@ -10,7 +10,7 @@ RPMDIR := $(CURDIR)/../ltib/rpm
 
 LFSDIR := $(RFSDIR)/../../images-all/$(TARGET)/localfs
 LDIR := $(CURDIR)/localfs
-RPMROOTDIR := $(CURDIR)/rpm
+SPECDIR := $(CURDIR)/rpm/SPECS
 
 SMP_FLAG := -j$(shell grep -c ^processor /proc/cpuinfo)
 
@@ -40,7 +40,7 @@ local_prepare_build:
 
 .PHONY: local_prepare_install
 local_prepare_install:
-	sudo rpm --nodeps --root $(LDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --force --define '_tmppath /tmp/rpm' $(RPMDIR)/RPMS/arm/skell-local-1.18-2.arm.rpm
+	sudo rpm --nodeps --root $(LDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --define '_tmppath /tmp/rpm' $(RPMDIR)/RPMS/arm/skell-lfs-1.18-2.arm.rpm
 	sudo chown -R $(USER) $(LDIR)
 	sudo rm -rf $(LDIR)/var/lib/rpm
 	-sudo rmdir $(LDIR)/var/lib
@@ -202,8 +202,8 @@ localfs_rpm_install:
 	test -n $(PRJDIR)
 	tar cjvf $(LFSDIR)/../local.tar.bz2 --exclude=.svn -C $(LDIR) .
 	rm -rf $(RPMTMPDIR)/{*,.??*}
-	install -D -m 644 $(LFSDIR)/../local.tar.bz2 $(RPMROOTDIR)/SOURCES/local.tar.bz2
-	rpmbuild --define '_topdir $(RPMROOTDIR)' --dbpath $(RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(RPMROOTDIR)/RPMS' -bb --clean --rmsource $(RPMROOTDIR)/SPECS/local.spec
+	install -D -m 644 $(LFSDIR)/../local.tar.bz2 $(RPMDIR)/SOURCES/local.tar.bz2
+	rpmbuild --define 'rel $(RELEASE)' --define '_topdir $(RPMDIR)' --dbpath $(RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(RPMDIR)/RPMS' -bb --clean --rmsource $(SPECDIR)/local.spec
 
 .PHONY: localfs_rpm_clean
 localfs_rpm_clean: PRJDIR := $(CURDIR)

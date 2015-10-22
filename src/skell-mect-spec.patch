@@ -62,12 +62,12 @@
 +skell package contents restricted to just the files that are
 +needed at run time on the target.
 +
-+%Package local
++%Package lfs
 +Summary         : Skeleton for local file system.
 +Group           : Applications/File
 +Prefix          : %{pfx}/local
 +AutoReqProv     : no
-+%Description local
++%Description lfs
 +Basic contents of the local file system.
 +
  
@@ -146,6 +146,6 @@
 -%attr(0755, root, root) %{pfx}/usr/bin/startx
 -%{pfx}/*
 +
-+%Files local
++%Files lfs
 +%defattr(-,root,root)
 +%{pfx}/local/*

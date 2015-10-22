@@ -1,5 +1,5 @@
 # Build version information.
-BUILD_RELEASE = rel6.6rc0
+BUILD_RELEASE = 6.6rc0
 BUILD_TARGET = TPAC1007_480x272
 BUILD_QTVERSION = $(QT_VERSION)
 BUILD_QWTVERSION = $(QWT_VERSION)
@@ -86,6 +86,17 @@ RFSPKGS_TPAC_1007 := \
 	zlib-rfs-1.2.3-2.arm.rpm \
 
 RFSPKGS_TPAC_1007 := $(RFSPKGS_TPAC_1007:%=$(RPMDIR)/%)
+
+LFSPKGS_TPAC_1007 := \
+	skell-lfs-1.18-2.arm.rpm \
+	local-1.0-1_$(BUILD_RELEASE).arm.rpm \
+	local-ATCMControl_runtime_system-1.0-1_$(BUILD_RELEASE).arm.rpm \
+	local-cgic_work--1_1.0.arm.rpm \
+	local-factory_data-1.0-1_$(BUILD_RELEASE).arm.rpm \
+	local-setup_time-1.0-1_$(BUILD_RELEASE).arm.rpm \
+	local-splash-1.0-1_$(BUILD_RELEASE).arm.rpm \
+
+LFSPKGS_TPAC_1007 := $(LFSPKGS_TPAC_1007:%=$(RPMDIR)/%)
 
 
 # Definition of the sources
@@ -508,7 +519,7 @@ qt:
 # Build the local projects.
 .PHONY: projects
 projects:
-	make -C projects clean all
+	make -C projects RELEASE=$(BUILD_RELEASE) clean all
 
 
 # Rules to build target root file systems
@@ -522,10 +533,10 @@ tpac_1007_rfs: RFSDIR := tpac_1007/rootfs
 tpac_1007_rfs: $(RFSPKGS_TPAC_1007)
 	sudo rm -rf $(IMGDIR)/$(RFSDIR)
 	mkdir -p $(IMGDIR)/$(RFSDIR)/var/lib/rpm $(IMGDIR)/$(RFSDIR)/tmp/ltib
-	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(IMGDIR)/$(RFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --force --excludedocs --define '_tmppath /tmp/ltib' $(RFSPKGS_TPAC_1007)
+	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(IMGDIR)/$(RFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --excludedocs --define '_tmppath /tmp/ltib' $(RFSPKGS_TPAC_1007)
 	cd $(IMGDIR)/$(RFSDIR); sudo ldconfig -r `pwd`
 	( \
-		echo "Release: $(BUILD_RELEASE)"; \
+		echo "Release: rel$(BUILD_RELEASE)"; \
 		echo "Target:  $(BUILD_TARGET)";  \
 		echo "Qt:      $(QT_VERSION)";    \
 		echo "Qwt:     $(QWT_VERSION)"    \
@@ -537,23 +548,33 @@ tpac_1007_rfs: $(RFSPKGS_TPAC_1007)
 .PHONY: tpac_1007_lfs
 tpac_1007_lfs: LFSDIR := tpac_1007/localfs
 tpac_1007_lfs:
-	#sudo rm -rf $(IMGDIR)/$(LFSDIR)
-	#mkdir -p $(IMGDIR)/$(LFSDIR)/var/lib/rpm $(IMGDIR)/$(LFSDIR)/tmp/ltib
-	#sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(IMGDIR)/$(LFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --force --excludedocs --define '_tmppath /tmp/ltib' $(LFSPKGS_TPAC_1007)
-	#du -sh --apparent-size $(IMGDIR)/$(LFSDIR)
-	#cd $(IMGDIR)/$(LFSDIR); BZIP2=-9 tar cjf ../localfs.tar.bz2 *
+	sudo rm -rf $(IMGDIR)/$(LFSDIR)
+	mkdir -p $(IMGDIR)/$(LFSDIR)/var/lib/rpm $(IMGDIR)/$(LFSDIR)/tmp/ltib
+	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(IMGDIR)/$(LFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --excludedocs --define '_tmppath /tmp/ltib' $(LFSPKGS_TPAC_1007)
+	rm -f $(IMGDIR)/$(LFSDIR)/var/lib/rpm/*
+	-rmdir $(IMGDIR)/$(LFSDIR)/var/lib/rpm
+	-rmdir $(IMGDIR)/$(LFSDIR)/var/lib
+	-rmdir $(IMGDIR)/$(LFSDIR)/var
+	-rmdir $(IMGDIR)/$(LFSDIR)/tmp/ltib
+	-rmdir $(IMGDIR)/$(LFSDIR)/tmp
+	du -sh --apparent-size $(IMGDIR)/$(LFSDIR)
+	cd $(IMGDIR)/$(LFSDIR); BZIP2=-9 tar cjf ../localfs.tar.bz2 *
 
 
 .PHONY: clean
-clean:
+clean: clean_projects
 	sudo rm -rf $(LTIBDIR) $(TMPDIR) $(CSXCUNPACK) $(CSXCDIR) $(FSDIR) $(TMPRPMDIR) $(QT_INSTALL_DIR)
+
+.PHONY: clean_projects
+clean_projects:
+	make -C projects RELEASE=$(BUILD_RELEASE) clean
 
 
 
 # Downloads
 #
-# NOTE: Here we assume that each downloaded file has an MD5
-# checksum in the same directory and named <file_name>.$(MD5EXT)
+# NOTE: Here we assume that each file to download has an MD5
+# checksum named <file_name>.$(MD5EXT) in the same directory.
 #
 
 # Generic download rule for MECT site

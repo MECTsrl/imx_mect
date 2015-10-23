@@ -1,8 +1,10 @@
 --- ltib/dist/lfs-5.1/boa/boa.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/dist/lfs-5.1/boa/boa.spec	2015-10-12 10:46:10.538468000 +0200
-@@ -12,8 +12,21 @@
++++ ltib.new/dist/lfs-5.1/boa/boa.spec	2015-10-23 23:45:26.678971978 +0200
+@@ -11,9 +11,23 @@
+ Packager        : Stuart Hughes
  Group           : System/Servers
  Source          : %{name}-%{version}.tar.gz
++Source1         : boa.conf
  Patch1          : boa-0.94.14rc21-nommu.patch
 +Patch2          : boa-0.94.14rc21-defines.patch
 +Patch3          : boa-0.94.14rc21-1416842658.patch
@@ -22,7 +24,7 @@
  
  %Description
  %{summary}
-@@ -24,6 +37,8 @@
+@@ -24,6 +38,8 @@
  %Prep
  %setup
  %patch1 -p1 
@@ -31,32 +33,42 @@
  
  %Build
  ac_cv_func_setvbuf_reversed=no \
-@@ -43,16 +58,31 @@
- ln -s boa $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin/boa_d
- perl -ni -e '
-     m,#ServerName,  &&  do { $_ = "ServerName localhost\n" } ;
+@@ -33,26 +49,28 @@
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/conf
+-mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{base}/var/log/boa
+-mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin
+-install -m 755 src/boa $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin/
+-install -m 755 src/boa_indexer $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin/
+-install -m 644 examples/boa.conf $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/conf/
+-ln -s conf/boa.conf $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/boa.conf
+-ln -s boa $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin/boa_d
+-perl -ni -e '
+-    m,#ServerName,  &&  do { $_ = "ServerName localhost\n" } ;
 -    m,^DocumentRoot, && do { $_ = "DocumentRoot /var/www/html\n" };
-+    m,^User, && do { $_ = "User root\n" };
-+    m,^Group, && do { $_ = "Group root\n" };
-+    m,^ServerName, && do { $_ = "ServerName localhost\n" };
-+    m,^DocumentRoot, && do { $_ = "DocumentRoot /local/www\n" };
-     m,^DirectoryMaker, && do { $_ = "DirectoryMaker %{_prefix}/sbin/boa_indexer\n" };
+-    m,^DirectoryMaker, && do { $_ = "DirectoryMaker %{_prefix}/sbin/boa_indexer\n" };
 -    m,^DefaultType, && do { $_ = "DefaultType text/html\n" };
 -    m,^ScriptAlias, &&  do { $_ = "ScriptAlias /cgi-bin/ /var/www/cgi-bin/\n"};
-+    m,^KeepAliveTimeout, && do { $_ = "KeepAliveTimeout 30\n" };
-+    m,^DefaultType, && do { $_ = "DefaultType text/plain\n" };
-+    m,^# SinglePostLimit:, && do { $_ = "SinglePostLimit 4194304\n" };
-+    m,#AddType, && do { $_ = "AddType application/x-httpd-cgi cgi\n" };
-+    m,^ScriptAlias, &&  do { $_ = "ScriptAlias /cgi-bin/ /var/www/cgi-bin/ /local/www/\n"};
-     print;
-     ' $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/conf/boa.conf
- 
+-    print;
+-    ' $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/conf/boa.conf
++mkdir -p $RPM_BUILD_ROOT%{pfx}/%{base}/etc/conf
++mkdir -p $RPM_BUILD_ROOT%{pfx}/%{base}/var/log/boa
++mkdir -p $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin
++install -m 755 src/boa $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/
++install -m 755 src/boa_indexer $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/
++install -m 644 examples/boa.conf $RPM_BUILD_ROOT%{pfx}/%{base}/etc/conf/
++ln -s conf/boa.conf $RPM_BUILD_ROOT%{pfx}/%{base}/etc/boa.conf
++ln -s boa $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/boa_d
++install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{pfx}/%{base}/etc/conf/boa.conf
++
 +cd %{_builddir}/%{name}-%{version}
 +( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
 +    p
 +' all_files.lst > rfs_files.lst
-+
+ 
  %Clean
  rm -rf $RPM_BUILD_ROOT
  

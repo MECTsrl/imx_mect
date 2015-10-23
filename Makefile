@@ -48,7 +48,6 @@ RFSPKGS_TPAC1007_480x272 := \
 	base_libs-rfs-1.2-1.arm.rpm \
 	boa-rfs-0.94.14rc21-1.arm.rpm \
 	busybox-rfs-1.15.0-1.arm.rpm \
-	bzip2-rfs-1.0.2-2.arm.rpm \
 	cantest-rfs-1.0-1.arm.rpm \
 	dhcp-rfs-3.0.3b1-1.arm.rpm \
 	dropbear-rfs-0.52-1.arm.rpm \
@@ -80,10 +79,11 @@ RFSPKGS_TPAC1007_480x272 := \
 	sysconfig-rfs-1.2-5.arm.rpm \
 	tslib-rfs-1.0-3.arm.rpm \
 	udev-rfs-117-5.arm.rpm \
-	unzip-rfs-5.52-1.arm.rpm \
 	xenomai-rfs-2.6.0-1.arm.rpm \
 	zip-rfs-3.0.0-0.arm.rpm \
 	zlib-rfs-1.2.3-2.arm.rpm \
+	#bzip2-rfs-1.0.2-2.arm.rpm \
+	#unzip-rfs-5.52-1.arm.rpm \
 
 RFSPKGS_TPAC1007_480x272 := $(RFSPKGS_TPAC1007_480x272:%=$(RPMDIR)/%)
 
@@ -549,14 +549,14 @@ TPAC1007_480x272: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x272_lf
 .PHONY: TPAC1007_480x272_boot
 TPAC1007_480x272_boot:
 	sudo rm -rf $(BOOTDIR)
-	mkdir -p $(BOOTDIR)/var/lib/rpm $(BOOTDIR)/tmp/ltib
-	sudo rpm --force --nodeps --root $(BOOTDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --excludedocs --define '_tmppath /tmp/ltib' $(RPMDIR)/imx-bootlets-src-mfg-2.6.35.3-1.1.0.arm.rpm
+	mkdir -p $(BOOTDIR)/var/lib/rpm
+	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-mfg-2.6.35.3-1.1.0.arm.rpm
 
 .PHONY: TPAC1007_480x272_rfs
 TPAC1007_480x272_rfs: $(RFSPKGS_TPAC1007_480x272)
 	sudo rm -rf $(RFSDIR)
 	mkdir -p $(RFSDIR)/var/lib/rpm $(RFSDIR)/tmp/ltib
-	sudo rpm --force --nodeps --root $(RFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --excludedocs --define '_tmppath /tmp/ltib' $(RFSPKGS_TPAC1007_480x272)
+	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RFSPKGS_TPAC1007_480x272)
 	cd $(RFSDIR); sudo ldconfig -r `pwd`
 	( \
 		echo "Release: rel$(BUILD_RELEASE)"; \
@@ -565,13 +565,14 @@ TPAC1007_480x272_rfs: $(RFSPKGS_TPAC1007_480x272)
 		echo "Qwt:     $(QWT_VERSION)"    \
 	) > $(RFSDIR)/$(RFS_VERSION_FILE)
 	sudo install -D -p $(CSXCDIR)/arm-none-linux-gnueabi/libc/usr/bin/gdbserver $(RFSDIR)/usr/bin/gdbserver
+	-rmdir $(RFSDIR)/tmp/ltib
 	du -sh --apparent-size $(RFSDIR)
 
 .PHONY: TPAC1007_480x272_lfs
 TPAC1007_480x272_lfs:
 	sudo rm -rf $(LFSDIR)
 	mkdir -p $(LFSDIR)/var/lib/rpm $(LFSDIR)/tmp/ltib
-	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(LFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --excludedocs --define '_tmppath /tmp/ltib' $(LFSPKGS_TPAC1007_480x272)
+	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(LFSPKGS_TPAC1007_480x272)
 	rm -f $(LFSDIR)/var/lib/rpm/*
 	-rmdir $(LFSDIR)/var/lib/rpm
 	-rmdir $(LFSDIR)/var/lib
@@ -582,7 +583,7 @@ TPAC1007_480x272_lfs:
 
 .PHONY: TPAC1007_480x272_win
 TPAC1007_480x272_win:
-	-BZIP2=-9 tar cjhf $(TGTDIR)/rootfs_rsync-L.tar.bz2 --hard-dereference --one-file-system --transform=s/^rootfs/rootfs_rsync-L/ -C $(LTIBDIR) rootfs/usr/include rootfs/usr/lib rootfs/lib rootfs/usr/src/linux/include
+	-BZIP2=-9 tar cjhf $(TGTDIR)/rootfs_rsync-L.tar.bz2 --hard-dereference --transform=s/^rootfs/rootfs_rsync-L/ -C $(LTIBDIR) rootfs/usr/include rootfs/usr/lib rootfs/lib rootfs/usr/src/linux/include
 
 
 .PHONY: clean

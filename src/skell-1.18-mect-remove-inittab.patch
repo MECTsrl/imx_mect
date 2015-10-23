@@ -1,0 +1,28 @@
+diff -aurN skell-1.18-orig/etc/inittab skell-1.18/etc/inittab
+--- skell-1.18-orig/etc/inittab	2008-09-23 14:48:39.000000000 +0200
++++ skell-1.18/etc/inittab	1970-01-01 01:00:00.000000000 +0100
+@@ -1,24 +0,0 @@
+-#
+-# /etc/inittab
+-# 
+-# see busybox-1.00rc2/examples/inittab for more examples
+-#
+-
+-# starting up
+-::sysinit:/etc/rc.d/rcS
+-
+-# what to do after startup
+-::respawn:-/bin/sh
+-#::respawn:/sbin/getty -L ttyS0 115200 vt100
+-
+-# one way of rebooting
+-::ctrlaltdel:/sbin/reboot
+-
+-# what to do before rebooting
+-::shutdown:/etc/rc.d/rcS stop
+-::shutdown:/bin/umount -a -r
+-::shutdown:/sbin/swapoff -a
+-
+-# what to do when restarting the init process
+-::restart:/sbin/init
+-

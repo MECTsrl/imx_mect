@@ -1,7 +1,12 @@
 --- ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-10-12 10:46:10.662467000 +0200
-@@ -10,12 +10,22 @@
++++ ltib.new/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-10-24 00:52:50.700893343 +0200
+@@ -8,14 +8,27 @@
+ Vendor		: Freescale
+ Packager	: Stuart Hughes
  Group		: System Environment/Base
++Source          : inittab
++Source1         : issue
++Source2         : rc.local
  BuildRoot	: %{_tmppath}/%{name}
  Prefix		: %{pfx}
 +AutoReqProv     : no
@@ -24,7 +29,7 @@
  
  %Build
  
-@@ -63,6 +73,36 @@
+@@ -63,6 +76,36 @@
  then
      boa=boa
  fi
@@ -61,7 +66,7 @@
  if [ "$SYSCFG_SETTIME" = "y" ]
  then
      settime=settime
-@@ -91,14 +131,24 @@
+@@ -91,14 +134,24 @@
  then
          fslgnome=fslgnome
  fi
@@ -90,7 +95,7 @@
  
  export HOSTNAME="${SYSCFG_HOSTNAME:-$PLATFORM}"
  export NTP_SERVER="$SYSCFG_NTP_SERVER"
-@@ -154,57 +204,10 @@
+@@ -154,61 +207,9 @@
      else
  	sys_login="::respawn:-/bin/sh"
      fi
@@ -140,15 +145,22 @@
 -EOF
 -chmod +x $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc_gpu.S
 -
-     cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/inittab
- # see busybox-1.00rc2/examples/inittab for more examples
- ::sysinit:/etc/rc.d/rcS
- $sys_login
+-    cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/inittab
+-# see busybox-1.00rc2/examples/inittab for more examples
+-::sysinit:/etc/rc.d/rcS
+-$sys_login
 -::sysinit:/etc/rc.d/rc_gpu.S
- ::ctrlaltdel:/sbin/reboot
- ::shutdown:/etc/rc.d/rcS stop
- ::restart:/sbin/init
-@@ -308,9 +311,18 @@
+-::ctrlaltdel:/sbin/reboot
+-::shutdown:/etc/rc.d/rcS stop
+-::restart:/sbin/init
+-EOF
++    install -m 644 %{SOURCE0} $RPM_BUILD_ROOT/%{pfx}/etc/inittab
++    install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/etc/issue
++    install -m 644 %{SOURCE2} $RPM_BUILD_ROOT/%{pfx}/etc/rc.local
+ else
+     # SysVInit
+     if [ "$SYSCFG_WANT_LOGIN_TTY" = "y" ]
+@@ -308,9 +309,18 @@
      ln -s /sbin/init $RPM_BUILD_ROOT/%{pfx}/init
  fi
  

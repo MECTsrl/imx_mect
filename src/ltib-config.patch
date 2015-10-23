@@ -1,4 +1,4 @@
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/.config ltib.new/config/.config
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/.config ltib.new/config/.config
 --- ltib/config/.config	1970-01-01 01:00:00.000000000 +0100
 +++ ltib.new/config/.config	2015-09-23 14:29:35.000000000 +0200
 @@ -0,0 +1,56 @@
@@ -58,7 +58,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 +CONFIG_SYSCFG_CUTARG="zImage"
 +CONFIG_CAP_FSL_EXT=y
 +CONFIG_LTIB_RELEASE="8.1.2"
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/.config.cmd ltib.new/config/.config.cmd
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/.config.cmd ltib.new/config/.config.cmd
 --- ltib/config/.config.cmd	1970-01-01 01:00:00.000000000 +0100
 +++ ltib.new/config/.config.cmd	2015-09-23 14:29:35.000000000 +0200
 @@ -0,0 +1,7 @@
@@ -69,7 +69,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 +.config include/linux/autoconf.h: $(deps_config)
 +
 +$(deps_config):
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/main.lkc ltib.new/config/main.lkc
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/main.lkc ltib.new/config/main.lkc
 --- ltib/config/main.lkc	1970-01-01 01:00:00.000000000 +0100
 +++ ltib.new/config/main.lkc	2015-09-23 14:29:35.000000000 +0200
 @@ -0,0 +1,18 @@
@@ -91,7 +91,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 +config PLATFORM_DIR
 +    string
 +    default "config/platform/imx" if PLATFORM_imx
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/host/ltib.preconfig ltib.new/config/platform/host/ltib.preconfig
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/host/ltib.preconfig ltib.new/config/platform/host/ltib.preconfig
 --- ltib/config/platform/host/ltib.preconfig	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/host/ltib.preconfig	2015-09-23 14:29:35.000000000 +0200
 @@ -56,8 +56,6 @@
@@ -348,7 +348,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  CONFIG_INITTAB_LINE="::respawn:-/sbin/getty -L console 0 screen"
  CONFIG_UCLIBC_DYNAMIC_LINKER="/lib/ld-uClibc.so.0"
  CONFIG_GLIBC_DYNAMIC_LINKER="/lib/ld.so.1"
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/host/main.lkc ltib.new/config/platform/host/main.lkc
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/host/main.lkc ltib.new/config/platform/host/main.lkc
 --- ltib/config/platform/host/main.lkc	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/host/main.lkc	2015-09-23 14:29:35.000000000 +0200
 @@ -127,12 +127,6 @@
@@ -364,16 +364,16 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  source ../../userspace/distro.lkc
  source ../../userspace/packages.lkc
  source ../../userspace/defaults.lkc
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/host/pkg_map ltib.new/config/platform/host/pkg_map
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/host/pkg_map ltib.new/config/platform/host/pkg_map
 --- ltib/config/platform/host/pkg_map	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/host/pkg_map	2015-09-23 14:29:35.000000000 +0200
 @@ -1,3 +1,2 @@
  PKG_MTD_UTILS = mtd-utils
  PKG_ELFTOSB = elftosb
 -PKG_UBUNTU_ARM_LIB = ubuntu_arm_lib
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/busybox.config ltib.new/config/platform/imx/busybox.config
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/busybox.config ltib.new/config/platform/imx/busybox.config
 --- ltib/config/platform/imx/busybox.config	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/busybox.config	2015-09-23 14:29:35.000000000 +0200
++++ ltib.new/config/platform/imx/busybox.config	2015-10-23 23:21:46.705901651 +0200
 @@ -1,7 +1,6 @@
  #
  # Automatically generated make config: don't edit
@@ -482,7 +482,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  CONFIG_MONOTONIC_SYSCALL=y
  CONFIG_IOCTL_HEX2STR_ERROR=y
  # CONFIG_FEATURE_HWIB is not set
-@@ -125,14 +103,12 @@
+@@ -125,16 +103,14 @@
  #
  # Archival Utilities
  #
@@ -495,8 +495,11 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  # CONFIG_FEATURE_AR_LONG_FILENAMES is not set
 -# CONFIG_FEATURE_AR_CREATE is not set
  CONFIG_BUNZIP2=y
- # CONFIG_BZIP2 is not set
+-# CONFIG_BZIP2 is not set
++CONFIG_BZIP2=y
  # CONFIG_CPIO is not set
+ # CONFIG_FEATURE_CPIO_O is not set
+ # CONFIG_FEATURE_CPIO_P is not set
 @@ -143,69 +119,43 @@
  # CONFIG_FEATURE_DPKG_DEB_EXTRACT_ONLY is not set
  CONFIG_GUNZIP=y
@@ -530,8 +533,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 -# CONFIG_LZMA is not set
 -CONFIG_UNXZ=y
 -CONFIG_XZ=y
--CONFIG_UNZIP=y
-+# CONFIG_UNZIP is not set
+ CONFIG_UNZIP=y
  
  #
  # Coreutils
@@ -644,7 +646,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  CONFIG_YES=y
  
  #
-@@ -308,23 +268,18 @@
+@@ -308,25 +268,20 @@
  # Common options for df, du, ls
  #
  CONFIG_FEATURE_HUMAN_READABLE=y
@@ -660,9 +662,10 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  #
  CONFIG_CHVT=y
 -CONFIG_FGCONSOLE=y
- CONFIG_CLEAR=y
+-CONFIG_CLEAR=y
 -CONFIG_DEALLOCVT=y
 -CONFIG_DUMPKMAP=y
++# CONFIG_CLEAR is not set
 +# CONFIG_DEALLOCVT is not set
 +# CONFIG_DUMPKMAP is not set
  # CONFIG_KBD_MODE is not set
@@ -671,8 +674,11 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 +# CONFIG_LOADFONT is not set
 +# CONFIG_LOADKMAP is not set
  CONFIG_OPENVT=y
- CONFIG_RESET=y
+-CONFIG_RESET=y
++# CONFIG_RESET is not set
  CONFIG_RESIZE=y
+ CONFIG_FEATURE_RESIZE_PRINT=y
+ # CONFIG_SETCONSOLE is not set
 @@ -335,55 +290,48 @@
  # CONFIG_FEATURE_SETFONT_TEXTUAL_MAP is not set
  CONFIG_DEFAULT_SETFONT_DIR=""
@@ -1362,7 +1368,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  CONFIG_KLOGD=y
 -CONFIG_FEATURE_KLOGD_KLOGCTL=y
  CONFIG_LOGGER=y
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/.config ltib.new/config/platform/imx/.config
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/.config ltib.new/config/platform/imx/.config
 --- ltib/config/platform/imx/.config	1970-01-01 01:00:00.000000000 +0100
 +++ ltib.new/config/platform/imx/.config	2015-09-23 14:29:35.000000000 +0200
 @@ -0,0 +1,644 @@
@@ -2010,7 +2016,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 +CONFIG_SYSCFG_CUTARG="zImage"
 +CONFIG_CAP_FSL_EXT=y
 +CONFIG_LTIB_RELEASE="8.1.2"
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/.config.cmd ltib.new/config/platform/imx/.config.cmd
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/.config.cmd ltib.new/config/platform/imx/.config.cmd
 --- ltib/config/platform/imx/.config.cmd	1970-01-01 01:00:00.000000000 +0100
 +++ ltib.new/config/platform/imx/.config.cmd	2015-09-23 14:29:35.000000000 +0200
 @@ -0,0 +1,22 @@
@@ -2036,7 +2042,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 +.config include/linux/autoconf.h: $(deps_config)
 +
 +$(deps_config):
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/defconfig.dev ltib.new/config/platform/imx/defconfig.dev
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/defconfig.dev ltib.new/config/platform/imx/defconfig.dev
 --- ltib/config/platform/imx/defconfig.dev	1970-01-01 01:00:00.000000000 +0100
 +++ ltib.new/config/platform/imx/defconfig.dev	2015-09-23 14:29:35.000000000 +0200
 @@ -0,0 +1,644 @@
@@ -2684,7 +2690,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 +CONFIG_SYSCFG_CUTARG="zImage"
 +CONFIG_CAP_FSL_EXT=y
 +CONFIG_LTIB_RELEASE="8.1.2"
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/dev.profile ltib.new/config/platform/imx/dev.profile
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/dev.profile ltib.new/config/platform/imx/dev.profile
 --- ltib/config/platform/imx/dev.profile	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/dev.profile	2015-09-23 14:29:35.000000000 +0200
 @@ -41,4 +41,3 @@
@@ -2692,7 +2698,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  CONFIG_PKG_UUC=y
  CONFIG_PKG_ZLIB=y
 -CONFIG_PKG_PERF=y
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/fsl_mm.lkc ltib.new/config/platform/imx/fsl_mm.lkc
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/fsl_mm.lkc ltib.new/config/platform/imx/fsl_mm.lkc
 --- ltib/config/platform/imx/fsl_mm.lkc	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/fsl_mm.lkc	2015-09-23 14:29:35.000000000 +0200
 @@ -1,63 +1,46 @@
@@ -2787,7 +2793,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 +          This package provides the Freescale Gstreamer based plugins. 
 +		 
  endmenu
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/imx28.cf ltib.new/config/platform/imx/imx28.cf
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/imx28.cf ltib.new/config/platform/imx/imx28.cf
 --- ltib/config/platform/imx/imx28.cf	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/imx28.cf	2015-09-23 14:29:35.000000000 +0200
 @@ -41,7 +41,7 @@
@@ -3227,7 +3233,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 -CONFIG_CAP_FSL_INT=y
 +CONFIG_CAP_FSL_EXT=y
  CONFIG_LTIB_RELEASE="8.1.2"
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/imx28_updater.cf ltib.new/config/platform/imx/imx28_updater.cf
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/imx28_updater.cf ltib.new/config/platform/imx/imx28_updater.cf
 --- ltib/config/platform/imx/imx28_updater.cf	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/imx28_updater.cf	2015-09-23 14:29:35.000000000 +0200
 @@ -576,3 +576,4 @@
@@ -3235,7 +3241,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  CONFIG_CAP_FSL_INT=y
  CONFIG_LTIB_RELEASE="8.1.2"
 +CONFIG_SYSCFG_AUTOEXEC=y
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/imx51.cf ltib.new/config/platform/imx/imx51.cf
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/imx51.cf ltib.new/config/platform/imx/imx51.cf
 --- ltib/config/platform/imx/imx51.cf	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/imx51.cf	2015-09-23 14:29:35.000000000 +0200
 @@ -221,7 +221,7 @@
@@ -3247,7 +3253,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  # CONFIG_PKG_INETUTILS is not set
  # CONFIG_PKG_IPERF is not set
  # CONFIG_PKG_OPENSWAN is not set
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config ltib.new/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config ltib.new/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config
 --- ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config	1970-01-01 01:00:00.000000000 +0100
 +++ ltib.new/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config	2015-09-23 14:29:35.000000000 +0200
 @@ -0,0 +1,2315 @@
@@ -5566,7 +5572,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 +CONFIG_HAS_DMA=y
 +CONFIG_NLATTR=y
 +CONFIG_GENERIC_ATOMIC64=y
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/main.lkc ltib.new/config/platform/imx/main.lkc
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/main.lkc ltib.new/config/platform/imx/main.lkc
 --- ltib/config/platform/imx/main.lkc	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/main.lkc	2015-09-23 14:29:35.000000000 +0200
 @@ -15,7 +15,6 @@
@@ -5805,7 +5811,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
      default "linux-kernel-dir-build.config" if KERNEL_DIR_BUILD
  
  source ../../userspace/distro.lkc
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/max.profile ltib.new/config/platform/imx/max.profile
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/max.profile ltib.new/config/platform/imx/max.profile
 --- ltib/config/platform/imx/max.profile	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/max.profile	2015-09-23 14:29:35.000000000 +0200
 @@ -7,8 +7,8 @@
@@ -5849,7 +5855,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  CONFIG_QTOPIA_NONE=y
 -CONFIG_PKG_PERF=y
 -CONFIG_PKG_PYTHON=y
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/merge/etc/asound.conf ltib.new/config/platform/imx/merge/etc/asound.conf
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/merge/etc/asound.conf ltib.new/config/platform/imx/merge/etc/asound.conf
 --- ltib/config/platform/imx/merge/etc/asound.conf	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/merge/etc/asound.conf	1970-01-01 01:00:00.000000000 +0100
 @@ -1,257 +0,0 @@
@@ -6110,7 +6116,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 -type hw
 -card 0
 -}
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/min.profile ltib.new/config/platform/imx/min.profile
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/min.profile ltib.new/config/platform/imx/min.profile
 --- ltib/config/platform/imx/min.profile	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/min.profile	2015-09-23 14:29:35.000000000 +0200
 @@ -12,5 +12,3 @@
@@ -6119,7 +6125,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  CONFIG_PKG_UDEV_WANT_IMX=y
 -CONFIG_PKG_PERF=y
 -CONFIG_PKG_PYTHON=y
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/packages.lkc ltib.new/config/platform/imx/packages.lkc
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/packages.lkc ltib.new/config/platform/imx/packages.lkc
 --- ltib/config/platform/imx/packages.lkc	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/packages.lkc	2015-09-23 14:29:35.000000000 +0200
 @@ -32,7 +32,7 @@
@@ -6203,7 +6209,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 -    help
 -      This package provides Linux perf tool.
 -
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/pkg_map ltib.new/config/platform/imx/pkg_map
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/pkg_map ltib.new/config/platform/imx/pkg_map
 --- ltib/config/platform/imx/pkg_map	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/pkg_map	2015-09-23 14:29:35.000000000 +0200
 @@ -9,11 +9,19 @@
@@ -6249,7 +6255,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  PKG_LTP_IMX = ltp-imx
  PKG_ATHEROS_WIFI = atheros-wifi
 -PKG_PERF = perf
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/preconfigs.lkc ltib.new/config/platform/imx/preconfigs.lkc
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/preconfigs.lkc ltib.new/config/platform/imx/preconfigs.lkc
 --- ltib/config/platform/imx/preconfigs.lkc	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/preconfigs.lkc	2015-09-23 14:29:35.000000000 +0200
 @@ -21,12 +21,10 @@
@@ -6287,7 +6293,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  
  config PCF_PROFILE
      string
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/release_gnome.profile ltib.new/config/platform/imx/release_gnome.profile
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/release_gnome.profile ltib.new/config/platform/imx/release_gnome.profile
 --- ltib/config/platform/imx/release_gnome.profile	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/release_gnome.profile	2015-09-23 14:29:35.000000000 +0200
 @@ -7,8 +7,8 @@
@@ -6347,7 +6353,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  CONFIG_QTOPIA_NONE=y
 -CONFIG_PKG_PERF=y
 -CONFIG_PKG_PYTHON=y
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/release.profile ltib.new/config/platform/imx/release.profile
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/release.profile ltib.new/config/platform/imx/release.profile
 --- ltib/config/platform/imx/release.profile	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/release.profile	2015-09-23 14:29:35.000000000 +0200
 @@ -3,7 +3,6 @@
@@ -6364,7 +6370,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  CONFIG_PKG_ZLIB=y
 -CONFIG_PKG_PERF=y
 -CONFIG_PKG_PYTHON=y
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/.tmpconfig.h ltib.new/config/platform/imx/.tmpconfig.h
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/.tmpconfig.h ltib.new/config/platform/imx/.tmpconfig.h
 --- ltib/config/platform/imx/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
 +++ ltib.new/config/platform/imx/.tmpconfig.h	2015-09-23 14:29:35.000000000 +0200
 @@ -0,0 +1,645 @@
@@ -7013,7 +7019,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 +#define CONFIG_SYSCFG_CUTARG "zImage"
 +#define CONFIG_CAP_FSL_EXT 1
 +#define CONFIG_LTIB_RELEASE "8.1.2"
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/platform/imx/updater.profile ltib.new/config/platform/imx/updater.profile
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/updater.profile ltib.new/config/platform/imx/updater.profile
 --- ltib/config/platform/imx/updater.profile	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/platform/imx/updater.profile	2015-09-23 14:29:35.000000000 +0200
 @@ -10,8 +10,4 @@
@@ -7026,7 +7032,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 -CONFIG_PKG_UDEV_WANT_NON_RAID=y
 -CONFIG_PKG_UDEV=y
 +CONFIG_PKG_DOSFSTOOLS=y
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/.tmpconfig.h ltib.new/config/.tmpconfig.h
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/.tmpconfig.h ltib.new/config/.tmpconfig.h
 --- ltib/config/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
 +++ ltib.new/config/.tmpconfig.h	2015-09-23 14:29:35.000000000 +0200
 @@ -0,0 +1,59 @@
@@ -7089,7 +7095,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 +#define CONFIG_SYSCFG_CUTARG "zImage"
 +#define CONFIG_CAP_FSL_EXT 1
 +#define CONFIG_LTIB_RELEASE "8.1.2"
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/userspace/packages.lkc ltib.new/config/userspace/packages.lkc
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/userspace/packages.lkc ltib.new/config/userspace/packages.lkc
 --- ltib/config/userspace/packages.lkc	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/userspace/packages.lkc	2015-09-23 14:29:35.000000000 +0200
 @@ -229,6 +229,13 @@
@@ -7197,7 +7203,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  source ../../userspace/extra_packages.lkc
  
  endmenu
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/userspace/pkg_map ltib.new/config/userspace/pkg_map
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/userspace/pkg_map ltib.new/config/userspace/pkg_map
 --- ltib/config/userspace/pkg_map	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/userspace/pkg_map	2015-09-23 14:29:35.000000000 +0200
 @@ -53,7 +53,6 @@
@@ -7240,7 +7246,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
  
  # leave these as the last 3 packages in the build order
  PKG_SYSCONFIG                    = sysconfig
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/userspace/sysconfig.lkc ltib.new/config/userspace/sysconfig.lkc
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/userspace/sysconfig.lkc ltib.new/config/userspace/sysconfig.lkc
 --- ltib/config/userspace/sysconfig.lkc	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/userspace/sysconfig.lkc	2015-09-23 14:29:35.000000000 +0200
 @@ -126,6 +126,16 @@
@@ -7280,7 +7286,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 +    start at boot the S10setup script script in /etc/rc.d/init.d
 +    that performs system update through USB key.
  endmenu
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/config/userspace/toolchain.lkc ltib.new/config/userspace/toolchain.lkc
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/userspace/toolchain.lkc ltib.new/config/userspace/toolchain.lkc
 --- ltib/config/userspace/toolchain.lkc	2013-01-09 04:58:38.000000000 +0100
 +++ ltib.new/config/userspace/toolchain.lkc	2015-09-23 14:29:35.000000000 +0200
 @@ -541,21 +541,6 @@
@@ -7339,7 +7345,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
      default "-O2 -march=armv6 -mfpu=vfp -mfloat-abi=softfp" if (( PLATFORM = imx31_3stack || PLATFORM = imx35_3stack || PLATFORM = imx31ads || PLATFORM = imx37_3stack ) && TOOLCHAIN_ARMEABI_FSL_GCC_MULTILIB)
      default "-O2 -march=armv5te" if (( PLATFORM = imx21ads || PLATFORM = imx233 || PLATFORM = imx25_3stack || PLATFORM = imx27ads || PLATFORM = imx28 ) && TOOLCHAIN_ARMEABI_FSL_GCC_MULTILIB)
  
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/.config ltib.new/.config
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/.config ltib.new/.config
 --- ltib/.config	1970-01-01 01:00:00.000000000 +0100
 +++ ltib.new/.config	2015-09-23 14:29:35.000000000 +0200
 @@ -0,0 +1,7 @@
@@ -7350,7 +7356,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 +CONFIG_CONFIG_TITLE="GNU/Linux Target Image Builder : Platform Selection"
 +CONFIG_PLATFORM_imx=y
 +CONFIG_PLATFORM_DIR="config/platform/imx"
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/.config.cmd ltib.new/.config.cmd
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/.config.cmd ltib.new/.config.cmd
 --- ltib/.config.cmd	1970-01-01 01:00:00.000000000 +0100
 +++ ltib.new/.config.cmd	2015-09-23 14:29:35.000000000 +0200
 @@ -0,0 +1,6 @@
@@ -7360,7 +7366,7 @@ diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib
 +.config include/linux/autoconf.h: $(deps_config)
 +
 +$(deps_config):
-diff -aurN --exclude=kernel-2.6.35.spec.in --exclude=dist --exclude=.ltibrc ltib/.tmpconfig.h ltib.new/.tmpconfig.h
+diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/.tmpconfig.h ltib.new/.tmpconfig.h
 --- ltib/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
 +++ ltib.new/.tmpconfig.h	2015-09-23 14:29:35.000000000 +0200
 @@ -0,0 +1,8 @@

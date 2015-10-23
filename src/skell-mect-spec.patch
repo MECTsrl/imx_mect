@@ -1,6 +1,6 @@
 --- ltib/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/dist/lfs-5.1/skell/skell.spec	2015-10-23 12:33:48.791662720 +0200
-@@ -9,15 +9,70 @@
++++ ltib.new/dist/lfs-5.1/skell/skell.spec	2015-10-24 00:48:46.920009725 +0200
+@@ -9,15 +9,72 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -34,8 +34,10 @@
 +Patch23         : skell-1.18-1428680350.patch
 +Patch24         : skell-1.18-1429172043.patch
 +Patch25         : skell-1.18-1431590614.patch
-+Patch26         : skell-1.18-ld-xenomai-libs.patch
-+Patch27         : skell-1.18-root-home-perms.patch
++Patch26         : skell-1.18-mect-ld-xenomai-libs.patch
++Patch27         : skell-1.18-mect-remove-inittab.patch
++Patch28         : skell-1.18-mect-remove-issue.patch
++Patch29         : skell-1.18-mect-remove-rc.local.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -73,7 +75,7 @@
  
  %Description
  %{summary}
-@@ -31,24 +86,69 @@
+@@ -31,24 +88,71 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -99,6 +101,8 @@
 +%patch25 -p1
 +%patch26 -p1
 +%patch27 -p1
++%patch28 -p1
++%patch29 -p1
  
  %Build
 +DESTDIR=$RPM_BUILD_ROOT/%{pfx} 

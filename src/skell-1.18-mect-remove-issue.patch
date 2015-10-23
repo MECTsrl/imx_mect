@@ -1,0 +1,13 @@
+diff -aurN skell-1.18-orig/etc/issue skell-1.18/etc/issue
+--- skell-1.18-orig/etc/issue	2008-09-23 14:48:38.000000000 +0200
++++ skell-1.18/etc/issue	1970-01-01 01:00:00.000000000 +0100
+@@ -1,9 +0,0 @@
+-
+-        Welcome to Freescale Semiconductor Embedded Linux Environment
+-
+-!!!!! WARNING !!!!!!!
+-
+-The default password for the root account is: root
+-please change this password using the 'passwd' command
+-and then edit this message (/etc/issue) to remove this message
+-

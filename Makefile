@@ -534,7 +534,7 @@ TPAC1007_480x272: MFGZIP := $(MFGDIR)/../$(shell basename $(MFGDIR)).zip
 TPAC1007_480x272: BOOTDIR := $(TGTDIR)/boot
 TPAC1007_480x272: RFSDIR := $(TGTDIR)/rootfs
 TPAC1007_480x272: LFSDIR := $(TGTDIR)/localfs
-TPAC1007_480x272: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x272_lfs
+TPAC1007_480x272: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x272_lfs TPAC1007_480x272_win
 	mkdir -p $(MFGDIR)/'OS firmware'/img $(MFGDIR)/'OS firmware'/sys
 	sed "s/@@PLAYER@@/$(shell basename $(MFGDIR))/" $(FTPDIR)/player.ini > $(MFGDIR)/player.ini
 	install -m 644 $(FTPDIR)/fdisk-u.input $(MFGDIR)/'OS firmware'/sys/fdisk-u.input
@@ -579,6 +579,10 @@ TPAC1007_480x272_lfs:
 	-rmdir $(LFSDIR)/tmp/ltib
 	-rmdir $(LFSDIR)/tmp
 	du -sh --apparent-size $(LFSDIR)
+
+.PHONY: TPAC1007_480x272_win
+TPAC1007_480x272_win:
+	BZIP2=-9 tar cjhf $(TGTDIR)/rootfs_rsync-L.tar.bz2 --hard-dereference --one-file-system --transform=s/^rootfs/rootfs_rsync-L/ -C $(LTIBDIR) rootfs/usr/include rootfs/usr/lib rootfs/lib rootfs/usr/src/linux/include
 
 
 .PHONY: clean

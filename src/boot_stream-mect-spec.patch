@@ -1,11 +1,12 @@
 --- ltib/dist/lfs-5.1/boot_stream/boot_stream.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/dist/lfs-5.1/boot_stream/boot_stream.spec	2015-10-12 10:46:10.534468000 +0200
-@@ -8,15 +8,43 @@
++++ ltib.new/dist/lfs-5.1/boot_stream/boot_stream.spec	2015-10-23 01:24:50.227008412 +0200
+@@ -8,15 +8,52 @@
  Vendor          : Freescale
  Packager        : Terry Lv
  Group           : Tools
 -Source          : %{name}-%{version}-%{release}.tar.gz
 +Source          : %{name}-11.01.00.tar.gz
++Source1         : updater_ivt.sb
 +Patch1          : imx-bootlets-src-11.01.00-1315841439.patch
 +Patch2          : imx-bootlets-src-11.01.00-1332172356.patch
 +Patch3          : imx-bootlets-src-11.01.00-1337962710.patch
@@ -24,6 +25,14 @@
 +%Description rfs
 +imx-bootlets-src package contents restricted to just the files
 +that are needed at run time on the target.
++
++%Package mfg
++Summary         : Trimmed imx-bootlets-src for manufacturing tool requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description mfg
++imx-bootlets-src package contents restricted to just the files
++that are needed for programming the target.
 +
 +
 +
@@ -46,10 +55,23 @@
  
  %Build
  export CMDLINE1="$PKG_BOOT_STREAM_CMDLINE1"
-@@ -37,10 +65,19 @@
+@@ -25,8 +62,7 @@
+ export CMDLINE4="$PKG_BOOT_STREAM_CMDLINE4"
+ 
+ PLATFORMSHORTNAME=`echo $PLATFORM | sed "s,imx\([0-9]*\).*,MX\1,g"`
+-if [ "x$PLATFORMSHORTNAME" = "xMX233" ]
+-then
++if test "$PLATFORMSHORTNAME" = "MX233"; then
+     make -j1 MEM_TYPE="${PKG_BOOT_STREAM_MEMTYPE_PRECONFIG}"
+ else
+     make -j1 MEM_TYPE="${PKG_BOOT_STREAM_MEMTYPE_PRECONFIG}" BOARD=iMX28_EVK
+@@ -37,10 +73,27 @@
  mkdir -p $RPM_BUILD_ROOT/%{pfx}/boot
  make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}/boot
  
++install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/boot
++
++
 +cd %{_builddir}/%{name}-11.01.00
 +( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
@@ -66,5 +88,10 @@
 +
 +
 +%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
++
++%Files mfg
  %defattr(-,root,root)
 -%{pfx}/*
++%{pfx}/boot/imx28_ivt_linux.sb
++%{pfx}/boot/updater_ivt.sb

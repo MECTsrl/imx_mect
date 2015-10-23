@@ -8,7 +8,6 @@ TOOLCHAIN := codesourcery
 export RFSDIR := $(CURDIR)/../ltib/rootfs
 RPMDIR := $(CURDIR)/../ltib/rpm
 
-LFSDIR := $(RFSDIR)/../../images-all/$(TARGET)/localfs
 LDIR := $(CURDIR)/localfs
 SPECDIR := $(CURDIR)/rpm/SPECS
 
@@ -194,15 +193,13 @@ localfs_rpm: localfs_rpm_clean localfs_rpm_build localfs_rpm_install
 localfs_rpm_build: PRJDIR := $(CURDIR)
 localfs_rpm_build:
 	test -n $(PRJDIR)
-	mkdir -p $(LFSDIR)
 
 .PHONY: localfs_rpm_install
 localfs_rpm_install: PRJDIR := $(CURDIR)
 localfs_rpm_install:
 	test -n $(PRJDIR)
-	tar cjvf $(LFSDIR)/../local.tar.bz2 --exclude=.svn -C $(LDIR) .
+	tar cjvf $(RPMDIR)/SOURCES/local.tar.bz2 --exclude=.svn -C $(LDIR) .
 	rm -rf $(RPMTMPDIR)/{*,.??*}
-	install -D -m 644 $(LFSDIR)/../local.tar.bz2 $(RPMDIR)/SOURCES/local.tar.bz2
 	rpmbuild --define 'rel $(RELEASE)' --define '_topdir $(RPMDIR)' --dbpath $(RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(RPMDIR)/RPMS' -bb --clean --rmsource $(SPECDIR)/local.spec
 
 .PHONY: localfs_rpm_clean
@@ -217,4 +214,4 @@ localfs_rpm_clean:
 
 .PHONY: clean
 clean: ATCMControl_runtime_system_clean cgic_work_clean factory_data_clean local_prepare_clean setup_time_clean splash_clean
-	sudo rm -rf $(LFSDIR) $(LDIR)
+	sudo rm -rf $(LDIR)

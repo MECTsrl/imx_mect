@@ -1,5 +1,5 @@
 --- ltib/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/dist/lfs-5.1/skell/skell.spec	2015-10-21 00:46:04.527048017 +0200
++++ ltib.new/dist/lfs-5.1/skell/skell.spec	2015-10-23 12:33:48.791662720 +0200
 @@ -9,15 +9,70 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
@@ -73,7 +73,7 @@
  
  %Description
  %{summary}
-@@ -31,24 +86,67 @@
+@@ -31,24 +86,69 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -136,6 +136,7 @@
 +%attr(0666, root, root) %dev(c, 5, 0) %{pfx}/dev/tty
 +%attr(0600, root, root) %dev(c, 5, 1) %{pfx}/dev/console
 +%attr(0666, root, root) %dev(c, 1, 3) %{pfx}/dev/null
++%attr(0755, root, root) %dir %{pfx}/local
  
 -%Files
 +%Files rfs -f rfs_files.lst
@@ -145,6 +146,7 @@
  %attr(0666, root, root) %dev(c, 1, 3) %{pfx}/dev/null
 -%attr(0755, root, root) %{pfx}/usr/bin/startx
 -%{pfx}/*
++%attr(0755, root, root) %dir %{pfx}/local
 +
 +%Files lfs
 +%defattr(-,root,root)

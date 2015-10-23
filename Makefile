@@ -18,7 +18,7 @@ FTPDIR = $(CURDIR)/src
 # LTIB is installed here.
 LTIBDIR = $(CURDIR)/ltib
 # LTIB rootfs is created here.
-LTIB_RFS_DIR = $(LTIBDIR)/rootfs
+LTIB_RFSDIR = $(LTIBDIR)/rootfs
 # LTIB specs are installed here.
 LTIBSPECDIR = $(LTIBDIR)/dist/lfs-5.1
 # Unpack the archives here.
@@ -44,7 +44,7 @@ MD5EXT = md5
 # Package list for creating the root file system for various targets.
 #
 
-RFSPKGS_TPAC_1007 := \
+RFSPKGS_TPAC1007_480x272 := \
 	base_libs-rfs-1.2-1.arm.rpm \
 	boa-rfs-0.94.14rc21-1.arm.rpm \
 	busybox-rfs-1.15.0-1.arm.rpm \
@@ -85,18 +85,18 @@ RFSPKGS_TPAC_1007 := \
 	zip-rfs-3.0.0-0.arm.rpm \
 	zlib-rfs-1.2.3-2.arm.rpm \
 
-RFSPKGS_TPAC_1007 := $(RFSPKGS_TPAC_1007:%=$(RPMDIR)/%)
+RFSPKGS_TPAC1007_480x272 := $(RFSPKGS_TPAC1007_480x272:%=$(RPMDIR)/%)
 
-LFSPKGS_TPAC_1007 := \
+LFSPKGS_TPAC1007_480x272 := \
 	skell-lfs-1.18-2.arm.rpm \
 	local-1.0-1_$(BUILD_RELEASE).arm.rpm \
 	local-ATCMControl_runtime_system-1.0-1_$(BUILD_RELEASE).arm.rpm \
-	local-cgic_work--1_1.0.arm.rpm \
+	local-cgic_work-1.0-1_$(BUILD_RELEASE).arm.rpm \
 	local-factory_data-1.0-1_$(BUILD_RELEASE).arm.rpm \
 	local-setup_time-1.0-1_$(BUILD_RELEASE).arm.rpm \
 	local-splash-1.0-1_$(BUILD_RELEASE).arm.rpm \
 
-LFSPKGS_TPAC_1007 := $(LFSPKGS_TPAC_1007:%=$(RPMDIR)/%)
+LFSPKGS_TPAC1007_480x272 := $(LFSPKGS_TPAC1007_480x272:%=$(RPMDIR)/%)
 
 
 # Definition of the sources
@@ -359,6 +359,7 @@ PACKAGES = \
 	uuid \
 	uuid-dev \
 	wget \
+	zip \
 	zlib1g \
 	zlib1g-dev \
 	zlib-bin \
@@ -525,40 +526,59 @@ projects:
 # Rules to build target root file systems
 #
 
-.PHONY: tpac_1007
-tpac_1007: tpac_1007_rfs tpac_1007_lfs
+.PHONY: TPAC1007_480x272
+TPAC1007_480x272: TGTDIR := $(IMGDIR)/TPAC1007_480x272_r$(BUILD_RELEASE)
+TPAC1007_480x272: TGT_RPMDIR := $(TGTDIR)/rpm
+TPAC1007_480x272: MFGDIR := $(TGTDIR)/$(shell basename $(TGTDIR) | sed 's/\./_/g')
+TPAC1007_480x272: MFGZIP := $(MFGDIR)/../$(shell basename $(MFGDIR)).zip
+TPAC1007_480x272: BOOTDIR := $(TGTDIR)/boot
+TPAC1007_480x272: RFSDIR := $(TGTDIR)/rootfs
+TPAC1007_480x272: LFSDIR := $(TGTDIR)/localfs
+TPAC1007_480x272: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x272_lfs
+	mkdir -p $(MFGDIR)/'OS firmware'/img $(MFGDIR)/'OS firmware'/sys
+	sed "s/@@PLAYER@@/$(shell basename $(MFGDIR))/" $(FTPDIR)/player.ini > $(MFGDIR)/player.ini
+	install -m 644 $(FTPDIR)/fdisk-u.input $(MFGDIR)/'OS firmware'/sys/fdisk-u.input
+	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
+	BZIP2=-3 tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
+	BZIP2=-3 tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
+	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
+	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
+	rm -f $(MFGZIP)
+	cd $(MFGDIR); zip -0r $(MFGZIP) *
 
-.PHONY: tpac_1007_rfs
-tpac_1007_rfs: RFSDIR := tpac_1007/rootfs
-tpac_1007_rfs: $(RFSPKGS_TPAC_1007)
-	sudo rm -rf $(IMGDIR)/$(RFSDIR)
-	mkdir -p $(IMGDIR)/$(RFSDIR)/var/lib/rpm $(IMGDIR)/$(RFSDIR)/tmp/ltib
-	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(IMGDIR)/$(RFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --excludedocs --define '_tmppath /tmp/ltib' $(RFSPKGS_TPAC_1007)
-	cd $(IMGDIR)/$(RFSDIR); sudo ldconfig -r `pwd`
+.PHONY: TPAC1007_480x272_boot
+TPAC1007_480x272_boot:
+	sudo rm -rf $(BOOTDIR)
+	mkdir -p $(BOOTDIR)/var/lib/rpm $(BOOTDIR)/tmp/ltib
+	sudo rpm --force --nodeps --root $(BOOTDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --excludedocs --define '_tmppath /tmp/ltib' $(RPMDIR)/imx-bootlets-src-mfg-2.6.35.3-1.1.0.arm.rpm
+
+.PHONY: TPAC1007_480x272_rfs
+TPAC1007_480x272_rfs: $(RFSPKGS_TPAC1007_480x272)
+	sudo rm -rf $(RFSDIR)
+	mkdir -p $(RFSDIR)/var/lib/rpm $(RFSDIR)/tmp/ltib
+	sudo rpm --force --nodeps --root $(RFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --excludedocs --define '_tmppath /tmp/ltib' $(RFSPKGS_TPAC1007_480x272)
+	cd $(RFSDIR); sudo ldconfig -r `pwd`
 	( \
 		echo "Release: rel$(BUILD_RELEASE)"; \
 		echo "Target:  $(BUILD_TARGET)";  \
 		echo "Qt:      $(QT_VERSION)";    \
 		echo "Qwt:     $(QWT_VERSION)"    \
-	) > $(IMGDIR)/$(RFSDIR)/$(RFS_VERSION_FILE)
-	sudo install -D -p $(CSXCDIR)/arm-none-linux-gnueabi/libc/usr/bin/gdbserver $(IMGDIR)/$(RFSDIR)/usr/bin/gdbserver
-	du -sh --apparent-size $(IMGDIR)/$(RFSDIR)
-	cd $(IMGDIR)/$(RFSDIR); BZIP2=-9 tar cjf ../rootfs.tar.bz2 *
+	) > $(RFSDIR)/$(RFS_VERSION_FILE)
+	sudo install -D -p $(CSXCDIR)/arm-none-linux-gnueabi/libc/usr/bin/gdbserver $(RFSDIR)/usr/bin/gdbserver
+	du -sh --apparent-size $(RFSDIR)
 
-.PHONY: tpac_1007_lfs
-tpac_1007_lfs: LFSDIR := tpac_1007/localfs
-tpac_1007_lfs:
-	sudo rm -rf $(IMGDIR)/$(LFSDIR)
-	mkdir -p $(IMGDIR)/$(LFSDIR)/var/lib/rpm $(IMGDIR)/$(LFSDIR)/tmp/ltib
-	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(IMGDIR)/$(LFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --excludedocs --define '_tmppath /tmp/ltib' $(LFSPKGS_TPAC_1007)
-	rm -f $(IMGDIR)/$(LFSDIR)/var/lib/rpm/*
-	-rmdir $(IMGDIR)/$(LFSDIR)/var/lib/rpm
-	-rmdir $(IMGDIR)/$(LFSDIR)/var/lib
-	-rmdir $(IMGDIR)/$(LFSDIR)/var
-	-rmdir $(IMGDIR)/$(LFSDIR)/tmp/ltib
-	-rmdir $(IMGDIR)/$(LFSDIR)/tmp
-	du -sh --apparent-size $(IMGDIR)/$(LFSDIR)
-	cd $(IMGDIR)/$(LFSDIR); BZIP2=-9 tar cjf ../localfs.tar.bz2 *
+.PHONY: TPAC1007_480x272_lfs
+TPAC1007_480x272_lfs:
+	sudo rm -rf $(LFSDIR)
+	mkdir -p $(LFSDIR)/var/lib/rpm $(LFSDIR)/tmp/ltib
+	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(LFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --excludedocs --define '_tmppath /tmp/ltib' $(LFSPKGS_TPAC1007_480x272)
+	rm -f $(LFSDIR)/var/lib/rpm/*
+	-rmdir $(LFSDIR)/var/lib/rpm
+	-rmdir $(LFSDIR)/var/lib
+	-rmdir $(LFSDIR)/var
+	-rmdir $(LFSDIR)/tmp/ltib
+	-rmdir $(LFSDIR)/tmp
+	du -sh --apparent-size $(LFSDIR)
 
 
 .PHONY: clean
@@ -568,6 +588,10 @@ clean: clean_projects
 .PHONY: clean_projects
 clean_projects:
 	make -C projects RELEASE=$(BUILD_RELEASE) clean
+
+.PHONY: distclean
+distclean: clean
+	sudo rm -rf $(IMGDIR)
 
 
 

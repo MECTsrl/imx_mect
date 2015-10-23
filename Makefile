@@ -582,7 +582,7 @@ TPAC1007_480x272_lfs:
 
 .PHONY: TPAC1007_480x272_win
 TPAC1007_480x272_win:
-	BZIP2=-9 tar cjhf $(TGTDIR)/rootfs_rsync-L.tar.bz2 --hard-dereference --one-file-system --transform=s/^rootfs/rootfs_rsync-L/ -C $(LTIBDIR) rootfs/usr/include rootfs/usr/lib rootfs/lib rootfs/usr/src/linux/include
+	-BZIP2=-9 tar cjhf $(TGTDIR)/rootfs_rsync-L.tar.bz2 --hard-dereference --one-file-system --transform=s/^rootfs/rootfs_rsync-L/ -C $(LTIBDIR) rootfs/usr/include rootfs/usr/lib rootfs/lib rootfs/usr/src/linux/include
 
 
 .PHONY: clean

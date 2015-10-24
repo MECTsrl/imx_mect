@@ -1,12 +1,11 @@
 --- ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-10-24 00:52:50.700893343 +0200
-@@ -8,14 +8,27 @@
++++ ltib.new/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-10-24 12:37:40.053336872 +0200
+@@ -8,14 +8,26 @@
  Vendor		: Freescale
  Packager	: Stuart Hughes
  Group		: System Environment/Base
 +Source          : inittab
 +Source1         : issue
-+Source2         : rc.local
  BuildRoot	: %{_tmppath}/%{name}
  Prefix		: %{pfx}
 +AutoReqProv     : no
@@ -29,7 +28,7 @@
  
  %Build
  
-@@ -63,6 +76,36 @@
+@@ -63,6 +75,36 @@
  then
      boa=boa
  fi
@@ -66,7 +65,7 @@
  if [ "$SYSCFG_SETTIME" = "y" ]
  then
      settime=settime
-@@ -91,14 +134,24 @@
+@@ -91,14 +133,24 @@
  then
          fslgnome=fslgnome
  fi
@@ -95,7 +94,7 @@
  
  export HOSTNAME="${SYSCFG_HOSTNAME:-$PLATFORM}"
  export NTP_SERVER="$SYSCFG_NTP_SERVER"
-@@ -154,61 +207,9 @@
+@@ -154,61 +206,8 @@
      else
  	sys_login="::respawn:-/bin/sh"
      fi
@@ -156,20 +155,72 @@
 -EOF
 +    install -m 644 %{SOURCE0} $RPM_BUILD_ROOT/%{pfx}/etc/inittab
 +    install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/etc/issue
-+    install -m 644 %{SOURCE2} $RPM_BUILD_ROOT/%{pfx}/etc/rc.local
  else
      # SysVInit
      if [ "$SYSCFG_WANT_LOGIN_TTY" = "y" ]
-@@ -308,9 +309,18 @@
-     ln -s /sbin/init $RPM_BUILD_ROOT/%{pfx}/init
+@@ -242,18 +241,20 @@
+ #
+ # This script will be executed *after* all the other init scripts.
+ # You can put your own initialization stuff in here
++
++# Rebuild the RPM db on target at first boot.
+ if [ -x "/usr/bin/rpm" -a -e "/tmp/ltib" ]
+ then
+-    echo "rebuilding rpm database"
++    echo "rebuilding the RPM database"
+     rm -rf /tmp/ltib
+     rpm --rebuilddb
  fi
  
+-# fix up permissions
+-if [ -d /home/user ]
+-then
+-    chown -R user.user /home/user
+-fi
++# Fix the user home directory permissions.
++test -d /home/user && chown -R user.user /home/user
++
++# Fix the root home directory permissions.
++test -d /local/flash/root && chmod 0755 /local/flash/root
+ 
+ # Add nodes when running under the hypervisor and static devices
+ if [ -r /sys/class/misc/fsl-hv/dev -a ! -r /dev/fsl-hv ]
+@@ -287,30 +288,32 @@
+ fi
+ 
+ for i in 0 1 2; do
+-    if [ -e /sys/class/graphics/fb$i ]; then
+-        chmod 0666 /sys/class/graphics/fb$i/pan
+-    fi
++	test -e /sys/class/graphics/fb$i && chmod 0666 /sys/class/graphics/fb$i/pan
+ done
+-
+ EOF
+-chmod +x $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc.local
++chmod a+x $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc.local
+ 
+ cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/issue
+-$( gcc --version | grep 'gcc')
++$(gcc --version | grep gcc)
+ root filesystem built on $(date -R)
+-Freescale Semiconductor, Inc.
+-
++MECT s.r.l.
+ EOF
+ 
+ # The kernel attempts to run /init (not /sbin/init!) from initramfs images
+-if [ "$SYSCFG_DEPLOYMENT_STYLE" = "INITRAMFS" ]
+-then
+-    ln -s /sbin/init $RPM_BUILD_ROOT/%{pfx}/init
+-fi
++test "$SYSCFG_DEPLOYMENT_STYLE" = "INITRAMFS" && ln -s /sbin/init $RPM_BUILD_ROOT/%{pfx}/init
++
 +cd %{_builddir}
 +( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
 +	p;
 +' all_files.lst > rfs_files.lst
-+
+ 
  %Clean
  rm -rf $RPM_BUILD_ROOT
  

@@ -1,5 +1,5 @@
 --- ltib/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/dist/lfs-5.1/skell/skell.spec	2015-10-24 00:48:46.920009725 +0200
++++ ltib.new/dist/lfs-5.1/skell/skell.spec	2015-10-24 11:16:45.556936943 +0200
 @@ -9,15 +9,72 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities

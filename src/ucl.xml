@@ -13,109 +13,103 @@
 *  "drop" - Does UtpCommand(body) then waits for device to disconnect.
 *  "boot" - Finds configured device, forces it to "body" device and downloads "file".
 *  "find" - Waits for "timeout" seconds for the "body" device to connect.
-*  "show" - Parse and show device info in "file".  
+*  "show" - Parse and show device info in "file".
 -->
 
 <UCL>
   <CFG>
     <STATE name="Recovery" dev="IMX28"/>
-    <STATE name="Updater"   dev="Updater" />  
+    <STATE name="Updater" dev="Updater"/>
     <DEV name="IMX28" vid="15A2" pid="004F"/>
-    <DEV name="Updater" vid="066F" pid="37FF" />
+    <DEV name="Updater" vid="066F" pid="37FF"/>
   </CFG>
   <LIST name="Singlechip NAND" desc="Install on singlechip NAND">
-    <CMD type="boot" body="Recovery" file="sys/updater_ivt.sb" timeout="60">Booting Update Firmware.</CMD>
+    <CMD type="boot" body="Recovery" file="sys/updater_ivt.sb" timeout="60">Sending and booting up the updater.</CMD>
     <CMD type="find" body="Updater" timeout="180"/>
     <CMD type="push" body="mknod class/mtd,mtd0,/dev/mtd0"/>
     <CMD type="push" body="mknod class/mtd,mtd1,/dev/mtd1"/>
     <CMD type="push" body="mknod class/misc,ubi_ctrl,/dev/ubi_ctrl"/>
     <!-- UBI image support
     * If the user has ubi image, he can use below command to program ubi image to certain mtd device.
-    * <CMD type="push" body="pipe ubiformat /dev/mtdX -y -f - -S @FILESIZE" file="files/ubi.img">Sending and writting rootfs</CMD>
+    * <CMD type="push" body="pipe ubiformat /dev/mtdX -y -f - -S @FILESIZE" file="files/ubi.img">Sending and writing rootfs</CMD>
     *
     * If @FILESIZE is not supported at host tool, please replace it with real file size in byte.
     -->
-    <CMD type="push" body="$ flash_eraseall /dev/mtd0">Erasing rootfs partition 0</CMD>
-    <CMD type="push" body="$ flash_eraseall /dev/mtd1">Erasing rootfs partition 1</CMD>
-    <CMD type="push" body="send" file="img/imx28_ivt_linux.sb" >Sending u-boot Image.</CMD>
-    <CMD type="push" body="$ kobs-ng init $FILE">Flashing firmware</CMD>
-    <CMD type="push" body="$ ubiattach /dev/ubi_ctrl -m 1 -d 0">Attaching UBI partition</CMD>
+    <CMD type="push" body="$ flash_eraseall /dev/mtd0">Erasing partition 0.</CMD>
+    <CMD type="push" body="$ flash_eraseall /dev/mtd1">Erasing partition 1.</CMD>
+    <CMD type="push" body="send" file="img/imx28_ivt_linux.sb">Sending the boot and kernel images.</CMD>
+    <CMD type="push" body="$ kobs-ng init $FILE">Flashing the firmware.</CMD>
+    <CMD type="push" body="$ ubiattach /dev/ubi_ctrl -m 1 -d 0">Attaching the UBI partition 0.</CMD>
     <CMD type="push" body="mknod class/ubi,ubi0,/dev/ubi0"/>
-    <!-- 
-		create the root partition with size 64MiB
-	-->
-	<CMD type="push" body="$ ubimkvol /dev/ubi0 -n 0 -N rootfs0 -s 80MiB">Creating rootfs UBI volumes</CMD>
-    <!-- 
-		create the data partition with the remaining space
-	-->
-    <CMD type="push" body="$ ubimkvol /dev/ubi0 -n 1 -N local -m">Creating local UBI volumes</CMD>
-    
-	<CMD type="push" body="$ mkdir -p /mnt/ubi0; mount -t ubifs ubi0_0 /mnt/ubi0" />
-    <CMD type="push" body="pipe tar -jxv -C /mnt/ubi0" file="img/rootfs.tar.bz2">Transfer rootfs</CMD>
-	<CMD type="push" body="frf">Finish Flashing NAND</CMD>
-    <CMD type="push" body="$ umount /mnt/ubi0">Unmounting rootfs</CMD>
+    <!-- create the root partition with size 64MiB -->
+    <CMD type="push" body="$ ubimkvol /dev/ubi0 -n 0 -N rootfs0 -s 80MiB">Creating the root UBI volume.</CMD>
+    <!-- create the data partition with the remaining space -->
+    <CMD type="push" body="$ ubimkvol /dev/ubi0 -n 1 -N local -m">Creating the local UBI volume.</CMD>
+    <CMD type="push" body="$ mkdir -p /mnt/ubi0; mount -t ubifs ubi0_0 /mnt/ubi0"/>
+    <CMD type="push" body="pipe tar -jxv -C /mnt/ubi0" file="img/rootfs.tar.bz2">Flashing the root file system.</CMD>
+    <CMD type="push" body="frf">Finish root file system flashing.</CMD>
+    <CMD type="push" body="$ umount /mnt/ubi0">Unmounting the root file system.</CMD>
 
-    <CMD type="push" body="$ mkdir -p /mnt/ubi1; mount -t ubifs ubi0_1 /mnt/ubi1" />
-    <CMD type="push" body="pipe tar -jxv -C /mnt/ubi1" file="img/localfs.tar.bz2">Transfer local</CMD>
-	<CMD type="push" body="frf">Finish Flashing NAND</CMD>
-    <CMD type="push" body="$ umount /mnt/ubi1">Unmounting local</CMD>
+    <CMD type="push" body="$ mkdir -p /mnt/ubi1; mount -t ubifs ubi0_1 /mnt/ubi1"/>
+    <CMD type="push" body="pipe tar -jxv -C /mnt/ubi1" file="img/localfs.tar.bz2">Flashing the local file system.</CMD>
+    <CMD type="push" body="frf">Finish local file system flashing.</CMD>
+    <CMD type="push" body="$ umount /mnt/ubi1">Unmounting the local file system.</CMD>
 
-    <CMD type="push" body="$ echo Update Complete!">Done</CMD>
+    <CMD type="push" body="$ echo Update Complete!">Done.</CMD>
   </LIST>
 
   <LIST name="Bootstream NAND" desc="Install on singlechip NAND only bootstream">
-    <CMD type="boot" body="Recovery" file="sys/updater_ivt.sb" timeout="60">Booting Update Firmware.</CMD>
+    <CMD type="boot" body="Recovery" file="sys/updater_ivt.sb" timeout="60">Booting up the updater.</CMD>
     <CMD type="find" body="Updater" timeout="180"/>
     <CMD type="push" body="mknod class/mtd,mtd0,/dev/mtd0"/>
     <CMD type="push" body="mknod class/misc,ubi_ctrl,/dev/ubi_ctrl"/>
-    <CMD type="push" body="$ flash_eraseall /dev/mtd0">Erasing rootfs partition 0</CMD>
-    <CMD type="push" body="send" file="img/imx28_ivt_linux.sb" >Sending u-boot Image.</CMD>
-    <CMD type="push" body="$ kobs-ng init $FILE">Flashing firmware</CMD>
-    <CMD type="push" body="$ echo Update Complete!">Done</CMD>
+    <CMD type="push" body="$ flash_eraseall /dev/mtd0">Erasing partition 0.</CMD>
+    <CMD type="push" body="send" file="img/imx28_ivt_linux.sb">Sending the boot and kernel images.</CMD>
+    <CMD type="push" body="$ kobs-ng init $FILE">Flashing the firmware.</CMD>
+    <CMD type="push" body="$ echo Update finished!">Done.</CMD>
   </LIST>
 
   <LIST name="SD(with uboot)" desc="Install to SD card">
-    <CMD type="boot" body="Recovery" file="sys/updater_ivt.sb">Booting Update Firmware.</CMD>
-    <CMD type="find" body="Updater" timeout="180"/>
-    <CMD type="push" body="mknod block,mmcblk0,/dev/mmcblk0,block"/>
-	 <!-- instruction to create the SD card -->
-    <CMD type="push" body="send" file="sys/fdisk-u.input">Sending fdisk input</CMD>
-    <CMD type="push" body="$ fdisk -u /dev/mmcblk0 < $FILE">Partitioning SD card</CMD>
-    <CMD type="push" body="mknod block/mmcblk0,mmcblk0p1,/dev/mmcblk0p1,block"/>
-    <CMD type="push" body="mknod block/mmcblk0,mmcblk0p2,/dev/mmcblk0p2,block"/>
-    <CMD type="push" body="mknod block/mmcblk0,mmcblk0p3,/dev/mmcblk0p3,block"/>
-    <CMD type="push" body="send" file="sys/uboot_ivt.sb">Sending u-boot Image.</CMD>
-    <CMD type="push" body="$ sdimage -f $FILE -d /dev/mmcblk0">Writing linux image</CMD>
-    <CMD type="push" body="send" file="sys/uImage">Sending kernel image</CMD>
-    <CMD type="push" body="$ dd if=$FILE of=/dev/mmcblk0 ibs=512 seek=256 conv=sync,notrunc">Writing kernel image</CMD>
-    <CMD type="push" body="$ mkfs.ext3 -j /dev/mmcblk0p3">Formatting rootfs partition</CMD>
-    <CMD type="push" body="$ mkdir -p /mnt/mmcblk0p3"/> 
-    <CMD type="push" body="$ mount /dev/mmcblk0p3 /mnt/mmcblk0p3"/>
-    <CMD type="push" body="pipe tar -jxv -C /mnt/mmcblk0p3" file="img/rootfs.tar.bz2">Sending and writting rootfs</CMD>
-    <CMD type="push" body="frf">Finishing rootfs write</CMD>
-    <CMD type="push" body="$ umount /mnt/mmcblk0p3">Unmounting rootfs partition</CMD>
-    <CMD type="push" body="$ echo Update Complete!">Done</CMD>
-  </LIST>
-
-  <LIST name="SD(without uboot)" desc="Install to SD card">
-    <CMD type="boot" body="Recovery" file="sys/updater_ivt.sb" >Booting Update Firmware.</CMD>
+    <CMD type="boot" body="Recovery" file="sys/updater_ivt.sb" timeout="60">Booting up the updater.</CMD>
     <CMD type="find" body="Updater" timeout="180"/>
     <CMD type="push" body="mknod block,mmcblk0,/dev/mmcblk0,block"/>
     <!-- instruction to create the SD card -->
-	<CMD type="push" body="send" file="sys/fdisk-u.input">Sending fdisk input</CMD>
-    <CMD type="push" body="$ fdisk -u /dev/mmcblk0 < $FILE">Partitioning SD card</CMD>
+    <CMD type="push" body="send" file="sys/fdisk-u.input">Sending the fdisk input.</CMD>
+    <CMD type="push" body="$ fdisk -u /dev/mmcblk0 < $FILE">Partitioning the SD card.</CMD>
     <CMD type="push" body="mknod block/mmcblk0,mmcblk0p1,/dev/mmcblk0p1,block"/>
     <CMD type="push" body="mknod block/mmcblk0,mmcblk0p2,/dev/mmcblk0p2,block"/>
     <CMD type="push" body="mknod block/mmcblk0,mmcblk0p3,/dev/mmcblk0p3,block"/>
-    <CMD type="push" body="send" file="sys/linux_ivt.sb" >Sending Linux Image.</CMD>
-    <CMD type="push" body="$ sdimage -f $FILE -d /dev/mmcblk0">Writing linux image</CMD>
-    <CMD type="push" body="$ mkdir -p /mnt/mmcblk0p3"/> 
-    <CMD type="push" body="$ mkfs.ext3 -j /dev/mmcblk0p3">Formatting rootfs partition</CMD>
+    <CMD type="push" body="send" file="sys/uboot_ivt.sb">Sending the U-Boot image.</CMD>
+    <CMD type="push" body="$ sdimage -f $FILE -d /dev/mmcblk0">Writing the Linux image.</CMD>
+    <CMD type="push" body="send" file="sys/uImage">Sending the kernel image.</CMD>
+    <CMD type="push" body="$ dd if=$FILE of=/dev/mmcblk0 ibs=512 seek=256 conv=sync,notrunc">Writing the kernel image.</CMD>
+    <CMD type="push" body="$ mkfs.ext3 -j /dev/mmcblk0p3">Formatting the root partition</CMD>
+    <CMD type="push" body="$ mkdir -p /mnt/mmcblk0p3"/>
     <CMD type="push" body="$ mount /dev/mmcblk0p3 /mnt/mmcblk0p3"/>
-    <CMD type="push" body="pipe tar -jxv -C /mnt/mmcblk0p3" file="img/rootfs.tar.bz2">Sending and writting rootfs</CMD>
-    <CMD type="push" body="frf">Finishing rootfs write</CMD>
-    <CMD type="push" body="$ umount /mnt/mmcblk0p3">Unmounting rootfs partition</CMD>
-    <CMD type="push" body="$ echo Update Complete!">Done</CMD>
+    <CMD type="push" body="pipe tar -jxv -C /mnt/mmcblk0p3" file="img/rootfs.tar.bz2">Sending and writing the root file system.</CMD>
+    <CMD type="push" body="frf">Finish writing the root file system.</CMD>
+    <CMD type="push" body="$ umount /mnt/mmcblk0p3">Unmounting the root partition.</CMD>
+    <CMD type="push" body="$ echo Update Complete!">Done.</CMD>
   </LIST>
 
+  <LIST name="SD(without uboot)" desc="Install to SD card">
+    <CMD type="boot" body="Recovery" file="sys/updater_ivt.sb" timeout="60">Booting up the updater.</CMD>
+    <CMD type="find" body="Updater" timeout="180"/>
+    <CMD type="push" body="mknod block,mmcblk0,/dev/mmcblk0,block"/>
+    <!-- instruction to create the SD card -->
+    <CMD type="push" body="send" file="sys/fdisk-u.input">Sending the fdisk input.</CMD>
+    <CMD type="push" body="$ fdisk -u /dev/mmcblk0 < $FILE">Partitioning the SD card.</CMD>
+    <CMD type="push" body="mknod block/mmcblk0,mmcblk0p1,/dev/mmcblk0p1,block"/>
+    <CMD type="push" body="mknod block/mmcblk0,mmcblk0p2,/dev/mmcblk0p2,block"/>
+    <CMD type="push" body="mknod block/mmcblk0,mmcblk0p3,/dev/mmcblk0p3,block"/>
+    <CMD type="push" body="send" file="sys/linux_ivt.sb">Sending the Linux image.</CMD>
+    <CMD type="push" body="$ sdimage -f $FILE -d /dev/mmcblk0">Writing the Linux image.</CMD>
+    <CMD type="push" body="$ mkdir -p /mnt/mmcblk0p3"/>
+    <CMD type="push" body="$ mkfs.ext3 -j /dev/mmcblk0p3">Formatting the root partition.</CMD>
+    <CMD type="push" body="$ mount /dev/mmcblk0p3 /mnt/mmcblk0p3"/>
+    <CMD type="push" body="pipe tar -jxv -C /mnt/mmcblk0p3" file="img/rootfs.tar.bz2">Sending and writing the root file system.</CMD>
+    <CMD type="push" body="frf">Finish writing the root file system.</CMD>
+    <CMD type="push" body="$ umount /mnt/mmcblk0p3">Unmounting the root partition.</CMD>
+    <CMD type="push" body="$ echo Update Complete!">Done.</CMD>
+  </LIST>
 </UCL>

@@ -373,7 +373,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 -PKG_UBUNTU_ARM_LIB = ubuntu_arm_lib
 diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/busybox.config ltib.new/config/platform/imx/busybox.config
 --- ltib/config/platform/imx/busybox.config	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/busybox.config	2015-10-23 23:21:46.705901651 +0200
++++ ltib.new/config/platform/imx/busybox.config	2015-10-24 12:40:42.354013799 +0200
 @@ -1,7 +1,6 @@
  #
  # Automatically generated make config: don't edit

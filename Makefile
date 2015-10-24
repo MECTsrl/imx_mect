@@ -534,42 +534,42 @@ TPAC1007_480x272: MFGZIP := $(MFGDIR)/../$(shell basename $(MFGDIR)).zip
 TPAC1007_480x272: BOOTDIR := $(TGTDIR)/boot
 TPAC1007_480x272: RFSDIR := $(TGTDIR)/rootfs
 TPAC1007_480x272: LFSDIR := $(TGTDIR)/localfs
-TPAC1007_480x272: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x272_lfs TPAC1007_480x272_win
-	mkdir -p $(MFGDIR)/'OS firmware'/img $(MFGDIR)/'OS firmware'/sys
-	sed "s/@@PLAYER@@/$(shell basename $(MFGDIR))/" $(FTPDIR)/player.ini > $(MFGDIR)/player.ini
-	install -m 644 $(FTPDIR)/fdisk-u.input $(MFGDIR)/'OS firmware'/sys/fdisk-u.input
-	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
-	BZIP2=-3 tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
-	BZIP2=-3 tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
-	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
-	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
-	rm -f $(MFGZIP)
-	cd $(MFGDIR); zip -0r $(MFGZIP) *
+TPAC1007_480x272: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x272_lfs TPAC1007_480x272_mfg TPAC1007_480x272_win
 
 .PHONY: TPAC1007_480x272_boot
-TPAC1007_480x272_boot:
+TPAC1007_480x272_boot: $(RFSPKGS_TPAC1007_480x272)
 	sudo rm -rf $(BOOTDIR)
 	mkdir -p $(BOOTDIR)/var/lib/rpm
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-mfg-2.6.35.3-1.1.0.arm.rpm
+	rm -f $(BOOTDIR)/var/lib/rpm/*
+	-rmdir $(BOOTDIR)/var/lib/rpm
+	-rmdir $(BOOTDIR)/var/lib
+	-rmdir $(BOOTDIR)/var
+	-rmdir $(BOOTDIR)/tmp/ltib
+	-rmdir $(BOOTDIR)/tmp
 
 .PHONY: TPAC1007_480x272_rfs
 TPAC1007_480x272_rfs: $(RFSPKGS_TPAC1007_480x272)
 	sudo rm -rf $(RFSDIR)
 	mkdir -p $(RFSDIR)/var/lib/rpm $(RFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RFSPKGS_TPAC1007_480x272)
+	rm -f $(RFSDIR)/var/lib/rpm/*
+	-rmdir $(RFSDIR)/var/lib/rpm
+	-rmdir $(RFSDIR)/var/lib
+	-rmdir $(RFSDIR)/var
+	-rmdir $(RFSDIR)/tmp/ltib
 	cd $(RFSDIR); sudo ldconfig -r `pwd`
 	( \
 		echo "Release: rel$(BUILD_RELEASE)"; \
-		echo "Target:  $(BUILD_TARGET)";  \
-		echo "Qt:      $(QT_VERSION)";    \
-		echo "Qwt:     $(QWT_VERSION)"    \
+		echo "Target:  $(BUILD_TARGET)"; \
+		echo "Qt:      $(QT_VERSION)"; \
+		echo "Qwt:     $(QWT_VERSION)" \
 	) > $(RFSDIR)/$(RFS_VERSION_FILE)
-	sudo install -D -p $(CSXCDIR)/arm-none-linux-gnueabi/libc/usr/bin/gdbserver $(RFSDIR)/usr/bin/gdbserver
-	-rmdir $(RFSDIR)/tmp/ltib
+	#sudo install -D -p $(CSXCDIR)/arm-none-linux-gnueabi/libc/usr/bin/gdbserver $(RFSDIR)/usr/bin/gdbserver
 	du -sh --apparent-size $(RFSDIR)
 
 .PHONY: TPAC1007_480x272_lfs
-TPAC1007_480x272_lfs:
+TPAC1007_480x272_lfs: $(LFSPKGS_TPAC1007_480x272)
 	sudo rm -rf $(LFSDIR)
 	mkdir -p $(LFSDIR)/var/lib/rpm $(LFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(LFSPKGS_TPAC1007_480x272)
@@ -581,9 +581,22 @@ TPAC1007_480x272_lfs:
 	-rmdir $(LFSDIR)/tmp
 	du -sh --apparent-size $(LFSDIR)
 
+.PHONY: TPAC1007_480x272_mfg
+TPAC1007_480x272_mfg: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x272_lfs
+	mkdir -p $(MFGDIR)/'OS firmware'/img $(MFGDIR)/'OS firmware'/sys
+	sed "s/@@PLAYER@@/$(shell basename $(MFGDIR))/" $(FTPDIR)/player.ini > $(MFGDIR)/player.ini
+	install -m 644 $(FTPDIR)/fdisk-u.input $(MFGDIR)/'OS firmware'/sys/fdisk-u.input
+	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
+	BZIP2=-1 tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
+	BZIP2=-1 tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
+	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
+	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
+	rm -f $(MFGZIP)
+	cd $(MFGDIR); zip -0r $(MFGZIP) *
+
 .PHONY: TPAC1007_480x272_win
-TPAC1007_480x272_win:
-	-BZIP2=-9 tar cjhf $(TGTDIR)/rootfs_rsync-L.tar.bz2 --hard-dereference --transform=s/^rootfs/rootfs_rsync-L/ -C $(LTIBDIR) rootfs/usr/include rootfs/usr/lib rootfs/lib rootfs/usr/src/linux/include
+TPAC1007_480x272_win: TPAC1007_480x272_rfs
+	-BZIP2=-1 tar cjhf $(TGTDIR)/rootfs_rsync-L.tar.bz2 --hard-dereference --transform=s/^rootfs/rootfs_rsync-L/ -C $(LTIBDIR) rootfs/usr/include rootfs/usr/lib rootfs/lib rootfs/usr/src/linux/include
 
 
 .PHONY: clean

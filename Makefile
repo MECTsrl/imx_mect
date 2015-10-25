@@ -526,18 +526,20 @@ projects:
 # Rules to build target root file systems
 #
 
+TPAC1007_480x272%: TGTDIR := $(IMGDIR)/TPAC1007_480x272_r$(BUILD_RELEASE)
+TPAC1007_480x272%: TGT_RPMDIR = $(TGTDIR)/rpm
+TPAC1007_480x272%: MFGDIR = $(TGTDIR)/$(shell basename $(TGTDIR) | sed 's/\./_/g')
+TPAC1007_480x272%: MFGZIP = $(MFGDIR)/../$(shell basename $(MFGDIR)).zip
+TPAC1007_480x272%: BOOTDIR = $(TGTDIR)/boot
+TPAC1007_480x272%: RFSDIR = $(TGTDIR)/rootfs
+TPAC1007_480x272%: LFSDIR = $(TGTDIR)/localfs
+
 .PHONY: TPAC1007_480x272
-TPAC1007_480x272: TGTDIR := $(IMGDIR)/TPAC1007_480x272_r$(BUILD_RELEASE)
-TPAC1007_480x272: TGT_RPMDIR := $(TGTDIR)/rpm
-TPAC1007_480x272: MFGDIR := $(TGTDIR)/$(shell basename $(TGTDIR) | sed 's/\./_/g')
-TPAC1007_480x272: MFGZIP := $(MFGDIR)/../$(shell basename $(MFGDIR)).zip
-TPAC1007_480x272: BOOTDIR := $(TGTDIR)/boot
-TPAC1007_480x272: RFSDIR := $(TGTDIR)/rootfs
-TPAC1007_480x272: LFSDIR := $(TGTDIR)/localfs
 TPAC1007_480x272: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x272_lfs TPAC1007_480x272_mfg TPAC1007_480x272_win
 
 .PHONY: TPAC1007_480x272_boot
 TPAC1007_480x272_boot: $(RFSPKGS_TPAC1007_480x272)
+	test -n '$(BOOTDIR)'
 	sudo rm -rf $(BOOTDIR)
 	mkdir -p $(BOOTDIR)/var/lib/rpm
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-mfg-2.6.35.3-1.1.0.arm.rpm
@@ -550,6 +552,7 @@ TPAC1007_480x272_boot: $(RFSPKGS_TPAC1007_480x272)
 
 .PHONY: TPAC1007_480x272_rfs
 TPAC1007_480x272_rfs: $(RFSPKGS_TPAC1007_480x272)
+	test -n '$(RFSDIR)'
 	sudo rm -rf $(RFSDIR)
 	mkdir -p $(RFSDIR)/var/lib/rpm $(RFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RFSPKGS_TPAC1007_480x272)
@@ -570,6 +573,7 @@ TPAC1007_480x272_rfs: $(RFSPKGS_TPAC1007_480x272)
 
 .PHONY: TPAC1007_480x272_lfs
 TPAC1007_480x272_lfs: $(LFSPKGS_TPAC1007_480x272)
+	test -n '$(LFSDIR)'
 	sudo rm -rf $(LFSDIR)
 	mkdir -p $(LFSDIR)/var/lib/rpm $(LFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(LFSPKGS_TPAC1007_480x272)
@@ -583,6 +587,7 @@ TPAC1007_480x272_lfs: $(LFSPKGS_TPAC1007_480x272)
 
 .PHONY: TPAC1007_480x272_mfg
 TPAC1007_480x272_mfg: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x272_lfs
+	test -n '$(MFGDIR)' -a -n '$(RFSDIR)' -a -n '$(LFSDIR)' -a -n '$(BOOTDIR)' -a -n '$(MFGDIR)' -a -n '$(MFGZIP)'
 	mkdir -p $(MFGDIR)/'OS firmware'/img $(MFGDIR)/'OS firmware'/sys
 	sed "s/@@PLAYER@@/$(shell basename $(MFGDIR))/" $(FTPDIR)/player.ini > $(MFGDIR)/player.ini
 	install -m 644 $(FTPDIR)/fdisk-u.input $(MFGDIR)/'OS firmware'/sys/fdisk-u.input

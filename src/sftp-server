@@ -8,10 +8,10 @@ dos2unix /local/etc/sysconfig/*.csv > /dev/null 2>&1
 dos2unix /local/etc/sysconfig/*.conf > /dev/null 2>&1
 dos2unix /local/data/custom*/*.csv > /dev/null 2>&1
 
-mv safe_hmi safe_hmi.disabled > /dev/null 2>&1
+test -f safe_hmi > /dev/null 2>&1 && mv safe_hmi safe_hmi.disabled > /dev/null 2>&1
 
 /etc/rc.d/init.d/autoexec start > /dev/null 2>&1
 
-mv safe_hmi.disabled safe_hmi > /dev/null 2>&1
+test -f safe_hmi.disabled > /dev/null 2>&1 && mv safe_hmi.disabled safe_hmi > /dev/null 2>&1
 
 exit 0

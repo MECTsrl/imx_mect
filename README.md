@@ -50,7 +50,7 @@ LTIB is built and installed as an unprivileged user, but it requires root privil
         cd ~/imx_mect
         make clean all
 
-1. Create the images to flash the TPAC 1007 in *~/imx_mect/images-all/TPAC1007_480x272_r<version>* (<version> is assigned to variable BUILD_RELEASE in the top-level Makefile):
+1. Create the images to flash the TPAC 1007 in *~/imx_mect/images-all/TPAC1007_480x272_r\<version\>* (\<version\> is assigned to variable BUILD_RELEASE in the top-level Makefile):
 
         cd ~/imx_mect
         make TPAC1007_480x272
@@ -59,10 +59,10 @@ LTIB is built and installed as an unprivileged user, but it requires root privil
    - **boot** -- holds some of the files for the Mfgtool used to flash the target device
    - **localfs** -- the contents of the local file system
    - **rootfs** -- the contents of the root file system
-   - **TPAC1007_480x272_r<version>** -- holds all the files necessary for a profile of the Mfgtool that can be used to flash the target device
+   - **TPAC1007_480x272_r\<version\>** -- holds all the files necessary for a profile of the Mfgtool that can be used to flash the target device
 
    and the archives:
-   - **TPAC1007_480x272_r<version>.zip** -- archive with all files necessary to create a profile for flashing the target device
+   - **TPAC1007_480x272_r\<version\>.zip** -- archive with all files necessary to create a profile for flashing the target device
    - **rootfs_rsync-L.tar.bz2** -- archive with files necessary for target HMI application development on Windows.
 
 ## Main steps of the automatic build

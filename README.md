@@ -1,6 +1,6 @@
 # LTIB installation for MECT operator panels based on Freescale i.MX28 processors
 
-The build downloads, configures and installs the LTIB image build environment and Codesurcery target toolchain for MECT operator panels based on Freescale i.MX28 processors:
+The build downloads, configures and installs the LTIB image build environment and the Codesurcery target toolchain for the MECT operator panels based on Freescale i.MX28 processors:
 
 - with on board I/O:
 [TPAC1007] (http://www.mect.it/en/products/control-and-automation/operator-panels-with-plcpac/tpac1007/),
@@ -13,7 +13,7 @@ The build downloads, configures and installs the LTIB image build environment an
 
 ## Build instructions
 
-LTIB is built and installed as an unprivileged user but it requires root privileges for some operations.
+LTIB is built and installed as an unprivileged user, but it requires root privileges for some operations.
 
 ### Build prerequisites
 
@@ -43,18 +43,26 @@ LTIB is built and installed as an unprivileged user but it requires root privile
 
 1. Clone this repository in the build directory created in the previous step (copy-paste the appropriate *clone URL* from the GitHub site):
 
-        cd ~/imx_mect
-        git clone <clone URL>
+        git clone <clone URL> ~/imx_mect
 
-1. Install the toolchain and LTIB, and create the target image files:
+1. Install the toolchain and LTIB, and build the target image packages (RPMs):
 
         cd ~/imx_mect
         make clean all
 
-1. Create the target images for TPAC 1007 in *~/imx_mect/images-all/tpac_1007*:
+1. Create the images to flash the TPAC 1007 in *~/imx_mect/images-all/TPAC1007_480x272_r<version>* (<version> is assigned to variable BUILD_RELEASE in the top-level Makefile):
 
         cd ~/imx_mect
-        make tpac_1007
+        make TPAC1007_480x272
+
+   This creates the diretories:
+   - **boot** -- holds some of the files for the Mfgtool used to flash the target device;
+   - **localfs** -- the contents of the local file system;
+   - **rootfs** -- the contents of the root file system;
+   - **TPAC1007_480x272_r6_6rc0** -- holds all the files necessary for a profile of the Mfgtool that can be used to flash the target device.
+   and the archives:
+   - **TPAC1007_480x272_r6_6rc0.zip** -- archive with all files necessary to create a profile for flashing the target device;
+   - **rootfs_rsync-L.tar.bz2** -- archive with files necessary for target HMI application development on Windows.
 
 ## Main steps of the automatic build
 
@@ -62,11 +70,13 @@ The Makefile-driven build flow does in sequence:
 
 - checks and updates the host environment
 - downloads LTIB, toolchain for cross-compilation, Qt, and their configurations and patches
-- installs and patch LTIB
+- installs and patches LTIB
 - installs the toolchain for cross-compilation, compiles and installs Qt
-- builds the image for the target.  
-  The build process automatically downloads the source archives and packages, as they are needed.  
-  If any of these downloads fails, the build is aborted. It can be resumed by restarting manually the build of the target image using LTIB:
+- builds all configured packets (RPMs) for the target.  
+  The build process automatically downloads the source archives and packages as they are needed.  
+  If any of these downloads fails, the build is aborted. An aborted build can be manually resumed as follows:
 
         cd ~/imx_mect/ltib
         ./ltib
+- builds the target files systems by installing the appropriate packages (RPMs)
+- builds the project for Mfgtool that can be used to flash the target

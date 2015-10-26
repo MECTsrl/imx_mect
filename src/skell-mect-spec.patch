@@ -1,6 +1,6 @@
 --- ltib/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/dist/lfs-5.1/skell/skell.spec	2015-10-24 11:16:45.556936943 +0200
-@@ -9,15 +9,72 @@
++++ ltib.new/dist/lfs-5.1/skell/skell.spec	2015-10-26 17:18:16.937169453 +0100
+@@ -9,15 +9,73 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -38,6 +38,7 @@
 +Patch27         : skell-1.18-mect-remove-inittab.patch
 +Patch28         : skell-1.18-mect-remove-issue.patch
 +Patch29         : skell-1.18-mect-remove-rc.local.patch
++Patch30         : skell-mect-cond-safe_hmi-in-autoexec.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -75,7 +76,7 @@
  
  %Description
  %{summary}
-@@ -31,24 +88,71 @@
+@@ -31,24 +89,72 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -103,6 +104,7 @@
 +%patch27 -p1
 +%patch28 -p1
 +%patch29 -p1
++%patch30 -p1
  
  %Build
 +DESTDIR=$RPM_BUILD_ROOT/%{pfx} 

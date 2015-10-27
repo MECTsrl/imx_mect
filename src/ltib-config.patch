@@ -3255,7 +3255,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  # CONFIG_PKG_OPENSWAN is not set
 diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config ltib.new/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config
 --- ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib.new/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config	2015-09-23 14:29:35.000000000 +0200
++++ ltib.new/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config	2015-10-27 21:38:47.791228168 +0100
 @@ -0,0 +1,2315 @@
 +#
 +# Automatically generated make config: don't edit
@@ -4986,7 +4986,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +#
 +# USB port drivers
 +#
-+# CONFIG_USB_SERIAL is not set
++CONFIG_USB_SERIAL=m
 +
 +#
 +# USB Miscellaneous drivers

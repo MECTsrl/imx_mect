@@ -1,5 +1,5 @@
 --- ltib/config/platform/imx/kernel-2.6.35.spec.in	2015-09-22 13:05:57.000000000 +0200
-+++ ltib.new/config/platform/imx/kernel-2.6.35.spec.in	2015-09-25 15:14:57.093929000 +0200
++++ ltib.new/config/platform/imx/kernel-2.6.35.spec.in	2015-10-27 18:52:00.430670098 +0100
 @@ -2,6 +2,8 @@
  
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
@@ -9,7 +9,7 @@
  
  Summary         : Linux kernel (core of the Linux operating system)
  Name            : kernel
-@@ -12,22 +14,185 @@
+@@ -12,22 +14,192 @@
  Packager        : Rob Herring
  Group           : System Environment/Kernel
  Source          : %{pkg_name}-%{version}.tar.bz2
@@ -84,6 +84,13 @@
 +%Description rfs
 +kernel package contents restricted to just the files that are
 +needed at run time on the target.
++
++%Package dev-usb_serial
++Summary         : Kernel module for the USB serial driver.
++Group           : Applications/File
++AutoReqProv     : no
++%Description dev-usb_serial
++Kernel module for the USB serial driver.
 +
 +
 +# %{name}-%{version}-1310041712.patch : Fix the ethernet plug/unplug problem

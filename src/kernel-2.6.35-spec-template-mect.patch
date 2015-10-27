@@ -1,5 +1,5 @@
 --- ltib/dist/lfs-5.1/kernel/kernel-common.tmpl	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/dist/lfs-5.1/kernel/kernel-common.tmpl	2015-10-12 10:46:10.482469000 +0200
++++ ltib.new/dist/lfs-5.1/kernel/kernel-common.tmpl	2015-10-27 18:55:27.932880003 +0100
 @@ -182,10 +182,10 @@
  #
  # build the kernel and optionally the modules
@@ -13,7 +13,7 @@
  fi
  
  # cscope index
-@@ -333,6 +333,13 @@
+@@ -333,6 +333,14 @@
      fi
  fi
  
@@ -22,20 +22,25 @@
 +sed '
 +    \,^%{pfx}/boot, d;
 +    \,^%{pfx}%{_prefix}/src, d;
++    \,^%{pfx}/%{_lib}/modules/%{version}-[^/]*/kernel/drivers/usb/serial/usbserial.ko, d;
 +' all_files.lst > rfs_files.lst
 +cd -
  
  %Clean
  rm -rf $RPM_BUILD_ROOT
-@@ -341,6 +348,9 @@
+@@ -341,6 +349,13 @@
      rm -f $RPM_BUILD_DIR/linux
  fi
  
 -%Files
 +%Files -f all_files.lst
-+%defattr(-,root,root)
+ %defattr(-,root,root)
+-%{pfx}/*
 +
 +
 +%Files rfs -f rfs_files.lst
- %defattr(-,root,root)
--%{pfx}/*
++%defattr(-,root,root)
++
++%Files dev-usb_serial
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/usbserial.ko

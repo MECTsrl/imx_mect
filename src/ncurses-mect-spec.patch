@@ -1,5 +1,5 @@
 --- ltib/dist/lfs-5.1/ncurses/ncurses.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/dist/lfs-5.1/ncurses/ncurses.spec	2015-10-12 10:46:10.838464000 +0200
++++ ltib.new/dist/lfs-5.1/ncurses/ncurses.spec	2015-10-27 18:20:22.034301737 +0100
 @@ -14,6 +14,17 @@
  Patch2          : ncurses-5.3-wint_t.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -18,15 +18,6 @@
  
  %Description
  %{summary}
-@@ -37,7 +48,7 @@
-     --with-install-prefix=$RPM_BUILD_ROOT --mandir=%{_mandir} \
-     --without-shared  --without-debug --without-cxx-binding
- fi
--make -j1 HOSTCC="$BUILDCC"
-+make -j`grep -c ^processor /proc/cpuinfo` HOSTCC="$BUILDCC"
- 
- sed -e 's%$srcdir/shlib tic$suffix%/usr/bin/tic$suffix%' \
- misc/run_tic.sh > misc/run_tic.sh.tmp
 @@ -94,12 +105,22 @@
      rm -rf $USR_SHARE/termtemp
  fi

@@ -85,11 +85,11 @@
 +kernel package contents restricted to just the files that are
 +needed at run time on the target.
 +
-+%Package dev-usb_serial
++%Package dev-usbserial
 +Summary         : Kernel module for the USB serial driver.
 +Group           : Applications/File
 +AutoReqProv     : no
-+%Description dev-usb_serial
++%Description dev-usbserial
 +Kernel module for the USB serial driver.
 +
 +

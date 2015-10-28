@@ -41,6 +41,6 @@
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 +
-+%Files dev-usb_serial
++%Files dev-usbserial
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/usbserial.ko

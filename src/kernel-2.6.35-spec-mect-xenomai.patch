@@ -1,5 +1,5 @@
 --- ltib/config/platform/imx/kernel-2.6.35.spec.in	2015-09-22 13:05:57.000000000 +0200
-+++ ltib.new/config/platform/imx/kernel-2.6.35.spec.in	2015-10-27 18:52:00.430670098 +0100
++++ ltib.new/config/platform/imx/kernel-2.6.35.spec.in	2015-10-29 17:57:26.872523840 +0100
 @@ -2,6 +2,8 @@
  
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
@@ -9,7 +9,7 @@
  
  Summary         : Linux kernel (core of the Linux operating system)
  Name            : kernel
-@@ -12,22 +14,192 @@
+@@ -12,22 +14,617 @@
  Packager        : Rob Herring
  Group           : System Environment/Kernel
  Source          : %{pkg_name}-%{version}.tar.bz2
@@ -75,11 +75,12 @@
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
- 
++
 +
 +%Package rfs
 +Summary         : Trimmed kernel for root file system requirements.
-+Group           : Applications/File
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
 +AutoReqProv     : no
 +%Description rfs
 +kernel package contents restricted to just the files that are
@@ -87,10 +88,434 @@
 +
 +%Package dev-usbserial
 +Summary         : Kernel module for the USB serial driver.
-+Group           : Applications/File
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
 +AutoReqProv     : no
 +%Description dev-usbserial
-+Kernel module for the USB serial driver.
++%{summary}
++
++%Package dev-usbserial-aircable
++Summary         : USB AIRcable Bluetooth Dongle Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-aircable
++%{summary}
++
++%Package dev-usbserial-ark3116
++Summary         : USB ARK Micro 3116 USB Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-ark3116
++%{summary}
++
++%Package dev-usbserial-belkin_sa
++Summary         : USB Belkin and Peracom Single Port Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-belkin_sa
++%{summary}
++
++%Package dev-usbserial-ch341
++Summary         : USB Winchiphead CH341 Single Port Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-ch341
++%{summary}
++
++%Package dev-usbserial-cp210x
++Summary         : USB CP210x family of UART Bridge Controllers
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-cp210x
++%{summary}
++
++%Package dev-usbserial-cyberjack
++Summary         : USB REINER SCT cyberJack pinpad/e-com chipcard reader
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-cyberjack
++%{summary}
++
++%Package dev-usbserial-cypress_m8
++Summary         : USB Cypress M8 USB Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-cypress_m8
++%{summary}
++
++%Package dev-usbserial-digi_acceleport
++Summary         : USB Digi International AccelePort USB Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-digi_acceleport
++%{summary}
++
++%Package dev-usbserial-empeg
++Summary         : USB Empeg empeg-car Mark I/II Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-empeg
++%{summary}
++
++%Package dev-usbserial-ftdi_sio
++Summary         : USB FTDI Single Port Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-ftdi_sio
++%{summary}
+ 
++%Package dev-usbserial-funsoft
++Summary         : USB Fundamental Software Dongle Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-funsoft
++%{summary}
++
++%Package dev-usbserial-garmin_gps
++Summary         : USB Garmin GPS driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-garmin_gps
++%{summary}
++
++%Package dev-usbserial-hp4x
++Summary         : USB HP4x Calculators support
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-hp4x
++%{summary}
++
++%Package dev-usbserial-io_edgeport
++Summary         : USB Inside Out Edgeport Serial Driver (TI devices)
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-io_edgeport
++%{summary}
++
++%Package dev-usbserial-io_ti
++Summary         : Edgeport USB Serial Converter driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-io_ti
++%{summary}
++
++%Package dev-usbserial-ipaq
++Summary         : USB PocketPC PDA Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-ipaq
++%{summary}
++
++%Package dev-usbserial-ipw
++Summary         : USB IPWireless (3G UMTS TDD) Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-ipw
++%{summary}
++
++%Package dev-usbserial-ir
++Summary         : USB IR Dongle Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-ir
++%{summary}
++
++%Package dev-usbserial-iuu_phoenix
++Summary         : USB Infinity USB Unlimited Phoenix Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-iuu_phoenix
++%{summary}
++
++%Package dev-usbserial-keyspan
++Summary         : USB Keyspan USA-xxx Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-keyspan
++%{summary}
++
++%Package dev-usbserial-keyspan_pda
++Summary         : USB Keyspan PDA Single Port Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-keyspan_pda
++%{summary}
++
++%Package dev-usbserial-kl5kusb105
++Summary         : USB KL5KUSB105 (Palmconnect) Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-kl5kusb105
++%{summary}
++
++%Package dev-usbserial-kobil_sct
++Summary         : USB KOBIL chipcard reader
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-kobil_sct
++%{summary}
++
++%Package dev-usbserial-mct_u232
++Summary         : USB MCT Single Port Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-mct_u232
++%{summary}
++
++%Package dev-usbserial-mos7720
++Summary         : USB Moschip 7720 Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-mos7720
++%{summary}
++
++%Package dev-usbserial-mos7840
++Summary         : USB Moschip 7840/7820 USB Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-mos7840
++%{summary}
++
++%Package dev-usbserial-moto_modem
++Summary         : USB Motorola Phone modem driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-moto_modem
++%{summary}
++
++%Package dev-usbserial-navman
++Summary         : USB Navman GPS device
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-navman
++%{summary}
++
++%Package dev-usbserial-omninet
++Summary         : USB ZyXEL omni.net LCD Plus Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-omninet
++%{summary}
++
++%Package dev-usbserial-opticon
++Summary         : USB Opticon Barcode driver (serial mode)
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-opticon
++%{summary}
++
++%Package dev-usbserial-option
++Summary         : USB driver for GSM and CDMA modems
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial kernel-dev-usbserial-wwan
++%Description dev-usbserial-option
++%{summary}
++
++%Package dev-usbserial-oti6858
++Summary         : USB Ours Technology Inc. OTi-6858 USB To RS232 Bridge Controller
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-oti6858
++%{summary}
++
++%Package dev-usbserial-pl2303
++Summary         : USB Prolific 2303 Single Port Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-pl2303
++%{summary}
++
++%Package dev-usbserial-qcaux
++Summary         : USB Qualcomm Auxiliary Serial Port Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-qcaux
++%{summary}
++
++%Package dev-usbserial-qcserial
++Summary         : USB Qualcomm Serial modem
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial kernel-dev-usbserial-wwan
++%Description dev-usbserial-qcserial
++%{summary}
++
++%Package dev-usbserial-safe_serial
++Summary         : USB Safe Serial (Encapsulated) Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-safe_serial
++%{summary}
++
++%Package dev-usbserial-siemens_mpi
++Summary         : USB Siemens MPI driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-siemens_mpi
++%{summary}
++
++%Package dev-usbserial-sierra
++Summary         : USB Sierra Wireless Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-sierra
++%{summary}
++
++%Package dev-usbserial-spcp8x5
++Summary         : USB SPCP8x5 USB To Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-spcp8x5
++%{summary}
++
++%Package dev-usbserial-symbolserial
++Summary         : USB Symbol Barcode driver (serial mode)
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-symbolserial
++%{summary}
++
++%Package dev-usbserial-ti_3410_5052
++Summary         : USB TI 3410/5052 Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-ti_3410_5052
++%{summary}
++
++%Package dev-usbserial-debug
++Summary         : USB Debugging Device
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-debug
++%{summary}
++
++%Package dev-usbserial-wwan
++Summary         : USB serial mobile broadband cards
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-wwan
++%{summary}
++
++%Package dev-usbserial-visor
++Summary         : USB Handspring Visor / Palm m50x / Sony Clie Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-visor
++%{summary}
++
++%Package dev-usbserial-vivopay-serial
++Summary         : USB ViVOpay serial interface driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-vivopay-serial
++%{summary}
++
++%Package dev-usbserial-whiteheat
++Summary         : USB ConnectTech WhiteHEAT Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-whiteheat
++%{summary}
++
++%Package dev-usbserial-zio
++Summary         : ZIO Motherboard USB serial interface driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-zio
++%{summary}
 +
 +
 +# %{name}-%{version}-1310041712.patch : Fix the ethernet plug/unplug problem

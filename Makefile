@@ -40,6 +40,57 @@ TMPRPMDIR = /tmp/rpm-$(USER)
 # Extension of the MD5 checksums for the downloads.
 MD5EXT = md5
 
+# Packages with USB serial kernel modules.
+#
+
+USBSERIAL_USBSERIAL := kernel-dev-usbserial-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_AIRCABLE := kernel-dev-usbserial-aircable-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_ARK3116 := kernel-dev-usbserial-ark3116-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_BELKIN := kernel-dev-usbserial-belkin_sa-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_CH341 := kernel-dev-usbserial-ch341-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_CP210X := kernel-dev-usbserial-cp210x-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_CYBERJACK := kernel-dev-usbserial-cyberjack-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_CYPRESS_M8 := kernel-dev-usbserial-cypress_m8-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_DEBUG := kernel-dev-usbserial-debug-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_DIGI_ACCELEPORT := kernel-dev-usbserial-digi_acceleport-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_EMPEG := kernel-dev-usbserial-empeg-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_FTDI_SIO := kernel-dev-usbserial-ftdi_sio-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_FUNSOFT := kernel-dev-usbserial-funsoft-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_GARMIN_GPS := kernel-dev-usbserial-garmin_gps-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_HP4X := kernel-dev-usbserial-hp4x-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_IO_EDGEPORT := kernel-dev-usbserial-io_edgeport-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_IO_TI := kernel-dev-usbserial-io_ti-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_IPAQ := kernel-dev-usbserial-ipaq-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_IPW := kernel-dev-usbserial-ipw-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_IR := kernel-dev-usbserial-ir-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_IUU_PHOENIX := kernel-dev-usbserial-iuu_phoenix-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_KEYSPAN := kernel-dev-usbserial-keyspan-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_KEYSPAN_PDA := kernel-dev-usbserial-keyspan_pda-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_KL5KUSB105 := kernel-dev-usbserial-kl5kusb105-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_KOBIL_SCT := kernel-dev-usbserial-kobil_sct-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_MCT_U232 := kernel-dev-usbserial-mct_u232-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_MOS7720 := kernel-dev-usbserial-mos7720-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_MOS7840 := kernel-dev-usbserial-mos7840-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_MOTO_MODEM := kernel-dev-usbserial-moto_modem-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_NAVMAN := kernel-dev-usbserial-navman-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_OMNINET := kernel-dev-usbserial-omninet-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_OPTICON := kernel-dev-usbserial-opticon-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_OPTION := kernel-dev-usbserial-option-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_OTI6858 := kernel-dev-usbserial-oti6858-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_PL2303 := kernel-dev-usbserial-pl2303-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_QCAUX := kernel-dev-usbserial-qcaux-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_QCSERIAL := kernel-dev-usbserial-qcserial-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_SAFE_SERIAL := kernel-dev-usbserial-safe_serial-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_SIEMENS_MPI := kernel-dev-usbserial-siemens_mpi-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_SIERRA := kernel-dev-usbserial-sierra-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_SPCP8X5 := kernel-dev-usbserial-spcp8x5-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_SYMBOLSERIAL := kernel-dev-usbserial-symbolserial-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_TI_3410_5052 := kernel-dev-usbserial-ti_3410_5052-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_VISOR := kernel-dev-usbserial-visor-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_VIVOPAY := kernel-dev-usbserial-vivopay-serial-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_WHITEHEAT := kernel-dev-usbserial-whiteheat-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_WWAN := kernel-dev-usbserial-wwan-2.6.35.3-imx_1.1.0.arm.rpm
+USBSERIAL_ZIO := kernel-dev-usbserial-zio-2.6.35.3-imx_1.1.0.arm.rpm
 
 # Package list for creating the root file system for various targets.
 #
@@ -82,8 +133,8 @@ RFSPKGS_TPAC1007_480x272 := \
 	xenomai-rfs-2.6.0-1.arm.rpm \
 	zip-rfs-3.0.0-0.arm.rpm \
 	zlib-rfs-1.2.3-2.arm.rpm \
-	#bzip2-rfs-1.0.2-2.arm.rpm \
-	#unzip-rfs-5.52-1.arm.rpm \
+	$(USBSERIAL_PL2303) \
+	$(USBSERIAL_USBSERIAL) \
 
 RFSPKGS_TPAC1007_480x272 := $(RFSPKGS_TPAC1007_480x272:%=$(RPMDIR)/%)
 
@@ -98,61 +149,8 @@ LFSPKGS_TPAC1007_480x272 := \
 
 LFSPKGS_TPAC1007_480x272 := $(LFSPKGS_TPAC1007_480x272:%=$(RPMDIR)/%)
 
-# USB serial TPAC1007_480x272 packages
-USBSERIAL_PKGS_TPAC1007_480x272 := \
-	kernel-dev-usbserial-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-aircable-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-ark3116-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-belkin_sa-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-ch341-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-cp210x-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-cyberjack-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-cypress_m8-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-debug-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-digi_acceleport-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-empeg-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-ftdi_sio-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-funsoft-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-garmin_gps-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-hp4x-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-io_edgeport-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-io_ti-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-ipaq-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-ipw-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-ir-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-iuu_phoenix-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-keyspan-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-keyspan_pda-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-kl5kusb105-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-kobil_sct-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-mct_u232-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-mos7720-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-mos7840-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-moto_modem-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-navman-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-omninet-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-opticon-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-option-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-oti6858-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-pl2303-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-qcaux-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-qcserial-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-safe_serial-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-siemens_mpi-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-sierra-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-spcp8x5-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-symbolserial-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-ti_3410_5052-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-visor-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-vivopay-serial-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-whiteheat-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-wwan-2.6.35.3-imx_1.1.0.arm.rpm \
-	kernel-dev-usbserial-zio-2.6.35.3-imx_1.1.0.arm.rpm \
 
-USBSERIAL_PKGS_TPAC1007_480x272 := $(USBSERIAL_PKGS_TPAC1007_480x272:%=$(RPMDIR)/%)
-
-
-# Definition of the sources
+# Set archive sources
 #
 
 # Toolchain archive

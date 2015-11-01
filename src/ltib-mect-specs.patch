@@ -1,0 +1,3917 @@
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec ltib/dist/lfs-5.1/base_libs/base_libs.spec
+--- ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/base_libs/base_libs.spec	2015-10-31 22:49:40.730780912 +0100
+@@ -11,6 +11,17 @@
+ Group           : System Environment/Libraries
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed base_libs for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++base_libs package contents restricted to just the files that
++are needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -35,7 +46,7 @@
+ # strip "bin/"
+ set +e
+ ${TOOLCHAIN_PREFIX}gcc -v 2>&1 | grep -q "prefix=/usr"
+-if (( $? ))
++if test $? -ne 0
+ then
+ TC_PREFIX="`which ${TOOLCHAIN_PREFIX}gcc | perl -p -e 's,/bin/'${TOOLCHAIN_PREFIX}'gcc,,'`"
+ else
+@@ -53,7 +64,7 @@
+ # strip "bin/"
+ set +e
+ ${TOOLCHAIN_PREFIX}gcc -v 2>&1 | grep -q "prefix=/usr"
+-if (( $? ))
++if test $? -ne 0
+ then
+ TC_PREFIX="`which ${TOOLCHAIN_PREFIX}gcc | perl -p -e 's,/bin/'${TOOLCHAIN_PREFIX}'gcc,,'`"
+ SYSROOT_TC="no"
+@@ -122,12 +133,12 @@
+     #       is a symbolic link to lib! - Stevep
+     if [ "${TC_TYPE}" != "UCLIBC" ]
+     then
+-        cp -dp $SHARED_LIBS_DIR/../usr/lib/*.so* $RPM_BUILD_ROOT/%{pfx}/usr/lib/
++        cp -dp $SHARED_LIBS_DIR/../usr/lib/*.so* $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/
+     fi
+     rm -f $RPM_BUILD_ROOT/%{pfx}/lib/libstdc++*.so*
+-    rm -f $RPM_BUILD_ROOT/%{pfx}/usr/lib/libstdc++*.so*
++    rm -f $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libstdc++*.so*
+     rm -f $RPM_BUILD_ROOT/%{pfx}/lib/libgcc*.so*
+-    rm -f $RPM_BUILD_ROOT/%{pfx}/usr/lib/libgcc*.so*
++    rm -f $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libgcc*.so*
+ 
+     # Only needed if gcc native is selected.
+     #
+@@ -157,9 +168,9 @@
+         do
+             if [ "$TC_TYPE" = "XTOOL" ]
+             then
+-                cp -dpf $TC_PREFIX/$X_DIR/$i/bin/${file} $RPM_BUILD_ROOT/%{pfx}/usr/bin
++                cp -dpf $TC_PREFIX/$X_DIR/$i/bin/${file} $RPM_BUILD_ROOT/%{pfx}%{_prefix}/bin
+             else
+-                cp -dpf $TC_PREFIX/$X_DIR/$i/usr/bin/${file} $RPM_BUILD_ROOT/%{pfx}/usr/bin
++                cp -dpf $TC_PREFIX/$X_DIR/$i/usr/bin/${file} $RPM_BUILD_ROOT/%{pfx}%{_prefix}/bin
+             fi
+         done
+         for file in ldconfig sln
+@@ -170,54 +181,54 @@
+         do
+             if [ "$TC_TYPE" = "XTOOL" ]
+             then
+-                cp -dpf $TC_PREFIX/$X_DIR/$i/sbin/${file} $RPM_BUILD_ROOT/%{pfx}/usr/sbin
++                cp -dpf $TC_PREFIX/$X_DIR/$i/sbin/${file} $RPM_BUILD_ROOT/%{pfx}%{_prefix}/sbin
+             else
+-                cp -dpf $TC_PREFIX/$X_DIR/$i/usr/sbin/${file} $RPM_BUILD_ROOT/%{pfx}/usr/sbin
++                cp -dpf $TC_PREFIX/$X_DIR/$i/usr/sbin/${file} $RPM_BUILD_ROOT/%{pfx}%{_prefix}/sbin
+             fi
+         done
+     else
+-        cp $TC_PREFIX/$X_DIR/$i/target_utils/ldd $RPM_BUILD_ROOT/%{pfx}/usr/bin
++        cp $TC_PREFIX/$X_DIR/$i/target_utils/ldd $RPM_BUILD_ROOT/%{pfx}%{_prefix}/bin
+     fi
+     set -e
+ fi
+ 
+ if [ -n "$PKG_LIBC_WANT_CRT_FILES" ]
+ then 
+-    cp -dp $CRT_FILES_DIR/*crt*.o $RPM_BUILD_ROOT/%{pfx}/usr/lib/
++    cp -dp $CRT_FILES_DIR/*crt*.o $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/
+ fi
+ 
+ if [ -n "$PKG_LIBC_WANT_HEADERS1" ]
+ then
+     if [ "$TC_TYPE" = "CSL" ]
+     then 
+-        cp -a $TC_PREFIX/$X_DIR/libc/usr/include $RPM_BUILD_ROOT/%{pfx}/usr
++        cp -a $TC_PREFIX/$X_DIR/libc/usr/include $RPM_BUILD_ROOT/%{pfx}%{_prefix}
+     elif [ "$TC_TYPE" = "EGLIBC" ]
+     then
+-        cp -a $TC_PREFIX/$X_DIR/sysroot/usr/include $RPM_BUILD_ROOT/%{pfx}/usr
++        cp -a $TC_PREFIX/$X_DIR/sysroot/usr/include $RPM_BUILD_ROOT/%{pfx}%{_prefix}
+     elif [ "$TC_TYPE" = "XTOOL-SYSROOT" ]
+     then
+-        cp -a $TC_PREFIX/$X_DIR/sys-root/usr/include $RPM_BUILD_ROOT/%{pfx}/usr
++        cp -a $TC_PREFIX/$X_DIR/sys-root/usr/include $RPM_BUILD_ROOT/%{pfx}%{_prefix}
+     elif [ "${TC_TYPE}" = "UCLIBC-SYSROOT" ]
+     then
+-        cp -a ${TC_PREFIX}/usr/include ${RPM_BUILD_ROOT}/%{pfx}/usr
++        cp -a ${TC_PREFIX}/usr/include ${RPM_BUILD_ROOT}/%{pfx}%{_prefix}
+     else
+         for i in $TC_PREFIX/$X_DIR/include $TC_PREFIX/include
+         do
+             if [ -f $i/stdio.h ]
+             then
+-                cp -a $i $RPM_BUILD_ROOT/%{pfx}/usr
++                cp -a $i $RPM_BUILD_ROOT/%{pfx}%{_prefix}
+                 break
+             fi
+         done
+-        rm -rf $RPM_BUILD_ROOT/%{pfx}/usr/include/c++
++        rm -rf $RPM_BUILD_ROOT/%{pfx}%{_prefix}/include/c++
+     fi
+ fi
+ 
+ if [ -n "$PKG_LIBC_WANT_STATIC_LIBS" ]
+ then 
+-    cp -dp $STATIC_LIBS_DIR/*.a $RPM_BUILD_ROOT/%{pfx}/usr/lib/
+-    rm -f $RPM_BUILD_ROOT/%{pfx}/usr/lib/libstdc++*a*
+-    rm -f $RPM_BUILD_ROOT/%{pfx}/usr/lib/libsupc++*a*
++    cp -dp $STATIC_LIBS_DIR/*.a $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/
++    rm -f $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libstdc++*a*
++    rm -f $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libsupc++*a*
+ fi
+ 
+ if [ -n "$PKG_LIBC_WANT_C_LOCALES" ]
+@@ -225,7 +236,7 @@
+     set +e
+     if [ -n "$UCLIBC" ]
+     then
+-        cp -a $TC_PREFIX/usr/share/locale $RPM_BUILD_ROOT/%{pfx}/usr/share
++        cp -a $TC_PREFIX/usr/share/locale $RPM_BUILD_ROOT/%{pfx}%{_prefix}/share
+     else
+         if [ "$TC_TYPE" = "CSL" ]
+         then
+@@ -241,16 +252,16 @@
+             i=
+         fi
+ 
+-        cp -a $TC_PREFIX/$X_DIR/$i/lib/locale $RPM_BUILD_ROOT/%{pfx}/usr/lib
+-        cp -a $TC_PREFIX/$X_DIR/$i/info $RPM_BUILD_ROOT/%{pfx}/usr
+-        cp -a $TC_PREFIX/$X_DIR/$i/share/locale $RPM_BUILD_ROOT/%{pfx}/usr/share
+-        cp -a $TC_PREFIX/$X_DIR/$i/share/i18n $RPM_BUILD_ROOT/%{pfx}/usr/share
+-        cp -a $TC_PREFIX/$X_DIR/$i/share/zoneinfo $RPM_BUILD_ROOT/%{pfx}/usr/share
++        cp -a $TC_PREFIX/$X_DIR/$i/lib/locale $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
++        cp -a $TC_PREFIX/$X_DIR/$i/info $RPM_BUILD_ROOT/%{pfx}%{_prefix}
++        cp -a $TC_PREFIX/$X_DIR/$i/share/locale $RPM_BUILD_ROOT/%{pfx}%{_prefix}/share
++        cp -a $TC_PREFIX/$X_DIR/$i/share/i18n $RPM_BUILD_ROOT/%{pfx}%{_prefix}/share
++        cp -a $TC_PREFIX/$X_DIR/$i/share/zoneinfo $RPM_BUILD_ROOT/%{pfx}%{_prefix}/share
+         for j in tzselect locale localedef
+         do
+-            cp -a $TC_PREFIX/$X_DIR/$i/bin/$j $RPM_BUILD_ROOT/%{pfx}/usr/bin/
++            cp -a $TC_PREFIX/$X_DIR/$i/bin/$j $RPM_BUILD_ROOT/%{pfx}%{_prefix}/bin/
+         done
+-        cp -a $TC_PREFIX/$X_DIR/$i/$SLIBS/gconv $RPM_BUILD_ROOT/%{pfx}/usr/lib/
++        cp -a $TC_PREFIX/$X_DIR/$i/$SLIBS/gconv $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/
+     fi
+     set -e
+ fi
+@@ -277,13 +288,13 @@
+     else
+         i= 
+     fi
+-    cp -a $TC_PREFIX/$i/include/c++ $RPM_BUILD_ROOT/%{pfx}/usr/include
++    cp -a $TC_PREFIX/$i/include/c++ $RPM_BUILD_ROOT/%{pfx}%{_prefix}/include
+ fi
+ 
+ if [ -n "$PKG_CXX_WANT_STATIC_LIBS" ]
+ then 
+-    cp -dp $CPP_LIB_DIR/libstdc++*.a $RPM_BUILD_ROOT/%{pfx}/usr/lib/
+-    cp -dp $CPPSUP_LIB_DIR/libsupc++*.a $RPM_BUILD_ROOT/%{pfx}/usr/lib/
++    cp -dp $CPP_LIB_DIR/libstdc++*.a $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/
++    cp -dp $CPPSUP_LIB_DIR/libsupc++*.a $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/
+ fi
+ 
+ if [ -n "$PKG_GCC_WANT_LIBGCC_SHARED" ]
+@@ -296,7 +307,7 @@
+ 
+ # remove absolute paths from text search files (if they exist)
+ perl -w -e '
+-    @ARGV = grep { `file $_` =~ m,ASCII C program text, } @ARGV;
++    @ARGV = grep { `file $_` =~ m,ASCII\s+.*text, } @ARGV;
+     exit(0) unless @ARGV;
+     $^I = ".bak";
+     while(<>) {
+@@ -305,14 +316,14 @@
+     }
+     ' $RPM_BUILD_ROOT/%{pfx}/lib/libc.so \
+       $RPM_BUILD_ROOT/%{pfx}/lib/libpthread.so \
+-      $RPM_BUILD_ROOT/%{pfx}/usr/lib/libc.so \
+-      $RPM_BUILD_ROOT/%{pfx}/usr/lib/libpthread.so
++      $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libc.so \
++      $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libpthread.so
+ 
+ cd $RPM_BUILD_ROOT/%{pfx}
+ # this is necessary to avoid annoying warnings from ldd about no execute
+ # permissions for some malformed uClibc toolchains
+ find $RPM_BUILD_ROOT/%{pfx}/lib     | xargs chmod 755
+-find $RPM_BUILD_ROOT/%{pfx}/usr/lib | xargs chmod 755
++find $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib | xargs chmod 755
+ 
+ # relocate all symlink .so (linker files) to usr/lib
+ cd lib
+@@ -333,9 +344,19 @@
+    }
+ ' 
+ 
++cd %{_builddir}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,%{pfx}%{_includedir}, d;
++    \,\.bak$, d;
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bison/bison.spec ltib/dist/lfs-5.1/bison/bison.spec
+--- ltib.reference/dist/lfs-5.1/bison/bison.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/bison/bison.spec	2015-10-31 22:49:40.730780912 +0100
+@@ -20,7 +20,7 @@
+ 
+ %Build
+ ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
+-make
++make -j`grep -c ^processor /proc/cpuinfo`
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boa/boa.spec ltib/dist/lfs-5.1/boa/boa.spec
+--- ltib.reference/dist/lfs-5.1/boa/boa.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/boa/boa.spec	2015-10-31 22:49:40.730780912 +0100
+@@ -11,9 +11,23 @@
+ Packager        : Stuart Hughes
+ Group           : System/Servers
+ Source          : %{name}-%{version}.tar.gz
++Source1         : boa.conf
+ Patch1          : boa-0.94.14rc21-nommu.patch
++Patch2          : boa-0.94.14rc21-defines.patch
++Patch3          : boa-0.94.14rc21-1416842658.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed boa for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++boa package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -24,6 +38,8 @@
+ %Prep
+ %setup
+ %patch1 -p1 
++%patch2 -p1
++%patch3 -p1 
+ 
+ %Build
+ ac_cv_func_setvbuf_reversed=no \
+@@ -33,26 +49,28 @@
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/conf
+-mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{base}/var/log/boa
+-mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin
+-install -m 755 src/boa $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin/
+-install -m 755 src/boa_indexer $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin/
+-install -m 644 examples/boa.conf $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/conf/
+-ln -s conf/boa.conf $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/boa.conf
+-ln -s boa $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin/boa_d
+-perl -ni -e '
+-    m,#ServerName,  &&  do { $_ = "ServerName localhost\n" } ;
+-    m,^DocumentRoot, && do { $_ = "DocumentRoot /var/www/html\n" };
+-    m,^DirectoryMaker, && do { $_ = "DirectoryMaker %{_prefix}/sbin/boa_indexer\n" };
+-    m,^DefaultType, && do { $_ = "DefaultType text/html\n" };
+-    m,^ScriptAlias, &&  do { $_ = "ScriptAlias /cgi-bin/ /var/www/cgi-bin/\n"};
+-    print;
+-    ' $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/conf/boa.conf
++mkdir -p $RPM_BUILD_ROOT%{pfx}/%{base}/etc/conf
++mkdir -p $RPM_BUILD_ROOT%{pfx}/%{base}/var/log/boa
++mkdir -p $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin
++install -m 755 src/boa $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/
++install -m 755 src/boa_indexer $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/
++install -m 644 examples/boa.conf $RPM_BUILD_ROOT%{pfx}/%{base}/etc/conf/
++ln -s conf/boa.conf $RPM_BUILD_ROOT%{pfx}/%{base}/etc/boa.conf
++ln -s boa $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/boa_d
++install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{pfx}/%{base}/etc/conf/boa.conf
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
+--- ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec	2015-10-31 22:49:40.730780912 +0100
+@@ -8,15 +8,52 @@
+ Vendor          : Freescale
+ Packager        : Terry Lv
+ Group           : Tools
+-Source          : %{name}-%{version}-%{release}.tar.gz
++Source          : %{name}-11.01.00.tar.gz
++Source1         : updater_ivt.sb
++Patch1          : imx-bootlets-src-11.01.00-1315841439.patch
++Patch2          : imx-bootlets-src-11.01.00-1332172356.patch
++Patch3          : imx-bootlets-src-11.01.00-1337962710.patch
++Patch4          : imx-bootlets-src-11.01.00-1412693346.patch
++Patch5          : imx-bootlets-src-11.01.00-1418123773.patch
++Patch6          : imx-bootlets-src-11.01.00-1418123774.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
+ 
++
++%Package rfs
++Summary         : Trimmed imx-bootlets-src for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++imx-bootlets-src package contents restricted to just the files
++that are needed at run time on the target.
++
++%Package mfg
++Summary         : Trimmed imx-bootlets-src for manufacturing tool requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description mfg
++imx-bootlets-src package contents restricted to just the files
++that are needed for programming the target.
++
++
++
++# patch1 imx-bootlets-src-11.01.00-1315841439.patch: modify the boot arguments in order to boot from flash instead of memory card.
++# patch2 imx-bootlets-src-11.01.00-1332172356.patch: modify power prep to not use battery for boot but to keep battery values updated in the battmonitor register.
++# patch3 : modifies boot_stream preparation to write results in a diffrent directory based on the current selected kernel
++# patch4: modifies boot_stream to drive the GPMI nand flash by ref_gpmi and not ref_xtal
+ %Description
+ %{summary}
+ 
+ %Prep
+-%setup -n %{name}-%{version}-%{release}
++%setup -n %{name}-11.01.00
++%patch1 -p1
++%patch2 -p1
++%patch3 -p1
++%patch4 -p1
++%patch5 -p1
++%patch6 -p1
+ 
+ %Build
+ export CMDLINE1="$PKG_BOOT_STREAM_CMDLINE1"
+@@ -25,8 +62,7 @@
+ export CMDLINE4="$PKG_BOOT_STREAM_CMDLINE4"
+ 
+ PLATFORMSHORTNAME=`echo $PLATFORM | sed "s,imx\([0-9]*\).*,MX\1,g"`
+-if [ "x$PLATFORMSHORTNAME" = "xMX233" ]
+-then
++if test "$PLATFORMSHORTNAME" = "MX233"; then
+     make -j1 MEM_TYPE="${PKG_BOOT_STREAM_MEMTYPE_PRECONFIG}"
+ else
+     make -j1 MEM_TYPE="${PKG_BOOT_STREAM_MEMTYPE_PRECONFIG}" BOARD=iMX28_EVK
+@@ -37,10 +73,27 @@
+ mkdir -p $RPM_BUILD_ROOT/%{pfx}/boot
+ make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}/boot
+ 
++install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/boot
++
++
++cd %{_builddir}/%{name}-11.01.00
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/boot, d;
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ make clean
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
++
++%Files mfg
+ %defattr(-,root,root)
+-%{pfx}/*
++%{pfx}/boot/imx28_ivt_linux.sb
++%{pfx}/boot/updater_ivt.sb
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/busybox/busybox.spec ltib/dist/lfs-5.1/busybox/busybox.spec
+--- ltib.reference/dist/lfs-5.1/busybox/busybox.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/busybox/busybox.spec	2015-10-31 22:49:40.734780912 +0100
+@@ -3,22 +3,35 @@
+ 
+ Summary         : A small executable that replaces many UNIX utilities
+ Name            : busybox
+-Version         : 1.20.2
++Version         : 1.15.0
+ Release         : 1
+ License         : GPL
+ URL             : http://www.busybox.net/
+ Vendor          : Freescale
+ Packager        : Steve Papacharalambous/Stuart Hughes
+ Group           : System Environment/Shells
+-Source          : %{name}-%{version}.tar.bz2
++Source          : %{name}-%{version}.tar.gz
++Patch1          : %{name}-%{version}-getty-nobaud-1.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed busybox for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++busybox package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+ 
+ %Prep
+ %setup
++%patch1 -p1
+ 
+ %Build
+ PKG_BUSYBOX_PRECONFIG=${PKG_BUSYBOX_PRECONFIG:-busybox.config}
+@@ -71,10 +84,20 @@
+ EOF
+ chmod 644 $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/busybox.conf
+ 
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++%attr(4755,root,root) %{pfx}/%{base}/bin/busybox
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+ %attr(4755,root,root) %{pfx}/%{base}/bin/busybox
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec ltib/dist/lfs-5.1/bzip2/bzip2.spec
+--- ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/bzip2/bzip2.spec	2015-10-31 22:49:40.734780912 +0100
+@@ -15,6 +15,17 @@
+ Patch2          : %{name}-%{version}-armv7a-cross-compile-fix.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed bzip2 for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++bzip2 package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -32,14 +43,23 @@
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-make install PREFIX=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
++make install PREFIX=$RPM_BUILD_ROOT%{pfx}%{_prefix}
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_prefix}/share/man, d;
++    \,^%{pfx}%{_prefix}/include, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+ 
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+ 
+ 
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cantest/cantest.spec ltib/dist/lfs-5.1/cantest/cantest.spec
+--- ltib.reference/dist/lfs-5.1/cantest/cantest.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/cantest/cantest.spec	2015-10-31 22:49:40.734780912 +0100
+@@ -9,13 +9,24 @@
+ Packager        : Chen Hongjun
+ Group           : Applications/System
+ Source          : %{name}-%{version}.tar.gz
++URL             : http://svn.berlios.de/svnroot/repos/socketcan/trunk/can-utils/
+ Patch0		: cantest-1.0.patch
+ Patch1          : cantest-1.0-uClinux.patch
+ Patch2          : cantest-1.0-cansend-1.patch
+ Patch3          : cantest-1.0-cansend-debug.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
+-URL             : http://svn.berlios.de/svnroot/repos/socketcan/trunk/can-utils/
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed cantest for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++cantest package contents restricted to just the files that
++are needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -34,12 +45,21 @@
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-mkdir -p $RPM_BUILD_ROOT/%{pfx}/usr/bin
+-cp cantest $RPM_BUILD_ROOT/%{pfx}/usr/bin
++mkdir -p $RPM_BUILD_ROOT%{pfx}%{_prefix}/bin
++cp cantest $RPM_BUILD_ROOT%{pfx}%{_prefix}/bin
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
+--- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/dhcp/dhcp.spec	2015-10-31 22:49:40.734780912 +0100
+@@ -10,6 +10,7 @@
+ Packager        : John Faith
+ Group           : Applications/Internet
+ Source          : dhcp-3.0.3b1.tgz
++URL             : http://www.isc.org/sw/dhcp/
+ Patch1          : dhcp-3.0.3b1-sip.patch
+ Patch2          : dhcp-3.0.3b1-defaults.patch
+ Patch3          : dhcp-3.0.3b1-types.patch
+@@ -17,7 +18,17 @@
+ Patch5          : dhcp-3.0.3b1-compat-with-linux-3.0.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
+-URL             : http://www.isc.org/sw/dhcp/
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed dhcp for root file system requirements.
++Group           : Applications/Internet
++AutoReqProv     : no
++%Description rfs
++dhcp package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -32,14 +43,15 @@
+ 
+ %Build
+ ./configure
+-make
++make -j`grep -c ^processor /proc/cpuinfo`
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-make install prefix=$RPM_BUILD_ROOT/%{pfx}
+-mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/share
+-mv $RPM_BUILD_ROOT/%{pfx}/usr/man  $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/share
+-chmod 755 $RPM_BUILD_ROOT/%{pfx}/%base/sbin/dhclient-script
++make install prefix=$RPM_BUILD_ROOT%{pfx}
++
++mkdir -p $RPM_BUILD_ROOT%{pfx}%{_prefix}/share
++mv $RPM_BUILD_ROOT%{pfx}%{_prefix}/man  $RPM_BUILD_ROOT%{pfx}%{_prefix}/share
++chmod 755 $RPM_BUILD_ROOT%{pfx}/%base/sbin/dhclient-script
+ 
+ for i in %pfx/%base/etc/test %pfx/%base/etc/rc.d \
+          %pfx/%base/sbin/S30dhclient %pfx/%_prefix/local
+@@ -86,10 +98,18 @@
+      done
+ fi
+ 
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_prefix}/share/man, d;
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+ 
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec ltib/dist/lfs-5.1/dropbear/dropbear.spec
+--- ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/dropbear/dropbear.spec	2015-10-31 22:49:40.734780912 +0100
+@@ -10,8 +10,20 @@
+ Group           : Applications/Internet
+ Source          : %{name}-%{version}.tar.gz
+ Source1         : dropbear_hackable_rsa_host_key
++Source2         : dropbear_rsa_host_key
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed dropbear for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++dropbear package contents restricted to just the files that
++are needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -54,9 +66,20 @@
+     cp %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/etc/dropbear/dropbear_rsa_host_key
+ fi
+ 
++cp %{SOURCE2} $RPM_BUILD_ROOT%{pfx}/etc/dropbear/dropbear_rsa_host_key
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
+--- ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec	2015-10-31 22:49:40.738780912 +0100
+@@ -13,6 +13,17 @@
+ Patch1          : e2fsprogs-1.41.4-fix-lib-links.patch
+ BuildRoot	: %{_tmppath}/%{name}
+ Prefix		: %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed e2fsprogs for root file system requirements.
++Group           : Applications/Internet
++AutoReqProv     : no
++%Description rfs
++e2fsprogs package contents restricted to just the files that
++are needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -27,11 +38,25 @@
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-make DESTDIR=$RPM_BUILD_ROOT/%{pfx} install install-libs
++make DESTDIR=$RPM_BUILD_ROOT%{pfx} install install-libs
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_prefix}/share/locale, d;
++    \,^%{pfx}%{_prefix}/share/info, d;
++    \,^%{pfx}%{_prefix}/share/man, d;
++    \,^%{pfx}%{_prefix}/lib/pkgconfig, d;
++    \,^%{pfx}%{_prefix}/include, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-, root, root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-, root, root)
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec ltib/dist/lfs-5.1/elftosb/elftosb.spec
+--- ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/elftosb/elftosb.spec	2015-10-31 22:49:40.738780912 +0100
+@@ -9,6 +9,7 @@
+ Packager        : Frank Li
+ Group           : System Environment/Libraries
+ Source          : %{name}-%{version}-%{release}.tar.gz
++Patch1		: elftosb-missing-lm.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
+ Autoreq		: no
+@@ -19,6 +20,7 @@
+ 
+ %Prep
+ %setup -n %{name}-%{version}-%{release}
++%patch1 -p1
+ 
+ %Build
+ make
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/expat/expat.spec ltib/dist/lfs-5.1/expat/expat.spec
+--- ltib.reference/dist/lfs-5.1/expat/expat.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/expat/expat.spec	2015-10-31 22:49:40.738780912 +0100
+@@ -14,6 +14,17 @@
+ Patch2          : expat-1.95.8-man1dir.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed expat for root file system requirements.
++Group           : Applications/Internet
++AutoReqProv     : no
++%Description rfs
++expat package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -30,14 +41,22 @@
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-make install DESTDIR=$RPM_BUILD_ROOT/%{pfx} install
+-rm $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
++make install DESTDIR=$RPM_BUILD_ROOT%{pfx} install
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_prefix}/share/man, d;
++    \,^%{pfx}%{_prefix}/include, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+ 
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec ltib/dist/lfs-5.1/fake-provides/fake-provides.spec
+--- ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/fake-provides/fake-provides.spec	2015-10-31 22:49:40.738780912 +0100
+@@ -5,83 +5,81 @@
+ %define __os_install_post %{nil}
+ %define  pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+-Name     : fake-provides
+-Version  : 1.0
+-Release  : 5
+-Group    : Bootstrap
+-Summary  : Fake provides to satisfy package dependancies
+-License  : GPL
+-Packager : Stuart Hughes, Steve Papacharalambous
+-Vendor   : Freescale Corp
+-Buildroot: /tmp/%{name}-%{version}
+-Prefix   : %{pfx}
+-
+-Provides : /bin/sh
+-Provides : /bin/bash
+-Provides : /bin/csh
+-Provides : /bin/tcsh
+-Provides : /usr/bin/env
+-Provides : /usr/bin/perl
+-Provides : /usr/local/bin/perl
+-Provides : libgcc_s.so.1
+-Provides : libgcc_s.so.1(GCC_3.0)
+-Provides : libgcc_s.so.1(GLIBC_2.0)
++Name            : fake-provides
++Version         : 1.0
++Release         : 5
++Group           : Bootstrap
++Summary         : Fake provides to satisfy package dependancies
++License         : GPL
++Packager        : Stuart Hughes, Steve Papacharalambous
++Vendor          : Freescale Corp
++Buildroot       : /tmp/%{name}-%{version}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++Provides        : /bin/sh
++Provides        : /bin/bash
++Provides        : /bin/csh
++Provides        : /bin/tcsh
++Provides        : /usr/bin/env
++Provides        : /usr/bin/perl
++Provides        : /usr/local/bin/perl
++Provides        : libgcc_s.so.1
++Provides        : libgcc_s.so.1(GCC_3.0)
++Provides        : libgcc_s.so.1(GLIBC_2.0)
+ %ifarch ppc ppc64
+-Provides : linux-vdso32.so.1
++Provides        : linux-vdso32.so.1
+ %endif
+ %ifarch ppc64
+-Provides : linux-vdso64.so.1
++Provides        : linux-vdso64.so.1
+ %endif
+-Provides : /bin/gawk
+-Provides : /usr/bin/nawk
+-Provides : /usr/bin/awk
+-Provides : /usr/bin/bash
+-Provides : perl 5.8.0
+-Provides : perl(Getopt::Long)
+-Provides : perl(Getopt::Std)
+-Provides : perl(constant)
+-Provides : perl(getopts.pl)
+-Provides : perl(strict)
+-Provides : perl(vars)
+-Provides : perl(Carp)
+-Provides : perl(Cwd)
+-Provides : perl(Data::Dumper)
+-Provides : perl(DynaLoader)
+-Provides : perl(Exporter)
+-Provides : perl(File::Basename)
+-Provides : perl(File::Compare)
+-Provides : perl(File::Copy)
+-Provides : perl(File::Find)
+-Provides : perl(File::Spec)
+-Provides : perl(File::stat)
+-Provides : perl(IO::File)
+-Provides : perl(POSIX)
+-Provides : perl(Text::ParseWords)
+-Provides : libstdc++.so.5
+-Provides : libstdc++.so.5(CXXABI_1.2)
+-Provides : libstdc++.so.5(GLIBCPP_3.2)
+-Provides : libstdc++.so.5(GLIBCPP_3.2.1)
+-Provides : /bin/rm
+-Provides : /sbin/ldconfig
+-Provides : /sbin/chkconfig
+-Provides : linux-gate.so.1
++Provides        : /bin/gawk
++Provides        : /usr/bin/nawk
++Provides        : /usr/bin/awk
++Provides        : /usr/bin/bash
++Provides        : perl 5.8.0
++Provides        : perl(Getopt::Long)
++Provides        : perl(Getopt::Std)
++Provides        : perl(constant)
++Provides        : perl(getopts.pl)
++Provides        : perl(strict)
++Provides        : perl(vars)
++Provides        : perl(Carp)
++Provides        : perl(Cwd)
++Provides        : perl(Data::Dumper)
++Provides        : perl(DynaLoader)
++Provides        : perl(Exporter)
++Provides        : perl(File::Basename)
++Provides        : perl(File::Compare)
++Provides        : perl(File::Copy)
++Provides        : perl(File::Find)
++Provides        : perl(File::Spec)
++Provides        : perl(File::stat)
++Provides        : perl(IO::File)
++Provides        : perl(POSIX)
++Provides        : perl(Text::ParseWords)
++Provides        : libstdc++.so.5
++Provides        : libstdc++.so.5(CXXABI_1.2)
++Provides        : libstdc++.so.5(GLIBCPP_3.2)
++Provides        : libstdc++.so.5(GLIBCPP_3.2.1)
++Provides        : /bin/rm
++Provides        : /sbin/ldconfig
++Provides        : /sbin/chkconfig
++Provides        : linux-gate.so.1
+ 
+ %Description
+-
+ These are horrible hacks to take care of the fact that some
+ packages do indeed depend directly on some things outside the
+ root file system.  This is unavoidable unless we change the packages.
+ 
+-
+ %Prep
+ 
+ %Build
+ 
+-%install
++%Install
+ rm -rf $RPM_BUILD_ROOT
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
+-
++%Files
+\ No newline at end of file
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec ltib/dist/lfs-5.1/fontconfig/fontconfig.spec
+--- ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/fontconfig/fontconfig.spec	2015-10-31 22:49:40.738780912 +0100
+@@ -10,7 +10,18 @@
+ Group           : System Environment/Libraries
+ Source          : %{name}-%{version}.tar.gz
+ BuildRoot       : %{_tmppath}/%{name}
+-Prefix		    : %{pfx}
++Prefix		: %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed fontconfig for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++fontconfig package contents restricted to just the files that
++are needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -24,13 +35,16 @@
+ ac_cv_prog_CC_FOR_BUILD="${BUILDCC}" \
+ ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} \
+             --with-arch=$GNUTARCH --sysconfdir=%{_sysconfdir} \
+-            --with-freetype-config="$DEV_IMAGE/usr/bin/freetype-config --prefix=$DEV_IMAGE/usr"
++            --with-freetype-config="$DEV_IMAGE%{_prefix}/bin/freetype-config --prefix=$DEV_IMAGE%{_prefix}"
+ make
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-make install DESTDIR=$RPM_BUILD_ROOT/%{pfx} 
+-rm -rf $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
++make install DESTDIR=$RPM_BUILD_ROOT%{pfx} 
++
++rm -rf $RPM_BUILD_ROOT%{pfx}%{_prefix}/lib/*.la
++rm -rf $RPM_BUILD_ROOT%{pfx}%{_prefix}/share/doc
++rm -rf $RPM_BUILD_ROOT%{pfx}%{_prefix}/lib/pkgconfig
+ 
+ perl -pi -e 's,^</fontconfig>,
+ <dir>%{_prefix}/X11R6/lib/X11/fonts/TTF</dir>
+@@ -38,13 +52,23 @@
+ <dir>%{_prefix}/X11R6/lib/X11/fonts/truetype</dir>
+ </fontconfig>
+ ,;
+-        ' $RPM_BUILD_ROOT/%{pfx}/%{_sysconfdir}/fonts/local.conf
++        ' $RPM_BUILD_ROOT%{pfx}%{_sysconfdir}/fonts/local.conf
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_prefix}/share/man, d;
++    \,^%{pfx}%{_prefix}/include, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+ 
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+ 
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/freetype/freetype.spec ltib/dist/lfs-5.1/freetype/freetype.spec
+--- ltib.reference/dist/lfs-5.1/freetype/freetype.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/freetype/freetype.spec	2015-10-31 22:49:40.738780912 +0100
+@@ -12,6 +12,17 @@
+ Patch1          : proper-armel-asm-declaration.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed freetype for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++freetype package contents restricted to just the files that
++are needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -28,13 +39,22 @@
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+ make DESTDIR=$RPM_BUILD_ROOT/%{pfx} install
+-rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_libdir}/pkgconfig, d;
++    \,^%{pfx}%{_includedir}, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+ 
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+ 
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/git/git.spec ltib/dist/lfs-5.1/git/git.spec
+--- ltib.reference/dist/lfs-5.1/git/git.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/git/git.spec	2015-10-31 22:49:40.742780911 +0100
+@@ -27,7 +27,7 @@
+ config_opts='ac_cv_c_c99_format=yes ac_cv_fread_reads_directories=no ac_cv_snprintf_returns_bogus=no' 
+ eval $config_opts \
+ ./configure  --prefix=%{_prefix} --host=$CFGHOST
+-make
++make -j`grep -c ^processor /proc/cpuinfo`
+ 
+ 
+ %Install
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/glib2/glib2.spec ltib/dist/lfs-5.1/glib2/glib2.spec
+--- ltib.reference/dist/lfs-5.1/glib2/glib2.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/glib2/glib2.spec	2015-10-31 22:49:40.742780911 +0100
+@@ -1,24 +1,36 @@
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
++%define archname glib
+ 
+ Summary         : A library of functions used by GDK, GTK+, and many applications
+ Name            : glib2
+-Version         : 2.22.1
++Version         : 2.18.1
+ Release         : 1
+ License         : LGPL
+ Vendor          : Freescale
+ Packager        : Stuart Hughes/Kurt Mahan
+ Group           : System Environment/Libraries
+-Source          : glib-%{version}.tar.bz2
+-Patch1          : glib2-2.12.11-relink.patch
++Source          : %{archname}-%{version}.tar.bz2
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed glib2 for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++
++
++%Description rfs
++glib2 package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+ 
+ %Prep
+-%setup -n glib-%{version}
+-#%patch1 -p1
++%setup -n %{archname}-%{version}
+ 
+ %Build
+ # prevent configure from trying to compile and
+@@ -27,21 +39,31 @@
+ glib_cv_uscore=no \
+ ac_cv_func_posix_getpwuid_r=yes \
+ ac_cv_func_posix_getgrgid_r=yes \
+-glib_cv_long_long_format=ll \
+-ac_cv_func_printf_unix98=yes \
+-ac_cv_func_vsnprintf_c99=yes \
+ ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
+ make
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+-find $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib -name "*.la" | xargs rm -f
++make install DESTDIR=$RPM_BUILD_ROOT%{pfx}
++
++cd %{_builddir}/%{archname}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_datadir}/gtk-doc, d;
++    \,^%{pfx}%{_datadir}/locale, d;
++    \,^%{pfx}%{_mandir}, d;
++    \,^%{pfx}%{_libdir}/pkgconfig, d;
++    \,^%{pfx}%{_libdir}/glib-2.0, d;
++    \,^%{pfx}%{_includedir}, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+ 
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/hotplug/hotplug.spec ltib/dist/lfs-5.1/hotplug/hotplug.spec
+--- ltib.reference/dist/lfs-5.1/hotplug/hotplug.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/hotplug/hotplug.spec	2015-10-31 22:49:40.742780911 +0100
+@@ -13,6 +13,17 @@
+ Patch2          : hotplug-2004_03_29-dash.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed hotplug for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++hotplug package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -27,12 +38,22 @@
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-make install prefix=$RPM_BUILD_ROOT/%{pfx}
++make install prefix=$RPM_BUILD_ROOT%{pfx}
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_mandir}, d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++%attr(755,root,root) %{pfx}/var/run/usb
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%attr(755,root,root)  %{pfx}/var/run/usb
+-%{pfx}/*
++%attr(755,root,root) %{pfx}/var/run/usb
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/iproute/iproute.spec ltib/dist/lfs-5.1/iproute/iproute.spec
+--- ltib.reference/dist/lfs-5.1/iproute/iproute.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/iproute/iproute.spec	2015-10-31 22:49:40.742780911 +0100
+@@ -3,16 +3,31 @@
+ 
+ Summary         : Advanced IP routing and network device configuration tools
+ Name            : iproute
+-Version         : 2.6.38
+-Release         : 1
++Version         : 2.6.37
++Release         : 050330
+ License         : GPL
+ Vendor          : Freescale
+ Packager        : Jaksa Djordjevic, Stuart Hughes
+ Group           : Applications/System
+-Source          : %{name}2-%{version}.tar.bz2
+-Patch0          : iproute2-do-not-build-arpd.patch
++Source          : %{name}2-%{version}-%{release}.tar.bz2
++Patch0          : iproute-2.6.11-socket_h_warning.patch
++Patch1          : iproute2-paretonormal-overflow.patch
++Patch2          : iproute-2.6.37-1317825720.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++# iproute-2.6.37-1317825720.patch : exclude arpd from compilation cause db_185.h problems
++
++
++%Package rfs
++Summary         : Trimmed iproute for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++iproute package contents restricted to just the files that
++are needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -22,8 +37,10 @@
+ capabilities of the Linux kernel.
+ 
+ %Prep
+-%setup -n %{name}2-%{version}
++%setup -n %{name}2-%{version}-%{release}
+ %patch0 -p1
++%patch1 -p0
++%patch2 -p1
+ 
+ %Build
+ 
+@@ -33,9 +50,19 @@
+ rm -rf $RPM_BUILD_ROOT
+ make -j1 install SBINDIR=%{base}/sbin DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+ 
++cd %{_builddir}/%{name}2-%{version}-%{release}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/share/doc, d;
++    \,^%{pfx}/share/man, d;
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl ltib/dist/lfs-5.1/kernel/kernel-common.tmpl
+--- ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/kernel/kernel-common.tmpl	2015-10-31 22:49:40.742780911 +0100
+@@ -182,10 +182,10 @@
+ #
+ # build the kernel and optionally the modules
+ #
+-make $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" $SYSCFG_KTARG
++make -j`grep -c ^processor /proc/cpuinfo` $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" $SYSCFG_KTARG
+ if grep -q '^CONFIG_MODULES=' $KBOUT/.config
+ then
+-    make $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" modules
++    make -j`grep -c ^processor /proc/cpuinfo` $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" modules
+ fi
+ 
+ # cscope index
+@@ -333,6 +333,14 @@
+     fi
+ fi
+ 
++cd %{_builddir}/%{pkg_name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/boot, d;
++    \,^%{pfx}%{_prefix}/src, d;
++    \,^%{pfx}/%{_lib}/modules/%{version}-[^/]*/kernel/drivers/usb/serial/usbserial.ko, d;
++' all_files.lst > rfs_files.lst
++cd -
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+@@ -341,6 +349,200 @@
+     rm -f $RPM_BUILD_DIR/linux
+ fi
+ 
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
++
++%Files dev-usbserial
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/usbserial.ko
++
++%Files dev-usbserial-aircable
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/aircable.ko
++
++%Files dev-usbserial-ark3116
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/ark3116.ko
++
++%Files dev-usbserial-belkin_sa
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/belkin_sa.ko
++
++%Files dev-usbserial-ch341
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/ch341.ko
++
++%Files dev-usbserial-cp210x
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/cp210x.ko
++
++%Files dev-usbserial-cyberjack
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/cyberjack.ko
++
++%Files dev-usbserial-cypress_m8
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/cypress_m8.ko
++
++%Files dev-usbserial-digi_acceleport
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/digi_acceleport.ko
++
++%Files dev-usbserial-empeg
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/empeg.ko
++
++%Files dev-usbserial-ftdi_sio
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/ftdi_sio.ko
++
++%Files dev-usbserial-funsoft
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/funsoft.ko
++
++%Files dev-usbserial-garmin_gps
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/garmin_gps.ko
++
++%Files dev-usbserial-hp4x
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/hp4x.ko
++
++%Files dev-usbserial-io_edgeport
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/io_edgeport.ko
++
++%Files dev-usbserial-io_ti
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/io_ti.ko
++
++%Files dev-usbserial-ipaq
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/ipaq.ko
++
++%Files dev-usbserial-ipw
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/ipw.ko
++
++%Files dev-usbserial-ir
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/ir-usb.ko
++
++%Files dev-usbserial-iuu_phoenix
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/iuu_phoenix.ko
++
++%Files dev-usbserial-keyspan
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/keyspan.ko
++
++%Files dev-usbserial-keyspan_pda
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/keyspan_pda.ko
++
++%Files dev-usbserial-kl5kusb105
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/kl5kusb105.ko
++
++%Files dev-usbserial-kobil_sct
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/kobil_sct.ko
++
++%Files dev-usbserial-mct_u232
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/mct_u232.ko
++
++%Files dev-usbserial-mos7720
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/mos7720.ko
++
++%Files dev-usbserial-mos7840
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/mos7840.ko
++
++%Files dev-usbserial-moto_modem
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/moto_modem.ko
++
++%Files dev-usbserial-navman
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/navman.ko
++
++%Files dev-usbserial-omninet
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/omninet.ko
++
++%Files dev-usbserial-opticon
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/opticon.ko
++
++%Files dev-usbserial-option
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/option.ko
++
++%Files dev-usbserial-oti6858
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/oti6858.ko
++
++%Files dev-usbserial-pl2303
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/pl2303.ko
++
++%Files dev-usbserial-qcaux
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/qcaux.ko
++
++%Files dev-usbserial-qcserial
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/qcserial.ko
++
++%Files dev-usbserial-safe_serial
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/safe_serial.ko
++
++%Files dev-usbserial-siemens_mpi
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/siemens_mpi.ko
++
++%Files dev-usbserial-sierra
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/sierra.ko
++
++%Files dev-usbserial-spcp8x5
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/spcp8x5.ko
++
++%Files dev-usbserial-symbolserial
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/symbolserial.ko
++
++%Files dev-usbserial-ti_3410_5052
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/ti_usb_3410_5052.ko
++
++%Files dev-usbserial-debug
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/usb_debug.ko
++
++%Files dev-usbserial-wwan
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/usb_wwan.ko
++
++%Files dev-usbserial-visor
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/visor.ko
++
++%Files dev-usbserial-vivopay-serial
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/vivopay-serial.ko
++
++%Files dev-usbserial-whiteheat
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/whiteheat.ko
++
++%Files dev-usbserial-zio
++%defattr(-,root,root)
++%{pfx}/%{_lib}/modules/%{version}-*/kernel/drivers/usb/serial/zio.ko
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
+--- ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec	1970-01-01 01:00:00.000000000 +0100
++++ ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec	2015-10-31 22:49:40.742780911 +0100
+@@ -0,0 +1,65 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : Library to allow control of basic functions in socketcan from userspace
++Name            : libsocketcan
++Version         : 0.0.8
++Release         : 0
++License         : GNU LGPLv2.1
++Vendor          : Freescale
++Packager        : Rogerio Pimentel
++Group           : System Environment/Libraries
++Source          : %{name}-%{version}.tar.gz
++URL             : http://www.pengutronix.de/software/libsocketcan/download/
++Patch1          : libsocketcan-0.0.8-1317716454.patch
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed libsocketcan for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++libsocketcan package contents restricted to just the files
++that are needed at run time on the target.
++
++
++%Description
++%{summary}
++
++%Prep
++%setup
++%patch1 -p1
++
++%Build
++
++
++./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
++#./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} CC=/opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi/bin/arm-fsl-linux-gnueabi-gcc
++
++make
++
++%Install
++rm -rf $RPM_BUILD_ROOT
++make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_libdir}/pkgconfig, d;
++    \,^%{pfx}%{_datadir}/doc, d;
++    \,^%{pfx}%{_prefix}/include, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
++
++%Clean
++rm -rf $RPM_BUILD_ROOT
++
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec ltib/dist/lfs-5.1/libtermcap/libtermcap.spec
+--- ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/libtermcap/libtermcap.spec	2015-10-31 22:49:40.742780911 +0100
+@@ -1,4 +1,5 @@
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
++%define archname termcap
+ 
+ Summary         : A basic system library for accessing the termcap database.
+ Name            : libtermcap
+@@ -8,21 +9,32 @@
+ Vendor          : Freescale Inc
+ Packager        : Steve Papacharalambous
+ Group           : System Environment/Libraries
+-Source          : termcap-2.0.8.tar.bz2
+-Patch0: termcap-2.0.8-shared.patch
+-Patch1: termcap-2.0.8-setuid.patch
+-Patch2: termcap-2.0.8-instnoroot.patch
+-Patch3: termcap-2.0.8-compat21.patch
+-Patch4: termcap-2.0.8-xref.patch
+-Patch5: termcap-2.0.8-fix-tc.patch
+-Patch6: termcap-2.0.8-ignore-p.patch
+-Patch7: termcap-buffer.patch
+-Patch8: termcap-2.0.8-bufsize.patch
+-Patch9: termcap-2.0.8-colon.patch
+-Patch10: libtermcap-aaargh.patch
+-Patch11: termcap-2.0.8-glibc22.patch
++Source          : %{archname}-%{version}.tar.bz2
++Patch0          : %{archname}-%{version}-shared.patch
++Patch1          : %{archname}-%{version}-setuid.patch
++Patch2          : %{archname}-%{version}-instnoroot.patch
++Patch3          : %{archname}-%{version}-compat21.patch
++Patch4          : %{archname}-%{version}-xref.patch
++Patch5          : %{archname}-%{version}-fix-tc.patch
++Patch6          : %{archname}-%{version}-ignore-p.patch
++Patch7          : %{archname}-buffer.patch
++Patch8          : %{archname}-%{version}-bufsize.patch
++Patch9          : %{archname}-%{version}-colon.patch
++Patch10         : libtermcap-aaargh.patch
++Patch11         : %{archname}-%{version}-glibc22.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed libtermcap for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++libtermcap package contents restricted to just the files that
++are needed at run time on the target.
++
+ 
+ %Description
+ The libtermcap package contains a basic system library needed to
+@@ -31,7 +43,7 @@
+ displays in a terminal-independent manner.
+ 
+ %Prep
+-%setup -q -n termcap-2.0.8
++%setup -q -n %{archname}-%{version}
+ %patch0 -p1 
+ %patch1 -p1
+ %patch2 -p1
+@@ -61,7 +73,7 @@
+ if [ "$GNUTARCH" = m68knommu ]
+ then
+ ( cp libtermcap.a ${RPM_BUILD_ROOT}/%{pfx}/lib/
+-  cp termcap.h ${RPM_BUILD_ROOT}/%{pfx}/usr/include/
++  cp termcap.h ${RPM_BUILD_ROOT}/%{pfx}%{_prefix}/include/
+   cp termcap.info* ${RPM_BUILD_ROOT}/%{pfx}/%{_infodir}
+   cd ${RPM_BUILD_ROOT}/%{pfx}
+   cd ./%{_infodir}
+@@ -71,7 +83,7 @@
+ 
+ else
+ export PATH=/sbin:$PATH
+-make prefix=${RPM_BUILD_ROOT}/%{pfx}/usr install
++make prefix=${RPM_BUILD_ROOT}/%{pfx}%{_prefix} install
+ 
+ install -c -m644 termcap.src ${RPM_BUILD_ROOT}/%{pfx}/etc/termcap
+ cp termcap.info* ${RPM_BUILD_ROOT}/%{pfx}/%{_infodir}
+@@ -79,24 +91,33 @@
+ ( cd ${RPM_BUILD_ROOT}/%{pfx}
+   rm -f ./etc/termcap
+   mv ./usr/lib/libtermcap.so* ./lib
+-  ln -sf libtermcap.so.2.0.8 ./lib/libtermcap.so.2
++  ln -sf libtermcap.so.%{version} ./lib/libtermcap.so.2
+   ln -sf libtermcap.so.2 ./lib/libtermcap.so
+   cd usr/lib
+-  ln -sf ../../lib/libtermcap.so.2.0.8 libtermcap.so
++  ln -sf ../../lib/libtermcap.so.%{version} libtermcap.so
+   cd ../..
+-  strip -R .comments --strip-unneeded ./lib/libtermcap.so.2.0.8
++  strip -R .comments --strip-unneeded ./lib/libtermcap.so.%{version}
+   cd ./%{_infodir}
+   gzip -9nf ./termcap.info*
+   chmod 644 ./termcap.info*
+ )
+ fi
+ 
++cd %{_builddir}/%{archname}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_prefix}/info, d;
++    \,^%{pfx}%{_prefix}/include, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf ${RPM_BUILD_ROOT}
+-rm -rf ${RPM_BUILD_DIR}/termcap-%{version}
++rm -rf ${RPM_BUILD_DIR}/%{archname}-%{version}
+ 
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+ 
+ 
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb1.spec ltib/dist/lfs-5.1/libusb/libusb1.spec
+--- ltib.reference/dist/lfs-5.1/libusb/libusb1.spec	1970-01-01 01:00:00.000000000 +0100
++++ ltib/dist/lfs-5.1/libusb/libusb1.spec	2015-10-31 22:49:40.742780911 +0100
+@@ -0,0 +1,57 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++%define libname libusb
++
++Summary         : A library which allows userspace access to USB devices 
++Name            : %{libname}1
++Version         : 1.0.20
++Release         : 1
++License         : LGPL
++Vendor          : MECT
++Packager        : Mihai Lazarescu
++Group           : System Environment/Libraries
++Source          : %{libname}-%{version}.tar.bz2
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed down libusb-1.x to just run time libraries
++Group           : System Environment/Libraries
++AutoReqProv     : no
++%Description rfs
++libusb-1.x package contents restricted to just the libraries
++that are needed at run time on the target.
++
++
++%Description
++%{summary}.
++
++%Prep
++%setup -n %{libname}-%{version}
++
++%Build
++./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --disable-udev --disable-build-docs
++make -j1
++
++%Install
++rm -rf $RPM_BUILD_ROOT
++make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
++
++cd %{_builddir}/%{libname}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_prefix}/include, d;
++    \,^%{pfx}%{_libdir}/pkgconfig, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
++
++%Clean
++rm -rf $RPM_BUILD_ROOT
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb.spec ltib/dist/lfs-5.1/libusb/libusb.spec
+--- ltib.reference/dist/lfs-5.1/libusb/libusb.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/libusb/libusb.spec	2015-10-31 22:49:40.746780911 +0100
+@@ -11,6 +11,17 @@
+ Source          : %{name}-%{version}.tar.gz
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed libusb for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++libusb package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -35,11 +46,20 @@
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+ make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+-rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_prefix}/include, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lzo/lzo.spec ltib/dist/lfs-5.1/lzo/lzo.spec
+--- ltib.reference/dist/lfs-5.1/lzo/lzo.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/lzo/lzo.spec	2015-10-31 22:49:40.746780911 +0100
+@@ -11,6 +11,17 @@
+ Source          : lzo-%{version}.tar.gz
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed lzo for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++lzo package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -32,12 +43,21 @@
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+ make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+-rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_prefix}/include, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
+--- ltib.reference/dist/lfs-5.1/merge/merge.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/merge/merge.spec	2015-10-31 23:54:18.000000000 +0100
+@@ -13,6 +13,16 @@
+ # We have assume the user knows merge file dependencies.
+ Autoreqprov     : no
+ 
++
++%Package rfs
++Summary         : Trimmed merge for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++merge package contents restricted to just the files that are
++needed at run time on the target.
++
++
+ %Description
+ Detects the presence of of merge directory in the top level of the root
+ file system builder directory, and if it is present creates a rpm containing
+@@ -40,10 +50,20 @@
+     fi
+ done
+ 
++cd %{_builddir}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++%attr(0777, root, root) %{pfx}/etc/ltib-release
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+ %attr(0777, root, root) %{pfx}/etc/ltib-release
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
+--- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec	2015-10-31 22:49:40.746780911 +0100
+@@ -2,15 +2,28 @@
+ 
+ Summary		: Memory Technology Device tools
+ Name		: mtd-utils
+-Version		: 1.5.0
++Version		: 201006
+ Release		: 1
+ License		: GPL
+ Vendor		: Freescale Semiconductor
+ Packager	: Ross Wille
+ Group		: Applications/System
+-Source		: %{name}-%{version}.tar.gz
++Source		: %{name}-%{version}.tar.bz2
++Patch1          : mtd-utils-201006-4K-218-224-support.patch
++Patch2          : mtd-utils-201006-1418122799.patch
+ BuildRoot	: %{_tmppath}/%{name}
+ Prefix		: %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed mtd-utils for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++mtd-utils package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -21,19 +34,34 @@
+ 
+ %Prep
+ %setup -n %{name}
++%patch1 -p1
++%patch2 -p1
+ 
+ %Build
+ make -j1 WITHOUT_XATTR=1
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-make -j1 DESTDIR=$RPM_BUILD_ROOT/%{pfx} SBINDIR=%{_prefix}/bin MANDIR=%{_mandir} install
+-mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/include/mtd
+-install -m0644 include/mtd/*.h $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/include/mtd
++make -j1 DESTDIR=$RPM_BUILD_ROOT%{pfx} SBINDIR=%{_prefix}/bin MANDIR=%{_mandir} install
++
++mkdir -p $RPM_BUILD_ROOT%{pfx}%{_prefix}/include/mtd
++install -m 0644 include/mtd/*.h $RPM_BUILD_ROOT%{pfx}%{_prefix}/include/mtd
++
++cd %{_builddir}/%{name}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_mandir}, d;
++    \,^%{pfx}%{_prefix}/include, d;
++    \,^%{pfx}%{_bindir}/mkfs.jffs2, d;
++    \,^%{pfx}%{_bindir}/mkfs.ubifs, d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec ltib/dist/lfs-5.1/mxc-misc/imx-test.spec
+--- ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/mxc-misc/imx-test.spec	2015-10-31 22:49:40.750780911 +0100
+@@ -2,21 +2,32 @@
+ 
+ Summary         : platform specific unit tests for mxc platform
+ Name            : imx-test
+-Version         : 2.6.35.3
+-Release         : 1.1.0
++Version         : 11.01.00
++Release         : 1
+ License         : GPL/Other
+ Vendor          : Freescale
+ Packager        : Rob Herring
+ Group           : Test
+-Source          : %{name}-%{version}-%{release}.tar.gz
++Source          : %{name}-%{version}.tar.gz
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed imx-test for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++imx-test package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+ 
+ %Prep
+-%setup -n %{name}-%{version}-%{release}
++%setup
+ 
+ %Build
+ if [ -z "$PKG_KERNEL_KBUILD_PRECONFIG" ]
+@@ -69,9 +80,18 @@
+ PLATFORM_UPPER="$(echo $PLATFORM | awk '{print toupper($0)}')"
+ make PLATFORM=$PLATFORM_UPPER DESTDIR=$RPM_BUILD_ROOT/%{pfx}/unit_tests install
+ 
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
+-%defattr(755,root,root)
+-%{pfx}/*
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mysql/mysql.spec ltib/dist/lfs-5.1/mysql/mysql.spec
+--- ltib.reference/dist/lfs-5.1/mysql/mysql.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/mysql/mysql.spec	2015-10-31 22:49:40.750780911 +0100
+@@ -13,6 +13,17 @@
+ Patch1          : mysql-4.1.12-gcc-4.2.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed mysql for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++mysql package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -38,18 +49,28 @@
+ rm -rf $RPM_BUILD_ROOT
+ mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}
+ make install prefix=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
+-cd $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/mysql
+-mv $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/mysql/* ../
+-rm mysql -rf
+-rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
+ 
++cd $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/mysql
++mv * ..
++cd ..
++rmdir mysql
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/usr/man, d;
++    \,^%{pfx}%{_includedir}, d;
++    \,^%{pfx}%{_prefix}/mysql-test/include, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+ 
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+ 
+ 
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec ltib/dist/lfs-5.1/ncurses/ncurses.spec
+--- ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/ncurses/ncurses.spec	2015-10-31 22:49:40.750780911 +0100
+@@ -14,6 +14,17 @@
+ Patch2          : ncurses-5.3-wint_t.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed ncurses for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++ncurses package contents restricted to just the files that
++are needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -94,12 +105,22 @@
+     rm -rf $USR_SHARE/termtemp
+ fi
+ 
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_mandir}, d;
++    \,^%{pfx}%{_includedir}, d;
++    \,^%{pfx}%{_datadir}/terminfo, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+ 
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+ 
+ 
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec
+--- ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec	2015-10-31 22:49:40.750780911 +0100
+@@ -24,7 +24,7 @@
+ # don't add --build as glib will fail for a host build due to 
+ # stupid incorrect cross compile detection
+ ./configure --prefix=%{_prefix} --host=$CFGHOST
+-make
++make -j`grep -c ^processor /proc/cpuinfo`
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ppp/ppp.spec ltib/dist/lfs-5.1/ppp/ppp.spec
+--- ltib.reference/dist/lfs-5.1/ppp/ppp.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/ppp/ppp.spec	2015-10-31 22:49:40.750780911 +0100
+@@ -13,6 +13,17 @@
+ Patch1          : ppp-2.4.3-hspeed.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed ppp for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++ppp package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -38,11 +49,23 @@
+ make -j1 install INSTALL=install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+ mkdir -p $RPM_BUILD_ROOT/%{pfx}/var/lock
+ 
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/share/man, d;
++    \,^%{pfx}/include, d;
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++%attr(4554,root,root)  %{pfx}//lib/pppd/2.4.4/pppoatm.so
++%attr(4554,root,root)  %{pfx}//lib/pppd/2.4.4/rp-pppoe.so
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+ %attr(4554,root,root)  %{pfx}//lib/pppd/2.4.4/pppoatm.so
+ %attr(4554,root,root)  %{pfx}//lib/pppd/2.4.4/rp-pppoe.so
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec ltib/dist/lfs-5.1/qt/qt-embedded.spec
+--- ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/qt/qt-embedded.spec	2015-10-31 22:49:40.754780911 +0100
+@@ -1,41 +1,48 @@
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
++%define archivename qt-everywhere-opensource-src
+ 
+ Summary         : Qt
+-Name            : qt-everywhere-opensource-src
+-Version         : 4.6.0
+-Release         : 0
+-License         : GNU GPL
++Name            : qt-embedded
++Version         : 4.8.5
++Release         : 1
++License         : LGPL v2.1
+ Vendor          : Freescale
+ Packager        : Rogerio Pimentel
+ Group           : System Environment/Libraries
+-Source          : %{name}-%{version}.tar.gz
+-BuildRoot       : %{_tmppath}/%{name}
++URL             : http://get.qt.nokia.com/qt/source/%{archivename}-%{version}.tar.gz
++Source          : %{archivename}-%{version}.tar.gz
++Patch1          : %{archivename}-%{version}-1394522957.patch
++Patch2          : %{archivename}-%{version}-1420823826.patch
++Patch3          : %{archivename}-%{version}-1420823825.patch
++BuildRoot       : %{_tmppath}/%{name}-%{version}
+ Prefix          : %{pfx}
+-URL             : http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.0.tar.gz
++AutoReqProv     : no
++
++
++%if %{?toolchain:0}%{!?toolchain:1}
++
++%Package rfs
++Summary         : Trimmed qt-embedded for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++qt-embedded package contents restricted to just the files that
++are needed at run time on the target.
++
++%endif
++
+ 
+ %Description
+ %{summary}
+ 
+ %Prep
+-%setup
++%setup -n %{archivename}-%{version}
+ 
+ #Checking what packages are available
+ 
+ export XTRA_OPTS=""
+ export XTRA_OPTS_CONFIG=""
+ 
+-if [ -n "$PKG_QT_PHONON" ]
+-then
+-    export XTRA_OPTS="$XTRA_OPTS -multimedia -phonon -phonon-backend -lgstreamer-0.10"
+-    export XTRA_OPTS_CONFIG="$XTRA_OPTS_CONFIG -lgstreamer-0.10 -lxml2 -lasound"
+-fi
+-
+-#if PKG_AMD_GPU_BIN_MX51 is already installed, uncomment the following line to add OpenGLES 2 support
+-#export XTRA_OPTS_CONFIG="$XTRA_OPTS_CONFIG -lGLESv2 -lEGL -lgsl -lc2d -lpanel2"
+-
+-#if PKG_MBX_BIN is already installed, uncomment the following line to add OpenGLES 1.1 support
+-#export XTRA_OPTS_CONFIG="$XTRA_OPTS_CONFIG -lEGL -lEGL"
+-
+ mkdir mkspecs/qws/linux-g++-mx
+ initscript=mkspecs/qws/linux-g++-mx/qmake.conf
+ cat > $initscript << EOF
+@@ -43,123 +50,103 @@
+ # qmake configuration for building with arm-none-linux-gnueabi-g++
+ #
+ 
+-QMAKE_CC		= arm-none-linux-gnueabi-gcc
+-QMAKE_CFLAGS		+= -pipe
+-QMAKE_CFLAGS_DEPS	+= -M
+-QMAKE_CFLAGS_WARN_ON	+= -Wall -W
+-QMAKE_CFLAGS_WARN_OFF	+= -w
+-QMAKE_CFLAGS_RELEASE	+= -O2
+-QMAKE_CFLAGS_DEBUG	+= -g
+-QMAKE_CFLAGS_SHLIB	+= -fPIC
+-QMAKE_CFLAGS_STATIC_LIB	+= -fPIC
+-QMAKE_CFLAGS_YACC	+= -Wno-unused -Wno-parentheses
+-QMAKE_CFLAGS_HIDESYMS   += -fvisibility=hidden
+-QMAKE_CFLAGS_PRECOMPILE += -x c-header -c \${QMAKE_PCH_INPUT} -o \${QMAKE_PCH_OUTPUT}
+-QMAKE_CFLAGS_USE_PRECOMPILE += -include \${QMAKE_PCH_OUTPUT_BASE}
+-
+-QMAKE_CXX		= arm-none-linux-gnueabi-g++
+-QMAKE_CXXFLAGS		+= \$\$QMAKE_CFLAGS
+-QMAKE_CXXFLAGS_DEPS	+= \$\$QMAKE_CFLAGS_DEPS
+-QMAKE_CXXFLAGS_WARN_ON	+= \$\$QMAKE_CFLAGS_WARN_ON
+-QMAKE_CXXFLAGS_WARN_OFF	+= \$\$QMAKE_CFLAGS_WARN_OFF
+-QMAKE_CXXFLAGS_RELEASE	+= \$\$QMAKE_CFLAGS_RELEASE
+-QMAKE_CXXFLAGS_DEBUG	+= \$\$QMAKE_CFLAGS_DEBUG
+-QMAKE_CXXFLAGS_SHLIB	+= \$\$QMAKE_CFLAGS_SHLIB
+-QMAKE_CXXFLAGS_STATIC_LIB += \$\$QMAKE_CFLAGS_STATIC_LIB
+-QMAKE_CXXFLAGS_YACC	+= \$\$QMAKE_CFLAGS_YACC
+-QMAKE_CXXFLAGS_HIDESYMS += \$\$QMAKE_CFLAGS_HIDESYMS -fvisibility-inlines-hidden
+-QMAKE_CXXFLAGS_PRECOMPILE += -x c++-header -c \${QMAKE_PCH_INPUT} -o \${QMAKE_PCH_OUTPUT}
+-QMAKE_CXXFLAGS_USE_PRECOMPILE = \$\$QMAKE_CFLAGS_USE_PRECOMPILE
+-
+-QMAKE_LINK		= arm-none-linux-gnueabi-g++
+-QMAKE_LINK_SHLIB	= arm-none-linux-gnueabi-g++
+-QMAKE_LINK_C		= arm-none-linux-gnueabi-gcc
+-QMAKE_LINK_C_SHLIB	= arm-none-linux-gnueabi-gcc
+-QMAKE_LFLAGS		+=
+-QMAKE_LFLAGS_RELEASE	+= -Wl,-O1
+-QMAKE_LFLAGS_DEBUG	+=
+-QMAKE_LFLAGS_APP	+=
+-QMAKE_LFLAGS_SHLIB	+= -shared
+-QMAKE_LFLAGS_PLUGIN	+= \$\$QMAKE_LFLAGS_SHLIB
+-QMAKE_LFLAGS_SONAME	+= -Wl,-soname,
+-QMAKE_LFLAGS_THREAD	+=
+-QMAKE_LFLAGS_NOUNDEF	+= -Wl,--no-undefined
+-QMAKE_RPATH		= -Wl,-rpath,
++QMAKE_CC                      =  arm-none-linux-gnueabi-gcc
++QMAKE_CFLAGS                  += -pipe
++QMAKE_CFLAGS_DEPS             += -M
++QMAKE_CFLAGS_WARN_ON          += -Wall -W
++QMAKE_CFLAGS_WARN_OFF         += -w
++QMAKE_CFLAGS_RELEASE          += -O2
++QMAKE_CFLAGS_DEBUG            += -g
++QMAKE_CFLAGS_SHLIB            += -fPIC
++QMAKE_CFLAGS_STATIC_LIB       += -fPIC
++QMAKE_CFLAGS_YACC             += -Wno-unused -Wno-parentheses
++QMAKE_CFLAGS_HIDESYMS         += -fvisibility=hidden
++QMAKE_CFLAGS_PRECOMPILE       += -x c-header -c \${QMAKE_PCH_INPUT} -o \${QMAKE_PCH_OUTPUT}
++QMAKE_CFLAGS_USE_PRECOMPILE   += -include \${QMAKE_PCH_OUTPUT_BASE}
++
++QMAKE_CXX                     =  arm-none-linux-gnueabi-g++
++QMAKE_CXXFLAGS                += \$\$QMAKE_CFLAGS
++QMAKE_CXXFLAGS_DEPS           += \$\$QMAKE_CFLAGS_DEPS
++QMAKE_CXXFLAGS_WARN_ON        += \$\$QMAKE_CFLAGS_WARN_ON
++QMAKE_CXXFLAGS_WARN_OFF       += \$\$QMAKE_CFLAGS_WARN_OFF
++QMAKE_CXXFLAGS_RELEASE        += \$\$QMAKE_CFLAGS_RELEASE
++QMAKE_CXXFLAGS_DEBUG          += \$\$QMAKE_CFLAGS_DEBUG
++QMAKE_CXXFLAGS_SHLIB          += \$\$QMAKE_CFLAGS_SHLIB
++QMAKE_CXXFLAGS_STATIC_LIB     += \$\$QMAKE_CFLAGS_STATIC_LIB
++QMAKE_CXXFLAGS_YACC           += \$\$QMAKE_CFLAGS_YACC
++QMAKE_CXXFLAGS_HIDESYMS       += \$\$QMAKE_CFLAGS_HIDESYMS -fvisibility-inlines-hidden
++QMAKE_CXXFLAGS_PRECOMPILE     += -x c++-header -c \${QMAKE_PCH_INPUT} -o \${QMAKE_PCH_OUTPUT}
++QMAKE_CXXFLAGS_USE_PRECOMPILE =  \$\$QMAKE_CFLAGS_USE_PRECOMPILE
++
++QMAKE_LINK                    =  arm-none-linux-gnueabi-g++
++QMAKE_LINK_SHLIB              =  arm-none-linux-gnueabi-g++
++QMAKE_LINK_C                  =  arm-none-linux-gnueabi-gcc
++QMAKE_LINK_C_SHLIB            =  arm-none-linux-gnueabi-gcc
++QMAKE_LFLAGS                  +=
++QMAKE_LFLAGS_RELEASE          += -Wl,-O1
++QMAKE_LFLAGS_DEBUG            +=
++QMAKE_LFLAGS_APP              +=
++QMAKE_LFLAGS_SHLIB            += -shared
++QMAKE_LFLAGS_PLUGIN           += \$\$QMAKE_LFLAGS_SHLIB
++QMAKE_LFLAGS_SONAME           += -Wl,-soname,
++QMAKE_LFLAGS_THREAD           +=
++QMAKE_LFLAGS_NOUNDEF          += -Wl,--no-undefined
++QMAKE_LFLAGS_RPATH            =  -Wl,-rpath,
+ 
+-QMAKE_PCH_OUTPUT_EXT    = .gch
++QMAKE_PCH_OUTPUT_EXT          =  .gch
+ 
+ # -Bsymbolic-functions (ld) support
+-QMAKE_LFLAGS_BSYMBOLIC_FUNC = -Wl,-Bsymbolic-functions
+-QMAKE_LFLAGS_DYNAMIC_LIST = -Wl,--dynamic-list,
++QMAKE_LFLAGS_BSYMBOLIC_FUNC   =  -Wl,-Bsymbolic-functions
++QMAKE_LFLAGS_DYNAMIC_LIST     =  -Wl,--dynamic-list,
+ 
+-QMAKE_CFLAGS_THREAD	+= -D_REENTRANT
+-QMAKE_CXXFLAGS_THREAD	+= \$\$QMAKE_CFLAGS_THREAD
++QMAKE_CFLAGS_THREAD           += -D_REENTRANT
++QMAKE_CXXFLAGS_THREAD         += \$\$QMAKE_CFLAGS_THREAD
+ 
+-QMAKE_INCDIR          = $RPM_BUILD_DIR/../../rootfs/usr/include $RPM_BUILD_DIR/../../rootfs/usr/include/glib-2.0 \
+-			$RPM_BUILD_DIR/../../rootfs/usr/lib/glib-2.0/include/ $RPM_BUILD_DIR/../../rootfs/usr/include/gstreamer-0.10/ \
+-			$RPM_BUILD_DIR/../../rootfs/usr/include/libxml2/ $RPM_BUILD_DIR/../../rootfs/usr/include/freetype2
+-QMAKE_LIBDIR          = $RPM_BUILD_DIR/../../rootfs/usr/lib
+-QMAKE_INCDIR_X11      =
+-QMAKE_LIBDIR_X11      =
+-QMAKE_INCDIR_QT       = \$\$[QT_INSTALL_HEADERS]
+-QMAKE_LIBDIR_QT       = \$\$[QT_INSTALL_LIBS]
+-QMAKE_INCDIR_OPENGL   = $RPM_BUILD_DIR/../../rootfs/usr/include/GL
+-QMAKE_LIBDIR_OPENGL   = $RPM_BUILD_DIR/../../rootfs/usr/lib
+-QMAKE_INCDIR_POWERVR  = $RPM_BUILD_DIR/../../rootfs/usr/include
+-QMAKE_INCDIR_OPENGL_ES1 = $RPM_BUILD_DIR/../../rootfs/usr/include/GLES
+-QMAKE_LIBDIR_OPENGL_ES1 = $RPM_BUILD_DIR/../../rootfs/usr/lib
+-QMAKE_INCDIR_OPENGL_ES1CL = $RPM_BUILD_DIR/../../rootfs/usr/include/GLES
+-QMAKE_LIBDIR_OPENGL_ES1CL = $RPM_BUILD_DIR/../../rootfs/usr/lib
+-QMAKE_INCDIR_OPENGL_ES2 = $RPM_BUILD_DIR/../../rootfs/usr/include/GLES2
+-QMAKE_LIBDIR_OPENGL_ES2 = $RPM_BUILD_DIR/../../rootfs/usr/lib
+-QMAKE_INCDIR_EGL      = $RPM_BUILD_DIR/../../rootfs/usr/include/GL
+-QMAKE_LIBDIR_EGL      = $RPM_BUILD_DIR/../../rootfs/usr/lib
+-QMAKE_INCDIR_OPENVG   =
+-QMAKE_LIBDIR_OPENVG   =
+-
+-QMAKE_LIBS            = -lglib-2.0 -lgthread-2.0 -lz -lgmodule-2.0 -lgobject-2.0 -lts -lfreetype $XTRA_OPTS_CONFIG
+-QMAKE_LIBS_DYNLOAD    = -ldl
+-QMAKE_LIBS_X11        =
+-QMAKE_LIBS_X11SM      =
+-QMAKE_LIBS_NIS        = -lnsl
+-QMAKE_LIBS_EGL        = -lEGL
+-QMAKE_LIBS_OPENGL     = -lGLU -lGL
+-QMAKE_LIBS_OPENGL_QT  = -lGL
+-QMAKE_LIBS_OPENGL_ES1 = -lGLESv1_CM
+-QMAKE_LIBS_OPENGL_ES1CL = -lGLES_CL
+-QMAKE_LIBS_OPENGL_ES2 = -lGLESv2
+-QMAKE_LIBS_OPENVG     = -lOpenVG
+-QMAKE_LIBS_THREAD     = -lpthread
+-QMAKE_LIBS_EGL	      = -lEGL
+-
+-QMAKE_MOC             = \$\$[QT_INSTALL_BINS]/moc
+-QMAKE_UIC             = \$\$[QT_INSTALL_BINS]/uic
+-
+-QMAKE_AR              = arm-none-linux-gnueabi-ar cqs
+-QMAKE_OBJCOPY         = arm-none-linux-gnueabi-objcopy
+-QMAKE_RANLIB          = arm-none-linux-gnueabi-ranlib
+-
+-QMAKE_TAR             = tar -cf
+-QMAKE_GZIP            = gzip -9f
+-
+-QMAKE_COPY            = cp -f
+-QMAKE_COPY_FILE       = \$(COPY)
+-QMAKE_COPY_DIR        = \$(COPY) -r
+-QMAKE_MOVE            = mv -f
+-QMAKE_DEL_FILE        = rm -f
+-QMAKE_DEL_DIR         = rmdir
+-QMAKE_STRIP           = arm-none-linux-gnueabi-strip
+-QMAKE_STRIPFLAGS_LIB += --strip-unneeded
+-QMAKE_CHK_DIR_EXISTS  = test -d
+-QMAKE_MKDIR           = mkdir -p
+-QMAKE_INSTALL_FILE    = install -m 644 -p
+-QMAKE_INSTALL_PROGRAM = install -m 755 -p
+-
+-MAKEFILE_GENERATOR      = UNIX
+-TEMPLATE                = app
+-CONFIG                 += qt warn_on release incremental link_prl
+-QT                     += core gui network
+-QMAKE_INCREMENTAL_STYLE = sublib
++%if %{?toolchain:1}%{!?toolchain:0}
++QMAKE_INCDIR                  =  %{toolchain_install_dir}/include %{toolchain_install_dir}/include/glib-2.0 %{toolchain_install_dir}/lib/glib-2.0/include/
++QMAKE_LIBDIR                  =  %{toolchain_install_dir}/lib
++QMAKE_LIBS                    =
++%else
++QMAKE_INCDIR                  =  $RPM_BUILD_DIR/../../rootfs/usr/include $RPM_BUILD_DIR/../../rootfs/usr/include/glib-2.0 $RPM_BUILD_DIR/../../rootfs/usr/lib/glib-2.0/include/
++QMAKE_LIBDIR                  =  $RPM_BUILD_DIR/../../rootfs/usr/lib
++QMAKE_LIBS                    =  -lglib-2.0 -lgthread-2.0 -lz -lgmodule-2.0 -lgobject-2.0 -lts -lfreetype
++%endif
++QMAKE_INCDIR_X11              =
++QMAKE_LIBDIR_X11              =
++QMAKE_LIBS_DYNLOAD            =  -ldl
++QMAKE_LIBS_X11                =
++QMAKE_LIBS_X11SM              =
++QMAKE_LIBS_NIS                =  -lnsl
++QMAKE_LIBS_THREAD             =  -lpthread
++
++
++QMAKE_MOC                     =  \$\$[QT_INSTALL_BINS]/moc
++QMAKE_UIC                     =  \$\$[QT_INSTALL_BINS]/uic
++
++QMAKE_AR                      =  arm-none-linux-gnueabi-ar cqs
++QMAKE_OBJCOPY                 =  arm-none-linux-gnueabi-objcopy
++QMAKE_RANLIB                  =  arm-none-linux-gnueabi-ranlib
++
++QMAKE_TAR                     =  tar -cf
++QMAKE_GZIP                    =  gzip -9f
++
++QMAKE_COPY                    =  cp -f
++QMAKE_COPY_FILE               =  \$(COPY)
++QMAKE_COPY_DIR                =  \$(COPY) -r
++QMAKE_MOVE                    =  mv -f
++QMAKE_DEL_FILE                =  rm -f
++QMAKE_DEL_DIR                 =  rmdir
++QMAKE_STRIP                   =  arm-none-linux-gnueabi-strip
++QMAKE_CHK_DIR_EXISTS          =  test -d
++QMAKE_MKDIR                   =  mkdir -p
++QMAKE_INSTALL_FILE            =  install -m 644 -p
++QMAKE_INSTALL_PROGRAM         =  install -m 755 -p
++
++MAKEFILE_GENERATOR            =  UNIX
++TEMPLATE                      =  app
++CONFIG                        += qt warn_on release incremental link_prl
++QT                            += core gui
++QMAKE_INCREMENTAL_STYLE       =  sublib
+ 
+ load(qt_config)
+ EOF
+@@ -173,10 +160,12 @@
+ 
+ EOF
+ chmod 744 $initscript
++%patch1 -p1
++%patch2 -p1
++%patch3 -p1
+ 
+ %Build
+-
+-export PATH=$UNSPOOF_PATH
++test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
+ 
+ # Unset compiler to prevent gcc being used when the cross
+ # tools should be used. (Trolltech issue# 138807)
+@@ -185,32 +174,104 @@
+ # Unset PLATFORM because this is used as host machine.
+ unset PLATFORM
+ 
+-#if PKG_AMD_GPU_BIN_MX51 is already installed, uncomment the following line to add OpenGLES 2 support
+-#export XTRA_OPTS="$XTRA_OPTS -opengl es2"
++./configure \
++%if %{?toolchain:1}%{!?toolchain:0}
++	--prefix=%{toolchain_install_dir} \
++%else
++	--prefix=$RPM_BUILD_DIR/../../rootfs/usr/local/Trolltech \
++	-plugin-sql-mysql \
++	-qt-mouse-tslib \
++%endif
++	-xplatform qws/linux-g++-mx \
++	-confirm-license \
++	-embedded arm \
++	-fast \
++	-fontconfig \
++	-host-little-endian \
++	-little-endian \
++	-no-3dnow \
++	-no-accessibility \
++	-no-declarative \
++	-no-javascript-jit \
++	-no-largefile \
++	-nomake demos \
++	-nomake examples \
++	-no-mmx \
++	-no-multimedia \
++	-no-phonon \
++	-no-phonon-backend \
++	-no-qt3support \
++	-no-script \
++	-no-scripttools \
++	-no-sse \
++	-no-sse2 \
++	-no-sse3 \
++	-no-ssse3 \
++	-no-stl \
++	-no-svg \
++	-no-webkit \
++	-no-xmlpatterns \
++	-opensource \
++	-plugin-sql-sqlite \
++	-qt-gfx-linuxfb \
++	-qt-gfx-transformed \
++	-qt-gfx-vnc \
++	-qt-kbd-tty \
++	-release \
++	-shared \
++	-sm \
++	-v \
++	$XTRA_OPTS
+ 
+-#if PKG_MBX_BIN is already installed, uncomment the following line to add OpenGLES 1.1 support
+-#export XTRA_OPTS="$XTRA_OPTS -opengl es1"
++make -j`grep -c ^processor /proc/cpuinfo`
+ 
+-./configure --prefix=$RPM_BUILD_DIR/../../rootfs/usr/local/Trolltech -embedded arm -xplatform qws/linux-g++-mx -release \
+-	-qt-gfx-linuxfb -qt-kbd-tty -qt-mouse-tslib -little-endian -host-little-endian -fontconfig -sm -v -opensource -confirm-license $XTRA_OPTS
++%Install
++test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
+ 
+-make
++%if %{?toolchain:1}%{!?toolchain:0}
+ 
+-%Install
++make INSTALL_ROOT=%{buildroot} install
++
++%else
+ 
+-export PATH=$UNSPOOF_PATH
+-install -d $RPM_BUILD_ROOT/%{pfx}/usr/local/Trolltech
+-install -d $RPM_BUILD_ROOT/%{pfx}/usr/lib
+-
+-cp -a demos $RPM_BUILD_ROOT/%{pfx}/usr/local/Trolltech
+-cp -a examples $RPM_BUILD_ROOT/%{pfx}/usr/local/Trolltech
+-cp -a lib/* $RPM_BUILD_ROOT/%{pfx}/usr/lib
++install -d $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
++cp -a lib/* $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
++$TOOLCHAIN_PATH/bin/${TOOLCHAIN_PREFIX}strip --strip-unneeded $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libQt*.so.%{version}
++test -x plugins/sqldrivers/libqsqlite.so && install -m 644 plugins/sqldrivers/libqsqlite.so $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
++test -x plugins/sqldrivers/libqsqlmysql.so && install -m 644 plugins/sqldrivers/libqsqlmysql.so $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
+ 
+-export PATH=$SPOOF_PATH
++%endif
++
++%if %{?toolchain:0}%{!?toolchain:1}
++
++cd %{_builddir}/%{archivename}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_libdir}/pkgconfig, d;
++    \,^%{pfx}%{_libdir}/libQtTest, d;
++    \,^%{pfx}%{_libdir}/libQt3Support, d;
++    \,^%{pfx}%{_libdir}/libQtWebKit, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
++
++%endif
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
++%if %{?toolchain:1}%{!?toolchain:0}
++
+ %Files
+ %defattr(-,root,root)
+-%{pfx}/*
++%{toolchain_install_dir}/*
++
++%else
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
++
++%endif
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt.spec ltib/dist/lfs-5.1/qwt/qwt.spec
+--- ltib.reference/dist/lfs-5.1/qwt/qwt.spec	1970-01-01 01:00:00.000000000 +0100
++++ ltib/dist/lfs-5.1/qwt/qwt.spec	2015-10-31 22:49:40.754780911 +0100
+@@ -0,0 +1,77 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : Qwt package
++Name            : qwt
++Version         : 6.1.0
++Release         : 1
++License         : GNU LGPLv2.1
++Vendor          : Qwt Widget Library
++Packager        : Bergamaschini Emiliano
++Group           : xxxx
++URL             : http://freefr.dl.sourceforge.net/project/qwt/qwt/6.0.1/%{name}-%{version}.tar.bz2
++Source          : %{name}-%{version}.tar.bz2
++Patch1          : qwt-6.0.1-1381834981.patch
++Patch2          : qwt-6.1.0-1418122118.patch
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++#Patch1          : qwt-6.0.1-1381834981.patch : put libQtSVG dependent object under conditional compilation
++
++
++%Package rfs
++Summary         : Trimmed qwt for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++qwt package contents restricted to just the files that are
++needed at run time on the target.
++
++
++%Description
++%{summary}
++
++%Prep
++%setup
++%patch1 -p1
++%patch2 -p1 
++
++%Build
++cp qwt.pro qwt.pro.orig
++awk '{if ($0 ~ /QwtDesigner/ || $0 ~ /QwtExamples/) {getline; getline;} else {print $0;}}' qwt.pro.orig > qwt.pro
++
++cp qwtconfig.pri qwtconfig.pri.orig
++awk '{if ($0 ~ /\/usr\/local\//) {print "    QWT_INSTALL_PREFIX    = /usr/";} else{print $0;}}' qwtconfig.pri.orig > qwtconfig.pri
++
++/opt/Trolltech/bin/qmake -spec qws/linux-arm-gnueabi-g++
++
++make \
++    sub-src-all-ordered \
++    sub-textengines-all-ordered \
++
++%Install
++rm -rf $RPM_BUILD_ROOT
++
++make \
++    install \
++    sub-src-install_subtargets-ordered \
++    sub-textengines-install_subtargets-ordered \
++    install_qwtspec \
++    INSTALL_ROOT=$RPM_BUILD_ROOT/%{pfx}\
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_prefix}/doc, d;
++    \,^%{pfx}%{_includedir}, d;
++' all_files.lst > rfs_files.lst
++
++%Clean
++rm -rf $RPM_BUILD_ROOT
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rpm/rpm-fs.spec ltib/dist/lfs-5.1/rpm/rpm-fs.spec
+--- ltib.reference/dist/lfs-5.1/rpm/rpm-fs.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/rpm/rpm-fs.spec	2015-10-31 22:49:40.754780911 +0100
+@@ -83,7 +83,7 @@
+ ./configure --prefix=%{_prefix} --localstatedir=$var --sysconfdir=$etc \
+ --without-python --without-javaglue
+ 
+-make
++make -j`grep -c ^processor /proc/cpuinfo`
+ 
+ 
+ %Install
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rsync/rsync.spec ltib/dist/lfs-5.1/rsync/rsync.spec
+--- ltib.reference/dist/lfs-5.1/rsync/rsync.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/rsync/rsync.spec	2015-10-31 22:49:40.754780911 +0100
+@@ -12,6 +12,17 @@
+ Patch1          : rsync-2.6.5-va_copy-2.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed rsync for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++rsync package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -29,9 +40,18 @@
+ rm -rf $RPM_BUILD_ROOT
+ make install prefix=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
+ 
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/usr/man, d;
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
+--- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec	1970-01-01 01:00:00.000000000 +0100
++++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec	2015-10-31 22:49:40.754780911 +0100
+@@ -0,0 +1,108 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : Just the sftp-server executable from OpenSSH
++Name            : sftp-server
++Version         : 4.3p2
++Release         : 1
++License         : BSD
++Vendor          : Avid Technology
++Packager        : Fritz Mueller
++Group           : Applications/Internet
++Source          : openssh-4.3p2.tar.gz
++Source1         : openssl-0.9.8g.tar.gz
++Source2         : sftp-server
++Patch0          : openssl-md4_size_t.patch
++Patch1          : openssl-md5_size_t.patch
++Patch2          : openssl-sha_size_t.patch
++Patch3          : openssl-0.9.8g-lib64.patch
++Patch4          : openssl-0.9.8g-ripemd_size_t.patch
++Patch5          : openssl-0.9.8g-sec.patch
++Patch6          : openssl-0.9.8g-cryptodev.patch
++Patch7          : openssh-4.3p2-static-sftp-server.patch
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed sftp-server for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++sftp-server package contents restricted to just the files that
++are needed at run time on the target.
++
++
++%Description
++%{summary}
++
++%Prep
++%setup -T -c
++%setup -T -D -a 0
++%setup -T -D -a 1
++%patch7 -p1
++cd openssl-0.9.8g
++%patch0 -p1
++%patch1 -p1
++%patch2 -p1
++%patch3 -p1
++%patch4 -p1
++%patch5 -p1
++%patch6 -p1
++
++
++%Build
++cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g
++case $ENDIAN in
++    big)
++        XTRA_OPTS="-DB_ENDIAN"
++        ;;
++    little)
++        XTRA_OPTS="-DL_ENDIAN"
++        ;;
++    *)
++        echo "Please set the ENDIAN environment variable to big|little"
++        ;;
++esac
++case "$LINTARCH" in
++    arm|m68k*)
++       OSSL_ARCH="linux-generic32"
++       ;;
++    powerpc*)
++       OSSL_ARCH="linux-ppc"
++       ;;
++    *)
++       OSSL_ARCH="linux-$LINTARCH"
++       ;;
++esac
++./Configure $OSSL_ARCH --prefix=%{_prefix} shared no-asm $XTRA_OPTS --with-cryptodev 
++make -j`grep -c ^processor /proc/cpuinfo` build_crypto
++
++cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssh-4.3p2
++LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-zlib=$DEV_IMAGE/usr --with-ssl-dir=$RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g --with-ldflags="-L$RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g" --config-cache
++make -j`grep -c ^processor /proc/cpuinfo` sysconfdir=%{_sysconfdir}/ssh sftp-server
++
++%Install
++rm -rf $RPM_BUILD_ROOT
++cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssh-4.3p2
++make -j1 install-sftp-server sysconfdir=%{_sysconfdir}/ssh DESTDIR=$RPM_BUILD_ROOT/%{pfx}
++cd -
++
++mv $RPM_BUILD_ROOT/%{pfx}/usr/libexec/sftp-server $RPM_BUILD_ROOT/%{pfx}/usr/libexec/sftp-server.bin
++install -m0755 %{SOURCE2} $RPM_BUILD_ROOT/%{pfx}/usr/libexec/sftp-server
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p;
++' all_files.lst > rfs_files.lst
++
++%Clean
++rm -rf $RPM_BUILD_ROOT
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
+--- ltib.reference/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/skell/skell.spec	2015-10-31 22:49:40.754780911 +0100
+@@ -9,15 +9,73 @@
+ Packager        : Steve Papacharalambous/Stuart Hughes
+ Group           : System Environment/Utilities
+ Source          : %{name}-%{version}.tar.gz
++Source1         : skell-mect-dev.tar.bz2
++Source2         : rootfs_patch.tar.bz2
++Source3         : skell-local.tar.bz2
+ Patch1          : skell-1.18-dropbear_args.patch
+ Patch2          : skell-1.17-imx.patch
+ Patch3          : skell-1.16-imx-fsl-gstplugin.patch
+ Patch4          : skell-1.19-imx-fsl-gnome.patch
+ Patch5          : skell-1.19-imx-hal-messagebus.patch
+-Patch6          : skell-1.18-imx-add-ttymxc2n3.patch
+-Patch7          : skell-1.18-imx-add-ttymxc4n5.patch
++Patch6          : skell-1.18-mect-config.patch
++Patch7          : skell-1.18-1317731895.patch
++Patch8          : skell-1.18-1318337638.patch
++Patch9          : skell-1.18-1319030600.patch
++Patch10         : skell-1.18-1328695400.patch
++Patch11         : skell-1.18-1329225205.patch
++Patch12         : skell-1.18-1332342531.patch
++Patch13         : skell-1.18-1333039892.patch
++Patch14         : skell-1.18-1349102220.patch
++Patch15         : skell-1.18-1353931133.patch
++Patch16         : skell-1.18-1416848812.patch
++Patch17         : skell-1.18-1418999072.patch
++Patch18         : skell-1.18-1420825964.patch
++Patch19         : skell-1.18-1421745467.patch
++Patch20         : skell-1.18-1421838801.patch
++Patch21         : skell-1.18-1423222246.patch
++Patch22         : skell-1.18-1427985138.patch
++Patch23         : skell-1.18-1428680350.patch
++Patch24         : skell-1.18-1429172043.patch
++Patch25         : skell-1.18-1431590614.patch
++Patch26         : skell-1.18-mect-ld-xenomai-libs.patch
++Patch27         : skell-1.18-mect-remove-inittab.patch
++Patch28         : skell-1.18-mect-remove-issue.patch
++Patch29         : skell-1.18-mect-remove-rc.local.patch
++Patch30         : skell-mect-cond-safe_hmi-in-autoexec.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++# skell-1.18-mect-config.patch : prepare a skell with read only partition and data partition
++# skell-1.18-1317731895.patch  : add the environment variable for touchscreen and QT, remove rc.conf because is already created by sysconfig package
++# skell-1.18-1318337638.patch  : disable httpd and create the character device /dev/buzzer
++# skell-1.18-1328695400.patch  : add the autoexec script
++# skell-1.18-1329225205.patch  : fix the LCD calibration sync problem, add the MAC configuration at power-on
++#Patch12          : skell-1.18-1332342531.patch add S10setup script to file system 
++#Patch13          : skell-1.18-1333039892.patch modified S10setup script
++#Patch14          : skell-1.18-1349102220.patch modified S10setup script, added root password
++#Patch15          : skell-1.18-1353931133.patch modified S10setup script
++#Patch16          : skell-1.18-1355479713.patch modified S10setup to work with the autoexec logic. Added S10setup and autoexec in /usr/bin
++#Patch22          : skell-1.18-1427985138.patch remove the unecessary sleep at boot scripts and change the command to detect the usb
++#Patch25          : skell-1.18-1431590614.patch set the backglight first of all into the autoexec script
++
++
++%Package rfs
++Summary         : Trimmed skell for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++skell package contents restricted to just the files that are
++needed at run time on the target.
++
++%Package lfs
++Summary         : Skeleton for local file system.
++Group           : Applications/File
++Prefix          : %{pfx}/local
++AutoReqProv     : no
++%Description lfs
++Basic contents of the local file system.
++
+ 
+ %Description
+ %{summary}
+@@ -31,24 +89,72 @@
+ %patch5 -p1
+ %patch6 -p1
+ %patch7 -p1
++%patch8 -p1
++%patch9 -p1
++%patch10 -p1
++%patch11 -p1
++%patch12 -p1
++%patch13 -p1
++%patch14 -p1
++%patch15 -p1
++
++DESTDIR=$RPM_BUILD_ROOT/%{pfx} 
++%patch16 -p1
++%patch17 -p1
++%patch18 -p1
++%patch19 -p1
++%patch20 -p1
++%patch21 -p1
++%patch22 -p1
++%patch23 -p1
++%patch24 -p1
++%patch25 -p1
++%patch26 -p1
++%patch27 -p1
++%patch28 -p1
++%patch29 -p1
++%patch30 -p1
+ 
+ %Build
++DESTDIR=$RPM_BUILD_ROOT/%{pfx} 
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
++DESTDIR=$RPM_BUILD_ROOT/%{pfx} 
+ make DESTDIR=$RPM_BUILD_ROOT/%{pfx} install
+-if [ -z "$PKG_SKELL_WANT_TERMINFO" ]
+-then
+-    rm -rf $RPM_BUILD_ROOT/%{pfx}/usr/share/terminfo
+-fi
++
++test -z "$PKG_SKELL_WANT_TERMINFO" && rm -rf $RPM_BUILD_ROOT/%{pfx}%{_prefix}/share/terminfo
++
++sudo tar xjvf %{SOURCE1} -C $RPM_BUILD_ROOT/%{pfx}
++tar xjvf %{SOURCE2} -C $RPM_BUILD_ROOT/%{pfx}
++tar xjvf %{SOURCE3} -C $RPM_BUILD_ROOT/%{pfx}
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/boot, d;
++    \,%{pfx}%{_includedir}, d;
++    \,^%{pfx}/local, d;
++    \,^%{pfx}/\.keepme, d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+-rm -rf $RPM_BUILD_ROOT
++sudo rm -rf $RPM_BUILD_ROOT
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++%attr(0666, root, root) %dev(c, 5, 0) %{pfx}/dev/tty
++%attr(0600, root, root) %dev(c, 5, 1) %{pfx}/dev/console
++%attr(0666, root, root) %dev(c, 1, 3) %{pfx}/dev/null
++%attr(0755, root, root) %dir %{pfx}/local
+ 
+-%Files
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+ %attr(0666, root, root) %dev(c, 5, 0) %{pfx}/dev/tty
+ %attr(0600, root, root) %dev(c, 5, 1) %{pfx}/dev/console
+ %attr(0666, root, root) %dev(c, 1, 3) %{pfx}/dev/null
+-%attr(0755, root, root) %{pfx}/usr/bin/startx
+-%{pfx}/*
++%attr(0755, root, root) %dir %{pfx}/local
++
++%Files lfs
++%defattr(-,root,root)
++%{pfx}/local/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec ltib/dist/lfs-5.1/sqlite/sqlite.spec
+--- ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/sqlite/sqlite.spec	2015-10-31 22:49:40.754780911 +0100
+@@ -12,6 +12,17 @@
+ Source          : %{name}-amalgamation-%{version}.tar.gz
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed sqlite for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++sqlite package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.
+@@ -21,17 +32,26 @@
+ 
+ %Build
+ ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
+-make
++make -j`grep -c ^processor /proc/cpuinfo`
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+ make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+-find $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/ -name "*.la" | xargs rm -f
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_libdir}/pkgconfig, d;
++    \,^%{pfx}%{_includedir}, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+ 
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec ltib/dist/lfs-5.1/sysconfig/modeps.spec
+--- ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/sysconfig/modeps.spec	2015-10-31 22:49:40.754780911 +0100
+@@ -10,6 +10,17 @@
+ Group           : System Environment/Base
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed modeps for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++modeps package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -32,10 +43,18 @@
+     fi
+ fi
+ 
++cd %{_builddir}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+ 
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
+--- ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-10-31 22:49:40.758780911 +0100
+@@ -8,14 +8,25 @@
+ Vendor		: Freescale
+ Packager	: Stuart Hughes
+ Group		: System Environment/Base
++Source          : inittab
+ BuildRoot	: %{_tmppath}/%{name}
+ Prefix		: %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed sysconfig for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++sysconfig package contents restricted to just the files that
++are needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+ 
+ %Prep
+-#%setup
+ 
+ %Build
+ 
+@@ -63,6 +74,36 @@
+ then
+     boa=boa
+ fi
++if [ "$SYSCFG_START_VSFTPD" = "y" ]
++then
++    vsftpd=vsftpd
++fi
++if [ "$SYSCFG_START_TELNET" = "y" ]
++then
++    telnetd=telnetd
++	mkdir -p $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/init.d
++cat <<'EOF' > $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/init.d/telnetd
++#!/bin/sh
++
++if [ ! -x /usr/sbin/telnetd ]
++then
++	exit 0
++fi
++
++if [ "$1" = "stop" -o "$1" = "restart" ]
++then
++	echo "Stopping the telnet daemon: "
++	killall telnetd
++fi
++
++if [ "$1" = "start" -o "$1" = "restart" ]
++then
++	echo "Starting the telnet daemon: "
++	/usr/sbin/telnetd
++fi
++EOF
++	chmod +x $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/init.d/telnetd
++fi
+ if [ "$SYSCFG_SETTIME" = "y" ]
+ then
+     settime=settime
+@@ -91,14 +132,24 @@
+ then
+         fslgnome=fslgnome
+ fi
++if [ "$SYSCFG_START_AUTOEXEC" = "y" ]
++then
++        autoexec=autoexec
++	sdcheck=sdcheck
++	usbmode=usbmode
++fi
+ 
++if [ "$SYSCFG_START_S10SETUP" = "y" ]
++then
++        S10setup=S10setup
++fi
+ cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc.conf
+-all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems syslog network inetd portmap dropbear sshd boa smb dhcpd settime fslgnome watchdog bluetooth gtk2 pango"
+-all_services_r="pango gtk2 bluetooth watchdog fslgnome settime dhcpd smb boa sshd dropbear portmap inetd network syslog filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
++all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems sdcheck syslog network inetd portmap dropbear sshd boa vsftpd smb dhcpd settime fslgnome watchdog bluetooth gtk2 pango telnetd usbmode S10setup autoexec"
++all_services_r="autoexec S10setup usbmode telnetd pango gtk2 bluetooth watchdog fslgnome settime dhcpd smb boa vsftpd sshd dropbear portmap inetd network syslog sdcheck filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
+ 
+-cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $syslog $network $inetd $portmap $dropbear $sshd $boa $smb $dhcpd $settime $fslgnome $watchdog $bluetooth $gtk2 $pango"
++cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $sdcheck $usbmode $autoexec $syslog $network $inetd $portmap $dropbear $sshd $boa $vsftpd $smb $dhcpd $settime $fslgnome $watchdog $bluetooth $gtk2 $pango $telnetd $S10setup"
+ 
+-cfg_services_r="$pango $gtk2 $bluetooth $watchdog $fslgnome $settime $dhcpd $smb $boa $sshd $dropbear $portmap $inetd $network $syslog filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys"
++cfg_services_r="$autoexec $S10setup $usbmode $pango $gtk2 $bluetooth $watchdog $fslgnome $settime $dhcpd $smb $boa $vsftpd $sshd $dropbear $portmap $inetd $network $syslog $sdcheck filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys $telnetd"
+ 
+ export HOSTNAME="${SYSCFG_HOSTNAME:-$PLATFORM}"
+ export NTP_SERVER="$SYSCFG_NTP_SERVER"
+@@ -154,61 +205,7 @@
+     else
+ 	sys_login="::respawn:-/bin/sh"
+     fi
+-
+-    cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc_mxc.S
+-#!/bin/bash
+-#
+-if grep -sq ttymxc0 /proc/cmdline; then
+-	/sbin/getty -L ttymxc0 115200 vt100
+-elif grep -sq ttymxc1 /proc/cmdline; then
+-	/sbin/getty -L ttymxc1 115200 vt100
+-elif grep -sq ttymxc2 /proc/cmdline; then
+-	/sbin/getty -L ttymxc2 115200 vt100
+-elif grep -sq ttymxc3 /proc/cmdline; then
+-	/sbin/getty -L ttymxc3 115200 vt100
+-else
+-	sleep 100000
+-fi
+-EOF
+-chmod +x $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc_mxc.S
+-
+-cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc_gpu.S
+-#!/bin/bash
+-CPUREV=\$(cat /proc/cpuinfo | grep Revision | awk '{print \$3}' | awk '{print substr(\$0,1,2)}')
+-FILEVG=/usr/lib/libOpenVG.so
+-FILEVG3D=/usr/lib/libOpenVG_3D.so
+-FILEVG355=/usr/lib/libOpenVG_355.so
+-if  [ -e \$FILEVG3D ] && [ -e \$FILEVG355 ]
+-then
+-  if  [ \$CPUREV == "61" ] || [ \$CPUREV == "63" ] || [ \$CPUREV == "60" ] && [ -e  \$FILEVG ]
+-  then
+-        rm -f \$FILEVG
+-  fi
+-  if [ \$CPUREV == "61" ]
+-  then
+-        ln -s \$FILEVG3D \$FILEVG
+-  fi
+-  if [ \$CPUREV == "63" ]
+-  then
+-        ln -s \$FILEVG355 \$FILEVG
+-  fi
+-  if [ \$CPUREV == "60" ]
+-  then
+-        ln -s \$FILEVG355 \$FILEVG
+-  fi
+-fi
+-EOF
+-chmod +x $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc_gpu.S
+-
+-    cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/inittab
+-# see busybox-1.00rc2/examples/inittab for more examples
+-::sysinit:/etc/rc.d/rcS
+-$sys_login
+-::sysinit:/etc/rc.d/rc_gpu.S
+-::ctrlaltdel:/sbin/reboot
+-::shutdown:/etc/rc.d/rcS stop
+-::restart:/sbin/init
+-EOF
++    install -m 644 %{SOURCE0} $RPM_BUILD_ROOT/%{pfx}/etc/inittab
+ else
+     # SysVInit
+     if [ "$SYSCFG_WANT_LOGIN_TTY" = "y" ]
+@@ -242,18 +239,20 @@
+ #
+ # This script will be executed *after* all the other init scripts.
+ # You can put your own initialization stuff in here
++
++# Rebuild the RPM db on target at first boot.
+ if [ -x "/usr/bin/rpm" -a -e "/tmp/ltib" ]
+ then
+-    echo "rebuilding rpm database"
++    echo "rebuilding the RPM database"
+     rm -rf /tmp/ltib
+     rpm --rebuilddb
+ fi
+ 
+-# fix up permissions
+-if [ -d /home/user ]
+-then
+-    chown -R user.user /home/user
+-fi
++# Fix the user home directory permissions.
++test -d /home/user && chown -R user.user /home/user
++
++# Fix the root home directory permissions.
++test -d /local/flash/root && chmod 0755 /local/flash/root
+ 
+ # Add nodes when running under the hypervisor and static devices
+ if [ -r /sys/class/misc/fsl-hv/dev -a ! -r /dev/fsl-hv ]
+@@ -287,30 +286,34 @@
+ fi
+ 
+ for i in 0 1 2; do
+-    if [ -e /sys/class/graphics/fb$i ]; then
+-        chmod 0666 /sys/class/graphics/fb$i/pan
+-    fi
++	test -e /sys/class/graphics/fb$i && chmod 0666 /sys/class/graphics/fb$i/pan
+ done
+-
+ EOF
+-chmod +x $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc.local
++chmod a+x $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc.local
+ 
+ cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/issue
+-$( gcc --version | grep 'gcc')
++
++$(gcc --version | grep gcc)
+ root filesystem built on $(date -R)
+-Freescale Semiconductor, Inc.
++MECT s.r.l. http://www.mect.it/
+ 
+ EOF
+ 
+ # The kernel attempts to run /init (not /sbin/init!) from initramfs images
+-if [ "$SYSCFG_DEPLOYMENT_STYLE" = "INITRAMFS" ]
+-then
+-    ln -s /sbin/init $RPM_BUILD_ROOT/%{pfx}/init
+-fi
++test "$SYSCFG_DEPLOYMENT_STYLE" = "INITRAMFS" && ln -s /sbin/init $RPM_BUILD_ROOT/%{pfx}/init
++
++cd %{_builddir}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++	p;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec ltib/dist/lfs-5.1/texinfo/texinfo.spec
+--- ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/texinfo/texinfo.spec	2015-10-31 22:49:40.758780911 +0100
+@@ -31,7 +31,7 @@
+ else
+               ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
+ fi
+-make
++make -j`grep -c ^processor /proc/cpuinfo`
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/tslib/tslib.spec ltib/dist/lfs-5.1/tslib/tslib.spec
+--- ltib.reference/dist/lfs-5.1/tslib/tslib.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/tslib/tslib.spec	2015-10-31 22:49:40.758780911 +0100
+@@ -13,9 +13,21 @@
+ Patch2          : tslib-1.0-mx-pre_gen-2.patch
+ Patch3          : tslib-1.0-mx-pre_config.patch
+ Patch4          : tslib-1.0-glibc-2.7.x-open-O_CREAT-lack-parameter.patch
+-Patch5          : tslib-1.0-change-input-raw.c-to-support-multi-touch.patch
++Patch5          : tslib-1.0-1394538963.patch
++Patch6          : tslib-1.0-1417198155.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed tslib for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++tslib package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -35,13 +47,14 @@
+ if [ `echo ${LIBC_VERSION} | cut -d '.' -f 1` -eq 2 -a `echo ${LIBC_VERSION} | cut -d '.' -f 2` -ge 7 ]; then
+ %patch4 -p1
+ fi
+-%patch5 -p1
+ 
+ touch aclocal.m4
+ sleep 1
+ find . -name Makefile.in | xargs touch
+ sleep 1
+ touch configure
++%patch5 -p1
++%patch6 -p1
+ 
+ %Build
+ #sed -i s/AS_HELP_STRING/AC_HELP_STRING/ configure.ac
+@@ -54,16 +67,26 @@
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+ make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+-rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
+-rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/ts/*.la
++
+ # Remove unused platform binaries
+ for so in arctic2.so collie.so corgi.so h3600.so mk712.so; do
+ 	rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/usr/lib/ts/$so
+ done
+ 
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_libdir}/pkgconfig, d;
++    \,^%{pfx}%{_includedir}, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl
+--- ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl	2015-10-31 22:49:40.758780911 +0100
+@@ -18,7 +18,8 @@
+     make HOSTCC="$BUILDCC" CROSS_COMPILE=$TOOLCHAIN_PREFIX O=$BUILD_DIR distclean
+ fi
+ make HOSTCC="$BUILDCC" CROSS_COMPILE=$TOOLCHAIN_PREFIX O=$BUILD_DIR $PKG_U_BOOT_CONFIG_TYPE
+-make HOSTCC="$BUILDCC" HOSTSTRIP="$BUILDSTRIP" \
++make -j`grep -c ^processor /proc/cpuinfo` \
++     HOSTCC="$BUILDCC" HOSTSTRIP="$BUILDSTRIP" \
+      CROSS_COMPILE=$TOOLCHAIN_PREFIX $PKG_U_BOOT_BUILD_ARGS \
+      O=$BUILD_DIR all
+ 
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/udev/udev.spec ltib/dist/lfs-5.1/udev/udev.spec
+--- ltib.reference/dist/lfs-5.1/udev/udev.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/udev/udev.spec	2015-10-31 22:49:40.758780911 +0100
+@@ -25,12 +25,9 @@
+ Patch13         : udev-117-mxc-ipu-dev-privilege.patch
+ Patch14         : udev-117-mxc-vpu.patch
+ Patch15         : udev-117-chg-to-attrs.patch
+-Patch16         : udev-117-add_p1003_egalax.patch
+-Patch17         : udev-117-add-galcore-and-asrc.patch
+-Patch18	        : udev-117-change-mxc-galcore-to-galcore.patch
+-
+ BuildRoot	: %{_tmppath}/%{name}
+ Prefix		: %{pfx}
++AutoReqProv     : no
+ 
+ # List of extra things to build, which must be
+ # passed to make at build time and install time.
+@@ -38,6 +35,16 @@
+ # it once.
+ %define extras "extras/volume_id extras/path_id extras/usb_id extras/firmware"
+ 
++
++%Package rfs
++Summary         : Trimmed udev for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++udev package contents restricted to just the files that are
++needed at run time on the target.
++
++
+ %Description
+ %{summary}
+ 
+@@ -59,17 +66,14 @@
+ %patch13 -p1
+ %patch14 -p1
+ %patch15 -p1
+-%patch16 -p1
+-%patch17 -p1
+-%patch18 -p1
+ 
+ %Build
+ make EXTRAS=%{extras}
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-make install EXTRAS=%{extras} DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+-install -m 644 etc/udev/packages/40-alsa.rules $RPM_BUILD_ROOT/%{pfx}/etc/udev/rules.d
++make install EXTRAS=%{extras} DESTDIR=$RPM_BUILD_ROOT%{pfx}
++install -m 644 etc/udev/packages/40-alsa.rules $RPM_BUILD_ROOT%{pfx}/etc/udev/rules.d
+ 
+ # To avoid duplication removed as skell installs this and all the
+ # other init scripts.
+@@ -78,12 +82,12 @@
+ 
+ if [ "$PKG_UDEV_WANT_IMX" = "y" ]
+ then
+-	install -m 644 etc/udev/ltib/??-imx*.rules $RPM_BUILD_ROOT/%{pfx}/etc/udev/rules.d
++	install -m 644 etc/udev/ltib/??-imx*.rules $RPM_BUILD_ROOT%{pfx}/etc/udev/rules.d
+ fi
+ 
+ if [ "$PKG_UDEV_WANT_AUTOMOUNT" = "y" ]
+ then
+-	install -m 644 etc/udev/ltib/65-automount.rules $RPM_BUILD_ROOT/%{pfx}/etc/udev/rules.d
++	install -m 644 etc/udev/ltib/65-automount.rules $RPM_BUILD_ROOT%{pfx}/etc/udev/rules.d
+ fi
+ 
+ if [ "$PKG_UDEV_WANT_NON_RAID" = "y" ]
+@@ -95,13 +99,23 @@
+ 	# capacity incorrectly.
+ 
+ 	perl -pi -e 's/vol_id /vol_id --skip-raid /' \
+-		$RPM_BUILD_ROOT/%{pfx}/etc/udev/rules.d/*
++		$RPM_BUILD_ROOT%{pfx}/etc/udev/rules.d/*
+ fi
+ 
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_libdir}/pkgconfig, d;
++    \,^%{pfx}%{_mandir}, d;
++    \,^%{pfx}%{_includedir}, d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/unzip/unzip.spec ltib/dist/lfs-5.1/unzip/unzip.spec
+--- ltib.reference/dist/lfs-5.1/unzip/unzip.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/unzip/unzip.spec	2015-10-31 22:49:40.762780911 +0100
+@@ -12,6 +12,17 @@
+ Source          : unzip552.tar.gz
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed unzip for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++unzip package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -27,9 +38,18 @@
+ rm -rf $RPM_BUILD_ROOT
+ make install prefix=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
+ 
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/usr/man, d;
++' all_files.lst > rfs_files.lst
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
+--- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	1970-01-01 01:00:00.000000000 +0100
++++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	2015-10-31 22:49:40.762780911 +0100
+@@ -0,0 +1,52 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : Data for the USB Modeswitch tool
++Name            : usb-modeswitch-data
++Version         : 20150627
++Release         : 1
++License         : LGPL
++Vendor          : MECT
++Packager        : Mihai Lazarescu
++Group           : Applications/System
++Source          : %{name}-%{version}.tar.bz2
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed down to just the run time files
++Group           : Applications/System
++AutoReqProv     : no
++%Description rfs
++%name} package contents trimmed to just the files
++that are needed at run time on the target.
++
++
++%Description
++%{summary}.
++
++%Prep
++%setup
++
++%Build
++
++%Install
++rm -rf $RPM_BUILD_ROOT
++make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/%{_lib}/udev, d;
++' all_files.lst > rfs_files.lst
++
++%Clean
++rm -rf $RPM_BUILD_ROOT
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
+--- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	1970-01-01 01:00:00.000000000 +0100
++++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	2015-10-31 23:53:59.462695526 +0100
+@@ -0,0 +1,56 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : USB Modeswitch gets mobile broadband cards in operational mode
++Name            : usb-modeswitch
++Version         : 2.2.5
++Release         : 1
++License         : LGPL
++Vendor          : MECT
++Packager        : Mihai Lazarescu
++Group           : Applications/System
++Source          : %{name}-%{version}.tar.bz2
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed down to just the run time files
++Group           : Applications/System
++Requires        : usb-modeswitch-data
++AutoReqProv     : no
++%Description rfs
++%name} package contents trimmed to just the files
++that are needed at run time on the target.
++
++
++%Description
++%{summary}.
++
++%Prep
++%setup
++
++%Build
++make
++
++%Install
++rm -rf $RPM_BUILD_ROOT
++# Target install-static does not depend on external Tcl interpreter/libs.
++make install-static DESTDIR=$RPM_BUILD_ROOT/%{pfx}
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/%{_lib}/udev, d;
++    \,^%{pfx}%{_mandir}, d;
++' all_files.lst > rfs_files.lst
++
++%Clean
++rm -rf $RPM_BUILD_ROOT
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec ltib/dist/lfs-5.1/xenomai/xenomai.spec
+--- ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec	1970-01-01 01:00:00.000000000 +0100
++++ ltib/dist/lfs-5.1/xenomai/xenomai.spec	2015-10-31 22:49:40.762780911 +0100
+@@ -0,0 +1,60 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : xenomai - Real Time extension for the Linux kernel
++Name            : xenomai
++Version         : 2.6.0
++Release         : 1
++License         : GPL
++Vendor          : Freescale
++Packager        : Mect
++Group           : System Environment
++Source          : %{name}-%{version}.tar.bz2
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed xenomai for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++xenomai package contents restricted to just the files that
++are needed at run time on the target.
++
++
++%Description
++%{summary}
++
++#The Prep target is performed together with the kernel if kernel with ipipe is selected.
++#  %{name}-%{version}
++
++%Prep
++%setup
++./configure CFLAGS="-march=armv5te" LDFLAGS="-march=armv5te" --build=%{_build} --host=$CFGHOST
++
++%Build
++make DESTDIR=$RPM_BUILD_ROOT%{pfx} all
++
++%Install
++rm -rf $RPM_BUILD_ROOT
++make DESTDIR=$RPM_BUILD_ROOT%{pfx} install
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_prefix}/xenomai/share/doc, d;
++    \,^%{pfx}%{_prefix}/xenomai/share/man, d;
++    \,^%{pfx}%{_prefix}/xenomai/include, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
++
++%Clean
++rm -rf $RPM_BUILD_ROOT
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zip30/zip30.spec ltib/dist/lfs-5.1/zip30/zip30.spec
+--- ltib.reference/dist/lfs-5.1/zip30/zip30.spec	1970-01-01 01:00:00.000000000 +0100
++++ ltib/dist/lfs-5.1/zip30/zip30.spec	2015-10-31 22:49:40.762780911 +0100
+@@ -0,0 +1,56 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : A file compression utility.
++Name            : zip
++Version         : 3.0.0
++Release         : 0
++License         : BSD
++Vendor          : Mect srl
++Packager        : Monica Donno
++Group           : Applications/File
++Source          : %{name}-%{version}.tar.bz2
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed zip for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++zip package contents restricted to just the files that are
++needed at run time on the target.
++
++
++%Description
++%{summary}
++
++%Prep
++%setup
++
++%Build
++make -f unix/Makefile generic_gcc
++
++
++%Install
++rm -rf $RPM_BUILD_ROOT
++make -f unix/Makefile install PREFIX=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
++$TOOLCHAIN_PATH/bin/${TOOLCHAIN_PREFIX}strip --strip-unneeded $RPM_BUILD_ROOT/%{pfx}%{_prefix}/bin/zip
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p
++' all_files.lst > rfs_files.lst
++
++%Clean
++rm -rf $RPM_BUILD_ROOT
++
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zlib/zlib.spec ltib/dist/lfs-5.1/zlib/zlib.spec
+--- ltib.reference/dist/lfs-5.1/zlib/zlib.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/zlib/zlib.spec	2015-10-31 22:49:40.762780911 +0100
+@@ -12,6 +12,17 @@
+ Patch1          : zlib-1.2.3-arflags-1.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed zlib for root file system requirements.
++Group           : Applications/File
++AutoReqProv     : no
++%Description rfs
++zlib package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -30,16 +41,25 @@
+ 
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+-mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}
+-make -f Makefile.shared install prefix=${RPM_BUILD_ROOT}/%{pfx}/%{_prefix}
+-make -f Makefile.static install prefix=${RPM_BUILD_ROOT}/%{pfx}/%{_prefix}
++mkdir -p $RPM_BUILD_ROOT%{pfx}%{_prefix}
++make -f Makefile.shared install prefix=${RPM_BUILD_ROOT}%{pfx}%{_prefix}
++make -f Makefile.static install prefix=${RPM_BUILD_ROOT}%{pfx}%{_prefix}
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_mandir}, d;
++    \,^%{pfx}%{_includedir}, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
+ 
+-%Files
++%Files -f all_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
+ 
+ 
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)

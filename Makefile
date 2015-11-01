@@ -3,6 +3,10 @@ BUILD_RELEASE = 6.6rc0
 BUILD_TARGET = TPAC1007_480x272
 BUILD_QTVERSION = $(QT_VERSION)
 BUILD_QWTVERSION = $(QWT_VERSION)
+
+QT_VERSION = 4.8.5
+QWT_VERSION = 6.1.0
+
 # Name of the root file system version file
 RFS_VERSION_FILE = rootfs_version
 
@@ -17,6 +21,8 @@ HOST_NAME = "development.localdomain"
 FTPDIR = $(CURDIR)/src
 # LTIB is installed here.
 LTIBDIR = $(CURDIR)/ltib
+# LTIB (config and dist) before MECT patches is saved here.
+LTIBDIR_REF = $(CURDIR)/ltib.reference
 # LTIB rootfs is created here.
 LTIB_RFSDIR = $(LTIBDIR)/rootfs
 # LTIB specs are installed here.
@@ -40,57 +46,64 @@ TMPRPMDIR = /tmp/rpm-$(USER)
 # Extension of the MD5 checksums for the downloads.
 MD5EXT = md5
 
-# Packages with USB serial kernel modules.
+# Packages for USB serial kernel modules.
 #
 
-USBSERIAL_USBSERIAL := kernel-dev-usbserial-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_AIRCABLE := kernel-dev-usbserial-aircable-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_ARK3116 := kernel-dev-usbserial-ark3116-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_BELKIN := kernel-dev-usbserial-belkin_sa-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_CH341 := kernel-dev-usbserial-ch341-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_CP210X := kernel-dev-usbserial-cp210x-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_CYBERJACK := kernel-dev-usbserial-cyberjack-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_CYPRESS_M8 := kernel-dev-usbserial-cypress_m8-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_DEBUG := kernel-dev-usbserial-debug-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_DIGI_ACCELEPORT := kernel-dev-usbserial-digi_acceleport-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_EMPEG := kernel-dev-usbserial-empeg-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_FTDI_SIO := kernel-dev-usbserial-ftdi_sio-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_FUNSOFT := kernel-dev-usbserial-funsoft-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_GARMIN_GPS := kernel-dev-usbserial-garmin_gps-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_HP4X := kernel-dev-usbserial-hp4x-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_IO_EDGEPORT := kernel-dev-usbserial-io_edgeport-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_IO_TI := kernel-dev-usbserial-io_ti-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_IPAQ := kernel-dev-usbserial-ipaq-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_IPW := kernel-dev-usbserial-ipw-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_IR := kernel-dev-usbserial-ir-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_IUU_PHOENIX := kernel-dev-usbserial-iuu_phoenix-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_KEYSPAN := kernel-dev-usbserial-keyspan-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_KEYSPAN_PDA := kernel-dev-usbserial-keyspan_pda-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_KL5KUSB105 := kernel-dev-usbserial-kl5kusb105-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_KOBIL_SCT := kernel-dev-usbserial-kobil_sct-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_MCT_U232 := kernel-dev-usbserial-mct_u232-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_MOS7720 := kernel-dev-usbserial-mos7720-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_MOS7840 := kernel-dev-usbserial-mos7840-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_MOTO_MODEM := kernel-dev-usbserial-moto_modem-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_NAVMAN := kernel-dev-usbserial-navman-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_OMNINET := kernel-dev-usbserial-omninet-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_OPTICON := kernel-dev-usbserial-opticon-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_OPTION := kernel-dev-usbserial-option-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_OTI6858 := kernel-dev-usbserial-oti6858-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_PL2303 := kernel-dev-usbserial-pl2303-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_QCAUX := kernel-dev-usbserial-qcaux-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_QCSERIAL := kernel-dev-usbserial-qcserial-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_SAFE_SERIAL := kernel-dev-usbserial-safe_serial-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_SIEMENS_MPI := kernel-dev-usbserial-siemens_mpi-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_SIERRA := kernel-dev-usbserial-sierra-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_SPCP8X5 := kernel-dev-usbserial-spcp8x5-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_SYMBOLSERIAL := kernel-dev-usbserial-symbolserial-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_TI_3410_5052 := kernel-dev-usbserial-ti_3410_5052-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_VISOR := kernel-dev-usbserial-visor-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_VIVOPAY := kernel-dev-usbserial-vivopay-serial-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_WHITEHEAT := kernel-dev-usbserial-whiteheat-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_WWAN := kernel-dev-usbserial-wwan-2.6.35.3-imx_1.1.0.arm.rpm
-USBSERIAL_ZIO := kernel-dev-usbserial-zio-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_USBSERIAL := kernel-dev-usbserial-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_AIRCABLE := kernel-dev-usbserial-aircable-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_ARK3116 := kernel-dev-usbserial-ark3116-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_BELKIN := kernel-dev-usbserial-belkin_sa-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_CH341 := kernel-dev-usbserial-ch341-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_CP210X := kernel-dev-usbserial-cp210x-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_CYBERJACK := kernel-dev-usbserial-cyberjack-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_CYPRESS_M8 := kernel-dev-usbserial-cypress_m8-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_DEBUG := kernel-dev-usbserial-debug-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_DIGI_ACCELEPORT := kernel-dev-usbserial-digi_acceleport-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_EMPEG := kernel-dev-usbserial-empeg-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_FTDI_SIO := kernel-dev-usbserial-ftdi_sio-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_FUNSOFT := kernel-dev-usbserial-funsoft-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_GARMIN_GPS := kernel-dev-usbserial-garmin_gps-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_HP4X := kernel-dev-usbserial-hp4x-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_IO_EDGEPORT := kernel-dev-usbserial-io_edgeport-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_IO_TI := kernel-dev-usbserial-io_ti-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_IPAQ := kernel-dev-usbserial-ipaq-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_IPW := kernel-dev-usbserial-ipw-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_IR := kernel-dev-usbserial-ir-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_IUU_PHOENIX := kernel-dev-usbserial-iuu_phoenix-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_KEYSPAN := kernel-dev-usbserial-keyspan-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_KEYSPAN_PDA := kernel-dev-usbserial-keyspan_pda-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_KL5KUSB105 := kernel-dev-usbserial-kl5kusb105-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_KOBIL_SCT := kernel-dev-usbserial-kobil_sct-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_MCT_U232 := kernel-dev-usbserial-mct_u232-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_MOS7720 := kernel-dev-usbserial-mos7720-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_MOS7840 := kernel-dev-usbserial-mos7840-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_MOTO_MODEM := kernel-dev-usbserial-moto_modem-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_NAVMAN := kernel-dev-usbserial-navman-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_OMNINET := kernel-dev-usbserial-omninet-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_OPTICON := kernel-dev-usbserial-opticon-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_OPTION := kernel-dev-usbserial-option-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_OTI6858 := kernel-dev-usbserial-oti6858-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_PL2303 := kernel-dev-usbserial-pl2303-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_QCAUX := kernel-dev-usbserial-qcaux-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_QCSERIAL := kernel-dev-usbserial-qcserial-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_SAFE_SERIAL := kernel-dev-usbserial-safe_serial-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_SIEMENS_MPI := kernel-dev-usbserial-siemens_mpi-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_SIERRA := kernel-dev-usbserial-sierra-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_SPCP8X5 := kernel-dev-usbserial-spcp8x5-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_SYMBOLSERIAL := kernel-dev-usbserial-symbolserial-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_TI_3410_5052 := kernel-dev-usbserial-ti_3410_5052-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_VISOR := kernel-dev-usbserial-visor-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_VIVOPAY := kernel-dev-usbserial-vivopay-serial-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_WHITEHEAT := kernel-dev-usbserial-whiteheat-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_WWAN := kernel-dev-usbserial-wwan-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_ZIO := kernel-dev-usbserial-zio-2.6.35.3-imx_1.1.0.arm.rpm
+
+# Packages for USB 3G modems
+#
+
+RFSPKG_USB3G_MODESWITCH := usb-modeswitch-rfs-2.2.5-1.arm.rpm
+RFSPKG_USB3G_MODESWITCH_DATA := usb-modeswitch-data-rfs-20150627-1.arm.rpm
+RFSPKG_USB3G_LIBUSB1 := libusb1-rfs-1.0.20-1.arm.rpm
 
 # Package list for creating the root file system for various targets.
 #
@@ -113,6 +126,7 @@ RFSPKGS_TPAC1007_480x272 := \
 	kernel-rfs-2.6.35.3-imx_1.1.0.arm.rpm \
 	libsocketcan-rfs-0.0.8-0.arm.rpm \
 	libtermcap-rfs-2.0.8-31_1.arm.rpm \
+	libusb1-rfs-1.0.20-1.arm.rpm \
 	libusb-rfs-0.1.8-1.arm.rpm \
 	lzo-rfs-2.03-0.arm.rpm \
 	merge-rfs-0.1-1.arm.rpm \
@@ -130,11 +144,16 @@ RFSPKGS_TPAC1007_480x272 := \
 	sysconfig-rfs-1.2-5.arm.rpm \
 	tslib-rfs-1.0-3.arm.rpm \
 	udev-rfs-117-5.arm.rpm \
+	usb-modeswitch-data-rfs-20150627-1.arm.rpm \
+	usb-modeswitch-rfs-2.2.5-1.arm.rpm \
 	xenomai-rfs-2.6.0-1.arm.rpm \
 	zip-rfs-3.0.0-0.arm.rpm \
 	zlib-rfs-1.2.3-2.arm.rpm \
-	$(USBSERIAL_PL2303) \
-	$(USBSERIAL_USBSERIAL) \
+	$(RFSPKG_USBSERIAL_PL2303) \
+	$(RFSPKG_USBSERIAL_USBSERIAL) \
+	$(RFSPKG_USB3G_MODESWITCH) \
+	$(RFSPKG_USB3G_MODESWITCH_DATA) \
+	$(RFSPKG_USB3G_LIBUSB1) \
 
 RFSPKGS_TPAC1007_480x272 := $(RFSPKGS_TPAC1007_480x272:%=$(RPMDIR)/%)
 
@@ -175,40 +194,15 @@ LTIB_UBUNTU_URL_PATHCH = ltib-ubuntu12.04-url.patch
 # LTIB fix /usr/include/sys for i386 architectures for Ubuntu 12.04 (MECT patch)
 LTIB_UBUNTU_INCLUDE_SYS_PATHCH = ltib-ubuntu12.04-include-sys.patch
 
-# LTIB set configuration (MECT patch)
-LTIB_CONFIG_PATCH = ltib-config.patch
+# LTIB fix configuration and specs (MECT patches)
+LTIB_MECT_CONFIG_PATCH = ltib-mect-config.patch
+LTIB_MECT_SPECS_PATCH = ltib-mect-specs.patch
 
 # LTIB fix deprecated warning and missing zlib (MECT patch)
 LTIB_DEPR_AND_ZLIB_PATCH = ltib-deprecated+zlib.patch
 
 # LTIB change wget options for download and log (MECT patch)
 LTIB_WGET_OPTIONS_PATCH = ltib-wget-retry.patch
-
-# LTIB rpm-fs spec file (MECT patch)
-LTIB_RPM_FS_SPEC_PATCH = rpm-fs-mect-spec.patch
-
-# LTIB bison spec file (MECT patch)
-LTIB_BISON_SPEC_PATCH = bison-mect-spec.patch
-
-# LTIB texinfo spec file (MECT patch)
-LTIB_TEXINFO_SPEC_PATCH = texinfo-mect-spec.patch
-
-# LTIB pkgconfig spec file (MECT patch)
-LTIB_PKGCONFIG_SPEC_PATCH = pkgconfig-mect-spec.patch
-
-# LTIB git spec file (MECT patch)
-LTIB_GIT_SPEC_PATCH = git-mect-spec.patch
-
-# LTIB fix u-boot build (MECT patch)
-LTIB_U_BOOT_SPEC_PATCH = u-boot-spec-patch-link-fix-1418123257.patch
-LTIB_U_BOOT_TEMPLATE_SPEC_PATCH = u-boot-2.6.35_1.1.0-spec-template-mect.patch
-
-# LTIB fix configuration merge into root file system (MECT patch)
-LTIB_MERGE_PATCH = merge-mect-spec.patch
-
-# LTIB fix kernel spec to include MECT changes and Xenomai (MECT patch)
-LTIB_KERNEL_SPEC_PATCH = kernel-2.6.35-spec-mect-xenomai.patch
-LTIB_KERNEL_TEMPLATE_SPEC_PATCH = kernel-2.6.35-spec-template-mect.patch
 
 # LTIB set MECT PPP (MECT patch)
 LTIB_MECT_PPP_PATCH = ltib-mect-ppp-url.patch
@@ -220,132 +214,12 @@ URL_LTIB_UBUNTU_12_04_PATCH = $(FTPURL)/$(LTIB_UBUNTU_12_04_PATCH)
 # LTIB Ubuntu 12.04 patch bundle fix /usr/include/sys for i386 architectures (MECT patch)
 LTIB_UBUNTU_12_04_PATCH_INCLUDE_SYS_PATCH = ubuntu-ltib-patch-include-sys-i386.patch
 
-# LTIB include patch elftosb-missing-lm.patch in elftosb spec file (MECT patch)
-LTIB_ELFTOSB_SPEC_PATCH = elftosb-spec-patch1.patch
-
-# SFTP server
-LTIB_SFTP_SERVER_SPEC_PATCH = sftp-server-mect-spec.patch
-
-# libsocketcan
-LTIB_LIBSOCKETCAN_SPEC_PATCH = libsocketcan-mect-spec.patch
-
-# qwt
-QWT_VERSION = 6.1.0
-LTIB_QWT_SPEC_PATCH = qwt-mect-6.1.0-spec.patch
-
-# LTIB fix boot_stream spec (MECT patch)
-LTIB_BOOT_STREAM_SPEC_PATCH = boot_stream-mect-spec.patch
-
-# LTIB MECT patch to fix linking of base_libs
-LTIB_BASE_LIBS_SPEC_PATCH = base_libs-mect-spec.patch
-
-# LTIB boa spec file (MECT patch)
-LTIB_BOA_SPEC_PATCH = boa-mect-spec.patch
-
 # LTIB qt spec file (MECT patch)
 QT_INSTALL_DIR = /opt/Trolltech
-QT_VERSION = 4.8.5
-LTIB_QT_SPEC_PATCH = qt-embedded-mect-4.8.5-spec.patch
 LTIB_QT_ARCH = qt-everywhere-opensource-src-4.8.5.tar.gz
 LTIB_QT_PATCH1 = qt-everywhere-opensource-src-4.8.5-1394522957.patch
 LTIB_QT_PATCH2 = qt-everywhere-opensource-src-4.8.5-1420823826.patch
 LTIB_QT_PATCH3 = qt-everywhere-opensource-src-4.8.5-1420823825.patch
-
-# LTIB iproute spec file (MECT patch)
-LTIB_IPROUTE_SPEC_PATCH = iproute-mect-spec.patch
-
-# LTIB skell spec file (MECT patch)
-LTIB_SKELL_SPEC_PATCH = skell-mect-spec.patch
-
-# LTIB sysconfig spec file (MECT patch)
-LTIB_SYSCONFIG_SPEC_PATCH = sysconfig-mx-mect-spec.patch
-
-# LTIB xenomai spec file (MECT patch)
-LTIB_XENOMAI_SPEC_PATCH = xenomai-mect-spec.patch
-
-# LTIB zip30 spec file (MECT patch)
-LTIB_ZIP30_SPEC_PATCH = zip30-mect-spec.patch
-
-# LTIB busybox spec file (MECT patch)
-LTIB_BUSYBOX_SPEC_PATCH = busybox-mect-spec.patch
-
-# LTIB bzip2 spec file (MECT patch)
-LTIB_BZIP2_SPEC_PATCH = bzip2-mect-spec.patch
-
-# LTIB cantest spec file (MECT patch)
-LTIB_CANTEST_SPEC_PATCH = cantest-mect-spec.patch
-
-# LTIB dhcp spec file (MECT patch)
-LTIB_DHCP_SPEC_PATCH = dhcp-mect-spec.patch
-
-# LTIB dropbear spec file (MECT patch)
-LTIB_DROPBEAR_SPEC_PATCH = dropbear-mect-spec.patch
-
-# LTIB e2fsprogs spec file (MECT patch)
-LTIB_E2FSPROGS_SPEC_PATCH = e2fsprogs-mect-spec.patch
-
-# LTIB expat spec file (MECT patch)
-LTIB_EXPAT_SPEC_PATCH = expat-mect-spec.patch
-
-# LTIB fake-provides spec file (MECT patch)
-LTIB_FAKE_SPEC_PATCH = fake-provides-mect-spec.patch
-
-# LTIB fontconfig spec file (MECT patch)
-LTIB_FONTCONFIG_SPEC_PATCH = fontconfig-mect-spec.patch
-
-# LTIB freetype spec file (MECT patch)
-LTIB_FREETYPE_SPEC_PATCH = freetype-mect-spec.patch
-
-# LTIB glib2 spec file (MECT patch)
-LTIB_GLIB2_SPEC_PATCH = glib2-mect-spec.patch
-
-# LTIB hotplug spec file (MECT patch)
-LTIB_HOTPLUG_SPEC_PATCH = hotplug-mect-spec.patch
-
-# LTIB imx spec file (MECT patch)
-LTIB_IMX_SPEC_PATCH = imx-test-mect-spec.patch
-
-# LTIB libtermcap spec file (MECT patch)
-LTIB_LIBTERMCAP_SPEC_PATCH = libtermcap-mect-spec.patch
-
-# LTIB libusb spec file (MECT patch)
-LTIB_LIBUSB_SPEC_PATCH = libusb-mect-spec.patch
-
-# LTIB lzo spec file (MECT patch)
-LTIB_LZO_SPEC_PATCH = lzo-mect-spec.patch
-
-# LTIB modeps spec file (MECT patch)
-LTIB_MODEPS_SPEC_PATCH = modeps-mect-spec.patch
-
-# LTIB mtd spec file (MECT patch)
-LTIB_MTD_SPEC_PATCH = mtd-utils-mect-spec.patch
-
-# LTIB mysql spec file (MECT patch)
-LTIB_MYSQL_SPEC_PATCH = mysql-mect-spec.patch
-
-# LTIB ncurses spec file (MECT patch)
-LTIB_NCURSES_SPEC_PATCH = ncurses-mect-spec.patch
-
-# LTIB ppp spec file (MECT patch)
-LTIB_PPP_SPEC_PATCH = ppp-mect-spec.patch
-
-# LTIB rsync spec file (MECT patch)
-LTIB_RSYNC_SPEC_PATCH = rsync-mect-spec.patch
-
-# LTIB sqlite spec file (MECT patch)
-LTIB_SQLITE_SPEC_PATCH = sqlite-mect-spec.patch
-
-# LTIB tslib spec file (MECT patch)
-LTIB_TSLIB_SPEC_PATCH = tslib-mect-spec.patch
-
-# LTIB udev spec file (MECT patch)
-LTIB_UDEV_SPEC_PATCH = udev-mect-spec.patch
-
-# LTIB unzip spec file (MECT patch)
-LTIB_UNZIP_SPEC_PATCH = unzip-mect-spec.patch
-
-# LTIB zlib spec file (MECT patch)
-LTIB_ZLIB_SPEC_PATCH = zlib-mect-spec.patch
 
 
 # Extra packages to copy in $(LTIBPKGDIR)
@@ -475,61 +349,15 @@ ltibpatch: downloads
 	cd $(LTIBDIR); patch -p1 < $(FTPDIR)/$(LTIB_UBUNTU_INCLUDE_SYS_PATHCH)
 	cd $(LTIBDIR); sh ./$(LTIB_UBUNTU_12_04_PATCH) $(FTPURL)
 	cd $(LTIBDIR); rm -f $(LTIB_UBUNTU_12_04_PATCH) $(LTIB_UBUNTU_12_04_PATCH_INCLUDE_SYS_PATCH)
+	rm -rf $(LTIBDIR_REF)
+	mkdir -p $(LTIBDIR_REF)
+	rsync -a $(LTIBDIR)/config $(LTIBDIR)/dist $(LTIBDIR_REF)/
 	cd $(LTIBDIR); for p in \
-			$(LTIB_CONFIG_PATCH) \
-			$(LTIB_DEPR_AND_ZLIB_PATCH) \
-			$(LTIB_WGET_OPTIONS_PATCH) \
-			$(LTIB_U_BOOT_SPEC_PATCH) \
-			$(LTIB_RPM_FS_SPEC_PATCH) \
-			$(LTIB_BISON_SPEC_PATCH) \
-			$(LTIB_TEXINFO_SPEC_PATCH) \
-			$(LTIB_PKGCONFIG_SPEC_PATCH) \
-			$(LTIB_GIT_SPEC_PATCH) \
-			$(LTIB_U_BOOT_TEMPLATE_SPEC_PATCH) \
-			$(LTIB_MERGE_PATCH) \
-			$(LTIB_KERNEL_SPEC_PATCH) \
-			$(LTIB_KERNEL_TEMPLATE_SPEC_PATCH) \
-			$(LTIB_MECT_PPP_PATCH) \
-			$(LTIB_ELFTOSB_SPEC_PATCH) \
-			$(LTIB_SFTP_SERVER_SPEC_PATCH) \
-			$(LTIB_LIBSOCKETCAN_SPEC_PATCH) \
-			$(LTIB_QWT_SPEC_PATCH) \
-			$(LTIB_BOOT_STREAM_SPEC_PATCH) \
-			$(LTIB_BASE_LIBS_SPEC_PATCH) \
-			$(LTIB_BOA_SPEC_PATCH) \
-			$(LTIB_QT_SPEC_PATCH) \
-			$(LTIB_IPROUTE_SPEC_PATCH) \
-			$(LTIB_SKELL_SPEC_PATCH) \
-			$(LTIB_SYSCONFIG_SPEC_PATCH) \
-			$(LTIB_XENOMAI_SPEC_PATCH) \
-			$(LTIB_ZIP30_SPEC_PATCH) \
-			$(LTIB_BUSYBOX_SPEC_PATCH) \
-			$(LTIB_BZIP2_SPEC_PATCH) \
-			$(LTIB_CANTEST_SPEC_PATCH) \
-			$(LTIB_DHCP_SPEC_PATCH) \
-			$(LTIB_DROPBEAR_SPEC_PATCH) \
-			$(LTIB_E2FSPROGS_SPEC_PATCH) \
-			$(LTIB_EXPAT_SPEC_PATCH) \
-			$(LTIB_FAKE_SPEC_PATCH) \
-			$(LTIB_FONTCONFIG_SPEC_PATCH) \
-			$(LTIB_FREETYPE_SPEC_PATCH) \
-			$(LTIB_GLIB2_SPEC_PATCH) \
-			$(LTIB_HOTPLUG_SPEC_PATCH) \
-			$(LTIB_IMX_SPEC_PATCH) \
-			$(LTIB_LIBTERMCAP_SPEC_PATCH) \
-			$(LTIB_LIBUSB_SPEC_PATCH) \
-			$(LTIB_LZO_SPEC_PATCH) \
-			$(LTIB_MODEPS_SPEC_PATCH) \
-			$(LTIB_MTD_SPEC_PATCH) \
-			$(LTIB_MYSQL_SPEC_PATCH) \
-			$(LTIB_NCURSES_SPEC_PATCH) \
-			$(LTIB_PPP_SPEC_PATCH) \
-			$(LTIB_RSYNC_SPEC_PATCH) \
-			$(LTIB_SQLITE_SPEC_PATCH) \
-			$(LTIB_TSLIB_SPEC_PATCH) \
-			$(LTIB_UDEV_SPEC_PATCH) \
-			$(LTIB_UNZIP_SPEC_PATCH) \
-			$(LTIB_ZLIB_SPEC_PATCH) \
+		$(LTIB_MECT_CONFIG_PATCH) \
+		$(LTIB_DEPR_AND_ZLIB_PATCH) \
+		$(LTIB_WGET_OPTIONS_PATCH) \
+		$(LTIB_MECT_PPP_PATCH) \
+		$(LTIB_MECT_SPECS_PATCH) \
 	; do \
 		patch -p1 < $(FTPDIR)/$$p; \
 	done
@@ -595,11 +423,11 @@ TPAC1007_480x272_boot: $(RFSPKGS_TPAC1007_480x272)
 	mkdir -p $(BOOTDIR)/var/lib/rpm
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-mfg-2.6.35.3-1.1.0.arm.rpm
 	rm -f $(BOOTDIR)/var/lib/rpm/*
-	-rmdir $(BOOTDIR)/var/lib/rpm
-	-rmdir $(BOOTDIR)/var/lib
-	-rmdir $(BOOTDIR)/var
-	-rmdir $(BOOTDIR)/tmp/ltib
-	-rmdir $(BOOTDIR)/tmp
+	-sudo rmdir $(BOOTDIR)/var/lib/rpm
+	-sudo rmdir $(BOOTDIR)/var/lib
+	-sudo rmdir $(BOOTDIR)/var
+	-sudo rmdir $(BOOTDIR)/tmp/ltib
+	-sudo rmdir $(BOOTDIR)/tmp
 
 .PHONY: TPAC1007_480x272_rfs
 TPAC1007_480x272_rfs: $(RFSPKGS_TPAC1007_480x272)
@@ -608,10 +436,10 @@ TPAC1007_480x272_rfs: $(RFSPKGS_TPAC1007_480x272)
 	mkdir -p $(RFSDIR)/var/lib/rpm $(RFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RFSPKGS_TPAC1007_480x272)
 	rm -f $(RFSDIR)/var/lib/rpm/*
-	-rmdir $(RFSDIR)/var/lib/rpm
-	-rmdir $(RFSDIR)/var/lib
-	-rmdir $(RFSDIR)/var
-	-rmdir $(RFSDIR)/tmp/ltib
+	-sudo rmdir $(RFSDIR)/var/lib/rpm
+	-sudo rmdir $(RFSDIR)/var/lib
+	-sudo rmdir $(RFSDIR)/var
+	-sudo rmdir $(RFSDIR)/tmp/ltib
 	cd $(RFSDIR); sudo ldconfig -r `pwd`
 	( \
 		echo "Release: rel$(BUILD_RELEASE)"; \
@@ -629,11 +457,11 @@ TPAC1007_480x272_lfs: $(LFSPKGS_TPAC1007_480x272)
 	mkdir -p $(LFSDIR)/var/lib/rpm $(LFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(LFSPKGS_TPAC1007_480x272)
 	rm -f $(LFSDIR)/var/lib/rpm/*
-	-rmdir $(LFSDIR)/var/lib/rpm
-	-rmdir $(LFSDIR)/var/lib
-	-rmdir $(LFSDIR)/var
-	-rmdir $(LFSDIR)/tmp/ltib
-	-rmdir $(LFSDIR)/tmp
+	-sudo rmdir $(LFSDIR)/var/lib/rpm
+	-sudo rmdir $(LFSDIR)/var/lib
+	-sudo rmdir $(LFSDIR)/var
+	-sudo rmdir $(LFSDIR)/tmp/ltib
+	-sudo rmdir $(LFSDIR)/tmp
 	du -sh --apparent-size $(LFSDIR)
 
 .PHONY: TPAC1007_480x272_mfg
@@ -653,6 +481,20 @@ TPAC1007_480x272_mfg: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x27
 .PHONY: TPAC1007_480x272_win
 TPAC1007_480x272_win: TPAC1007_480x272_rfs
 	-BZIP2=-1 tar cjhf $(TGTDIR)/rootfs_rsync-L.tar.bz2 --hard-dereference --transform=s/^rootfs/rootfs_rsync-L/ -C $(LTIBDIR) rootfs/usr/include rootfs/usr/lib rootfs/lib rootfs/usr/src/linux/include
+
+
+.PHONY: ltib_patch
+ltib_patch: ltib_patch_config ltib_patch_specs
+
+.PHONY: ltib_patch_config
+ltib_patch_config: $(LTIBDIR_REF)/config
+	cd $(LTIBDIR)/.. && { diff -aurN --exclude=*.bak --exclude=*.swp $(shell basename $(LTIBDIR_REF))/config $(shell basename $(LTIBDIR))/config; diff -auN $(shell basename $(LTIBDIR_REF))/.config $(shell basename $(LTIBDIR))/.config; diff -auN $(shell basename $(LTIBDIR_REF))/.config.cmd $(shell basename $(LTIBDIR))/.config.cmd; diff -auN $(shell basename $(LTIBDIR_REF))/.tmpconfig.h $(shell basename $(LTIBDIR))/.tmpconfig.h; } > $(FTPDIR)/$(LTIB_MECT_CONFIG_PATCH); true
+	cd $(FTPDIR); md5sum $(LTIB_MECT_CONFIG_PATCH) > $(LTIB_MECT_CONFIG_PATCH).$(MD5EXT)
+
+.PHONY: ltib_patch_specs
+ltib_patch_specs: $(LTIBDIR_REF)/dist
+	cd $(LTIBDIR)/.. && diff -aurN --exclude=*-orig.spec --exclude=*.bak --exclude=*.swp $(shell basename $(LTIBDIR_REF))/dist $(shell basename $(LTIBDIR))/dist > $(FTPDIR)/$(LTIB_MECT_SPECS_PATCH); true
+	cd $(FTPDIR); md5sum $(LTIB_MECT_SPECS_PATCH) > $(LTIB_MECT_SPECS_PATCH).$(MD5EXT)
 
 
 .PHONY: clean

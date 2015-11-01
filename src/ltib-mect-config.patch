@@ -1,6 +1,6 @@
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/.config ltib.new/config/.config
---- ltib/config/.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib.new/config/.config	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.config ltib/config/.config
+--- ltib.reference/config/.config	1970-01-01 01:00:00.000000000 +0100
++++ ltib/config/.config	2015-10-31 22:49:40.574780915 +0100
 @@ -0,0 +1,56 @@
 +#
 +# Automatically generated make config: don't edit
@@ -58,9 +58,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +CONFIG_SYSCFG_CUTARG="zImage"
 +CONFIG_CAP_FSL_EXT=y
 +CONFIG_LTIB_RELEASE="8.1.2"
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/.config.cmd ltib.new/config/.config.cmd
---- ltib/config/.config.cmd	1970-01-01 01:00:00.000000000 +0100
-+++ ltib.new/config/.config.cmd	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.config.cmd ltib/config/.config.cmd
+--- ltib.reference/config/.config.cmd	1970-01-01 01:00:00.000000000 +0100
++++ ltib/config/.config.cmd	2015-10-31 22:49:40.574780915 +0100
 @@ -0,0 +1,7 @@
 +deps_config := \
 +	userspace/defaults.lkc \
@@ -69,9 +69,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +.config include/linux/autoconf.h: $(deps_config)
 +
 +$(deps_config):
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/main.lkc ltib.new/config/main.lkc
---- ltib/config/main.lkc	1970-01-01 01:00:00.000000000 +0100
-+++ ltib.new/config/main.lkc	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/main.lkc ltib/config/main.lkc
+--- ltib.reference/config/main.lkc	1970-01-01 01:00:00.000000000 +0100
++++ ltib/config/main.lkc	2015-10-31 22:49:40.574780915 +0100
 @@ -0,0 +1,18 @@
 +config CONFIG_TITLE
 +    string
@@ -91,9 +91,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +config PLATFORM_DIR
 +    string
 +    default "config/platform/imx" if PLATFORM_imx
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/host/ltib.preconfig ltib.new/config/platform/host/ltib.preconfig
---- ltib/config/platform/host/ltib.preconfig	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/host/ltib.preconfig	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/ltib.preconfig ltib/config/platform/host/ltib.preconfig
+--- ltib.reference/config/platform/host/ltib.preconfig	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/host/ltib.preconfig	2015-10-31 22:49:40.578780915 +0100
 @@ -56,8 +56,6 @@
  CONFIG_KERNEL_NONE=y
  # CONFIG_PKG_KERNEL_FORCE is not set
@@ -348,9 +348,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  CONFIG_INITTAB_LINE="::respawn:-/sbin/getty -L console 0 screen"
  CONFIG_UCLIBC_DYNAMIC_LINKER="/lib/ld-uClibc.so.0"
  CONFIG_GLIBC_DYNAMIC_LINKER="/lib/ld.so.1"
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/host/main.lkc ltib.new/config/platform/host/main.lkc
---- ltib/config/platform/host/main.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/host/main.lkc	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/main.lkc ltib/config/platform/host/main.lkc
+--- ltib.reference/config/platform/host/main.lkc	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/host/main.lkc	2015-10-31 22:49:40.578780915 +0100
 @@ -127,12 +127,6 @@
       help 
       	This is imx233 boot stream convert tools
@@ -364,16 +364,16 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  source ../../userspace/distro.lkc
  source ../../userspace/packages.lkc
  source ../../userspace/defaults.lkc
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/host/pkg_map ltib.new/config/platform/host/pkg_map
---- ltib/config/platform/host/pkg_map	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/host/pkg_map	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/pkg_map ltib/config/platform/host/pkg_map
+--- ltib.reference/config/platform/host/pkg_map	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/host/pkg_map	2015-10-31 22:49:40.582780915 +0100
 @@ -1,3 +1,2 @@
  PKG_MTD_UTILS = mtd-utils
  PKG_ELFTOSB = elftosb
 -PKG_UBUNTU_ARM_LIB = ubuntu_arm_lib
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/busybox.config ltib.new/config/platform/imx/busybox.config
---- ltib/config/platform/imx/busybox.config	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/busybox.config	2015-10-24 12:40:42.354013799 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/busybox.config ltib/config/platform/imx/busybox.config
+--- ltib.reference/config/platform/imx/busybox.config	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/busybox.config	2015-10-31 22:49:40.586780915 +0100
 @@ -1,7 +1,6 @@
  #
  # Automatically generated make config: don't edit
@@ -1368,10 +1368,10 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  CONFIG_KLOGD=y
 -CONFIG_FEATURE_KLOGD_KLOGCTL=y
  CONFIG_LOGGER=y
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/.config ltib.new/config/platform/imx/.config
---- ltib/config/platform/imx/.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib.new/config/platform/imx/.config	2015-09-23 14:29:35.000000000 +0200
-@@ -0,0 +1,644 @@
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
+--- ltib.reference/config/platform/imx/.config	1970-01-01 01:00:00.000000000 +0100
++++ ltib/config/platform/imx/.config	2015-10-31 22:49:40.000000000 +0100
+@@ -0,0 +1,651 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -1694,6 +1694,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +# CONFIG_PKG_LIBTIFF is not set
 +# CONFIG_PKG_LIBTOOL is not set
 +CONFIG_PKG_LIBUSB=y
++CONFIG_PKG_LIBUSB1=y
 +# CONFIG_PKG_LIBXML2 is not set
 +# CONFIG_PKG_LINUX_ATM is not set
 +# CONFIG_PKG_LINUX_WLAN is not set
@@ -1780,6 +1781,12 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +CONFIG_QTOPIA_NONE=y
 +# CONFIG_PKG_QTOPIA is not set
 +# CONFIG_PKG_QTOPIA_4 is not set
++
++#
++# Cellular USB modem support
++#
++CONFIG_PKG_USB_MODESWITCH=y
++CONFIG_PKG_USB_MODESWITCH_DATA=y
 +
 +#
 +# Applications
@@ -2016,9 +2023,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +CONFIG_SYSCFG_CUTARG="zImage"
 +CONFIG_CAP_FSL_EXT=y
 +CONFIG_LTIB_RELEASE="8.1.2"
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/.config.cmd ltib.new/config/platform/imx/.config.cmd
---- ltib/config/platform/imx/.config.cmd	1970-01-01 01:00:00.000000000 +0100
-+++ ltib.new/config/platform/imx/.config.cmd	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config.cmd ltib/config/platform/imx/.config.cmd
+--- ltib.reference/config/platform/imx/.config.cmd	1970-01-01 01:00:00.000000000 +0100
++++ ltib/config/platform/imx/.config.cmd	2015-10-31 22:49:40.590780915 +0100
 @@ -0,0 +1,22 @@
 +deps_config := \
 +	../../userspace/defaults.lkc \
@@ -2042,10 +2049,10 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +.config include/linux/autoconf.h: $(deps_config)
 +
 +$(deps_config):
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/defconfig.dev ltib.new/config/platform/imx/defconfig.dev
---- ltib/config/platform/imx/defconfig.dev	1970-01-01 01:00:00.000000000 +0100
-+++ ltib.new/config/platform/imx/defconfig.dev	2015-09-23 14:29:35.000000000 +0200
-@@ -0,0 +1,644 @@
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
+--- ltib.reference/config/platform/imx/defconfig.dev	1970-01-01 01:00:00.000000000 +0100
++++ ltib/config/platform/imx/defconfig.dev	2015-10-31 22:49:40.590780915 +0100
+@@ -0,0 +1,651 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -2368,6 +2375,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +# CONFIG_PKG_LIBTIFF is not set
 +# CONFIG_PKG_LIBTOOL is not set
 +CONFIG_PKG_LIBUSB=y
++CONFIG_PKG_LIBUSB1=y
 +# CONFIG_PKG_LIBXML2 is not set
 +# CONFIG_PKG_LINUX_ATM is not set
 +# CONFIG_PKG_LINUX_WLAN is not set
@@ -2454,6 +2462,12 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +CONFIG_QTOPIA_NONE=y
 +# CONFIG_PKG_QTOPIA is not set
 +# CONFIG_PKG_QTOPIA_4 is not set
++
++#
++# Cellular USB modem support
++#
++CONFIG_PKG_USB_MODESWITCH=y
++CONFIG_PKG_USB_MODESWITCH_DATA=y
 +
 +#
 +# Applications
@@ -2690,17 +2704,17 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +CONFIG_SYSCFG_CUTARG="zImage"
 +CONFIG_CAP_FSL_EXT=y
 +CONFIG_LTIB_RELEASE="8.1.2"
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/dev.profile ltib.new/config/platform/imx/dev.profile
---- ltib/config/platform/imx/dev.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/dev.profile	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/dev.profile ltib/config/platform/imx/dev.profile
+--- ltib.reference/config/platform/imx/dev.profile	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/dev.profile	2015-10-31 22:49:40.598780915 +0100
 @@ -41,4 +41,3 @@
  CONFIG_PKG_USBUTILS=y
  CONFIG_PKG_UUC=y
  CONFIG_PKG_ZLIB=y
 -CONFIG_PKG_PERF=y
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/fsl_mm.lkc ltib.new/config/platform/imx/fsl_mm.lkc
---- ltib/config/platform/imx/fsl_mm.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/fsl_mm.lkc	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/fsl_mm.lkc ltib/config/platform/imx/fsl_mm.lkc
+--- ltib.reference/config/platform/imx/fsl_mm.lkc	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/fsl_mm.lkc	2015-10-31 22:49:40.598780915 +0100
 @@ -1,63 +1,46 @@
  menu "Freescale Multimedia Plugins/Codecs"
  
@@ -2793,9 +2807,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +          This package provides the Freescale Gstreamer based plugins. 
 +		 
  endmenu
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/imx28.cf ltib.new/config/platform/imx/imx28.cf
---- ltib/config/platform/imx/imx28.cf	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/imx28.cf	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx28.cf ltib/config/platform/imx/imx28.cf
+--- ltib.reference/config/platform/imx/imx28.cf	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/imx28.cf	2015-10-31 22:49:40.602780915 +0100
 @@ -41,7 +41,7 @@
  CONFIG_PKG_BASE_LIBS=y
  CONFIG_PKG_LIBC_WANT_SHARED_LIBS=y
@@ -2848,14 +2862,16 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  # CONFIG_KERNEL_28 is not set
  # CONFIG_KERNEL_GIT is not set
  # CONFIG_KERNEL_DIR_BUILD is not set
-@@ -94,6 +98,7 @@
+@@ -94,7 +98,8 @@
  CONFIG_PKG_KERNEL_WANT_HEADERS=y
  # CONFIG_PKG_KERNEL_WANT_CF is not set
  CONFIG_PKG_KERNEL_LEAVESRC=y
+-CONFIG_PKG_KERNEL_PRECONFIG="imx28evk_defconfig"
 +# CONFIG_PKG_KERNEL_UPDATER is not set
- CONFIG_PKG_KERNEL_PRECONFIG="imx28evk_defconfig"
++CONFIG_PKG_KERNEL_PRECONFIG="kernel-2.6.35-imx28-tpac1007.config"
  CONFIG_DISTRO="dist/lfs-5.1"
  
+ #
 @@ -108,14 +113,30 @@
  #
  # Platform specific package selection
@@ -2982,7 +2998,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  # CONFIG_PKG_INETUTILS is not set
  # CONFIG_PKG_IPERF is not set
  # CONFIG_PKG_OPENSWAN is not set
-@@ -278,16 +309,17 @@
+@@ -278,16 +309,18 @@
  # CONFIG_PKG_LIBJPEG is not set
  # CONFIG_PKG_LIBELF is not set
  # CONFIG_PKG_LIBNET is not set
@@ -2999,10 +3015,11 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  # CONFIG_PKG_LIBTOOL is not set
 -# CONFIG_PKG_LIBUSB is not set
 +CONFIG_PKG_LIBUSB=y
++CONFIG_PKG_LIBUSB1=y
  # CONFIG_PKG_LIBXML2 is not set
  # CONFIG_PKG_LINUX_ATM is not set
  # CONFIG_PKG_LINUX_WLAN is not set
-@@ -298,7 +330,7 @@
+@@ -298,7 +331,7 @@
  # CONFIG_PKG_LMBENCH is not set
  # CONFIG_PKG_LM_SENSORS is not set
  # CONFIG_PKG_LRZSZ is not set
@@ -3011,7 +3028,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  # CONFIG_PKG_M4 is not set
  # CONFIG_PKG_MADPLAY is not set
  # CONFIG_PKG_MAKE is not set
-@@ -320,11 +352,12 @@
+@@ -320,11 +353,12 @@
  CONFIG_MODUTILS_NONE=y
  # CONFIG_PKG_MPLAYER is not set
  # CONFIG_PKG_MP3PLAY is not set
@@ -3027,7 +3044,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  # CONFIG_PKG_NET_SNMP is not set
  # CONFIG_PKG_NET_TOOLS is not set
  # CONFIG_PKG_NETCAT is not set
-@@ -333,6 +366,7 @@
+@@ -333,6 +367,7 @@
  # CONFIG_PKG_NSS_MDNS is not set
  # CONFIG_PKG_NTPCLIENT is not set
  # CONFIG_PKG_OPENOBEX is not set
@@ -3035,7 +3052,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  # CONFIG_PKG_OPENSSH is not set
  # CONFIG_PKG_OPENSSL is not set
  # CONFIG_PKG_OPROFILE is not set
-@@ -347,15 +381,26 @@
+@@ -347,15 +382,26 @@
  # CONFIG_PKG_PIDENTD is not set
  # CONFIG_PKG_PKGCONFIG is not set
  # CONFIG_PKG_PLAY is not set
@@ -3063,7 +3080,20 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  # Qtopia
  #
  CONFIG_QTOPIA_NONE=y
-@@ -372,7 +417,7 @@
+@@ -363,6 +409,12 @@
+ # CONFIG_PKG_QTOPIA_4 is not set
+ 
+ #
++# Cellular USB modem support
++#
++CONFIG_PKG_USB_MODESWITCH=y
++CONFIG_PKG_USB_MODESWITCH_DATA=y
++
++#
+ # Applications
+ #
+ 
+@@ -372,7 +424,7 @@
  # CONFIG_PKG_READLINE is not set
  # CONFIG_PKG_RPM is not set
  # CONFIG_PKG_RNG_TOOLS is not set
@@ -3072,7 +3102,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  # CONFIG_PKG_RT_TESTS is not set
  # CONFIG_PKG_RTCTEST is not set
  # CONFIG_PKG_SAMBA is not set
-@@ -387,7 +432,7 @@
+@@ -387,7 +439,7 @@
  # CONFIG_PKG_SKELL_WANT_TERMINFO is not set
  # CONFIG_PKG_SPARSE is not set
  # CONFIG_PKG_STATSERIAL is not set
@@ -3081,7 +3111,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  # CONFIG_PKG_STRACE is not set
  CONFIG_PKG_SYSCONFIG=y
  # CONFIG_PKG_SYSFSUTILS is not set
-@@ -406,14 +451,14 @@
+@@ -406,14 +458,14 @@
  # CONFIG_PKG_TINYPROXY is not set
  # CONFIG_PKG_TOTEM is not set
  # CONFIG_PKG_TOTEM_PL_PARSER is not set
@@ -3098,7 +3128,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  # CONFIG_PKG_VIM is not set
  # CONFIG_PKG_VPLAY is not set
  # CONFIG_PKG_VSFTPD is not set
-@@ -467,6 +512,8 @@
+@@ -467,6 +519,8 @@
  # CONFIG_PKG_LIBXFT is not set
  # CONFIG_PKG_LIBXRANDR is not set
  # CONFIG_PKG_LIBXRENDER is not set
@@ -3107,7 +3137,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  # CONFIG_PKG_LIBPCIACCESS is not set
  # CONFIG_PKG_FONTUTIL is not set
  # CONFIG_PKG_LIBICE is not set
-@@ -482,14 +529,12 @@
+@@ -482,14 +536,12 @@
  # CONFIG_PKG_XTERM is not set
  # CONFIG_PKG_YAFFS_UTILS is not set
  # CONFIG_PKG_ZAPTEL is not set
@@ -3124,7 +3154,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  
  #
  # Target System Configuration
-@@ -502,12 +547,55 @@
+@@ -502,12 +554,55 @@
  CONFIG_SYSCFG_WANT_LOGIN_TTY=y
  CONFIG_SYSCFG_LOGING_TTY="::respawn:/sbin/getty -L ttyAM0 115200 vt100"
  CONFIG_SYSCFG_MODLIST=""
@@ -3183,7 +3213,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  
  #
  # Target Image Generation
-@@ -520,35 +608,19 @@
+@@ -520,35 +615,19 @@
  #
  # Choose your root filesystem image type
  #
@@ -3226,24 +3256,24 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  CONFIG_CAP_UCLIBC=y
  CONFIG_CAP_GLIBC=y
  CONFIG_CAP_LFS_5_1=y
-@@ -568,5 +640,5 @@
+@@ -568,5 +647,5 @@
  CONFIG_SYSCFG_LOADDTBADDR="0x9F0000"
  CONFIG_SYSCFG_LOADRAMADDR="0xB00000"
  CONFIG_SYSCFG_CUTARG="zImage"
 -CONFIG_CAP_FSL_INT=y
 +CONFIG_CAP_FSL_EXT=y
  CONFIG_LTIB_RELEASE="8.1.2"
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/imx28_updater.cf ltib.new/config/platform/imx/imx28_updater.cf
---- ltib/config/platform/imx/imx28_updater.cf	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/imx28_updater.cf	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx28_updater.cf ltib/config/platform/imx/imx28_updater.cf
+--- ltib.reference/config/platform/imx/imx28_updater.cf	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/imx28_updater.cf	2015-10-31 22:49:40.602780915 +0100
 @@ -576,3 +576,4 @@
  CONFIG_SYSCFG_CUTARG="zImage"
  CONFIG_CAP_FSL_INT=y
  CONFIG_LTIB_RELEASE="8.1.2"
 +CONFIG_SYSCFG_AUTOEXEC=y
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/imx51.cf ltib.new/config/platform/imx/imx51.cf
---- ltib/config/platform/imx/imx51.cf	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/imx51.cf	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx51.cf ltib/config/platform/imx/imx51.cf
+--- ltib.reference/config/platform/imx/imx51.cf	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/imx51.cf	2015-10-31 22:49:40.602780915 +0100
 @@ -221,7 +221,7 @@
  # CONFIG_PKG_I2C_TOOLS is not set
  # CONFIG_PKG_IOZONE is not set
@@ -3253,9 +3283,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  # CONFIG_PKG_INETUTILS is not set
  # CONFIG_PKG_IPERF is not set
  # CONFIG_PKG_OPENSWAN is not set
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config ltib.new/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config
---- ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib.new/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config	2015-10-29 21:16:47.503435023 +0100
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config
+--- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config	1970-01-01 01:00:00.000000000 +0100
++++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007.config	2015-10-31 23:29:24.882728155 +0100
 @@ -0,0 +1,2378 @@
 +#
 +# Automatically generated make config: don't edit
@@ -5635,9 +5665,643 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +CONFIG_HAS_DMA=y
 +CONFIG_NLATTR=y
 +CONFIG_GENERIC_ATOMIC64=y
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/main.lkc ltib.new/config/platform/imx/main.lkc
---- ltib/config/platform/imx/main.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/main.lkc	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35.spec.in ltib/config/platform/imx/kernel-2.6.35.spec.in
+--- ltib.reference/config/platform/imx/kernel-2.6.35.spec.in	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/kernel-2.6.35.spec.in	2015-10-31 22:49:40.606780914 +0100
+@@ -2,6 +2,8 @@
+ 
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ %define pkg_name linux
++%define x_name   xenomai
++%define x_ver    2.6.0
+ 
+ Summary         : Linux kernel (core of the Linux operating system)
+ Name            : kernel
+@@ -12,22 +14,617 @@
+ Packager        : Rob Herring
+ Group           : System Environment/Kernel
+ Source          : %{pkg_name}-%{version}.tar.bz2
+-Source1         : %{pkg_name}-%{version}-%{release}.bz2
++# Archive superseeded by Patch0 from Francesco
++#Source1         : %{pkg_name}-%{version}-%{release}.bz2
++Source2         : %{x_name}-%{x_ver}.tar.bz2
+ URL             : http://www.kernel.org/
++# Freescale patch from Francesco, equivalent to %{pkg_name}-%{version}-%{release}.bz2
++Patch0          : %{pkg_name}-2.6-imx_rel_imx_2.6.35_11.01.00.patch
++
++# MECT patches (2012)
++Patch1          : %{name}-%{version}-1310041712.patch
++Patch2          : %{name}-%{version}-1310035700.patch
++Patch3          : %{name}-%{version}-1310028574.patch
++Patch4          : %{name}-%{version}-1316603523.patch
++Patch5          : %{name}-%{version}-1316009304.patch
++Patch6          : %{name}-%{version}-1317998791.patch
++Patch7          : %{name}-%{version}-1318337806.patch
++Patch8          : %{name}-%{version}-1318495408.patch
++Patch9          : %{name}-%{version}-1319702741.patch
++Patch10         : %{name}-%{version}-1329224069.patch
++Patch11         : %{name}-%{version}-1332171148.patch
++Patch12         : %{name}-%{version}-1333040073.patch
++Patch13         : %{name}-%{version}-1337754222.patch
++Patch14         : %{name}-%{version}-1348834818.patch
++Patch15         : %{name}-%{version}-1352446729.patch
++Patch16         : %{name}-%{version}-1353925535.patch
++Patch17         : %{name}-%{version}-1355490258.patch
++Patch18         : %{name}-%{version}-1359385592.patch
++Patch19         : %{name}-%{version}-1364380255.patch
++Patch20         : %{name}-%{version}-1366295778.patch
++
++# MECT patches
++Patch21         : %{name}-%{version}-1367838157.patch
++Patch22         : %{name}-%{version}-1367915669.patch
++Patch23         : %{name}-%{version}-1368026104.patch
++Patch24         : %{name}-%{version}-1374825662.patch
++Patch25         : %{name}-%{version}-1382692579.patch
++Patch26         : %{name}-%{version}-1389885832.patch
++Patch27         : %{name}-%{version}-1391688299.patch
++Patch28         : %{name}-%{version}-1406105822.patch
++Patch29         : %{name}-%{version}-1410159845.patch
++Patch30         : %{name}-%{version}-1412763299.patch
++Patch31         : %{name}-%{version}-1417086426.patch
++Patch32         : %{name}-%{version}-1417857461.patch
++Patch33         : %{name}-%{version}-1428042966.patch
++
++# Xenomai 2.6.0 patches
++# Patch kernel for Adeos I-pipe
++Patch34         : %{pkg_name}-2.6-imx_rel_imx_2.6.35_11.01.00_mect2.patch
++Patch35         : %{pkg_name}-2.6-imx_rel_imx_2.6.35_11.01.00_mect3-mtl.patch
++# Patch Xenomai
++Patch36         : %{x_name}-%{x_ver}_mect3.patch
++# Kernel patches for monitoring using GPIO
++#Patch37         : %{pkg_name}-%{version}_ipipe_2012_07_11_timer_match.patch
++# Patch Xenomai
++#Patch38         : %{x_name}-%{x_ver}+flexcan_all_in_one_final.patch
++Patch39         : %{x_name}-%{x_ver}-fix-scriptpath-calculation.patch
++
++# Generic kernel patches
++Patch40         : %{name}-%{version}-mxs_reset_block-undefined.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed kernel for root file system requirements.
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++%Description rfs
++kernel package contents restricted to just the files that are
++needed at run time on the target.
++
++%Package dev-usbserial
++Summary         : Kernel module for the USB serial driver.
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++%Description dev-usbserial
++%{summary}
++
++%Package dev-usbserial-aircable
++Summary         : USB AIRcable Bluetooth Dongle Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-aircable
++%{summary}
++
++%Package dev-usbserial-ark3116
++Summary         : USB ARK Micro 3116 USB Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-ark3116
++%{summary}
++
++%Package dev-usbserial-belkin_sa
++Summary         : USB Belkin and Peracom Single Port Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-belkin_sa
++%{summary}
++
++%Package dev-usbserial-ch341
++Summary         : USB Winchiphead CH341 Single Port Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-ch341
++%{summary}
++
++%Package dev-usbserial-cp210x
++Summary         : USB CP210x family of UART Bridge Controllers
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-cp210x
++%{summary}
++
++%Package dev-usbserial-cyberjack
++Summary         : USB REINER SCT cyberJack pinpad/e-com chipcard reader
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-cyberjack
++%{summary}
++
++%Package dev-usbserial-cypress_m8
++Summary         : USB Cypress M8 USB Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-cypress_m8
++%{summary}
++
++%Package dev-usbserial-digi_acceleport
++Summary         : USB Digi International AccelePort USB Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-digi_acceleport
++%{summary}
++
++%Package dev-usbserial-empeg
++Summary         : USB Empeg empeg-car Mark I/II Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-empeg
++%{summary}
++
++%Package dev-usbserial-ftdi_sio
++Summary         : USB FTDI Single Port Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-ftdi_sio
++%{summary}
+ 
++%Package dev-usbserial-funsoft
++Summary         : USB Fundamental Software Dongle Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-funsoft
++%{summary}
++
++%Package dev-usbserial-garmin_gps
++Summary         : USB Garmin GPS driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-garmin_gps
++%{summary}
++
++%Package dev-usbserial-hp4x
++Summary         : USB HP4x Calculators support
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-hp4x
++%{summary}
++
++%Package dev-usbserial-io_edgeport
++Summary         : USB Inside Out Edgeport Serial Driver (TI devices)
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-io_edgeport
++%{summary}
++
++%Package dev-usbserial-io_ti
++Summary         : Edgeport USB Serial Converter driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-io_ti
++%{summary}
++
++%Package dev-usbserial-ipaq
++Summary         : USB PocketPC PDA Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-ipaq
++%{summary}
++
++%Package dev-usbserial-ipw
++Summary         : USB IPWireless (3G UMTS TDD) Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-ipw
++%{summary}
++
++%Package dev-usbserial-ir
++Summary         : USB IR Dongle Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-ir
++%{summary}
++
++%Package dev-usbserial-iuu_phoenix
++Summary         : USB Infinity USB Unlimited Phoenix Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-iuu_phoenix
++%{summary}
++
++%Package dev-usbserial-keyspan
++Summary         : USB Keyspan USA-xxx Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-keyspan
++%{summary}
++
++%Package dev-usbserial-keyspan_pda
++Summary         : USB Keyspan PDA Single Port Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-keyspan_pda
++%{summary}
++
++%Package dev-usbserial-kl5kusb105
++Summary         : USB KL5KUSB105 (Palmconnect) Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-kl5kusb105
++%{summary}
++
++%Package dev-usbserial-kobil_sct
++Summary         : USB KOBIL chipcard reader
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-kobil_sct
++%{summary}
++
++%Package dev-usbserial-mct_u232
++Summary         : USB MCT Single Port Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-mct_u232
++%{summary}
++
++%Package dev-usbserial-mos7720
++Summary         : USB Moschip 7720 Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-mos7720
++%{summary}
++
++%Package dev-usbserial-mos7840
++Summary         : USB Moschip 7840/7820 USB Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-mos7840
++%{summary}
++
++%Package dev-usbserial-moto_modem
++Summary         : USB Motorola Phone modem driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-moto_modem
++%{summary}
++
++%Package dev-usbserial-navman
++Summary         : USB Navman GPS device
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-navman
++%{summary}
++
++%Package dev-usbserial-omninet
++Summary         : USB ZyXEL omni.net LCD Plus Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-omninet
++%{summary}
++
++%Package dev-usbserial-opticon
++Summary         : USB Opticon Barcode driver (serial mode)
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-opticon
++%{summary}
++
++%Package dev-usbserial-option
++Summary         : USB driver for GSM and CDMA modems
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial kernel-dev-usbserial-wwan
++%Description dev-usbserial-option
++%{summary}
++
++%Package dev-usbserial-oti6858
++Summary         : USB Ours Technology Inc. OTi-6858 USB To RS232 Bridge Controller
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-oti6858
++%{summary}
++
++%Package dev-usbserial-pl2303
++Summary         : USB Prolific 2303 Single Port Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-pl2303
++%{summary}
++
++%Package dev-usbserial-qcaux
++Summary         : USB Qualcomm Auxiliary Serial Port Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-qcaux
++%{summary}
++
++%Package dev-usbserial-qcserial
++Summary         : USB Qualcomm Serial modem
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial kernel-dev-usbserial-wwan
++%Description dev-usbserial-qcserial
++%{summary}
++
++%Package dev-usbserial-safe_serial
++Summary         : USB Safe Serial (Encapsulated) Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-safe_serial
++%{summary}
++
++%Package dev-usbserial-siemens_mpi
++Summary         : USB Siemens MPI driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-siemens_mpi
++%{summary}
++
++%Package dev-usbserial-sierra
++Summary         : USB Sierra Wireless Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-sierra
++%{summary}
++
++%Package dev-usbserial-spcp8x5
++Summary         : USB SPCP8x5 USB To Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-spcp8x5
++%{summary}
++
++%Package dev-usbserial-symbolserial
++Summary         : USB Symbol Barcode driver (serial mode)
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-symbolserial
++%{summary}
++
++%Package dev-usbserial-ti_3410_5052
++Summary         : USB TI 3410/5052 Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-ti_3410_5052
++%{summary}
++
++%Package dev-usbserial-debug
++Summary         : USB Debugging Device
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-debug
++%{summary}
++
++%Package dev-usbserial-wwan
++Summary         : USB serial mobile broadband cards
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-wwan
++%{summary}
++
++%Package dev-usbserial-visor
++Summary         : USB Handspring Visor / Palm m50x / Sony Clie Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-visor
++%{summary}
++
++%Package dev-usbserial-vivopay-serial
++Summary         : USB ViVOpay serial interface driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-vivopay-serial
++%{summary}
++
++%Package dev-usbserial-whiteheat
++Summary         : USB ConnectTech WhiteHEAT Serial Driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-whiteheat
++%{summary}
++
++%Package dev-usbserial-zio
++Summary         : ZIO Motherboard USB serial interface driver
++Packager        : Mihai Lazarescu (MECT s.r.l.)
++Group           : System Environment/Kernel
++AutoReqProv     : no
++Requires        : kernel-dev-usbserial
++%Description dev-usbserial-zio
++%{summary}
++
++
++# %{name}-%{version}-1310041712.patch : Fix the ethernet plug/unplug problem
++# %{name}-%{version}-1310035700.patch : added the Mect logo in the logo lists
++# %{name}-%{version}-1310028574.patch : enable keyboard GPIO using the module gpio-keys for the Mect project
++# %{name}-%{version}-1316603523.patch : Add the RTS control
++# %{name}-%{version}-1316009304.patch : Added support for TIANMA 4.3 LCD Display
++# %{name}-%{version}-1317998791.patch : Added support for buzzer as char device /dev/buzzer and patched gpio_keyboard driver
++# %{name}-%{version}-1318337806.patch : export the buzzer header to be visible for the user space
++# %{name}-%{version}-1318495408.patch : Added in the power fail detect module, the code to get the PLC application pid and the code to send to it the signal 
++# %{name}-%{version}-1319702741.patch : Disabled the standby display, modify the logo to 480x272 and solved the recovery ubifs bug
++# %{name}-%{version}-1329224069.patch : Fix liminance range of tm043, introduce the config key MECT_CUSTOMIZATION, fix the keyboard press&release problem, fix the LAN problem, fix the CAN power on/off problem
++# %{name}-%{version}-1332171148.patch : Add support for PENMOUNT driver. Modified power support to gracefully shutdown, added ele01 and val01 customization keyword for lan, wifi.
++# %{name}-%{version}-1333040073.patch : Fixed a bug in lan enable management
++# %{name}-%{version}-1337754222.patch : Add support for HITACHI 5.7 LCD Display
++# %{name}-%{version}-1348834818.patch : Introduced Kconfig keys for TPAC1006, U295, added boot logo for all currently managed projects, modified buzzer driver to choose beside duration also duty cycle for VAL01 project. Patched the lcdif clock source to be compliant with display requirements and managed LCD_ENABLE signal as required by the different supported displays.
++# %{name}-%{version}-1352446729.patch : freescale patch to solve trouble with some eth0 that won't start
++# %{name}-%{version}-1353925535.patch : configure lan enable according to the new hardware requirement
++# %{name}-%{version}-1355490258.patch : changed frequency for VAL01 buzzer and added patch to avoid kernel bug in gspca driver
++# %{name}-%{version}-1359385592.patch : added support for Hitachi LCD 5.7" 640x480 pixel
++# %{name}-%{version}-1364380255.patch: fixed polarity of dotclock for TIANMA4.3' monitor 
++# %{name}-%{version}-1366295778.patch: added support for ROCKTECH 4.3" display
++# %{name}-%{version}-1367838157.patch: retentive support for ATN01 project
++# %{name}-%{version}-1367915669.patch: added CONFIG_MECT_ATN01 keyword and logo for ATN01 project
++# %{name}-%{version}-1368026104.patch: added support for I2C RS5C372 chip through GPIO for VAL01 project
++# %{name}-%{version}-1374825662.patch: added support for DS1390 RTC chip device
++# %{name}-%{version}-1382692579.patch: fixed RS485 behaviour in order to stop rx while transmitting, working half duplex
++# %{name}-%{version}-1389885832.patch: fixed LAN phy driver to work also when a direct connection (i.e. without a switch device) exists
++# %{name}-%{version}-1391688299.patch: Added support for Formike LCD 7" display driven by ref_xtal
++# %{name}-%{version}-1406105822.patch: Added support for TPAC1006 at power fail, uploaded various mect logo and changed logo for atn01
++# %{name}-%{version}-1410159845.patch: Patched gpmi-nand driver to deal with bitflips in erased regions (corrupt empty space LEB error)
++# %{name}-%{version}-1412763299.patch: Added check to get ref_gpmi as FLASH clock if configured so by bootlets.
+ %Description
+ %{summary}
+ 
+ %Prep
+ %define buildsubdir %{pkg_name}-%{version}
++%define x_dir    %{buildsubdir}-%{x_name}-%{x_ver}
++%define x_subdir %{x_name}-%{x_ver}
+ KSRC_DIR=${PKG_KERNEL_PATH_PRECONFIG:-%{_builddir}/%{buildsubdir}}
+ 
+ if [ -z "$PKG_KERNEL_LEAVESRC" ] || [ ! -d "$KSRC_DIR" ]
+ then
+-%setup -n %{buildsubdir} -a 1
+-chmod 755 patches/patch-kernel.sh
+-./patches/patch-kernel.sh
++# Patches from the archive are superseeded by Francesco's Patch0
++#%setup -a 1 -n %{buildsubdir}
++#chmod 755 patches/patch-kernel.sh
++#./patches/patch-kernel.sh
++:
+ fi
++# Unpack Xenomai source tree
++%setup -T -a 2 -c -n %{x_dir}
++%setup -T -D -b 0 -n %{buildsubdir}
++
++%patch0 -p1
++%patch1 -p1
++%patch2 -p1
++%patch3 -p1
++%patch4 -p1
++%patch5 -p1
++%patch6 -p1
++%patch7 -p1
++%patch8 -p1
++%patch9 -p1
++%patch10 -p1
++%patch11 -p1
++%patch12 -p1
++%patch13 -p1
++%patch14 -p1
++%patch15 -p1
++%patch16 -p1
++%patch17 -p1
++%patch18 -p1
++%patch19 -p1
++%patch20 -p1
++%patch21 -p1
++%patch22 -p1
++%patch23 -p1
++%patch24 -p1
++%patch25 -p1
++%patch26 -p1
++%patch27 -p1
++%patch28 -p1
++%patch29 -p1
++%patch30 -p1
++%patch31 -p1
++%patch32 -p1
++%patch33 -p1
++
++%patch34 -p1
++%patch35 -p1
++
++# Patch Xenomai
++cd %{_builddir}/%{x_dir}/%{x_name}-%{x_ver}
++%patch36 -p1
++%patch39 -p1
++cd %{_builddir}/%{buildsubdir}
++
++# Setup the kernel for Xenomai
++cd %{_builddir}/%{x_dir}
++sh %{x_name}-%{x_ver}/scripts/prepare-kernel.sh --arch=arm --adeos=/dev/null --linux=$KSRC_DIR
++cd %{_builddir}/%{buildsubdir}
++
++# Kernel patches to use GPIOs for monitoring
++#%patch37 -p1
++
++# Patch Xenomai
++cd %{_builddir}/%{x_dir}/%{x_name}-%{x_ver}
++#%patch38 -p1
++cd %{_builddir}/%{buildsubdir}
++
++%patch40 -p1
+ 
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/main.lkc ltib/config/platform/imx/main.lkc
+--- ltib.reference/config/platform/imx/main.lkc	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/main.lkc	2015-10-31 22:49:40.606780914 +0100
 @@ -15,7 +15,6 @@
      default "Freescale iMX37 3-Stack Board" if PLATFORM = "imx37_3stack"
      default "Freescale iMX51 3-Stack Board" if PLATFORM = "imx51_3stack"
@@ -5874,9 +6538,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
      default "linux-kernel-dir-build.config" if KERNEL_DIR_BUILD
  
  source ../../userspace/distro.lkc
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/max.profile ltib.new/config/platform/imx/max.profile
---- ltib/config/platform/imx/max.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/max.profile	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/max.profile ltib/config/platform/imx/max.profile
+--- ltib.reference/config/platform/imx/max.profile	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/max.profile	2015-10-31 22:49:40.606780914 +0100
 @@ -7,8 +7,8 @@
  CONFIG_PKG_AMD_GPU_BIN_MX35=y
  CONFIG_PKG_AMD_GPU_BIN_MX51=y
@@ -5918,9 +6582,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  CONFIG_QTOPIA_NONE=y
 -CONFIG_PKG_PERF=y
 -CONFIG_PKG_PYTHON=y
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/merge/etc/asound.conf ltib.new/config/platform/imx/merge/etc/asound.conf
---- ltib/config/platform/imx/merge/etc/asound.conf	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/merge/etc/asound.conf	1970-01-01 01:00:00.000000000 +0100
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/asound.conf ltib/config/platform/imx/merge/etc/asound.conf
+--- ltib.reference/config/platform/imx/merge/etc/asound.conf	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/merge/etc/asound.conf	1970-01-01 01:00:00.000000000 +0100
 @@ -1,257 +0,0 @@
 -defaults.pcm.rate_converter "linear"
 -
@@ -6179,18 +6843,18 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 -type hw
 -card 0
 -}
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/min.profile ltib.new/config/platform/imx/min.profile
---- ltib/config/platform/imx/min.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/min.profile	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/min.profile ltib/config/platform/imx/min.profile
+--- ltib.reference/config/platform/imx/min.profile	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/min.profile	2015-10-31 22:49:40.610780914 +0100
 @@ -12,5 +12,3 @@
  CONFIG_PKG_UDEV=y
  CONFIG_PKG_UDEV_WANT_NON_RAID=y
  CONFIG_PKG_UDEV_WANT_IMX=y
 -CONFIG_PKG_PERF=y
 -CONFIG_PKG_PYTHON=y
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/packages.lkc ltib.new/config/platform/imx/packages.lkc
---- ltib/config/platform/imx/packages.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/packages.lkc	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/packages.lkc ltib/config/platform/imx/packages.lkc
+--- ltib.reference/config/platform/imx/packages.lkc	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/packages.lkc	2015-10-31 22:49:40.610780914 +0100
 @@ -32,7 +32,7 @@
  
  config PKG_FIRMWARE_IMX
@@ -6272,9 +6936,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 -    help
 -      This package provides Linux perf tool.
 -
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/pkg_map ltib.new/config/platform/imx/pkg_map
---- ltib/config/platform/imx/pkg_map	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/pkg_map	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/pkg_map ltib/config/platform/imx/pkg_map
+--- ltib.reference/config/platform/imx/pkg_map	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/pkg_map	2015-10-31 22:49:40.610780914 +0100
 @@ -9,11 +9,19 @@
  PKG_IMX_TEST = imx-test
  PKG_KOBS_NG = kobs-ng
@@ -6318,9 +6982,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  PKG_LTP_IMX = ltp-imx
  PKG_ATHEROS_WIFI = atheros-wifi
 -PKG_PERF = perf
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/preconfigs.lkc ltib.new/config/platform/imx/preconfigs.lkc
---- ltib/config/platform/imx/preconfigs.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/preconfigs.lkc	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/preconfigs.lkc ltib/config/platform/imx/preconfigs.lkc
+--- ltib.reference/config/platform/imx/preconfigs.lkc	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/preconfigs.lkc	2015-10-31 22:49:40.610780914 +0100
 @@ -21,12 +21,10 @@
          bool imx35_3stack
      config PCF_PLATFORM_IMX37_3STACK
@@ -6356,9 +7020,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  
  config PCF_PROFILE
      string
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/release_gnome.profile ltib.new/config/platform/imx/release_gnome.profile
---- ltib/config/platform/imx/release_gnome.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/release_gnome.profile	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/release_gnome.profile ltib/config/platform/imx/release_gnome.profile
+--- ltib.reference/config/platform/imx/release_gnome.profile	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/release_gnome.profile	2015-10-31 22:49:40.610780914 +0100
 @@ -7,8 +7,8 @@
  CONFIG_PKG_AMD_GPU_BIN_MX35=y
  CONFIG_PKG_AMD_GPU_BIN_MX51=y
@@ -6416,9 +7080,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  CONFIG_QTOPIA_NONE=y
 -CONFIG_PKG_PERF=y
 -CONFIG_PKG_PYTHON=y
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/release.profile ltib.new/config/platform/imx/release.profile
---- ltib/config/platform/imx/release.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/release.profile	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/release.profile ltib/config/platform/imx/release.profile
+--- ltib.reference/config/platform/imx/release.profile	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/release.profile	2015-10-31 22:49:40.610780914 +0100
 @@ -3,7 +3,6 @@
  CONFIG_PKG_AMD_GPU_BIN_MX35=y
  CONFIG_PKG_AMD_GPU_BIN_MX51=y
@@ -6433,10 +7097,10 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  CONFIG_PKG_ZLIB=y
 -CONFIG_PKG_PERF=y
 -CONFIG_PKG_PYTHON=y
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/.tmpconfig.h ltib.new/config/platform/imx/.tmpconfig.h
---- ltib/config/platform/imx/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
-+++ ltib.new/config/platform/imx/.tmpconfig.h	2015-09-23 14:29:35.000000000 +0200
-@@ -0,0 +1,645 @@
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
+--- ltib.reference/config/platform/imx/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
++++ ltib/config/platform/imx/.tmpconfig.h	2015-10-31 22:49:40.614780914 +0100
+@@ -0,0 +1,652 @@
 +/*
 + * Automatically generated C config: don't edit
 + * LTIB version: 8.1.2
@@ -6760,6 +7424,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +#undef CONFIG_PKG_LIBTIFF
 +#undef CONFIG_PKG_LIBTOOL
 +#define CONFIG_PKG_LIBUSB 1
++#define CONFIG_PKG_LIBUSB1 1
 +#undef CONFIG_PKG_LIBXML2
 +#undef CONFIG_PKG_LINUX_ATM
 +#undef CONFIG_PKG_LINUX_WLAN
@@ -6846,6 +7511,12 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +#define CONFIG_QTOPIA_NONE 1
 +#undef CONFIG_PKG_QTOPIA
 +#undef CONFIG_PKG_QTOPIA_4
++
++/*
++ * Cellular USB modem support
++ */
++#define CONFIG_PKG_USB_MODESWITCH 1
++#define CONFIG_PKG_USB_MODESWITCH_DATA 1
 +
 +/*
 + * Applications
@@ -7082,9 +7753,27 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +#define CONFIG_SYSCFG_CUTARG "zImage"
 +#define CONFIG_CAP_FSL_EXT 1
 +#define CONFIG_LTIB_RELEASE "8.1.2"
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/platform/imx/updater.profile ltib.new/config/platform/imx/updater.profile
---- ltib/config/platform/imx/updater.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/platform/imx/updater.profile	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/u-boot.spec.in ltib/config/platform/imx/u-boot.spec.in
+--- ltib.reference/config/platform/imx/u-boot.spec.in	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/u-boot.spec.in	2015-10-31 22:49:40.614780914 +0100
+@@ -13,6 +13,7 @@
+ Source          : %{name}-%{version}.tar.bz2
+ Source1         : %{name}-v%{version}-%{release}.tar.bz2
+ BuildRoot       : %{_tmppath}/%{name}
++Patch1          : u-boot-2009.08-1418123257.patch
+ Prefix          : %{pfx}
+ 
+ %Description
+@@ -28,5 +29,6 @@
+ 
+ chmod 755 patches/patch-uboot.sh
+ ./patches/patch-uboot.sh
++%patch1 -p1
+ 
+ 
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/updater.profile ltib/config/platform/imx/updater.profile
+--- ltib.reference/config/platform/imx/updater.profile	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/platform/imx/updater.profile	2015-10-31 22:49:40.614780914 +0100
 @@ -10,8 +10,4 @@
  CONFIG_PKG_MTD_UTILS=y
  CONFIG_PKG_E2FSPROGS=y
@@ -7095,9 +7784,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 -CONFIG_PKG_UDEV_WANT_NON_RAID=y
 -CONFIG_PKG_UDEV=y
 +CONFIG_PKG_DOSFSTOOLS=y
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/.tmpconfig.h ltib.new/config/.tmpconfig.h
---- ltib/config/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
-+++ ltib.new/config/.tmpconfig.h	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.tmpconfig.h ltib/config/.tmpconfig.h
+--- ltib.reference/config/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
++++ ltib/config/.tmpconfig.h	2015-10-31 22:49:40.614780914 +0100
 @@ -0,0 +1,59 @@
 +/*
 + * Automatically generated C config: don't edit
@@ -7158,9 +7847,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +#define CONFIG_SYSCFG_CUTARG "zImage"
 +#define CONFIG_CAP_FSL_EXT 1
 +#define CONFIG_LTIB_RELEASE "8.1.2"
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/userspace/packages.lkc ltib.new/config/userspace/packages.lkc
---- ltib/config/userspace/packages.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/userspace/packages.lkc	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/packages.lkc ltib/config/userspace/packages.lkc
+--- ltib.reference/config/userspace/packages.lkc	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/userspace/packages.lkc	2015-10-31 22:49:40.614780914 +0100
 @@ -229,6 +229,13 @@
        --with : debug access poll
        --without : gzip sendfile
@@ -7230,22 +7919,59 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
      select PKG_LIBBONOBOUI
      bool "libgnomeui"
      help
-@@ -2675,6 +2691,14 @@
-        Enable Phonon library.
- endmenu
+@@ -1904,6 +1920,13 @@
+     help
+       This package provides a way for applications to access USB devices.
  
++config PKG_LIBUSB1
++    depends CAP_HAS_MMU
++    bool "libusb1"
++    default n
++    help
++       A library which allows userspace access to USB devices.
++
+ config PKG_LIBXML2
+     depends CAP_HAS_MMU
+     bool "libxml2"
+@@ -2673,6 +2696,13 @@
+     default n
+     help
+        Enable Phonon library.
++
 +config PKG_QWT
 +    depends PKG_QT_EMBEDDED
 +    bool "qwt"
 +    default n
 +    help
 +       Enable Qwt library, used to draw graphics.
+ endmenu
+ 
+ menu "Qtopia"
+@@ -2768,6 +2798,23 @@
+        Not building these tools saves time when building.  Select y here
+        to enable designer, linguist, and assistant GUI tools.
+ 
++menu "Cellular USB modem support"
++config PKG_USB_MODESWITCH
++    depends PKG_LIBUSB1
++    depends PKG_USB_MODESWITCH_DATA
++    bool "usb_modeswitch"
++    default n
++    help
++       USB Modeswitch gets mobile broadband cards in operational mode.
++
++config PKG_USB_MODESWITCH_DATA
++    depends PKG_USB_MODESWITCH
++    bool "usb_modeswitch_data"
++    default n
++    help
++       Data for the USB Modeswitch tool.
 +endmenu
 +
- menu "Qtopia"
- choice
-     prompt "Qtopia version"
-@@ -3346,7 +3370,7 @@
+ menu "Applications"
+ config PKG_QTOPIA_WANT_APP_CALCULATOR
+     depends PKG_QTOPIA_4
+@@ -3346,7 +3393,7 @@
      bool "totem-pl-parser"
      select PKG_EVOLUTION_DATA_SERVER
      select PKG_GTK2
@@ -7254,7 +7980,7 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3862,6 +3886,11 @@
+@@ -3862,6 +3909,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  
@@ -7266,9 +7992,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  source ../../userspace/extra_packages.lkc
  
  endmenu
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/userspace/pkg_map ltib.new/config/userspace/pkg_map
---- ltib/config/userspace/pkg_map	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/userspace/pkg_map	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/pkg_map ltib/config/userspace/pkg_map
+--- ltib.reference/config/userspace/pkg_map	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/userspace/pkg_map	2015-10-31 22:49:40.618780914 +0100
 @@ -53,7 +53,6 @@
  PKG_BZIP2                        = bzip2
  PKG_DIFFUTILS                    = diffutils
@@ -7301,17 +8027,20 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
  PKG_I2C_TOOLS                    = i2c-tools
  PKG_WATCHDOG                     = watchdog
  PKG_DSPI                         = dspi
-@@ -407,6 +410,7 @@
+@@ -407,6 +410,10 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
 +PKG_QWT                          = qwt
++PKG_LIBUSB1                      = libusb1
++PKG_USB_MODESWITCH               = usb_modeswitch
++PKG_USB_MODESWITCH_DATA          = usb_modeswitch_data
  
  # leave these as the last 3 packages in the build order
  PKG_SYSCONFIG                    = sysconfig
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/userspace/sysconfig.lkc ltib.new/config/userspace/sysconfig.lkc
---- ltib/config/userspace/sysconfig.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/userspace/sysconfig.lkc	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/sysconfig.lkc ltib/config/userspace/sysconfig.lkc
+--- ltib.reference/config/userspace/sysconfig.lkc	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/userspace/sysconfig.lkc	2015-10-31 22:49:40.618780914 +0100
 @@ -126,6 +126,16 @@
         These will be passed to boa as command line arguments.
         The default is '-c /etc' and '-c /etc -e' for MMUless.
@@ -7349,9 +8078,9 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +    start at boot the S10setup script script in /etc/rc.d/init.d
 +    that performs system update through USB key.
  endmenu
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/config/userspace/toolchain.lkc ltib.new/config/userspace/toolchain.lkc
---- ltib/config/userspace/toolchain.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib.new/config/userspace/toolchain.lkc	2015-09-23 14:29:35.000000000 +0200
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/toolchain.lkc ltib/config/userspace/toolchain.lkc
+--- ltib.reference/config/userspace/toolchain.lkc	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/userspace/toolchain.lkc	2015-10-31 22:49:40.618780914 +0100
 @@ -541,21 +541,6 @@
              list of choices select the custom option and enter the
              toolchain path and prefix in the appropriate boxes.
@@ -7408,9 +8137,8 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
      default "-O2 -march=armv6 -mfpu=vfp -mfloat-abi=softfp" if (( PLATFORM = imx31_3stack || PLATFORM = imx35_3stack || PLATFORM = imx31ads || PLATFORM = imx37_3stack ) && TOOLCHAIN_ARMEABI_FSL_GCC_MULTILIB)
      default "-O2 -march=armv5te" if (( PLATFORM = imx21ads || PLATFORM = imx233 || PLATFORM = imx25_3stack || PLATFORM = imx27ads || PLATFORM = imx28 ) && TOOLCHAIN_ARMEABI_FSL_GCC_MULTILIB)
  
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/.config ltib.new/.config
---- ltib/.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib.new/.config	2015-09-23 14:29:35.000000000 +0200
+--- ltib.reference/.config	1970-01-01 01:00:00.000000000 +0100
++++ ltib/.config	2015-10-31 22:49:40.618780914 +0100
 @@ -0,0 +1,7 @@
 +#
 +# Automatically generated make config: don't edit
@@ -7419,9 +8147,8 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +CONFIG_CONFIG_TITLE="GNU/Linux Target Image Builder : Platform Selection"
 +CONFIG_PLATFORM_imx=y
 +CONFIG_PLATFORM_DIR="config/platform/imx"
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/.config.cmd ltib.new/.config.cmd
---- ltib/.config.cmd	1970-01-01 01:00:00.000000000 +0100
-+++ ltib.new/.config.cmd	2015-09-23 14:29:35.000000000 +0200
+--- ltib.reference/.config.cmd	1970-01-01 01:00:00.000000000 +0100
++++ ltib/.config.cmd	2015-10-31 22:49:40.618780914 +0100
 @@ -0,0 +1,6 @@
 +deps_config := \
 +	/home/imx28/mect/ltib/config/main.lkc
@@ -7429,9 +8156,8 @@ diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc
 +.config include/linux/autoconf.h: $(deps_config)
 +
 +$(deps_config):
-diff -aurN '--exclude=kernel-2.6.35.spec.in' '--exclude=dist' '--exclude=.ltibrc' ltib/.tmpconfig.h ltib.new/.tmpconfig.h
---- ltib/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
-+++ ltib.new/.tmpconfig.h	2015-09-23 14:29:35.000000000 +0200
+--- ltib.reference/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
++++ ltib/.tmpconfig.h	2015-10-31 22:49:40.618780914 +0100
 @@ -0,0 +1,8 @@
 +/*
 + * Automatically generated C config: don't edit

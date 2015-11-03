@@ -175,15 +175,19 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/network skell-
 diff --exclude CVS --exclude .git -uNr skell-1.18/local/etc/sysconfig/net.conf skell-1.18.modified/local/etc/sysconfig/net.conf
 --- skell-1.18/local/etc/sysconfig/net.conf	1970-01-01 01:00:00.000000000 +0100
 +++ skell-1.18.modified/local/etc/sysconfig/net.conf	2011-07-13 08:45:13.545022664 +0200
-@@ -0,0 +1,11 @@
+@@ -0,0 +1,15 @@
 +#
 +# set up the network interfaces
 +#
-+IPADDR0=192.168.0.24
++MAC0=00:11:22:22:51:14
++IPADDR0=192.168.5.114
 +NETMASK0=255.255.255.0
-+GATEWAY0=""
-+NAMESERVER0=""
-+IPADDR1=""
-+NETMASK1=""
-+GATEWAY1=""
-+NAMESERVER1=""
++GATEWAY0=192.168.5.10
++NAMESERVER01=1.0.0.0
++NAMESERVER02=1.0.0.0
++MAC1=
++IPADDR1=
++NETMASK1=
++GATEWAY1=
++NAMESERVER11=
++NAMESERVER12=

@@ -40,19 +40,3 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/home/user/.rhosts skell-1.18.m
 +++ skell-1.18.modified/home/user/.rhosts	1970-01-01 01:00:00.000000000 +0100
 @@ -1 +0,0 @@
 -+ +
-diff --exclude CVS --exclude .git -uNr skell-1.18/local/etc/sysconfig/net.conf skell-1.18.modified/local/etc/sysconfig/net.conf
---- skell-1.18/local/etc/sysconfig/net.conf	2012-02-14 14:13:26.858687764 +0100
-+++ skell-1.18.modified/local/etc/sysconfig/net.conf	2012-02-14 12:33:44.434687682 +0100
-@@ -1,10 +1,12 @@
- #
- # set up the network interfaces
- #
-+MAC0="00:11:22:22:11:1A"
- IPADDR0=192.168.0.24
- NETMASK0=255.255.255.0
- GATEWAY0=""
- NAMESERVER0=""
-+MAC1=""
- IPADDR1=""
- NETMASK1=""
- GATEWAY1=""

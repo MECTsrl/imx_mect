@@ -158,7 +158,6 @@ RFSPKGS_TPAC1007_480x272 := \
 RFSPKGS_TPAC1007_480x272 := $(RFSPKGS_TPAC1007_480x272:%=$(RPMDIR)/%)
 
 LFSPKGS_TPAC1007_480x272 := \
-	skell-lfs-1.18-2.arm.rpm \
 	local-1.0-1_$(BUILD_RELEASE).arm.rpm \
 	local-ATCMControl_runtime_system-1.0-1_$(BUILD_RELEASE).arm.rpm \
 	local-cgic_work-1.0-1_$(BUILD_RELEASE).arm.rpm \
@@ -367,7 +366,7 @@ ltibbuild: hosttools
 	sudo rm -rf $(FSDIR)/rootfs
 	sudo mkdir -p $(FSDIR)/rootfs
 	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') $(FSDIR)
-	sed -i "s,^%ldirs$$,\0\n$(FTPDIR)," $(LTIBDIR)/.ltibrc
+	sed -i "s,^%ldirs$$,\0\n$(FTPDIR)\n$(CSXCDIR)/arm-none-linux-gnueabi/libc/usr/bin," $(LTIBDIR)/.ltibrc
 	cd $(LTIBDIR); PATH=/usr/lib/ccache:$$PATH GIT_AUTHOR_NAME=$(USER_NAME) GIT_AUTHOR_EMAIL=$(TARGET_UNIX_NAME)@$(HOST_NAME) GIT_COMMITTER_NAME=$(USER_NAME) GIT_COMMITTER_EMAIL=$(TARGET_UNIX_NAME)@$(HOST_NAME) ./ltib
 
 # Set up the host tools.
@@ -447,7 +446,6 @@ TPAC1007_480x272_rfs: $(RFSPKGS_TPAC1007_480x272)
 		echo "Qt:      $(QT_VERSION)"; \
 		echo "Qwt:     $(QWT_VERSION)" \
 	) > $(RFSDIR)/$(RFS_VERSION_FILE)
-	#sudo install -D -p $(CSXCDIR)/arm-none-linux-gnueabi/libc/usr/bin/gdbserver $(RFSDIR)/usr/bin/gdbserver
 	du -sh --apparent-size $(RFSDIR)
 
 .PHONY: TPAC1007_480x272_lfs

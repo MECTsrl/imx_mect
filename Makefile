@@ -479,8 +479,15 @@ TPAC1007_480x272_mfg: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x27
 	cd $(MFGDIR); zip -0r $(MFGZIP) *
 
 .PHONY: TPAC1007_480x272_win
+TPAC1007_480x272_win: TGTTMPDIR = $(TGTDIR)/tmp
 TPAC1007_480x272_win: TPAC1007_480x272_rfs
-	-BZIP2=-1 tar cjhf $(TGTDIR)/rootfs_rsync-L.tar.bz2 --hard-dereference --transform=s/^rootfs/rootfs_rsync-L/ -C $(LTIBDIR) rootfs/usr/include rootfs/usr/lib rootfs/lib rootfs/usr/src/linux/include
+	rm -rf $(TGTTMPDIR)
+	-for d in /usr/include /usr/lib /lib /usr/src/linux/include; do \
+		mkdir -p $(TGTTMPDIR)/rootfs$$d; \
+		rsync -aL $(LTIBDIR)/rootfs$$d $(TGTTMPDIR)/rootfs$$d; \
+	done
+	cd $(TGTTMPDIR); zip -1qr $(TGTDIR)/rootfs_rsync-L.zip rootfs
+	rm -rf $(TGTTMPDIR)
 
 
 .PHONY: ltib_patch

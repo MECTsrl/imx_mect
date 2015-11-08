@@ -1,24 +1,26 @@
 # Build version information.
-BUILD_RELEASE = 6.6rc0
-BUILD_TARGET_TPAC1006_320x240 = TPAC1006_320x240
-BUILD_TARGET_TPAC1006_640x480 = TPAC1006_640x480
-BUILD_TARGET_TPAC1007_480x272 = TPAC1007_480x272
-BUILD_TARGET_TPAC1008_800x600 = TPAC1008_800x600
+BUILD_RELEASE := 6.6rc0
+BUILD_TARGET_TPAC1006_320x240 := TPAC1006_320x240
+BUILD_TARGET_TPAC1006_640x480 := TPAC1006_640x480
+BUILD_TARGET_TPAC1007_480x272 := TPAC1007_480x272
+BUILD_TARGET_TPAC1008_800x600 := TPAC1008_800x600
 BUILD_QTVERSION = $(QT_VERSION)
 BUILD_QWTVERSION = $(QWT_VERSION)
 
-QT_VERSION = 4.8.5
-QWT_VERSION = 6.1.0
+QT_VERSION := 4.8.5
+QWT_VERSION := 6.1.0
 
 # Name of the root file system version file
-RFS_VERSION_FILE = rootfs_version
+RFS_VERSION_FILE := rootfs_version
 
+# Target pltform architecture
+TARGET_ARCH := arm
 # UNIX name of the target platform
-TARGET_UNIX_NAME = imx28
+TARGET_UNIX_NAME := imx28
 
 # Developer info for git
-USER_NAME = "Embedded developer"
-HOST_NAME = "development.localdomain"
+USER_NAME := "Embedded developer"
+HOST_NAME := "development.localdomain"
 
 # Download the archives here.
 FTPDIR = $(CURDIR)/src
@@ -35,142 +37,152 @@ LTIBSPECDIR = $(LTIBDIR)/dist/lfs-5.1
 # Unpack the archives here.
 TMPDIR = $(CURDIR)/tmp
 # Archive repository
-FTPURL = http://www.mect.it/archive
+FTPURL := http://www.mect.it/archive
 # Hardcoded Freescale directory
-FSDIR = /opt/freescale
+FSDIR := /opt/freescale
 # LPP location
 LPPDIR = $(FSDIR)/pkgs
 # RPM archive
-RPMDIR = $(CURDIR)/ltib/rpm/RPMS/arm
+RPMDIR = $(CURDIR)/ltib/rpm/RPMS/$(TARGET_ARCH)
 # Root file system top-level directory
 IMGDIR = $(CURDIR)/images-all
 # Draft directory for rpmbuild
 TMPRPMDIR = /tmp/rpm-$(USER)
+# Expand to the name of the kernel RPM built by LTIB.
+LTIB_KERNEL_RPM = $(RPMDIR)/$(shell $(FSDIR)/ltib/usr/bin/rpm --root $(LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides kernel).$(TARGET_ARCH).rpm
+# Expand to the name of the timestamp when the kernel RPM was built by LTIB.
+LTIB_KERNEL_TS_NAME = last-kernel-build
+LTIB_KERNEL_TS_RPM = $(RPMDIR)/$(shell $(FSDIR)/ltib/usr/bin/rpm --root $(LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides $(LTIB_KERNEL_TS_NAME)).$(TARGET_ARCH).rpm
+# Kernel configuration file.
+KERNEL_CONF := $(LTIBDIR)/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 
 
 # Extension of the MD5 checksums for the downloads.
-MD5EXT = md5
+MD5EXT := md5
 
 # Packages for USB serial kernel modules.
 #
 
-RFSPKG_USBSERIAL_USBSERIAL := kernel-dev-usbserial-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_AIRCABLE := kernel-dev-usbserial-aircable-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_ARK3116 := kernel-dev-usbserial-ark3116-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_BELKIN := kernel-dev-usbserial-belkin_sa-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_CH341 := kernel-dev-usbserial-ch341-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_CP210X := kernel-dev-usbserial-cp210x-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_CYBERJACK := kernel-dev-usbserial-cyberjack-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_CYPRESS_M8 := kernel-dev-usbserial-cypress_m8-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_DEBUG := kernel-dev-usbserial-debug-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_DIGI_ACCELEPORT := kernel-dev-usbserial-digi_acceleport-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_EMPEG := kernel-dev-usbserial-empeg-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_FTDI_SIO := kernel-dev-usbserial-ftdi_sio-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_FUNSOFT := kernel-dev-usbserial-funsoft-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_GARMIN_GPS := kernel-dev-usbserial-garmin_gps-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_HP4X := kernel-dev-usbserial-hp4x-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_IO_EDGEPORT := kernel-dev-usbserial-io_edgeport-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_IO_TI := kernel-dev-usbserial-io_ti-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_IPAQ := kernel-dev-usbserial-ipaq-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_IPW := kernel-dev-usbserial-ipw-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_IR := kernel-dev-usbserial-ir-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_IUU_PHOENIX := kernel-dev-usbserial-iuu_phoenix-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_KEYSPAN := kernel-dev-usbserial-keyspan-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_KEYSPAN_PDA := kernel-dev-usbserial-keyspan_pda-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_KL5KUSB105 := kernel-dev-usbserial-kl5kusb105-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_KOBIL_SCT := kernel-dev-usbserial-kobil_sct-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_MCT_U232 := kernel-dev-usbserial-mct_u232-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_MOS7720 := kernel-dev-usbserial-mos7720-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_MOS7840 := kernel-dev-usbserial-mos7840-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_MOTO_MODEM := kernel-dev-usbserial-moto_modem-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_NAVMAN := kernel-dev-usbserial-navman-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_OMNINET := kernel-dev-usbserial-omninet-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_OPTICON := kernel-dev-usbserial-opticon-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_OPTION := kernel-dev-usbserial-option-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_OTI6858 := kernel-dev-usbserial-oti6858-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_PL2303 := kernel-dev-usbserial-pl2303-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_QCAUX := kernel-dev-usbserial-qcaux-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_QCSERIAL := kernel-dev-usbserial-qcserial-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_SAFE_SERIAL := kernel-dev-usbserial-safe_serial-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_SIEMENS_MPI := kernel-dev-usbserial-siemens_mpi-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_SIERRA := kernel-dev-usbserial-sierra-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_SPCP8X5 := kernel-dev-usbserial-spcp8x5-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_SYMBOLSERIAL := kernel-dev-usbserial-symbolserial-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_TI_3410_5052 := kernel-dev-usbserial-ti_3410_5052-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_VISOR := kernel-dev-usbserial-visor-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_VIVOPAY := kernel-dev-usbserial-vivopay-serial-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_WHITEHEAT := kernel-dev-usbserial-whiteheat-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_WWAN := kernel-dev-usbserial-wwan-2.6.35.3-imx_1.1.0.arm.rpm
-RFSPKG_USBSERIAL_ZIO := kernel-dev-usbserial-zio-2.6.35.3-imx_1.1.0.arm.rpm
+RFSPKG_USBSERIAL_USBSERIAL := kernel-dev-usbserial-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_AIRCABLE := kernel-dev-usbserial-aircable-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_ARK3116 := kernel-dev-usbserial-ark3116-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_BELKIN := kernel-dev-usbserial-belkin_sa-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_CH341 := kernel-dev-usbserial-ch341-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_CP210X := kernel-dev-usbserial-cp210x-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_CYBERJACK := kernel-dev-usbserial-cyberjack-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_CYPRESS_M8 := kernel-dev-usbserial-cypress_m8-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_DEBUG := kernel-dev-usbserial-debug-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_DIGI_ACCELEPORT := kernel-dev-usbserial-digi_acceleport-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_EMPEG := kernel-dev-usbserial-empeg-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_FTDI_SIO := kernel-dev-usbserial-ftdi_sio-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_FUNSOFT := kernel-dev-usbserial-funsoft-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_GARMIN_GPS := kernel-dev-usbserial-garmin_gps-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_HP4X := kernel-dev-usbserial-hp4x-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_IO_EDGEPORT := kernel-dev-usbserial-io_edgeport-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_IO_TI := kernel-dev-usbserial-io_ti-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_IPAQ := kernel-dev-usbserial-ipaq-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_IPW := kernel-dev-usbserial-ipw-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_IR := kernel-dev-usbserial-ir-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_IUU_PHOENIX := kernel-dev-usbserial-iuu_phoenix-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_KEYSPAN := kernel-dev-usbserial-keyspan-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_KEYSPAN_PDA := kernel-dev-usbserial-keyspan_pda-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_KL5KUSB105 := kernel-dev-usbserial-kl5kusb105-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_KOBIL_SCT := kernel-dev-usbserial-kobil_sct-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_MCT_U232 := kernel-dev-usbserial-mct_u232-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_MOS7720 := kernel-dev-usbserial-mos7720-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_MOS7840 := kernel-dev-usbserial-mos7840-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_MOTO_MODEM := kernel-dev-usbserial-moto_modem-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_NAVMAN := kernel-dev-usbserial-navman-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_OMNINET := kernel-dev-usbserial-omninet-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_OPTICON := kernel-dev-usbserial-opticon-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_OPTION := kernel-dev-usbserial-option-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_OTI6858 := kernel-dev-usbserial-oti6858-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_PL2303 := kernel-dev-usbserial-pl2303-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_QCAUX := kernel-dev-usbserial-qcaux-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_QCSERIAL := kernel-dev-usbserial-qcserial-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_SAFE_SERIAL := kernel-dev-usbserial-safe_serial-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_SIEMENS_MPI := kernel-dev-usbserial-siemens_mpi-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_SIERRA := kernel-dev-usbserial-sierra-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_SPCP8X5 := kernel-dev-usbserial-spcp8x5-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_SYMBOLSERIAL := kernel-dev-usbserial-symbolserial-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_TI_3410_5052 := kernel-dev-usbserial-ti_3410_5052-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_VISOR := kernel-dev-usbserial-visor-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_VIVOPAY := kernel-dev-usbserial-vivopay-serial-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_WHITEHEAT := kernel-dev-usbserial-whiteheat-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_WWAN := kernel-dev-usbserial-wwan-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
+RFSPKG_USBSERIAL_ZIO := kernel-dev-usbserial-zio-2.6.35.3-imx_1.1.0.$(TARGET_ARCH).rpm
 
 # Packages for USB 3G modems
 #
 
-RFSPKG_USB3G_MODESWITCH := usb-modeswitch-rfs-2.2.5-1.arm.rpm
-RFSPKG_USB3G_MODESWITCH_DATA := usb-modeswitch-data-rfs-20150627-1.arm.rpm
-RFSPKG_USB3G_LIBUSB1 := libusb1-rfs-1.0.20-1.arm.rpm
+RFSPKG_USB3G_MODESWITCH := usb-modeswitch-rfs-2.2.5-1.$(TARGET_ARCH).rpm
+RFSPKG_USB3G_MODESWITCH_DATA := usb-modeswitch-data-rfs-20150627-1.$(TARGET_ARCH).rpm
+RFSPKG_USB3G_LIBUSB1 := libusb1-rfs-1.0.20-1.$(TARGET_ARCH).rpm
 
 # Package list for creating the root file system for various targets.
 #
 
-RFSPKGS := \
-	base_libs-rfs-1.2-1.arm.rpm \
-	boa-rfs-0.94.14rc21-1.arm.rpm \
-	busybox-rfs-1.15.0-1.arm.rpm \
-	cantest-rfs-1.0-1.arm.rpm \
-	dhcp-rfs-3.0.3b1-1.arm.rpm \
-	dropbear-rfs-0.52-1.arm.rpm \
-	e2fsprogs-rfs-1.41.4-1.arm.rpm \
-	expat-rfs-1.95.8-1.arm.rpm \
-	fontconfig-rfs-2.4.2-1.arm.rpm \
-	freetype-rfs-2.3.9-1.arm.rpm \
-	glib2-rfs-2.18.1-1.arm.rpm \
-	hotplug-rfs-2004_03_29-3.arm.rpm \
-	imx-bootlets-src-rfs-2.6.35.3-1.1.0.arm.rpm \
-	iproute-rfs-2.6.37-050330.arm.rpm \
+COMMON_RFSPKGS := \
+	base_libs-rfs-1.2-1.$(TARGET_ARCH).rpm \
+	boa-rfs-0.94.14rc21-1.$(TARGET_ARCH).rpm \
+	busybox-rfs-1.15.0-1.$(TARGET_ARCH).rpm \
+	cantest-rfs-1.0-1.$(TARGET_ARCH).rpm \
+	dhcp-rfs-3.0.3b1-1.$(TARGET_ARCH).rpm \
+	dropbear-rfs-0.52-1.$(TARGET_ARCH).rpm \
+	e2fsprogs-rfs-1.41.4-1.$(TARGET_ARCH).rpm \
+	expat-rfs-1.95.8-1.$(TARGET_ARCH).rpm \
+	fontconfig-rfs-2.4.2-1.$(TARGET_ARCH).rpm \
+	freetype-rfs-2.3.9-1.$(TARGET_ARCH).rpm \
+	glib2-rfs-2.18.1-1.$(TARGET_ARCH).rpm \
+	hotplug-rfs-2004_03_29-3.$(TARGET_ARCH).rpm \
+	iproute-rfs-2.6.37-050330.$(TARGET_ARCH).rpm \
+	libsocketcan-rfs-0.0.8-0.$(TARGET_ARCH).rpm \
+	libtermcap-rfs-2.0.8-31_1.$(TARGET_ARCH).rpm \
+	libusb1-rfs-1.0.20-1.$(TARGET_ARCH).rpm \
+	libusb-rfs-0.1.8-1.$(TARGET_ARCH).rpm \
+	lzo-rfs-2.03-0.$(TARGET_ARCH).rpm \
+	merge-rfs-0.1-1.$(TARGET_ARCH).rpm \
+	modeps-rfs-1.0-1.$(TARGET_ARCH).rpm \
+	mtd-utils-rfs-201006-1.$(TARGET_ARCH).rpm \
+	mysql-rfs-4.1.12-0.$(TARGET_ARCH).rpm \
+	ncurses-rfs-5.3-1.$(TARGET_ARCH).rpm \
+	ppp-rfs-2.4.4-1.$(TARGET_ARCH).rpm \
+	qt-embedded-rfs-4.8.5-1.$(TARGET_ARCH).rpm \
+	qwt-rfs-6.1.0-1.$(TARGET_ARCH).rpm \
+	rsync-rfs-2.6.5-1.$(TARGET_ARCH).rpm \
+	sftp-server-rfs-4.3p2-1.$(TARGET_ARCH).rpm \
+	skell-rfs-1.18-2.$(TARGET_ARCH).rpm \
+	sqlite-rfs-3.6.12-1.$(TARGET_ARCH).rpm \
+	sysconfig-rfs-1.2-5.$(TARGET_ARCH).rpm \
+	tslib-rfs-1.0-3.$(TARGET_ARCH).rpm \
+	udev-rfs-117-5.$(TARGET_ARCH).rpm \
+	usb-modeswitch-data-rfs-20150627-1.$(TARGET_ARCH).rpm \
+	usb-modeswitch-rfs-2.2.5-1.$(TARGET_ARCH).rpm \
+	xenomai-rfs-2.6.0-1.$(TARGET_ARCH).rpm \
+	zip-rfs-3.0.0-0.$(TARGET_ARCH).rpm \
+	zlib-rfs-1.2.3-2.$(TARGET_ARCH).rpm \
+
+COMMON_RFSPKGS := $(COMMON_RFSPKGS:%=$(RPMDIR)/%)
+
+LFSPKGS := \
+	local-1.0-1_$(BUILD_RELEASE).$(TARGET_ARCH).rpm \
+	local-ATCMControl_runtime_system-1.0-1_$(BUILD_RELEASE).$(TARGET_ARCH).rpm \
+	local-cgic_work-1.0-1_$(BUILD_RELEASE).$(TARGET_ARCH).rpm \
+	local-factory_data-1.0-1_$(BUILD_RELEASE).$(TARGET_ARCH).rpm \
+	local-setup_time-1.0-1_$(BUILD_RELEASE).$(TARGET_ARCH).rpm \
+	local-splash-1.0-1_$(BUILD_RELEASE).$(TARGET_ARCH).rpm \
+
+LFSPKGS := $(LFSPKGS:%=$(RPMDIR)/%)
+
+TARGET_RFSPKGS := \
 	kernel-rfs-2.6.35.3-imx_1.1.0.arm.rpm \
-	libsocketcan-rfs-0.0.8-0.arm.rpm \
-	libtermcap-rfs-2.0.8-31_1.arm.rpm \
-	libusb1-rfs-1.0.20-1.arm.rpm \
-	libusb-rfs-0.1.8-1.arm.rpm \
-	lzo-rfs-2.03-0.arm.rpm \
-	merge-rfs-0.1-1.arm.rpm \
-	modeps-rfs-1.0-1.arm.rpm \
-	mtd-utils-rfs-201006-1.arm.rpm \
-	mysql-rfs-4.1.12-0.arm.rpm \
-	ncurses-rfs-5.3-1.arm.rpm \
-	ppp-rfs-2.4.4-1.arm.rpm \
-	qt-embedded-rfs-4.8.5-1.arm.rpm \
-	qwt-rfs-6.1.0-1.arm.rpm \
-	rsync-rfs-2.6.5-1.arm.rpm \
-	sftp-server-rfs-4.3p2-1.arm.rpm \
-	skell-rfs-1.18-2.arm.rpm \
-	sqlite-rfs-3.6.12-1.arm.rpm \
-	sysconfig-rfs-1.2-5.arm.rpm \
-	tslib-rfs-1.0-3.arm.rpm \
-	udev-rfs-117-5.arm.rpm \
-	usb-modeswitch-data-rfs-20150627-1.arm.rpm \
-	usb-modeswitch-rfs-2.2.5-1.arm.rpm \
-	xenomai-rfs-2.6.0-1.arm.rpm \
-	zip-rfs-3.0.0-0.arm.rpm \
-	zlib-rfs-1.2.3-2.arm.rpm \
 	$(RFSPKG_USBSERIAL_PL2303) \
 	$(RFSPKG_USBSERIAL_USBSERIAL) \
 	$(RFSPKG_USB3G_MODESWITCH) \
 	$(RFSPKG_USB3G_MODESWITCH_DATA) \
 	$(RFSPKG_USB3G_LIBUSB1) \
 
-RFSPKGS := $(RFSPKGS:%=$(RPMDIR)/%)
-
-LFSPKGS := \
-	local-1.0-1_$(BUILD_RELEASE).arm.rpm \
-	local-ATCMControl_runtime_system-1.0-1_$(BUILD_RELEASE).arm.rpm \
-	local-cgic_work-1.0-1_$(BUILD_RELEASE).arm.rpm \
-	local-factory_data-1.0-1_$(BUILD_RELEASE).arm.rpm \
-	local-setup_time-1.0-1_$(BUILD_RELEASE).arm.rpm \
-	local-splash-1.0-1_$(BUILD_RELEASE).arm.rpm \
-
-LFSPKGS := $(LFSPKGS:%=$(RPMDIR)/%)
+TARGET_RFSPKGS := $(TARGET_RFSPKGS:%=$(RPMDIR)/%)
 
 
 # Set archive sources
@@ -397,56 +409,63 @@ qt:
 	for f in $(FSPKG); do cp $$f $(LTIBDIR)/rpm/SOURCES; done
 	PATH=/usr/lib/ccache:$(CSXCDIR)/bin:$(PATH) MAKEFLAGS=-j`grep -c ^processor /proc/cpuinfo` rpmbuild --define 'toolchain 1' --define 'toolchain_install_dir $(QT_INSTALL_DIR)' --define '_topdir $(LTIBDIR)/rpm' --dbpath /tmp/rpm-$(USER)/rpmdb --target arm --define '_target_cpu arm' --define '_prefix /opt' --define '_rpmdir /tmp/rpm-$(USER)/RPMS' -bb --clean --rmsource $(LTIBDIR)/dist/lfs-5.1/qt/qt-embedded.spec
 	-sudo rpm --force-debian --root / --dbpath /tmp/rpm-$(USER)/rpmdb -e --allmatches --nodeps --define '_tmppath $(LTIBDIR)/tmp' qt-embedded 2>/dev/null
-	sudo rpm --force-debian --root / --dbpath /tmp/rpm-$(USER)/rpmdb --ignorearch -ivh --force --nodeps --excludedocs --define '_tmppath $(LTIBDIR)/tmp' /tmp/rpm-$(USER)/RPMS/arm/qt-embedded-$(QT_VERSION)-*.arm.rpm
+	sudo rpm --force-debian --root / --dbpath /tmp/rpm-$(USER)/rpmdb --ignorearch -ivh --force --nodeps --excludedocs --define '_tmppath $(LTIBDIR)/tmp' /tmp/rpm-$(USER)/RPMS/$(TARGET_ARCH)/qt-embedded-$(QT_VERSION)-*.$(TARGET_ARCH).rpm
 	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') /tmp/rpm-$(USER)
 
 
 # Build the local projects.
 .PHONY: projects
 projects:
-	make -C projects RELEASE=$(BUILD_RELEASE) clean all
+	$(MAKE) -C projects RELEASE=$(BUILD_RELEASE) clean all
 
 
 # Rules to build target root file systems
 #
 
-# TPAC 1006 320x240
+# Generate all manufacturing images.
 
+.PHONY: images
+images: TPAC1006_320x240 TPAC1006_640x480 TPAC1007_480x272 TPAC1008_800x600
+
+# Target TPAC 1006 320x240
+
+TPAC1006_320x240%: SUFFIX := tpac_1006_320x240
 TPAC1006_320x240%: TGTDIR := $(IMGDIR)/TPAC1006_320x240_r$(BUILD_RELEASE)
-TPAC1006_320x240%: TGT_RPMDIR = $(TGTDIR)/rpm
 TPAC1006_320x240%: MFGDIR = $(TGTDIR)/$(shell basename $(TGTDIR) | sed 's/\./_/g')
 TPAC1006_320x240%: MFGZIP = $(MFGDIR)/../$(shell basename $(MFGDIR)).zip
 TPAC1006_320x240%: BOOTDIR = $(TGTDIR)/boot
 TPAC1006_320x240%: RFSDIR = $(TGTDIR)/rootfs
 TPAC1006_320x240%: LFSDIR = $(TGTDIR)/localfs
+TPAC1006_320x240%: KERNELRPM = $(subst /kernel-,/kernel-$(SUFFIX)-,$(LTIB_KERNEL_RPM))
+TPAC1006_320x240%: KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1006_320x240.config
 
 .PHONY: TPAC1006_320x240
 TPAC1006_320x240: TPAC1006_320x240_mfg
 
 .PHONY: TPAC1006_320x240_boot
-TPAC1006_320x240_boot: $(RFSPKGS)
-	test -n '$(BOOTDIR)'
+TPAC1006_320x240_boot: $(COMMON_RFSPKGS)
+	test -n '$(BOOTDIR)' -a -n '$(SUFFIX)'
+	$(MAKE) SUFFIX=$(SUFFIX) KERNEL_TARGET_CONF=$(KERNEL_TARGET_CONF) $(KERNELRPM)
 	sudo rm -rf $(BOOTDIR)
 	mkdir -p $(BOOTDIR)/var/lib/rpm
-	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-mfg-2.6.35.3-1.1.0.arm.rpm
+	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-$(SUFFIX)-mfg-2.6.35.3-1.1.0.$(TARGET_ARCH).rpm
 	rm -f $(BOOTDIR)/var/lib/rpm/*
-	-sudo rmdir $(BOOTDIR)/var/lib/rpm
-	-sudo rmdir $(BOOTDIR)/var/lib
-	-sudo rmdir $(BOOTDIR)/var
-	-sudo rmdir $(BOOTDIR)/tmp/ltib
-	-sudo rmdir $(BOOTDIR)/tmp
+	sudo rmdir $(BOOTDIR)/var/lib/rpm
+	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var/lib
+	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var
 
 .PHONY: TPAC1006_320x240_rfs
-TPAC1006_320x240_rfs: $(RFSPKGS)
-	test -n '$(RFSDIR)'
+TPAC1006_320x240_rfs: $(COMMON_RFSPKGS)
+	test -n '$(RFSDIR)' -a -n '$(SUFFIX)'
+	$(MAKE) SUFFIX=$(SUFFIX) KERNEL_TARGET_CONF=$(KERNEL_TARGET_CONF) $(KERNELRPM)
 	sudo rm -rf $(RFSDIR)
 	mkdir -p $(RFSDIR)/var/lib/rpm $(RFSDIR)/tmp/ltib
-	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RFSPKGS)
+	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(COMMON_RFSPKGS) $(subst /kernel-,/kernel-$(SUFFIX)-,$(TARGET_RFSPKGS))
 	rm -f $(RFSDIR)/var/lib/rpm/*
-	-sudo rmdir $(RFSDIR)/var/lib/rpm
-	-sudo rmdir $(RFSDIR)/var/lib
-	-sudo rmdir $(RFSDIR)/var
-	-sudo rmdir $(RFSDIR)/tmp/ltib
+	sudo rmdir $(RFSDIR)/var/lib/rpm
+	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var/lib
+	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var
+	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/tmp/ltib
 	sudo qemu-arm $(CSXCDIR)/arm-none-linux-gnueabi/libc/sbin/ldconfig -r $(RFSDIR)
 	( \
 		echo "Release: rel$(BUILD_RELEASE)"; \
@@ -463,11 +482,11 @@ TPAC1006_320x240_lfs: $(LFSPKGS)
 	mkdir -p $(LFSDIR)/var/lib/rpm $(LFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(LFSPKGS)
 	rm -f $(LFSDIR)/var/lib/rpm/*
-	-sudo rmdir $(LFSDIR)/var/lib/rpm
-	-sudo rmdir $(LFSDIR)/var/lib
-	-sudo rmdir $(LFSDIR)/var
-	-sudo rmdir $(LFSDIR)/tmp/ltib
-	-sudo rmdir $(LFSDIR)/tmp
+	sudo rmdir $(LFSDIR)/var/lib/rpm
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var/lib
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp/ltib
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp
 	du -sh --apparent-size $(LFSDIR)
 
 .PHONY: TPAC1006_320x240_mfg
@@ -495,43 +514,45 @@ TPAC1006_320x240_win: TPAC1006_320x240_rfs
 	cd $(TGTTMPDIR); zip -1qr $(TGTDIR)/rootfs_rsync-L.zip rootfs
 	rm -rf $(TGTTMPDIR)
 
-# TPAC 1006 640x480
+# Target TPAC 1006 640x480
 
+TPAC1006_640x480%: SUFFIX := tpac_1006_640x480
 TPAC1006_640x480%: TGTDIR := $(IMGDIR)/TPAC1006_640x480_r$(BUILD_RELEASE)
-TPAC1006_640x480%: TGT_RPMDIR = $(TGTDIR)/rpm
 TPAC1006_640x480%: MFGDIR = $(TGTDIR)/$(shell basename $(TGTDIR) | sed 's/\./_/g')
 TPAC1006_640x480%: MFGZIP = $(MFGDIR)/../$(shell basename $(MFGDIR)).zip
 TPAC1006_640x480%: BOOTDIR = $(TGTDIR)/boot
 TPAC1006_640x480%: RFSDIR = $(TGTDIR)/rootfs
 TPAC1006_640x480%: LFSDIR = $(TGTDIR)/localfs
+TPAC1006_640x480%: KERNELRPM = $(subst /kernel-,/kernel-$(SUFFIX)-,$(LTIB_KERNEL_RPM))
+TPAC1006_640x480%: KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1006_640x480.config
 
 .PHONY: TPAC1006_640x480
 TPAC1006_640x480: TPAC1006_640x480_mfg
 
 .PHONY: TPAC1006_640x480_boot
-TPAC1006_640x480_boot: $(RFSPKGS)
-	test -n '$(BOOTDIR)'
+TPAC1006_640x480_boot: $(COMMON_RFSPKGS)
+	test -n '$(BOOTDIR)' -a -n '$(SUFFIX)'
+	$(MAKE) SUFFIX=$(SUFFIX) KERNEL_TARGET_CONF=$(KERNEL_TARGET_CONF) $(KERNELRPM)
 	sudo rm -rf $(BOOTDIR)
 	mkdir -p $(BOOTDIR)/var/lib/rpm
-	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-mfg-2.6.35.3-1.1.0.arm.rpm
+	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-$(SUFFIX)-mfg-2.6.35.3-1.1.0.$(TARGET_ARCH).rpm
 	rm -f $(BOOTDIR)/var/lib/rpm/*
-	-sudo rmdir $(BOOTDIR)/var/lib/rpm
-	-sudo rmdir $(BOOTDIR)/var/lib
-	-sudo rmdir $(BOOTDIR)/var
-	-sudo rmdir $(BOOTDIR)/tmp/ltib
-	-sudo rmdir $(BOOTDIR)/tmp
+	sudo rmdir $(BOOTDIR)/var/lib/rpm
+	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var/lib
+	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var
 
 .PHONY: TPAC1006_640x480_rfs
-TPAC1006_640x480_rfs: $(RFSPKGS)
-	test -n '$(RFSDIR)'
+TPAC1006_640x480_rfs: $(COMMON_RFSPKGS)
+	test -n '$(RFSDIR)' -a -n '$(SUFFIX)'
+	$(MAKE) SUFFIX=$(SUFFIX) KERNEL_TARGET_CONF=$(KERNEL_TARGET_CONF) $(KERNELRPM)
 	sudo rm -rf $(RFSDIR)
 	mkdir -p $(RFSDIR)/var/lib/rpm $(RFSDIR)/tmp/ltib
-	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RFSPKGS)
+	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(COMMON_RFSPKGS) $(subst /kernel-,/kernel-$(SUFFIX)-,$(TARGET_RFSPKGS))
 	rm -f $(RFSDIR)/var/lib/rpm/*
-	-sudo rmdir $(RFSDIR)/var/lib/rpm
-	-sudo rmdir $(RFSDIR)/var/lib
-	-sudo rmdir $(RFSDIR)/var
-	-sudo rmdir $(RFSDIR)/tmp/ltib
+	sudo rmdir $(RFSDIR)/var/lib/rpm
+	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var/lib
+	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var
+	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/tmp/ltib
 	sudo qemu-arm $(CSXCDIR)/arm-none-linux-gnueabi/libc/sbin/ldconfig -r $(RFSDIR)
 	( \
 		echo "Release: rel$(BUILD_RELEASE)"; \
@@ -548,11 +569,11 @@ TPAC1006_640x480_lfs: $(LFSPKGS)
 	mkdir -p $(LFSDIR)/var/lib/rpm $(LFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(LFSPKGS)
 	rm -f $(LFSDIR)/var/lib/rpm/*
-	-sudo rmdir $(LFSDIR)/var/lib/rpm
-	-sudo rmdir $(LFSDIR)/var/lib
-	-sudo rmdir $(LFSDIR)/var
-	-sudo rmdir $(LFSDIR)/tmp/ltib
-	-sudo rmdir $(LFSDIR)/tmp
+	sudo rmdir $(LFSDIR)/var/lib/rpm
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var/lib
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp/ltib
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp
 	du -sh --apparent-size $(LFSDIR)
 
 .PHONY: TPAC1006_640x480_mfg
@@ -580,43 +601,45 @@ TPAC1006_640x480_win: TPAC1006_640x480_rfs
 	cd $(TGTTMPDIR); zip -1qr $(TGTDIR)/rootfs_rsync-L.zip rootfs
 	rm -rf $(TGTTMPDIR)
 
-# TPAC 1007 480x272
+# Target TPAC 1007 480x272
 
+TPAC1007_480x272%: SUFFIX := tpac_1007_480x272
 TPAC1007_480x272%: TGTDIR := $(IMGDIR)/TPAC1007_480x272_r$(BUILD_RELEASE)
-TPAC1007_480x272%: TGT_RPMDIR = $(TGTDIR)/rpm
 TPAC1007_480x272%: MFGDIR = $(TGTDIR)/$(shell basename $(TGTDIR) | sed 's/\./_/g')
 TPAC1007_480x272%: MFGZIP = $(MFGDIR)/../$(shell basename $(MFGDIR)).zip
 TPAC1007_480x272%: BOOTDIR = $(TGTDIR)/boot
 TPAC1007_480x272%: RFSDIR = $(TGTDIR)/rootfs
 TPAC1007_480x272%: LFSDIR = $(TGTDIR)/localfs
+TPAC1007_480x272%: KERNELRPM = $(subst /kernel-,/kernel-$(SUFFIX)-,$(LTIB_KERNEL_RPM))
+TPAC1007_480x272%: KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1007_480x272.config
 
 .PHONY: TPAC1007_480x272
 TPAC1007_480x272: TPAC1007_480x272_mfg
 
 .PHONY: TPAC1007_480x272_boot
-TPAC1007_480x272_boot: $(RFSPKGS)
-	test -n '$(BOOTDIR)'
+TPAC1007_480x272_boot: $(COMMON_RFSPKGS)
+	test -n '$(BOOTDIR)' -a -n '$(SUFFIX)'
+	$(MAKE) SUFFIX=$(SUFFIX) KERNEL_TARGET_CONF=$(KERNEL_TARGET_CONF) $(KERNELRPM)
 	sudo rm -rf $(BOOTDIR)
 	mkdir -p $(BOOTDIR)/var/lib/rpm
-	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-mfg-2.6.35.3-1.1.0.arm.rpm
+	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-$(SUFFIX)-mfg-2.6.35.3-1.1.0.$(TARGET_ARCH).rpm
 	rm -f $(BOOTDIR)/var/lib/rpm/*
-	-sudo rmdir $(BOOTDIR)/var/lib/rpm
-	-sudo rmdir $(BOOTDIR)/var/lib
-	-sudo rmdir $(BOOTDIR)/var
-	-sudo rmdir $(BOOTDIR)/tmp/ltib
-	-sudo rmdir $(BOOTDIR)/tmp
+	sudo rmdir $(BOOTDIR)/var/lib/rpm
+	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var/lib
+	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var
 
 .PHONY: TPAC1007_480x272_rfs
-TPAC1007_480x272_rfs: $(RFSPKGS)
-	test -n '$(RFSDIR)'
+TPAC1007_480x272_rfs: $(COMMON_RFSPKGS)
+	test -n '$(RFSDIR)' -a -n '$(SUFFIX)'
+	$(MAKE) SUFFIX=$(SUFFIX) KERNEL_TARGET_CONF=$(KERNEL_TARGET_CONF) $(KERNELRPM)
 	sudo rm -rf $(RFSDIR)
 	mkdir -p $(RFSDIR)/var/lib/rpm $(RFSDIR)/tmp/ltib
-	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RFSPKGS)
+	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(COMMON_RFSPKGS) $(subst /kernel-,/kernel-$(SUFFIX)-,$(TARGET_RFSPKGS))
 	rm -f $(RFSDIR)/var/lib/rpm/*
-	-sudo rmdir $(RFSDIR)/var/lib/rpm
-	-sudo rmdir $(RFSDIR)/var/lib
-	-sudo rmdir $(RFSDIR)/var
-	-sudo rmdir $(RFSDIR)/tmp/ltib
+	sudo rmdir $(RFSDIR)/var/lib/rpm
+	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var/lib
+	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var
+	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/tmp/ltib
 	sudo qemu-arm $(CSXCDIR)/arm-none-linux-gnueabi/libc/sbin/ldconfig -r $(RFSDIR)
 	( \
 		echo "Release: rel$(BUILD_RELEASE)"; \
@@ -633,11 +656,11 @@ TPAC1007_480x272_lfs: $(LFSPKGS)
 	mkdir -p $(LFSDIR)/var/lib/rpm $(LFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(LFSPKGS)
 	rm -f $(LFSDIR)/var/lib/rpm/*
-	-sudo rmdir $(LFSDIR)/var/lib/rpm
-	-sudo rmdir $(LFSDIR)/var/lib
-	-sudo rmdir $(LFSDIR)/var
-	-sudo rmdir $(LFSDIR)/tmp/ltib
-	-sudo rmdir $(LFSDIR)/tmp
+	sudo rmdir $(LFSDIR)/var/lib/rpm
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var/lib
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp/ltib
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp
 	du -sh --apparent-size $(LFSDIR)
 
 .PHONY: TPAC1007_480x272_mfg
@@ -665,43 +688,45 @@ TPAC1007_480x272_win: TPAC1007_480x272_rfs
 	cd $(TGTTMPDIR); zip -1qr $(TGTDIR)/rootfs_rsync-L.zip rootfs
 	rm -rf $(TGTTMPDIR)
 
-# TPAC 1008 800x600
+# Target TPAC 1008 800x600
 
+TPAC1008_800x600%: SUFFIX := tpac_1008_800x600
 TPAC1008_800x600%: TGTDIR := $(IMGDIR)/TPAC1008_800x600_r$(BUILD_RELEASE)
-TPAC1008_800x600%: TGT_RPMDIR = $(TGTDIR)/rpm
 TPAC1008_800x600%: MFGDIR = $(TGTDIR)/$(shell basename $(TGTDIR) | sed 's/\./_/g')
 TPAC1008_800x600%: MFGZIP = $(MFGDIR)/../$(shell basename $(MFGDIR)).zip
 TPAC1008_800x600%: BOOTDIR = $(TGTDIR)/boot
 TPAC1008_800x600%: RFSDIR = $(TGTDIR)/rootfs
 TPAC1008_800x600%: LFSDIR = $(TGTDIR)/localfs
+TPAC1008_800x600%: KERNELRPM = $(subst /kernel-,/kernel-$(SUFFIX)-,$(LTIB_KERNEL_RPM))
+TPAC1008_800x600%: KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1008_800x480.config
 
 .PHONY: TPAC1008_800x600
 TPAC1008_800x600: TPAC1008_800x600_mfg
 
 .PHONY: TPAC1008_800x600_boot
-TPAC1008_800x600_boot: $(RFSPKGS)
-	test -n '$(BOOTDIR)'
+TPAC1008_800x600_boot: $(COMMON_RFSPKGS)
+	test -n '$(BOOTDIR)' -a -n '$(SUFFIX)'
+	$(MAKE) SUFFIX=$(SUFFIX) KERNEL_TARGET_CONF=$(KERNEL_TARGET_CONF) $(KERNELRPM)
 	sudo rm -rf $(BOOTDIR)
 	mkdir -p $(BOOTDIR)/var/lib/rpm
-	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-mfg-2.6.35.3-1.1.0.arm.rpm
+	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-$(SUFFIX)-mfg-2.6.35.3-1.1.0.$(TARGET_ARCH).rpm
 	rm -f $(BOOTDIR)/var/lib/rpm/*
-	-sudo rmdir $(BOOTDIR)/var/lib/rpm
-	-sudo rmdir $(BOOTDIR)/var/lib
-	-sudo rmdir $(BOOTDIR)/var
-	-sudo rmdir $(BOOTDIR)/tmp/ltib
-	-sudo rmdir $(BOOTDIR)/tmp
+	sudo rmdir $(BOOTDIR)/var/lib/rpm
+	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var/lib
+	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var
 
 .PHONY: TPAC1008_800x600_rfs
-TPAC1008_800x600_rfs: $(RFSPKGS)
-	test -n '$(RFSDIR)'
+TPAC1008_800x600_rfs: $(COMMON_RFSPKGS)
+	test -n '$(RFSDIR)' -a -n '$(SUFFIX)'
+	$(MAKE) SUFFIX=$(SUFFIX) KERNEL_TARGET_CONF=$(KERNEL_TARGET_CONF) $(KERNELRPM)
 	sudo rm -rf $(RFSDIR)
 	mkdir -p $(RFSDIR)/var/lib/rpm $(RFSDIR)/tmp/ltib
-	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RFSPKGS)
+	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(COMMON_RFSPKGS) $(subst /kernel-,/kernel-$(SUFFIX)-,$(TARGET_RFSPKGS))
 	rm -f $(RFSDIR)/var/lib/rpm/*
-	-sudo rmdir $(RFSDIR)/var/lib/rpm
-	-sudo rmdir $(RFSDIR)/var/lib
-	-sudo rmdir $(RFSDIR)/var
-	-sudo rmdir $(RFSDIR)/tmp/ltib
+	sudo rmdir $(RFSDIR)/var/lib/rpm
+	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var/lib
+	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var
+	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/tmp/ltib
 	sudo qemu-arm $(CSXCDIR)/arm-none-linux-gnueabi/libc/sbin/ldconfig -r $(RFSDIR)
 	( \
 		echo "Release: rel$(BUILD_RELEASE)"; \
@@ -718,11 +743,11 @@ TPAC1008_800x600_lfs: $(LFSPKGS)
 	mkdir -p $(LFSDIR)/var/lib/rpm $(LFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(LFSPKGS)
 	rm -f $(LFSDIR)/var/lib/rpm/*
-	-sudo rmdir $(LFSDIR)/var/lib/rpm
-	-sudo rmdir $(LFSDIR)/var/lib
-	-sudo rmdir $(LFSDIR)/var
-	-sudo rmdir $(LFSDIR)/tmp/ltib
-	-sudo rmdir $(LFSDIR)/tmp
+	sudo rmdir $(LFSDIR)/var/lib/rpm
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var/lib
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp/ltib
+	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp
 	du -sh --apparent-size $(LFSDIR)
 
 .PHONY: TPAC1008_800x600_mfg
@@ -750,6 +775,27 @@ TPAC1008_800x600_win: TPAC1008_800x600_rfs
 	cd $(TGTTMPDIR); zip -1qr $(TGTDIR)/rootfs_rsync-L.zip rootfs
 	rm -rf $(TGTTMPDIR)
 
+# Common target rules
+#
+
+# Build the target-specific kernel.
+$(subst /kernel-,/kernel-$(SUFFIX)-,$(LTIB_KERNEL_RPM)): $(LTIB_KERNEL_TS_RPM)
+	test -n "$(SUFFIX)" -a -n "$(KERNEL_TARGET_CONF)"
+	touch -r $(LTIB_KERNEL_TS_RPM) /tmp/$(shell basename $(LTIB_KERNEL_TS_RPM).ltib-timestamp)
+	rm -rf $(LTIBDIR)/rpm/BUILD/linux-*
+	ln -sf $(KERNEL_TARGET_CONF) $(KERNEL_CONF)
+	cd $(LTIBDIR); ./ltib -f -p kernel
+	touch -r /tmp/$(shell basename $(LTIB_KERNEL_TS_RPM).ltib-timestamp) $(LTIB_KERNEL_TS_RPM); rm -f /tmp/$(shell basename $(LTIB_KERNEL_TS_RPM).ltib-timestamp)
+	set -e; cd $(RPMDIR); for rpm in '' `ls kernel-*.$(TARGET_ARCH).rpm imx-bootlets-src-*.$(TARGET_ARCH).rpm 2>/dev/null | sed '/-tpac_/ d;'`; do \
+		test -n "$$rpm" || continue; \
+		mv $$rpm `echo $$rpm | sed 's/^kernel-/kernel-$(SUFFIX)-/; s/^imx-bootlets-src-/imx-bootlets-src-$(SUFFIX)-/;'`; \
+	done
+
+$(LTIB_KERNEL_TS_RPM):
+	cd $(LTIBDIR); ./ltib -f -p $(LTIB_KERNEL_TS_NAME)
+
+# Update the patches for LTIB configuration and spec files.
+# 
 
 .PHONY: ltib_patch
 ltib_patch: ltib_patch_config ltib_patch_specs
@@ -768,7 +814,7 @@ ltib_patch_specs: $(LTIBDIR_REF)/dist
 ltib_update:
 	if ! test -d $(LTIBDIR_REF); then \
 		mv $(LTIBDIR) $(LTIBDIR).precious; \
-		make ltibinst ltibpatch; \
+		$(MAKE) ltibinst ltibpatch; \
 		rm -rf $(LTIBDIR); \
 		mv $(LTIBDIR).precious $(LTIBDIR); \
 	fi
@@ -784,18 +830,20 @@ ltib_update:
 	rm -rf $(LTIBDIR_PATCH)
 
 
+# Utilities
+#
+
 .PHONY: clean
 clean: clean_projects
 	sudo rm -rf $(LTIBDIR) $(TMPDIR) $(CSXCUNPACK) $(CSXCDIR) $(FSDIR) $(TMPRPMDIR) $(QT_INSTALL_DIR)
 
 .PHONY: clean_projects
 clean_projects:
-	make -C projects RELEASE=$(BUILD_RELEASE) clean
+	$(MAKE) -C projects RELEASE=$(BUILD_RELEASE) clean
 
 .PHONY: distclean
 distclean: clean
 	sudo rm -rf $(IMGDIR)
-
 
 
 # Downloads
@@ -811,8 +859,9 @@ $(FTPDIR)/%: $(FTPDIR)/%.$(MD5EXT)
 $(FTPDIR)/%.$(MD5EXT):
 	mkdir -p $(shell dirname $@)
 	wget -O $@ "$(FTPURL)/$(shell basename $@)"
-	touch -c $@		# Force the re-check of the downloaded file, if any.
-	make $(@:%.$(MD5EXT)=%)	# Re-check the downloaded file, if any.
+	touch -c $@			# Force the re-check of the downloaded file, if any.
+	$(MAKE) $(@:%.$(MD5EXT)=%)	# Re-check the downloaded file, if any.
+
 
 # Specific download rules from non-MECT sites
 $(FTPDIR)/$(LTIB_UBUNTU_12_04_PATCH): $(FTPDIR)/$(LTIB_UBUNTU_12_04_PATCH).$(MD5EXT)
@@ -821,5 +870,5 @@ $(FTPDIR)/$(LTIB_UBUNTU_12_04_PATCH): $(FTPDIR)/$(LTIB_UBUNTU_12_04_PATCH).$(MD5
 $(FTPDIR)/$(LTIB_UBUNTU_12_04_PATCH).$(MD5EXT):
 	mkdir -p $(shell dirname $@)
 	wget -O $@ "$(FTPURL)/$(shell basename $@)"
-	touch -c $@		# Force the re-check of the downloaded file, if any.
-	make $(@:%.$(MD5EXT)=%)	# Re-check the downloaded file, if any.
+	touch -c $@			# Force the re-check of the downloaded file, if any.
+	$(MAKE) $(@:%.$(MD5EXT)=%)	# Re-check the downloaded file, if any.

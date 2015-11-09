@@ -794,8 +794,10 @@ $(subst /kernel-,/kernel-$(SUFFIX)-,$(LTIB_KERNEL_RPM)): $(LTIB_KERNEL_TS_RPM)
 $(LTIB_KERNEL_TS_RPM):
 	cd $(LTIBDIR); ./ltib -f -p $(LTIB_KERNEL_TS_NAME)
 
-# Update the patches for LTIB configuration and spec files.
+# Handle the patches for LTIB configuration and spec files.
 # 
+
+# Create new patches from the current installation.
 
 .PHONY: ltib_patch
 ltib_patch: ltib_patch_config ltib_patch_specs
@@ -809,6 +811,8 @@ ltib_patch_config: $(LTIBDIR_REF)/config
 ltib_patch_specs: $(LTIBDIR_REF)/dist
 	cd $(LTIBDIR)/.. && diff -aurN --exclude=*-orig.spec --exclude=*.bak --exclude=*.swp $(shell basename $(LTIBDIR_REF))/dist $(shell basename $(LTIBDIR))/dist > $(FTPDIR)/$(LTIB_MECT_SPECS_PATCH); true
 	cd $(FTPDIR); md5sum $(LTIB_MECT_SPECS_PATCH) > $(LTIB_MECT_SPECS_PATCH).$(MD5EXT)
+
+# Update an existing LTIB installation from repository.
 
 .PHONY: ltib_update
 ltib_update:

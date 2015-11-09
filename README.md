@@ -39,7 +39,7 @@ LTIB is built and installed as an unprivileged user, but it requires root privil
 
 1. Create the LTIB build directory with read and write permissions for the user that performs the build. E.g., assuming that the name of the directory is *imx_mect* in the home directory of the build user:
 
-        mkdir -p ~/imx_mect
+        mkdir -p ~/imx_mect     # 
 
 1. Clone this repository in the build directory created in the previous step (copy-paste the appropriate *clone URL* from the GitHub site):
 
@@ -47,12 +47,12 @@ LTIB is built and installed as an unprivileged user, but it requires root privil
 
 1. Install the toolchain and LTIB, and build the target image packages (RPMs):
 
-        cd ~/imx_mect
+        cd ~/imx_mect           # Top-level directory
         make clean all
 
 1. Create the images to flash the TPAC 1007 in *~/imx_mect/images-all/TPAC1007_480x272_r\<version\>* (\<version\> is assigned to variable BUILD_RELEASE in the top-level Makefile):
 
-        cd ~/imx_mect
+        cd ~/imx_mect           # Top-level directory
         make TPAC1007_480x272
 
    This creates the directories:
@@ -77,7 +77,14 @@ The Makefile-driven build flow does in sequence:
   The build process automatically downloads the source archives and packages as they are needed.  
   If any of these downloads fails, the build is aborted. An aborted build can be manually resumed as follows:
 
-        cd ~/imx_mect/ltib
+        cd ~/imx_mect/ltib      # LTIB directory
         ./ltib
 - builds the target files systems by installing the appropriate packages (RPMs)
 - builds the project for Mfgtool that can be used to flash the target
+
+### Update an existing build
+
+        cd ~/imx_mect           # Top-level directory
+        make ltib_update
+
+The update process pulls the new changes from the repository and applies them to the LTIB build under the top-level directory.

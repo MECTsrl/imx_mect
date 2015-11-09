@@ -384,6 +384,7 @@ ltibpatch: downloads
 		$(LTIB_DEPR_AND_ZLIB_PATCH) \
 		$(LTIB_WGET_OPTIONS_PATCH) \
 		$(LTIB_MECT_PPP_PATCH) \
+		$(LTIB_MECT_KERNEL_REV_DEPS_PATCH) \
 		$(LTIB_MECT_SPECS_PATCH) \
 	; do \
 		patch -p1 < $(FTPDIR)/$$p; \

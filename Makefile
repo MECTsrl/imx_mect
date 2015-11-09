@@ -1,3 +1,10 @@
+# Default target image.
+# NOT: uncomment only one.
+DEFAULT_IMAGE := TPAC1007_480x272
+#DEFAULT_IMAGE := TPAC1006_320x240
+#DEFAULT_IMAGE := TPAC1006_640x480
+#DEFAULT_IMAGE := TPAC1008_800x600
+
 # Build version information.
 BUILD_RELEASE := 6.6rc0
 BUILD_TARGET_TPAC1006_320x240 := TPAC1006_320x240
@@ -223,6 +230,9 @@ LTIB_WGET_OPTIONS_PATCH = ltib-wget-retry.patch
 # LTIB set MECT PPP (MECT patch)
 LTIB_MECT_PPP_PATCH = ltib-mect-ppp-url.patch
 
+# LTIB reverse dependencies for kernel build (MECT patch)
+LTIB_MECT_KERNEL_REV_DEPS_PATCH = ltib-mect-kernel-build-reverse-deps.patch
+
 # LTIB Ubuntu 12.04 patch bundle
 LTIB_UBUNTU_12_04_PATCH = patch-ltib-ubuntu12.04.sh
 URL_LTIB_UBUNTU_12_04_PATCH = $(FTPURL)/$(LTIB_UBUNTU_12_04_PATCH)
@@ -309,7 +319,7 @@ PACKAGES = \
 
 
 .PHONY: all
-all: env downloads ltib projects
+all: env downloads ltib projects image
 
 # Set up the build environment.
 .PHONY: env
@@ -418,6 +428,10 @@ qt:
 projects:
 	$(MAKE) -C projects RELEASE=$(BUILD_RELEASE) clean all
 
+# Build the default target image.
+.PHONY: image
+image: $(DEFAULT_IMAGE)
+
 
 # Rules to build target root file systems
 #
@@ -449,7 +463,7 @@ TPAC1006_320x240_boot: $(COMMON_RFSPKGS)
 	sudo rm -rf $(BOOTDIR)
 	mkdir -p $(BOOTDIR)/var/lib/rpm
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-$(SUFFIX)-mfg-2.6.35.3-1.1.0.$(TARGET_ARCH).rpm
-	rm -f $(BOOTDIR)/var/lib/rpm/*
+	sudo rm -f $(BOOTDIR)/var/lib/rpm/*
 	sudo rmdir $(BOOTDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var/lib
 	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var
@@ -461,7 +475,7 @@ TPAC1006_320x240_rfs: $(COMMON_RFSPKGS)
 	sudo rm -rf $(RFSDIR)
 	mkdir -p $(RFSDIR)/var/lib/rpm $(RFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(COMMON_RFSPKGS) $(subst /kernel-,/kernel-$(SUFFIX)-,$(TARGET_RFSPKGS))
-	rm -f $(RFSDIR)/var/lib/rpm/*
+	sudo rm -f $(RFSDIR)/var/lib/rpm/*
 	sudo rmdir $(RFSDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var/lib
 	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var
@@ -473,7 +487,7 @@ TPAC1006_320x240_rfs: $(COMMON_RFSPKGS)
 		echo "Qt:      $(QT_VERSION)"; \
 		echo "Qwt:     $(QWT_VERSION)" \
 	) > $(RFSDIR)/$(RFS_VERSION_FILE)
-	du -sh --apparent-size $(RFSDIR)
+	sudo du -sh --apparent-size $(RFSDIR)
 
 .PHONY: TPAC1006_320x240_lfs
 TPAC1006_320x240_lfs: $(LFSPKGS)
@@ -481,38 +495,39 @@ TPAC1006_320x240_lfs: $(LFSPKGS)
 	sudo rm -rf $(LFSDIR)
 	mkdir -p $(LFSDIR)/var/lib/rpm $(LFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(LFSPKGS)
-	rm -f $(LFSDIR)/var/lib/rpm/*
+	sudo rm -f $(LFSDIR)/var/lib/rpm/*
 	sudo rmdir $(LFSDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var/lib
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp/ltib
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp
-	du -sh --apparent-size $(LFSDIR)
+	sudo du -sh --apparent-size $(LFSDIR)
 
 .PHONY: TPAC1006_320x240_mfg
 TPAC1006_320x240_mfg: TPAC1006_320x240_boot TPAC1006_320x240_rfs TPAC1006_320x240_lfs
-	test -n '$(MFGDIR)' -a -n '$(RFSDIR)' -a -n '$(LFSDIR)' -a -n '$(BOOTDIR)' -a -n '$(MFGDIR)' -a -n '$(MFGZIP)'
+	test -n '$(MFGDIR)' -a -n '$(RFSDIR)' -a -n '$(LFSDIR)' -a -n '$(BOOTDIR)' -a -n '$(MFGZIP)'
+	sudo rm -rf $(MFGDIR)
 	mkdir -p $(MFGDIR)/'OS firmware'/img $(MFGDIR)/'OS firmware'/sys
 	sed "s/@@PLAYER@@/$(shell basename $(MFGDIR))/" $(FTPDIR)/player.ini > $(MFGDIR)/player.ini
 	install -m 644 $(FTPDIR)/fdisk-u.input $(MFGDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
-	BZIP2=-1 tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
-	BZIP2=-1 tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
+	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
+	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
 	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
 	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
-	rm -f $(MFGZIP)
-	cd $(MFGDIR); zip -0r $(MFGZIP) *
+	sudo rm -f $(MFGZIP)
+	cd $(MFGDIR); sudo zip -0r $(MFGZIP) *
 
 .PHONY: TPAC1006_320x240_win
 TPAC1006_320x240_win: TGTTMPDIR = $(TGTDIR)/tmp
 TPAC1006_320x240_win: TPAC1006_320x240_rfs
-	rm -rf $(TGTTMPDIR)
+	sudo rm -rf $(TGTTMPDIR)
 	-for d in /usr/include /usr/lib /lib /usr/src/linux/include; do \
 		mkdir -p $(TGTTMPDIR)/rootfs$$d; \
-		rsync -aL $(LTIBDIR)/rootfs$$d $(TGTTMPDIR)/rootfs$$d; \
+		sudo rsync -aL $(LTIBDIR)/rootfs$$d $(TGTTMPDIR)/rootfs$$d; \
 	done
-	cd $(TGTTMPDIR); zip -1qr $(TGTDIR)/rootfs_rsync-L.zip rootfs
-	rm -rf $(TGTTMPDIR)
+	cd $(TGTTMPDIR); sudo zip -1qr $(TGTDIR)/rootfs_rsync-L.zip rootfs
+	sudo rm -rf $(TGTTMPDIR)
 
 # Target TPAC 1006 640x480
 
@@ -536,7 +551,7 @@ TPAC1006_640x480_boot: $(COMMON_RFSPKGS)
 	sudo rm -rf $(BOOTDIR)
 	mkdir -p $(BOOTDIR)/var/lib/rpm
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-$(SUFFIX)-mfg-2.6.35.3-1.1.0.$(TARGET_ARCH).rpm
-	rm -f $(BOOTDIR)/var/lib/rpm/*
+	sudo rm -f $(BOOTDIR)/var/lib/rpm/*
 	sudo rmdir $(BOOTDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var/lib
 	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var
@@ -548,7 +563,7 @@ TPAC1006_640x480_rfs: $(COMMON_RFSPKGS)
 	sudo rm -rf $(RFSDIR)
 	mkdir -p $(RFSDIR)/var/lib/rpm $(RFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(COMMON_RFSPKGS) $(subst /kernel-,/kernel-$(SUFFIX)-,$(TARGET_RFSPKGS))
-	rm -f $(RFSDIR)/var/lib/rpm/*
+	sudo rm -f $(RFSDIR)/var/lib/rpm/*
 	sudo rmdir $(RFSDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var/lib
 	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var
@@ -560,7 +575,7 @@ TPAC1006_640x480_rfs: $(COMMON_RFSPKGS)
 		echo "Qt:      $(QT_VERSION)"; \
 		echo "Qwt:     $(QWT_VERSION)" \
 	) > $(RFSDIR)/$(RFS_VERSION_FILE)
-	du -sh --apparent-size $(RFSDIR)
+	sudo du -sh --apparent-size $(RFSDIR)
 
 .PHONY: TPAC1006_640x480_lfs
 TPAC1006_640x480_lfs: $(LFSPKGS)
@@ -568,38 +583,39 @@ TPAC1006_640x480_lfs: $(LFSPKGS)
 	sudo rm -rf $(LFSDIR)
 	mkdir -p $(LFSDIR)/var/lib/rpm $(LFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(LFSPKGS)
-	rm -f $(LFSDIR)/var/lib/rpm/*
+	sudo rm -f $(LFSDIR)/var/lib/rpm/*
 	sudo rmdir $(LFSDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var/lib
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp/ltib
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp
-	du -sh --apparent-size $(LFSDIR)
+	sudo du -sh --apparent-size $(LFSDIR)
 
 .PHONY: TPAC1006_640x480_mfg
 TPAC1006_640x480_mfg: TPAC1006_640x480_boot TPAC1006_640x480_rfs TPAC1006_640x480_lfs
-	test -n '$(MFGDIR)' -a -n '$(RFSDIR)' -a -n '$(LFSDIR)' -a -n '$(BOOTDIR)' -a -n '$(MFGDIR)' -a -n '$(MFGZIP)'
+	test -n '$(MFGDIR)' -a -n '$(RFSDIR)' -a -n '$(LFSDIR)' -a -n '$(BOOTDIR)' -a -n '$(MFGZIP)'
+	sudo rm -rf $(MFGDIR)
 	mkdir -p $(MFGDIR)/'OS firmware'/img $(MFGDIR)/'OS firmware'/sys
 	sed "s/@@PLAYER@@/$(shell basename $(MFGDIR))/" $(FTPDIR)/player.ini > $(MFGDIR)/player.ini
 	install -m 644 $(FTPDIR)/fdisk-u.input $(MFGDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
-	BZIP2=-1 tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
-	BZIP2=-1 tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
+	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
+	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
 	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
 	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
-	rm -f $(MFGZIP)
-	cd $(MFGDIR); zip -0r $(MFGZIP) *
+	sudo rm -f $(MFGZIP)
+	cd $(MFGDIR); sudo zip -0r $(MFGZIP) *
 
 .PHONY: TPAC1006_640x480_win
 TPAC1006_640x480_win: TGTTMPDIR = $(TGTDIR)/tmp
 TPAC1006_640x480_win: TPAC1006_640x480_rfs
-	rm -rf $(TGTTMPDIR)
+	sudo rm -rf $(TGTTMPDIR)
 	-for d in /usr/include /usr/lib /lib /usr/src/linux/include; do \
 		mkdir -p $(TGTTMPDIR)/rootfs$$d; \
-		rsync -aL $(LTIBDIR)/rootfs$$d $(TGTTMPDIR)/rootfs$$d; \
+		sudo rsync -aL $(LTIBDIR)/rootfs$$d $(TGTTMPDIR)/rootfs$$d; \
 	done
-	cd $(TGTTMPDIR); zip -1qr $(TGTDIR)/rootfs_rsync-L.zip rootfs
-	rm -rf $(TGTTMPDIR)
+	cd $(TGTTMPDIR); sudo zip -1qr $(TGTDIR)/rootfs_rsync-L.zip rootfs
+	sudo rm -rf $(TGTTMPDIR)
 
 # Target TPAC 1007 480x272
 
@@ -623,7 +639,7 @@ TPAC1007_480x272_boot: $(COMMON_RFSPKGS)
 	sudo rm -rf $(BOOTDIR)
 	mkdir -p $(BOOTDIR)/var/lib/rpm
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-$(SUFFIX)-mfg-2.6.35.3-1.1.0.$(TARGET_ARCH).rpm
-	rm -f $(BOOTDIR)/var/lib/rpm/*
+	sudo rm -f $(BOOTDIR)/var/lib/rpm/*
 	sudo rmdir $(BOOTDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var/lib
 	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var
@@ -635,7 +651,7 @@ TPAC1007_480x272_rfs: $(COMMON_RFSPKGS)
 	sudo rm -rf $(RFSDIR)
 	mkdir -p $(RFSDIR)/var/lib/rpm $(RFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(COMMON_RFSPKGS) $(subst /kernel-,/kernel-$(SUFFIX)-,$(TARGET_RFSPKGS))
-	rm -f $(RFSDIR)/var/lib/rpm/*
+	sudo rm -f $(RFSDIR)/var/lib/rpm/*
 	sudo rmdir $(RFSDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var/lib
 	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var
@@ -647,7 +663,7 @@ TPAC1007_480x272_rfs: $(COMMON_RFSPKGS)
 		echo "Qt:      $(QT_VERSION)"; \
 		echo "Qwt:     $(QWT_VERSION)" \
 	) > $(RFSDIR)/$(RFS_VERSION_FILE)
-	du -sh --apparent-size $(RFSDIR)
+	sudo du -sh --apparent-size $(RFSDIR)
 
 .PHONY: TPAC1007_480x272_lfs
 TPAC1007_480x272_lfs: $(LFSPKGS)
@@ -655,38 +671,39 @@ TPAC1007_480x272_lfs: $(LFSPKGS)
 	sudo rm -rf $(LFSDIR)
 	mkdir -p $(LFSDIR)/var/lib/rpm $(LFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(LFSPKGS)
-	rm -f $(LFSDIR)/var/lib/rpm/*
+	sudo rm -f $(LFSDIR)/var/lib/rpm/*
 	sudo rmdir $(LFSDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var/lib
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp/ltib
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp
-	du -sh --apparent-size $(LFSDIR)
+	sudo du -sh --apparent-size $(LFSDIR)
 
 .PHONY: TPAC1007_480x272_mfg
 TPAC1007_480x272_mfg: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x272_lfs
-	test -n '$(MFGDIR)' -a -n '$(RFSDIR)' -a -n '$(LFSDIR)' -a -n '$(BOOTDIR)' -a -n '$(MFGDIR)' -a -n '$(MFGZIP)'
+	test -n '$(MFGDIR)' -a -n '$(RFSDIR)' -a -n '$(LFSDIR)' -a -n '$(BOOTDIR)' -a -n '$(MFGZIP)'
+	sudo rm -rf $(MFGDIR)
 	mkdir -p $(MFGDIR)/'OS firmware'/img $(MFGDIR)/'OS firmware'/sys
 	sed "s/@@PLAYER@@/$(shell basename $(MFGDIR))/" $(FTPDIR)/player.ini > $(MFGDIR)/player.ini
 	install -m 644 $(FTPDIR)/fdisk-u.input $(MFGDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
-	BZIP2=-1 tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
-	BZIP2=-1 tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
+	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
+	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
 	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
 	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
-	rm -f $(MFGZIP)
-	cd $(MFGDIR); zip -0r $(MFGZIP) *
+	sudo rm -f $(MFGZIP)
+	cd $(MFGDIR); sudo zip -0r $(MFGZIP) *
 
 .PHONY: TPAC1007_480x272_win
 TPAC1007_480x272_win: TGTTMPDIR = $(TGTDIR)/tmp
 TPAC1007_480x272_win: TPAC1007_480x272_rfs
-	rm -rf $(TGTTMPDIR)
+	sudo rm -rf $(TGTTMPDIR)
 	-for d in /usr/include /usr/lib /lib /usr/src/linux/include; do \
 		mkdir -p $(TGTTMPDIR)/rootfs$$d; \
-		rsync -aL $(LTIBDIR)/rootfs$$d $(TGTTMPDIR)/rootfs$$d; \
+		sudo rsync -aL $(LTIBDIR)/rootfs$$d $(TGTTMPDIR)/rootfs$$d; \
 	done
-	cd $(TGTTMPDIR); zip -1qr $(TGTDIR)/rootfs_rsync-L.zip rootfs
-	rm -rf $(TGTTMPDIR)
+	cd $(TGTTMPDIR); sudo zip -1qr $(TGTDIR)/rootfs_rsync-L.zip rootfs
+	sudo rm -rf $(TGTTMPDIR)
 
 # Target TPAC 1008 800x600
 
@@ -710,7 +727,7 @@ TPAC1008_800x600_boot: $(COMMON_RFSPKGS)
 	sudo rm -rf $(BOOTDIR)
 	mkdir -p $(BOOTDIR)/var/lib/rpm
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(RPMDIR)/imx-bootlets-src-$(SUFFIX)-mfg-2.6.35.3-1.1.0.$(TARGET_ARCH).rpm
-	rm -f $(BOOTDIR)/var/lib/rpm/*
+	sudo rm -f $(BOOTDIR)/var/lib/rpm/*
 	sudo rmdir $(BOOTDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var/lib
 	sudo rmdir --ignore-fail-on-non-empty $(BOOTDIR)/var
@@ -722,7 +739,7 @@ TPAC1008_800x600_rfs: $(COMMON_RFSPKGS)
 	sudo rm -rf $(RFSDIR)
 	mkdir -p $(RFSDIR)/var/lib/rpm $(RFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(COMMON_RFSPKGS) $(subst /kernel-,/kernel-$(SUFFIX)-,$(TARGET_RFSPKGS))
-	rm -f $(RFSDIR)/var/lib/rpm/*
+	sudo rm -f $(RFSDIR)/var/lib/rpm/*
 	sudo rmdir $(RFSDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var/lib
 	sudo rmdir --ignore-fail-on-non-empty $(RFSDIR)/var
@@ -734,7 +751,7 @@ TPAC1008_800x600_rfs: $(COMMON_RFSPKGS)
 		echo "Qt:      $(QT_VERSION)"; \
 		echo "Qwt:     $(QWT_VERSION)" \
 	) > $(RFSDIR)/$(RFS_VERSION_FILE)
-	du -sh --apparent-size $(RFSDIR)
+	sudo du -sh --apparent-size $(RFSDIR)
 
 .PHONY: TPAC1008_800x600_lfs
 TPAC1008_800x600_lfs: $(LFSPKGS)
@@ -742,38 +759,39 @@ TPAC1008_800x600_lfs: $(LFSPKGS)
 	sudo rm -rf $(LFSDIR)
 	mkdir -p $(LFSDIR)/var/lib/rpm $(LFSDIR)/tmp/ltib
 	sudo $(FSDIR)/ltib/usr/bin/rpm --nodeps --root $(LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(LFSPKGS)
-	rm -f $(LFSDIR)/var/lib/rpm/*
+	sudo rm -f $(LFSDIR)/var/lib/rpm/*
 	sudo rmdir $(LFSDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var/lib
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/var
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp/ltib
 	sudo rmdir --ignore-fail-on-non-empty $(LFSDIR)/tmp
-	du -sh --apparent-size $(LFSDIR)
+	sudo du -sh --apparent-size $(LFSDIR)
 
 .PHONY: TPAC1008_800x600_mfg
 TPAC1008_800x600_mfg: TPAC1008_800x600_boot TPAC1008_800x600_rfs TPAC1008_800x600_lfs
-	test -n '$(MFGDIR)' -a -n '$(RFSDIR)' -a -n '$(LFSDIR)' -a -n '$(BOOTDIR)' -a -n '$(MFGDIR)' -a -n '$(MFGZIP)'
+	test -n '$(MFGDIR)' -a -n '$(RFSDIR)' -a -n '$(LFSDIR)' -a -n '$(BOOTDIR)' -a -n '$(MFGZIP)'
+	sudo rm -rf $(MFGDIR)
 	mkdir -p $(MFGDIR)/'OS firmware'/img $(MFGDIR)/'OS firmware'/sys
 	sed "s/@@PLAYER@@/$(shell basename $(MFGDIR))/" $(FTPDIR)/player.ini > $(MFGDIR)/player.ini
 	install -m 644 $(FTPDIR)/fdisk-u.input $(MFGDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
-	BZIP2=-1 tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
-	BZIP2=-1 tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
+	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
+	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
 	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
 	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
-	rm -f $(MFGZIP)
-	cd $(MFGDIR); zip -0r $(MFGZIP) *
+	sudo rm -f $(MFGZIP)
+	cd $(MFGDIR); sudo zip -0r $(MFGZIP) *
 
 .PHONY: TPAC1008_800x600_win
 TPAC1008_800x600_win: TGTTMPDIR = $(TGTDIR)/tmp
 TPAC1008_800x600_win: TPAC1008_800x600_rfs
-	rm -rf $(TGTTMPDIR)
+	sudo rm -rf $(TGTTMPDIR)
 	-for d in /usr/include /usr/lib /lib /usr/src/linux/include; do \
 		mkdir -p $(TGTTMPDIR)/rootfs$$d; \
-		rsync -aL $(LTIBDIR)/rootfs$$d $(TGTTMPDIR)/rootfs$$d; \
+		sudo rsync -aL $(LTIBDIR)/rootfs$$d $(TGTTMPDIR)/rootfs$$d; \
 	done
-	cd $(TGTTMPDIR); zip -1qr $(TGTDIR)/rootfs_rsync-L.zip rootfs
-	rm -rf $(TGTTMPDIR)
+	cd $(TGTTMPDIR); sudo zip -1qr $(TGTDIR)/rootfs_rsync-L.zip rootfs
+	sudo rm -rf $(TGTTMPDIR)
 
 # Common target rules
 #

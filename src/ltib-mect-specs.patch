@@ -1917,7 +1917,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -%{pfx}/*
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/merge/merge.spec	2015-11-09 00:27:43.094493675 +0100
++++ ltib/dist/lfs-5.1/merge/merge.spec	2015-11-09 13:43:36.222003699 +0100
 @@ -13,6 +13,16 @@
  # We have assume the user knows merge file dependencies.
  Autoreqprov     : no
@@ -1935,7 +1935,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  Detects the presence of of merge directory in the top level of the root
  file system builder directory, and if it is present creates a rpm containing
-@@ -40,10 +50,18 @@
+@@ -29,6 +39,7 @@
+ rm -rf $RPM_BUILD_ROOT
+ mkdir -p $RPM_BUILD_ROOT/%{pfx}/etc
+ touch $RPM_BUILD_ROOT/%{pfx}/etc/ltib-release
++chmod 666 $RPM_BUILD_ROOT/%{pfx}/etc/ltib-release
+ 
+ for dir in "$PLATFORM_PATH/merge" "$TOP/merge"
+ do
+@@ -40,10 +51,18 @@
      fi
  done
  

@@ -1,0 +1,29 @@
+diff --exclude CVS --exclude .git -uNr qwt-6.1.0/qwt.pro qwt-6.1.0.modified/qwt.pro
+--- qwt-6.1.0/qwt.pro	2013-05-30 17:18:27.751341938 +0200
++++ qwt-6.1.0.modified/qwt.pro	2014-12-05 19:05:56.893464049 +0100
+@@ -17,13 +17,7 @@
+     textengines \
+     doc
+ 
+-contains(QWT_CONFIG, QwtDesigner ) {
+-    SUBDIRS += designer 
+-}
+ 
+-contains(QWT_CONFIG, QwtExamples ) {
+-    SUBDIRS += examples 
+-}
+ 
+ contains(QWT_CONFIG, QwtPlayground ) {
+     SUBDIRS += playground 
+diff --exclude CVS --exclude .git -uNr qwt-6.1.0/qwtconfig.pri qwt-6.1.0.modified/qwtconfig.pri
+--- qwt-6.1.0/qwtconfig.pri	2014-12-09 11:48:41.836038909 +0100
++++ qwt-6.1.0.modified/qwtconfig.pri	2014-12-05 19:05:56.893464049 +0100
+@@ -99,7 +99,7 @@
+ # If you want to use a OpenGL plot canvas
+ ######################################################################
+ 
+-QWT_CONFIG     += QwtOpenGL
++#QWT_CONFIG     += QwtOpenGL
+ 
+ ######################################################################
+ # You can use the MathML renderer of the Qt solutions package to 

@@ -46,12 +46,12 @@
     <!-- create the data partition with the remaining space -->
     <CMD type="push" body="$ ubimkvol /dev/ubi0 -n 1 -N local -m">Creating the local UBI volume.</CMD>
     <CMD type="push" body="$ mkdir -p /mnt/ubi0; mount -t ubifs ubi0_0 /mnt/ubi0"/>
-    <CMD type="push" body="pipe tar -jxv -C /mnt/ubi0" file="img/rootfs.tar.bz2">Flashing the root file system.</CMD>
+    <CMD type="push" body="pipe tar xv -C /mnt/ubi0" file="img/rootfs.tar">Flashing the root file system.</CMD>
     <CMD type="push" body="frf">Finish root file system flashing.</CMD>
     <CMD type="push" body="$ umount /mnt/ubi0">Unmounting the root file system.</CMD>
 
     <CMD type="push" body="$ mkdir -p /mnt/ubi1; mount -t ubifs ubi0_1 /mnt/ubi1"/>
-    <CMD type="push" body="pipe tar -jxv -C /mnt/ubi1" file="img/localfs.tar.bz2">Flashing the local file system.</CMD>
+    <CMD type="push" body="pipe tar xv -C /mnt/ubi1" file="img/localfs.tar">Flashing the local file system.</CMD>
     <CMD type="push" body="frf">Finish local file system flashing.</CMD>
     <CMD type="push" body="$ umount /mnt/ubi1">Unmounting the local file system.</CMD>
 
@@ -86,7 +86,7 @@
     <CMD type="push" body="$ mkfs.ext3 -j /dev/mmcblk0p3">Formatting the root partition</CMD>
     <CMD type="push" body="$ mkdir -p /mnt/mmcblk0p3"/>
     <CMD type="push" body="$ mount /dev/mmcblk0p3 /mnt/mmcblk0p3"/>
-    <CMD type="push" body="pipe tar -jxv -C /mnt/mmcblk0p3" file="img/rootfs.tar.bz2">Sending and writing the root file system.</CMD>
+    <CMD type="push" body="pipe tar xv -C /mnt/mmcblk0p3" file="img/rootfs.tar">Sending and writing the root file system.</CMD>
     <CMD type="push" body="frf">Finish writing the root file system.</CMD>
     <CMD type="push" body="$ umount /mnt/mmcblk0p3">Unmounting the root partition.</CMD>
     <CMD type="push" body="$ echo Update Complete!">Done.</CMD>
@@ -107,7 +107,7 @@
     <CMD type="push" body="$ mkdir -p /mnt/mmcblk0p3"/>
     <CMD type="push" body="$ mkfs.ext3 -j /dev/mmcblk0p3">Formatting the root partition.</CMD>
     <CMD type="push" body="$ mount /dev/mmcblk0p3 /mnt/mmcblk0p3"/>
-    <CMD type="push" body="pipe tar -jxv -C /mnt/mmcblk0p3" file="img/rootfs.tar.bz2">Sending and writing the root file system.</CMD>
+    <CMD type="push" body="pipe tar xv -C /mnt/mmcblk0p3" file="img/rootfs.tar">Sending and writing the root file system.</CMD>
     <CMD type="push" body="frf">Finish writing the root file system.</CMD>
     <CMD type="push" body="$ umount /mnt/mmcblk0p3">Unmounting the root partition.</CMD>
     <CMD type="push" body="$ echo Update Complete!">Done.</CMD>

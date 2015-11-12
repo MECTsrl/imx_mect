@@ -512,8 +512,8 @@ TPAC1006_320x240_mfg: TPAC1006_320x240_boot TPAC1006_320x240_rfs TPAC1006_320x24
 	sed "s/@@PLAYER@@/$(shell basename $(MFGDIR))/" $(FTPDIR)/player.ini > $(MFGDIR)/player.ini
 	install -m 644 $(FTPDIR)/fdisk-u.input $(MFGDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
-	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
-	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
+	sudo tar cf $(MFGDIR)/'OS firmware'/img/rootfs.tar -C $(RFSDIR) .
+	sudo tar cf $(MFGDIR)/'OS firmware'/img/localfs.tar -C $(LFSDIR) .
 	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
 	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
 	sudo rm -f $(MFGZIP)
@@ -600,8 +600,8 @@ TPAC1006_640x480_mfg: TPAC1006_640x480_boot TPAC1006_640x480_rfs TPAC1006_640x48
 	sed "s/@@PLAYER@@/$(shell basename $(MFGDIR))/" $(FTPDIR)/player.ini > $(MFGDIR)/player.ini
 	install -m 644 $(FTPDIR)/fdisk-u.input $(MFGDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
-	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
-	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
+	sudo tar cf $(MFGDIR)/'OS firmware'/img/rootfs.tar -C $(RFSDIR) .
+	sudo tar cf $(MFGDIR)/'OS firmware'/img/localfs.tar -C $(LFSDIR) .
 	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
 	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
 	sudo rm -f $(MFGZIP)
@@ -688,8 +688,8 @@ TPAC1007_480x272_mfg: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x27
 	sed "s/@@PLAYER@@/$(shell basename $(MFGDIR))/" $(FTPDIR)/player.ini > $(MFGDIR)/player.ini
 	install -m 644 $(FTPDIR)/fdisk-u.input $(MFGDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
-	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
-	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
+	sudo tar cf $(MFGDIR)/'OS firmware'/img/rootfs.tar -C $(RFSDIR) .
+	sudo tar cf $(MFGDIR)/'OS firmware'/img/localfs.tar -C $(LFSDIR) .
 	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
 	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
 	sudo rm -f $(MFGZIP)
@@ -776,8 +776,8 @@ TPAC1008_800x600_mfg: TPAC1008_800x600_boot TPAC1008_800x600_rfs TPAC1008_800x60
 	sed "s/@@PLAYER@@/$(shell basename $(MFGDIR))/" $(FTPDIR)/player.ini > $(MFGDIR)/player.ini
 	install -m 644 $(FTPDIR)/fdisk-u.input $(MFGDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
-	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/rootfs.tar.bz2 -C $(RFSDIR) .
-	BZIP2=-1 sudo tar cjf $(MFGDIR)/'OS firmware'/img/localfs.tar.bz2 -C $(LFSDIR) .
+	sudo tar cf $(MFGDIR)/'OS firmware'/img/rootfs.tar -C $(RFSDIR) .
+	sudo tar cf $(MFGDIR)/'OS firmware'/img/localfs.tar -C $(LFSDIR) .
 	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
 	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
 	sudo rm -f $(MFGZIP)
@@ -830,6 +830,15 @@ ltib_patch_config: $(LTIBDIR_REF)/config
 ltib_patch_specs: $(LTIBDIR_REF)/dist
 	cd $(LTIBDIR)/.. && diff -aurN --exclude=*-orig.spec --exclude=*.bak --exclude=*.swp $(shell basename $(LTIBDIR_REF))/dist $(shell basename $(LTIBDIR))/dist > $(FTPDIR)/$(LTIB_MECT_SPECS_PATCH); true
 	cd $(FTPDIR); md5sum $(LTIB_MECT_SPECS_PATCH) > $(LTIB_MECT_SPECS_PATCH).$(MD5EXT)
+
+.PHONY: ltib_patch_to_vcs_add
+ltib_patch_to_vcs_add:
+	cd $(LTIBDIR); for s in `./ltib -m listpkgs 2>/dev/null | awk '/ y / { print $$2; }'`; do find dist/lfs-5.1 -name $$s.spec -print; done
+	# Insert:
+	# %dump
+	# exit 1
+	# before %prep or %setup, then
+	#rpmbuild -ba dist/lfs-5.1/busybox/busybox.spec 2>&1 | awk '/PATCH[0-9]+/ { print $$3; }'
 
 # Update an existing LTIB installation from repository.
 

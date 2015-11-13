@@ -514,6 +514,7 @@ TPAC1006_320x240_mfg: TPAC1006_320x240_boot TPAC1006_320x240_rfs TPAC1006_320x24
 	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
 	sudo tar cf $(MFGDIR)/'OS firmware'/img/rootfs.tar -C $(RFSDIR) .
 	sudo tar cf $(MFGDIR)/'OS firmware'/img/localfs.tar -C $(LFSDIR) .
+	sudo tar cjf $(TGTDIR)/local.tar.bz2 -C $(LFSDIR) .
 	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
 	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
 	sudo rm -f $(MFGZIP)
@@ -602,6 +603,7 @@ TPAC1006_640x480_mfg: TPAC1006_640x480_boot TPAC1006_640x480_rfs TPAC1006_640x48
 	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
 	sudo tar cf $(MFGDIR)/'OS firmware'/img/rootfs.tar -C $(RFSDIR) .
 	sudo tar cf $(MFGDIR)/'OS firmware'/img/localfs.tar -C $(LFSDIR) .
+	sudo tar cjf $(TGTDIR)/local.tar.bz2 -C $(LFSDIR) .
 	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
 	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
 	sudo rm -f $(MFGZIP)
@@ -690,6 +692,7 @@ TPAC1007_480x272_mfg: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x27
 	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
 	sudo tar cf $(MFGDIR)/'OS firmware'/img/rootfs.tar -C $(RFSDIR) .
 	sudo tar cf $(MFGDIR)/'OS firmware'/img/localfs.tar -C $(LFSDIR) .
+	sudo tar cjf $(TGTDIR)/local.tar.bz2 -C $(LFSDIR) .
 	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
 	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
 	sudo rm -f $(MFGZIP)
@@ -778,6 +781,7 @@ TPAC1008_800x600_mfg: TPAC1008_800x600_boot TPAC1008_800x600_rfs TPAC1008_800x60
 	install -m 644 $(FTPDIR)/ucl.xml $(MFGDIR)/'OS firmware'/ucl.xml
 	sudo tar cf $(MFGDIR)/'OS firmware'/img/rootfs.tar -C $(RFSDIR) .
 	sudo tar cf $(MFGDIR)/'OS firmware'/img/localfs.tar -C $(LFSDIR) .
+	sudo tar cjf $(TGTDIR)/local.tar.bz2 -C $(LFSDIR) .
 	install -m 644 $(BOOTDIR)/boot/imx28_ivt_linux.sb $(MFGDIR)/'OS firmware'/img
 	install -m 644 $(BOOTDIR)/boot/updater_ivt.sb $(MFGDIR)/'OS firmware'/sys
 	sudo rm -f $(MFGZIP)

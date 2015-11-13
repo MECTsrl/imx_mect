@@ -1372,7 +1372,7 @@ diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/im
  CONFIG_LOGGER=y
 diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.config	2015-11-13 00:00:33.000000000 +0100
++++ ltib/config/platform/imx/.config	2015-11-13 15:17:28.983783299 +0100
 @@ -0,0 +1,652 @@
 +#
 +# Automatically generated make config: don't edit
@@ -1944,11 +1944,11 @@ diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/im
 +CONFIG_SYSCFG_IFACE0=y
 +CONFIG_SYSCFG_NET_INTERFACE0="eth0"
 +# CONFIG_SYSCFG_DHCPC0 is not set
-+CONFIG_SYSCFG_IPADDR0="192.168.0.220"
++CONFIG_SYSCFG_IPADDR0="192.168.5.211"
 +CONFIG_SYSCFG_NET_MASK0="255.255.255.0"
 +CONFIG_SYSCFG_NET_BROADCAST0="192.168.0.255"
-+CONFIG_SYSCFG_NET_GATEWAY0="192.168.0.1"
-+CONFIG_SYSCFG_NAMESERVER0="192.168.0.170"
++CONFIG_SYSCFG_NET_GATEWAY0="192.168.5.1"
++CONFIG_SYSCFG_NAMESERVER0="192.168.5.1"
 +
 +#
 +# 
@@ -2054,7 +2054,7 @@ diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/im
 +$(deps_config):
 diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/defconfig.dev	2015-11-09 20:51:24.675926575 +0100
++++ ltib/config/platform/imx/defconfig.dev	2015-11-13 15:18:01.867782768 +0100
 @@ -0,0 +1,650 @@
 +#
 +# Automatically generated make config: don't edit
@@ -2624,11 +2624,11 @@ diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/im
 +CONFIG_SYSCFG_IFACE0=y
 +CONFIG_SYSCFG_NET_INTERFACE0="eth0"
 +# CONFIG_SYSCFG_DHCPC0 is not set
-+CONFIG_SYSCFG_IPADDR0="192.168.0.220"
++CONFIG_SYSCFG_IPADDR0="192.168.5.211"
 +CONFIG_SYSCFG_NET_MASK0="255.255.255.0"
 +CONFIG_SYSCFG_NET_BROADCAST0="192.168.0.255"
-+CONFIG_SYSCFG_NET_GATEWAY0="192.168.0.1"
-+CONFIG_SYSCFG_NAMESERVER0="192.168.0.170"
++CONFIG_SYSCFG_NET_GATEWAY0="192.168.5.1"
++CONFIG_SYSCFG_NAMESERVER0="192.168.5.1"
 +
 +#
 +# 
@@ -2811,7 +2811,7 @@ diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/im
  endmenu
 diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx28.cf ltib/config/platform/imx/imx28.cf
 --- ltib.reference/config/platform/imx/imx28.cf	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/imx28.cf	2015-11-09 20:51:24.691926575 +0100
++++ ltib/config/platform/imx/imx28.cf	2015-11-13 15:18:14.439782565 +0100
 @@ -41,7 +41,7 @@
  CONFIG_PKG_BASE_LIBS=y
  CONFIG_PKG_LIBC_WANT_SHARED_LIBS=y
@@ -3180,11 +3180,11 @@ diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/im
 +CONFIG_SYSCFG_IFACE0=y
 +CONFIG_SYSCFG_NET_INTERFACE0="eth0"
 +# CONFIG_SYSCFG_DHCPC0 is not set
-+CONFIG_SYSCFG_IPADDR0="192.168.0.220"
++CONFIG_SYSCFG_IPADDR0="192.168.5.211"
 +CONFIG_SYSCFG_NET_MASK0="255.255.255.0"
 +CONFIG_SYSCFG_NET_BROADCAST0="192.168.0.255"
-+CONFIG_SYSCFG_NET_GATEWAY0="192.168.0.1"
-+CONFIG_SYSCFG_NAMESERVER0="192.168.0.170"
++CONFIG_SYSCFG_NET_GATEWAY0="192.168.5.1"
++CONFIG_SYSCFG_NAMESERVER0="192.168.5.1"
 +
 +#
 +# 
@@ -16623,7 +16623,7 @@ diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/im
 -CONFIG_PKG_PYTHON=y
 diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.tmpconfig.h	2015-11-13 00:01:16.749968648 +0100
++++ ltib/config/platform/imx/.tmpconfig.h	2015-11-13 15:17:46.639783014 +0100
 @@ -0,0 +1,652 @@
 +/*
 + * Automatically generated C config: don't edit
@@ -17195,11 +17195,11 @@ diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/im
 +#define CONFIG_SYSCFG_IFACE0 1
 +#define CONFIG_SYSCFG_NET_INTERFACE0 "eth0"
 +#undef CONFIG_SYSCFG_DHCPC0
-+#define CONFIG_SYSCFG_IPADDR0 "192.168.0.220"
++#define CONFIG_SYSCFG_IPADDR0 "192.168.5.211"
 +#define CONFIG_SYSCFG_NET_MASK0 "255.255.255.0"
 +#define CONFIG_SYSCFG_NET_BROADCAST0 "192.168.0.255"
-+#define CONFIG_SYSCFG_NET_GATEWAY0 "192.168.0.1"
-+#define CONFIG_SYSCFG_NAMESERVER0 "192.168.0.170"
++#define CONFIG_SYSCFG_NET_GATEWAY0 "192.168.5.1"
++#define CONFIG_SYSCFG_NAMESERVER0 "192.168.5.1"
 +
 +/*
 + * 

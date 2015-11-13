@@ -3016,12 +3016,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%defattr(-,root,root)
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/skell/skell.spec	2015-11-12 03:46:50.277013288 +0100
-@@ -9,15 +9,75 @@
++++ ltib/dist/lfs-5.1/skell/skell.spec	2015-11-13 11:34:27.783999246 +0100
+@@ -9,15 +9,74 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
-+Source1         : skell-mect-dev.tar.bz2
 +Source2         : rootfs_patch.tar.bz2
 +Source3         : skell-local.tar.bz2
 +Source4         : gdbserver
@@ -3095,7 +3094,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  %Description
  %{summary}
-@@ -31,24 +91,69 @@
+@@ -31,24 +90,68 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -3140,7 +3139,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +test -z "$PKG_SKELL_WANT_TERMINFO" && rm -rf $RPM_BUILD_ROOT/%{pfx}%{_prefix}/share/terminfo
 +
-+sudo tar xjvf %{SOURCE1} -C $RPM_BUILD_ROOT/%{pfx}
 +tar xjvf %{SOURCE2} -C $RPM_BUILD_ROOT/%{pfx}
 +tar xjvf %{SOURCE3} -C $RPM_BUILD_ROOT/%{pfx}
 +install -m 755 -D %{SOURCE4} $RPM_BUILD_ROOT/%{pfx}%{_bindir}/`basename %{SOURCE4}`

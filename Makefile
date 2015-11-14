@@ -220,18 +220,10 @@ LTIB_UBUNTU_INCLUDE_SYS_PATHCH = ltib-ubuntu12.04-include-sys.patch
 # LTIB fix configuration and specs (MECT patches)
 LTIB_MECT_CONFIG_PATCH = ltib-mect-config.patch
 LTIB_MECT_SPECS_PATCH = ltib-mect-specs.patch
-
-# LTIB fix deprecated warning and missing zlib (MECT patch)
-LTIB_DEPR_AND_ZLIB_PATCH = ltib-deprecated+zlib.patch
-
-# LTIB change wget options for download and log (MECT patch)
-LTIB_WGET_OPTIONS_PATCH = ltib-wget-retry.patch
+LTIB_MECT_BIN_PATCH = ltib-mect-bin.patch
 
 # LTIB set MECT PPP (MECT patch)
 LTIB_MECT_PPP_PATCH = ltib-mect-ppp-url.patch
-
-# LTIB reverse dependencies for kernel build (MECT patch)
-LTIB_MECT_KERNEL_REV_DEPS_PATCH = ltib-mect-kernel-build-reverse-deps.patch
 
 # LTIB Ubuntu 12.04 patch bundle
 LTIB_UBUNTU_12_04_PATCH = patch-ltib-ubuntu12.04.sh
@@ -378,14 +370,12 @@ ltibpatch: downloads
 	cd $(LTIBDIR); rm -f $(LTIB_UBUNTU_12_04_PATCH) $(LTIB_UBUNTU_12_04_PATCH_INCLUDE_SYS_PATCH)
 	rm -rf $(LTIBDIR_REF)
 	mkdir -p $(LTIBDIR_REF)
-	rsync -a $(LTIBDIR)/config $(LTIBDIR)/dist $(LTIBDIR_REF)/
+	rsync -a $(LTIBDIR)/config $(LTIBDIR)/dist $(LTIBDIR)/bin $(LTIBDIR)/ltib $(LTIBDIR_REF)/
 	cd $(LTIBDIR); for p in \
 		$(LTIB_MECT_CONFIG_PATCH) \
-		$(LTIB_DEPR_AND_ZLIB_PATCH) \
-		$(LTIB_WGET_OPTIONS_PATCH) \
 		$(LTIB_MECT_PPP_PATCH) \
-		$(LTIB_MECT_KERNEL_REV_DEPS_PATCH) \
 		$(LTIB_MECT_SPECS_PATCH) \
+		$(LTIB_MECT_BIN_PATCH) \
 	; do \
 		patch -p1 < $(FTPDIR)/$$p; \
 	done
@@ -947,26 +937,22 @@ images_check:
 # Create new patches from the current installation.
 
 .PHONY: ltib_patch
-ltib_patch: ltib_patch_config ltib_patch_specs
+ltib_patch: ltib_patch_config ltib_patch_specs ltib_patch_bin
 
 .PHONY: ltib_patch_config
 ltib_patch_config: $(LTIBDIR_REF)/config
-	cd $(LTIBDIR)/.. && { diff -aurN --exclude=*.bak --exclude=*.swp $(shell basename $(LTIBDIR_REF))/config $(shell basename $(LTIBDIR))/config; diff -auN $(shell basename $(LTIBDIR_REF))/.config $(shell basename $(LTIBDIR))/.config; diff -auN $(shell basename $(LTIBDIR_REF))/.config.cmd $(shell basename $(LTIBDIR))/.config.cmd; diff -auN $(shell basename $(LTIBDIR_REF))/.tmpconfig.h $(shell basename $(LTIBDIR))/.tmpconfig.h; } > $(FTPDIR)/$(LTIB_MECT_CONFIG_PATCH); true
+	cd $(LTIBDIR)/.. && { diff -urN --exclude=*.bak --exclude=*.swp $(shell basename $(LTIBDIR_REF))/config $(shell basename $(LTIBDIR))/config; diff -uN $(shell basename $(LTIBDIR_REF))/.config $(shell basename $(LTIBDIR))/.config; diff -uN $(shell basename $(LTIBDIR_REF))/.config.cmd $(shell basename $(LTIBDIR))/.config.cmd; diff -uN $(shell basename $(LTIBDIR_REF))/.tmpconfig.h $(shell basename $(LTIBDIR))/.tmpconfig.h; } > $(FTPDIR)/$(LTIB_MECT_CONFIG_PATCH); true
 	cd $(FTPDIR); md5sum $(LTIB_MECT_CONFIG_PATCH) > $(LTIB_MECT_CONFIG_PATCH).$(MD5EXT)
 
 .PHONY: ltib_patch_specs
 ltib_patch_specs: $(LTIBDIR_REF)/dist
-	cd $(LTIBDIR)/.. && diff -aurN --exclude=*-orig.spec --exclude=*.bak --exclude=*.swp $(shell basename $(LTIBDIR_REF))/dist $(shell basename $(LTIBDIR))/dist > $(FTPDIR)/$(LTIB_MECT_SPECS_PATCH); true
+	cd $(LTIBDIR)/.. && diff -urN --exclude=*-orig.spec --exclude=*.bak --exclude=*.swp $(shell basename $(LTIBDIR_REF))/dist $(shell basename $(LTIBDIR))/dist > $(FTPDIR)/$(LTIB_MECT_SPECS_PATCH); true
 	cd $(FTPDIR); md5sum $(LTIB_MECT_SPECS_PATCH) > $(LTIB_MECT_SPECS_PATCH).$(MD5EXT)
 
-.PHONY: ltib_patch_to_vcs_add
-ltib_patch_to_vcs_add:
-	cd $(LTIBDIR); for s in `./ltib -m listpkgs 2>/dev/null | awk '/ y / { print $$2; }'`; do find dist/lfs-5.1 -name $$s.spec -print; done
-	# Insert:
-	# %dump
-	# exit 1
-	# before %prep or %setup, then
-	#rpmbuild -ba dist/lfs-5.1/busybox/busybox.spec 2>&1 | awk '/PATCH[0-9]+/ { print $$3; }'
+.PHONY: ltib_patch_bin
+ltib_patch_bin: $(LTIBDIR_REF)/bin
+	cd $(LTIBDIR)/.. && { diff -urN --exclude=*.bak --exclude=*.swp $(shell basename $(LTIBDIR_REF))/bin $(shell basename $(LTIBDIR))/bin; diff -uN $(shell basename $(LTIBDIR_REF))/ltib $(shell basename $(LTIBDIR))/ltib; } > $(FTPDIR)/$(LTIB_MECT_BIN_PATCH); true
+	cd $(FTPDIR); md5sum $(LTIB_MECT_BIN_PATCH) > $(LTIB_MECT_BIN_PATCH).$(MD5EXT)
 
 # Update an existing LTIB installation from repository.
 
@@ -982,11 +968,14 @@ ltib_update:
 	rsync -a $(LTIBDIR_REF)/ $(LTIBDIR_PATCH)/
 	cd $(LTIBDIR_PATCH); patch -p1 < $(FTPDIR)/$(LTIB_MECT_CONFIG_PATCH)
 	cd $(LTIBDIR_PATCH); patch -p1 < $(FTPDIR)/$(LTIB_MECT_SPECS_PATCH)
+	cd $(LTIBDIR_PATCH); patch -p1 < $(FTPDIR)/$(LTIB_MECT_BIN_PATCH)
 	rsync -a --delete $(LTIBDIR_PATCH)/config/ $(LTIBDIR)/config/
 	rsync -a --delete $(LTIBDIR_PATCH)/dist/ $(LTIBDIR)/dist/
+	rsync -a --delete $(LTIBDIR_PATCH)/bin/ $(LTIBDIR)/bin/
 	cp $(LTIBDIR_PATCH)/.config $(LTIBDIR)/.config
 	cp $(LTIBDIR_PATCH)/.config.cmd $(LTIBDIR)/.config.cmd
 	cp $(LTIBDIR_PATCH)/.tmpconfig.h $(LTIBDIR)/.tmpconfig.h
+	cp -a $(LTIBDIR_PATCH)/ltib $(LTIBDIR)/ltib
 	rm -rf $(LTIBDIR_PATCH)
 
 

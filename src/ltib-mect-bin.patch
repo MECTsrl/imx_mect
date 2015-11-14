@@ -1,0 +1,114 @@
+--- ltib.reference/ltib	2013-01-09 04:58:38.000000000 +0100
++++ ../imx_mect.new-clone/ltib/ltib	2015-11-12 03:44:32.609015510 +0100
+@@ -78,7 +78,7 @@
+     proxy        => "",
+     force_md5get => "",
+     quiet        => "",
+-    wget_opts    => "--passive-ftp -nc --tries=1 --timeout=12 -nv",
++    wget_opts    => "--passive-ftp -nc --tries=5 --timeout=30 --progress=dot:mega",
+     configured   => "",
+     pre_install_deps   => "
+             glibc           2.2.4
+@@ -199,7 +199,7 @@
+ };
+ 
+ use strict 'vars';
+-use vars qw($cf $config_deps $build_deps $install_deps
++use vars qw($cf $config_deps $build_deps $install_deps $top
+             $echo $pcf $ppcf $rev_install_deps $pcac $verbose);
+ 
+ # package config dependencies
+@@ -265,7 +265,7 @@
+ 
+ # package build dependencies
+ # rebuild all packages in the list (rhs) if the key (lhs) has been installed
+-$build_deps = { PKG_KERNEL => [ qw/PKG_MODEPS/ ],
++$build_deps = { PKG_KERNEL => [ qw/PKG_BOOT_STREAM PKG_MODEPS PKG_LAST_KERNEL_BUILD/ ],
+                 PKG_SKELL  => [ qw/PKG_SYSCONFIG/ ],
+                 PKG_MERGE  => [ qw/PKG_MODEPS/ ],
+                 PKG_TSLIB  => [ qw/PKG_XORG_SERVER PKG_ENLIGHTENMENT
+@@ -1153,7 +1153,7 @@
+     $num = $p[-1] || 0;
+     $num++;
+ 
+-    # ensure his patch name is not already in the gpp (use seconds since 1970)
++    # ensure that this patch name is not already in the gpp (use seconds since 1970)
+     my $pname = "$tok->{name}-$tok->{version}-$cf->{stime}.patch";
+ 
+     system_nb(<<TXT) == 0 or die;
+@@ -1166,6 +1166,11 @@
+ cd $cf->{rpmdir}/BUILD
+ diff --exclude CVS --exclude .git -uNr $pkg_dir_name $pkg_dir_name.modified > $cf->{lpp}/$pname
+ rm -rf $cf->{rpmdir}/BUILD/$pkg_dir_name
++
++rm -rf $top/../src/$pname
++ln -sf $cf->{lpp}/$pname $top/../src/$pname
++cd $top/../src
++md5sum $pname > $pname.md5
+ TXT
+ 
+     open(SPEC, ">$spec.bak") or die("can't open $spec.bak for writing: $!");
+@@ -1180,16 +1185,20 @@
+     print <<TXT;
+ 
+ A patch has been generated and placed in:
+-
+     $cf->{lpp}/$pname
++and a symbolic link to it in:
++    $top/../src/$pname
++
++Make sure that you add the latter and its MD5
++to git, commit and push the change to the repository.
+ 
+-You need to check this and removed any bogus entries that may exist
+-due to and incomplete "make distclean"
++Before that you need to check this and remove any bogus entries
++that may have been added due to an incomplete "make distclean".
+ 
+ In addition, the specfile:
+     $spec
+-had been edited, and an entry for the new patch has been put in there,
+-a backup of the original specfile is in
++had been edited to add an entry for the new patch.
++A backup of the original specfile is in:
+     $spec.bak
+ 
+ TXT
+@@ -1611,7 +1620,7 @@
+ 
+ sub save_binary_rpms
+ {
+-    die("pcf  not defined") unless $pcf;
++    die("pcf not defined") unless $pcf;
+ 
+     my $newarch = g2larch($pcf->{LINTARCH}) or die;
+     my $cfn     = '.config';
+diff -urN ltib.reference/bin/Ltibutils.pm ../imx_mect.new-clone/ltib/bin/Ltibutils.pm
+--- ltib.reference/bin/Ltibutils.pm	2013-01-09 04:58:38.000000000 +0100
++++ ../imx_mect.new-clone/ltib/bin/Ltibutils.pm	2015-11-09 20:51:24.807926573 +0100
+@@ -359,7 +359,7 @@
+     return scalar @{$cf->{pp_list}} if $pp_list_tested;
+     $pp_list_tested = 1;
+ 
+-    return unless defined @{$cf->{pp_list}};
++    return unless @{$cf->{pp_list}};
+     return 1 if $cf->{bypass_network_tests};
+     return 1 unless $have_request_common && $have_useragent;
+ 
+@@ -410,7 +410,7 @@
+     my($dest, $pxys, $wget_opts, $pxmode, $url) = @_;
+     return system_nb(<<TXT) == 0;
+ cd $dest
+-$pxys wget $wget_opts --proxy=$pxmode $url 2>&1
++$pxys wget $wget_opts --proxy=$pxmode $url
+ cd - >/dev/null
+ TXT
+ }
+@@ -584,6 +584,7 @@
+                     },
+     zlib         => sub { my @f = (glob('/usr/lib/libz.so*'),
+                                    glob('/lib/libz.so*'),
++                                   glob('/lib/i386-linux-gnu/libz.so*'),
+                                    glob('/lib64/libz.so*'),
+                                    glob('/usr/lib/i386-linux-gnu/libz.so*'),
+                                    glob('/usr/lib32/libz.so*'),

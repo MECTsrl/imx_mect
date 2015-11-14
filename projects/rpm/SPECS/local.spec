@@ -105,7 +105,6 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/flash/root/sqldrivers/libqsqlmysql.so
 %{pfx}/local/flash/root/writemac
 %{pfx}/local/home
-%{pfx}/local/path.conf
 %{pfx}/local/retentive
 %{pfx}/local/root
 %{pfx}/local/sd_card

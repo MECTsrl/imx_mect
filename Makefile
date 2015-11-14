@@ -1,5 +1,5 @@
 # Default target image.
-# NOT: uncomment only one.
+# NOTE: uncomment only one.
 DEFAULT_IMAGE := TPAC1007_480x272
 #DEFAULT_IMAGE := TPAC1006_320x240
 #DEFAULT_IMAGE := TPAC1006_640x480
@@ -936,21 +936,21 @@ images_check:
 
 # Create new patches from the current installation.
 
-.PHONY: ltib_patch
-ltib_patch: ltib_patch_config ltib_patch_specs ltib_patch_bin
+.PHONY: ltib_genpatch
+ltib_genpatch: ltib_genpatch_config ltib_genpatch_specs ltib_genpatch_bin
 
-.PHONY: ltib_patch_config
-ltib_patch_config: $(LTIBDIR_REF)/config
+.PHONY: ltib_genpatch_config
+ltib_genpatch_config: $(LTIBDIR_REF)/config
 	cd $(LTIBDIR)/.. && { diff -urN --exclude=*.bak --exclude=*.swp $(shell basename $(LTIBDIR_REF))/config $(shell basename $(LTIBDIR))/config; diff -uN $(shell basename $(LTIBDIR_REF))/.config $(shell basename $(LTIBDIR))/.config; diff -uN $(shell basename $(LTIBDIR_REF))/.config.cmd $(shell basename $(LTIBDIR))/.config.cmd; diff -uN $(shell basename $(LTIBDIR_REF))/.tmpconfig.h $(shell basename $(LTIBDIR))/.tmpconfig.h; } > $(FTPDIR)/$(LTIB_MECT_CONFIG_PATCH); true
 	cd $(FTPDIR); md5sum $(LTIB_MECT_CONFIG_PATCH) > $(LTIB_MECT_CONFIG_PATCH).$(MD5EXT)
 
-.PHONY: ltib_patch_specs
-ltib_patch_specs: $(LTIBDIR_REF)/dist
+.PHONY: ltib_genpatch_specs
+ltib_genpatch_specs: $(LTIBDIR_REF)/dist
 	cd $(LTIBDIR)/.. && diff -urN --exclude=*-orig.spec --exclude=*.bak --exclude=*.swp $(shell basename $(LTIBDIR_REF))/dist $(shell basename $(LTIBDIR))/dist > $(FTPDIR)/$(LTIB_MECT_SPECS_PATCH); true
 	cd $(FTPDIR); md5sum $(LTIB_MECT_SPECS_PATCH) > $(LTIB_MECT_SPECS_PATCH).$(MD5EXT)
 
-.PHONY: ltib_patch_bin
-ltib_patch_bin: $(LTIBDIR_REF)/bin
+.PHONY: ltib_genpatch_bin
+ltib_genpatch_bin: $(LTIBDIR_REF)/bin
 	cd $(LTIBDIR)/.. && { diff -urN --exclude=*.bak --exclude=*.swp $(shell basename $(LTIBDIR_REF))/bin $(shell basename $(LTIBDIR))/bin; diff -uN $(shell basename $(LTIBDIR_REF))/ltib $(shell basename $(LTIBDIR))/ltib; } > $(FTPDIR)/$(LTIB_MECT_BIN_PATCH); true
 	cd $(FTPDIR); md5sum $(LTIB_MECT_BIN_PATCH) > $(LTIB_MECT_BIN_PATCH).$(MD5EXT)
 

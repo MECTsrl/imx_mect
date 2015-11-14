@@ -15,7 +15,7 @@ BUILD_QTVERSION = $(QT_VERSION)
 BUILD_QWTVERSION = $(QWT_VERSION)
 
 QT_VERSION := 4.8.5
-QWT_VERSION := 6.1.0
+QWT_VERSION := 6.1-multiaxes
 
 # Name of the root file system version file
 RFS_VERSION_FILE := rootfs_version

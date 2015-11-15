@@ -984,7 +984,8 @@ ltib_update:
 
 .PHONY: clean
 clean: clean_projects
-	sudo rm -rf $(LTIBDIR) $(TMPDIR) $(CSXCUNPACK) $(CSXCDIR) $(FSDIR) $(TMPRPMDIR) $(QT_INSTALL_DIR)
+	sudo rm -rf $(LTIBDIR) $(TMPDIR) $(CSXCUNPACK) $(CSXCDIR) $(FSDIR)/ltib $(FSDIR)/pkgs $(FSDIR)/rootfs $(TMPRPMDIR) $(QT_INSTALL_DIR)
+	sudo rmdir --ignore-fail-on-non-empty $(FSDIR)
 
 .PHONY: clean_projects
 clean_projects:

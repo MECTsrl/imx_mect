@@ -13,6 +13,7 @@ BUILD_TARGET_TPAC1007_480x272 := TPAC1007_480x272
 BUILD_TARGET_TPAC1008_800x600 := TPAC1008_800x600
 BUILD_QTVERSION = $(QT_VERSION)
 BUILD_QWTVERSION = $(QWT_VERSION)
+BUILD_ATCMCRT_VER := master
 
 QT_VERSION := 4.8.5
 QWT_VERSION := 6.1-multiaxes
@@ -50,7 +51,8 @@ FSDIR := /opt/freescale
 # LPP location
 LPPDIR = $(FSDIR)/pkgs
 # RPM archive
-RPMDIR = $(CURDIR)/ltib/rpm/RPMS/$(TARGET_ARCH)
+RPMBASEDIR = $(CURDIR)/ltib/rpm
+RPMDIR = $(RPMBASEDIR)/RPMS/$(TARGET_ARCH)
 # Root file system top-level directory
 IMGDIR = $(CURDIR)/images-all
 # Draft directory for rpmbuild
@@ -173,7 +175,7 @@ COMMON_RFSPKGS := $(COMMON_RFSPKGS:%=$(RPMDIR)/%)
 
 LFSPKGS := \
 	local-1.0-1_$(BUILD_RELEASE).$(TARGET_ARCH).rpm \
-	local-ATCMControl_runtime_system-1.0-1_$(BUILD_RELEASE).$(TARGET_ARCH).rpm \
+	local-ATCMcontrol_RunTimeSystem-1.0-1_$(BUILD_RELEASE).$(TARGET_ARCH).rpm \
 	local-cgic_work-1.0-1_$(BUILD_RELEASE).$(TARGET_ARCH).rpm \
 	local-factory_data-1.0-1_$(BUILD_RELEASE).$(TARGET_ARCH).rpm \
 	local-setup_time-1.0-1_$(BUILD_RELEASE).$(TARGET_ARCH).rpm \
@@ -417,7 +419,10 @@ qt:
 # Build the local projects.
 .PHONY: projects
 projects:
-	$(MAKE) -C projects RELEASE=$(BUILD_RELEASE) clean all
+	test -n '$(BUILD_ATCMCRT_VER)'
+	test -d projects/ATCMcontrol_RunTimeSystem || { cd projects; git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; cd -; }
+	test -d projects/ATCMcontrol_RunTimeSystem && { cd projects; git checkout $(BUILD_ATCMCRT_VER) https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; cd -; }
+	$(MAKE) -C projects ROOTFS='$(LTIB_RFSDIR)' CC_VERSION='' CC_DIRECTORY='$(CSXCDIR)' CC_RADIX='arm-none-linux-gnueabi' RELEASE='$(BUILD_RELEASE)' RPMBASEDIR='$(RPMBASEDIR)' QT_INSTALL_DIR='$(QT_INSTALL_DIR)' clean all
 
 # Build the default target image.
 .PHONY: image

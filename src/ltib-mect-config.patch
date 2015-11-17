@@ -1927,7 +1927,7 @@ diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/im
 +#
 +# Options
 +#
-+CONFIG_SYSCFG_HOSTNAME="tpac_1007"
++CONFIG_SYSCFG_HOSTNAME="mect"
 +CONFIG_SYSCFG_WANT_LOGIN_TTY=y
 +CONFIG_SYSCFG_LOGING_TTY="::respawn:/sbin/getty -L ttyAM0 115200 vt100"
 +CONFIG_SYSCFG_MODLIST=""
@@ -2607,7 +2607,7 @@ diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/im
 +#
 +# Options
 +#
-+CONFIG_SYSCFG_HOSTNAME="tpac_1007"
++CONFIG_SYSCFG_HOSTNAME="mect"
 +CONFIG_SYSCFG_WANT_LOGIN_TTY=y
 +CONFIG_SYSCFG_LOGING_TTY="::respawn:/sbin/getty -L ttyAM0 115200 vt100"
 +CONFIG_SYSCFG_MODLIST=""
@@ -3160,7 +3160,7 @@ diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/im
  # Options
  #
 -CONFIG_SYSCFG_HOSTNAME="freescale"
-+CONFIG_SYSCFG_HOSTNAME="tpac_1007"
++CONFIG_SYSCFG_HOSTNAME="mect"
  CONFIG_SYSCFG_WANT_LOGIN_TTY=y
  CONFIG_SYSCFG_LOGING_TTY="::respawn:/sbin/getty -L ttyAM0 115200 vt100"
  CONFIG_SYSCFG_MODLIST=""
@@ -17178,7 +17178,7 @@ diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/im
 +/*
 + * Options
 + */
-+#define CONFIG_SYSCFG_HOSTNAME "tpac_1007"
++#define CONFIG_SYSCFG_HOSTNAME "mect"
 +#define CONFIG_SYSCFG_WANT_LOGIN_TTY 1
 +#define CONFIG_SYSCFG_LOGING_TTY "::respawn:/sbin/getty -L ttyAM0 115200 vt100"
 +#define CONFIG_SYSCFG_MODLIST ""

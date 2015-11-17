@@ -16,11 +16,11 @@ AutoReqProv     : no
 %description
 %{summary}
 
-%Package ATCMControl_runtime_system
+%Package ATCMcontrol_RunTimeSystem
 Summary         : ATCM control runtime system application
 Group           : Applications/File
 AutoReqProv     : no
-%Description ATCMControl_runtime_system
+%Description ATCMcontrol_RunTimeSystem
 ATCM control runtime system provides the run-time execution
 environment for the PLC applications built using the ATCM
 control engineering SDK.
@@ -94,7 +94,6 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/flash/etc/sysconfig/.passwd
 %{pfx}/local/flash/etc/sysconfig/ppp
 %{pfx}/local/flash/root/backing_file
-%{pfx}/local/flash/root/codrev103_fcrts
 %{pfx}/local/flash/root/fcrts
 %{pfx}/local/flash/root/make_usb_device
 %{pfx}/local/flash/root/safe_hmi
@@ -150,7 +149,7 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/www/upgrade.cgi
 %{pfx}/local/www/upload.cgi
 
-%files ATCMControl_runtime_system
+%files ATCMcontrol_RunTimeSystem
 %defattr(-,root,root)
 %{pfx}/local/flash/root/fcrts
 

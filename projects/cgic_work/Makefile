@@ -5,12 +5,21 @@
 
 QMAKE          =  qmake -spec qws/linux-arm-gnueabi-g++
 
-CC_RADIX       =  arm-none-linux-gnueabi-
-AR             =  $(CC_DIRECTORY)$(CC_RADIX)ar
-AS             =  $(CC_DIRECTORY)$(CC_RADIX)gcc
-CC             =  $(CC_DIRECTORY)$(CC_RADIX)gcc -Wcast-align
-LD             =  $(CC_DIRECTORY)$(CC_RADIX)gcc
-STRIP          =  $(CC_DIRECTORY)$(CC_RADIX)strip --strip-unneeded
+CC_RADIX       =  arm-none-linux-gnueabi
+CC_BINDIR      =  $(CC_DIRECTORY)/bin/
+ifdef CC_RADIX
+AR             =  $(CC_BINDIR)/$(CC_RADIX)-ar
+AS             =  $(CC_BINDIR)/$(CC_RADIX)-gcc
+CC             =  $(CC_BINDIR)/$(CC_RADIX)-gcc -Wcast-align
+LD             =  $(CC_BINDIR)/$(CC_RADIX)-gcc
+STRIP          =  $(CC_BINDIR)/$(CC_RADIX)-strip --strip-unneeded
+else
+AR             =  $(CC_BINDIR)/ar
+AS             =  $(CC_BINDIR)/gcc
+CC             =  $(CC_BINDIR)/gcc -Wcast-align
+LD             =  $(CC_BINDIR)/gcc
+STRIP          =  $(CC_BINDIR)/strip --strip-unneeded
+endif
 RM             =  rm
 MD             =  mkdir
 SED            =  sed

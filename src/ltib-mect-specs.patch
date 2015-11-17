@@ -2417,7 +2417,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -QMAKE_LFLAGS_THREAD	+=
 -QMAKE_LFLAGS_NOUNDEF	+= -Wl,--no-undefined
 -QMAKE_RPATH		= -Wl,-rpath,
-+QMAKE_CC                      =  arm-none-linux-gnueabi-gcc
++QMAKE_CC                      =  /opt/CodeSourcery/bin/arm-none-linux-gnueabi-gcc
 +QMAKE_CFLAGS                  += -pipe
 +QMAKE_CFLAGS_DEPS             += -M
 +QMAKE_CFLAGS_WARN_ON          += -Wall -W
@@ -2431,7 +2431,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +QMAKE_CFLAGS_PRECOMPILE       += -x c-header -c \${QMAKE_PCH_INPUT} -o \${QMAKE_PCH_OUTPUT}
 +QMAKE_CFLAGS_USE_PRECOMPILE   += -include \${QMAKE_PCH_OUTPUT_BASE}
 +
-+QMAKE_CXX                     =  arm-none-linux-gnueabi-g++
++QMAKE_CXX                     =  /opt/CodeSourcery/bin/arm-none-linux-gnueabi-g++
 +QMAKE_CXXFLAGS                += \$\$QMAKE_CFLAGS
 +QMAKE_CXXFLAGS_DEPS           += \$\$QMAKE_CFLAGS_DEPS
 +QMAKE_CXXFLAGS_WARN_ON        += \$\$QMAKE_CFLAGS_WARN_ON
@@ -2445,10 +2445,10 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +QMAKE_CXXFLAGS_PRECOMPILE     += -x c++-header -c \${QMAKE_PCH_INPUT} -o \${QMAKE_PCH_OUTPUT}
 +QMAKE_CXXFLAGS_USE_PRECOMPILE =  \$\$QMAKE_CFLAGS_USE_PRECOMPILE
 +
-+QMAKE_LINK                    =  arm-none-linux-gnueabi-g++
-+QMAKE_LINK_SHLIB              =  arm-none-linux-gnueabi-g++
-+QMAKE_LINK_C                  =  arm-none-linux-gnueabi-gcc
-+QMAKE_LINK_C_SHLIB            =  arm-none-linux-gnueabi-gcc
++QMAKE_LINK                    =  /opt/CodeSourcery/bin/arm-none-linux-gnueabi-g++
++QMAKE_LINK_SHLIB              =  /opt/CodeSourcery/bin/arm-none-linux-gnueabi-g++
++QMAKE_LINK_C                  =  /opt/CodeSourcery/bin/arm-none-linux-gnueabi-gcc
++QMAKE_LINK_C_SHLIB            =  /opt/CodeSourcery/bin/arm-none-linux-gnueabi-gcc
 +QMAKE_LFLAGS                  +=
 +QMAKE_LFLAGS_RELEASE          += -Wl,-O1
 +QMAKE_LFLAGS_DEBUG            +=
@@ -2560,9 +2560,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +QMAKE_MOC                     =  \$\$[QT_INSTALL_BINS]/moc
 +QMAKE_UIC                     =  \$\$[QT_INSTALL_BINS]/uic
 +
-+QMAKE_AR                      =  arm-none-linux-gnueabi-ar cqs
-+QMAKE_OBJCOPY                 =  arm-none-linux-gnueabi-objcopy
-+QMAKE_RANLIB                  =  arm-none-linux-gnueabi-ranlib
++QMAKE_AR                      =  /opt/CodeSourcery/bin/arm-none-linux-gnueabi-ar cqs
++QMAKE_OBJCOPY                 =  /opt/CodeSourcery/bin/arm-none-linux-gnueabi-objcopy
++QMAKE_RANLIB                  =  /opt/CodeSourcery/bin/arm-none-linux-gnueabi-ranlib
 +
 +QMAKE_TAR                     =  tar -cf
 +QMAKE_GZIP                    =  gzip -9f
@@ -2573,7 +2573,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +QMAKE_MOVE                    =  mv -f
 +QMAKE_DEL_FILE                =  rm -f
 +QMAKE_DEL_DIR                 =  rmdir
-+QMAKE_STRIP                   =  arm-none-linux-gnueabi-strip
++QMAKE_STRIP                   =  /opt/CodeSourcery/bin/arm-none-linux-gnueabi-strip
 +QMAKE_CHK_DIR_EXISTS          =  test -d
 +QMAKE_MKDIR                   =  mkdir -p
 +QMAKE_INSTALL_FILE            =  install -m 644 -p

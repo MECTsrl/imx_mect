@@ -20,13 +20,53 @@ SMP_FLAG := -j$(shell grep -c ^processor /proc/cpuinfo)
 # Use ccache.
 export PATH := /usr/lib/ccache:$(PATH)
 
+# All build targets
+ALL_TARGETS = \
+	local_prepare \
+	setup_time \
+	splash \
+	cgic_work \
+	ATCMcontrol_RunTimeSystem \
+
+ifneq ($(wildcard factory_test/trunk/.*),)
+ALL_TARGETS += factory_test
+endif
+
+ifneq ($(wildcard key_generator/trunk/.*),)
+ALL_TARGETS += key_generator
+endif
+
+ALL_TARGETS += \
+	factory_data \
+	localfs_rpm
+
+# All clean targets
+CLEAN_TARGETS = \
+	local_prepare_clean \
+	setup_time_clean \
+	splash_clean \
+	cgic_work_clean \
+	ATCMcontrol_RunTimeSystem_clean \
+
+ifneq ($(wildcard factory_test/trunk/.*),)
+CLEAN_TARGETS += factory_test_clean
+endif
+
+ifneq ($(wildcard key_generator/trunk/.*),)
+CLEAN_TARGETS += key_generator_clean
+endif
+
+CLEAN_TARGETS += \
+	factory_data_clean \
+	localfs_rpm_clean
+
 
 # ##########################
 #
 # Build/deploy all projects
 
 .PHONY: all
-all: local_prepare setup_time splash cgic_work ATCMcontrol_RunTimeSystem factory_data localfs_rpm
+all: $(ALL_TARGETS)
 
 
 
@@ -212,11 +252,74 @@ localfs_rpm_clean: PRJDIR := $(CURDIR)
 localfs_rpm_clean:
 	test -n $(PRJDIR)
 
+# ##########################
+#
+# factory_test
+#
+
+ifneq ($(wildcard factory_test/trunk/.*),)
+
+.PHONY: factory_test
+factory_test: factory_test_clean factory_test_build factory_test_install
+
+.PHONY: factory_test_build
+factory_test_build: PRJDIR := $(CURDIR)/factory_test/trunk
+factory_test_build:
+	test -n $(PRJDIR)
+	cd $(PRJDIR); $(QMAKE) -spec qws/linux-arm-gnueabi-g++ -config codesourcery
+	$(MAKE) $(SMP_FLAG) -C $(PRJDIR)
+
+.PHONY: factory_test_install
+factory_test_install: PRJDIR := $(CURDIR)/factory_test/trunk
+factory_test_install:
+	test -n $(PRJDIR)
+	install -D -m 755 $(PRJDIR)/factory_test $(LDIR)/root/factory_test
+
+.PHONY: factory_test_clean
+factory_test_clean: PRJDIR := $(CURDIR)/factory_test/trunk
+factory_test_clean:
+	test -n $(PRJDIR)
+	-make -C $(PRJDIR) distclean
+	make -C $(PRJDIR)/trama $(TOOLCHAIN_FLAG) distclean
+
+endif
+
+# ##########################
+#
+# key_generator
+#
+
+ifneq ($(wildcard key_generator/trunk/.*),)
+
+.PHONY: key_generator
+key_generator: key_generator_clean key_generator_build key_generator_install
+
+.PHONY: key_generator_build
+key_generator_build: PRJDIR := $(CURDIR)/key_generator/trunk
+key_generator_build:
+	test -n $(PRJDIR)
+	cd $(PRJDIR); $(QMAKE) -spec qws/linux-arm-gnueabi-g++
+	make $(SMP_FLAG) -C $(PRJDIR)
+
+.PHONY: key_generator_install
+key_generator_install: PRJDIR := $(CURDIR)/key_generator/trunk
+key_generator_install:
+	test -n $(PRJDIR)
+	install -D -m 755 $(PRJDIR)/keyGenerator $(LDIR)/root/key_generator
+
+.PHONY: key_generator_clean
+key_generator_clean: PRJDIR := $(CURDIR)/key_generator/trunk
+key_generator_clean:
+	test -n $(PRJDIR)
+	-make -C $(PRJDIR) distclean
+
+endif
+
 
 
 # ##########################
 # Utils
 
 .PHONY: clean
-clean: ATCMcontrol_RunTimeSystem_clean cgic_work_clean factory_data_clean local_prepare_clean setup_time_clean splash_clean
+clean: $(CLEAN_TARGETS)
 	sudo rm -rf $(LDIR)

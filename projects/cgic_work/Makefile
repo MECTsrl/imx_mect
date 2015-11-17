@@ -5,8 +5,9 @@
 
 QMAKE          =  qmake -spec qws/linux-arm-gnueabi-g++
 
-CC_RADIX       =  arm-none-linux-gnueabi
+CC_DIRECTORY   =  /opt/CodeSourcery
 CC_BINDIR      =  $(CC_DIRECTORY)/bin/
+CC_RADIX       =  arm-none-linux-gnueabi
 ifdef CC_RADIX
 AR             =  $(CC_BINDIR)/$(CC_RADIX)-ar
 AS             =  $(CC_BINDIR)/$(CC_RADIX)-gcc

@@ -1,5 +1,34 @@
+diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/bin/Ltibutils.pm ltib/bin/Ltibutils.pm
+--- ltib.reference/bin/Ltibutils.pm	2013-01-09 04:58:38.000000000 +0100
++++ ltib/bin/Ltibutils.pm	2015-11-17 21:40:21.466046444 +0100
+@@ -359,7 +359,7 @@
+     return scalar @{$cf->{pp_list}} if $pp_list_tested;
+     $pp_list_tested = 1;
+ 
+-    return unless defined @{$cf->{pp_list}};
++    return unless @{$cf->{pp_list}};
+     return 1 if $cf->{bypass_network_tests};
+     return 1 unless $have_request_common && $have_useragent;
+ 
+@@ -410,7 +410,7 @@
+     my($dest, $pxys, $wget_opts, $pxmode, $url) = @_;
+     return system_nb(<<TXT) == 0;
+ cd $dest
+-$pxys wget $wget_opts --proxy=$pxmode $url 2>&1
++$pxys wget $wget_opts --proxy=$pxmode $url
+ cd - >/dev/null
+ TXT
+ }
+@@ -584,6 +584,7 @@
+                     },
+     zlib         => sub { my @f = (glob('/usr/lib/libz.so*'),
+                                    glob('/lib/libz.so*'),
++                                   glob('/lib/i386-linux-gnu/libz.so*'),
+                                    glob('/lib64/libz.so*'),
+                                    glob('/usr/lib/i386-linux-gnu/libz.so*'),
+                                    glob('/usr/lib32/libz.so*'),
 --- ltib.reference/ltib	2013-01-09 04:58:38.000000000 +0100
-+++ ../imx_mect.new-clone/ltib/ltib	2015-11-12 03:44:32.609015510 +0100
++++ ltib/ltib	2015-11-17 21:40:21.466046444 +0100
 @@ -78,7 +78,7 @@
      proxy        => "",
      force_md5get => "",
@@ -83,32 +112,3 @@
  
      my $newarch = g2larch($pcf->{LINTARCH}) or die;
      my $cfn     = '.config';
-diff -urN ltib.reference/bin/Ltibutils.pm ../imx_mect.new-clone/ltib/bin/Ltibutils.pm
---- ltib.reference/bin/Ltibutils.pm	2013-01-09 04:58:38.000000000 +0100
-+++ ../imx_mect.new-clone/ltib/bin/Ltibutils.pm	2015-11-09 20:51:24.807926573 +0100
-@@ -359,7 +359,7 @@
-     return scalar @{$cf->{pp_list}} if $pp_list_tested;
-     $pp_list_tested = 1;
- 
--    return unless defined @{$cf->{pp_list}};
-+    return unless @{$cf->{pp_list}};
-     return 1 if $cf->{bypass_network_tests};
-     return 1 unless $have_request_common && $have_useragent;
- 
-@@ -410,7 +410,7 @@
-     my($dest, $pxys, $wget_opts, $pxmode, $url) = @_;
-     return system_nb(<<TXT) == 0;
- cd $dest
--$pxys wget $wget_opts --proxy=$pxmode $url 2>&1
-+$pxys wget $wget_opts --proxy=$pxmode $url
- cd - >/dev/null
- TXT
- }
-@@ -584,6 +584,7 @@
-                     },
-     zlib         => sub { my @f = (glob('/usr/lib/libz.so*'),
-                                    glob('/lib/libz.so*'),
-+                                   glob('/lib/i386-linux-gnu/libz.so*'),
-                                    glob('/lib64/libz.so*'),
-                                    glob('/usr/lib/i386-linux-gnu/libz.so*'),
-                                    glob('/usr/lib32/libz.so*'),

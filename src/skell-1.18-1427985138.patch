@@ -79,7 +79,7 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell
 +		#sleep 2
  		$LOCAL_ROOT_DIR/safe_hmi > /dev/null 2>&1 &
  	fi
- elif [ -x $LOCAL_ROOT_DIR/chooser ]
+ fi
 diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/network skell-1.18.modified/etc/rc.d/init.d/network
 --- skell-1.18/etc/rc.d/init.d/network	2015-04-02 16:32:18.379976976 +0200
 +++ skell-1.18.modified/etc/rc.d/init.d/network	2015-03-30 14:01:53.459153311 +0200

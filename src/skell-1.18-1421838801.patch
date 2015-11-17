@@ -23,11 +23,11 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell
 @@ -109,8 +108,9 @@
  stop() {
  echo -n "Shutting down 'autoexec'... "
- killall -q keyGenerator factory_test chooser safe_hmi fcrts hmi 
+ killall -q keyGenerator factory_test safe_hmi fcrts hmi 
 -# clean the frame buffer
 -dd if=/dev/zero of=/dev/fb0
 +sleep 1
-+killall -9 -q keyGenerator factory_test chooser safe_hmi fcrts hmi 
++killall -9 -q keyGenerator factory_test safe_hmi fcrts hmi 
 +dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
  echo "Done."
  }

@@ -341,7 +341,7 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell
  
  # qt variable
  export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
-@@ -21,16 +45,88 @@
+@@ -21,16 +45,84 @@
  	echo "Done."
  fi
  
@@ -417,10 +417,6 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell
 +		sleep 2
 +		$LOCAL_ROOT_DIR/hmi -qws > /dev/null 2>&1 &
 +	fi
-+elif [ -x $LOCAL_ROOT_DIR/chooser ]
-+then
-+	echo "Starting chooser."
-+	$LOCAL_ROOT_DIR/chooser -qws > /dev/null 2>&1 &
  fi
 +
 +echo "Done."
@@ -430,7 +426,7 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell
  stop() {
  echo -n "Shutting down 'autoexec'... "
 -start-stop-daemon  -K -q -x /usr/bin/autoexec
-+killall -q keyGenerator factory_test chooser safe_hmi fcrts hmi 
++killall -q keyGenerator factory_test safe_hmi fcrts hmi 
  echo "Done."
  }
  

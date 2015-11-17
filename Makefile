@@ -1000,6 +1000,7 @@ ltib_genpatch_bin: $(LTIBDIR_REF)/bin
 
 .PHONY: ltib_update
 ltib_update:
+	git pull
 	if ! test -d $(LTIBDIR_REF); then \
 		mv $(LTIBDIR) $(LTIBDIR).precious; \
 		$(MAKE) ltibinst ltibpatch; \

@@ -353,7 +353,7 @@ ltibinst: $(TMPDIR) downloads
 	rm -rf $(TMPDIR)/$(LTIB_EVKDIR)
 	tar xzvf $(FTPDIR)/$(LTIB_EVKARCH) -C $(TMPDIR)
 	cd $(TMPDIR)/$(LTIB_EVKDIR); patch -p1 < $(FTPDIR)/$(LTIBINST_TARGETDIR_PATHCH)
-	-test -n "$(FSPKG)" && cp -pv $(FSPKG) $(TMPDIR)/$(LTIB_EVKDIR)/pkgs
+	if test -n "$(FSPKG)"; then cp -pv $(FSPKG) $(TMPDIR)/$(LTIB_EVKDIR)/pkgs; fi
 	cd $(TMPDIR)/$(LTIB_EVKDIR); (echo -e "qy\nyes" ) | ./install
 	rm -rf $(TMPDIR)/$(LTIB_EVKDIR)
 
@@ -421,7 +421,7 @@ qt:
 projects:
 	test -n '$(BUILD_ATCMCRT_VER)'
 	cd projects; test -d ATCMcontrol_RunTimeSystem || git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem
-	cd projects; test -d ATCMcontrol_RunTimeSystem && git checkout $(BUILD_ATCMCRT_VER)
+	cd projects; if test -d ATCMcontrol_RunTimeSystem; then git checkout $(BUILD_ATCMCRT_VER); fi
 	$(MAKE) -C projects ROOTFS='$(LTIB_RFSDIR)' CC_VERSION='' CC_DIRECTORY='$(CSXCDIR)' CC_RADIX='arm-none-linux-gnueabi' RELEASE='$(BUILD_RELEASE)' RPMBASEDIR='$(RPMBASEDIR)' QT_INSTALL_DIR='$(QT_INSTALL_DIR)' clean all
 
 # Build the default target image.
@@ -1033,7 +1033,7 @@ ltib_update:
 .PHONY: clean
 clean: clean_projects
 	sudo rm -rf $(LTIBDIR) $(TMPDIR) $(CSXCUNPACK) $(CSXCDIR) $(FSDIR)/ltib $(FSDIR)/pkgs $(FSDIR)/rootfs $(TMPRPMDIR) $(QT_INSTALL_DIR)
-	sudo rmdir --ignore-fail-on-non-empty $(FSDIR)
+	if test -d $(FSDIR); then sudo rmdir --ignore-fail-on-non-empty $(FSDIR); fi
 
 .PHONY: clean_projects
 clean_projects:

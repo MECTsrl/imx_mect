@@ -420,8 +420,8 @@ qt:
 .PHONY: projects
 projects:
 	test -n '$(BUILD_ATCMCRT_VER)'
-	test -d projects/ATCMcontrol_RunTimeSystem || { cd projects; git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; cd -; }
-	test -d projects/ATCMcontrol_RunTimeSystem && { cd projects; git checkout $(BUILD_ATCMCRT_VER) https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; cd -; }
+	cd projects; test -d ATCMcontrol_RunTimeSystem || git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem
+	cd projects; test -d ATCMcontrol_RunTimeSystem && git checkout $(BUILD_ATCMCRT_VER)
 	$(MAKE) -C projects ROOTFS='$(LTIB_RFSDIR)' CC_VERSION='' CC_DIRECTORY='$(CSXCDIR)' CC_RADIX='arm-none-linux-gnueabi' RELEASE='$(BUILD_RELEASE)' RPMBASEDIR='$(RPMBASEDIR)' QT_INSTALL_DIR='$(QT_INSTALL_DIR)' clean all
 
 # Build the default target image.

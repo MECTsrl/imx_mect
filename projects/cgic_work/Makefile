@@ -3,7 +3,7 @@
 # ../../Makefile.cfg
 #
 
-QMAKE          =  qmake -spec qws/linux-arm-gnueabi-g++
+QMAKE          =  qmake -spec qws/linux-g++-mx
 
 CC_DIRECTORY   =  /opt/CodeSourcery
 CC_BINDIR      =  $(CC_DIRECTORY)/bin/

@@ -106,7 +106,7 @@ setup_time: setup_time_clean setup_time_build setup_time_install
 setup_time_build: PRJDIR := $(CURDIR)/setup_time
 setup_time_build:
 	test -n $(PRJDIR)
-	cd $(PRJDIR); $(QMAKE) -spec qws/linux-arm-gnueabi-g++
+	cd $(PRJDIR); $(QMAKE) -spec qws/linux-g++-mx
 	$(MAKE) $(SMP_FLAG) -C $(PRJDIR)
 
 .PHONY: setup_time_install
@@ -133,7 +133,7 @@ splash: splash_clean splash_build splash_install
 splash_build: PRJDIR := $(CURDIR)/splash
 splash_build:
 	test -n $(PRJDIR)
-	cd $(PRJDIR); $(QMAKE) -spec qws/linux-arm-gnueabi-g++
+	cd $(PRJDIR); $(QMAKE) -spec qws/linux-g++-mx
 	$(MAKE) $(SMP_FLAG) -C $(PRJDIR)
 
 .PHONY: splash_install
@@ -266,7 +266,7 @@ factory_test: factory_test_clean factory_test_build factory_test_install
 factory_test_build: PRJDIR := $(CURDIR)/factory_test/trunk
 factory_test_build:
 	test -n $(PRJDIR)
-	cd $(PRJDIR); $(QMAKE) -spec qws/linux-arm-gnueabi-g++ -config codesourcery
+	cd $(PRJDIR); $(QMAKE) -spec qws/linux-g++-mx -config codesourcery
 	$(MAKE) $(SMP_FLAG) -C $(PRJDIR)
 
 .PHONY: factory_test_install
@@ -298,7 +298,7 @@ key_generator: key_generator_clean key_generator_build key_generator_install
 key_generator_build: PRJDIR := $(CURDIR)/key_generator/trunk
 key_generator_build:
 	test -n $(PRJDIR)
-	cd $(PRJDIR); $(QMAKE) -spec qws/linux-arm-gnueabi-g++
+	cd $(PRJDIR); $(QMAKE) -spec qws/linux-g++-mx
 	make $(SMP_FLAG) -C $(PRJDIR)
 
 .PHONY: key_generator_install

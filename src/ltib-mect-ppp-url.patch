@@ -5,7 +5,7 @@
  # The URL of the PPP (Private Package Pool) private code repository
  %ppp_url
 -http://auslxsc01.am.freescale.net/ppp/
-+http://www.mect.it/archive/
++http://10.0.2.2/archive/
  
  # The URL of the GPP (Global Package Pool) master code repository
  %gpp_url

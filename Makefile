@@ -410,7 +410,7 @@ toolchain:
 qt:
 	mkdir -p /tmp/rpm-$(USER) $(LTIBDIR)/rpm/SOURCES
 	for f in $(FSPKG); do cp $$f $(LTIBDIR)/rpm/SOURCES; done
-	PATH=/usr/lib/ccache:$(CSXCDIR)/bin:$(PATH) MAKEFLAGS=-j`grep -c ^processor /proc/cpuinfo` rpmbuild --define 'toolchain 1' --define 'toolchain_install_dir $(QT_INSTALL_DIR)' --define '_topdir $(LTIBDIR)/rpm' --dbpath /tmp/rpm-$(USER)/rpmdb --target arm --define '_target_cpu arm' --define '_prefix /opt' --define '_rpmdir /tmp/rpm-$(USER)/RPMS' -bb --clean --rmsource $(LTIBDIR)/dist/lfs-5.1/qt/qt-embedded.spec
+	PATH=/usr/lib/ccache:$(PATH) rpmbuild --define 'toolchain 1' --define 'toolchain_install_dir $(QT_INSTALL_DIR)' --define '_topdir $(LTIBDIR)/rpm' --dbpath /tmp/rpm-$(USER)/rpmdb --target arm --define '_target_cpu arm' --define '_prefix /opt' --define '_rpmdir /tmp/rpm-$(USER)/RPMS' -bb --clean --rmsource $(LTIBDIR)/dist/lfs-5.1/qt/qt-embedded.spec
 	-sudo rpm --force-debian --root / --dbpath /tmp/rpm-$(USER)/rpmdb -e --allmatches --nodeps --define '_tmppath $(LTIBDIR)/tmp' qt-embedded 2>/dev/null
 	sudo rpm --force-debian --root / --dbpath /tmp/rpm-$(USER)/rpmdb --ignorearch -ivh --force --nodeps --excludedocs --define '_tmppath $(LTIBDIR)/tmp' /tmp/rpm-$(USER)/RPMS/$(TARGET_ARCH)/qt-embedded-$(QT_VERSION)-*.$(TARGET_ARCH).rpm
 	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') /tmp/rpm-$(USER)
@@ -421,7 +421,7 @@ qt:
 projects:
 	test -n '$(BUILD_ATCMCRT_VER)'
 	cd projects; test -d ATCMcontrol_RunTimeSystem || git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem
-	cd projects; if test -d ATCMcontrol_RunTimeSystem; then git checkout $(BUILD_ATCMCRT_VER); fi
+	cd projects; if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git checkout $(BUILD_ATCMCRT_VER); fi
 	$(MAKE) -C projects ROOTFS='$(LTIB_RFSDIR)' CC_VERSION='' CC_DIRECTORY='$(CSXCDIR)' CC_RADIX='arm-none-linux-gnueabi' RELEASE='$(BUILD_RELEASE)' RPMBASEDIR='$(RPMBASEDIR)' QT_INSTALL_DIR='$(QT_INSTALL_DIR)' clean all
 
 # Build the default target image.

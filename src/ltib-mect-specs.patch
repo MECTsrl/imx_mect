@@ -2607,7 +2607,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  # Unset compiler to prevent gcc being used when the cross
  # tools should be used. (Trolltech issue# 138807)
-@@ -185,32 +179,104 @@
+@@ -185,32 +179,105 @@
  # Unset PLATFORM because this is used as host machine.
  unset PLATFORM
  
@@ -2701,6 +2701,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_libdir}/pkgconfig, d;
++    \,^%{pfx}%{_libdir}/[^/]*\.prl$, d;
 +    \,^%{pfx}%{_libdir}/libQtTest, d;
 +    \,^%{pfx}%{_libdir}/libQt3Support, d;
 +    \,^%{pfx}%{_libdir}/libQtWebKit, d;

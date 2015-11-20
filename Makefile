@@ -150,6 +150,7 @@ COMMON_RFSPKGS := \
 	libtermcap-rfs-2.0.8-31_1.$(TARGET_ARCH).rpm \
 	libusb1-rfs-1.0.20-1.$(TARGET_ARCH).rpm \
 	libusb-rfs-0.1.8-1.$(TARGET_ARCH).rpm \
+	lrzsz-rfs-0.12.21-1.$(TARGET_ARCH).rpm \
 	lzo-rfs-2.03-0.$(TARGET_ARCH).rpm \
 	merge-rfs-0.1-1.$(TARGET_ARCH).rpm \
 	modeps-rfs-1.0-1.$(TARGET_ARCH).rpm \

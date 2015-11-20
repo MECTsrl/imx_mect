@@ -2163,7 +2163,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mysql/mysql.spec ltib/dist/lfs-5.1/mysql/mysql.spec
 --- ltib.reference/dist/lfs-5.1/mysql/mysql.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/mysql/mysql.spec	2015-11-20 12:39:31.799134095 +0100
++++ ltib/dist/lfs-5.1/mysql/mysql.spec	2015-11-20 17:47:55.802289458 +0100
 @@ -13,6 +13,17 @@
  Patch1          : mysql-4.1.12-gcc-4.2.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -2199,7 +2199,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +cd %{_builddir}/%{name}-%{version}
 +( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
-+    \,^%{pfx}/usr/man, d;
++    \,^%{pfx}%{_prefix}/man, d;
 +    \,^%{pfx}%{_includedir}, d;
 +    \,^%{pfx}%{_prefix}/mysql-test/include, d;
 +    /\.l\?a$/ d;
@@ -4026,7 +4026,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zip30/zip30.spec ltib/dist/lfs-5.1/zip30/zip30.spec
 --- ltib.reference/dist/lfs-5.1/zip30/zip30.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/zip30/zip30.spec	2015-11-20 12:39:31.807138096 +0100
++++ ltib/dist/lfs-5.1/zip30/zip30.spec	2015-11-20 17:39:06.745895101 +0100
 @@ -0,0 +1,56 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -4071,7 +4071,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +cd %{_builddir}/%{name}-%{version}
 +( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
-+    p
++    \,^%{pfx}%{_bindir}/zip, p;
 +' all_files.lst > rfs_files.lst
 +
 +%Clean

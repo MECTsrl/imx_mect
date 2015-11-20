@@ -1372,7 +1372,7 @@ diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx
  CONFIG_LOGGER=y
 diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.config	2015-11-20 16:45:35.000000000 +0100
++++ ltib/config/platform/imx/.config	2015-11-20 17:19:30.000000000 +0100
 @@ -0,0 +1,652 @@
 +#
 +# Automatically generated make config: don't edit
@@ -2054,7 +2054,7 @@ diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx
 +$(deps_config):
 diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/defconfig.dev	2015-11-20 16:46:48.377534747 +0100
++++ ltib/config/platform/imx/defconfig.dev	2015-11-20 17:19:10.456064364 +0100
 @@ -0,0 +1,650 @@
 +#
 +# Automatically generated make config: don't edit
@@ -2811,7 +2811,7 @@ diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx
  endmenu
 diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx28.cf ltib/config/platform/imx/imx28.cf
 --- ltib.reference/config/platform/imx/imx28.cf	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/imx28.cf	2015-11-20 16:47:18.580628032 +0100
++++ ltib/config/platform/imx/imx28.cf	2015-11-20 17:19:02.079878889 +0100
 @@ -41,7 +41,7 @@
  CONFIG_PKG_BASE_LIBS=y
  CONFIG_PKG_LIBC_WANT_SHARED_LIBS=y
@@ -16625,7 +16625,7 @@ diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx
 -CONFIG_PKG_PYTHON=y
 diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.tmpconfig.h	2015-11-20 16:46:18.714710204 +0100
++++ ltib/config/platform/imx/.tmpconfig.h	2015-11-20 17:19:21.813739712 +0100
 @@ -0,0 +1,652 @@
 +/*
 + * Automatically generated C config: don't edit

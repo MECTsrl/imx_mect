@@ -990,7 +990,7 @@ ltib_genpatch: ltib_genpatch_config ltib_genpatch_specs ltib_genpatch_bin
 
 .PHONY: ltib_genpatch_config
 ltib_genpatch_config: $(LTIBDIR_REF)/config
-	cd $(LTIBDIR)/.. && { diff -urN --exclude=*.bak --exclude=*.swp $(shell basename $(LTIBDIR_REF))/config $(shell basename $(LTIBDIR))/config; diff -uN $(shell basename $(LTIBDIR_REF))/.config $(shell basename $(LTIBDIR))/.config; diff -uN $(shell basename $(LTIBDIR_REF))/.config.cmd $(shell basename $(LTIBDIR))/.config.cmd; diff -uN $(shell basename $(LTIBDIR_REF))/.tmpconfig.h $(shell basename $(LTIBDIR))/.tmpconfig.h; } > $(FTPDIR)/$(LTIB_MECT_CONFIG_PATCH); true
+	cd $(LTIBDIR)/.. && { diff -urN --exclude=.config.old --exclude=*.bak --exclude=*.swp $(shell basename $(LTIBDIR_REF))/config $(shell basename $(LTIBDIR))/config; diff -uN $(shell basename $(LTIBDIR_REF))/.config $(shell basename $(LTIBDIR))/.config; diff -uN $(shell basename $(LTIBDIR_REF))/.config.cmd $(shell basename $(LTIBDIR))/.config.cmd; diff -uN $(shell basename $(LTIBDIR_REF))/.tmpconfig.h $(shell basename $(LTIBDIR))/.tmpconfig.h; } > $(FTPDIR)/$(LTIB_MECT_CONFIG_PATCH); true
 	cd $(FTPDIR); md5sum $(LTIB_MECT_CONFIG_PATCH) > $(LTIB_MECT_CONFIG_PATCH).$(MD5EXT)
 
 .PHONY: ltib_genpatch_specs

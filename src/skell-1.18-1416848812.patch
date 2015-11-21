@@ -341,7 +341,7 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell
  
  # qt variable
  export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
-@@ -21,16 +45,84 @@
+@@ -21,16 +45,78 @@
  	echo "Done."
  fi
  
@@ -359,16 +359,10 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell
 +	
 +done
 +
-+echo "NO update are running now,so go on...."
++echo "NO update in progress, move on..."
 +
-+# fix for the remount read-only problem after updates
-+touch /root/cucu
-+if [ $? -eq 0 ]; then 
-+	echo -n "filesystem in read/write. Set it in read only... "
-+	rm /root/cucu
-+	mount -oro,remount /
-+	echo "done."
-+fi 
++# Make sure / is mounted R/O
++mount -oro,remount /
 +
 +# set the brightness
 +if [ -e $LOCAL_ETC_DIR/brightness ]

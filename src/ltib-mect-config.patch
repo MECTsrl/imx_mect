@@ -373,7 +373,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -PKG_UBUNTU_ARM_LIB = ubuntu_arm_lib
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/busybox.config ltib/config/platform/imx/busybox.config
 --- ltib.reference/config/platform/imx/busybox.config	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/busybox.config	2015-11-20 12:39:31.723096097 +0100
++++ ltib/config/platform/imx/busybox.config	2015-11-22 14:53:01.619359439 +0100
 @@ -1,7 +1,6 @@
  #
  # Automatically generated make config: don't edit
@@ -1372,7 +1372,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  CONFIG_LOGGER=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.config	2015-11-20 23:42:16.362249006 +0100
++++ ltib/config/platform/imx/.config	2015-11-22 14:56:09.000000000 +0100
 @@ -0,0 +1,652 @@
 +#
 +# Automatically generated make config: don't edit
@@ -1842,7 +1842,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +# CONFIG_PKG_UTIL_LINUX is not set
 +# CONFIG_PKG_U_BOOT_TOOLS is not set
 +# CONFIG_PKG_UNIFDEF is not set
-+CONFIG_PKG_UNZIP=y
++# CONFIG_PKG_UNZIP is not set
 +# CONFIG_PKG_VIM is not set
 +# CONFIG_PKG_VPLAY is not set
 +# CONFIG_PKG_VSFTPD is not set
@@ -2028,7 +2028,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_LTIB_RELEASE="8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config.cmd ltib/config/platform/imx/.config.cmd
 --- ltib.reference/config/platform/imx/.config.cmd	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.config.cmd	2015-11-20 23:42:16.362249006 +0100
++++ ltib/config/platform/imx/.config.cmd	2015-11-22 14:56:09.231369413 +0100
 @@ -0,0 +1,22 @@
 +deps_config := \
 +	../../userspace/defaults.lkc \
@@ -2054,7 +2054,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +$(deps_config):
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/defconfig.dev	2015-11-20 23:42:16.370249465 +0100
++++ ltib/config/platform/imx/defconfig.dev	2015-11-22 14:56:09.239369413 +0100
 @@ -0,0 +1,652 @@
 +#
 +# Automatically generated make config: don't edit
@@ -2524,7 +2524,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +# CONFIG_PKG_UTIL_LINUX is not set
 +# CONFIG_PKG_U_BOOT_TOOLS is not set
 +# CONFIG_PKG_UNIFDEF is not set
-+CONFIG_PKG_UNZIP=y
++# CONFIG_PKG_UNZIP is not set
 +# CONFIG_PKG_VIM is not set
 +# CONFIG_PKG_VPLAY is not set
 +# CONFIG_PKG_VSFTPD is not set
@@ -12834,7 +12834,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_GENERIC_ATOMIC64=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config	2015-11-20 12:39:31.731100096 +0100
++++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config	2015-11-20 12:39:31.735102096 +0100
 @@ -0,0 +1,2379 @@
 +#
 +# Automatically generated make config: don't edit
@@ -13237,15 +13237,15 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_MECT_CUSTOMIZATION=y
 +# CONFIG_MECT_TPAC1006_320x240 is not set
 +# CONFIG_MECT_TPAC1006_640x480 is not set
-+CONFIG_MECT_TPAC1007_480x272=y
-+# CONFIG_MECT_TPAC1008_800x480 is not set
++# CONFIG_MECT_TPAC1007_480x272 is not set
++CONFIG_MECT_TPAC1008_800x480=y
 +# CONFIG_MECT_VAL01 is not set
 +# CONFIG_MECT_ATN01 is not set
 +# CONFIG_MECT_ACQUATI is not set
 +# CONFIG_MECT_ELE01 is not set
-+CONFIG_MECT_PRODUCT="MECT TPAC1007 480x272 panel"
++CONFIG_MECT_PRODUCT="MECT TPAC1008/TP1070 800x480 panel"
 +CONFIG_MECT_GPIO_POWERFAIL=y
-+# CONFIG_MECT_RAISING_PWRFAIL is not set
++CONFIG_MECT_RAISING_PWRFAIL=y
 +CONFIG_MXS_ICOLL=y
 +CONFIG_MXS_EARLY_CONSOLE=y
 +CONFIG_MXS_DMA_ENGINE=y
@@ -14371,8 +14371,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_FB_MXS=y
 +# CONFIG_FB_MXS_LCD_HH057 is not set
 +# CONFIG_FB_MXS_LCD_HH057_640x480 is not set
-+# CONFIG_FB_MXS_LCD_FRMK7 is not set
-+CONFIG_FB_MXS_LCD_TM043=y
++CONFIG_FB_MXS_LCD_FRMK7=y
++# CONFIG_FB_MXS_LCD_TM043 is not set
 +# CONFIG_FB_MXS_LCD_RK043 is not set
 +# CONFIG_FB_MXS_LCD_43WVF1G is not set
 +# CONFIG_FB_MXS_LCD_LMS430 is not set
@@ -14412,8 +14412,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +# CONFIG_LOGO_MECT_CLUT224 is not set
 +# CONFIG_LOGO_MECT_320x240 is not set
 +# CONFIG_LOGO_MECT_640x480 is not set
-+CONFIG_LOGO_MECT_480x272=y
-+# CONFIG_LOGO_MECT_800x480 is not set
++# CONFIG_LOGO_MECT_480x272 is not set
++CONFIG_LOGO_MECT_800x480=y
 +# CONFIG_LOGO_VAL01_480x272 is not set
 +# CONFIG_LOGO_ATN01_480x272 is not set
 +# CONFIG_LOGO_ACQUATI_320x240 is not set
@@ -16643,7 +16643,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -CONFIG_PKG_PYTHON=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.tmpconfig.h	2015-11-20 23:42:16.362249006 +0100
++++ ltib/config/platform/imx/.tmpconfig.h	2015-11-22 14:56:09.231369413 +0100
 @@ -0,0 +1,653 @@
 +/*
 + * Automatically generated C config: don't edit
@@ -17114,7 +17114,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +#undef CONFIG_PKG_UTIL_LINUX
 +#undef CONFIG_PKG_U_BOOT_TOOLS
 +#undef CONFIG_PKG_UNIFDEF
-+#define CONFIG_PKG_UNZIP 1
++#undef CONFIG_PKG_UNZIP
 +#undef CONFIG_PKG_VIM
 +#undef CONFIG_PKG_VPLAY
 +#undef CONFIG_PKG_VSFTPD

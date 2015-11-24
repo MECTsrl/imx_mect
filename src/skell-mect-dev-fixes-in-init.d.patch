@@ -6,7 +6,7 @@ diff -aurN rootfs.orig/etc/rc.d/init.d/mount-proc-sys rootfs/etc/rc.d/init.d/mou
      mount -n -t proc proc /proc
      mount -n -t sysfs sys /sys
 +
-+    echo "Fixing /dev (TODO: write as udev rules)"
++    echo "Custom /dev setup on top of devtmpfs"
 +    mknod /dev/buzzer c 35 0
 +    ln -s event0 /dev/input/ts0
  fi

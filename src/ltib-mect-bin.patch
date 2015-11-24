@@ -28,7 +28,7 @@ diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/bin/Ltibutils.pm lt
                                     glob('/usr/lib/i386-linux-gnu/libz.so*'),
                                     glob('/usr/lib32/libz.so*'),
 --- ltib.reference/ltib	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/ltib	2015-11-20 12:39:31.823146095 +0100
++++ ltib/ltib	2015-11-22 14:58:01.895375402 +0100
 @@ -78,7 +78,7 @@
      proxy        => "",
      force_md5get => "",
@@ -56,6 +56,15 @@ diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/bin/Ltibutils.pm lt
                  PKG_SKELL  => [ qw/PKG_SYSCONFIG/ ],
                  PKG_MERGE  => [ qw/PKG_MODEPS/ ],
                  PKG_TSLIB  => [ qw/PKG_XORG_SERVER PKG_ENLIGHTENMENT
+@@ -278,7 +278,7 @@
+                   PKG_BUSYBOX => [ qw/PKG_INETUTILS PKG_SYSKLOGD
+                                       PKG_SYSVINIT PKG_COREUTILS
+                                       PKG_SED PKG_TIME PKG_UTIL_LINUX
+-                                      PKG_UNZIP PKG_NET_TOOLS
++                                      PKG_NET_TOOLS
+                                       PKG_FINDUTILS PKG_TINYLOGIN
+                                       PKG_MODUTILS PKG_MODULE_INIT_TOOLS
+                                       PKG_KBD PKG_BZIP2 PKG_PSMISC
 @@ -1153,7 +1153,7 @@
      $num = $p[-1] || 0;
      $num++;

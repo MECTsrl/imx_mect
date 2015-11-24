@@ -53,6 +53,7 @@ FSDIR := /opt/freescale
 LPPDIR = $(FSDIR)/pkgs
 # RPM archive
 RPMBASEDIR = $(CURDIR)/ltib/rpm
+RPMBUILDDIR = $(RPMBASEDIR)/BUILD
 RPMDIR = $(RPMBASEDIR)/RPMS/$(TARGET_ARCH)
 # Root file system top-level directory
 IMGDIR = $(CURDIR)/images-all
@@ -1007,6 +1008,7 @@ ltib_genpatch_bin: $(LTIBDIR_REF)/bin
 
 .PHONY: ltib_update
 ltib_update:
+	# FIXME: adapt for branches
 	git pull
 	if ! test -d $(LTIBDIR_REF); then \
 		mv $(LTIBDIR) $(LTIBDIR).precious; \
@@ -1027,6 +1029,11 @@ ltib_update:
 	cp $(LTIBDIR_PATCH)/.tmpconfig.h $(LTIBDIR)/.tmpconfig.h
 	cp -a $(LTIBDIR_PATCH)/ltib $(LTIBDIR)/ltib
 	rm -rf $(LTIBDIR_PATCH)
+
+.PHONY: ltib_rebuild
+ltib_rebuild:
+	rm -rf $(RPMBUILDDIR)/*
+	cd $(LTIBDIR); ./ltib -f
 
 
 # Utilities

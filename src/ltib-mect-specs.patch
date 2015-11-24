@@ -1,6 +1,6 @@
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec ltib/dist/lfs-5.1/base_libs/base_libs.spec
 --- ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/base_libs/base_libs.spec	2015-11-20 12:39:31.783126096 +0100
++++ ltib/dist/lfs-5.1/base_libs/base_libs.spec	2015-11-24 11:07:08.484035920 +0100
 @@ -11,6 +11,17 @@
  Group           : System Environment/Libraries
  BuildRoot       : %{_tmppath}/%{name}
@@ -19,7 +19,17 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -35,7 +46,7 @@
+@@ -18,6 +29,9 @@
+ %Prep
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ cat <<TXT
+ PKG_LIBC_WANT_SHARED_LIBS   : $PKG_LIBC_WANT_SHARED_LIBS
+ PKG_LIBC_WANT_CRT_FILES     : $PKG_LIBC_WANT_CRT_FILES
+@@ -35,7 +49,7 @@
  # strip "bin/"
  set +e
  ${TOOLCHAIN_PREFIX}gcc -v 2>&1 | grep -q "prefix=/usr"
@@ -28,7 +38,17 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  then
  TC_PREFIX="`which ${TOOLCHAIN_PREFIX}gcc | perl -p -e 's,/bin/'${TOOLCHAIN_PREFIX}'gcc,,'`"
  else
-@@ -53,7 +64,7 @@
+@@ -45,6 +59,9 @@
+ 
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ X_DIR=`echo $TOOLCHAIN_PREFIX | sed -e 's,-$,,'`
+ 
+@@ -53,7 +70,7 @@
  # strip "bin/"
  set +e
  ${TOOLCHAIN_PREFIX}gcc -v 2>&1 | grep -q "prefix=/usr"
@@ -37,7 +57,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  then
  TC_PREFIX="`which ${TOOLCHAIN_PREFIX}gcc | perl -p -e 's,/bin/'${TOOLCHAIN_PREFIX}'gcc,,'`"
  SYSROOT_TC="no"
-@@ -122,12 +133,12 @@
+@@ -122,12 +139,12 @@
      #       is a symbolic link to lib! - Stevep
      if [ "${TC_TYPE}" != "UCLIBC" ]
      then
@@ -53,7 +73,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
      # Only needed if gcc native is selected.
      #
-@@ -157,9 +168,9 @@
+@@ -157,9 +174,9 @@
          do
              if [ "$TC_TYPE" = "XTOOL" ]
              then
@@ -65,7 +85,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
              fi
          done
          for file in ldconfig sln
-@@ -170,54 +181,54 @@
+@@ -170,54 +187,54 @@
          do
              if [ "$TC_TYPE" = "XTOOL" ]
              then
@@ -133,7 +153,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  fi
  
  if [ -n "$PKG_LIBC_WANT_C_LOCALES" ]
-@@ -225,7 +236,7 @@
+@@ -225,7 +242,7 @@
      set +e
      if [ -n "$UCLIBC" ]
      then
@@ -142,7 +162,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
      else
          if [ "$TC_TYPE" = "CSL" ]
          then
-@@ -241,16 +252,16 @@
+@@ -241,16 +258,16 @@
              i=
          fi
  
@@ -166,7 +186,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
      fi
      set -e
  fi
-@@ -277,13 +288,13 @@
+@@ -277,13 +294,13 @@
      else
          i= 
      fi
@@ -183,7 +203,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  fi
  
  if [ -n "$PKG_GCC_WANT_LIBGCC_SHARED" ]
-@@ -296,7 +307,7 @@
+@@ -296,7 +313,7 @@
  
  # remove absolute paths from text search files (if they exist)
  perl -w -e '
@@ -192,7 +212,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
      exit(0) unless @ARGV;
      $^I = ".bak";
      while(<>) {
-@@ -305,14 +316,14 @@
+@@ -305,14 +322,14 @@
      }
      ' $RPM_BUILD_ROOT/%{pfx}/lib/libc.so \
        $RPM_BUILD_ROOT/%{pfx}/lib/libpthread.so \
@@ -210,7 +230,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  # relocate all symlink .so (linker files) to usr/lib
  cd lib
-@@ -333,9 +344,19 @@
+@@ -333,9 +350,21 @@
     }
  ' 
  
@@ -222,19 +242,21 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
 +%Files -f all_files.lst
 +%defattr(-,root,root)
 +
-+
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bison/bison.spec ltib/dist/lfs-5.1/bison/bison.spec
 --- ltib.reference/dist/lfs-5.1/bison/bison.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/bison/bison.spec	2015-11-20 12:39:31.783126096 +0100
++++ ltib/dist/lfs-5.1/bison/bison.spec	2015-11-23 23:35:04.625453407 +0100
 @@ -20,7 +20,7 @@
  
  %Build
@@ -246,8 +268,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boa/boa.spec ltib/dist/lfs-5.1/boa/boa.spec
 --- ltib.reference/dist/lfs-5.1/boa/boa.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/boa/boa.spec	2015-11-20 12:39:31.783126096 +0100
-@@ -11,9 +11,23 @@
++++ ltib/dist/lfs-5.1/boa/boa.spec	2015-11-24 11:07:49.248036469 +0100
+@@ -11,9 +11,24 @@
  Packager        : Stuart Hughes
  Group           : System/Servers
  Source          : %{name}-%{version}.tar.gz
@@ -264,6 +286,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed boa for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +boa package contents restricted to just the files that are
 +needed at run time on the target.
@@ -271,18 +294,31 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -24,6 +38,8 @@
+@@ -22,37 +37,53 @@
+ at http://www.uclinux.org/pub/uClinux/dist/
+ 
  %Prep
++export LC_ALL
++LC_ALL=C
++
  %setup
  %patch1 -p1 
 +%patch2 -p1
 +%patch3 -p1 
  
  %Build
++export LC_ALL
++LC_ALL=C
++
  ac_cv_func_setvbuf_reversed=no \
-@@ -33,26 +49,28 @@
+ CFLAGS="-DSERVER_ROOT='\"/etc\"' -g -Os" \
+ ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
+ make
  
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
 -mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/conf
 -mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{base}/var/log/boa
@@ -317,20 +353,23 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
 --- ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec	2015-11-20 12:39:31.783126096 +0100
-@@ -8,15 +8,52 @@
++++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec	2015-11-24 11:08:25.792036962 +0100
+@@ -8,39 +8,105 @@
  Vendor          : Freescale
  Packager        : Terry Lv
  Group           : Tools
@@ -352,6 +391,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed imx-bootlets-src for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +imx-bootlets-src package contents restricted to just the files
 +that are needed at run time on the target.
@@ -360,10 +400,10 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed imx-bootlets-src for manufacturing tool requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description mfg
 +imx-bootlets-src package contents restricted to just the files
 +that are needed for programming the target.
-+
 +
 +
 +# patch1 imx-bootlets-src-11.01.00-1315841439.patch: modify the boot arguments in order to boot from flash instead of memory card.
@@ -375,6 +415,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Prep
 -%setup -n %{name}-%{version}-%{release}
++export LC_ALL
++LC_ALL=C
++
 +%setup -n %{name}-11.01.00
 +%patch1 -p1
 +%patch2 -p1
@@ -384,8 +427,12 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%patch6 -p1
  
  %Build
++export LC_ALL
++LC_ALL=C
++
  export CMDLINE1="$PKG_BOOT_STREAM_CMDLINE1"
-@@ -25,8 +62,7 @@
+ export CMDLINE2="$PKG_BOOT_STREAM_CMDLINE2"
+ export CMDLINE3="$PKG_BOOT_STREAM_CMDLINE3"
  export CMDLINE4="$PKG_BOOT_STREAM_CMDLINE4"
  
  PLATFORMSHORTNAME=`echo $PLATFORM | sed "s,imx\([0-9]*\).*,MX\1,g"`
@@ -395,7 +442,13 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
      make -j1 MEM_TYPE="${PKG_BOOT_STREAM_MEMTYPE_PRECONFIG}"
  else
      make -j1 MEM_TYPE="${PKG_BOOT_STREAM_MEMTYPE_PRECONFIG}" BOARD=iMX28_EVK
-@@ -37,10 +73,27 @@
+ fi
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
  mkdir -p $RPM_BUILD_ROOT/%{pfx}/boot
  make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}/boot
  
@@ -409,13 +462,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  make clean
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
@@ -427,8 +483,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{pfx}/boot/updater_ivt.sb
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/busybox/busybox.spec ltib/dist/lfs-5.1/busybox/busybox.spec
 --- ltib.reference/dist/lfs-5.1/busybox/busybox.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/busybox/busybox.spec	2015-11-20 12:39:31.783126096 +0100
-@@ -3,22 +3,35 @@
++++ ltib/dist/lfs-5.1/busybox/busybox.spec	2015-11-24 11:08:45.540037228 +0100
+@@ -3,24 +3,44 @@
  
  Summary         : A small executable that replaces many UNIX utilities
  Name            : busybox
@@ -452,6 +508,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed busybox for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +busybox package contents restricted to just the files that are
 +needed at run time on the target.
@@ -461,12 +518,30 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %{summary}
  
  %Prep
++export LC_ALL
++LC_ALL=C
++
  %setup
 +%patch1 -p1
  
  %Build
++export LC_ALL
++LC_ALL=C
++
  PKG_BUSYBOX_PRECONFIG=${PKG_BUSYBOX_PRECONFIG:-busybox.config}
-@@ -71,10 +84,18 @@
+ if [ -f "$PLATFORM_PATH/${PKG_BUSYBOX_PRECONFIG}" ]
+ then
+@@ -45,6 +65,9 @@
+ make HOSTCC="$BUILDCC" $MAKE_EXTRA
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ install -d $RPM_BUILD_ROOT/%{pfx}/%{base}/bin
+ make HOSTCC="$BUILDCC" CONFIG_PREFIX=$RPM_BUILD_ROOT/%{pfx}/%{base} install
+@@ -71,10 +94,21 @@
  EOF
  chmod 644 $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/busybox.conf
  
@@ -477,12 +552,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
@@ -490,8 +568,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec ltib/dist/lfs-5.1/bzip2/bzip2.spec
 --- ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/bzip2/bzip2.spec	2015-11-20 12:39:31.787128096 +0100
-@@ -15,6 +15,17 @@
++++ ltib/dist/lfs-5.1/bzip2/bzip2.spec	2015-11-24 11:09:03.464037469 +0100
+@@ -15,31 +15,63 @@
  Patch2          : %{name}-%{version}-armv7a-cross-compile-fix.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -502,6 +580,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed bzip2 for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +bzip2 package contents restricted to just the files that are
 +needed at run time on the target.
@@ -509,9 +588,28 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -32,14 +43,23 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
+ %patch0 -p1
+ %patch1 -p1
+ %patch2 -p1
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ make -f Makefile-libbz2_so
+ make clean
+ make
  
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
 -make install PREFIX=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
 +make install PREFIX=$RPM_BUILD_ROOT%{pfx}%{_prefix}
@@ -525,6 +623,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
  
@@ -532,14 +633,14 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files -f all_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
- 
+-
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cantest/cantest.spec ltib/dist/lfs-5.1/cantest/cantest.spec
 --- ltib.reference/dist/lfs-5.1/cantest/cantest.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/cantest/cantest.spec	2015-11-20 12:39:31.787128096 +0100
-@@ -9,13 +9,24 @@
++++ ltib/dist/lfs-5.1/cantest/cantest.spec	2015-11-24 11:09:23.740037743 +0100
+@@ -9,18 +9,33 @@
  Packager        : Chen Hongjun
  Group           : Applications/System
  Source          : %{name}-%{version}.tar.gz
@@ -558,6 +659,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed cantest for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +cantest package contents restricted to just the files that
 +are needed at run time on the target.
@@ -565,9 +667,27 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -34,12 +45,21 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup -n %{name}-%{version}
+ %patch0 -p1
+ %patch1 -p1
+@@ -30,16 +45,34 @@
+ fi
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ make
  
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
 -mkdir -p $RPM_BUILD_ROOT/%{pfx}/usr/bin
 -cp cantest $RPM_BUILD_ROOT/%{pfx}/usr/bin
@@ -581,19 +701,22 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/dhcp/dhcp.spec	2015-11-20 12:39:31.787128096 +0100
++++ ltib/dist/lfs-5.1/dhcp/dhcp.spec	2015-11-24 11:09:42.516037996 +0100
 @@ -10,6 +10,7 @@
  Packager        : John Faith
  Group           : Applications/Internet
@@ -602,7 +725,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  Patch1          : dhcp-3.0.3b1-sip.patch
  Patch2          : dhcp-3.0.3b1-defaults.patch
  Patch3          : dhcp-3.0.3b1-types.patch
-@@ -17,7 +18,17 @@
+@@ -17,12 +18,26 @@
  Patch5          : dhcp-3.0.3b1-compat-with-linux-3.0.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -614,6 +737,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed dhcp for root file system requirements.
 +Group           : Applications/Internet
 +AutoReqProv     : no
++
 +%Description rfs
 +dhcp package contents restricted to just the files that are
 +needed at run time on the target.
@@ -621,14 +745,29 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -32,14 +43,15 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup -n %{name}-%{version}
+ %patch1 -p1
+ %patch2 -p1
+@@ -31,15 +46,22 @@
+ %patch5 -p1
  
  %Build
++export LC_ALL
++LC_ALL=C
++
  ./configure
 -make
 +make -j`grep -c ^processor /proc/cpuinfo`
  
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
 -make install prefix=$RPM_BUILD_ROOT/%{pfx}
 -mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/share
@@ -642,7 +781,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  for i in %pfx/%base/etc/test %pfx/%base/etc/rc.d \
           %pfx/%base/sbin/S30dhclient %pfx/%_prefix/local
-@@ -86,10 +98,18 @@
+@@ -86,10 +108,21 @@
       done
  fi
  
@@ -653,20 +792,23 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
  
-+
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec ltib/dist/lfs-5.1/dropbear/dropbear.spec
 --- ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/dropbear/dropbear.spec	2015-11-20 12:39:31.787128096 +0100
-@@ -10,8 +10,20 @@
++++ ltib/dist/lfs-5.1/dropbear/dropbear.spec	2015-11-24 11:09:59.452038224 +0100
+@@ -10,16 +10,35 @@
  Group           : Applications/Internet
  Source          : %{name}-%{version}.tar.gz
  Source1         : dropbear_hackable_rsa_host_key
@@ -680,6 +822,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed dropbear for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +dropbear package contents restricted to just the files that
 +are needed at run time on the target.
@@ -687,7 +830,31 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -54,9 +66,20 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup 
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ if [ "$PKG_DROPBEAR_WANT_URANDOM_DEV" = "y" ]
+ then
+     perl -pi -e 's,^#define DROPBEAR_RANDOM_DEV.*,#define DROPBEAR_RANDOM_DEV "/dev/urandom",; ' options.h
+@@ -37,6 +56,9 @@
+ make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp" MULTI=1 SCPPROGRESS=1
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ for i in bin sbin
+ do
+@@ -54,9 +76,23 @@
      cp %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/etc/dropbear/dropbear_rsa_host_key
  fi
  
@@ -700,20 +867,23 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 --- ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec	2015-11-20 12:39:31.787128096 +0100
-@@ -13,6 +13,17 @@
++++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec	2015-11-24 11:10:14.668038429 +0100
+@@ -13,25 +13,63 @@
  Patch1          : e2fsprogs-1.41.4-fix-lib-links.patch
  BuildRoot	: %{_tmppath}/%{name}
  Prefix		: %{pfx}
@@ -724,6 +894,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed e2fsprogs for root file system requirements.
 +Group           : Applications/Internet
 +AutoReqProv     : no
++
 +%Description rfs
 +e2fsprogs package contents restricted to just the files that
 +are needed at run time on the target.
@@ -731,9 +902,25 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -27,11 +38,25 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
+ %patch1 -p1
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ BUILD_CC=$BUILDCC ./configure --host=$CFGHOST --enable-elf-shlibs
+ make
  
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
 -make DESTDIR=$RPM_BUILD_ROOT/%{pfx} install install-libs
 +make DESTDIR=$RPM_BUILD_ROOT%{pfx} install install-libs
@@ -750,19 +937,22 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-, root, root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-, root, root)
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec ltib/dist/lfs-5.1/elftosb/elftosb.spec
 --- ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/elftosb/elftosb.spec	2015-11-20 12:39:31.787128096 +0100
++++ ltib/dist/lfs-5.1/elftosb/elftosb.spec	2015-11-23 23:35:04.633453407 +0100
 @@ -9,6 +9,7 @@
  Packager        : Frank Li
  Group           : System Environment/Libraries
@@ -781,8 +971,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  make
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/expat/expat.spec ltib/dist/lfs-5.1/expat/expat.spec
 --- ltib.reference/dist/lfs-5.1/expat/expat.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/expat/expat.spec	2015-11-20 12:39:31.791130096 +0100
-@@ -14,6 +14,17 @@
++++ ltib/dist/lfs-5.1/expat/expat.spec	2015-11-24 11:10:31.200038652 +0100
+@@ -14,30 +14,62 @@
  Patch2          : expat-1.95.8-man1dir.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -793,6 +983,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed expat for root file system requirements.
 +Group           : Applications/Internet
 +AutoReqProv     : no
++
 +%Description rfs
 +expat package contents restricted to just the files that are
 +needed at run time on the target.
@@ -800,9 +991,27 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -30,14 +41,22 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
+ %patch0 -p1
+ %patch1 -p1
+ %patch2 -p1
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
+ make
  
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
 -make install DESTDIR=$RPM_BUILD_ROOT/%{pfx} install
 -rm $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
@@ -817,21 +1026,23 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
--
+ 
 -%Files
 +%Files -f all_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
  
-+
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec ltib/dist/lfs-5.1/fake-provides/fake-provides.spec
 --- ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/fake-provides/fake-provides.spec	2015-11-20 12:39:31.791130096 +0100
-@@ -5,83 +5,81 @@
++++ ltib/dist/lfs-5.1/fake-provides/fake-provides.spec	2015-11-24 11:11:01.088039055 +0100
+@@ -5,83 +5,93 @@
  %define __os_install_post %{nil}
  %define  pfx /opt/freescale/rootfs/%{_target_cpu}
  
@@ -961,24 +1172,34 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 -
  %Prep
++export LC_ALL
++LC_ALL=C
++
  
  %Build
++export LC_ALL
++LC_ALL=C
++
++
++%Install
++export LC_ALL
++LC_ALL=C
  
 -%install
-+%Install
  rm -rf $RPM_BUILD_ROOT
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
--%Files
+ %Files
 -
-+%Files
-\ No newline at end of file
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec ltib/dist/lfs-5.1/fontconfig/fontconfig.spec
 --- ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/fontconfig/fontconfig.spec	2015-11-20 12:39:31.791130096 +0100
-@@ -10,7 +10,18 @@
++++ ltib/dist/lfs-5.1/fontconfig/fontconfig.spec	2015-11-24 11:11:16.616039264 +0100
+@@ -10,27 +10,51 @@
  Group           : System Environment/Libraries
  Source          : %{name}-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -991,6 +1212,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed fontconfig for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +fontconfig package contents restricted to just the files that
 +are needed at run time on the target.
@@ -998,7 +1220,19 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -24,13 +35,16 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup 
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ # we don't have docbook-utils in the distribution
+ ac_cv_prog_HASDOCBOOK=no \
  ac_cv_prog_CC_FOR_BUILD="${BUILDCC}" \
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} \
              --with-arch=$GNUTARCH --sysconfdir=%{_sysconfdir} \
@@ -1007,6 +1241,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  make
  
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
 -make install DESTDIR=$RPM_BUILD_ROOT/%{pfx} 
 -rm -rf $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
@@ -1018,7 +1255,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  perl -pi -e 's,^</fontconfig>,
  <dir>%{_prefix}/X11R6/lib/X11/fonts/TTF</dir>
-@@ -38,13 +52,23 @@
+@@ -38,13 +62,25 @@
  <dir>%{_prefix}/X11R6/lib/X11/fonts/truetype</dir>
  </fontconfig>
  ,;
@@ -1034,6 +1271,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
  
@@ -1042,13 +1282,12 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %defattr(-,root,root)
 -%{pfx}/*
  
-+
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/freetype/freetype.spec ltib/dist/lfs-5.1/freetype/freetype.spec
 --- ltib.reference/dist/lfs-5.1/freetype/freetype.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/freetype/freetype.spec	2015-11-20 12:39:31.791130096 +0100
-@@ -12,6 +12,17 @@
++++ ltib/dist/lfs-5.1/freetype/freetype.spec	2015-11-24 11:11:29.504039437 +0100
+@@ -12,29 +12,61 @@
  Patch1          : proper-armel-asm-declaration.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -1059,6 +1298,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed freetype for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +freetype package contents restricted to just the files that
 +are needed at run time on the target.
@@ -1066,8 +1306,26 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -28,13 +39,22 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
+ %patch1 -p1
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ export CC_BUILD="$BUILDCC"
+ ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
+ make 
+ 
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  make DESTDIR=$RPM_BUILD_ROOT/%{pfx} install
 -rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
@@ -1081,6 +1339,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
  
@@ -1089,12 +1350,11 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %defattr(-,root,root)
 -%{pfx}/*
  
-+
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/git/git.spec ltib/dist/lfs-5.1/git/git.spec
 --- ltib.reference/dist/lfs-5.1/git/git.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/git/git.spec	2015-11-20 12:39:31.791130096 +0100
++++ ltib/dist/lfs-5.1/git/git.spec	2015-11-23 23:35:04.633453407 +0100
 @@ -27,7 +27,7 @@
  config_opts='ac_cv_c_c99_format=yes ac_cv_fread_reads_directories=no ac_cv_snprintf_returns_bogus=no' 
  eval $config_opts \
@@ -1106,8 +1366,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %Install
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/glib2/glib2.spec ltib/dist/lfs-5.1/glib2/glib2.spec
 --- ltib.reference/dist/lfs-5.1/glib2/glib2.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/glib2/glib2.spec	2015-11-20 12:39:31.795132096 +0100
-@@ -1,24 +1,36 @@
++++ ltib/dist/lfs-5.1/glib2/glib2.spec	2015-11-24 11:11:47.064039674 +0100
+@@ -1,47 +1,80 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archname glib
  
@@ -1133,7 +1393,6 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Group           : Applications/File
 +AutoReqProv     : no
 +
-+
 +%Description rfs
 +glib2 package contents restricted to just the files that are
 +needed at run time on the target.
@@ -1145,11 +1404,18 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %Prep
 -%setup -n glib-%{version}
 -#%patch1 -p1
++export LC_ALL
++LC_ALL=C
++
 +%setup -n %{archname}-%{version}
  
  %Build
++export LC_ALL
++LC_ALL=C
++
  # prevent configure from trying to compile and
-@@ -27,21 +39,31 @@
+ # run test binaries for the target.
+ glib_cv_stack_grows=no \
  glib_cv_uscore=no \
  ac_cv_func_posix_getpwuid_r=yes \
  ac_cv_func_posix_getgrgid_r=yes \
@@ -1160,6 +1426,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  make
  
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
 -make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 -find $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib -name "*.la" | xargs rm -f
@@ -1178,20 +1447,23 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
  
-+
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/hotplug/hotplug.spec ltib/dist/lfs-5.1/hotplug/hotplug.spec
 --- ltib.reference/dist/lfs-5.1/hotplug/hotplug.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/hotplug/hotplug.spec	2015-11-20 12:39:31.795132096 +0100
-@@ -13,6 +13,17 @@
++++ ltib/dist/lfs-5.1/hotplug/hotplug.spec	2015-11-24 11:12:01.156039864 +0100
+@@ -13,26 +13,58 @@
  Patch2          : hotplug-2004_03_29-dash.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -1202,6 +1474,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed hotplug for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +hotplug package contents restricted to just the files that are
 +needed at run time on the target.
@@ -1209,9 +1482,25 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -27,12 +38,20 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
+ %patch1 -p1
+ %patch2 -p1
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ make
  
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
 -make install prefix=$RPM_BUILD_ROOT/%{pfx}
 +make install prefix=$RPM_BUILD_ROOT%{pfx}
@@ -1223,12 +1512,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
@@ -1236,8 +1528,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/iproute/iproute.spec ltib/dist/lfs-5.1/iproute/iproute.spec
 --- ltib.reference/dist/lfs-5.1/iproute/iproute.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/iproute/iproute.spec	2015-11-20 12:39:31.795132096 +0100
-@@ -3,16 +3,31 @@
++++ ltib/dist/lfs-5.1/iproute/iproute.spec	2015-11-24 11:12:34.704040316 +0100
+@@ -3,16 +3,32 @@
  
  Summary         : Advanced IP routing and network device configuration tools
  Name            : iproute
@@ -1266,6 +1558,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed iproute for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +iproute package contents restricted to just the files that
 +are needed at run time on the target.
@@ -1273,19 +1566,29 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -22,8 +37,10 @@
+@@ -22,20 +38,43 @@
  capabilities of the Linux kernel.
  
  %Prep
 -%setup -n %{name}2-%{version}
++export LC_ALL
++LC_ALL=C
++
 +%setup -n %{name}2-%{version}-%{release}
  %patch0 -p1
 +%patch1 -p0
 +%patch2 -p1
  
  %Build
++export LC_ALL
++LC_ALL=C
  
-@@ -33,9 +50,19 @@
+ make -j1 KERNEL_INCLUDE=$DEV_IMAGE/usr/src/linux HOSTCC="$BUILDCC"
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  make -j1 install SBINDIR=%{base}/sbin DESTDIR=$RPM_BUILD_ROOT/%{pfx}
  
@@ -1297,19 +1600,22 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl ltib/dist/lfs-5.1/kernel/kernel-common.tmpl
 --- ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/kernel/kernel-common.tmpl	2015-11-20 12:39:31.795132096 +0100
++++ ltib/dist/lfs-5.1/kernel/kernel-common.tmpl	2015-11-23 23:35:04.633453407 +0100
 @@ -182,10 +182,10 @@
  #
  # build the kernel and optionally the modules
@@ -1543,8 +1849,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/zio.ko
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec
 --- ltib.reference/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec	2015-11-20 12:39:31.795132096 +0100
-@@ -0,0 +1,27 @@
++++ ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec	2015-11-24 11:12:52.924040562 +0100
+@@ -0,0 +1,39 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Used to timestamp of the last kernel build.
@@ -1564,18 +1870,30 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{summary}
 +
 +%Prep
++export LC_ALL
++LC_ALL=C
++
 +
 +%Build
++export LC_ALL
++LC_ALL=C
++
 +
 +%Install
++export LC_ALL
++LC_ALL=C
++
 +
 +%Clean
++export LC_ALL
++LC_ALL=C
++
 +
 +%Files
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 --- ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec	2015-11-20 12:39:31.795132096 +0100
-@@ -0,0 +1,65 @@
++++ ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec	2015-11-24 11:13:11.300040809 +0100
+@@ -0,0 +1,75 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Library to allow control of basic functions in socketcan from userspace
@@ -1598,6 +1916,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed libsocketcan for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +libsocketcan package contents restricted to just the files
 +that are needed at run time on the target.
@@ -1607,11 +1926,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{summary}
 +
 +%Prep
++export LC_ALL
++LC_ALL=C
++
 +%setup
 +%patch1 -p1
 +
 +%Build
-+
++export LC_ALL
++LC_ALL=C
 +
 +./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
 +#./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} CC=/opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi/bin/arm-fsl-linux-gnueabi-gcc
@@ -1619,6 +1942,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +make
 +
 +%Install
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
 +make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 +
@@ -1632,25 +1958,27 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
 +%Clean
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
 +
 +
 +%Files -f all_files.lst
 +%defattr(-,root,root)
 +
-+
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec ltib/dist/lfs-5.1/libtermcap/libtermcap.spec
 --- ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/libtermcap/libtermcap.spec	2015-11-20 12:39:31.795132096 +0100
++++ ltib/dist/lfs-5.1/libtermcap/libtermcap.spec	2015-11-24 11:13:34.376041120 +0100
 @@ -1,4 +1,5 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archname termcap
  
  Summary         : A basic system library for accessing the termcap database.
  Name            : libtermcap
-@@ -8,21 +9,32 @@
+@@ -8,21 +9,33 @@
  Vendor          : Freescale Inc
  Packager        : Steve Papacharalambous
  Group           : System Environment/Libraries
@@ -1689,6 +2017,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed libtermcap for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +libtermcap package contents restricted to just the files that
 +are needed at run time on the target.
@@ -1696,16 +2025,39 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  The libtermcap package contains a basic system library needed to
-@@ -31,7 +43,7 @@
+@@ -31,7 +44,10 @@
  displays in a terminal-independent manner.
  
  %Prep
 -%setup -q -n termcap-2.0.8
++export LC_ALL
++LC_ALL=C
++
 +%setup -q -n %{archname}-%{version}
  %patch0 -p1 
  %patch1 -p1
  %patch2 -p1
-@@ -61,7 +73,7 @@
+@@ -46,6 +62,9 @@
+ %patch11 -p1
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ if [ "$GNUTARCH" = m68knommu ]
+ then
+    MAKEOPTS="TARGETS=libtermcap.a"
+@@ -53,6 +72,9 @@
+ make $MAKEOPTS
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ for i in usr/lib %{_infodir} usr/include etc lib
+ do
+     mkdir -p ${RPM_BUILD_ROOT}/%{pfx}/$i
+@@ -61,7 +83,7 @@
  if [ "$GNUTARCH" = m68knommu ]
  then
  ( cp libtermcap.a ${RPM_BUILD_ROOT}/%{pfx}/lib/
@@ -1714,7 +2066,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
    cp termcap.info* ${RPM_BUILD_ROOT}/%{pfx}/%{_infodir}
    cd ${RPM_BUILD_ROOT}/%{pfx}
    cd ./%{_infodir}
-@@ -71,7 +83,7 @@
+@@ -71,7 +93,7 @@
  
  else
  export PATH=/sbin:$PATH
@@ -1723,7 +2075,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  install -c -m644 termcap.src ${RPM_BUILD_ROOT}/%{pfx}/etc/termcap
  cp termcap.info* ${RPM_BUILD_ROOT}/%{pfx}/%{_infodir}
-@@ -79,24 +91,33 @@
+@@ -79,24 +101,36 @@
  ( cd ${RPM_BUILD_ROOT}/%{pfx}
    rm -f ./etc/termcap
    mv ./usr/lib/libtermcap.so* ./lib
@@ -1751,22 +2103,26 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf ${RPM_BUILD_ROOT}
 -rm -rf ${RPM_BUILD_DIR}/termcap-%{version}
 +rm -rf ${RPM_BUILD_DIR}/%{archname}-%{version}
  
 -%Files
-+%Files -f all_files.lst
- %defattr(-,root,root)
+-%defattr(-,root,root)
 -%{pfx}/*
  
++%Files -f all_files.lst
++%defattr(-,root,root)
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb1.spec ltib/dist/lfs-5.1/libusb/libusb1.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb1.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/libusb/libusb1.spec	2015-11-20 12:39:31.795132096 +0100
-@@ -0,0 +1,57 @@
++++ ltib/dist/lfs-5.1/libusb/libusb1.spec	2015-11-24 11:15:04.388042333 +0100
+@@ -0,0 +1,70 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define libname libusb
 +
@@ -1788,6 +2144,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed down libusb-1.x to just run time libraries
 +Group           : System Environment/Libraries
 +AutoReqProv     : no
++
 +%Description rfs
 +libusb-1.x package contents restricted to just the libraries
 +that are needed at run time on the target.
@@ -1797,13 +2154,22 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{summary}.
 +
 +%Prep
++export LC_ALL
++LC_ALL=C
++
 +%setup -n %{libname}-%{version}
 +
 +%Build
++export LC_ALL
++LC_ALL=C
++
 +./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --disable-udev --disable-build-docs
 +make -j1
 +
 +%Install
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
 +make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 +
@@ -1816,18 +2182,21 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
 +%Clean
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
++
 +
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb.spec ltib/dist/lfs-5.1/libusb/libusb.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/libusb/libusb.spec	2015-11-20 12:39:31.795132096 +0100
-@@ -11,6 +11,17 @@
++++ ltib/dist/lfs-5.1/libusb/libusb.spec	2015-11-24 11:14:37.880041976 +0100
+@@ -11,15 +11,33 @@
  Source          : %{name}-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -1838,6 +2207,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed libusb for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +libusb package contents restricted to just the files that are
 +needed at run time on the target.
@@ -1845,8 +2215,28 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -35,11 +46,20 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup 
+ libtoolize --copy --force
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ # note: I tried version 0.1.10a buy this requires a c++ compiler
+ 
+ # configure can't figure this out in my environment (cross)
+@@ -33,13 +51,28 @@
+ make
+ 
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 -rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
@@ -1859,20 +2249,23 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
 --- ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec	2015-11-20 17:06:48.489274006 +0100
-@@ -12,12 +12,21 @@
++++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec	2015-11-24 11:15:23.824042595 +0100
+@@ -12,36 +12,66 @@
  Patch0          : lrzsz_0.12.21-4.diff
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -1882,6 +2275,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed lrzsz for root file system requirements.
 +Group           : Applications/Communications
 +AutoReqProv     : no
++
 +%Description rfs
 +lrzsz package contents restricted to just the files that
 +are needed at run time on the target.
@@ -1891,11 +2285,18 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Prep
 -%setup -n lrzsz-990823
++export LC_ALL
++LC_ALL=C
++
 +%setup -n %{name}-990823
  %patch0 -p1
  
  %Build
-@@ -26,9 +35,7 @@
++export LC_ALL
++LC_ALL=C
++
+ if [ -n "$UCLIBC" ]
+ then
      config_opts='ac_cv_lib_intl_gettext=no'
  fi
  eval $config_opts \
@@ -1906,8 +2307,13 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  touch Makefile.in
  touch stamp-h.in
  make -j1
-@@ -37,11 +44,20 @@
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
++
  make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
  
 +cd %{_builddir}/%{name}-990823
@@ -1917,12 +2323,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
@@ -1931,8 +2340,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lzo/lzo.spec ltib/dist/lfs-5.1/lzo/lzo.spec
 --- ltib.reference/dist/lfs-5.1/lzo/lzo.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/lzo/lzo.spec	2015-11-20 12:39:31.799134095 +0100
-@@ -11,6 +11,17 @@
++++ ltib/dist/lfs-5.1/lzo/lzo.spec	2015-11-24 11:15:38.916042799 +0100
+@@ -11,14 +11,32 @@
  Source          : lzo-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -1943,6 +2352,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed lzo for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +lzo package contents restricted to just the files that are
 +needed at run time on the target.
@@ -1950,8 +2360,27 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -32,12 +43,21 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ if [ "$GNUTARCH" = m68knommu ]
+ then
+ ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} \
+@@ -30,14 +48,28 @@
+ make
+ 
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 -rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
@@ -1964,6 +2393,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
  
@@ -1971,14 +2403,13 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files -f all_files.lst
 +%defattr(-,root,root)
 +
-+
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/merge/merge.spec	2015-11-20 12:58:49.000000000 +0100
-@@ -13,6 +13,16 @@
++++ ltib/dist/lfs-5.1/merge/merge.spec	2015-11-24 11:15:56.288043033 +0100
+@@ -13,6 +13,17 @@
  # We have assume the user knows merge file dependencies.
  Autoreqprov     : no
  
@@ -1987,6 +2418,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed merge for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +merge package contents restricted to just the files that are
 +needed at run time on the target.
@@ -1995,7 +2427,23 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %Description
  Detects the presence of of merge directory in the top level of the root
  file system builder directory, and if it is present creates a rpm containing
-@@ -29,6 +39,7 @@
+@@ -22,13 +33,23 @@
+ 
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  mkdir -p $RPM_BUILD_ROOT/%{pfx}/etc
  touch $RPM_BUILD_ROOT/%{pfx}/etc/ltib-release
@@ -2003,7 +2451,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  for dir in "$PLATFORM_PATH/merge" "$TOP/merge"
  do
-@@ -40,10 +51,18 @@
+@@ -40,10 +61,21 @@
      fi
  done
  
@@ -2014,12 +2462,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
@@ -2027,8 +2478,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 --- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec	2015-11-20 12:39:31.799134095 +0100
-@@ -2,15 +2,28 @@
++++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec	2015-11-24 11:16:24.532043413 +0100
+@@ -2,15 +2,29 @@
  
  Summary		: Memory Technology Device tools
  Name		: mtd-utils
@@ -2052,6 +2503,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed mtd-utils for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +mtd-utils package contents restricted to just the files that are
 +needed at run time on the target.
@@ -2059,17 +2511,27 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -21,19 +34,34 @@
+@@ -20,20 +34,47 @@
+   SHA1 d769da93a56590c23ce9430a1d970e31e835ae88
  
  %Prep
++export LC_ALL
++LC_ALL=C
++
  %setup -n %{name}
 +%patch1 -p1
 +%patch2 -p1
  
  %Build
++export LC_ALL
++LC_ALL=C
++
  make -j1 WITHOUT_XATTR=1
  
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
 -make -j1 DESTDIR=$RPM_BUILD_ROOT/%{pfx} SBINDIR=%{_prefix}/bin MANDIR=%{_mandir} install
 -mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/include/mtd
@@ -2089,20 +2551,23 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec ltib/dist/lfs-5.1/mxc-misc/imx-test.spec
 --- ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/mxc-misc/imx-test.spec	2015-11-20 12:39:31.799134095 +0100
-@@ -2,21 +2,32 @@
++++ ltib/dist/lfs-5.1/mxc-misc/imx-test.spec	2015-11-24 11:12:14.796040048 +0100
+@@ -2,23 +2,41 @@
  
  Summary         : platform specific unit tests for mxc platform
  Name            : imx-test
@@ -2125,6 +2590,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed imx-test for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +imx-test package contents restricted to just the files that are
 +needed at run time on the target.
@@ -2135,11 +2601,29 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Prep
 -%setup -n %{name}-%{version}-%{release}
++export LC_ALL
++LC_ALL=C
++
 +%setup
  
  %Build
++export LC_ALL
++LC_ALL=C
++
  if [ -z "$PKG_KERNEL_KBUILD_PRECONFIG" ]
-@@ -69,9 +80,18 @@
+ then
+       KERNELDIR="$PWD/../linux"
+@@ -45,6 +63,9 @@
+ make -j1 PLATFORM=$PLATFORM_UPPER INCLUDE="$INCLUDE" test
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ if [ -z "$PKG_KERNEL_KBUILD_PRECONFIG" ]
+ then
+       KERNELDIR="$PWD/../linux"
+@@ -69,9 +90,21 @@
  PLATFORM_UPPER="$(echo $PLATFORM | awk '{print toupper($0)}')"
  make PLATFORM=$PLATFORM_UPPER DESTDIR=$RPM_BUILD_ROOT/%{pfx}/unit_tests install
  
@@ -2150,21 +2634,24 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
 -%defattr(755,root,root)
 -%{pfx}/*
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mysql/mysql.spec ltib/dist/lfs-5.1/mysql/mysql.spec
 --- ltib.reference/dist/lfs-5.1/mysql/mysql.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/mysql/mysql.spec	2015-11-20 17:50:13.915305118 +0100
-@@ -13,6 +13,17 @@
++++ ltib/dist/lfs-5.1/mysql/mysql.spec	2015-11-24 11:16:37.596043589 +0100
+@@ -13,16 +13,34 @@
  Patch1          : mysql-4.1.12-gcc-4.2.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -2175,6 +2662,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed mysql for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +mysql package contents restricted to just the files that are
 +needed at run time on the target.
@@ -2182,7 +2670,29 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -38,18 +49,30 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup -n  %{name}-%{version}
+ %patch0 -p1
+ %patch1 -p1
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ ./configure --prefix=/usr --host=$CFGHOST --build=%{_build} \
+ 	--enable-so	\
+ 	--with-named-curses-libs=-lncurses	\
+@@ -35,21 +53,38 @@
+ make
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}
  make install prefix=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
@@ -2208,6 +2718,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
  
@@ -2215,14 +2728,14 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files -f all_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
- 
+-
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec ltib/dist/lfs-5.1/ncurses/ncurses.spec
 --- ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/ncurses/ncurses.spec	2015-11-20 12:39:31.799134095 +0100
-@@ -14,6 +14,17 @@
++++ ltib/dist/lfs-5.1/ncurses/ncurses.spec	2015-11-24 11:16:53.952043810 +0100
+@@ -14,17 +14,35 @@
  Patch2          : ncurses-5.3-wint_t.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -2233,6 +2746,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed ncurses for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +ncurses package contents restricted to just the files that
 +are needed at run time on the target.
@@ -2240,7 +2754,34 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -94,12 +105,22 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
+ %patch0 -p1 
+ %patch1 -p1
+ %patch2 -p1
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ CFLAGS="%{optflags} -DPURE_TERMINFO -DSVR4_CURSES"
+ %define optflags $CFLAGS
+ if [ "$GNUTARCH" != m68knommu ]
+@@ -45,6 +63,9 @@
+ mv misc/run_tic.sh.tmp misc/run_tic.sh
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx} includedir=%{_prefix}/include/ncurses libdir=%{_prefix}/lib mandir=%{_mandir}
+ 
+@@ -94,12 +115,24 @@
      rm -rf $USR_SHARE/termtemp
  fi
  
@@ -2254,6 +2795,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
  
@@ -2261,13 +2805,13 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files -f all_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
- 
+-
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec
 --- ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec	2015-11-20 12:39:31.799134095 +0100
++++ ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec	2015-11-23 23:35:04.641453407 +0100
 @@ -24,7 +24,7 @@
  # don't add --build as glib will fail for a host build due to 
  # stupid incorrect cross compile detection
@@ -2279,8 +2823,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ppp/ppp.spec ltib/dist/lfs-5.1/ppp/ppp.spec
 --- ltib.reference/dist/lfs-5.1/ppp/ppp.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/ppp/ppp.spec	2015-11-20 12:39:31.799134095 +0100
-@@ -13,6 +13,17 @@
++++ ltib/dist/lfs-5.1/ppp/ppp.spec	2015-11-24 11:17:06.752043982 +0100
+@@ -13,16 +13,34 @@
  Patch1          : ppp-2.4.3-hspeed.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -2291,6 +2835,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed ppp for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +ppp package contents restricted to just the files that are
 +needed at run time on the target.
@@ -2298,7 +2843,30 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -38,11 +49,19 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup 
+ %patch0 -p1
+ %patch1 -p1
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
+ if [ "$PKG_PPP_WANT_FILTER" = "y" ]
+ then
+@@ -34,15 +52,29 @@
+ 
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
  make -j1 install INSTALL=install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
  mkdir -p $RPM_BUILD_ROOT/%{pfx}/var/lock
  
@@ -2310,12 +2878,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
@@ -2324,7 +2895,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/prelink/prelink.spec ltib/dist/lfs-5.1/prelink/prelink.spec
 --- ltib.reference/dist/lfs-5.1/prelink/prelink.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/prelink/prelink.spec	2015-11-20 12:39:31.799134095 +0100
++++ ltib/dist/lfs-5.1/prelink/prelink.spec	2015-11-23 23:35:04.641453407 +0100
 @@ -0,0 +1,35 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -2363,8 +2934,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec ltib/dist/lfs-5.1/qt/qt-embedded.spec
 --- ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/qt/qt-embedded.spec	2015-11-20 15:25:43.754494576 +0100
-@@ -1,165 +1,157 @@
++++ ltib/dist/lfs-5.1/qt/qt-embedded.spec	2015-11-24 11:17:43.216044474 +0100
+@@ -1,165 +1,161 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archivename qt-everywhere-opensource-src
  
@@ -2399,6 +2970,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed qt-embedded for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +qt-embedded package contents restricted to just the files that
 +are needed at run time on the target.
@@ -2411,6 +2983,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Prep
 -%setup
++export LC_ALL
++LC_ALL=C
++
 +%setup -n %{archivename}-%{version}
  
  #Checking what packages are available
@@ -2654,7 +3229,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  load(qt_config)
  EOF
-@@ -173,10 +165,12 @@
+@@ -173,10 +169,15 @@
  
  EOF
  chmod 744 $initscript
@@ -2663,13 +3238,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%patch3 -p1
  
  %Build
--
++export LC_ALL
++LC_ALL=C
+ 
 -export PATH=$UNSPOOF_PATH
 +test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
  
  # Unset compiler to prevent gcc being used when the cross
  # tools should be used. (Trolltech issue# 138807)
-@@ -185,32 +179,105 @@
+@@ -185,32 +186,111 @@
  # Unset PLATFORM because this is used as host machine.
  unset PLATFORM
  
@@ -2731,12 +3308,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -./configure --prefix=$RPM_BUILD_DIR/../../rootfs/usr/local/Trolltech -embedded arm -xplatform qws/linux-g++-mx -release \
 -	-qt-gfx-linuxfb -qt-kbd-tty -qt-mouse-tslib -little-endian -host-little-endian -fontconfig -sm -v -opensource -confirm-license $XTRA_OPTS
 +%Install
-+test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
++export LC_ALL
++LC_ALL=C
  
 -make
-+%if %{?toolchain:1}%{!?toolchain:0}
++test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
  
 -%Install
++%if %{?toolchain:1}%{!?toolchain:0}
++
 +make INSTALL_ROOT=%{buildroot} install
  
 -export PATH=$UNSPOOF_PATH
@@ -2773,9 +3353,13 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%endif
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 +%if %{?toolchain:1}%{!?toolchain:0}
++
 +
  %Files
  %defattr(-,root,root)
@@ -2787,15 +3371,14 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files -f all_files.lst
 +%defattr(-,root,root)
 +
-+
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 +
 +%endif
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec	2015-11-20 12:39:31.803136095 +0100
-@@ -0,0 +1,78 @@
++++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec	2015-11-24 11:18:00.912044712 +0100
+@@ -0,0 +1,91 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define variant multiaxes
 +
@@ -2822,6 +3405,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed for root file system requirements.
 +Group           : Development/Libraries
 +AutoReqProv     : no
++
 +%Description rfs
 +qwt-multiaxes package contents restricted to just the files
 +that are needed at run time on the target.
@@ -2831,11 +3415,17 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{summary}
 +
 +%Prep
++export LC_ALL
++LC_ALL=C
++
 +%setup -n %{name}-%{version}-%{variant}
 +%patch1 -p1
 +%patch2 -p1 
 +
 +%Build
++export LC_ALL
++LC_ALL=C
++
 +cp qwt.pro qwt.pro.orig
 +awk '{if ($0 ~ /QwtDesigner/ || $0 ~ /QwtExamples/) {getline; getline;} else {print $0;}}' qwt.pro.orig > qwt.pro
 +
@@ -2849,6 +3439,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +    sub-textengines-all-ordered \
 +
 +%Install
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
 +
 +make \
@@ -2866,17 +3459,20 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
 +%Clean
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
++
 +
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt.spec ltib/dist/lfs-5.1/qwt/qwt.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/qwt/qwt.spec	2015-11-20 12:39:31.803136095 +0100
++++ ltib/dist/lfs-5.1/qwt/qwt.spec	2015-11-23 23:35:04.641453407 +0100
 @@ -0,0 +1,77 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -2957,7 +3553,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rpm/rpm-fs.spec ltib/dist/lfs-5.1/rpm/rpm-fs.spec
 --- ltib.reference/dist/lfs-5.1/rpm/rpm-fs.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/rpm/rpm-fs.spec	2015-11-20 12:39:31.803136095 +0100
++++ ltib/dist/lfs-5.1/rpm/rpm-fs.spec	2015-11-23 23:35:04.641453407 +0100
 @@ -83,7 +83,7 @@
  ./configure --prefix=%{_prefix} --localstatedir=$var --sysconfdir=$etc \
  --without-python --without-javaglue
@@ -2969,8 +3565,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %Install
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rsync/rsync.spec ltib/dist/lfs-5.1/rsync/rsync.spec
 --- ltib.reference/dist/lfs-5.1/rsync/rsync.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/rsync/rsync.spec	2015-11-20 12:39:31.803136095 +0100
-@@ -12,6 +12,17 @@
++++ ltib/dist/lfs-5.1/rsync/rsync.spec	2015-11-24 11:18:13.988044888 +0100
+@@ -12,26 +12,59 @@
  Patch1          : rsync-2.6.5-va_copy-2.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -2981,6 +3577,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed rsync for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +rsync package contents restricted to just the files that are
 +needed at run time on the target.
@@ -2988,7 +3585,26 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -29,9 +40,18 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
+ %patch1 -p1
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ rsync_cv_HAVE_GETTIMEOFDAY_TZ=yes \
+ ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
+ make
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  make install prefix=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
  
@@ -2999,20 +3615,23 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
 --- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec	2015-11-20 12:39:31.803136095 +0100
-@@ -0,0 +1,108 @@
++++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec	2015-11-24 11:18:30.704045114 +0100
+@@ -0,0 +1,121 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Just the sftp-server executable from OpenSSH
@@ -3043,6 +3662,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed sftp-server for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +sftp-server package contents restricted to just the files that
 +are needed at run time on the target.
@@ -3052,6 +3672,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{summary}
 +
 +%Prep
++export LC_ALL
++LC_ALL=C
++
 +%setup -T -c
 +%setup -T -D -a 0
 +%setup -T -D -a 1
@@ -3067,6 +3690,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +
 +%Build
++export LC_ALL
++LC_ALL=C
++
 +cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g
 +case $ENDIAN in
 +    big)
@@ -3098,6 +3724,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +make -j`grep -c ^processor /proc/cpuinfo` sysconfdir=%{_sysconfdir}/ssh sftp-server
 +
 +%Install
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
 +cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssh-4.3p2
 +make -j1 install-sftp-server sysconfdir=%{_sysconfdir}/ssh DESTDIR=$RPM_BUILD_ROOT/%{pfx}
@@ -3113,18 +3742,21 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
 +%Clean
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
++
 +
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/skell/skell.spec	2015-11-20 12:39:31.803136095 +0100
-@@ -9,15 +9,74 @@
++++ ltib/dist/lfs-5.1/skell/skell.spec	2015-11-24 11:18:53.984045427 +0100
+@@ -9,20 +9,84 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -3186,6 +3818,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed skell for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +skell package contents restricted to just the files that are
 +needed at run time on the target.
@@ -3195,13 +3828,22 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Group           : Applications/File
 +Prefix          : %{pfx}/local
 +AutoReqProv     : no
++
 +%Description lfs
 +Basic contents of the local file system.
 +
  
  %Description
  %{summary}
-@@ -31,24 +90,68 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
+ %patch1 -p1
+ %patch2 -p1
+@@ -31,24 +95,78 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -3233,9 +3875,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%patch31 -p1
  
  %Build
++export LC_ALL
++LC_ALL=C
++
 +DESTDIR=$RPM_BUILD_ROOT/%{pfx} 
  
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
 +DESTDIR=$RPM_BUILD_ROOT/%{pfx} 
  make DESTDIR=$RPM_BUILD_ROOT/%{pfx} install
@@ -3262,7 +3910,11 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Clean
 -rm -rf $RPM_BUILD_ROOT
++export LC_ALL
++LC_ALL=C
++
 +sudo rm -rf $RPM_BUILD_ROOT
++
 +
 +%Files -f all_files.lst
 +%defattr(-,root,root)
@@ -3283,8 +3935,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{pfx}/local/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec ltib/dist/lfs-5.1/sqlite/sqlite.spec
 --- ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sqlite/sqlite.spec	2015-11-20 12:39:31.803136095 +0100
-@@ -12,6 +12,17 @@
++++ ltib/dist/lfs-5.1/sqlite/sqlite.spec	2015-11-24 11:19:08.216045619 +0100
+@@ -12,26 +12,59 @@
  Source          : %{name}-amalgamation-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -3295,6 +3947,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed sqlite for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +sqlite package contents restricted to just the files that are
 +needed at run time on the target.
@@ -3302,14 +3955,25 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.
-@@ -21,17 +32,26 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
  
  %Build
++export LC_ALL
++LC_ALL=C
++
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
 -make
 +make -j`grep -c ^processor /proc/cpuinfo`
  
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 -find $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/ -name "*.la" | xargs rm -f
@@ -3323,20 +3987,23 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
  
-+
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec ltib/dist/lfs-5.1/sysconfig/modeps.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sysconfig/modeps.spec	2015-11-20 12:39:31.803136095 +0100
-@@ -10,6 +10,17 @@
++++ ltib/dist/lfs-5.1/sysconfig/modeps.spec	2015-11-24 11:16:09.792043215 +0100
+@@ -10,15 +10,36 @@
  Group           : System Environment/Base
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -3347,6 +4014,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed modeps for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +modeps package contents restricted to just the files that are
 +needed at run time on the target.
@@ -3354,7 +4022,25 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -32,10 +43,18 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ mkdir -p $RPM_BUILD_ROOT/%{pfx}/lib/modules
+ if [ -f $DEV_IMAGE/boot/vmlinux ]
+@@ -32,10 +53,21 @@
      fi
  fi
  
@@ -3365,20 +4051,23 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
  
-+
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-11-20 12:39:31.803136095 +0100
-@@ -8,14 +8,25 @@
++++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-11-24 11:19:22.892045817 +0100
+@@ -8,18 +8,39 @@
  Vendor		: Freescale
  Packager	: Stuart Hughes
  Group		: System Environment/Base
@@ -3392,6 +4081,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed sysconfig for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +sysconfig package contents restricted to just the files that
 +are needed at run time on the target.
@@ -3402,10 +4092,23 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Prep
 -#%setup
++export LC_ALL
++LC_ALL=C
++
  
  %Build
++export LC_ALL
++LC_ALL=C
++
  
-@@ -63,6 +74,36 @@
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ mkdir -p $RPM_BUILD_ROOT/%{pfx}/etc/rc.d
+ 
+@@ -63,6 +84,36 @@
  then
      boa=boa
  fi
@@ -3442,7 +4145,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  if [ "$SYSCFG_SETTIME" = "y" ]
  then
      settime=settime
-@@ -91,14 +132,24 @@
+@@ -91,14 +142,24 @@
  then
          fslgnome=fslgnome
  fi
@@ -3471,7 +4174,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  export HOSTNAME="${SYSCFG_HOSTNAME:-$PLATFORM}"
  export NTP_SERVER="$SYSCFG_NTP_SERVER"
-@@ -154,61 +205,7 @@
+@@ -154,61 +215,7 @@
      else
  	sys_login="::respawn:-/bin/sh"
      fi
@@ -3534,7 +4237,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  else
      # SysVInit
      if [ "$SYSCFG_WANT_LOGIN_TTY" = "y" ]
-@@ -242,18 +239,20 @@
+@@ -242,18 +249,20 @@
  #
  # This script will be executed *after* all the other init scripts.
  # You can put your own initialization stuff in here
@@ -3561,7 +4264,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  # Add nodes when running under the hypervisor and static devices
  if [ -r /sys/class/misc/fsl-hv/dev -a ! -r /dev/fsl-hv ]
-@@ -287,30 +286,34 @@
+@@ -287,30 +296,37 @@
  fi
  
  for i in 0 1 2; do
@@ -3599,19 +4302,22 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec ltib/dist/lfs-5.1/texinfo/texinfo.spec
 --- ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/texinfo/texinfo.spec	2015-11-20 12:39:31.803136095 +0100
++++ ltib/dist/lfs-5.1/texinfo/texinfo.spec	2015-11-23 23:35:04.641453407 +0100
 @@ -31,7 +31,7 @@
  else
                ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
@@ -3623,8 +4329,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/tslib/tslib.spec ltib/dist/lfs-5.1/tslib/tslib.spec
 --- ltib.reference/dist/lfs-5.1/tslib/tslib.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/tslib/tslib.spec	2015-11-20 12:39:31.803136095 +0100
-@@ -13,9 +13,21 @@
++++ ltib/dist/lfs-5.1/tslib/tslib.spec	2015-11-24 11:19:39.172046036 +0100
+@@ -13,14 +13,30 @@
  Patch2          : tslib-1.0-mx-pre_gen-2.patch
  Patch3          : tslib-1.0-mx-pre_config.patch
  Patch4          : tslib-1.0-glibc-2.7.x-open-O_CREAT-lack-parameter.patch
@@ -3640,6 +4346,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed tslib for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +tslib package contents restricted to just the files that are
 +needed at run time on the target.
@@ -3647,7 +4354,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -35,13 +47,14 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
+ %patch1 -p1 
+ %patch2 -p1 
+@@ -35,15 +51,19 @@
  if [ `echo ${LIBC_VERSION} | cut -d '.' -f 1` -eq 2 -a `echo ${LIBC_VERSION} | cut -d '.' -f 2` -ge 7 ]; then
  %patch4 -p1
  fi
@@ -3662,9 +4377,19 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%patch6 -p1
  
  %Build
++export LC_ALL
++LC_ALL=C
++
  #sed -i s/AS_HELP_STRING/AC_HELP_STRING/ configure.ac
-@@ -54,16 +67,26 @@
+ #./autogen.sh
+ chmod +x ./configure
+@@ -52,18 +72,34 @@
+ make
+ 
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 -rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
@@ -3684,19 +4409,22 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl
 --- ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl	2015-11-20 12:39:31.807138096 +0100
++++ ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl	2015-11-23 23:35:04.645453407 +0100
 @@ -18,7 +18,8 @@
      make HOSTCC="$BUILDCC" CROSS_COMPILE=$TOOLCHAIN_PREFIX O=$BUILD_DIR distclean
  fi
@@ -3707,9 +4435,48 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
       CROSS_COMPILE=$TOOLCHAIN_PREFIX $PKG_U_BOOT_BUILD_ARGS \
       O=$BUILD_DIR all
  
+diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec ltib/dist/lfs-5.1/u-boot/u-boot.spec
+--- ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/u-boot/u-boot.spec	2015-11-24 11:19:54.732046246 +0100
+@@ -17,16 +17,25 @@
+ %{summary}
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup 
+ %patch0 -p1
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ PKG_U_BOOT_CONFIG_TYPE=${PKG_U_BOOT_CONFIG_TYPE:-TQM823L_config}
+ make HOSTCC="$BUILDCC" CROSS_COMPILE=$TOOLCHAIN_PREFIX $PKG_U_BOOT_CONFIG_TYPE
+ make HOSTCC="$BUILDCC" HOSTSTRIP="$BUILDSTRIP" \
+      CROSS_COMPILE=$TOOLCHAIN_PREFIX $PKG_U_BOOT_BUILD_ARGS all
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ mkdir -p $RPM_BUILD_ROOT/%{pfx}/boot
+ for i in u-boot.bin u-boot
+@@ -35,6 +44,9 @@
+ done
+ 
+ %Clean
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ 
+ %Files
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/udev/udev.spec ltib/dist/lfs-5.1/udev/udev.spec
 --- ltib.reference/dist/lfs-5.1/udev/udev.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/udev/udev.spec	2015-11-20 12:39:31.807138096 +0100
++++ ltib/dist/lfs-5.1/udev/udev.spec	2015-11-24 11:20:17.388046551 +0100
 @@ -25,12 +25,9 @@
  Patch13         : udev-117-mxc-ipu-dev-privilege.patch
  Patch14         : udev-117-mxc-vpu.patch
@@ -3724,7 +4491,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  # List of extra things to build, which must be
  # passed to make at build time and install time.
-@@ -38,6 +35,16 @@
+@@ -38,10 +35,24 @@
  # it once.
  %define extras "extras/volume_id extras/path_id extras/usb_id extras/firmware"
  
@@ -3733,6 +4500,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed udev for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +udev package contents restricted to just the files that are
 +needed at run time on the target.
@@ -3741,7 +4509,14 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %Description
  %{summary}
  
-@@ -59,17 +66,14 @@
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
+ %patch0 -p1
+ %patch1 -p1
+@@ -59,17 +70,20 @@
  %patch13 -p1
  %patch14 -p1
  %patch15 -p1
@@ -3750,9 +4525,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%patch18 -p1
  
  %Build
++export LC_ALL
++LC_ALL=C
++
  make EXTRAS=%{extras}
  
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
 -make install EXTRAS=%{extras} DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 -install -m 644 etc/udev/packages/40-alsa.rules $RPM_BUILD_ROOT/%{pfx}/etc/udev/rules.d
@@ -3761,7 +4542,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  # To avoid duplication removed as skell installs this and all the
  # other init scripts.
-@@ -78,12 +82,12 @@
+@@ -78,12 +92,12 @@
  
  if [ "$PKG_UDEV_WANT_IMX" = "y" ]
  then
@@ -3776,7 +4557,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  fi
  
  if [ "$PKG_UDEV_WANT_NON_RAID" = "y" ]
-@@ -95,13 +99,23 @@
+@@ -95,13 +109,26 @@
  	# capacity incorrectly.
  
  	perl -pi -e 's/vol_id /vol_id --skip-raid /' \
@@ -3793,20 +4574,23 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/unzip/unzip.spec ltib/dist/lfs-5.1/unzip/unzip.spec
 --- ltib.reference/dist/lfs-5.1/unzip/unzip.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/unzip/unzip.spec	2015-11-20 12:39:31.807138096 +0100
-@@ -12,6 +12,17 @@
++++ ltib/dist/lfs-5.1/unzip/unzip.spec	2015-11-24 11:20:34.416046781 +0100
+@@ -12,24 +12,57 @@
  Source          : unzip552.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -3817,6 +4601,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed unzip for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +unzip package contents restricted to just the files that are
 +needed at run time on the target.
@@ -3824,7 +4609,24 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -27,9 +38,18 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup -n unzip-5.52
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ make -f unix/Makefile linux_noasm
+ make
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  make install prefix=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
  
@@ -3835,20 +4637,23 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
 -%Files
++
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	2015-11-20 12:39:31.807138096 +0100
-@@ -0,0 +1,52 @@
++++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	2015-11-24 11:21:01.468047145 +0100
+@@ -0,0 +1,65 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Data for the USB Modeswitch tool
@@ -3869,6 +4674,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed down to just the run time files
 +Group           : Applications/System
 +AutoReqProv     : no
++
 +%Description rfs
 +%name} package contents trimmed to just the files
 +that are needed at run time on the target.
@@ -3878,11 +4684,20 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{summary}.
 +
 +%Prep
++export LC_ALL
++LC_ALL=C
++
 +%setup
 +
 +%Build
++export LC_ALL
++LC_ALL=C
++
 +
 +%Install
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
 +make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 +
@@ -3893,18 +4708,21 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
 +%Clean
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
++
 +
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	2015-11-20 12:39:31.807138096 +0100
-@@ -0,0 +1,56 @@
++++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	2015-11-24 11:20:49.472046984 +0100
+@@ -0,0 +1,69 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : USB Modeswitch gets mobile broadband cards in operational mode
@@ -3926,6 +4744,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Group           : Applications/System
 +Requires        : usb-modeswitch-data-rfs
 +AutoReqProv     : no
++
 +%Description rfs
 +%name} package contents trimmed to just the files
 +that are needed at run time on the target.
@@ -3935,12 +4754,21 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{summary}.
 +
 +%Prep
++export LC_ALL
++LC_ALL=C
++
 +%setup
 +
 +%Build
++export LC_ALL
++LC_ALL=C
++
 +make
 +
 +%Install
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
 +# Target install-static does not depend on external Tcl interpreter/libs.
 +make install-static DESTDIR=$RPM_BUILD_ROOT/%{pfx}
@@ -3953,18 +4781,21 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
 +%Clean
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
++
 +
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec ltib/dist/lfs-5.1/xenomai/xenomai.spec
 --- ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/xenomai/xenomai.spec	2015-11-20 12:39:31.807138096 +0100
-@@ -0,0 +1,61 @@
++++ ltib/dist/lfs-5.1/xenomai/xenomai.spec	2015-11-24 11:21:15.584047336 +0100
+@@ -0,0 +1,74 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : xenomai - Real Time extension for the Linux kernel
@@ -3985,6 +4816,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed xenomai for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +xenomai package contents restricted to just the files that
 +are needed at run time on the target.
@@ -3997,13 +4829,22 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +#  %{name}-%{version}
 +
 +%Prep
++export LC_ALL
++LC_ALL=C
++
 +%setup
 +./configure CFLAGS="-march=armv5te" LDFLAGS="-march=armv5te" --build=%{_build} --host=$CFGHOST
 +
 +%Build
++export LC_ALL
++LC_ALL=C
++
 +make DESTDIR=$RPM_BUILD_ROOT%{pfx} all
 +
 +%Install
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
 +make DESTDIR=$RPM_BUILD_ROOT%{pfx} install
 +
@@ -4018,18 +4859,21 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
 +%Clean
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
++
 +
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zip30/zip30.spec ltib/dist/lfs-5.1/zip30/zip30.spec
 --- ltib.reference/dist/lfs-5.1/zip30/zip30.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/zip30/zip30.spec	2015-11-20 17:39:06.745895101 +0100
-@@ -0,0 +1,56 @@
++++ ltib/dist/lfs-5.1/zip30/zip30.spec	2015-11-24 11:21:28.376047508 +0100
+@@ -0,0 +1,68 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : A file compression utility.
@@ -4050,6 +4894,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed zip for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +zip package contents restricted to just the files that are
 +needed at run time on the target.
@@ -4059,13 +4904,22 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{summary}
 +
 +%Prep
++export LC_ALL
++LC_ALL=C
++
 +%setup
 +
 +%Build
++export LC_ALL
++LC_ALL=C
++
 +make -f unix/Makefile generic_gcc
 +
 +
 +%Install
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
 +make -f unix/Makefile install PREFIX=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
 +$TOOLCHAIN_PATH/bin/${TOOLCHAIN_PREFIX}strip --strip-unneeded $RPM_BUILD_ROOT/%{pfx}%{_prefix}/bin/zip
@@ -4077,19 +4931,21 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
 +
 +%Clean
++export LC_ALL
++LC_ALL=C
++
 +rm -rf $RPM_BUILD_ROOT
 +
 +
 +%Files -f all_files.lst
 +%defattr(-,root,root)
 +
-+
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zlib/zlib.spec ltib/dist/lfs-5.1/zlib/zlib.spec
 --- ltib.reference/dist/lfs-5.1/zlib/zlib.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/zlib/zlib.spec	2015-11-20 12:39:31.807138096 +0100
-@@ -12,6 +12,17 @@
++++ ltib/dist/lfs-5.1/zlib/zlib.spec	2015-11-24 11:21:38.952047651 +0100
+@@ -12,15 +12,33 @@
  Patch1          : zlib-1.2.3-arflags-1.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -4100,6 +4956,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Trimmed zlib for root file system requirements.
 +Group           : Applications/File
 +AutoReqProv     : no
++
 +%Description rfs
 +zlib package contents restricted to just the files that are
 +needed at run time on the target.
@@ -4107,9 +4964,28 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -30,16 +41,25 @@
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
+ %patch1 -p1
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ ./configure --prefix=%{_prefix} --shared
+ mv Makefile Makefile.shared
+ ./configure --prefix=%{_prefix}
+@@ -29,17 +47,31 @@
+ make -f Makefile.static
  
  %Install
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
 -mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}
 -make -f Makefile.shared install prefix=${RPM_BUILD_ROOT}/%{pfx}/%{_prefix}
@@ -4127,6 +5003,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
  
@@ -4134,7 +5013,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files -f all_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
- 
+-
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)

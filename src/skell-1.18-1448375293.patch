@@ -26,30 +26,30 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/mdev skell-1.1
 -        # make and mount devpts
 -        mkdir /dev/pts
 -        mount -n -t devpts devpts /dev/pts
-+       #echo "/sbin/mdev" > /proc/sys/kernel/hotplug
++        #echo "/sbin/mdev" > /proc/sys/kernel/hotplug
 +
-+       if ! grep -q 'devtmpfs on /dev type devtmpfs' /proc/mounts; then
-+               # put /dev in a tmpfs
-+               mount -n -o mode=0755 -t tmpfs mdev /dev
++        if ! grep -q 'devtmpfs on /dev type devtmpfs' /proc/mounts; then
++                # put /dev in a tmpfs
++                mount -n -o mode=0755 -t tmpfs mdev /dev
 +
-+               # Create static device nodes in /dev
-+               mknod /dev/console c 5 1
-+               chmod 600 /dev/console
-+               mknod /dev/null c 1 3
-+               chmod 666 /dev/null
++                # Create static device nodes in /dev
++                mknod /dev/console c 5 1
++                chmod 600 /dev/console
++                mknod /dev/null c 1 3
++                chmod 666 /dev/null
 +
-+               # make and mount devpts
-+               mkdir /dev/pts
-+               mount -n -t devpts devpts /dev/pts
++                # make and mount devpts
++                mkdir /dev/pts
++                mount -n -t devpts devpts /dev/pts
  
 -        echo "Starting the hotplug events dispatcher mdev"
 -        /sbin/mdev -s
-+               echo "Starting the hotplug events dispatcher mdev"
-+               /sbin/mdev -s
++                echo "Starting the hotplug events dispatcher mdev"
++                /sbin/mdev -s
  
 -        mkdir /dev/shm
-+               mkdir /dev/shm
-+       fi
++                mkdir /dev/shm
++        fi
          ;;
      stop)
          ;;

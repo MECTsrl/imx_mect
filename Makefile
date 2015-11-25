@@ -167,7 +167,6 @@ COMMON_RFSPKGS := \
 	sqlite-rfs-3.6.12-1.$(TARGET_ARCH).rpm \
 	sysconfig-rfs-1.2-5.$(TARGET_ARCH).rpm \
 	tslib-rfs-1.0-3.$(TARGET_ARCH).rpm \
-	udev-rfs-117-5.$(TARGET_ARCH).rpm \
 	usb-modeswitch-data-rfs-20150627-1.$(TARGET_ARCH).rpm \
 	usb-modeswitch-rfs-2.2.5-1.$(TARGET_ARCH).rpm \
 	xenomai-rfs-2.6.0-1.$(TARGET_ARCH).rpm \
@@ -1032,8 +1031,8 @@ ltib_update:
 
 .PHONY: ltib_rebuild
 ltib_rebuild:
-	rm -rf $(RPMBUILDDIR)/*
-	cd $(LTIBDIR); ./ltib -f
+	rm -rf $(RPMBUILDDIR)/* $(RPMDIR)/*.rpm
+	$(MAKE) ltibbuild projects image
 
 
 # Utilities

@@ -1,0 +1,37 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/mdev.conf skell-1.18.modified/etc/mdev.conf
+--- skell-1.18/etc/mdev.conf	2008-09-26 11:42:22.000000000 +0200
++++ skell-1.18.modified/etc/mdev.conf	2015-11-26 18:22:49.757494549 +0100
+@@ -2,26 +2,12 @@
+ # Syntax: %s %d:%d %s
+ # devices user:group mode
+ 
+-null      0:0  666
+-zero      0:0  666
+-grsec     0:0  660
+-
+-urandom   0:0  444
+-
+-console   0:5  600
+-fd0       0:11 660
+-hdc       0:6  660
+-kmem      0:9  640
+-mem       0:9  640
+-port      0:9  640
+-ptmx      0:5  660
+-
+-sda[0-9]  0:6  660
+-sdb[0-9]  0:6  660
+-hda[0-9]  0:6  660
+-
+-ttyS[0-9] 0:14 640
+-tty[0-9]  0:0  660
+-tty.+     0:5  660
++-$MODALIAS=.*  0:0   660  @modprobe  -s      "$MODALIAS"
++$MODALIAS=.*   0:0   660  $modprobe  -s  -r  "$MODALIAS"
+ 
++sda[0-9]       0:6   660
++sdb[0-9]       0:6   660
+ 
++ttyS[0-9]      0:14  640
++tty[0-9]       0:0   660
++tty.+          0:5   660

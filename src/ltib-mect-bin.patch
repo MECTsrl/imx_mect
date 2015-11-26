@@ -28,7 +28,7 @@ diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/bin/Ltibutils.pm lt
                                     glob('/usr/lib/i386-linux-gnu/libz.so*'),
                                     glob('/usr/lib32/libz.so*'),
 --- ltib.reference/ltib	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/ltib	2015-11-24 23:26:04.128516721 +0100
++++ ltib/ltib	2015-11-26 23:55:28.248477250 +0100
 @@ -78,7 +78,7 @@
      proxy        => "",
      force_md5get => "",
@@ -77,10 +77,12 @@ diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/bin/Ltibutils.pm lt
  TXT
  
      open(SPEC, ">$spec.bak") or die("can't open $spec.bak for writing: $!");
-@@ -1180,16 +1185,18 @@
+@@ -1179,17 +1184,19 @@
+     close SPEC;
      print <<TXT;
  
- A patch has been generated and placed in:
+-A patch has been generated and placed in:
++A patch has been generated and stored in:
 +    $top/../src/$pname
  
 -    $cf->{lpp}/$pname

@@ -3755,8 +3755,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/skell/skell.spec	2015-11-25 21:04:48.963959505 +0100
-@@ -9,20 +9,85 @@
++++ ltib/dist/lfs-5.1/skell/skell.spec	2015-11-26 18:23:12.745205554 +0100
+@@ -9,20 +9,86 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -3797,6 +3797,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Patch30         : skell-mect-cond-safe_hmi-in-autoexec.patch
 +Patch31         : skell-mect-dev-fixes-in-init.d.patch
 +Patch32         : skell-1.18-1448375293.patch
++Patch33          : skell-1.18-1448558592.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -3844,7 +3845,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +96,107 @@
+@@ -31,24 +97,108 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -3875,6 +3876,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%patch30 -p1
 +%patch31 -p1
 +%patch32 -p1
++%patch33 -p1
  
  %Build
 +export LC_ALL
@@ -4032,8 +4034,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec ltib/dist/lfs-5.1/sysconfig/modeps.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sysconfig/modeps.spec	2015-11-24 11:16:09.792043215 +0100
-@@ -10,15 +10,36 @@
++++ ltib/dist/lfs-5.1/sysconfig/modeps.spec	2015-11-26 18:27:52.117693366 +0100
+@@ -10,32 +10,68 @@
  Group           : System Environment/Base
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -4068,16 +4070,30 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +LC_ALL=C
 +
  rm -rf $RPM_BUILD_ROOT
- mkdir -p $RPM_BUILD_ROOT/%{pfx}/lib/modules
+-mkdir -p $RPM_BUILD_ROOT/%{pfx}/lib/modules
++mkdir -p $RPM_BUILD_ROOT%{pfx}/lib/modules
  if [ -f $DEV_IMAGE/boot/vmlinux ]
-@@ -32,10 +53,21 @@
+ then 
+-    # generate modules.conf
++    # generate modules.dep
+     KERNEL_VER=`strings $DEV_IMAGE/boot/vmlinux | perl -n -e 'print($1), exit(0) if m,Linux version ([\S]+),'`
+     if [ -n "$KERNEL_VER" ]
+     then
+-        mkdir -p $RPM_BUILD_ROOT/%{pfx}/lib/modules/$KERNEL_VER
+-        depmod.pl -b $DEV_IMAGE/lib/modules/$KERNEL_VER -F $DEV_IMAGE/boot/System.map --stdout > $RPM_BUILD_ROOT/%{pfx}/lib/modules/$KERNEL_VER/modules.dep
++        mkdir -p $RPM_BUILD_ROOT%{pfx}/lib/modules/$KERNEL_VER
++        #depmod.pl -b $DEV_IMAGE/lib/modules/$KERNEL_VER -F $DEV_IMAGE/boot/System.map --stdout > $RPM_BUILD_ROOT/%{pfx}/lib/modules/$KERNEL_VER/modules.dep
++	# TODO: depmod should be added to host tools insted of relying on the host one.
++	sudo depmod -a -b $DEV_IMAGE -F $DEV_IMAGE/boot/System.map $KERNEL_VER
++	install -m 644 $DEV_IMAGE/lib/modules/$KERNEL_VER/modules.* $RPM_BUILD_ROOT%{pfx}/lib/modules/$KERNEL_VER/
      fi
  fi
  
 +cd %{_builddir}
 +( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
-+    p
++    \,/modules\.alias$, p;
++    \,/modules\.dep$, p;
 +' all_files.lst > rfs_files.lst
 +
  %Clean
@@ -4096,7 +4112,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-11-25 01:51:23.000000000 +0100
++++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-11-26 00:52:55.000000000 +0100
 @@ -8,18 +8,39 @@
  Vendor		: Freescale
  Packager	: Stuart Hughes

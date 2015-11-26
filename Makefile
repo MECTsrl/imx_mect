@@ -145,12 +145,10 @@ COMMON_RFSPKGS := \
 	fontconfig-rfs-2.4.2-1.$(TARGET_ARCH).rpm \
 	freetype-rfs-2.3.9-1.$(TARGET_ARCH).rpm \
 	glib2-rfs-2.18.1-1.$(TARGET_ARCH).rpm \
-	hotplug-rfs-2004_03_29-3.$(TARGET_ARCH).rpm \
 	iproute-rfs-2.6.37-050330.$(TARGET_ARCH).rpm \
 	libsocketcan-rfs-0.0.8-0.$(TARGET_ARCH).rpm \
 	libtermcap-rfs-2.0.8-31_1.$(TARGET_ARCH).rpm \
 	libusb1-rfs-1.0.20-1.$(TARGET_ARCH).rpm \
-	libusb-rfs-0.1.8-1.$(TARGET_ARCH).rpm \
 	lrzsz-rfs-0.12.21-1.$(TARGET_ARCH).rpm \
 	lzo-rfs-2.03-0.$(TARGET_ARCH).rpm \
 	merge-rfs-0.1-1.$(TARGET_ARCH).rpm \
@@ -167,7 +165,6 @@ COMMON_RFSPKGS := \
 	sqlite-rfs-3.6.12-1.$(TARGET_ARCH).rpm \
 	sysconfig-rfs-1.2-5.$(TARGET_ARCH).rpm \
 	tslib-rfs-1.0-3.$(TARGET_ARCH).rpm \
-	udev-rfs-117-5.$(TARGET_ARCH).rpm \
 	usb-modeswitch-data-rfs-20150627-1.$(TARGET_ARCH).rpm \
 	usb-modeswitch-rfs-2.2.5-1.$(TARGET_ARCH).rpm \
 	xenomai-rfs-2.6.0-1.$(TARGET_ARCH).rpm \
@@ -1032,8 +1029,9 @@ ltib_update:
 
 .PHONY: ltib_rebuild
 ltib_rebuild:
-	rm -rf $(RPMBUILDDIR)/*
+	rm -rf $(RPMBUILDDIR)/* $(RPMDIR)/*.rpm
 	cd $(LTIBDIR); ./ltib -f
+	$(MAKE) projects image
 
 
 # Utilities

@@ -1,6 +1,6 @@
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec ltib/dist/lfs-5.1/base_libs/base_libs.spec
 --- ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/base_libs/base_libs.spec	2015-11-24 11:07:08.484035920 +0100
++++ ltib/dist/lfs-5.1/base_libs/base_libs.spec	2015-11-25 17:48:53.323027120 +0100
 @@ -11,6 +11,17 @@
  Group           : System Environment/Libraries
  BuildRoot       : %{_tmppath}/%{name}
@@ -235,7 +235,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  ' 
  
 +cd %{_builddir}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( -not -type d \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,%{pfx}%{_includedir}, d;
 +    \,\.bak$, d;
@@ -1971,7 +1971,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec ltib/dist/lfs-5.1/libtermcap/libtermcap.spec
 --- ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/libtermcap/libtermcap.spec	2015-11-24 11:13:34.376041120 +0100
++++ ltib/dist/lfs-5.1/libtermcap/libtermcap.spec	2015-11-25 17:48:35.955027244 +0100
 @@ -1,4 +1,5 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archname termcap
@@ -2095,7 +2095,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  fi
  
 +cd %{_builddir}/%{archname}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( -not -type d \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/info, d;
 +    \,^%{pfx}%{_prefix}/include, d;
@@ -2823,7 +2823,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ppp/ppp.spec ltib/dist/lfs-5.1/ppp/ppp.spec
 --- ltib.reference/dist/lfs-5.1/ppp/ppp.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/ppp/ppp.spec	2015-11-24 11:17:06.752043982 +0100
++++ ltib/dist/lfs-5.1/ppp/ppp.spec	2015-11-25 17:50:37.955026375 +0100
 @@ -13,16 +13,34 @@
  Patch1          : ppp-2.4.3-hspeed.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -2871,7 +2871,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  mkdir -p $RPM_BUILD_ROOT/%{pfx}/var/lock
  
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( -not -type d \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}/share/man, d;
 +    \,^%{pfx}/include, d;
@@ -3755,8 +3755,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/skell/skell.spec	2015-11-24 11:18:53.984045427 +0100
-@@ -9,20 +9,84 @@
++++ ltib/dist/lfs-5.1/skell/skell.spec	2015-11-26 18:23:12.745205554 +0100
+@@ -9,20 +9,86 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -3796,6 +3796,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Patch29         : skell-1.18-mect-remove-rc.local.patch
 +Patch30         : skell-mect-cond-safe_hmi-in-autoexec.patch
 +Patch31         : skell-mect-dev-fixes-in-init.d.patch
++Patch32         : skell-1.18-1448375293.patch
++Patch33         : skell-1.18-1448558592.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -3843,7 +3845,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +95,78 @@
+@@ -31,24 +97,108 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -3873,6 +3875,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%patch29 -p1
 +%patch30 -p1
 +%patch31 -p1
++%patch32 -p1
++%patch33 -p1
  
  %Build
 +export LC_ALL
@@ -3902,11 +3906,14 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}/boot, d;
-+    \,^%{pfx}/dev, d;
-+    \,%{pfx}%{_includedir}, d;
++    \,^%{pfx}/dev/, d;
++    \,^%{pfx}%{_includedir}, d;
 +    \,^%{pfx}/local, d;
 +    \,^%{pfx}/\.keepme, d;
 +' all_files.lst > rfs_files.lst
++sed -n '
++    \,^%{pfx}/local/, p;
++' all_files.lst > lfs_files.lst
  
  %Clean
 -rm -rf $RPM_BUILD_ROOT
@@ -3918,21 +3925,46 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files -f all_files.lst
 +%defattr(-,root,root)
++%attr(0555, root, root) %dir %{pfx}/bin
++%attr(0555, root, root) %dir %{pfx}/boot
++%attr(0755, root, root) %dir %{pfx}/dev
++%attr(0755, root, root) %dir %{pfx}/etc
++%attr(0555, root, root) %dir %{pfx}/lib
 +%attr(0755, root, root) %dir %{pfx}/local
++%attr(0755, root, root) %dir %{pfx}/mnt
++%attr(0755, root, root) %dir %{pfx}/opt
++%attr(0555, root, root) %dir %{pfx}/proc
++%attr(0555, root, root) %dir %{pfx}/sbin
++%attr(0555, root, root) %dir %{pfx}/sys
++%attr(0777, root, root) %dir %{pfx}/tmp
++%attr(0755, root, root) %dir %{pfx}/usr
++%attr(0755, root, root) %dir %{pfx}/var
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
++%attr(0555, root, root) %dir %{pfx}/bin
++%attr(0555, root, root) %dir %{pfx}/boot
++%attr(0755, root, root) %dir %{pfx}/dev
++%attr(0755, root, root) %dir %{pfx}/etc
++%attr(0555, root, root) %dir %{pfx}/lib
 +%attr(0755, root, root) %dir %{pfx}/local
++%attr(0755, root, root) %dir %{pfx}/mnt
++%attr(0755, root, root) %dir %{pfx}/opt
++%attr(0555, root, root) %dir %{pfx}/proc
++%attr(0555, root, root) %dir %{pfx}/sbin
++%attr(0555, root, root) %dir %{pfx}/sys
++%attr(0777, root, root) %dir %{pfx}/tmp
++%attr(0755, root, root) %dir %{pfx}/usr
++%attr(0755, root, root) %dir %{pfx}/var
  
 -%Files
-+%Files lfs
++%Files lfs -f lfs_files.lst
  %defattr(-,root,root)
 -%attr(0666, root, root) %dev(c, 5, 0) %{pfx}/dev/tty
 -%attr(0600, root, root) %dev(c, 5, 1) %{pfx}/dev/console
 -%attr(0666, root, root) %dev(c, 1, 3) %{pfx}/dev/null
 -%attr(0755, root, root) %{pfx}/usr/bin/startx
 -%{pfx}/*
-+%{pfx}/local/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec ltib/dist/lfs-5.1/sqlite/sqlite.spec
 --- ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec	2013-01-09 04:58:38.000000000 +0100
 +++ ltib/dist/lfs-5.1/sqlite/sqlite.spec	2015-11-24 11:19:08.216045619 +0100
@@ -4002,8 +4034,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec ltib/dist/lfs-5.1/sysconfig/modeps.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sysconfig/modeps.spec	2015-11-24 11:16:09.792043215 +0100
-@@ -10,15 +10,36 @@
++++ ltib/dist/lfs-5.1/sysconfig/modeps.spec	2015-11-26 18:27:52.117693366 +0100
+@@ -10,32 +10,68 @@
  Group           : System Environment/Base
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -4038,16 +4070,30 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +LC_ALL=C
 +
  rm -rf $RPM_BUILD_ROOT
- mkdir -p $RPM_BUILD_ROOT/%{pfx}/lib/modules
+-mkdir -p $RPM_BUILD_ROOT/%{pfx}/lib/modules
++mkdir -p $RPM_BUILD_ROOT%{pfx}/lib/modules
  if [ -f $DEV_IMAGE/boot/vmlinux ]
-@@ -32,10 +53,21 @@
+ then 
+-    # generate modules.conf
++    # generate modules.dep
+     KERNEL_VER=`strings $DEV_IMAGE/boot/vmlinux | perl -n -e 'print($1), exit(0) if m,Linux version ([\S]+),'`
+     if [ -n "$KERNEL_VER" ]
+     then
+-        mkdir -p $RPM_BUILD_ROOT/%{pfx}/lib/modules/$KERNEL_VER
+-        depmod.pl -b $DEV_IMAGE/lib/modules/$KERNEL_VER -F $DEV_IMAGE/boot/System.map --stdout > $RPM_BUILD_ROOT/%{pfx}/lib/modules/$KERNEL_VER/modules.dep
++        mkdir -p $RPM_BUILD_ROOT%{pfx}/lib/modules/$KERNEL_VER
++        #depmod.pl -b $DEV_IMAGE/lib/modules/$KERNEL_VER -F $DEV_IMAGE/boot/System.map --stdout > $RPM_BUILD_ROOT/%{pfx}/lib/modules/$KERNEL_VER/modules.dep
++	# TODO: depmod should be added to host tools insted of relying on the host one.
++	sudo depmod -a -b $DEV_IMAGE -F $DEV_IMAGE/boot/System.map $KERNEL_VER
++	install -m 644 $DEV_IMAGE/lib/modules/$KERNEL_VER/modules.* $RPM_BUILD_ROOT%{pfx}/lib/modules/$KERNEL_VER/
      fi
  fi
  
 +cd %{_builddir}
 +( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
-+    p
++    \,/modules\.alias$, p;
++    \,/modules\.dep$, p;
 +' all_files.lst > rfs_files.lst
 +
  %Clean
@@ -4066,7 +4112,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-11-24 11:19:22.892045817 +0100
++++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-11-26 00:52:55.000000000 +0100
 @@ -8,18 +8,39 @@
  Vendor		: Freescale
  Packager	: Stuart Hughes
@@ -4145,7 +4191,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  if [ "$SYSCFG_SETTIME" = "y" ]
  then
      settime=settime
-@@ -91,14 +142,24 @@
+@@ -91,14 +142,23 @@
  then
          fslgnome=fslgnome
  fi
@@ -4164,17 +4210,17 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems syslog network inetd portmap dropbear sshd boa smb dhcpd settime fslgnome watchdog bluetooth gtk2 pango"
 -all_services_r="pango gtk2 bluetooth watchdog fslgnome settime dhcpd smb boa sshd dropbear portmap inetd network syslog filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
 +all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems sdcheck syslog network inetd portmap dropbear sshd boa vsftpd smb dhcpd settime fslgnome watchdog bluetooth gtk2 pango telnetd usbmode S10setup autoexec"
-+all_services_r="autoexec S10setup usbmode telnetd pango gtk2 bluetooth watchdog fslgnome settime dhcpd smb boa vsftpd sshd dropbear portmap inetd network syslog sdcheck filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
++all_services_r="autoexec S10setup usbmode telnetd pango gtk2 bluetooth watchdog fslgnome settime dhcpd smb vsftpd boa sshd dropbear portmap inetd network syslog sdcheck filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
  
 -cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $syslog $network $inetd $portmap $dropbear $sshd $boa $smb $dhcpd $settime $fslgnome $watchdog $bluetooth $gtk2 $pango"
-+cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $sdcheck $usbmode $autoexec $syslog $network $inetd $portmap $dropbear $sshd $boa $vsftpd $smb $dhcpd $settime $fslgnome $watchdog $bluetooth $gtk2 $pango $telnetd $S10setup"
- 
+-
 -cfg_services_r="$pango $gtk2 $bluetooth $watchdog $fslgnome $settime $dhcpd $smb $boa $sshd $dropbear $portmap $inetd $network $syslog filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys"
++cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $sdcheck $usbmode $autoexec $syslog $network $inetd $portmap $dropbear $sshd $boa $vsftpd $smb $dhcpd $settime $fslgnome $watchdog $bluetooth $gtk2 $pango $telnetd $S10setup"
 +cfg_services_r="$autoexec $S10setup $usbmode $pango $gtk2 $bluetooth $watchdog $fslgnome $settime $dhcpd $smb $boa $vsftpd $sshd $dropbear $portmap $inetd $network $syslog $sdcheck filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys $telnetd"
  
  export HOSTNAME="${SYSCFG_HOSTNAME:-$PLATFORM}"
  export NTP_SERVER="$SYSCFG_NTP_SERVER"
-@@ -154,61 +215,7 @@
+@@ -154,61 +214,7 @@
      else
  	sys_login="::respawn:-/bin/sh"
      fi
@@ -4237,7 +4283,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  else
      # SysVInit
      if [ "$SYSCFG_WANT_LOGIN_TTY" = "y" ]
-@@ -242,18 +249,20 @@
+@@ -242,18 +248,20 @@
  #
  # This script will be executed *after* all the other init scripts.
  # You can put your own initialization stuff in here
@@ -4264,7 +4310,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  # Add nodes when running under the hypervisor and static devices
  if [ -r /sys/class/misc/fsl-hv/dev -a ! -r /dev/fsl-hv ]
-@@ -287,30 +296,37 @@
+@@ -287,30 +295,37 @@
  fi
  
  for i in 0 1 2; do

@@ -69,6 +69,44 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +.config include/linux/autoconf.h: $(deps_config)
 +
 +$(deps_config):
+diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/defaults/busybox.config ltib/config/defaults/busybox.config
+--- ltib.reference/config/defaults/busybox.config	2013-01-09 04:58:38.000000000 +0100
++++ ltib/config/defaults/busybox.config	2015-11-26 00:36:17.391051541 +0100
+@@ -487,11 +487,11 @@
+ CONFIG_LOSETUP=y
+ CONFIG_MDEV=y
+ CONFIG_FEATURE_MDEV_CONF=y
+-# CONFIG_FEATURE_MDEV_RENAME is not set
+-# CONFIG_FEATURE_MDEV_RENAME_REGEXP is not set
+-# CONFIG_FEATURE_MDEV_EXEC is not set
+-# CONFIG_FEATURE_MDEV_LOAD_FIRMWARE is not set
+-CONFIG_MKSWAP=y
++CONFIG_FEATURE_MDEV_RENAME=y
++CONFIG_FEATURE_MDEV_RENAME_REGEXP=y
++CONFIG_FEATURE_MDEV_EXEC=y
++CONFIG_FEATURE_MDEV_LOAD_FIRMWARE=y
++# CONFIG_MKSWAP is not set
+ # CONFIG_FEATURE_MKSWAP_V0 is not set
+ CONFIG_MORE=y
+ CONFIG_FEATURE_USE_TERMIOS=y
+@@ -528,7 +528,7 @@
+ # CONFIG_RTCWAKE is not set
+ # CONFIG_SCRIPT is not set
+ # CONFIG_SETARCH is not set
+-CONFIG_SWAPONOFF=y
++# CONFIG_SWAPONOFF is not set
+ # CONFIG_FEATURE_SWAPON_PRI is not set
+ # CONFIG_SWITCH_ROOT is not set
+ CONFIG_UMOUNT=y
+@@ -572,7 +572,7 @@
+ CONFIG_FEATURE_LAST_SMALL=y
+ # CONFIG_FEATURE_LAST_FANCY is not set
+ # CONFIG_LESS is not set
+-CONFIG_FEATURE_LESS_MAXLINES=
++CONFIG_FEATURE_LESS_MAXLINES=y
+ # CONFIG_FEATURE_LESS_BRACKETS is not set
+ # CONFIG_FEATURE_LESS_FLAGS is not set
+ # CONFIG_FEATURE_LESS_FLAGCS is not set
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/main.lkc ltib/config/main.lkc
 --- ltib.reference/config/main.lkc	1970-01-01 01:00:00.000000000 +0100
 +++ ltib/config/main.lkc	2015-11-23 23:35:04.537453406 +0100
@@ -373,7 +411,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -PKG_UBUNTU_ARM_LIB = ubuntu_arm_lib
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/busybox.config ltib/config/platform/imx/busybox.config
 --- ltib.reference/config/platform/imx/busybox.config	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/busybox.config	2015-11-23 23:35:04.541453406 +0100
++++ ltib/config/platform/imx/busybox.config	2015-11-26 03:21:31.214417903 +0100
 @@ -1,7 +1,6 @@
  #
  # Automatically generated make config: don't edit
@@ -931,15 +969,15 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  CONFIG_LOSETUP=y
 -CONFIG_LSPCI=y
 -CONFIG_LSUSB=y
-+# CONFIG_MDEV is not set
-+# CONFIG_FEATURE_MDEV_CONF is not set
-+# CONFIG_FEATURE_MDEV_RENAME is not set
-+# CONFIG_FEATURE_MDEV_RENAME_REGEXP is not set
-+# CONFIG_FEATURE_MDEV_EXEC is not set
-+# CONFIG_FEATURE_MDEV_LOAD_FIRMWARE is not set
- CONFIG_MKSWAP=y
--# CONFIG_FEATURE_MKSWAP_UUID is not set
-+CONFIG_FEATURE_MKSWAP_UUID=y
+-CONFIG_MKSWAP=y
++CONFIG_MDEV=y
++CONFIG_FEATURE_MDEV_CONF=y
++CONFIG_FEATURE_MDEV_RENAME=y
++CONFIG_FEATURE_MDEV_RENAME_REGEXP=y
++CONFIG_FEATURE_MDEV_EXEC=y
++CONFIG_FEATURE_MDEV_LOAD_FIRMWARE=y
++# CONFIG_MKSWAP is not set
+ # CONFIG_FEATURE_MKSWAP_UUID is not set
  CONFIG_MORE=y
 +CONFIG_FEATURE_USE_TERMIOS=y
 +CONFIG_VOLUMEID=y
@@ -1372,8 +1410,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  CONFIG_LOGGER=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.config	2015-11-23 23:35:04.000000000 +0100
-@@ -0,0 +1,652 @@
++++ ltib/config/platform/imx/.config	2015-11-26 00:19:07.000000000 +0100
+@@ -0,0 +1,649 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -1488,7 +1526,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +#
 +# Platform specific package selection
 +#
-+CONFIG_PKG_IMX_TEST=y
++# CONFIG_PKG_IMX_TEST is not set
 +# CONFIG_PKG_IMX_LIB is not set
 +# CONFIG_PKG_KOBS_NG is not set
 +CONFIG_PKG_BOOT_STREAM=y
@@ -1538,7 +1576,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_PKG_BUSYBOX=y
 +CONFIG_PKG_BUSYBOX_PRECONFIG="busybox.config"
 +# CONFIG_PKG_BUSYBOX_WANT_CF is not set
-+CONFIG_PKG_BZIP2=y
++# CONFIG_PKG_BZIP2 is not set
 +# CONFIG_PKG_CAIRO is not set
 +CONFIG_PKG_LIBSOCKETCAN=y
 +# CONFIG_PKG_CAN4LINUX is not set
@@ -1564,11 +1602,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +# CONFIG_PKG_DBUS is not set
 +# CONFIG_PKG_DBUS_GLIB is not set
 +# CONFIG_PKG_DEV is not set
-+# CONFIG_PKG_MDEV is not set
-+CONFIG_PKG_UDEV=y
-+# CONFIG_PKG_UDEV_WANT_AUTOMOUNT is not set
-+CONFIG_PKG_UDEV_WANT_NON_RAID=y
-+CONFIG_PKG_UDEV_WANT_IMX=y
++CONFIG_PKG_MDEV=y
++# CONFIG_PKG_UDEV is not set
 +# CONFIG_PKG_DEVFSD is not set
 +# CONFIG_PKG_DEV_NONE is not set
 +# CONFIG_PKG_DIFFUTILS is not set
@@ -1641,7 +1676,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +# CONFIG_PKG_HELLOWORLD is not set
 +# CONFIG_PKG_HELLOWORLD_MOD is not set
 +# CONFIG_PKG_HESIOD is not set
-+CONFIG_PKG_HOTPLUG=y
++# CONFIG_PKG_HOTPLUG is not set
 +# CONFIG_PKG_HTTPD is not set
 +# CONFIG_PKG_I2C_TOOLS is not set
 +# CONFIG_PKG_IOZONE is not set
@@ -1694,7 +1729,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_PKG_LIBTERMCAP=y
 +# CONFIG_PKG_LIBTIFF is not set
 +# CONFIG_PKG_LIBTOOL is not set
-+CONFIG_PKG_LIBUSB=y
++# CONFIG_PKG_LIBUSB is not set
 +CONFIG_PKG_LIBUSB1=y
 +# CONFIG_PKG_LIBXML2 is not set
 +# CONFIG_PKG_LINUX_ATM is not set
@@ -1842,7 +1877,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +# CONFIG_PKG_UTIL_LINUX is not set
 +# CONFIG_PKG_U_BOOT_TOOLS is not set
 +# CONFIG_PKG_UNIFDEF is not set
-+CONFIG_PKG_UNZIP=y
++# CONFIG_PKG_UNZIP is not set
 +# CONFIG_PKG_VIM is not set
 +# CONFIG_PKG_VPLAY is not set
 +# CONFIG_PKG_VSFTPD is not set
@@ -1931,7 +1966,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_SYSCFG_WANT_LOGIN_TTY=y
 +CONFIG_SYSCFG_LOGING_TTY="::respawn:/sbin/getty -L ttyAM0 115200 vt100"
 +CONFIG_SYSCFG_MODLIST=""
-+# CONFIG_SYSCFG_START_UDEV is not set
++CONFIG_SYSCFG_START_MDEV=y
 +CONFIG_SYSCFG_START_NETWORK=y
 +
 +#
@@ -2028,7 +2063,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_LTIB_RELEASE="8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config.cmd ltib/config/platform/imx/.config.cmd
 --- ltib.reference/config/platform/imx/.config.cmd	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.config.cmd	2015-11-23 23:35:04.545453406 +0100
++++ ltib/config/platform/imx/.config.cmd	2015-11-26 00:19:07.455999578 +0100
 @@ -0,0 +1,22 @@
 +deps_config := \
 +	../../userspace/defaults.lkc \
@@ -2054,8 +2089,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +$(deps_config):
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/defconfig.dev	2015-11-23 23:35:04.545453406 +0100
-@@ -0,0 +1,652 @@
++++ ltib/config/platform/imx/defconfig.dev	2015-11-26 00:19:07.459999528 +0100
+@@ -0,0 +1,649 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -2170,7 +2205,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +#
 +# Platform specific package selection
 +#
-+CONFIG_PKG_IMX_TEST=y
++# CONFIG_PKG_IMX_TEST is not set
 +# CONFIG_PKG_IMX_LIB is not set
 +# CONFIG_PKG_KOBS_NG is not set
 +CONFIG_PKG_BOOT_STREAM=y
@@ -2220,7 +2255,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_PKG_BUSYBOX=y
 +CONFIG_PKG_BUSYBOX_PRECONFIG="busybox.config"
 +# CONFIG_PKG_BUSYBOX_WANT_CF is not set
-+CONFIG_PKG_BZIP2=y
++# CONFIG_PKG_BZIP2 is not set
 +# CONFIG_PKG_CAIRO is not set
 +CONFIG_PKG_LIBSOCKETCAN=y
 +# CONFIG_PKG_CAN4LINUX is not set
@@ -2246,11 +2281,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +# CONFIG_PKG_DBUS is not set
 +# CONFIG_PKG_DBUS_GLIB is not set
 +# CONFIG_PKG_DEV is not set
-+# CONFIG_PKG_MDEV is not set
-+CONFIG_PKG_UDEV=y
-+# CONFIG_PKG_UDEV_WANT_AUTOMOUNT is not set
-+CONFIG_PKG_UDEV_WANT_NON_RAID=y
-+CONFIG_PKG_UDEV_WANT_IMX=y
++CONFIG_PKG_MDEV=y
++# CONFIG_PKG_UDEV is not set
 +# CONFIG_PKG_DEVFSD is not set
 +# CONFIG_PKG_DEV_NONE is not set
 +# CONFIG_PKG_DIFFUTILS is not set
@@ -2323,7 +2355,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +# CONFIG_PKG_HELLOWORLD is not set
 +# CONFIG_PKG_HELLOWORLD_MOD is not set
 +# CONFIG_PKG_HESIOD is not set
-+CONFIG_PKG_HOTPLUG=y
++# CONFIG_PKG_HOTPLUG is not set
 +# CONFIG_PKG_HTTPD is not set
 +# CONFIG_PKG_I2C_TOOLS is not set
 +# CONFIG_PKG_IOZONE is not set
@@ -2376,7 +2408,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_PKG_LIBTERMCAP=y
 +# CONFIG_PKG_LIBTIFF is not set
 +# CONFIG_PKG_LIBTOOL is not set
-+CONFIG_PKG_LIBUSB=y
++# CONFIG_PKG_LIBUSB is not set
 +CONFIG_PKG_LIBUSB1=y
 +# CONFIG_PKG_LIBXML2 is not set
 +# CONFIG_PKG_LINUX_ATM is not set
@@ -2524,7 +2556,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +# CONFIG_PKG_UTIL_LINUX is not set
 +# CONFIG_PKG_U_BOOT_TOOLS is not set
 +# CONFIG_PKG_UNIFDEF is not set
-+CONFIG_PKG_UNZIP=y
++# CONFIG_PKG_UNZIP is not set
 +# CONFIG_PKG_VIM is not set
 +# CONFIG_PKG_VPLAY is not set
 +# CONFIG_PKG_VSFTPD is not set
@@ -2613,7 +2645,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_SYSCFG_WANT_LOGIN_TTY=y
 +CONFIG_SYSCFG_LOGING_TTY="::respawn:/sbin/getty -L ttyAM0 115200 vt100"
 +CONFIG_SYSCFG_MODLIST=""
-+# CONFIG_SYSCFG_START_UDEV is not set
++CONFIG_SYSCFG_START_MDEV=y
 +CONFIG_SYSCFG_START_NETWORK=y
 +
 +#
@@ -2811,475 +2843,6 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +          This package provides the Freescale Gstreamer based plugins. 
 +		 
  endmenu
-diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx28.cf ltib/config/platform/imx/imx28.cf
---- ltib.reference/config/platform/imx/imx28.cf	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/imx28.cf	2015-11-23 23:35:04.549453406 +0100
-@@ -41,7 +41,7 @@
- CONFIG_PKG_BASE_LIBS=y
- CONFIG_PKG_LIBC_WANT_SHARED_LIBS=y
- # CONFIG_PKG_LIBC_WANT_CRT_FILES is not set
--# CONFIG_PKG_LIBC_WANT_HEADERS1 is not set
-+CONFIG_PKG_LIBC_WANT_HEADERS1=y
- # CONFIG_PKG_LIBC_WANT_STATIC_LIBS is not set
- # CONFIG_PKG_LIBC_WANT_C_LOCALES is not set
- CONFIG_PKG_CXX_WANT_SHARED_LIBS=y
-@@ -55,16 +55,18 @@
- #
- # Toolchain selection.
- #
--TOOLCHAIN_ARMEABI_FSL_GCC_MULTILIB=y
--# CONFIG_TOOLCHAIN_ARMEABI_GLIBC1 is not set
-+# CONFIG_TOOLCHAIN_ARMEABI_FSL_GCC_MULTILIB is not set
- # CONFIG_TOOLCHAIN_ARMEABI_CODE_SOURCERY is not set
--# CONFIG_TOOLCHAIN_ARMEABI_CUSTOM is not set
--CONFIG_TOOLCHAIN="gcc-4.4.4-glibc-2.11.1-multilib-1.0-1.i386.rpm"
--CONFIG_TOOLCHAIN_PATH="/opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi"
-+# CONFIG_TOOLCHAIN_ARMEABI_GLIBC1 is not set
-+CONFIG_TOOLCHAIN_ARMEABI_CUSTOM=y
-+CONFIG_CUSTOM_TOOLCHAIN=y
-+CONFIG_TOOLCHAIN_PATH="/opt/CodeSourcery"
-+CONFIG_CUSTOM_TOOLCHAIN_PREFIX="arm-none-linux-gnueabi-"
- CONFIG_TOOLCHAIN_PREFIX="arm-none-linux-gnueabi-"
-+CONFIG_TOOLCHAIN_CFLAGS="-O2 -msoft-float -fsigned-char"
- 
- #
--# Choose your bootloader
-+# Choose your bootloader for U-Boot
- #
- CONFIG_BOOTLOADER_U_BOOT=y
- # CONFIG_BOOTLOADER_GIT is not set
-@@ -72,7 +74,7 @@
- # CONFIG_BOOTLOADER_NONE is not set
- 
- #
--# Choose your board
-+# Choose your board for u-boot
- #
- CONFIG_PKG_U_BOOT="u-boot"
- CONFIG_PKG_U_BOOT_CONFIG_TYPE="mx28_evk_config"
-@@ -84,6 +86,7 @@
- # Choose your Kernel
- #
- CONFIG_KERNEL_35=y
-+# CONFIG_KERNEL_31 is not set
- # CONFIG_KERNEL_28 is not set
- # CONFIG_KERNEL_GIT is not set
- # CONFIG_KERNEL_DIR_BUILD is not set
-@@ -94,7 +97,8 @@
- CONFIG_PKG_KERNEL_WANT_HEADERS=y
- # CONFIG_PKG_KERNEL_WANT_CF is not set
- CONFIG_PKG_KERNEL_LEAVESRC=y
--CONFIG_PKG_KERNEL_PRECONFIG="imx28evk_defconfig"
-+# CONFIG_PKG_KERNEL_UPDATER is not set
-+CONFIG_PKG_KERNEL_PRECONFIG="kernel-2.6.35-imx28-tpac.config"
- CONFIG_DISTRO="dist/lfs-5.1"
- 
- #
-@@ -108,14 +112,30 @@
- #
- # Platform specific package selection
- #
--# CONFIG_PKG_IMX_TEST is not set
-+CONFIG_PKG_IMX_TEST=y
- # CONFIG_PKG_IMX_LIB is not set
-+# CONFIG_PKG_KOBS_NG is not set
-+CONFIG_PKG_BOOT_STREAM=y
-+CONFIG_PKG_XENOMAI=y
-+# CONFIG_PKG_BOOT_STREAM_MDDR is not set
-+CONFIG_PKG_BOOT_STREAM_MEMTYPE_PRECONFIG="MEM_DDR1"
-+CONFIG_PKG_BOOT_STREAM_CMDLINE1="noinitrd console=ttyAM0,115200 ubi.mtd=1 root=ubi0:rootfs0 rootfstype=ubifs ro gpmi lpj=1130496"
-+CONFIG_PKG_BOOT_STREAM_CMDLINE2="noinitrd console=ttyAM0,115200 ubi.mtd=1 root=ubi0:rootfs0 rootfstype=ubifs ro gpmi lpj=1130496 quiet"
-+CONFIG_PKG_BOOT_STREAM_CMDLINE3="noinitrd console=ttyAM0,115200 fec_mac=00:08:02:6B:A3:1A root=/dev/nfs nfsroot=10.193.100.213:/data/rootfs_home/rootfs_mx28 rw ip=dhcp rootwait gpmi lpj=1130496 quiet"
-+CONFIG_PKG_BOOT_STREAM_CMDLINE4="noinitrd console=ttyAM0,115200 root=/dev/ram0 rdinit=/sbin/init fec_mac=00:08:02:6B:A3:1A gpmi lpj=1130496 quiet"
- # CONFIG_PKG_LTP_IMX is not set
-+# CONFIG_PKG_UUC is not set
-+# CONFIG_PKG_ATHEROS_WIFI is not set
- 
- #
- # Freescale Multimedia Plugins/Codecs
- #
- # CONFIG_PKG_FSL_MMCODECLIB is not set
-+# CONFIG_PKG_FSL_MM_MS_CODECLIB is not set
-+# CONFIG_PKG_FSL_MM_AACPDEC_CODECLIB is not set
-+# CONFIG_PKG_FSL_MM_MP3ENC_CODECLIB is not set
-+# CONFIG_PKG_FSL_MM_AC3DEC_CODECLIB is not set
-+# CONFIG_PKG_FSL_MM_FLV_CODECLIB is not set
- # CONFIG_PKG_FSL_EXCLUDED_MMCODECLIB is not set
- # CONFIG_PKG_GST_FSL_PLUGIN is not set
- 
-@@ -135,16 +155,18 @@
- # CONFIG_PKG_BLUEZ_HCIDUMP is not set
- # CONFIG_PKG_BLUEZ_LIBS is not set
- # CONFIG_PKG_BLUEZ_UTILS is not set
--# CONFIG_PKG_BOA is not set
-+CONFIG_PKG_BOA=y
-+# CONFIG_PKG_MECT_BOA_GFG is not set
- # CONFIG_PKG_BONNIE_PLUS_PLUS is not set
- # CONFIG_PKG_BRIDGE_UTILS is not set
- CONFIG_PKG_BUSYBOX=y
- CONFIG_PKG_BUSYBOX_PRECONFIG="busybox.config"
- # CONFIG_PKG_BUSYBOX_WANT_CF is not set
--# CONFIG_PKG_BZIP2 is not set
-+CONFIG_PKG_BZIP2=y
- # CONFIG_PKG_CAIRO is not set
-+CONFIG_PKG_LIBSOCKETCAN=y
- # CONFIG_PKG_CAN4LINUX is not set
--# CONFIG_PKG_CANTEST is not set
-+CONFIG_PKG_CANTEST=y
- # CONFIG_PKG_CCACHE is not set
- # CONFIG_PKG_CHEESE is not set
- # CONFIG_PKG_CLAMAV is not set
-@@ -158,7 +180,9 @@
- # CONFIG_PKG_CURL is not set
- # CONFIG_PKG_DAEMONIZER is not set
- # CONFIG_PKG_DEVMEM2 is not set
--# CONFIG_PKG_DHCP is not set
-+CONFIG_PKG_DHCP=y
-+# CONFIG_PKG_DHCP_WANT_SERVER is not set
-+CONFIG_PKG_DHCP_WANT_CLIENT=y
- # CONFIG_PKG_DB1 is not set
- # CONFIG_PKG_DB4 is not set
- # CONFIG_PKG_DBUS is not set
-@@ -175,10 +199,15 @@
- # CONFIG_PKG_DIRECTFB is not set
- # CONFIG_PKG_DISTCC is not set
- # CONFIG_PKG_DOSFSTOOLS is not set
--# CONFIG_PKG_DROPBEAR is not set
-+CONFIG_PKG_DROPBEAR=y
-+CONFIG_PKG_SFTP_SERVER=y
-+CONFIG_PKG_DROPBEAR_WANT_URANDOM_DEV=y
-+CONFIG_PKG_DROPBEAR_WANT_NO_REV_DNS=y
-+CONFIG_PKG_DROPBEAR_WANT_NO_X11FWD=y
-+# CONFIG_PKG_DROPBEAR_WANT_HACKABLE_KEY is not set
- # CONFIG_PKG_DTC is not set
- # CONFIG_PKG_DT_D is not set
--# CONFIG_PKG_E2FSPROGS is not set
-+CONFIG_PKG_E2FSPROGS=y
- 
- #
- # Enlightenment window manager packages
-@@ -189,11 +218,12 @@
- # CONFIG_PKG_EEL is not set
- # CONFIG_PKG_ENCHANT is not set
- # CONFIG_PKG_EOG is not set
-+# CONFIG_PKG_EPDFVIEW is not set
- # CONFIG_PKG_ETHTOOL is not set
- # CONFIG_PKG_EVOLUTION is not set
- # CONFIG_PKG_EVOLUTION_DATA_SERVER is not set
- # CONFIG_PKG_EVTEST is not set
--# CONFIG_PKG_EXPAT is not set
-+CONFIG_PKG_EXPAT=y
- # CONFIG_PKG_FAAD2 is not set
- # CONFIG_PKG_FAKEROOT is not set
- CONFIG_PKG_FAKE_PROVIDES=y
-@@ -205,8 +235,8 @@
- # CONFIG_PKG_FINDUTILS is not set
- # CONFIG_PKG_FLEX is not set
- # CONFIG_PKG_FMTOOLS is not set
--# CONFIG_PKG_FONTCONFIG is not set
--# CONFIG_PKG_FREETYPE is not set
-+CONFIG_PKG_FONTCONFIG=y
-+CONFIG_PKG_FREETYPE=y
- # CONFIG_PKG_GAWK is not set
- # CONFIG_PKG_GCONF_DBUS is not set
- # CONFIG_PKG_GDBM is not set
-@@ -216,7 +246,7 @@
- # CONFIG_PKG_GEN_INIT_CPIO is not set
- # CONFIG_PKG_GETTEXT is not set
- # CONFIG_PKG_GIT is not set
--# CONFIG_PKG_GLIB2 is not set
-+CONFIG_PKG_GLIB2=y
- # CONFIG_PKG_GMP is not set
- # CONFIG_PKG_GNOME_DESKTOP is not set
- # CONFIG_PKG_GNOME_MIME_DATA is not set
-@@ -240,7 +270,7 @@
- # CONFIG_PKG_I2C_TOOLS is not set
- # CONFIG_PKG_IOZONE is not set
- # CONFIG_PKG_INPUT_UTILS is not set
--# CONFIG_PKG_IPROUTE is not set
-+CONFIG_PKG_IPROUTE=y
- # CONFIG_PKG_INETUTILS is not set
- # CONFIG_PKG_IPERF is not set
- # CONFIG_PKG_OPENSWAN is not set
-@@ -278,16 +308,18 @@
- # CONFIG_PKG_LIBJPEG is not set
- # CONFIG_PKG_LIBELF is not set
- # CONFIG_PKG_LIBNET is not set
-+# CONFIG_PKG_LIBOGG is not set
- # CONFIG_PKG_LIBPCAP is not set
- # CONFIG_PKG_LIBPNG is not set
- # CONFIG_PKG_LIBOIL is not set
- # CONFIG_PKG_LIBRSVG is not set
- # CONFIG_PKG_LIBSOUP is not set
- # CONFIG_PKG_LIBTASN1 is not set
--# CONFIG_PKG_LIBTERMCAP is not set
-+CONFIG_PKG_LIBTERMCAP=y
- # CONFIG_PKG_LIBTIFF is not set
- # CONFIG_PKG_LIBTOOL is not set
--# CONFIG_PKG_LIBUSB is not set
-+CONFIG_PKG_LIBUSB=y
-+CONFIG_PKG_LIBUSB1=y
- # CONFIG_PKG_LIBXML2 is not set
- # CONFIG_PKG_LINUX_ATM is not set
- # CONFIG_PKG_LINUX_WLAN is not set
-@@ -297,8 +329,8 @@
- # CONFIG_PKG_LTP is not set
- # CONFIG_PKG_LMBENCH is not set
- # CONFIG_PKG_LM_SENSORS is not set
--# CONFIG_PKG_LRZSZ is not set
--# CONFIG_PKG_LZO is not set
-+CONFIG_PKG_LRZSZ=y
-+CONFIG_PKG_LZO=y
- # CONFIG_PKG_M4 is not set
- # CONFIG_PKG_MADPLAY is not set
- # CONFIG_PKG_MAKE is not set
-@@ -315,16 +347,18 @@
- # CONFIG_PKG_MIITOOL is not set
- # CONFIG_PKG_MINICOM is not set
- CONFIG_PKG_MODEPS=y
-+CONFIG_PKG_LAST_KERNEL_BUILD=y
- # CONFIG_PKG_MODUTILS is not set
- # CONFIG_PKG_MODULE_INIT_TOOLS is not set
- CONFIG_MODUTILS_NONE=y
- # CONFIG_PKG_MPLAYER is not set
- # CONFIG_PKG_MP3PLAY is not set
--# CONFIG_PKG_MTD_UTILS is not set
-+CONFIG_PKG_MTD_UTILS=y
- # CONFIG_PKG_MUX_SERVER is not set
--# CONFIG_PKG_MYSQL is not set
-+CONFIG_PKG_MYSQL=y
- # CONFIG_PKG_NAUTILUS is not set
--# CONFIG_PKG_NCURSES is not set
-+CONFIG_PKG_NCURSES=y
-+CONFIG_PKG_NCURSES_WANT_REDUCED_SET=y
- # CONFIG_PKG_NET_SNMP is not set
- # CONFIG_PKG_NET_TOOLS is not set
- # CONFIG_PKG_NETCAT is not set
-@@ -333,6 +367,7 @@
- # CONFIG_PKG_NSS_MDNS is not set
- # CONFIG_PKG_NTPCLIENT is not set
- # CONFIG_PKG_OPENOBEX is not set
-+# CONFIG_PKG_OPENCV is not set
- # CONFIG_PKG_OPENSSH is not set
- # CONFIG_PKG_OPENSSL is not set
- # CONFIG_PKG_OPROFILE is not set
-@@ -347,15 +382,27 @@
- # CONFIG_PKG_PIDENTD is not set
- # CONFIG_PKG_PKGCONFIG is not set
- # CONFIG_PKG_PLAY is not set
-+# CONFIG_PKG_POPPLER is not set
- # CONFIG_PKG_POPT is not set
- # CONFIG_PKG_PORTMAP is not set
--# CONFIG_PKG_PPP is not set
-+CONFIG_PKG_PPP=y
-+# CONFIG_PKG_PPP_WANT_FILTER is not set
- # CONFIG_PKG_PROCINFO is not set
- # CONFIG_PKG_PROCPS is not set
- # CONFIG_PKG_PSMISC is not set
- # CONFIG_PKG_PYTHON is not set
- 
- #
-+# Qt
-+#
-+# CONFIG_QT_NONE is not set
-+CONFIG_PKG_QT_EMBEDDED=y
-+# CONFIG_PKG_QT_X11 is not set
-+# CONFIG_PKG_QT_PHONON is not set
-+# CONFIG_PKG_QWT is not set
-+CONFIG_PKG_QWT_MULTIAXES=y
-+
-+#
- # Qtopia
- #
- CONFIG_QTOPIA_NONE=y
-@@ -363,6 +410,12 @@
- # CONFIG_PKG_QTOPIA_4 is not set
- 
- #
-+# Cellular USB modem support
-+#
-+CONFIG_PKG_USB_MODESWITCH=y
-+CONFIG_PKG_USB_MODESWITCH_DATA=y
-+
-+#
- # Applications
- #
- 
-@@ -372,7 +425,7 @@
- # CONFIG_PKG_READLINE is not set
- # CONFIG_PKG_RPM is not set
- # CONFIG_PKG_RNG_TOOLS is not set
--# CONFIG_PKG_RSYNC is not set
-+CONFIG_PKG_RSYNC=y
- # CONFIG_PKG_RT_TESTS is not set
- # CONFIG_PKG_RTCTEST is not set
- # CONFIG_PKG_SAMBA is not set
-@@ -387,7 +440,7 @@
- # CONFIG_PKG_SKELL_WANT_TERMINFO is not set
- # CONFIG_PKG_SPARSE is not set
- # CONFIG_PKG_STATSERIAL is not set
--# CONFIG_PKG_SQLITE is not set
-+CONFIG_PKG_SQLITE=y
- # CONFIG_PKG_STRACE is not set
- CONFIG_PKG_SYSCONFIG=y
- # CONFIG_PKG_SYSFSUTILS is not set
-@@ -406,14 +459,14 @@
- # CONFIG_PKG_TINYPROXY is not set
- # CONFIG_PKG_TOTEM is not set
- # CONFIG_PKG_TOTEM_PL_PARSER is not set
--# CONFIG_PKG_TSLIB is not set
-+CONFIG_PKG_TSLIB=y
- # CONFIG_PKG_TUNCTL is not set
- # CONFIG_PKG_USBUTILS is not set
- # CONFIG_PKG_UCLINUX_CKSUM is not set
- # CONFIG_PKG_UTIL_LINUX is not set
- # CONFIG_PKG_U_BOOT_TOOLS is not set
- # CONFIG_PKG_UNIFDEF is not set
--# CONFIG_PKG_UNZIP is not set
-+CONFIG_PKG_UNZIP=y
- # CONFIG_PKG_VIM is not set
- # CONFIG_PKG_VPLAY is not set
- # CONFIG_PKG_VSFTPD is not set
-@@ -467,6 +520,8 @@
- # CONFIG_PKG_LIBXFT is not set
- # CONFIG_PKG_LIBXRANDR is not set
- # CONFIG_PKG_LIBXRENDER is not set
-+# CONFIG_PKG_LIBXFIXES is not set
-+# CONFIG_PKG_LIBXDAMAGE is not set
- # CONFIG_PKG_LIBPCIACCESS is not set
- # CONFIG_PKG_FONTUTIL is not set
- # CONFIG_PKG_LIBICE is not set
-@@ -482,14 +537,12 @@
- # CONFIG_PKG_XTERM is not set
- # CONFIG_PKG_YAFFS_UTILS is not set
- # CONFIG_PKG_ZAPTEL is not set
--# CONFIG_PKG_ZLIB is not set
-+CONFIG_PKG_ZLIB=y
-+CONFIG_PKG_ZIP30=y
- 
- #
- # Additional Package selection
- #
--# CONFIG_PKG_NBENCH_BYTE is not set
--# CONFIG_PKG_WHETSTONE is not set
--# CONFIG_PKG_DHRYSTONE is not set
- 
- #
- # Target System Configuration
-@@ -498,16 +551,59 @@
- #
- # Options
- #
--CONFIG_SYSCFG_HOSTNAME="freescale"
-+CONFIG_SYSCFG_HOSTNAME="mect"
- CONFIG_SYSCFG_WANT_LOGIN_TTY=y
- CONFIG_SYSCFG_LOGING_TTY="::respawn:/sbin/getty -L ttyAM0 115200 vt100"
- CONFIG_SYSCFG_MODLIST=""
--CONFIG_SYSCFG_START_UDEV=y
--# CONFIG_SYSCFG_START_NETWORK is not set
--# CONFIG_SYSCFG_SETTIME is not set
-+# CONFIG_SYSCFG_START_UDEV is not set
-+CONFIG_SYSCFG_START_NETWORK=y
-+
-+#
-+# Network setup
-+#
-+
-+#
-+# 
-+#
-+CONFIG_SYSCFG_IFACE0=y
-+CONFIG_SYSCFG_NET_INTERFACE0="eth0"
-+# CONFIG_SYSCFG_DHCPC0 is not set
-+CONFIG_SYSCFG_IPADDR0="192.168.5.211"
-+CONFIG_SYSCFG_NET_MASK0="255.255.255.0"
-+CONFIG_SYSCFG_NET_BROADCAST0="192.168.0.255"
-+CONFIG_SYSCFG_NET_GATEWAY0="192.168.5.1"
-+CONFIG_SYSCFG_NAMESERVER0="192.168.5.1"
-+
-+#
-+# 
-+#
-+# CONFIG_SYSCFG_IFACE1 is not set
-+
-+#
-+# 
-+#
-+# CONFIG_SYSCFG_IFACE2 is not set
-+
-+#
-+# 
-+#
-+# CONFIG_SYSCFG_IFACE3 is not set
-+
-+#
-+# 
-+#
-+# CONFIG_SYSCFG_IFACE4 is not set
-+CONFIG_SYSCFG_SETTIME=y
- # CONFIG_SYSCFG_START_SYSLOG is not set
- CONFIG_SYSCFG_START_INETD=y
- CONFIG_SYSCFG_INETD_ARGS=""
-+CONFIG_SYSCFG_START_DROPBEAR_SSH=y
-+CONFIG_SYSCFG_DROPBEAR_ARGS=""
-+CONFIG_SYSCFG_START_BOA=y
-+CONFIG_SYSCFG_BOA_ARGS="-c /etc"
-+CONFIG_SYSCFG_START_TELNET=y
-+CONFIG_SYSCFG_START_AUTOEXEC=y
-+CONFIG_SYSCFG_START_S10SETUP=y
- 
- #
- # Target Image Generation
-@@ -520,35 +616,19 @@
- #
- # Choose your root filesystem image type
- #
--CONFIG_DEPLOYMENT_JFFS2=y
-+# CONFIG_DEPLOYMENT_JFFS2 is not set
-+# CONFIG_DEPLOYMENT_UBIFS is not set
- # CONFIG_DEPLOYMENT_RAMDISK is not set
- # CONFIG_DEPLOYMENT_CRAMFS is not set
- # CONFIG_DEPLOYMENT_INITRAMFS is not set
- # CONFIG_DEPLOYMENT_ROMFS is not set
--# CONFIG_DEPLOYMENT_NFS is not set
--CONFIG_SYSCFG_DEPLOYMENT_STYLE="JFFS2"
-+CONFIG_DEPLOYMENT_NFS=y
-+CONFIG_SYSCFG_DEPLOYMENT_STYLE="NFS"
- # CONFIG_WANT_POST_BUILD_SCRIPT is not set
--CONFIG_DEPLOYMENT_ERASE_BLOCK_SIZE="512"
--# CONFIG_SYSCFG_READONLY_FS is not set
--CONFIG_SYSCFG_TMPFS_SIZE="512k"
-+CONFIG_SYSCFG_READONLY_FS=y
-+CONFIG_SYSCFG_TMPFS_SIZE="4096k"
- CONFIG_SYSCFG_RAM_DIRS="/tmp /var"
--CONFIG_DEPLOYMENT_ROOTFS_DIR=""
--# CONFIG_DEPLOYMENT_ROOTFS_KEEPSTAGE is not set
--# CONFIG_DEPLOYMENT_HL2SL is not set
--CONFIG_DEPLOYMENT_RM_DOCS=y
--CONFIG_DEPLOYMENT_RM_BOOT=y
--# CONFIG_DEPLOYMENT_RM_USR_SRC is not set
--# CONFIG_DEPLOYMENT_RM_USR_INCLUDE is not set
--CONFIG_DEPLOYMENT_RM_LOCALES=y
--CONFIG_DEPLOYMENT_RM_USER_DIRS="/opt/qt /usr/share/man /usr/man /u /usr/arm-linux /usr/lib/fonts"
--CONFIG_DEPLOYMENT_RM_USER_FILES="/usr/lib/libqte* /usr/include/q* /usr/include/jri*.h /usr/include/npapi.h /usr/include/npupp.h"
--CONFIG_DEPLOYMENT_RM_STATIC_LIBS=y
--CONFIG_DEPLOYMENT_RM_RPMDB="/var/lib/rpm"
--CONFIG_DEPLOYMENT_STRIP=y
--# CONFIG_DEPLOYMENT_STRIP_MORE is not set
--# CONFIG_DEPLOYMENT_PADDING_EN is not set
--CONFIG_DEPLOYMENT_PAGESIZE_KB="4"
--CONFIG_ERASE_BLOCK_SIZE="512"
-+CONFIG_ERASE_BLOCK_SIZE="64"
- CONFIG_CAP_UCLIBC=y
- CONFIG_CAP_GLIBC=y
- CONFIG_CAP_LFS_5_1=y
-@@ -568,5 +648,5 @@
- CONFIG_SYSCFG_LOADDTBADDR="0x9F0000"
- CONFIG_SYSCFG_LOADRAMADDR="0xB00000"
- CONFIG_SYSCFG_CUTARG="zImage"
--CONFIG_CAP_FSL_INT=y
-+CONFIG_CAP_FSL_EXT=y
- CONFIG_LTIB_RELEASE="8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx28_updater.cf ltib/config/platform/imx/imx28_updater.cf
 --- ltib.reference/config/platform/imx/imx28_updater.cf	2013-01-09 04:58:38.000000000 +0100
 +++ ltib/config/platform/imx/imx28_updater.cf	2015-11-23 23:35:04.549453406 +0100
@@ -16643,8 +16206,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -CONFIG_PKG_PYTHON=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.tmpconfig.h	2015-11-23 23:35:04.569453406 +0100
-@@ -0,0 +1,653 @@
++++ ltib/config/platform/imx/.tmpconfig.h	2015-11-26 00:19:07.455999578 +0100
+@@ -0,0 +1,650 @@
 +/*
 + * Automatically generated C config: don't edit
 + * LTIB version: 8.1.2
@@ -16760,7 +16323,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +/*
 + * Platform specific package selection
 + */
-+#define CONFIG_PKG_IMX_TEST 1
++#undef CONFIG_PKG_IMX_TEST
 +#undef CONFIG_PKG_IMX_LIB
 +#undef CONFIG_PKG_KOBS_NG
 +#define CONFIG_PKG_BOOT_STREAM 1
@@ -16810,7 +16373,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +#define CONFIG_PKG_BUSYBOX 1
 +#define CONFIG_PKG_BUSYBOX_PRECONFIG "busybox.config"
 +#undef CONFIG_PKG_BUSYBOX_WANT_CF
-+#define CONFIG_PKG_BZIP2 1
++#undef CONFIG_PKG_BZIP2
 +#undef CONFIG_PKG_CAIRO
 +#define CONFIG_PKG_LIBSOCKETCAN 1
 +#undef CONFIG_PKG_CAN4LINUX
@@ -16836,11 +16399,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +#undef CONFIG_PKG_DBUS
 +#undef CONFIG_PKG_DBUS_GLIB
 +#undef CONFIG_PKG_DEV
-+#undef CONFIG_PKG_MDEV
-+#define CONFIG_PKG_UDEV 1
-+#undef CONFIG_PKG_UDEV_WANT_AUTOMOUNT
-+#define CONFIG_PKG_UDEV_WANT_NON_RAID 1
-+#define CONFIG_PKG_UDEV_WANT_IMX 1
++#define CONFIG_PKG_MDEV 1
++#undef CONFIG_PKG_UDEV
 +#undef CONFIG_PKG_DEVFSD
 +#undef CONFIG_PKG_DEV_NONE
 +#undef CONFIG_PKG_DIFFUTILS
@@ -16913,7 +16473,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +#undef CONFIG_PKG_HELLOWORLD
 +#undef CONFIG_PKG_HELLOWORLD_MOD
 +#undef CONFIG_PKG_HESIOD
-+#define CONFIG_PKG_HOTPLUG 1
++#undef CONFIG_PKG_HOTPLUG
 +#undef CONFIG_PKG_HTTPD
 +#undef CONFIG_PKG_I2C_TOOLS
 +#undef CONFIG_PKG_IOZONE
@@ -16966,7 +16526,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +#define CONFIG_PKG_LIBTERMCAP 1
 +#undef CONFIG_PKG_LIBTIFF
 +#undef CONFIG_PKG_LIBTOOL
-+#define CONFIG_PKG_LIBUSB 1
++#undef CONFIG_PKG_LIBUSB
 +#define CONFIG_PKG_LIBUSB1 1
 +#undef CONFIG_PKG_LIBXML2
 +#undef CONFIG_PKG_LINUX_ATM
@@ -17114,7 +16674,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +#undef CONFIG_PKG_UTIL_LINUX
 +#undef CONFIG_PKG_U_BOOT_TOOLS
 +#undef CONFIG_PKG_UNIFDEF
-+#define CONFIG_PKG_UNZIP 1
++#undef CONFIG_PKG_UNZIP
 +#undef CONFIG_PKG_VIM
 +#undef CONFIG_PKG_VPLAY
 +#undef CONFIG_PKG_VSFTPD
@@ -17203,7 +16763,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +#define CONFIG_SYSCFG_WANT_LOGIN_TTY 1
 +#define CONFIG_SYSCFG_LOGING_TTY "::respawn:/sbin/getty -L ttyAM0 115200 vt100"
 +#define CONFIG_SYSCFG_MODLIST ""
-+#undef CONFIG_SYSCFG_START_UDEV
++#define CONFIG_SYSCFG_START_MDEV 1
 +#define CONFIG_SYSCFG_START_NETWORK 1
 +
 +/*

@@ -27,6 +27,7 @@ ALL_TARGETS = \
 	splash \
 	cgic_work \
 	ATCMcontrol_RunTimeSystem \
+	#plugins TODO: Fix configuration/build \
 
 ifneq ($(wildcard factory_test/trunk/.*),)
 ALL_TARGETS += factory_test
@@ -118,6 +119,34 @@ setup_time_install:
 .PHONY: setup_time_clean
 setup_time_clean: PRJDIR := $(CURDIR)/setup_time
 setup_time_clean:
+	test -n $(PRJDIR)
+	-test -d $(PRJDIR) && $(MAKE) -C $(PRJDIR) distclean
+
+# ##########################
+#
+# plugins
+#
+
+.PHONY: plugins
+plugins: plugins_clean plugins_build plugins_install
+
+.PHONY: plugins_build
+plugins_build: PRJDIR := $(CURDIR)/mect_plugins
+plugins_build:
+	test -n $(PRJDIR)
+	cd $(PRJDIR); $(QMAKE) QT_ROOTFS=$(RFSDIR) RFSDIR=$(RFSDIR) -spec qws/linux-g++-mx qt_atcm.pro
+	#$(MAKE) $(SMP_FLAG) -C $(PRJDIR)
+	$(MAKE) -C $(PRJDIR)
+
+.PHONY: plugins_install
+plugins_install: PRJDIR := $(CURDIR)/mect_plugins
+plugins_install:
+	test -n $(PRJDIR)
+	install -D -m 0755 $(PRJDIR)/plugins $(LDIR)/root/plugins
+
+.PHONY: plugins_clean
+plugins_clean: PRJDIR := $(CURDIR)/mect_plugins
+plugins_clean:
 	test -n $(PRJDIR)
 	-test -d $(PRJDIR) && $(MAKE) -C $(PRJDIR) distclean
 

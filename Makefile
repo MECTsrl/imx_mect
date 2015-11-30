@@ -13,8 +13,12 @@ BUILD_TARGET_TPAC1007_480x272 := TPAC1007_480x272
 BUILD_TARGET_TPAC1008_800x600 := TPAC1008_800x600
 BUILD_QTVERSION = $(QT_VERSION)
 BUILD_QWTVERSION = $(QWT_VERSION)
+
 #BUILD_ATCMCRT_VER := master
 BUILD_ATCMCRT_VER := config-for-ltib
+
+BUILD_PLUGINSCRT_VER := mect_suite_2.0
+
 
 QT_VERSION := 4.8.5
 QWT_VERSION := 6.1-multiaxes
@@ -167,6 +171,7 @@ COMMON_RFSPKGS := \
 	tslib-rfs-1.0-3.$(TARGET_ARCH).rpm \
 	usb-modeswitch-data-rfs-20150627-1.$(TARGET_ARCH).rpm \
 	usb-modeswitch-rfs-2.2.5-1.$(TARGET_ARCH).rpm \
+	wpa_supplicant-rfs-0.5.9-1.$(TARGET_ARCH).rpm \
 	xenomai-rfs-2.6.0-1.$(TARGET_ARCH).rpm \
 	zip-rfs-3.0.0-0.$(TARGET_ARCH).rpm \
 	zlib-rfs-1.2.3-2.$(TARGET_ARCH).rpm \
@@ -422,6 +427,9 @@ projects:
 	test -n '$(BUILD_ATCMCRT_VER)'
 	cd projects; test -d ATCMcontrol_RunTimeSystem || git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem
 	cd projects; if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git checkout $(BUILD_ATCMCRT_VER); fi
+	test -n '$(BUILD_PLUGINSCRT_VER)'
+	cd projects; test -d mect_plugins || git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins
+	cd projects; if test -d mect_plugins; then cd mect_plugins; git checkout $(BUILD_PLUGINSCRT_VER); fi
 	$(MAKE) -C projects ROOTFS='$(LTIB_RFSDIR)' CC_VERSION='' CC_DIRECTORY='$(CSXCDIR)' CC_RADIX='arm-none-linux-gnueabi' RELEASE='$(BUILD_RELEASE)' RPMBASEDIR='$(RPMBASEDIR)' QT_INSTALL_DIR='$(QT_INSTALL_DIR)' clean all
 
 # Build the default target image.

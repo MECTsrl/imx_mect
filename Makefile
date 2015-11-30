@@ -1,3 +1,5 @@
+export LC_ALL = C
+
 # Default target image.
 # NOTE: uncomment only one.
 DEFAULT_IMAGE := TPAC1007_480x272

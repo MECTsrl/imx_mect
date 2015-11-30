@@ -2155,6 +2155,77 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
+diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb.spec ltib/dist/lfs-5.1/libusb/libusb.spec
+--- ltib.reference/dist/lfs-5.1/libusb/libusb.spec	2013-01-09 04:58:38.000000000 +0100
++++ ltib/dist/lfs-5.1/libusb/libusb.spec	2015-11-28 11:57:32.807155496 +0100
+@@ -11,15 +11,35 @@
+ Source          : %{name}-%{version}.tar.gz
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed libusb for root file system requirements.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System Environment/Libraries
++AutoReqProv     : no
++
++%Description rfs
++libusb package contents restricted to just the files that are
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup 
+ libtoolize --copy --force
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ # note: I tried version 0.1.10a buy this requires a c++ compiler
+ 
+ # configure can't figure this out in my environment (cross)
+@@ -33,13 +53,28 @@
+ make
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+-rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}%{_prefix}/include, d;
++    /\.l\?a$/ d;
++' all_files.lst > rfs_files.lst
+ 
+ %Clean
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb1.spec ltib/dist/lfs-5.1/libusb/libusb1.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb1.spec	1970-01-01 01:00:00.000000000 +0100
 +++ ltib/dist/lfs-5.1/libusb/libusb1.spec	2015-11-28 11:57:27.711219561 +0100
@@ -2231,80 +2302,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb.spec ltib/dist/lfs-5.1/libusb/libusb.spec
---- ltib.reference/dist/lfs-5.1/libusb/libusb.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/libusb/libusb.spec	2015-11-28 11:57:32.807155496 +0100
-@@ -11,15 +11,35 @@
- Source          : %{name}-%{version}.tar.gz
- BuildRoot       : %{_tmppath}/%{name}
- Prefix          : %{pfx}
-+AutoReqProv     : no
-+
-+
-+%Package rfs
-+Summary         : Trimmed libusb for root file system requirements.
-+Vendor          : MECT s.r.l.
-+Packager        : Mihai Lazarescu
-+Group           : System Environment/Libraries
-+AutoReqProv     : no
-+
-+%Description rfs
-+libusb package contents restricted to just the files that are
-+needed at run time on the target.
-+
- 
- %Description
- %{summary}
- 
- %Prep
-+export LC_ALL
-+LC_ALL=C
-+
- %setup 
- libtoolize --copy --force
- 
- %Build
-+export LC_ALL
-+LC_ALL=C
-+
- # note: I tried version 0.1.10a buy this requires a c++ compiler
- 
- # configure can't figure this out in my environment (cross)
-@@ -33,13 +53,28 @@
- make
- 
- %Install
-+export LC_ALL
-+LC_ALL=C
-+
- rm -rf $RPM_BUILD_ROOT
- make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
--rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
-+
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_prefix}/include, d;
-+    /\.l\?a$/ d;
-+' all_files.lst > rfs_files.lst
- 
- %Clean
-+export LC_ALL
-+LC_ALL=C
-+
- rm -rf $RPM_BUILD_ROOT
- 
--%Files
-+
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
- %defattr(-,root,root)
--%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
 --- ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec	2015-11-28 11:53:44.354027541 +0100
++++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec	2015-11-30 13:40:25.043640944 +0100
 @@ -12,36 +12,68 @@
  Patch0          : lrzsz_0.12.21-4.diff
  BuildRoot       : %{_tmppath}/%{name}
@@ -4779,77 +4779,6 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
---- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	2015-11-28 11:54:31.533434415 +0100
-@@ -0,0 +1,67 @@
-+%define pfx /opt/freescale/rootfs/%{_target_cpu}
-+
-+Summary         : Data for the USB Modeswitch tool
-+Name            : usb-modeswitch-data
-+Version         : 20150627
-+Release         : 1
-+License         : LGPL
-+Vendor          : MECT
-+Packager        : Mihai Lazarescu
-+Group           : Applications/System
-+Source          : %{name}-%{version}.tar.bz2
-+BuildRoot       : %{_tmppath}/%{name}
-+Prefix          : %{pfx}
-+AutoReqProv     : no
-+
-+
-+%Package rfs
-+Summary         : Trimmed down to just the run time files
-+Vendor          : MECT s.r.l.
-+Packager        : Mihai Lazarescu
-+Group           : Applications/System
-+AutoReqProv     : no
-+
-+%Description rfs
-+%name} package contents trimmed to just the files
-+that are needed at run time on the target.
-+
-+
-+%Description
-+%{summary}.
-+
-+%Prep
-+export LC_ALL
-+LC_ALL=C
-+
-+%setup
-+
-+%Build
-+export LC_ALL
-+LC_ALL=C
-+
-+
-+%Install
-+export LC_ALL
-+LC_ALL=C
-+
-+rm -rf $RPM_BUILD_ROOT
-+make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
-+
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}/%{_lib}/udev, d;
-+' all_files.lst > rfs_files.lst
-+
-+%Clean
-+export LC_ALL
-+LC_ALL=C
-+
-+rm -rf $RPM_BUILD_ROOT
-+
-+
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
-+%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	1970-01-01 01:00:00.000000000 +0100
 +++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	2015-11-28 11:54:33.061415206 +0100
@@ -4925,9 +4854,80 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
+diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
+--- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	1970-01-01 01:00:00.000000000 +0100
++++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	2015-11-28 11:54:31.533434415 +0100
+@@ -0,0 +1,67 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : Data for the USB Modeswitch tool
++Name            : usb-modeswitch-data
++Version         : 20150627
++Release         : 1
++License         : LGPL
++Vendor          : MECT
++Packager        : Mihai Lazarescu
++Group           : Applications/System
++Source          : %{name}-%{version}.tar.bz2
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed down to just the run time files
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/System
++AutoReqProv     : no
++
++%Description rfs
++%name} package contents trimmed to just the files
++that are needed at run time on the target.
++
++
++%Description
++%{summary}.
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++%setup
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/%{_lib}/udev, d;
++' all_files.lst > rfs_files.lst
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
 --- ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec	2015-11-28 12:05:48.656921820 +0100
++++ ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec	2015-11-30 13:49:35.316723075 +0100
 @@ -7,10 +7,24 @@
  License         : GPL
  Vendor          : Freescale
@@ -4954,7 +4954,31 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  wpa_supplicant is an implementation of the WPA Supplicant component,
-@@ -84,11 +98,18 @@
+@@ -22,9 +36,15 @@
+ %{summary}
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup 
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ #Create .config file for build
+ cat > .config << EOF
+ #CONFIG_DRIVER_HOSTAP=n
+@@ -79,16 +99,29 @@
+ make CONFIG_L2_PACKET=linux
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ make install CONFIG_L2_PACKET=linux prefix=%{_prefix} DESTDIR=$RPM_BUILD_ROOT/%{pfx}
  mkdir -p  $RPM_BUILD_ROOT/%{pfx}/usr/etc/unifi
  cp ap_config.conf $RPM_BUILD_ROOT/%{pfx}/usr/etc/unifi
  
@@ -4965,6 +4989,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +' all_files.lst > rfs_files.lst
  
  %Clean
++export LC_ALL
++LC_ALL=C
++
  rm -rf $RPM_BUILD_ROOT
  
  

@@ -1,3 +1,5 @@
+export LC_ALL = C
+
 RELEASE := 6.6rc0
 TOOLCHAIN_FLAG := SOURCERY_GCC=1
 

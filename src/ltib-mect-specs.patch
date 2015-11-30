@@ -2304,9 +2304,12 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
 --- ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec	2015-11-30 13:40:25.043640944 +0100
-@@ -12,36 +12,68 @@
++++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec	2015-11-30 18:28:37.238248618 +0100
+@@ -10,38 +10,72 @@
+ Group           : Applications/Communications
+ Source          : lrzsz_0.12.21.orig.tar.gz
  Patch0          : lrzsz_0.12.21-4.diff
++Patch1          : lrzsz-0.12.21-1448891584.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -2332,6 +2335,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%setup -n %{name}-990823
  %patch0 -p1
++%patch1 -p1
  
  %Build
 +export LC_ALL

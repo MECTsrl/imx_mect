@@ -48,7 +48,8 @@ LTIB is built and installed as an unprivileged user, but it requires root privil
 1. Install the toolchain and LTIB, and build the target image packages (RPMs):
 
         cd ~/imx_mect           # Top-level directory
-        make clean all
+        make clean
+	make
 
 1. Create the images to flash the TPAC 1007 in *~/imx_mect/images-all/TPAC1007_480x272_r\<version\>* (\<version\> is assigned to variable BUILD_RELEASE in the top-level Makefile):
 

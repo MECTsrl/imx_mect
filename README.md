@@ -2,14 +2,14 @@
 
 The build downloads, configures and installs the LTIB image build environment and the Codesurcery target toolchain for the MECT operator panels based on Freescale i.MX28 processors:
 
-- with on board I/O:
-[TPAC1007] (http://www.mect.it/en/products/control-and-automation/operator-panels-with-plcpac/tpac1007/),
-[TPAC1006] (http://www.mect.it/en/products/control-and-automation/operator-panels-with-plcpac/tpac1006/),
-[TPAC1008] (http://www.mect.it/en/products/control-and-automation/operator-panels-with-plcpac/tpac1008/)
-- only RTU:
-[TP1043] (http://www.mect.it/en/products/control-and-automation/operator-panels/tp1043/),
-[TP1057] (http://www.mect.it/en/products/control-and-automation/operator-panels/tp1057/),
-[TP1070] (http://www.mect.it/en/products/control-and-automation/operator-panels/tp1070/)
+- with on-board I/O:
+[TPAC1007](http://www.mect.it/en/products/control-and-automation/operator-panels-with-plcpac/tpac1007/),
+[TPAC1006](http://www.mect.it/en/products/control-and-automation/operator-panels-with-plcpac/tpac1006/),
+[TPAC1008](http://www.mect.it/en/products/control-and-automation/operator-panels-with-plcpac/tpac1008/)
+- with RTU only:
+[TP1043](http://www.mect.it/en/products/control-and-automation/operator-panels/tp1043/),
+[TP1057](http://www.mect.it/en/products/control-and-automation/operator-panels/tp1057/),
+[TP1070](http://www.mect.it/en/products/control-and-automation/operator-panels/tp1070/)
 
 ## Build instructions
 
@@ -39,7 +39,7 @@ LTIB is built and installed as an unprivileged user, but it requires root privil
 
 1. Create the LTIB build directory with read and write permissions for the user that performs the build. E.g., assuming that the name of the directory is *imx_mect* in the home directory of the build user:
 
-        mkdir -p ~/imx_mect     # 
+        mkdir -p ~/imx_mect
 
 1. Clone this repository in the build directory created in the previous step (copy-paste the appropriate *clone URL* from the GitHub site):
 
@@ -51,41 +51,18 @@ LTIB is built and installed as an unprivileged user, but it requires root privil
         make clean
 	make
 
-1. Create the images to flash the TPAC 1007 in *~/imx_mect/images-all/TPAC1007_480x272_r\<version\>* (\<version\> is assigned to variable BUILD_RELEASE in the top-level Makefile):
+At the end, the build flow creates the archive needed to program TPAC 1007 480x272 devices in *~/imx_mect/images-all/TPAC1007_480x272_r\<version\>/TPAC1007_480x272_r\<version\>.zip*.
 
-        cd ~/imx_mect           # Top-level directory
-        make TPAC1007_480x272
+Unpack the archive in the *Profiles* directory of [Freescale i.MX Manufacturing Toolkit](https://www.freescale.com/webapp/sps/download/license.jsp?colCode=IMX_MFG_TOOL) and follow the Freescale instructions to program the device.
 
-   This creates the directories:
-   - **boot** -- holds some of the files for the Mfgtool used to flash the target device
-   - **localfs** -- the contents of the local file system
-   - **rootfs** -- the contents of the root file system
-   - **TPAC1007_480x272_r\<version\>** -- holds all the files necessary for a profile of the Mfgtool that can be used to flash the target device
+## Main steps of the first build
 
-   and the archives:
-   - **TPAC1007_480x272_r\<version\>.zip** -- archive with all files necessary to create a profile for flashing the target device
-   - **rootfs_rsync-L.tar.bz2** -- archive with files necessary for target HMI application development on Windows.
-
-## Main steps of the automatic build
-
-The Makefile-driven build flow does in sequence:
+The Makefile-driven build flow performs in sequence:
 
 - checks and updates the host environment
-- downloads LTIB, toolchain for cross-compilation, Qt, and their configurations and patches
-- installs and patches LTIB
-- installs the toolchain for cross-compilation, compiles and installs Qt
-- builds all configured packets (RPMs) for the target.  
-  The build process automatically downloads the source archives and packages as they are needed.  
-  If any of these downloads fails, the build is aborted. An aborted build can be manually resumed as follows:
-
-        cd ~/imx_mect/ltib      # LTIB directory
-        ./ltib
-- builds the target files systems by installing the appropriate packages (RPMs)
-- builds the project for Mfgtool that can be used to flash the target
-
-### Update an existing build
-
-        cd ~/imx_mect           # Top-level directory
-        make ltib_update
-
-The update process pulls the new changes from the repository and applies them to the LTIB build under the top-level directory.
+- downloads the LTIB, toolchain for cross-compilation, Qt, and their configurations and patches
+- installs and patches the LTIB
+- installs the toolchain for cross-compilation, compiles and installs Qt on the host
+- builds all configured packets (RPMs) to program the target device
+- builds the target file systems by installing the appropriate packages (RPMs)
+- builds the project for the Freescale i.MX Manufacturing Toolkit that can be used to flash the target device

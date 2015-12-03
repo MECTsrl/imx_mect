@@ -17,8 +17,8 @@ TEMPLATE = app
 TARGET = setup_time
 
 INCLUDEPATH += .\
-    $(RFSDIR)/usr/src/linux/include \
-    $(RFSDIR)/usr/include
+    $$(MECT_RFSDIR)/usr/src/linux/include \
+    $$(MECT_RFSDIR)/usr/include
 
 
 QT       += core gui

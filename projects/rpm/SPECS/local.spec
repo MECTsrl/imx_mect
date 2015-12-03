@@ -5,7 +5,7 @@ Name            : local
 Version         : 1.0
 Release         : 1_%{rel}
 License         : GPL
-Vendor          : MECT
+Vendor          : MECT s.r.l.
 Packager        : Mihai Lazarescu
 Group           : System Environment/Utilities
 Source          : local.tar.bz2
@@ -58,10 +58,17 @@ Factory preset values for all panel settings.
 
 
 %prep
+export LC_ALL
+LC_ALL=C
 
 %build
+export LC_ALL
+LC_ALL=C
 
 %install
+export LC_ALL
+LC_ALL=C
+
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{pfx}/local
 tar xjvf %{SOURCE0} -C $RPM_BUILD_ROOT/%{pfx}/local

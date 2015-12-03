@@ -8,7 +8,7 @@ DEFAULT_IMAGE := TPAC1007_480x272
 #DEFAULT_IMAGE := TPAC1008_800x600
 
 # Build version information.
-BUILD_RELEASE := 6.6rc0
+export BUILD_RELEASE := 6.6rc0
 BUILD_TARGET_TPAC1006_320x240 := TPAC1006_320x240
 BUILD_TARGET_TPAC1006_640x480 := TPAC1006_640x480
 BUILD_TARGET_TPAC1007_480x272 := TPAC1007_480x272
@@ -29,7 +29,7 @@ QWT_VERSION := 6.1-multiaxes
 RFS_VERSION_FILE := rootfs_version
 
 # Target pltform architecture
-TARGET_ARCH := arm
+export TARGET_ARCH := arm
 # UNIX name of the target platform
 TARGET_UNIX_NAME := imx28
 
@@ -46,7 +46,7 @@ LTIBDIR_REF = $(CURDIR)/ltib.reference
 # LTIB (config and dist) on which to apply current patches.
 LTIBDIR_PATCH = $(CURDIR)/ltib.patched
 # LTIB rootfs is created here.
-LTIB_RFSDIR = $(LTIBDIR)/rootfs
+export LTIB_RFSDIR = $(LTIBDIR)/rootfs
 # LTIB specs are installed here.
 LTIBSPECDIR = $(LTIBDIR)/dist/lfs-5.1
 # Unpack the archives here.
@@ -55,21 +55,25 @@ TMPDIR = $(CURDIR)/tmp
 FTPURL := http://www.mect.it/archive
 # Hardcoded Freescale directory
 FSDIR := /opt/freescale
+# Freescale binaries directory
+FSBINDIR := /opt/freescale/ltib/usr/bin
 # LPP location
 LPPDIR = $(FSDIR)/pkgs
+# LTIB RPM binary
+export RPMBIN = $(FSBINDIR)/rpm
 # RPM archive
-RPMBASEDIR = $(CURDIR)/ltib/rpm
+export RPMBASEDIR = $(CURDIR)/ltib/rpm
 RPMBUILDDIR = $(RPMBASEDIR)/BUILD
-RPMDIR = $(RPMBASEDIR)/RPMS/$(TARGET_ARCH)
+export RPMDIR = $(RPMBASEDIR)/RPMS/$(TARGET_ARCH)
 # Root file system top-level directory
 IMGDIR = $(CURDIR)/images-all
 # Draft directory for rpmbuild
 TMPRPMDIR = /tmp/rpm-$(USER)
 # Expand to the name of the kernel RPM built by LTIB.
-LTIB_KERNEL_RPM = $(RPMDIR)/$(shell $(FSDIR)/ltib/usr/bin/rpm --root $(LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides kernel).$(TARGET_ARCH).rpm
+LTIB_KERNEL_RPM = $(RPMDIR)/$(shell $(RPMBIN) --root $(LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides kernel).$(TARGET_ARCH).rpm
 # Expand to the name of the timestamp when the kernel RPM was built by LTIB.
 LTIB_KERNEL_TS_NAME = last-kernel-build
-LTIB_KERNEL_TS_RPM = $(RPMDIR)/$(shell $(FSDIR)/ltib/usr/bin/rpm --root $(LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides $(LTIB_KERNEL_TS_NAME)).$(TARGET_ARCH).rpm
+LTIB_KERNEL_TS_RPM = $(RPMDIR)/$(shell $(RPMBIN) --root $(LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides $(LTIB_KERNEL_TS_NAME)).$(TARGET_ARCH).rpm
 # Kernel configuration file.
 KERNEL_CONF := $(LTIBDIR)/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 
@@ -157,6 +161,7 @@ COMMON_RFSPKGS := \
 	libusb1-rfs-1.0.20-1.$(TARGET_ARCH).rpm \
 	lrzsz-rfs-0.12.21-1.$(TARGET_ARCH).rpm \
 	lzo-rfs-2.03-0.$(TARGET_ARCH).rpm \
+	mect_plugins-rfs-1.0-1_6.6rc0.$(TARGET_ARCH).rpm \
 	merge-rfs-0.1-1.$(TARGET_ARCH).rpm \
 	modeps-rfs-1.0-1.$(TARGET_ARCH).rpm \
 	mtd-utils-rfs-201006-1.$(TARGET_ARCH).rpm \
@@ -211,7 +216,10 @@ URL_CSXCARCH = $(FTPURL)/$(CSXCARCH)
 URL_CSXCARCH_MD5 = $(FTPURL)/$(CSXCARCH).$(MD5EXT)
 CSXCUNPACK = $(CURDIR)/$(CSXCPREFIX)
 # Keep this in sync with LTIB config
-CSXCDIR = /opt/CodeSourcery
+export CSXCDIR = /opt/CodeSourcery
+export CC_DIRECTORY := $(CSXCDIR)
+export CC_VERSION := 
+export CC_RADIX := arm-none-linux-gnueabi
 
 # LTIB archive
 LTIB_EVKARCH = L2.6.35_1.1.0_130130_source.tar.gz
@@ -242,7 +250,7 @@ URL_LTIB_UBUNTU_12_04_PATCH = $(FTPURL)/$(LTIB_UBUNTU_12_04_PATCH)
 LTIB_UBUNTU_12_04_PATCH_INCLUDE_SYS_PATCH = ubuntu-ltib-patch-include-sys-i386.patch
 
 # LTIB qt spec file (MECT patch)
-QT_INSTALL_DIR = /opt/Trolltech
+export QT_INSTALL_DIR = /opt/Trolltech
 LTIB_QT_ARCH = qt-everywhere-opensource-src-4.8.5.tar.gz
 LTIB_QT_PATCH1 = qt-everywhere-opensource-src-4.8.5-1394522957.patch
 LTIB_QT_PATCH2 = qt-everywhere-opensource-src-4.8.5-1420823826.patch
@@ -415,12 +423,12 @@ toolchain:
 # Set up host Qt.
 .PHONY: qt
 qt:
-	mkdir -p /tmp/rpm-$(USER) $(LTIBDIR)/rpm/SOURCES
+	mkdir -p $(TMPRPMDIR) $(LTIBDIR)/rpm/SOURCES
 	for f in $(FSPKG); do cp $$f $(LTIBDIR)/rpm/SOURCES; done
-	PATH=/usr/lib/ccache:$(PATH) rpmbuild --define 'toolchain 1' --define 'toolchain_install_dir $(QT_INSTALL_DIR)' --define '_topdir $(LTIBDIR)/rpm' --dbpath /tmp/rpm-$(USER)/rpmdb --target arm --define '_target_cpu arm' --define '_prefix /opt' --define '_rpmdir /tmp/rpm-$(USER)/RPMS' -bb --clean --rmsource $(LTIBDIR)/dist/lfs-5.1/qt/qt-embedded.spec
-	-sudo rpm --force-debian --root / --dbpath /tmp/rpm-$(USER)/rpmdb -e --allmatches --nodeps --define '_tmppath $(LTIBDIR)/tmp' qt-embedded 2>/dev/null
-	sudo rpm --force-debian --root / --dbpath /tmp/rpm-$(USER)/rpmdb --ignorearch -ivh --force --nodeps --excludedocs --define '_tmppath $(LTIBDIR)/tmp' /tmp/rpm-$(USER)/RPMS/$(TARGET_ARCH)/qt-embedded-$(QT_VERSION)-*.$(TARGET_ARCH).rpm
-	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') /tmp/rpm-$(USER)
+	PATH=/usr/lib/ccache:$(PATH) rpmbuild --define 'toolchain 1' --define 'toolchain_install_dir $(QT_INSTALL_DIR)' --define '_topdir $(LTIBDIR)/rpm' --dbpath $(TMPRPMDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_prefix /opt' --define '_rpmdir $(TMPRPMDIR)/RPMS' -bb --clean --rmsource $(LTIBDIR)/dist/lfs-5.1/qt/qt-embedded.spec
+	-sudo rpm --force-debian --root / --dbpath $(TMPRPMDIR)/rpmdb -e --allmatches --nodeps --define '_tmppath $(LTIBDIR)/tmp' qt-embedded 2>/dev/null
+	sudo rpm --force-debian --root / --dbpath $(TMPRPMDIR)/rpmdb --ignorearch -ivh --force --nodeps --excludedocs --define '_tmppath $(LTIBDIR)/tmp' $(TMPRPMDIR)/RPMS/$(TARGET_ARCH)/qt-embedded-$(QT_VERSION)-*.$(TARGET_ARCH).rpm
+	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') $(TMPRPMDIR)
 
 
 # Build the local projects.
@@ -432,7 +440,7 @@ projects:
 	test -n '$(BUILD_PLUGINSCRT_VER)'
 	cd projects; test -d mect_plugins || git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins
 	cd projects; if test -d mect_plugins; then cd mect_plugins; git checkout $(BUILD_PLUGINSCRT_VER); fi
-	$(MAKE) -C projects ROOTFS='$(LTIB_RFSDIR)' CC_VERSION='' CC_DIRECTORY='$(CSXCDIR)' CC_RADIX='arm-none-linux-gnueabi' RELEASE='$(BUILD_RELEASE)' RPMBASEDIR='$(RPMBASEDIR)' QT_INSTALL_DIR='$(QT_INSTALL_DIR)' clean all
+	$(MAKE) -C projects clean all
 
 # Build the default target image.
 .PHONY: image
@@ -1054,7 +1062,7 @@ clean: clean_projects
 
 .PHONY: clean_projects
 clean_projects:
-	$(MAKE) -C projects RELEASE=$(BUILD_RELEASE) clean
+	$(MAKE) -C projects clean
 
 .PHONY: distclean
 distclean: clean

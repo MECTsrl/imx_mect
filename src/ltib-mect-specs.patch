@@ -1,6 +1,6 @@
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec ltib/dist/lfs-5.1/base_libs/base_libs.spec
 --- ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/base_libs/base_libs.spec	2015-11-28 11:55:02.001051385 +0100
++++ ltib/dist/lfs-5.1/base_libs/base_libs.spec	2015-12-04 00:53:14.994247687 +0100
 @@ -11,6 +11,19 @@
  Group           : System Environment/Libraries
  BuildRoot       : %{_tmppath}/%{name}
@@ -237,7 +237,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  ' 
  
 +cd %{_builddir}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( -not -type d \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( -not -type d \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,%{pfx}%{_includedir}, d;
 +    \,\.bak$, d;
@@ -258,7 +258,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bison/bison.spec ltib/dist/lfs-5.1/bison/bison.spec
 --- ltib.reference/dist/lfs-5.1/bison/bison.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/bison/bison.spec	2015-11-27 18:18:54.425623201 +0100
++++ ltib/dist/lfs-5.1/bison/bison.spec	2015-12-03 15:48:35.114564111 +0100
 @@ -20,7 +20,7 @@
  
  %Build
@@ -270,7 +270,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boa/boa.spec ltib/dist/lfs-5.1/boa/boa.spec
 --- ltib.reference/dist/lfs-5.1/boa/boa.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/boa/boa.spec	2015-11-28 11:55:10.336946589 +0100
++++ ltib/dist/lfs-5.1/boa/boa.spec	2015-12-04 00:52:47.846588979 +0100
 @@ -11,9 +11,26 @@
  Packager        : Stuart Hughes
  Group           : System/Servers
@@ -351,7 +351,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{pfx}/%{base}/etc/conf/boa.conf
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
 +    p
 +' all_files.lst > rfs_files.lst
@@ -372,7 +372,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
 --- ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec	2015-11-28 11:55:25.504755904 +0100
++++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec	2015-12-04 00:53:52.205779875 +0100
 @@ -8,39 +8,109 @@
  Vendor          : Freescale
  Packager        : Terry Lv
@@ -464,7 +464,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +
 +cd %{_builddir}/%{name}-11.01.00
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}/boot, d;
 +' all_files.lst > rfs_files.lst
@@ -491,7 +491,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{pfx}/boot/updater_ivt.sb
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/busybox/busybox.spec ltib/dist/lfs-5.1/busybox/busybox.spec
 --- ltib.reference/dist/lfs-5.1/busybox/busybox.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/busybox/busybox.spec	2015-11-28 11:55:31.816676552 +0100
++++ ltib/dist/lfs-5.1/busybox/busybox.spec	2015-12-04 00:53:06.122359222 +0100
 @@ -3,24 +3,46 @@
  
  Summary         : A small executable that replaces many UNIX utilities
@@ -556,7 +556,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  chmod 644 $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/busybox.conf
  
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
 +    p
 +' all_files.lst > rfs_files.lst
@@ -578,7 +578,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec ltib/dist/lfs-5.1/bzip2/bzip2.spec
 --- ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/bzip2/bzip2.spec	2015-11-28 11:55:38.868587898 +0100
++++ ltib/dist/lfs-5.1/bzip2/bzip2.spec	2015-12-04 00:53:19.398192322 +0100
 @@ -15,31 +15,65 @@
  Patch2          : %{name}-%{version}-armv7a-cross-compile-fix.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -627,7 +627,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +make install PREFIX=$RPM_BUILD_ROOT%{pfx}%{_prefix}
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/share/man, d;
 +    \,^%{pfx}%{_prefix}/include, d;
@@ -651,7 +651,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cantest/cantest.spec ltib/dist/lfs-5.1/cantest/cantest.spec
 --- ltib.reference/dist/lfs-5.1/cantest/cantest.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/cantest/cantest.spec	2015-11-28 11:55:45.572503618 +0100
++++ ltib/dist/lfs-5.1/cantest/cantest.spec	2015-12-04 00:53:10.886299331 +0100
 @@ -9,18 +9,35 @@
  Packager        : Chen Hongjun
  Group           : Applications/System
@@ -709,7 +709,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +cp cantest $RPM_BUILD_ROOT%{pfx}%{_prefix}/bin
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
 +    p
 +' all_files.lst > rfs_files.lst
@@ -730,7 +730,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/dhcp/dhcp.spec	2015-11-28 11:53:28.674224663 +0100
++++ ltib/dist/lfs-5.1/dhcp/dhcp.spec	2015-12-04 00:52:16.134987648 +0100
 @@ -10,6 +10,7 @@
  Packager        : John Faith
  Group           : Applications/Internet
@@ -802,7 +802,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  fi
  
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/share/man, d;
 +' all_files.lst > rfs_files.lst
@@ -823,7 +823,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec ltib/dist/lfs-5.1/dropbear/dropbear.spec
 --- ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/dropbear/dropbear.spec	2015-11-28 11:55:57.268356581 +0100
++++ ltib/dist/lfs-5.1/dropbear/dropbear.spec	2015-12-04 00:53:21.190169794 +0100
 @@ -10,16 +10,37 @@
  Group           : Applications/Internet
  Source          : %{name}-%{version}.tar.gz
@@ -879,7 +879,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +cp %{SOURCE2} $RPM_BUILD_ROOT%{pfx}/etc/dropbear/dropbear_rsa_host_key
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
 +    p
 +' all_files.lst > rfs_files.lst
@@ -900,7 +900,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 --- ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec	2015-11-28 11:56:26.367990749 +0100
++++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec	2015-12-04 00:53:50.829797173 +0100
 @@ -13,25 +13,65 @@
  Patch1          : e2fsprogs-1.41.4-fix-lib-links.patch
  BuildRoot	: %{_tmppath}/%{name}
@@ -946,7 +946,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +make DESTDIR=$RPM_BUILD_ROOT%{pfx} install install-libs
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/share/locale, d;
 +    \,^%{pfx}%{_prefix}/share/info, d;
@@ -972,7 +972,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec ltib/dist/lfs-5.1/elftosb/elftosb.spec
 --- ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/elftosb/elftosb.spec	2015-11-27 18:18:54.437623050 +0100
++++ ltib/dist/lfs-5.1/elftosb/elftosb.spec	2015-12-03 15:48:35.118564061 +0100
 @@ -9,6 +9,7 @@
  Packager        : Frank Li
  Group           : System Environment/Libraries
@@ -991,7 +991,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  make
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/expat/expat.spec ltib/dist/lfs-5.1/expat/expat.spec
 --- ltib.reference/dist/lfs-5.1/expat/expat.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/expat/expat.spec	2015-11-28 11:56:35.183879919 +0100
++++ ltib/dist/lfs-5.1/expat/expat.spec	2015-12-04 00:53:54.101756039 +0100
 @@ -14,30 +14,64 @@
  Patch2          : expat-1.95.8-man1dir.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -1040,7 +1040,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +make install DESTDIR=$RPM_BUILD_ROOT%{pfx} install
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/share/man, d;
 +    \,^%{pfx}%{_prefix}/include, d;
@@ -1063,7 +1063,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec ltib/dist/lfs-5.1/fake-provides/fake-provides.spec
 --- ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/fake-provides/fake-provides.spec	2015-11-27 18:18:54.437623050 +0100
++++ ltib/dist/lfs-5.1/fake-provides/fake-provides.spec	2015-12-03 15:48:35.122564011 +0100
 @@ -5,83 +5,93 @@
  %define __os_install_post %{nil}
  %define  pfx /opt/freescale/rootfs/%{_target_cpu}
@@ -1220,7 +1220,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec ltib/dist/lfs-5.1/fontconfig/fontconfig.spec
 --- ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/fontconfig/fontconfig.spec	2015-11-28 11:56:49.047705627 +0100
++++ ltib/dist/lfs-5.1/fontconfig/fontconfig.spec	2015-12-04 00:53:38.949946523 +0100
 @@ -10,27 +10,53 @@
  Group           : System Environment/Libraries
  Source          : %{name}-%{version}.tar.gz
@@ -1287,7 +1287,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +        ' $RPM_BUILD_ROOT%{pfx}%{_sysconfdir}/fonts/local.conf
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/share/man, d;
 +    \,^%{pfx}%{_prefix}/include, d;
@@ -1310,7 +1310,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/freetype/freetype.spec ltib/dist/lfs-5.1/freetype/freetype.spec
 --- ltib.reference/dist/lfs-5.1/freetype/freetype.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/freetype/freetype.spec	2015-11-28 11:56:53.419650664 +0100
++++ ltib/dist/lfs-5.1/freetype/freetype.spec	2015-12-04 00:53:08.074334682 +0100
 @@ -12,29 +12,63 @@
  Patch1          : proper-armel-asm-declaration.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -1357,7 +1357,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_libdir}/pkgconfig, d;
 +    \,^%{pfx}%{_includedir}, d;
@@ -1380,7 +1380,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/git/git.spec ltib/dist/lfs-5.1/git/git.spec
 --- ltib.reference/dist/lfs-5.1/git/git.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/git/git.spec	2015-11-27 18:18:54.441623000 +0100
++++ ltib/dist/lfs-5.1/git/git.spec	2015-12-03 15:48:35.122564011 +0100
 @@ -27,7 +27,7 @@
  config_opts='ac_cv_c_c99_format=yes ac_cv_fread_reads_directories=no ac_cv_snprintf_returns_bogus=no' 
  eval $config_opts \
@@ -1392,7 +1392,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %Install
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/glib2/glib2.spec ltib/dist/lfs-5.1/glib2/glib2.spec
 --- ltib.reference/dist/lfs-5.1/glib2/glib2.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/glib2/glib2.spec	2015-11-28 11:56:59.551573575 +0100
++++ ltib/dist/lfs-5.1/glib2/glib2.spec	2015-12-04 00:52:40.350683216 +0100
 @@ -1,47 +1,82 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archname glib
@@ -1463,7 +1463,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +make install DESTDIR=$RPM_BUILD_ROOT%{pfx}
 +
 +cd %{_builddir}/%{archname}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_datadir}/gtk-doc, d;
 +    \,^%{pfx}%{_datadir}/locale, d;
@@ -1490,7 +1490,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/hotplug/hotplug.spec ltib/dist/lfs-5.1/hotplug/hotplug.spec
 --- ltib.reference/dist/lfs-5.1/hotplug/hotplug.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/hotplug/hotplug.spec	2015-11-28 11:57:04.703508807 +0100
++++ ltib/dist/lfs-5.1/hotplug/hotplug.spec	2015-12-04 00:53:03.126396886 +0100
 @@ -13,26 +13,60 @@
  Patch2          : hotplug-2004_03_29-dash.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -1536,7 +1536,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +make install prefix=$RPM_BUILD_ROOT%{pfx}
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_mandir}, d;
 +' all_files.lst > rfs_files.lst
@@ -1558,7 +1558,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/iproute/iproute.spec ltib/dist/lfs-5.1/iproute/iproute.spec
 --- ltib.reference/dist/lfs-5.1/iproute/iproute.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/iproute/iproute.spec	2015-11-28 11:57:10.327438104 +0100
++++ ltib/dist/lfs-5.1/iproute/iproute.spec	2015-12-04 00:53:23.142145254 +0100
 @@ -3,16 +3,34 @@
  
  Summary         : Advanced IP routing and network device configuration tools
@@ -1625,7 +1625,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  make -j1 install SBINDIR=%{base}/sbin DESTDIR=$RPM_BUILD_ROOT/%{pfx}
  
 +cd %{_builddir}/%{name}2-%{version}-%{release}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}/share/doc, d;
 +    \,^%{pfx}/share/man, d;
@@ -1647,7 +1647,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl ltib/dist/lfs-5.1/kernel/kernel-common.tmpl
 --- ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/kernel/kernel-common.tmpl	2015-11-27 18:18:54.441623000 +0100
++++ ltib/dist/lfs-5.1/kernel/kernel-common.tmpl	2015-12-04 00:53:38.045957888 +0100
 @@ -182,10 +182,10 @@
  #
  # build the kernel and optionally the modules
@@ -1666,7 +1666,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  fi
  
 +cd %{_builddir}/%{pkg_name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}/boot, d;
 +    \,^%{pfx}%{_prefix}/src, d;
@@ -1881,7 +1881,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/zio.ko
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec
 --- ltib.reference/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec	2015-11-27 18:18:54.441623000 +0100
++++ ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec	2015-12-03 15:48:35.126563961 +0100
 @@ -0,0 +1,39 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -1924,7 +1924,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 --- ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec	2015-11-28 11:57:15.815369112 +0100
++++ ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec	2015-12-04 00:53:49.661811857 +0100
 @@ -0,0 +1,77 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -1983,7 +1983,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_libdir}/pkgconfig, d;
 +    \,^%{pfx}%{_datadir}/doc, d;
@@ -2005,7 +2005,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec ltib/dist/lfs-5.1/libtermcap/libtermcap.spec
 --- ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/libtermcap/libtermcap.spec	2015-11-28 11:57:21.535297202 +0100
++++ ltib/dist/lfs-5.1/libtermcap/libtermcap.spec	2015-12-04 00:53:08.858324826 +0100
 @@ -1,4 +1,5 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archname termcap
@@ -2131,7 +2131,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  fi
  
 +cd %{_builddir}/%{archname}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( -not -type d \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( -not -type d \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/info, d;
 +    \,^%{pfx}%{_prefix}/include, d;
@@ -2157,7 +2157,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb.spec ltib/dist/lfs-5.1/libusb/libusb.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/libusb/libusb.spec	2015-11-28 11:57:32.807155496 +0100
++++ ltib/dist/lfs-5.1/libusb/libusb.spec	2015-12-04 00:53:17.982210123 +0100
 @@ -11,15 +11,35 @@
  Source          : %{name}-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -2206,7 +2206,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/include, d;
 +    /\.l\?a$/ d;
@@ -2228,7 +2228,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb1.spec ltib/dist/lfs-5.1/libusb/libusb1.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb1.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/libusb/libusb1.spec	2015-11-28 11:57:27.711219561 +0100
++++ ltib/dist/lfs-5.1/libusb/libusb1.spec	2015-12-04 00:53:17.038221991 +0100
 @@ -0,0 +1,72 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define libname libusb
@@ -2283,7 +2283,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 +
 +cd %{_builddir}/%{libname}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/include, d;
 +    \,^%{pfx}%{_libdir}/pkgconfig, d;
@@ -2304,7 +2304,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
 --- ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec	2015-11-30 18:28:37.238248618 +0100
++++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec	2015-12-04 00:53:20.166182667 +0100
 @@ -10,38 +10,72 @@
  Group           : Applications/Communications
  Source          : lrzsz_0.12.21.orig.tar.gz
@@ -2363,7 +2363,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
  
 +cd %{_builddir}/%{name}-990823
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/man, d;
 +' all_files.lst > rfs_files.lst
@@ -2386,7 +2386,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lzo/lzo.spec ltib/dist/lfs-5.1/lzo/lzo.spec
 --- ltib.reference/dist/lfs-5.1/lzo/lzo.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/lzo/lzo.spec	2015-11-28 11:57:41.059051756 +0100
++++ ltib/dist/lfs-5.1/lzo/lzo.spec	2015-12-04 00:52:24.958876717 +0100
 @@ -11,14 +11,34 @@
  Source          : lzo-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -2434,7 +2434,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/include, d;
 +    /\.l\?a$/ d;
@@ -2456,8 +2456,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/merge/merge.spec	2015-11-28 11:57:46.506983266 +0100
-@@ -13,6 +13,19 @@
++++ ltib/dist/lfs-5.1/merge/merge.spec	2015-12-04 14:45:18.000000000 +0100
+@@ -13,37 +13,69 @@
  # We have assume the user knows merge file dependencies.
  Autoreqprov     : no
  
@@ -2475,9 +2475,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +
  %Description
- Detects the presence of of merge directory in the top level of the root
- file system builder directory, and if it is present creates a rpm containing
-@@ -22,13 +35,23 @@
+-Detects the presence of of merge directory in the top level of the root
+-file system builder directory, and if it is present creates a rpm containing
+-the directory structure and files beneath the merge directory.
+-The purpose of this is to allow the user to add files and directories
+-that will get included in the target root file system.
++If a merge directory is detected at the top level of the
++root file system builder directory, it creates an RPM with
++the structure and files of the merge directory.  This allows
++the user to directly add files and directories to the target
++root file system.
  
  
  %Prep
@@ -2499,14 +2506,21 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  touch $RPM_BUILD_ROOT/%{pfx}/etc/ltib-release
 +chmod 666 $RPM_BUILD_ROOT/%{pfx}/etc/ltib-release
  
- for dir in "$PLATFORM_PATH/merge" "$TOP/merge"
- do
-@@ -40,10 +63,21 @@
+-for dir in "$PLATFORM_PATH/merge" "$TOP/merge"
+-do
+-    if [ -d $dir ]
+-    then
++for dir in "$PLATFORM_PATH/merge" "$TOP/merge"; do
++    if test -d $dir; then
+         cd $dir
+-        find . -name CVS -prune -o -perm -444 ! -type b ! -type c -print0 2>/dev/null |  cpio -p0d  --quiet $RPM_BUILD_ROOT/%{pfx}
++        find . -name CVS -prune -o -perm -444 ! -type b ! -type c -print0 2>/dev/null | cpio -p0d --quiet $RPM_BUILD_ROOT/%{pfx}
+         cd -
      fi
  done
  
 +cd %{_builddir}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
 +    p
 +' all_files.lst > rfs_files.lst
@@ -2528,7 +2542,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 --- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec	2015-11-28 11:58:05.738741490 +0100
++++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec	2015-12-04 00:52:22.854903167 +0100
 @@ -2,15 +2,31 @@
  
  Summary		: Memory Technology Device tools
@@ -2594,7 +2608,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +install -m 0644 include/mtd/*.h $RPM_BUILD_ROOT%{pfx}%{_prefix}/include/mtd
 +
 +cd %{_builddir}/%{name}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_mandir}, d;
 +    \,^%{pfx}%{_prefix}/include, d;
@@ -2618,7 +2632,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec ltib/dist/lfs-5.1/mxc-misc/imx-test.spec
 --- ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/mxc-misc/imx-test.spec	2015-11-28 11:58:15.686616428 +0100
++++ ltib/dist/lfs-5.1/mxc-misc/imx-test.spec	2015-12-04 00:53:04.442380342 +0100
 @@ -2,23 +2,43 @@
  
  Summary         : platform specific unit tests for mxc platform
@@ -2682,7 +2696,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  make PLATFORM=$PLATFORM_UPPER DESTDIR=$RPM_BUILD_ROOT/%{pfx}/unit_tests install
  
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
 +    p
 +' all_files.lst > rfs_files.lst
@@ -2704,7 +2718,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mysql/mysql.spec ltib/dist/lfs-5.1/mysql/mysql.spec
 --- ltib.reference/dist/lfs-5.1/mysql/mysql.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/mysql/mysql.spec	2015-11-28 11:58:22.570529886 +0100
++++ ltib/dist/lfs-5.1/mysql/mysql.spec	2015-12-04 00:54:01.393664367 +0100
 @@ -13,16 +13,36 @@
  Patch1          : mysql-4.1.12-gcc-4.2.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -2763,7 +2777,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +rmdir mysql
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/man, d;
 +    \,^%{pfx}%{_includedir}, d;
@@ -2790,7 +2804,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec ltib/dist/lfs-5.1/ncurses/ncurses.spec
 --- ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/ncurses/ncurses.spec	2015-11-28 11:58:29.130447416 +0100
++++ ltib/dist/lfs-5.1/ncurses/ncurses.spec	2015-12-04 00:52:53.402519132 +0100
 @@ -14,17 +14,37 @@
  Patch2          : ncurses-5.3-wint_t.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -2844,7 +2858,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  fi
  
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_mandir}, d;
 +    \,^%{pfx}%{_includedir}, d;
@@ -2869,7 +2883,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec
 --- ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec	2015-11-27 18:18:54.445622950 +0100
++++ ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec	2015-12-03 15:48:35.126563961 +0100
 @@ -24,7 +24,7 @@
  # don't add --build as glib will fail for a host build due to 
  # stupid incorrect cross compile detection
@@ -2881,7 +2895,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ppp/ppp.spec ltib/dist/lfs-5.1/ppp/ppp.spec
 --- ltib.reference/dist/lfs-5.1/ppp/ppp.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/ppp/ppp.spec	2015-11-28 11:58:39.690314661 +0100
++++ ltib/dist/lfs-5.1/ppp/ppp.spec	2015-12-04 00:52:47.034599187 +0100
 @@ -13,16 +13,36 @@
  Patch1          : ppp-2.4.3-hspeed.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -2931,7 +2945,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  mkdir -p $RPM_BUILD_ROOT/%{pfx}/var/lock
  
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( -not -type d \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( -not -type d \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}/share/man, d;
 +    \,^%{pfx}/include, d;
@@ -2955,7 +2969,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/prelink/prelink.spec ltib/dist/lfs-5.1/prelink/prelink.spec
 --- ltib.reference/dist/lfs-5.1/prelink/prelink.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/prelink/prelink.spec	2015-11-27 18:18:54.445622950 +0100
++++ ltib/dist/lfs-5.1/prelink/prelink.spec	2015-12-03 15:48:35.126563961 +0100
 @@ -0,0 +1,35 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -2994,7 +3008,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec ltib/dist/lfs-5.1/qt/qt-embedded.spec
 --- ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/qt/qt-embedded.spec	2015-11-28 11:58:46.722226258 +0100
++++ ltib/dist/lfs-5.1/qt/qt-embedded.spec	2015-12-04 00:53:21.966160038 +0100
 @@ -1,165 +1,163 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archivename qt-everywhere-opensource-src
@@ -3402,7 +3416,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%if %{?toolchain:0}%{!?toolchain:1}
 +
 +cd %{_builddir}/%{archivename}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_libdir}/pkgconfig, d;
 +    \,^%{pfx}%{_libdir}/[^/]*\.prl$, d;
@@ -3439,7 +3453,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%endif
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec	2015-11-28 11:53:53.117917364 +0100
++++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec	2015-12-04 00:52:26.946851725 +0100
 @@ -0,0 +1,93 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define variant multiaxes
@@ -3515,7 +3529,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +    install_qwtspec \
 +    INSTALL_ROOT=$RPM_BUILD_ROOT/%{pfx} \
 +
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/features, d;
 +    \,^%{pfx}%{_includedir}, d;
@@ -3536,7 +3550,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt.spec ltib/dist/lfs-5.1/qwt/qwt.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/qwt/qwt.spec	2015-11-28 12:01:10.188422643 +0100
++++ ltib/dist/lfs-5.1/qwt/qwt.spec	2015-12-04 00:52:25.746866810 +0100
 @@ -0,0 +1,80 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -3603,7 +3617,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +    INSTALL_ROOT=$RPM_BUILD_ROOT/%{pfx}\
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/doc, d;
 +    \,^%{pfx}%{_includedir}, d;
@@ -3620,7 +3634,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rpm/rpm-fs.spec ltib/dist/lfs-5.1/rpm/rpm-fs.spec
 --- ltib.reference/dist/lfs-5.1/rpm/rpm-fs.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/rpm/rpm-fs.spec	2015-11-27 18:18:54.445622950 +0100
++++ ltib/dist/lfs-5.1/rpm/rpm-fs.spec	2015-12-03 15:48:35.126563961 +0100
 @@ -83,7 +83,7 @@
  ./configure --prefix=%{_prefix} --localstatedir=$var --sysconfdir=$etc \
  --without-python --without-javaglue
@@ -3632,7 +3646,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %Install
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rsync/rsync.spec ltib/dist/lfs-5.1/rsync/rsync.spec
 --- ltib.reference/dist/lfs-5.1/rsync/rsync.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/rsync/rsync.spec	2015-11-28 12:01:18.960312366 +0100
++++ ltib/dist/lfs-5.1/rsync/rsync.spec	2015-12-04 00:53:53.157767907 +0100
 @@ -12,26 +12,61 @@
  Patch1          : rsync-2.6.5-va_copy-2.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -3678,7 +3692,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  make install prefix=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
  
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}/usr/man, d;
 +' all_files.lst > rfs_files.lst
@@ -3699,7 +3713,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
 --- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec	2015-11-28 12:01:24.892237791 +0100
++++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec	2015-12-04 00:53:24.022134191 +0100
 @@ -0,0 +1,123 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -3807,7 +3821,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +install -m0755 %{SOURCE2} $RPM_BUILD_ROOT/%{pfx}/usr/libexec/sftp-server
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
 +    p;
 +' all_files.lst > rfs_files.lst
@@ -3826,8 +3840,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/skell/skell.spec	2015-11-28 12:01:42.304018896 +0100
-@@ -9,20 +9,90 @@
++++ ltib/dist/lfs-5.1/skell/skell.spec	2015-12-04 14:41:02.622765878 +0100
+@@ -9,20 +9,91 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -3869,6 +3883,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Patch31         : skell-mect-dev-fixes-in-init.d.patch
 +Patch32         : skell-1.18-1448375293.patch
 +Patch33         : skell-1.18-1448558592.patch
++Patch34          : skell-1.18-1449236459.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -3920,7 +3935,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +101,108 @@
+@@ -31,24 +102,109 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -3952,6 +3967,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%patch31 -p1
 +%patch32 -p1
 +%patch33 -p1
++%patch34 -p1
  
  %Build
 +export LC_ALL
@@ -3978,7 +3994,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +install -m 755 -D %{SOURCE4} $RPM_BUILD_ROOT/%{pfx}%{_bindir}/`basename %{SOURCE4}`
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}/boot, d;
 +    \,^%{pfx}/dev/, d;
@@ -4042,7 +4058,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec ltib/dist/lfs-5.1/sqlite/sqlite.spec
 --- ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sqlite/sqlite.spec	2015-11-28 12:01:50.083921089 +0100
++++ ltib/dist/lfs-5.1/sqlite/sqlite.spec	2015-12-04 00:53:36.121982075 +0100
 @@ -12,26 +12,61 @@
  Source          : %{name}-amalgamation-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -4088,7 +4104,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -find $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/ -name "*.la" | xargs rm -f
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_libdir}/pkgconfig, d;
 +    \,^%{pfx}%{_includedir}, d;
@@ -4111,7 +4127,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec ltib/dist/lfs-5.1/sysconfig/modeps.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sysconfig/modeps.spec	2015-11-28 12:01:55.447853655 +0100
++++ ltib/dist/lfs-5.1/sysconfig/modeps.spec	2015-12-04 00:52:21.814916242 +0100
 @@ -10,32 +10,70 @@
  Group           : System Environment/Base
  BuildRoot       : %{_tmppath}/%{name}
@@ -4169,7 +4185,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  fi
  
 +cd %{_builddir}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
 +    \,/modules\.alias$, p;
 +    \,/modules\.dep$, p;
@@ -4191,7 +4207,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-11-28 12:02:08.899684543 +0100
++++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-12-04 00:52:20.674930573 +0100
 @@ -8,18 +8,41 @@
  Vendor		: Freescale
  Packager	: Stuart Hughes
@@ -4423,7 +4439,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +test "$SYSCFG_DEPLOYMENT_STYLE" = "INITRAMFS" && ln -s /sbin/init $RPM_BUILD_ROOT/%{pfx}/init
 +
 +cd %{_builddir}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
 +	p;
 +' all_files.lst > rfs_files.lst
@@ -4444,7 +4460,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec ltib/dist/lfs-5.1/texinfo/texinfo.spec
 --- ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/texinfo/texinfo.spec	2015-11-27 18:18:54.445622950 +0100
++++ ltib/dist/lfs-5.1/texinfo/texinfo.spec	2015-12-03 15:48:35.134563860 +0100
 @@ -31,7 +31,7 @@
  else
                ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
@@ -4456,7 +4472,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/tslib/tslib.spec ltib/dist/lfs-5.1/tslib/tslib.spec
 --- ltib.reference/dist/lfs-5.1/tslib/tslib.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/tslib/tslib.spec	2015-11-28 12:02:15.419602576 +0100
++++ ltib/dist/lfs-5.1/tslib/tslib.spec	2015-12-04 00:53:06.942348913 +0100
 @@ -13,14 +13,32 @@
  Patch2          : tslib-1.0-mx-pre_gen-2.patch
  Patch3          : tslib-1.0-mx-pre_config.patch
@@ -4530,7 +4546,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  done
  
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_libdir}/pkgconfig, d;
 +    \,^%{pfx}%{_includedir}, d;
@@ -4553,7 +4569,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl
 --- ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl	2015-11-27 18:18:54.453622849 +0100
++++ ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl	2015-12-03 15:48:35.134563860 +0100
 @@ -18,7 +18,8 @@
      make HOSTCC="$BUILDCC" CROSS_COMPILE=$TOOLCHAIN_PREFIX O=$BUILD_DIR distclean
  fi
@@ -4566,7 +4582,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec ltib/dist/lfs-5.1/u-boot/u-boot.spec
 --- ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/u-boot/u-boot.spec	2015-11-27 18:18:54.453622849 +0100
++++ ltib/dist/lfs-5.1/u-boot/u-boot.spec	2015-12-03 15:48:35.134563860 +0100
 @@ -17,16 +17,25 @@
  %{summary}
  
@@ -4605,7 +4621,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %Files
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/udev/udev.spec ltib/dist/lfs-5.1/udev/udev.spec
 --- ltib.reference/dist/lfs-5.1/udev/udev.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/udev/udev.spec	2015-11-28 12:02:35.187354062 +0100
++++ ltib/dist/lfs-5.1/udev/udev.spec	2015-12-04 00:53:51.525788423 +0100
 @@ -25,12 +25,9 @@
  Patch13         : udev-117-mxc-ipu-dev-privilege.patch
  Patch14         : udev-117-mxc-vpu.patch
@@ -4697,7 +4713,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  fi
  
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_libdir}/pkgconfig, d;
 +    \,^%{pfx}%{_mandir}, d;
@@ -4720,7 +4736,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/unzip/unzip.spec ltib/dist/lfs-5.1/unzip/unzip.spec
 --- ltib.reference/dist/lfs-5.1/unzip/unzip.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/unzip/unzip.spec	2015-11-28 12:02:44.795233275 +0100
++++ ltib/dist/lfs-5.1/unzip/unzip.spec	2015-12-04 00:53:05.302369530 +0100
 @@ -12,24 +12,59 @@
  Source          : unzip552.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -4764,7 +4780,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  make install prefix=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
  
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}/usr/man, d;
 +' all_files.lst > rfs_files.lst
@@ -4785,7 +4801,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	2015-11-28 11:54:33.061415206 +0100
++++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	2015-12-04 00:54:02.197654260 +0100
 @@ -0,0 +1,71 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -4840,7 +4856,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +make install-static DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}/%{_lib}/udev, d;
 +    \,^%{pfx}%{_mandir}, d;
@@ -4860,7 +4876,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	2015-11-28 11:54:31.533434415 +0100
++++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	2015-12-04 00:54:03.329640029 +0100
 @@ -0,0 +1,67 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -4912,7 +4928,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}/%{_lib}/udev, d;
 +' all_files.lst > rfs_files.lst
@@ -4931,7 +4947,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
 --- ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec	2015-11-30 13:49:35.316723075 +0100
++++ ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec	2015-12-04 00:53:16.282231495 +0100
 @@ -7,10 +7,24 @@
  License         : GPL
  Vendor          : Freescale
@@ -4987,7 +5003,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  cp ap_config.conf $RPM_BUILD_ROOT/%{pfx}/usr/etc/unifi
  
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
 +    p;
 +' all_files.lst > rfs_files.lst
@@ -5008,7 +5024,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec ltib/dist/lfs-5.1/xenomai/xenomai.spec
 --- ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/xenomai/xenomai.spec	2015-11-28 12:03:05.710970328 +0100
++++ ltib/dist/lfs-5.1/xenomai/xenomai.spec	2015-12-04 00:53:39.645937773 +0100
 @@ -0,0 +1,76 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -5065,7 +5081,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +make DESTDIR=$RPM_BUILD_ROOT%{pfx} install
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}/dev, d;
 +    \,^%{pfx}%{_prefix}/xenomai/share/doc, d;
@@ -5088,7 +5104,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zip30/zip30.spec ltib/dist/lfs-5.1/zip30/zip30.spec
 --- ltib.reference/dist/lfs-5.1/zip30/zip30.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/zip30/zip30.spec	2015-11-28 11:51:37.767618947 +0100
++++ ltib/dist/lfs-5.1/zip30/zip30.spec	2015-12-04 00:53:09.878312003 +0100
 @@ -0,0 +1,70 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -5143,7 +5159,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +$TOOLCHAIN_PATH/bin/${TOOLCHAIN_PREFIX}strip --strip-unneeded $RPM_BUILD_ROOT/%{pfx}%{_prefix}/bin/zip
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
 +    \,^%{pfx}%{_bindir}/zip, p;
 +' all_files.lst > rfs_files.lst
@@ -5162,7 +5178,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zlib/zlib.spec ltib/dist/lfs-5.1/zlib/zlib.spec
 --- ltib.reference/dist/lfs-5.1/zlib/zlib.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/zlib/zlib.spec	2015-11-28 12:03:20.474784722 +0100
++++ ltib/dist/lfs-5.1/zlib/zlib.spec	2015-12-04 00:53:18.722200820 +0100
 @@ -12,15 +12,35 @@
  Patch1          : zlib-1.2.3-arflags-1.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -5215,7 +5231,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +make -f Makefile.static install prefix=${RPM_BUILD_ROOT}%{pfx}%{_prefix}
 +
 +cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_mandir}, d;
 +    \,^%{pfx}%{_includedir}, d;

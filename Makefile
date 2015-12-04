@@ -2,8 +2,7 @@ export LC_ALL = C
 
 export MECT_BUILD_RELEASE := 6.6rc0
 
-#MECT_BUILD_ATCMCRT_VER := master
-MECT_BUILD_ATCMCRT_VER := config-for-ltib
+MECT_BUILD_ATCMCRT_VER := master
 
 MECT_BUILD_PLUGINSCRT_VER := mect_suite_2.0
 

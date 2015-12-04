@@ -3883,7 +3883,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Patch31         : skell-mect-dev-fixes-in-init.d.patch
 +Patch32         : skell-1.18-1448375293.patch
 +Patch33         : skell-1.18-1448558592.patch
-+Patch34          : skell-1.18-1449236459.patch
++Patch34         : skell-1.18-1449236459.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no

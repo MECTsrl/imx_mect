@@ -323,7 +323,7 @@ MECT_PACKAGES = \
 
 
 .PHONY: all
-all: env downloads ltib projects image
+all: env downloads ltib projects image target_dev
 
 # Set up the build environment.
 .PHONY: env

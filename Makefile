@@ -2,9 +2,11 @@ export LC_ALL = C
 
 export MECT_BUILD_RELEASE := 6.6rc0
 
-MECT_BUILD_ATCMCRT_VER := master
+MECT_BUILD_ATCMCRT_BRANCH := master
+MECT_BUILD_ATCMCRT_TAG := v0.2
 
-MECT_BUILD_PLUGINSCRT_VER := mect_suite_2.0
+MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
+MECT_BUILD_PLUGINSCRT_TAG := v7.0rc0
 
 # Default target image.
 # NOTE: uncomment only one.
@@ -323,7 +325,7 @@ MECT_PACKAGES = \
 
 
 .PHONY: all
-all: env downloads ltib projects image
+all: env downloads ltib projects image target_dev
 
 # Set up the build environment.
 .PHONY: env
@@ -429,12 +431,14 @@ qt:
 # Build the local projects.
 .PHONY: projects
 projects:
-	test -n '$(MECT_BUILD_ATCMCRT_VER)'
-	cd projects; test -d ATCMcontrol_RunTimeSystem || git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem
-	cd projects; if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git checkout $(MECT_BUILD_ATCMCRT_VER); fi
-	test -n '$(MECT_BUILD_PLUGINSCRT_VER)'
-	cd projects; test -d mect_plugins || git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins
-	cd projects; if test -d mect_plugins; then cd mect_plugins; git checkout $(MECT_BUILD_PLUGINSCRT_VER); fi
+	test -n '$(MECT_BUILD_ATCMCRT_BRANCH)'
+	cd projects; if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; fi
+	cd projects; if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_BRANCH)'; then cd ATCMcontrol_RunTimeSystem; git checkout $(MECT_BUILD_ATCMCRT_BRANCH); git pull; fi
+	cd projects; if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)'; then cd ATCMcontrol_RunTimeSystem; git checkout tags/$(MECT_BUILD_ATCMCRT_TAG); fi
+	test -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'
+	cd projects; if test -d mect_plugins; then cd mect_plugins; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins; fi
+	cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'; then cd mect_plugins; git checkout $(MECT_BUILD_PLUGINSCRT_BRANCH); git pull; fi
+	cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)'; then cd mect_plugins; git checkout tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
 	$(MAKE) -C projects clean all
 
 # Build the default target image.
@@ -1002,7 +1006,7 @@ clean: clean_projects
 
 .PHONY: clean_projects
 clean_projects:
-	$(MAKE) -C projects clean
+	if test -d projects; then $(MAKE) -C projects clean; fi
 
 .PHONY: distclean
 distclean: clean

@@ -121,6 +121,7 @@ setup_time_clean:
 #
 # mect_plugins
 #
+# TODO Convert to LTIB package (depends on several Makefile variables).
 
 .PHONY: mect_plugins
 mect_plugins%: MECT_PRJVER := 1.0

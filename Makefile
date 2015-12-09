@@ -6,7 +6,7 @@ MECT_BUILD_ATCMCRT_BRANCH := master
 MECT_BUILD_ATCMCRT_TAG := v0.2
 
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
-MECT_BUILD_PLUGINSCRT_TAG := v7.0rc0
+MECT_BUILD_PLUGINSCRT_TAG := v7.0rc0bis
 
 # Default target image.
 # NOTE: uncomment only one.
@@ -69,10 +69,10 @@ MECT_IMGDIR = $(CURDIR)/images-all
 # Draft directory for rpmbuild
 MECT_TMPRPMDIR = /tmp/rpm-$(USER)
 # Expand to the name of the kernel RPM built by LTIB.
-MECT_LTIB_KERNEL_RPM = $(MECT_RPMDIR)/$(shell $(MECT_RPMBIN) --root $(MECT_LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides kernel).$(MECT_TARGET_ARCH).rpm
+MECT_LTIB_KERNEL_RPM = $(MECT_RPMDIR)/$(shell if test -x $(MECT_RPMBIN); then $(MECT_RPMBIN) --root $(MECT_LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides kernel; else echo 'no-package'; fi).$(MECT_TARGET_ARCH).rpm
 # Expand to the name of the timestamp when the kernel RPM was built by LTIB.
 MECT_LTIB_KERNEL_TS_NAME = last-kernel-build
-MECT_LTIB_KERNEL_TS_RPM = $(MECT_RPMDIR)/$(shell $(MECT_RPMBIN) --root $(MECT_LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides $(MECT_LTIB_KERNEL_TS_NAME)).$(MECT_TARGET_ARCH).rpm
+MECT_LTIB_KERNEL_TS_RPM = $(MECT_RPMDIR)/$(shell if test -x $(MECT_RPMBIN); then $(MECT_RPMBIN) --root $(MECT_LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides $(MECT_LTIB_KERNEL_TS_NAME); else echo 'no-package'; fi).$(MECT_TARGET_ARCH).rpm
 # Kernel configuration file.
 MECT_KERNEL_CONF := $(MECT_LTIBDIR)/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 
@@ -428,17 +428,28 @@ qt:
 	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') $(MECT_TMPRPMDIR)
 
 
-# Build the local projects.
-.PHONY: projects
-projects:
+# Setup the local projects: ATCMcontrol_RunTimeSystem
+.PHONY: projects_setup_ATCMcontrol_RunTimeSystem
+projects_setup_ATCMcontrol_RunTimeSystem:
+	test -d projects
 	test -n '$(MECT_BUILD_ATCMCRT_BRANCH)'
 	cd projects; if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; fi
 	cd projects; if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_BRANCH)'; then cd ATCMcontrol_RunTimeSystem; git checkout $(MECT_BUILD_ATCMCRT_BRANCH); git pull; fi
 	cd projects; if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)'; then cd ATCMcontrol_RunTimeSystem; git checkout tags/$(MECT_BUILD_ATCMCRT_TAG); fi
+
+# Setup the local projects.
+.PHONY: projects_setup_mect_plugins
+projects_setup_mect_plugins:
+	test -d projects
 	test -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'
 	cd projects; if test -d mect_plugins; then cd mect_plugins; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins; fi
 	cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'; then cd mect_plugins; git checkout $(MECT_BUILD_PLUGINSCRT_BRANCH); git pull; fi
 	cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)'; then cd mect_plugins; git checkout tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
+
+# Build the local projects.
+.PHONY: projects
+projects: projects_setup_ATCMcontrol_RunTimeSystem projects_setup_mect_plugins
+	test -d projects
 	$(MAKE) -C projects clean all
 
 # Build the default target image.
@@ -993,20 +1004,20 @@ ltib_update:
 ltib_rebuild:
 	rm -rf $(MECT_RPMBUILDDIR)/* $(MECT_RPMDIR)/*.rpm
 	cd $(MECT_LTIBDIR); ./ltib -f
-	$(MAKE) projects image
+	$(MAKE) projects image target_dev
 
 
 # Utilities
 #
 
+.PHONY: clean_projects
+clean_projects:
+	if test -d projects; then $(MAKE) -C projects clean; fi
+
 .PHONY: clean
 clean: clean_projects
 	sudo rm -rf $(MECT_LTIBDIR) $(MECT_TMPDIR) $(MECT_CSXCUNPACK) $(MECT_CSXCDIR) $(MECT_FSDIR)/ltib $(MECT_FSDIR)/pkgs $(MECT_FSDIR)/rootfs $(MECT_TMPRPMDIR) $(MECT_QT_INSTALL_DIR)
 	if test -d $(MECT_FSDIR); then sudo rmdir --ignore-fail-on-non-empty $(MECT_FSDIR); fi
-
-.PHONY: clean_projects
-clean_projects:
-	if test -d projects; then $(MAKE) -C projects clean; fi
 
 .PHONY: distclean
 distclean: clean

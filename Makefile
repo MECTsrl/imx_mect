@@ -1,12 +1,12 @@
 export LC_ALL = C
 
-export MECT_BUILD_RELEASE := 6.6rc0
+export MECT_BUILD_RELEASE := 2.0alpha_rc1
 
 MECT_BUILD_ATCMCRT_BRANCH := master
 MECT_BUILD_ATCMCRT_TAG := v0.2
 
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
-MECT_BUILD_PLUGINSCRT_TAG := v7.0rc0
+MECT_BUILD_PLUGINSCRT_TAG := v7.0rc0bis
 
 # Default target image.
 # NOTE: uncomment only one.

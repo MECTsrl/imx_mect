@@ -59,7 +59,6 @@ rm -rf $RPM_BUILD_ROOT
 %{MECT_RFSDIR}/usr/include/alarms.h
 %{MECT_RFSDIR}/usr/include/alarms_history.h
 %{MECT_RFSDIR}/usr/include/alphanumpad.h
-%{MECT_RFSDIR}/usr/include/app_cfg_file.h
 %{MECT_RFSDIR}/usr/include/app_config.h
 %{MECT_RFSDIR}/usr/include/app_logprint.h
 %{MECT_RFSDIR}/usr/include/app_usb.h
@@ -81,9 +80,7 @@ rm -rf $RPM_BUILD_ROOT
 %{MECT_RFSDIR}/usr/include/buzzer_settings.h
 %{MECT_RFSDIR}/usr/include/comm_status.h
 %{MECT_RFSDIR}/usr/include/common.h
-%{MECT_RFSDIR}/usr/include/commpar_rtu.h
-%{MECT_RFSDIR}/usr/include/commpar_tcp.h
-%{MECT_RFSDIR}/usr/include/commpar_tcprtu.h
+%{MECT_RFSDIR}/usr/include/system_ini.h
 %{MECT_RFSDIR}/usr/include/cross_table_utility.h
 %{MECT_RFSDIR}/usr/include/data_manager.h
 %{MECT_RFSDIR}/usr/include/datalog_set.h

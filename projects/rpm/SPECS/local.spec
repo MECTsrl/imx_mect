@@ -116,7 +116,7 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/retentive
 %{pfx}/local/root
 %{pfx}/local/sd_card
-%{pfx}/local/upload
+%{pfx}/local/update
 %{pfx}/local/www/alarms_manager.cgi
 %{pfx}/local/www/changepwd.cgi
 %{pfx}/local/www/checkpwd.cgi

@@ -3,6 +3,7 @@
 images-all
 ltib.reference
 ltib
+projects/mect_plugins
 projects/ATCMcontrol_RunTimeSystem
 projects/localfs
 src/L2.6.35_1.1.0_130130_source.tar.gz

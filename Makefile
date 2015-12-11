@@ -9,7 +9,7 @@ export MECT_BUILD_ATCMCRT_TAG := v0.3
 
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
-export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc1bis
+export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc1ter
 
 # Default target image.
 # NOTE: uncomment only one.
@@ -443,9 +443,9 @@ projects_setup_ATCMcontrol_RunTimeSystem:
 projects_setup_mect_plugins:
 	test -d projects
 	test -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'
-	cd projects; if test -d mect_plugins; then cd mect_plugins; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins; fi
-	cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'; then cd mect_plugins; git checkout $(MECT_BUILD_PLUGINSCRT_BRANCH); git pull; fi
-	cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)'; then cd mect_plugins; git checkout tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
+	#cd projects; if test -d mect_plugins; then cd mect_plugins; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins; fi
+	#cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'; then cd mect_plugins; git checkout $(MECT_BUILD_PLUGINSCRT_BRANCH); git pull; fi
+	#cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)'; then cd mect_plugins; git checkout tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
 
 # Setup the local projects.
 .PHONY: projects_setup

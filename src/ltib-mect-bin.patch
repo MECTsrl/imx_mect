@@ -1,6 +1,6 @@
 diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/bin/Ltibutils.pm ltib/bin/Ltibutils.pm
 --- ltib.reference/bin/Ltibutils.pm	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/bin/Ltibutils.pm	2015-12-11 11:38:59.604086398 +0100
++++ ltib/bin/Ltibutils.pm	2015-12-11 15:28:09.303956499 +0100
 @@ -359,7 +359,7 @@
      return scalar @{$cf->{pp_list}} if $pp_list_tested;
      $pp_list_tested = 1;
@@ -28,7 +28,7 @@ diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/bin/Ltibutils.pm lt
                                     glob('/usr/lib/i386-linux-gnu/libz.so*'),
                                     glob('/usr/lib32/libz.so*'),
 --- ltib.reference/ltib	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/ltib	2015-12-11 11:38:59.604086398 +0100
++++ ltib/ltib	2015-12-11 15:28:09.303956499 +0100
 @@ -78,7 +78,7 @@
      proxy        => "",
      force_md5get => "",

@@ -68,7 +68,8 @@ if test -f ${UPDDIR}/hmi; then
 
 	/etc/rc.d/init.d/autoexec stop_hmi > /dev/null 2>&1
 
-	mv ${UPDDIR}/Alarms.csv /local/root
+	mv ${UPDDIR}/hmi /local/root
+	ln -s /local/root/hmi hmi
 fi
 
 if test -f ${UPDDIR}/splash.png; then

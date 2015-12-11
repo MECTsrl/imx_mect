@@ -5,11 +5,13 @@ export MECT_BUILD_RELEASE := 2.0alpha_rc1
 
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := master
+# Set to 0.0 to skip tag checkout
 export MECT_BUILD_ATCMCRT_TAG := v0.3
 
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
-export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc1ter
+# Set to 0.0 to skip tag checkout
+export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc2
 
 # Default target image.
 # NOTE: uncomment only one.
@@ -436,7 +438,7 @@ projects_setup_ATCMcontrol_RunTimeSystem:
 	test -n '$(MECT_BUILD_ATCMCRT_BRANCH)'
 	cd projects; if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; fi
 	cd projects; if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_BRANCH)'; then cd ATCMcontrol_RunTimeSystem; git checkout $(MECT_BUILD_ATCMCRT_BRANCH); git pull; fi
-	cd projects; if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)'; then cd ATCMcontrol_RunTimeSystem; git checkout tags/$(MECT_BUILD_ATCMCRT_TAG); fi
+	cd projects; if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)' -a '$(MECT_BUILD_ATCMCRT_TAG)' != '0.0'; then cd ATCMcontrol_RunTimeSystem; git checkout tags/$(MECT_BUILD_ATCMCRT_TAG); fi
 
 # Setup the local projects: mect_plugins.
 .PHONY: projects_setup_mect_plugins
@@ -445,7 +447,7 @@ projects_setup_mect_plugins:
 	test -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'
 	cd projects; if test -d mect_plugins; then cd mect_plugins; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins; fi
 	cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'; then cd mect_plugins; git checkout $(MECT_BUILD_PLUGINSCRT_BRANCH); git pull; fi
-	cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)'; then cd mect_plugins; git checkout tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
+	cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)' -a '$(MECT_BUILD_PLUGINSCRT_TAG)' != '0.0'; then cd mect_plugins; git checkout tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
 
 # Setup the local projects.
 .PHONY: projects_setup

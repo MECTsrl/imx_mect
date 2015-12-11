@@ -2543,6 +2543,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 --- ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec	1970-01-01 01:00:00.000000000 +0100
 +++ ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec	2015-12-10 17:26:19.070698008 +0100
++++ ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec	2015-12-07 19:56:49.853823114 +0100
 @@ -0,0 +1,210 @@
 +%define MECT_PROJECTS ${TOP}/../projects
 +

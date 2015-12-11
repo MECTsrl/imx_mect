@@ -80,7 +80,7 @@ local_prepare_build:
 
 .PHONY: local_prepare_install
 local_prepare_install:
-	sudo rpm --nodeps --root $(MECT_LDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --define '_tmppath /tmp/rpm' $(MECT_RPMBASEDIR)/RPMS/arm/skell-lfs-1.18-2.arm.rpm
+	sudo rpm --nodeps --root $(MECT_LDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --define '_tmppath /tmp/rpm' $(MECT_RPMBASEDIR)/RPMS/arm/skell-lfs-1.18-2_ms$(MECT_BUILD_RELEASE).arm.rpm
 	sudo chown -R $(USER) $(MECT_LDIR)
 	sudo rm -rf $(MECT_LDIR)/var/lib/rpm
 	-sudo rmdir $(MECT_LDIR)/var/lib
@@ -121,24 +121,24 @@ setup_time_clean:
 #
 # mect_plugins
 #
+# TODO Convert to LTIB package (depends on several Makefile variables).
 
 .PHONY: mect_plugins
-mect_plugins%: MECT_PRJVER := 1.0
 mect_plugins: mect_plugins_clean mect_plugins_build mect_plugins_install
 
 .PHONY: mect_plugins_build
 mect_plugins_build: MECT_PRJDIR := $(CURDIR)/mect_plugins
 mect_plugins_build:
 	test -n $(MECT_PRJDIR)
-	tar cf $(MECT_RPMBASEDIR)/SOURCES/mect_plugins-$(MECT_PRJVER).tar -C $(MECT_PRJDIR) --exclude=.git --transform='s/^\./mect_plugins-$(MECT_PRJVER)/' .
-	rpmbuild --define 'ver $(MECT_PRJVER)' --define 'rel $(MECT_BUILD_RELEASE)' --define 'MECT_RFSDIR $(MECT_RFSDIR)' --define 'MECT_QMAKE $(MECT_QMAKE)' --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean --rmsource $(MECT_SPECDIR)/mect_plugins.spec
+	tar cf $(MECT_RPMBASEDIR)/SOURCES/mect_plugins-$(MECT_BUILD_PLUGINSCRT_TAG).tar -C $(MECT_PRJDIR) --exclude=.git --transform='s/^\./mect_plugins-$(MECT_BUILD_PLUGINSCRT_TAG)/' .
+	rpmbuild --define 'MECT_RFSDIR $(MECT_RFSDIR)' --define 'MECT_QMAKE $(MECT_QMAKE)' --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean --rmsource $(MECT_SPECDIR)/mect_plugins.spec
 
 .PHONY: mect_plugins_install
 mect_plugins_install: MECT_PRJDIR := $(CURDIR)/mect_plugins
 mect_plugins_install:
 	test -n $(MECT_PRJDIR)
 	-sudo $(MECT_RPMBIN) --root $(MECT_RFSDIR) --dbpath /var/lib/rpm -e --allmatches --nodeps --define '_tmppath /tmp/ltib' mect_plugins 2>/dev/null
-	sudo $(MECT_RPMBIN) --root $(MECT_RFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -ivh --force --excludedocs --define '_tmppath /tmp/ltib' $(MECT_RPMDIR)/mect_plugins-$(MECT_PRJVER)-*.$(MECT_TARGET_ARCH).rpm
+	sudo $(MECT_RPMBIN) --root $(MECT_RFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -ivh --force --excludedocs --define '_tmppath /tmp/ltib' $(MECT_RPMDIR)/mect_plugins-$(MECT_BUILD_PLUGINSCRT_TAG)-*.$(MECT_TARGET_ARCH).rpm
 
 .PHONY: mect_plugins_clean
 mect_plugins_clean: MECT_PRJDIR := $(CURDIR)/mect_plugins
@@ -270,7 +270,7 @@ localfs_rpm_install:
 	test -n $(MECT_PRJDIR)
 	tar cjvf $(MECT_RPMBASEDIR)/SOURCES/local.tar.bz2 --exclude=.svn -C $(MECT_LDIR) .
 	rm -rf $(MECT_RPMTMPDIR)/{*,.??*}
-	rpmbuild --define 'rel $(MECT_BUILD_RELEASE)' --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean --rmsource $(MECT_SPECDIR)/local.spec
+	rpmbuild --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean --rmsource $(MECT_SPECDIR)/local.spec
 
 .PHONY: localfs_rpm_clean
 localfs_rpm_clean: MECT_PRJDIR := $(CURDIR)

@@ -1,13 +1,17 @@
-export LC_ALL = C
+export LC_ALL := C
 
-# Build version information.
-export MECT_BUILD_RELEASE := 6.6rc0
 
+# MECT Suite version
+export MECT_BUILD_RELEASE := 2.0alpha_rc1
+
+# git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := master
-MECT_BUILD_ATCMCRT_TAG := v0.2
+export MECT_BUILD_ATCMCRT_TAG := v0.2
 
+# git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
-MECT_BUILD_PLUGINSCRT_TAG := v7.0rc0bis
+export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc0bis
+
 
 # Default target image.
 # NOTE: uncomment only one.
@@ -82,119 +86,119 @@ MECT_MD5EXT := md5
 # Packages for USB serial kernel modules.
 #
 
-MECT_RFSPKG_USBSERIAL_USBSERIAL := kernel-dev-usbserial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_AIRCABLE := kernel-dev-usbserial-aircable-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_ARK3116 := kernel-dev-usbserial-ark3116-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_BELKIN := kernel-dev-usbserial-belkin_sa-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_CH341 := kernel-dev-usbserial-ch341-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_CP210X := kernel-dev-usbserial-cp210x-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_CYBERJACK := kernel-dev-usbserial-cyberjack-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_CYPRESS_M8 := kernel-dev-usbserial-cypress_m8-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_DEBUG := kernel-dev-usbserial-debug-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_DIGI_ACCELEPORT := kernel-dev-usbserial-digi_acceleport-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_EMPEG := kernel-dev-usbserial-empeg-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_FTDI_SIO := kernel-dev-usbserial-ftdi_sio-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_FUNSOFT := kernel-dev-usbserial-funsoft-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_GARMIN_GPS := kernel-dev-usbserial-garmin_gps-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_HP4X := kernel-dev-usbserial-hp4x-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IO_EDGEPORT := kernel-dev-usbserial-io_edgeport-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IO_TI := kernel-dev-usbserial-io_ti-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IPAQ := kernel-dev-usbserial-ipaq-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IPW := kernel-dev-usbserial-ipw-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IR := kernel-dev-usbserial-ir-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IUU_PHOENIX := kernel-dev-usbserial-iuu_phoenix-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_KEYSPAN := kernel-dev-usbserial-keyspan-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_KEYSPAN_PDA := kernel-dev-usbserial-keyspan_pda-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_KL5KUSB105 := kernel-dev-usbserial-kl5kusb105-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_KOBIL_SCT := kernel-dev-usbserial-kobil_sct-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_MCT_U232 := kernel-dev-usbserial-mct_u232-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_MOS7720 := kernel-dev-usbserial-mos7720-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_MOS7840 := kernel-dev-usbserial-mos7840-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_MOTO_MODEM := kernel-dev-usbserial-moto_modem-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_NAVMAN := kernel-dev-usbserial-navman-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_OMNINET := kernel-dev-usbserial-omninet-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_OPTICON := kernel-dev-usbserial-opticon-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_OPTION := kernel-dev-usbserial-option-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_OTI6858 := kernel-dev-usbserial-oti6858-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_PL2303 := kernel-dev-usbserial-pl2303-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_QCAUX := kernel-dev-usbserial-qcaux-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_QCSERIAL := kernel-dev-usbserial-qcserial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SAFE_SERIAL := kernel-dev-usbserial-safe_serial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SIEMENS_MPI := kernel-dev-usbserial-siemens_mpi-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SIERRA := kernel-dev-usbserial-sierra-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SPCP8X5 := kernel-dev-usbserial-spcp8x5-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SYMBOLSERIAL := kernel-dev-usbserial-symbolserial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_TI_3410_5052 := kernel-dev-usbserial-ti_3410_5052-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_VISOR := kernel-dev-usbserial-visor-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_VIVOPAY := kernel-dev-usbserial-vivopay-serial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_WHITEHEAT := kernel-dev-usbserial-whiteheat-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_WWAN := kernel-dev-usbserial-wwan-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_ZIO := kernel-dev-usbserial-zio-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_USBSERIAL := kernel-rfs-dev-usbserial-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_AIRCABLE := kernel-rfs-dev-usbserial-aircable-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_ARK3116 := kernel-rfs-dev-usbserial-ark3116-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_BELKIN := kernel-rfs-dev-usbserial-belkin_sa-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_CH341 := kernel-rfs-dev-usbserial-ch341-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_CP210X := kernel-rfs-dev-usbserial-cp210x-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_CYBERJACK := kernel-rfs-dev-usbserial-cyberjack-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_CYPRESS_M8 := kernel-rfs-dev-usbserial-cypress_m8-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_DEBUG := kernel-rfs-dev-usbserial-debug-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_DIGI_ACCELEPORT := kernel-rfs-dev-usbserial-digi_acceleport-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_EMPEG := kernel-rfs-dev-usbserial-empeg-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_FTDI_SIO := kernel-rfs-dev-usbserial-ftdi_sio-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_FUNSOFT := kernel-rfs-dev-usbserial-funsoft-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_GARMIN_GPS := kernel-rfs-dev-usbserial-garmin_gps-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_HP4X := kernel-rfs-dev-usbserial-hp4x-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IO_EDGEPORT := kernel-rfs-dev-usbserial-io_edgeport-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IO_TI := kernel-rfs-dev-usbserial-io_ti-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IPAQ := kernel-rfs-dev-usbserial-ipaq-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IPW := kernel-rfs-dev-usbserial-ipw-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IR := kernel-rfs-dev-usbserial-ir-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IUU_PHOENIX := kernel-rfs-dev-usbserial-iuu_phoenix-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_KEYSPAN := kernel-rfs-dev-usbserial-keyspan-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_KEYSPAN_PDA := kernel-rfs-dev-usbserial-keyspan_pda-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_KL5KUSB105 := kernel-rfs-dev-usbserial-kl5kusb105-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_KOBIL_SCT := kernel-rfs-dev-usbserial-kobil_sct-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_MCT_U232 := kernel-rfs-dev-usbserial-mct_u232-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_MOS7720 := kernel-rfs-dev-usbserial-mos7720-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_MOS7840 := kernel-rfs-dev-usbserial-mos7840-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_MOTO_MODEM := kernel-rfs-dev-usbserial-moto_modem-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_NAVMAN := kernel-rfs-dev-usbserial-navman-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_OMNINET := kernel-rfs-dev-usbserial-omninet-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_OPTICON := kernel-rfs-dev-usbserial-opticon-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_OPTION := kernel-rfs-dev-usbserial-option-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_OTI6858 := kernel-rfs-dev-usbserial-oti6858-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_PL2303 := kernel-rfs-dev-usbserial-pl2303-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_QCAUX := kernel-rfs-dev-usbserial-qcaux-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_QCSERIAL := kernel-rfs-dev-usbserial-qcserial-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SAFE_SERIAL := kernel-rfs-dev-usbserial-safe_serial-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SIEMENS_MPI := kernel-rfs-dev-usbserial-siemens_mpi-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SIERRA := kernel-rfs-dev-usbserial-sierra-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SPCP8X5 := kernel-rfs-dev-usbserial-spcp8x5-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SYMBOLSERIAL := kernel-rfs-dev-usbserial-symbolserial-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_TI_3410_5052 := kernel-rfs-dev-usbserial-ti_3410_5052-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_VISOR := kernel-rfs-dev-usbserial-visor-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_VIVOPAY := kernel-rfs-dev-usbserial-vivopay-serial-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_WHITEHEAT := kernel-rfs-dev-usbserial-whiteheat-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_WWAN := kernel-rfs-dev-usbserial-wwan-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_ZIO := kernel-rfs-dev-usbserial-zio-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
 
 # Packages for USB 3G modems
 #
 
-MECT_RFSPKG_USB3G_MODESWITCH := usb-modeswitch-rfs-2.2.5-1.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USB3G_MODESWITCH_DATA := usb-modeswitch-data-rfs-20150627-1.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USB3G_LIBUSB1 := libusb1-rfs-1.0.20-1.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USB3G_MODESWITCH := usb-modeswitch-rfs-2.2.5-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USB3G_MODESWITCH_DATA := usb-modeswitch-data-rfs-20150627-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USB3G_LIBUSB1 := libusb1-rfs-1.0.20-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
 
 # Package list for creating the root file system for various targets.
 #
 
 MECT_COMMON_RFSPKGS := \
-	base_libs-rfs-1.2-1.$(MECT_TARGET_ARCH).rpm \
-	boa-rfs-0.94.14rc21-1.$(MECT_TARGET_ARCH).rpm \
-	busybox-rfs-1.15.0-1.$(MECT_TARGET_ARCH).rpm \
-	cantest-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
-	dhcp-rfs-3.0.3b1-1.$(MECT_TARGET_ARCH).rpm \
-	dropbear-rfs-0.52-1.$(MECT_TARGET_ARCH).rpm \
-	e2fsprogs-rfs-1.41.4-1.$(MECT_TARGET_ARCH).rpm \
-	expat-rfs-1.95.8-1.$(MECT_TARGET_ARCH).rpm \
-	fontconfig-rfs-2.4.2-1.$(MECT_TARGET_ARCH).rpm \
-	freetype-rfs-2.3.9-1.$(MECT_TARGET_ARCH).rpm \
-	glib2-rfs-2.18.1-1.$(MECT_TARGET_ARCH).rpm \
-	iproute-rfs-2.6.37-050330.$(MECT_TARGET_ARCH).rpm \
-	libsocketcan-rfs-0.0.8-0.$(MECT_TARGET_ARCH).rpm \
-	libtermcap-rfs-2.0.8-31_1.$(MECT_TARGET_ARCH).rpm \
-	libusb1-rfs-1.0.20-1.$(MECT_TARGET_ARCH).rpm \
-	lrzsz-rfs-0.12.21-1.$(MECT_TARGET_ARCH).rpm \
-	lzo-rfs-2.03-0.$(MECT_TARGET_ARCH).rpm \
-	mect_plugins-rfs-1.0-1_6.6rc0.$(MECT_TARGET_ARCH).rpm \
-	merge-rfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
-	modeps-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
-	mtd-utils-rfs-201006-1.$(MECT_TARGET_ARCH).rpm \
-	mysql-rfs-4.1.12-0.$(MECT_TARGET_ARCH).rpm \
-	ncurses-rfs-5.3-1.$(MECT_TARGET_ARCH).rpm \
-	ppp-rfs-2.4.4-1.$(MECT_TARGET_ARCH).rpm \
-	qt-embedded-rfs-4.8.5-1.$(MECT_TARGET_ARCH).rpm \
-	qwt-rfs-6.1-1_multiaxes.$(MECT_TARGET_ARCH).rpm \
-	rsync-rfs-2.6.5-1.$(MECT_TARGET_ARCH).rpm \
-	sftp-server-rfs-4.3p2-1.$(MECT_TARGET_ARCH).rpm \
-	skell-rfs-1.18-2.$(MECT_TARGET_ARCH).rpm \
-	sqlite-rfs-3.6.12-1.$(MECT_TARGET_ARCH).rpm \
-	sysconfig-rfs-1.2-5.$(MECT_TARGET_ARCH).rpm \
-	tslib-rfs-1.0-3.$(MECT_TARGET_ARCH).rpm \
-	usb-modeswitch-data-rfs-20150627-1.$(MECT_TARGET_ARCH).rpm \
-	usb-modeswitch-rfs-2.2.5-1.$(MECT_TARGET_ARCH).rpm \
-	wpa_supplicant-rfs-0.5.9-1.$(MECT_TARGET_ARCH).rpm \
-	xenomai-rfs-2.6.0-1.$(MECT_TARGET_ARCH).rpm \
-	zip-rfs-3.0.0-0.$(MECT_TARGET_ARCH).rpm \
-	zlib-rfs-1.2.3-2.$(MECT_TARGET_ARCH).rpm \
+	base_libs-rfs-1.2-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	boa-rfs-0.94.14rc21-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	busybox-rfs-1.15.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	cantest-rfs-1.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	dhcp-rfs-3.0.3b1-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	dropbear-rfs-0.52-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	e2fsprogs-rfs-1.41.4-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	expat-rfs-1.95.8-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	fontconfig-rfs-2.4.2-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	freetype-rfs-2.3.9-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	glib2-rfs-2.18.1-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	iproute-rfs-2.6.37-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	libsocketcan-rfs-0.0.8-0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	libtermcap-rfs-2.0.8-31_1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	libusb1-rfs-1.0.20-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	lrzsz-rfs-0.12.21-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	lzo-rfs-2.03-0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	mect_plugins-rfs-$(MECT_BUILD_PLUGINSCRT_TAG)-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	merge-rfs-0.1-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	modeps-rfs-1.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	mtd-utils-rfs-201006-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	mysql-rfs-4.1.12-0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	ncurses-rfs-5.3-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	ppp-rfs-2.4.4-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	qt-embedded-rfs-4.8.5-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	qwt-rfs-6.1-1_multiaxes_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	rsync-rfs-2.6.5-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	sftp-server-rfs-4.3p2-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	skell-rfs-1.18-2_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	sqlite-rfs-3.6.12-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	sysconfig-rfs-1.2-5_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	tslib-rfs-1.0-3_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	usb-modeswitch-data-rfs-20150627-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	usb-modeswitch-rfs-2.2.5-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	wpa_supplicant-rfs-0.5.9-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	xenomai-rfs-2.6.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	zip-rfs-3.0.0-0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	zlib-rfs-1.2.3-2_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
 
 MECT_COMMON_RFSPKGS := $(MECT_COMMON_RFSPKGS:%=$(MECT_RPMDIR)/%)
 
 MECT_LFSPKGS := \
-	local-1.0-1_$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	local-ATCMcontrol_RunTimeSystem-1.0-1_$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	local-cgic_work-1.0-1_$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	local-factory_data-1.0-1_$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	local-setup_time-1.0-1_$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	local-splash-1.0-1_$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	local-1.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	local-ATCMcontrol_RunTimeSystem-$(MECT_BUILD_ATCMCRT_TAG)-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	local-cgic_work-1.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	local-factory_data-1.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	local-setup_time-1.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	local-splash-1.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
 
 MECT_LFSPKGS := $(MECT_LFSPKGS:%=$(MECT_RPMDIR)/%)
 
 MECT_TARGET_RFSPKGS := \
-	kernel-rfs-2.6.35.3-imx_1.1.0.arm.rpm \
+	kernel-rfs-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).arm.rpm \
 	$(MECT_RFSPKG_USBSERIAL_PL2303) \
 	$(MECT_RFSPKG_USBSERIAL_USBSERIAL) \
 	$(MECT_RFSPKG_USB3G_MODESWITCH) \
@@ -427,7 +431,7 @@ qt:
 	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') $(MECT_TMPRPMDIR)
 
 
-# Setup the local projects: ATCMcontrol_RunTimeSystem
+# Setup the local projects: ATCMcontrol_RunTimeSystem.
 .PHONY: projects_setup_ATCMcontrol_RunTimeSystem
 projects_setup_ATCMcontrol_RunTimeSystem:
 	test -d projects
@@ -436,7 +440,7 @@ projects_setup_ATCMcontrol_RunTimeSystem:
 	cd projects; if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_BRANCH)'; then cd ATCMcontrol_RunTimeSystem; git checkout $(MECT_BUILD_ATCMCRT_BRANCH); git pull; fi
 	cd projects; if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)'; then cd ATCMcontrol_RunTimeSystem; git checkout tags/$(MECT_BUILD_ATCMCRT_TAG); fi
 
-# Setup the local projects.
+# Setup the local projects: mect_plugins.
 .PHONY: projects_setup_mect_plugins
 projects_setup_mect_plugins:
 	test -d projects
@@ -445,11 +449,20 @@ projects_setup_mect_plugins:
 	cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'; then cd mect_plugins; git checkout $(MECT_BUILD_PLUGINSCRT_BRANCH); git pull; fi
 	cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)'; then cd mect_plugins; git checkout tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
 
+# Setup the local projects.
+.PHONY: projects_setup
+projects_setup: projects_setup_ATCMcontrol_RunTimeSystem projects_setup_mect_plugins
+
 # Build the local projects.
-.PHONY: projects
-projects: projects_setup_ATCMcontrol_RunTimeSystem projects_setup_mect_plugins
+.PHONY: projects_build
+projects_build:
 	test -d projects
 	$(MAKE) -C projects clean all
+
+# Setup and build the local projects.
+.PHONY: projects
+projects: projects_setup projects_build
+
 
 # Build the default target image.
 .PHONY: image
@@ -467,13 +480,13 @@ images: TPAC1006_IP112_320x240 TPAC1006_IP118_320x240 TPAC1006_320x240 TPAC1006_
 # Target TPAC 1006, 320x240, IP 192.168.5.112
 
 TPAC1006_IP112_320x240%: MECT_SUFFIX := tpac_1006_320x240
-TPAC1006_IP112_320x240%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1006_IP112_320x240_r$(MECT_BUILD_RELEASE)
+TPAC1006_IP112_320x240%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1006_IP112_320x240_ms$(MECT_BUILD_RELEASE)
 TPAC1006_IP112_320x240%: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
 TPAC1006_IP112_320x240%: MECT_MFGZIP = $(MECT_MFGDIR)/../$(shell basename $(MECT_MFGDIR)).zip
 TPAC1006_IP112_320x240%: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 TPAC1006_IP112_320x240%: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 TPAC1006_IP112_320x240%: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
-TPAC1006_IP112_320x240%: MECT_KERNELRPM = $(subst /kernel-,/kernel-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
+TPAC1006_IP112_320x240%: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
 TPAC1006_IP112_320x240%: MECT_KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1006_320x240.config
 
 .PHONY: TPAC1006_IP112_320x240
@@ -504,13 +517,13 @@ TPAC1006_IP112_320x240_mfg: TPAC1006_IP112_320x240_boot TPAC1006_IP112_320x240_r
 # Target TPAC 1006, 320x240, IP 192.168.5.118
 
 TPAC1006_IP118_320x240%: MECT_SUFFIX := tpac_1006_320x240
-TPAC1006_IP118_320x240%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1006_IP118_320x240_r$(MECT_BUILD_RELEASE)
+TPAC1006_IP118_320x240%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1006_IP118_320x240_ms$(MECT_BUILD_RELEASE)
 TPAC1006_IP118_320x240%: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
 TPAC1006_IP118_320x240%: MECT_MFGZIP = $(MECT_MFGDIR)/../$(shell basename $(MECT_MFGDIR)).zip
 TPAC1006_IP118_320x240%: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 TPAC1006_IP118_320x240%: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 TPAC1006_IP118_320x240%: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
-TPAC1006_IP118_320x240%: MECT_KERNELRPM = $(subst /kernel-,/kernel-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
+TPAC1006_IP118_320x240%: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
 TPAC1006_IP118_320x240%: MECT_KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1006_320x240.config
 
 .PHONY: TPAC1006_IP118_320x240
@@ -541,13 +554,13 @@ TPAC1006_IP118_320x240_mfg: TPAC1006_IP118_320x240_boot TPAC1006_IP118_320x240_r
 # Target TPAC 1006, 320x240
 
 TPAC1006_320x240%: MECT_SUFFIX := tpac_1006_320x240
-TPAC1006_320x240%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1006_320x240_r$(MECT_BUILD_RELEASE)
+TPAC1006_320x240%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1006_320x240_ms$(MECT_BUILD_RELEASE)
 TPAC1006_320x240%: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
 TPAC1006_320x240%: MECT_MFGZIP = $(MECT_MFGDIR)/../$(shell basename $(MECT_MFGDIR)).zip
 TPAC1006_320x240%: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 TPAC1006_320x240%: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 TPAC1006_320x240%: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
-TPAC1006_320x240%: MECT_KERNELRPM = $(subst /kernel-,/kernel-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
+TPAC1006_320x240%: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
 TPAC1006_320x240%: MECT_KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1006_320x240.config
 
 .PHONY: TPAC1006_320x240
@@ -572,13 +585,13 @@ TPAC1006_320x240_mfg: TPAC1006_320x240_boot TPAC1006_320x240_rfs TPAC1006_320x24
 # Target TPAC 1006, 640x480, IP 192.168.5.119
 
 TPAC1006_IP119_640x480%: MECT_SUFFIX := tpac_1006_640x480
-TPAC1006_IP119_640x480%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1006_IP119_640x480_r$(MECT_BUILD_RELEASE)
+TPAC1006_IP119_640x480%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1006_IP119_640x480_ms$(MECT_BUILD_RELEASE)
 TPAC1006_IP119_640x480%: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
 TPAC1006_IP119_640x480%: MECT_MFGZIP = $(MECT_MFGDIR)/../$(shell basename $(MECT_MFGDIR)).zip
 TPAC1006_IP119_640x480%: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 TPAC1006_IP119_640x480%: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 TPAC1006_IP119_640x480%: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
-TPAC1006_IP119_640x480%: MECT_KERNELRPM = $(subst /kernel-,/kernel-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
+TPAC1006_IP119_640x480%: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
 TPAC1006_IP119_640x480%: MECT_KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1006_640x480.config
 
 .PHONY: TPAC1006_IP119_640x480
@@ -609,13 +622,13 @@ TPAC1006_IP119_640x480_mfg: TPAC1006_IP119_640x480_boot TPAC1006_IP119_640x480_r
 # Target TPAC 1006, 640x480
 
 TPAC1006_640x480%: MECT_SUFFIX := tpac_1006_640x480
-TPAC1006_640x480%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1006_640x480_r$(MECT_BUILD_RELEASE)
+TPAC1006_640x480%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1006_640x480_ms$(MECT_BUILD_RELEASE)
 TPAC1006_640x480%: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
 TPAC1006_640x480%: MECT_MFGZIP = $(MECT_MFGDIR)/../$(shell basename $(MECT_MFGDIR)).zip
 TPAC1006_640x480%: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 TPAC1006_640x480%: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 TPAC1006_640x480%: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
-TPAC1006_640x480%: MECT_KERNELRPM = $(subst /kernel-,/kernel-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
+TPAC1006_640x480%: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
 TPAC1006_640x480%: MECT_KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1006_640x480.config
 
 .PHONY: TPAC1006_640x480
@@ -640,13 +653,13 @@ TPAC1006_640x480_mfg: TPAC1006_640x480_boot TPAC1006_640x480_rfs TPAC1006_640x48
 # Target TPAC 1007, 480x272 pixels, IP 192.168.5.113
 
 TPAC1007_IP113_480x272%: MECT_SUFFIX := tpac_1007_480x272
-TPAC1007_IP113_480x272%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1007_IP113_480x272_r$(MECT_BUILD_RELEASE)
+TPAC1007_IP113_480x272%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1007_IP113_480x272_ms$(MECT_BUILD_RELEASE)
 TPAC1007_IP113_480x272%: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
 TPAC1007_IP113_480x272%: MECT_MFGZIP = $(MECT_MFGDIR)/../$(shell basename $(MECT_MFGDIR)).zip
 TPAC1007_IP113_480x272%: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 TPAC1007_IP113_480x272%: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 TPAC1007_IP113_480x272%: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
-TPAC1007_IP113_480x272%: MECT_KERNELRPM = $(subst /kernel-,/kernel-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
+TPAC1007_IP113_480x272%: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
 TPAC1007_IP113_480x272%: MECT_KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1007_480x272.config
 
 .PHONY: TPAC1007_IP113_480x272
@@ -677,13 +690,13 @@ TPAC1007_IP113_480x272_mfg: TPAC1007_IP113_480x272_boot TPAC1007_IP113_480x272_r
 # Target TPAC 1007, 480x272 pixels, IP 192.168.5.114
 
 TPAC1007_IP114_480x272%: MECT_SUFFIX := tpac_1007_480x272
-TPAC1007_IP114_480x272%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1007_IP114_480x272_r$(MECT_BUILD_RELEASE)
+TPAC1007_IP114_480x272%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1007_IP114_480x272_ms$(MECT_BUILD_RELEASE)
 TPAC1007_IP114_480x272%: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
 TPAC1007_IP114_480x272%: MECT_MFGZIP = $(MECT_MFGDIR)/../$(shell basename $(MECT_MFGDIR)).zip
 TPAC1007_IP114_480x272%: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 TPAC1007_IP114_480x272%: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 TPAC1007_IP114_480x272%: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
-TPAC1007_IP114_480x272%: MECT_KERNELRPM = $(subst /kernel-,/kernel-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
+TPAC1007_IP114_480x272%: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
 TPAC1007_IP114_480x272%: MECT_KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1007_480x272.config
 
 .PHONY: TPAC1007_IP114_480x272
@@ -714,13 +727,13 @@ TPAC1007_IP114_480x272_mfg: TPAC1007_IP114_480x272_boot TPAC1007_IP114_480x272_r
 # Target TPAC 1007, 480x272 pixels, IP 192.168.5.120
 
 TPAC1007_IP120_480x272%: MECT_SUFFIX := tpac_1007_480x272
-TPAC1007_IP120_480x272%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1007_IP120_480x272_r$(MECT_BUILD_RELEASE)
+TPAC1007_IP120_480x272%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1007_IP120_480x272_ms$(MECT_BUILD_RELEASE)
 TPAC1007_IP120_480x272%: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
 TPAC1007_IP120_480x272%: MECT_MFGZIP = $(MECT_MFGDIR)/../$(shell basename $(MECT_MFGDIR)).zip
 TPAC1007_IP120_480x272%: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 TPAC1007_IP120_480x272%: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 TPAC1007_IP120_480x272%: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
-TPAC1007_IP120_480x272%: MECT_KERNELRPM = $(subst /kernel-,/kernel-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
+TPAC1007_IP120_480x272%: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
 TPAC1007_IP120_480x272%: MECT_KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1007_480x272.config
 
 .PHONY: TPAC1007_IP120_480x272
@@ -751,13 +764,13 @@ TPAC1007_IP120_480x272_mfg: TPAC1007_IP120_480x272_boot TPAC1007_IP120_480x272_r
 # Target TPAC 1007, 480x272
 
 TPAC1007_480x272%: MECT_SUFFIX := tpac_1007_480x272
-TPAC1007_480x272%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1007_480x272_r$(MECT_BUILD_RELEASE)
+TPAC1007_480x272%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1007_480x272_ms$(MECT_BUILD_RELEASE)
 TPAC1007_480x272%: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
 TPAC1007_480x272%: MECT_MFGZIP = $(MECT_MFGDIR)/../$(shell basename $(MECT_MFGDIR)).zip
 TPAC1007_480x272%: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 TPAC1007_480x272%: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 TPAC1007_480x272%: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
-TPAC1007_480x272%: MECT_KERNELRPM = $(subst /kernel-,/kernel-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
+TPAC1007_480x272%: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
 TPAC1007_480x272%: MECT_KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1007_480x272.config
 
 .PHONY: TPAC1007_480x272
@@ -782,13 +795,13 @@ TPAC1007_480x272_mfg: TPAC1007_480x272_boot TPAC1007_480x272_rfs TPAC1007_480x27
 # Target TPAC 1008, 800x600, IP 192.168.5.208
 
 TPAC1008_IP208_800x600%: MECT_SUFFIX := tpac_1008_800x600
-TPAC1008_IP208_800x600%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1008_IP208_800x600_r$(MECT_BUILD_RELEASE)
+TPAC1008_IP208_800x600%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1008_IP208_800x600_ms$(MECT_BUILD_RELEASE)
 TPAC1008_IP208_800x600%: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
 TPAC1008_IP208_800x600%: MECT_MFGZIP = $(MECT_MFGDIR)/../$(shell basename $(MECT_MFGDIR)).zip
 TPAC1008_IP208_800x600%: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 TPAC1008_IP208_800x600%: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 TPAC1008_IP208_800x600%: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
-TPAC1008_IP208_800x600%: MECT_KERNELRPM = $(subst /kernel-,/kernel-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
+TPAC1008_IP208_800x600%: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
 TPAC1008_IP208_800x600%: MECT_KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1008_800x480.config
 
 .PHONY: TPAC1008_IP208_800x600
@@ -819,13 +832,13 @@ TPAC1008_IP208_800x600_mfg: TPAC1008_IP208_800x600_boot TPAC1008_IP208_800x600_r
 # Target TPAC 1008, 800x600
 
 TPAC1008_800x600%: MECT_SUFFIX := tpac_1008_800x600
-TPAC1008_800x600%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1008_800x600_r$(MECT_BUILD_RELEASE)
+TPAC1008_800x600%: MECT_TGTDIR := $(MECT_IMGDIR)/TPAC1008_800x600_ms$(MECT_BUILD_RELEASE)
 TPAC1008_800x600%: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
 TPAC1008_800x600%: MECT_MFGZIP = $(MECT_MFGDIR)/../$(shell basename $(MECT_MFGDIR)).zip
 TPAC1008_800x600%: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 TPAC1008_800x600%: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 TPAC1008_800x600%: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
-TPAC1008_800x600%: MECT_KERNELRPM = $(subst /kernel-,/kernel-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
+TPAC1008_800x600%: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM))
 TPAC1008_800x600%: MECT_KERNEL_TARGET_CONF := kernel-2.6.35-imx28-tpac1008_800x480.config
 
 .PHONY: TPAC1008_800x600
@@ -851,16 +864,16 @@ TPAC1008_800x600_mfg: TPAC1008_800x600_boot TPAC1008_800x600_rfs TPAC1008_800x60
 #
 
 # Build the target-specific kernel.
-$(subst /kernel-,/kernel-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM)): $(MECT_LTIB_KERNEL_TS_RPM)
+$(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM)): $(MECT_LTIB_KERNEL_TS_RPM)
 	test -n "$(MECT_SUFFIX)" -a -n "$(MECT_KERNEL_TARGET_CONF)"
 	touch -r $(MECT_LTIB_KERNEL_TS_RPM) /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp)
 	rm -rf $(MECT_LTIBDIR)/rpm/BUILD/linux-*
 	ln -sf $(MECT_KERNEL_TARGET_CONF) $(MECT_KERNEL_CONF)
 	cd $(MECT_LTIBDIR); ./ltib -f -p kernel
 	touch -r /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp) $(MECT_LTIB_KERNEL_TS_RPM); rm -f /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp)
-	set -e; cd $(MECT_RPMDIR); for rpm in '' `ls kernel-*.$(MECT_TARGET_ARCH).rpm imx-bootlets-src-*.$(MECT_TARGET_ARCH).rpm 2>/dev/null | sed '/-tpac_/ d;'`; do \
+	set -e; cd $(MECT_RPMDIR); for rpm in '' `ls kernel-rfs-*_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm imx-bootlets-src-mfg-*_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm 2>/dev/null | sed '/-tpac_/ d;'`; do \
 		test -n "$$rpm" || continue; \
-		mv $$rpm `echo $$rpm | sed 's/^kernel-/kernel-$(MECT_SUFFIX)-/; s/^imx-bootlets-src-/imx-bootlets-src-$(MECT_SUFFIX)-/;'`; \
+		mv $$rpm `echo $$rpm | sed 's/^\(kernel\|imx-bootlets-src\)-\(rfs\|mfg\)-/\1-\2-$(MECT_SUFFIX)-/'`; \
 	done
 
 $(MECT_LTIB_KERNEL_TS_RPM):
@@ -873,7 +886,7 @@ target_boot: $(MECT_COMMON_RFSPKGS)
 	$(MAKE) MECT_SUFFIX=$(MECT_SUFFIX) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
 	sudo rm -rf $(MECT_BOOTDIR)
 	mkdir -p $(MECT_BOOTDIR)/var/lib/rpm
-	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_RPMDIR)/imx-bootlets-src-$(MECT_SUFFIX)-mfg-2.6.35.3-1.1.0.$(MECT_TARGET_ARCH).rpm
+	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_RPMDIR)/imx-bootlets-src-mfg-$(MECT_SUFFIX)-2.6.35.3-1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
 	sudo rm -f $(MECT_BOOTDIR)/var/lib/rpm/*
 	sudo rmdir $(MECT_BOOTDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_BOOTDIR)/var/lib
@@ -886,7 +899,7 @@ target_rfs: $(MECT_COMMON_RFSPKGS)
 	$(MAKE) MECT_SUFFIX=$(MECT_SUFFIX) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
 	sudo rm -rf $(MECT_RFSDIR)
 	mkdir -p $(MECT_RFSDIR)/var/lib/rpm $(MECT_RFSDIR)/tmp/ltib
-	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_COMMON_RFSPKGS) $(subst /kernel-,/kernel-$(MECT_SUFFIX)-,$(MECT_TARGET_RFSPKGS))
+	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_COMMON_RFSPKGS) $(subst /kernel-rfs-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_TARGET_RFSPKGS))
 	sudo rm -f $(MECT_RFSDIR)/var/lib/rpm/*
 	sudo rmdir $(MECT_RFSDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_RFSDIR)/var/lib

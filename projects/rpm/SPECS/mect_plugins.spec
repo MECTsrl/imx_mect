@@ -1,12 +1,12 @@
 Summary         : Custom Qt plugins for HMI development.
 Name            : mect_plugins
-Version         : %{ver}
-Release         : 1_%{rel}
+Version         : %(echo ${MECT_BUILD_PLUGINSCRT_TAG})
+Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
 License         : GPL
 Vendor          : MECT s.r.l.
 Packager        : Mihai Lazarescu
 Group           : System Environment/Libraries
-Source          : mect_plugins-%{version}.tar
+Source          : %{name}-%{version}.tar
 BuildRoot       : %{_tmppath}/%{name}
 Prefix          : %{MECT_RFSDIR}
 AutoReqProv     : no
@@ -49,7 +49,10 @@ rm -rf $RPM_BUILD_ROOT
 make -j1 INSTALL_ROOT=%{buildroot} install
 
 %clean
-sudo rm -rf $RPM_BUILD_ROOT
+export LC_ALL
+LC_ALL=C
+
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)

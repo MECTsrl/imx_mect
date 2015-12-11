@@ -1,6 +1,6 @@
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.config ltib/config/.config
 --- ltib.reference/config/.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/.config	2015-12-03 15:48:35.026565218 +0100
++++ ltib/config/.config	2015-12-10 17:26:19.026698009 +0100
 @@ -0,0 +1,56 @@
 +#
 +# Automatically generated make config: don't edit
@@ -60,7 +60,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_LTIB_RELEASE="8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.config.cmd ltib/config/.config.cmd
 --- ltib.reference/config/.config.cmd	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/.config.cmd	2015-12-03 15:48:35.026565218 +0100
++++ ltib/config/.config.cmd	2015-12-10 17:26:19.030698009 +0100
 @@ -0,0 +1,7 @@
 +deps_config := \
 +	userspace/defaults.lkc \
@@ -71,7 +71,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +$(deps_config):
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.tmpconfig.h ltib/config/.tmpconfig.h
 --- ltib.reference/config/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/.tmpconfig.h	2015-12-03 15:48:35.026565218 +0100
++++ ltib/config/.tmpconfig.h	2015-12-10 17:26:19.030698009 +0100
 @@ -0,0 +1,59 @@
 +/*
 + * Automatically generated C config: don't edit
@@ -134,7 +134,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +#define CONFIG_LTIB_RELEASE "8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/defaults/busybox.config ltib/config/defaults/busybox.config
 --- ltib.reference/config/defaults/busybox.config	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/defaults/busybox.config	2015-12-03 15:48:35.030565167 +0100
++++ ltib/config/defaults/busybox.config	2015-12-10 17:26:19.030698009 +0100
 @@ -487,11 +487,11 @@
  CONFIG_LOSETUP=y
  CONFIG_MDEV=y
@@ -172,7 +172,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  # CONFIG_FEATURE_LESS_FLAGCS is not set
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/main.lkc ltib/config/main.lkc
 --- ltib.reference/config/main.lkc	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/main.lkc	2015-12-03 15:48:35.030565167 +0100
++++ ltib/config/main.lkc	2015-12-10 17:26:19.030698009 +0100
 @@ -0,0 +1,18 @@
 +config CONFIG_TITLE
 +    string
@@ -194,7 +194,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +    default "config/platform/imx" if PLATFORM_imx
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/ltib.preconfig ltib/config/platform/host/ltib.preconfig
 --- ltib.reference/config/platform/host/ltib.preconfig	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/host/ltib.preconfig	2015-12-03 15:48:35.030565167 +0100
++++ ltib/config/platform/host/ltib.preconfig	2015-12-10 17:26:19.030698009 +0100
 @@ -56,8 +56,6 @@
  CONFIG_KERNEL_NONE=y
  # CONFIG_PKG_KERNEL_FORCE is not set
@@ -451,7 +451,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  CONFIG_GLIBC_DYNAMIC_LINKER="/lib/ld.so.1"
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/main.lkc ltib/config/platform/host/main.lkc
 --- ltib.reference/config/platform/host/main.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/host/main.lkc	2015-12-03 15:48:35.034565117 +0100
++++ ltib/config/platform/host/main.lkc	2015-12-10 17:26:19.030698009 +0100
 @@ -127,12 +127,6 @@
       help 
       	This is imx233 boot stream convert tools
@@ -467,14 +467,14 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  source ../../userspace/defaults.lkc
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/pkg_map ltib/config/platform/host/pkg_map
 --- ltib.reference/config/platform/host/pkg_map	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/host/pkg_map	2015-12-03 15:48:35.034565117 +0100
++++ ltib/config/platform/host/pkg_map	2015-12-10 17:26:19.030698009 +0100
 @@ -1,3 +1,2 @@
  PKG_MTD_UTILS = mtd-utils
  PKG_ELFTOSB = elftosb
 -PKG_UBUNTU_ARM_LIB = ubuntu_arm_lib
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.config	2015-12-03 15:48:35.000000000 +0100
++++ ltib/config/platform/imx/.config	2015-12-10 17:26:19.000000000 +0100
 @@ -0,0 +1,650 @@
 +#
 +# Automatically generated make config: don't edit
@@ -1128,7 +1128,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_LTIB_RELEASE="8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config.cmd ltib/config/platform/imx/.config.cmd
 --- ltib.reference/config/platform/imx/.config.cmd	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.config.cmd	2015-12-03 15:48:35.034565117 +0100
++++ ltib/config/platform/imx/.config.cmd	2015-12-10 17:26:19.030698009 +0100
 @@ -0,0 +1,22 @@
 +deps_config := \
 +	../../userspace/defaults.lkc \
@@ -1154,7 +1154,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +$(deps_config):
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.tmpconfig.h	2015-12-03 15:48:35.038565067 +0100
++++ ltib/config/platform/imx/.tmpconfig.h	2015-12-10 17:26:19.030698009 +0100
 @@ -0,0 +1,651 @@
 +/*
 + * Automatically generated C config: don't edit
@@ -1809,7 +1809,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +#define CONFIG_LTIB_RELEASE "8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/busybox.config ltib/config/platform/imx/busybox.config
 --- ltib.reference/config/platform/imx/busybox.config	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/busybox.config	2015-12-03 15:48:35.038565067 +0100
++++ ltib/config/platform/imx/busybox.config	2015-12-10 17:26:19.030698009 +0100
 @@ -1,7 +1,6 @@
  #
  # Automatically generated make config: don't edit
@@ -2808,7 +2808,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  CONFIG_LOGGER=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/defconfig.dev	2015-12-03 15:48:35.042565017 +0100
++++ ltib/config/platform/imx/defconfig.dev	2015-12-10 17:26:19.030698009 +0100
 @@ -0,0 +1,650 @@
 +#
 +# Automatically generated make config: don't edit
@@ -3462,7 +3462,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_LTIB_RELEASE="8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/dev.profile ltib/config/platform/imx/dev.profile
 --- ltib.reference/config/platform/imx/dev.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/dev.profile	2015-12-03 15:48:35.042565017 +0100
++++ ltib/config/platform/imx/dev.profile	2015-12-10 17:26:19.030698009 +0100
 @@ -41,4 +41,3 @@
  CONFIG_PKG_USBUTILS=y
  CONFIG_PKG_UUC=y
@@ -3470,7 +3470,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -CONFIG_PKG_PERF=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/fsl_mm.lkc ltib/config/platform/imx/fsl_mm.lkc
 --- ltib.reference/config/platform/imx/fsl_mm.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/fsl_mm.lkc	2015-12-03 15:48:35.042565017 +0100
++++ ltib/config/platform/imx/fsl_mm.lkc	2015-12-10 17:26:19.034698008 +0100
 @@ -1,63 +1,46 @@
  menu "Freescale Multimedia Plugins/Codecs"
  
@@ -3565,7 +3565,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  endmenu
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx28_updater.cf ltib/config/platform/imx/imx28_updater.cf
 --- ltib.reference/config/platform/imx/imx28_updater.cf	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/imx28_updater.cf	2015-12-03 15:48:35.042565017 +0100
++++ ltib/config/platform/imx/imx28_updater.cf	2015-12-10 17:26:19.034698008 +0100
 @@ -576,3 +576,4 @@
  CONFIG_SYSCFG_CUTARG="zImage"
  CONFIG_CAP_FSL_INT=y
@@ -3573,7 +3573,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_SYSCFG_AUTOEXEC=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx51.cf ltib/config/platform/imx/imx51.cf
 --- ltib.reference/config/platform/imx/imx51.cf	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/imx51.cf	2015-12-03 15:48:35.042565017 +0100
++++ ltib/config/platform/imx/imx51.cf	2015-12-10 17:26:19.034698008 +0100
 @@ -221,7 +221,7 @@
  # CONFIG_PKG_I2C_TOOLS is not set
  # CONFIG_PKG_IOZONE is not set
@@ -3585,7 +3585,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  # CONFIG_PKG_OPENSWAN is not set
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config	2015-12-03 15:48:35.050564916 +0100
++++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config	2015-12-10 17:26:19.038698008 +0100
 @@ -0,0 +1,2447 @@
 +#
 +# Automatically generated make config: don't edit
@@ -3988,15 +3988,15 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_MECT_CUSTOMIZATION=y
 +# CONFIG_MECT_TPAC1006_320x240 is not set
 +# CONFIG_MECT_TPAC1006_640x480 is not set
-+CONFIG_MECT_TPAC1007_480x272=y
-+# CONFIG_MECT_TPAC1008_800x480 is not set
++# CONFIG_MECT_TPAC1007_480x272 is not set
++CONFIG_MECT_TPAC1008_800x480=y
 +# CONFIG_MECT_VAL01 is not set
 +# CONFIG_MECT_ATN01 is not set
 +# CONFIG_MECT_ACQUATI is not set
 +# CONFIG_MECT_ELE01 is not set
-+CONFIG_MECT_PRODUCT="MECT TPAC1007 480x272 panel"
++CONFIG_MECT_PRODUCT="MECT TPAC1008/TP1070 800x480 panel"
 +CONFIG_MECT_GPIO_POWERFAIL=y
-+# CONFIG_MECT_RAISING_PWRFAIL is not set
++CONFIG_MECT_RAISING_PWRFAIL=y
 +CONFIG_MXS_ICOLL=y
 +CONFIG_MXS_EARLY_CONSOLE=y
 +CONFIG_MXS_DMA_ENGINE=y
@@ -5156,8 +5156,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_FB_MXS=y
 +# CONFIG_FB_MXS_LCD_HH057 is not set
 +# CONFIG_FB_MXS_LCD_HH057_640x480 is not set
-+# CONFIG_FB_MXS_LCD_FRMK7 is not set
-+CONFIG_FB_MXS_LCD_TM043=y
++CONFIG_FB_MXS_LCD_FRMK7=y
++# CONFIG_FB_MXS_LCD_TM043 is not set
 +# CONFIG_FB_MXS_LCD_RK043 is not set
 +# CONFIG_FB_MXS_LCD_43WVF1G is not set
 +# CONFIG_FB_MXS_LCD_LMS430 is not set
@@ -5197,8 +5197,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +# CONFIG_LOGO_MECT_CLUT224 is not set
 +# CONFIG_LOGO_MECT_320x240 is not set
 +# CONFIG_LOGO_MECT_640x480 is not set
-+CONFIG_LOGO_MECT_480x272=y
-+# CONFIG_LOGO_MECT_800x480 is not set
++# CONFIG_LOGO_MECT_480x272 is not set
++CONFIG_LOGO_MECT_800x480=y
 +# CONFIG_LOGO_VAL01_480x272 is not set
 +# CONFIG_LOGO_ATN01_480x272 is not set
 +# CONFIG_LOGO_ACQUATI_320x240 is not set
@@ -6036,7 +6036,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_GENERIC_ATOMIC64=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config.dev ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config.dev
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config.dev	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config.dev	2015-12-03 15:48:35.046564966 +0100
++++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config.dev	2015-12-10 17:26:19.034698008 +0100
 @@ -0,0 +1,2439 @@
 +#
 +# Automatically generated make config: don't edit
@@ -8479,7 +8479,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_GENERIC_ATOMIC64=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config	2015-12-03 15:48:35.050564916 +0100
++++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config	2015-12-10 17:26:19.034698008 +0100
 @@ -0,0 +1,2447 @@
 +#
 +# Automatically generated make config: don't edit
@@ -10930,7 +10930,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_GENERIC_ATOMIC64=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config	2015-12-03 15:48:35.050564916 +0100
++++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config	2015-12-10 17:26:19.038698008 +0100
 @@ -0,0 +1,2447 @@
 +#
 +# Automatically generated make config: don't edit
@@ -13381,7 +13381,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_GENERIC_ATOMIC64=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config	2015-12-03 15:48:35.050564916 +0100
++++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config	2015-12-10 17:26:19.038698008 +0100
 @@ -0,0 +1,2447 @@
 +#
 +# Automatically generated make config: don't edit
@@ -15832,7 +15832,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_GENERIC_ATOMIC64=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config	2015-12-03 15:48:35.054564866 +0100
++++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config	2015-12-10 17:26:19.038698008 +0100
 @@ -0,0 +1,2447 @@
 +#
 +# Automatically generated make config: don't edit
@@ -18283,8 +18283,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_GENERIC_ATOMIC64=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35.spec.in ltib/config/platform/imx/kernel-2.6.35.spec.in
 --- ltib.reference/config/platform/imx/kernel-2.6.35.spec.in	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/kernel-2.6.35.spec.in	2015-12-03 15:48:35.054564866 +0100
-@@ -2,6 +2,8 @@
++++ ltib/config/platform/imx/kernel-2.6.35.spec.in	2015-12-10 17:26:19.038698008 +0100
+@@ -2,32 +2,630 @@
  
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
  %define pkg_name linux
@@ -18293,7 +18293,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  Summary         : Linux kernel (core of the Linux operating system)
  Name            : kernel
-@@ -12,22 +14,617 @@
+ Version         : 2.6.35.3
+-Release         : imx_1.1.0
++Release         : imx_1.1.0_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : GPL
+ Vendor          : Freescale Semiconductor
  Packager        : Rob Herring
  Group           : System Environment/Kernel
  Source          : %{pkg_name}-%{version}.tar.bz2
@@ -18363,442 +18367,443 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Package rfs
 +Summary         : Trimmed kernel for root file system requirements.
-+Packager        : Mihai Lazarescu (MECT s.r.l.)
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
 +%Description rfs
 +kernel package contents restricted to just the files that are
 +needed at run time on the target.
 +
-+%Package dev-usbserial
++%Package rfs-dev-usbserial
 +Summary         : Kernel module for the USB serial driver.
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+%Description dev-usbserial
++%Description rfs-dev-usbserial
 +%{summary}
 +
-+%Package dev-usbserial-aircable
++%Package rfs-dev-usbserial-aircable
 +Summary         : USB AIRcable Bluetooth Dongle Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-aircable
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-aircable
 +%{summary}
 +
-+%Package dev-usbserial-ark3116
++%Package rfs-dev-usbserial-ark3116
 +Summary         : USB ARK Micro 3116 USB Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-ark3116
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-ark3116
 +%{summary}
 +
-+%Package dev-usbserial-belkin_sa
++%Package rfs-dev-usbserial-belkin_sa
 +Summary         : USB Belkin and Peracom Single Port Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-belkin_sa
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-belkin_sa
 +%{summary}
 +
-+%Package dev-usbserial-ch341
++%Package rfs-dev-usbserial-ch341
 +Summary         : USB Winchiphead CH341 Single Port Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-ch341
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-ch341
 +%{summary}
 +
-+%Package dev-usbserial-cp210x
++%Package rfs-dev-usbserial-cp210x
 +Summary         : USB CP210x family of UART Bridge Controllers
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-cp210x
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-cp210x
 +%{summary}
 +
-+%Package dev-usbserial-cyberjack
++%Package rfs-dev-usbserial-cyberjack
 +Summary         : USB REINER SCT cyberJack pinpad/e-com chipcard reader
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-cyberjack
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-cyberjack
 +%{summary}
 +
-+%Package dev-usbserial-cypress_m8
++%Package rfs-dev-usbserial-cypress_m8
 +Summary         : USB Cypress M8 USB Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-cypress_m8
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-cypress_m8
 +%{summary}
 +
-+%Package dev-usbserial-digi_acceleport
++%Package rfs-dev-usbserial-digi_acceleport
 +Summary         : USB Digi International AccelePort USB Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-digi_acceleport
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-digi_acceleport
 +%{summary}
 +
-+%Package dev-usbserial-empeg
++%Package rfs-dev-usbserial-empeg
 +Summary         : USB Empeg empeg-car Mark I/II Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-empeg
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-empeg
 +%{summary}
 +
-+%Package dev-usbserial-ftdi_sio
++%Package rfs-dev-usbserial-ftdi_sio
 +Summary         : USB FTDI Single Port Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-ftdi_sio
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-ftdi_sio
 +%{summary}
  
-+%Package dev-usbserial-funsoft
++%Package rfs-dev-usbserial-funsoft
 +Summary         : USB Fundamental Software Dongle Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-funsoft
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-funsoft
 +%{summary}
 +
-+%Package dev-usbserial-garmin_gps
++%Package rfs-dev-usbserial-garmin_gps
 +Summary         : USB Garmin GPS driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-garmin_gps
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-garmin_gps
 +%{summary}
 +
-+%Package dev-usbserial-hp4x
++%Package rfs-dev-usbserial-hp4x
 +Summary         : USB HP4x Calculators support
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-hp4x
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-hp4x
 +%{summary}
 +
-+%Package dev-usbserial-io_edgeport
++%Package rfs-dev-usbserial-io_edgeport
 +Summary         : USB Inside Out Edgeport Serial Driver (TI devices)
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-io_edgeport
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-io_edgeport
 +%{summary}
 +
-+%Package dev-usbserial-io_ti
++%Package rfs-dev-usbserial-io_ti
 +Summary         : Edgeport USB Serial Converter driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-io_ti
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-io_ti
 +%{summary}
 +
-+%Package dev-usbserial-ipaq
++%Package rfs-dev-usbserial-ipaq
 +Summary         : USB PocketPC PDA Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-ipaq
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-ipaq
 +%{summary}
 +
-+%Package dev-usbserial-ipw
++%Package rfs-dev-usbserial-ipw
 +Summary         : USB IPWireless (3G UMTS TDD) Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-ipw
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-ipw
 +%{summary}
 +
-+%Package dev-usbserial-ir
++%Package rfs-dev-usbserial-ir
 +Summary         : USB IR Dongle Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-ir
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-ir
 +%{summary}
 +
-+%Package dev-usbserial-iuu_phoenix
++%Package rfs-dev-usbserial-iuu_phoenix
 +Summary         : USB Infinity USB Unlimited Phoenix Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-iuu_phoenix
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-iuu_phoenix
 +%{summary}
 +
-+%Package dev-usbserial-keyspan
++%Package rfs-dev-usbserial-keyspan
 +Summary         : USB Keyspan USA-xxx Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-keyspan
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-keyspan
 +%{summary}
 +
-+%Package dev-usbserial-keyspan_pda
++%Package rfs-dev-usbserial-keyspan_pda
 +Summary         : USB Keyspan PDA Single Port Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-keyspan_pda
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-keyspan_pda
 +%{summary}
 +
-+%Package dev-usbserial-kl5kusb105
++%Package rfs-dev-usbserial-kl5kusb105
 +Summary         : USB KL5KUSB105 (Palmconnect) Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-kl5kusb105
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-kl5kusb105
 +%{summary}
 +
-+%Package dev-usbserial-kobil_sct
++%Package rfs-dev-usbserial-kobil_sct
 +Summary         : USB KOBIL chipcard reader
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-kobil_sct
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-kobil_sct
 +%{summary}
 +
-+%Package dev-usbserial-mct_u232
++%Package rfs-dev-usbserial-mct_u232
 +Summary         : USB MCT Single Port Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-mct_u232
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-mct_u232
 +%{summary}
 +
-+%Package dev-usbserial-mos7720
++%Package rfs-dev-usbserial-mos7720
 +Summary         : USB Moschip 7720 Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-mos7720
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-mos7720
 +%{summary}
 +
-+%Package dev-usbserial-mos7840
++%Package rfs-dev-usbserial-mos7840
 +Summary         : USB Moschip 7840/7820 USB Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-mos7840
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-mos7840
 +%{summary}
 +
-+%Package dev-usbserial-moto_modem
++%Package rfs-dev-usbserial-moto_modem
 +Summary         : USB Motorola Phone modem driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-moto_modem
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-moto_modem
 +%{summary}
 +
-+%Package dev-usbserial-navman
++%Package rfs-dev-usbserial-navman
 +Summary         : USB Navman GPS device
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-navman
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-navman
 +%{summary}
 +
-+%Package dev-usbserial-omninet
++%Package rfs-dev-usbserial-omninet
 +Summary         : USB ZyXEL omni.net LCD Plus Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-omninet
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-omninet
 +%{summary}
 +
-+%Package dev-usbserial-opticon
++%Package rfs-dev-usbserial-opticon
 +Summary         : USB Opticon Barcode driver (serial mode)
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-opticon
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-opticon
 +%{summary}
 +
-+%Package dev-usbserial-option
++%Package rfs-dev-usbserial-option
 +Summary         : USB driver for GSM and CDMA modems
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial kernel-dev-usbserial-wwan
-+%Description dev-usbserial-option
++Requires        : kernel-rfs-dev-usbserial kernel-dev-usbserial-wwan
++%Description rfs-dev-usbserial-option
 +%{summary}
 +
-+%Package dev-usbserial-oti6858
++%Package rfs-dev-usbserial-oti6858
 +Summary         : USB Ours Technology Inc. OTi-6858 USB To RS232 Bridge Controller
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-oti6858
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-oti6858
 +%{summary}
 +
-+%Package dev-usbserial-pl2303
++%Package rfs-dev-usbserial-pl2303
 +Summary         : USB Prolific 2303 Single Port Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-pl2303
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-pl2303
 +%{summary}
 +
-+%Package dev-usbserial-qcaux
++%Package rfs-dev-usbserial-qcaux
 +Summary         : USB Qualcomm Auxiliary Serial Port Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-qcaux
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-qcaux
 +%{summary}
 +
-+%Package dev-usbserial-qcserial
++%Package rfs-dev-usbserial-qcserial
 +Summary         : USB Qualcomm Serial modem
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial kernel-dev-usbserial-wwan
-+%Description dev-usbserial-qcserial
++Requires        : kernel-rfs-dev-usbserial kernel-dev-usbserial-wwan
++%Description rfs-dev-usbserial-qcserial
 +%{summary}
 +
-+%Package dev-usbserial-safe_serial
++%Package rfs-dev-usbserial-safe_serial
 +Summary         : USB Safe Serial (Encapsulated) Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-safe_serial
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-safe_serial
 +%{summary}
 +
-+%Package dev-usbserial-siemens_mpi
++%Package rfs-dev-usbserial-siemens_mpi
 +Summary         : USB Siemens MPI driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-siemens_mpi
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-siemens_mpi
 +%{summary}
 +
-+%Package dev-usbserial-sierra
++%Package rfs-dev-usbserial-sierra
 +Summary         : USB Sierra Wireless Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-sierra
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-sierra
 +%{summary}
 +
-+%Package dev-usbserial-spcp8x5
++%Package rfs-dev-usbserial-spcp8x5
 +Summary         : USB SPCP8x5 USB To Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-spcp8x5
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-spcp8x5
 +%{summary}
 +
-+%Package dev-usbserial-symbolserial
++%Package rfs-dev-usbserial-symbolserial
 +Summary         : USB Symbol Barcode driver (serial mode)
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-symbolserial
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-symbolserial
 +%{summary}
 +
-+%Package dev-usbserial-ti_3410_5052
++%Package rfs-dev-usbserial-ti_3410_5052
 +Summary         : USB TI 3410/5052 Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-ti_3410_5052
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-ti_3410_5052
 +%{summary}
 +
-+%Package dev-usbserial-debug
++%Package rfs-dev-usbserial-debug
 +Summary         : USB Debugging Device
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-debug
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-debug
 +%{summary}
 +
-+%Package dev-usbserial-wwan
++%Package rfs-dev-usbserial-wwan
 +Summary         : USB serial mobile broadband cards
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-wwan
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-wwan
 +%{summary}
 +
-+%Package dev-usbserial-visor
++%Package rfs-dev-usbserial-visor
 +Summary         : USB Handspring Visor / Palm m50x / Sony Clie Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-visor
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-visor
 +%{summary}
 +
-+%Package dev-usbserial-vivopay-serial
++%Package rfs-dev-usbserial-vivopay-serial
 +Summary         : USB ViVOpay serial interface driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-vivopay-serial
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-vivopay-serial
 +%{summary}
 +
-+%Package dev-usbserial-whiteheat
++%Package rfs-dev-usbserial-whiteheat
 +Summary         : USB ConnectTech WhiteHEAT Serial Driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-whiteheat
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-whiteheat
 +%{summary}
 +
-+%Package dev-usbserial-zio
++%Package rfs-dev-usbserial-zio
 +Summary         : ZIO Motherboard USB serial interface driver
 +Packager        : Mihai Lazarescu (MECT s.r.l.)
 +Group           : System Environment/Kernel
 +AutoReqProv     : no
-+Requires        : kernel-dev-usbserial
-+%Description dev-usbserial-zio
++Requires        : kernel-rfs-dev-usbserial
++%Description rfs-dev-usbserial-zio
 +%{summary}
 +
 +
@@ -18917,7 +18922,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/main.lkc ltib/config/platform/imx/main.lkc
 --- ltib.reference/config/platform/imx/main.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/main.lkc	2015-12-03 15:48:35.054564866 +0100
++++ ltib/config/platform/imx/main.lkc	2015-12-10 17:26:19.038698008 +0100
 @@ -15,7 +15,6 @@
      default "Freescale iMX37 3-Stack Board" if PLATFORM = "imx37_3stack"
      default "Freescale iMX51 3-Stack Board" if PLATFORM = "imx51_3stack"
@@ -19150,7 +19155,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  source ../../userspace/distro.lkc
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/max.profile ltib/config/platform/imx/max.profile
 --- ltib.reference/config/platform/imx/max.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/max.profile	2015-12-03 15:48:35.054564866 +0100
++++ ltib/config/platform/imx/max.profile	2015-12-10 17:26:19.038698008 +0100
 @@ -7,8 +7,8 @@
  CONFIG_PKG_AMD_GPU_BIN_MX35=y
  CONFIG_PKG_AMD_GPU_BIN_MX51=y
@@ -19455,7 +19460,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -}
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec	2015-12-04 14:45:07.055692940 +0100
++++ ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec	2015-12-10 17:26:19.038698008 +0100
 @@ -0,0 +1,187 @@
 +#!/bin/sh
 +
@@ -19646,7 +19651,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/min.profile ltib/config/platform/imx/min.profile
 --- ltib.reference/config/platform/imx/min.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/min.profile	2015-12-03 15:48:35.054564866 +0100
++++ ltib/config/platform/imx/min.profile	2015-12-10 17:26:19.038698008 +0100
 @@ -12,5 +12,3 @@
  CONFIG_PKG_UDEV=y
  CONFIG_PKG_UDEV_WANT_NON_RAID=y
@@ -19655,7 +19660,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -CONFIG_PKG_PYTHON=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/packages.lkc ltib/config/platform/imx/packages.lkc
 --- ltib.reference/config/platform/imx/packages.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/packages.lkc	2015-12-03 15:48:35.054564866 +0100
++++ ltib/config/platform/imx/packages.lkc	2015-12-10 17:26:19.038698008 +0100
 @@ -32,7 +32,7 @@
  
  config PKG_FIRMWARE_IMX
@@ -19739,7 +19744,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/pkg_map ltib/config/platform/imx/pkg_map
 --- ltib.reference/config/platform/imx/pkg_map	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/pkg_map	2015-12-03 15:48:35.058564815 +0100
++++ ltib/config/platform/imx/pkg_map	2015-12-10 17:26:19.038698008 +0100
 @@ -9,11 +9,19 @@
  PKG_IMX_TEST = imx-test
  PKG_KOBS_NG = kobs-ng
@@ -19785,7 +19790,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -PKG_PERF = perf
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/preconfigs.lkc ltib/config/platform/imx/preconfigs.lkc
 --- ltib.reference/config/platform/imx/preconfigs.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/preconfigs.lkc	2015-12-03 15:48:35.058564815 +0100
++++ ltib/config/platform/imx/preconfigs.lkc	2015-12-10 17:26:19.042698008 +0100
 @@ -21,12 +21,10 @@
          bool imx35_3stack
      config PCF_PLATFORM_IMX37_3STACK
@@ -19823,7 +19828,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
      string
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/release.profile ltib/config/platform/imx/release.profile
 --- ltib.reference/config/platform/imx/release.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/release.profile	2015-12-03 15:48:35.058564815 +0100
++++ ltib/config/platform/imx/release.profile	2015-12-10 17:26:19.042698008 +0100
 @@ -3,7 +3,6 @@
  CONFIG_PKG_AMD_GPU_BIN_MX35=y
  CONFIG_PKG_AMD_GPU_BIN_MX51=y
@@ -19840,7 +19845,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -CONFIG_PKG_PYTHON=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/release_gnome.profile ltib/config/platform/imx/release_gnome.profile
 --- ltib.reference/config/platform/imx/release_gnome.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/release_gnome.profile	2015-12-03 15:48:35.058564815 +0100
++++ ltib/config/platform/imx/release_gnome.profile	2015-12-10 17:26:19.042698008 +0100
 @@ -7,8 +7,8 @@
  CONFIG_PKG_AMD_GPU_BIN_MX35=y
  CONFIG_PKG_AMD_GPU_BIN_MX51=y
@@ -19900,16 +19905,31 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -CONFIG_PKG_PYTHON=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/u-boot.spec.in ltib/config/platform/imx/u-boot.spec.in
 --- ltib.reference/config/platform/imx/u-boot.spec.in	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/u-boot.spec.in	2015-12-03 15:48:35.058564815 +0100
-@@ -13,6 +13,7 @@
++++ ltib/config/platform/imx/u-boot.spec.in	2015-12-10 17:26:19.042698008 +0100
+@@ -1,18 +1,20 @@
+ # template = u-boot-common.tmpl
+ 
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
++%define verrel imx_2.6.35.3_1.1.0
+ 
+ Summary         : Universal Bootloader firmware
+ Name            : u-boot
+ Version         : 2009.08
+-Release         : imx_2.6.35.3_1.1.0
++Release         : %{verrel}_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : GPL
+ Vendor          : Freescale
+ Packager        : MAD
+ Group           : Applications/System
  Source          : %{name}-%{version}.tar.bz2
- Source1         : %{name}-v%{version}-%{release}.tar.bz2
+-Source1         : %{name}-v%{version}-%{release}.tar.bz2
++Source1         : %{name}-v%{version}-%{verrel}.tar.bz2
  BuildRoot       : %{_tmppath}/%{name}
 +Patch1          : u-boot-2009.08-1418123257.patch
  Prefix          : %{pfx}
  
  %Description
-@@ -28,5 +29,6 @@
+@@ -28,5 +30,6 @@
  
  chmod 755 patches/patch-uboot.sh
  ./patches/patch-uboot.sh
@@ -19918,7 +19938,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/updater.profile ltib/config/platform/imx/updater.profile
 --- ltib.reference/config/platform/imx/updater.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/updater.profile	2015-12-03 15:48:35.058564815 +0100
++++ ltib/config/platform/imx/updater.profile	2015-12-10 17:26:19.042698008 +0100
 @@ -10,8 +10,4 @@
  CONFIG_PKG_MTD_UTILS=y
  CONFIG_PKG_E2FSPROGS=y
@@ -19931,7 +19951,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_PKG_DOSFSTOOLS=y
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/deployment.lkc ltib/config/userspace/deployment.lkc
 --- ltib.reference/config/userspace/deployment.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/userspace/deployment.lkc	2015-12-03 15:48:35.058564815 +0100
++++ ltib/config/userspace/deployment.lkc	2015-12-10 17:26:19.042698008 +0100
 @@ -177,8 +177,8 @@
  config SYSCFG_RAM_DIRS
      depends SYSCFG_READONLY_FS || DEPLOYMENT_JFFS2
@@ -19945,7 +19965,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
         of 100000 times for a NOR device).  If you deploy to Flash,
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/packages.lkc ltib/config/userspace/packages.lkc
 --- ltib.reference/config/userspace/packages.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/userspace/packages.lkc	2015-12-03 15:48:35.058564815 +0100
++++ ltib/config/userspace/packages.lkc	2015-12-10 17:26:19.042698008 +0100
 @@ -229,6 +229,13 @@
        --with : debug access poll
        --without : gzip sendfile
@@ -20117,7 +20137,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  endmenu
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/pkg_map ltib/config/userspace/pkg_map
 --- ltib.reference/config/userspace/pkg_map	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/userspace/pkg_map	2015-12-03 15:48:35.062564765 +0100
++++ ltib/config/userspace/pkg_map	2015-12-10 17:26:19.042698008 +0100
 @@ -53,7 +53,6 @@
  PKG_BZIP2                        = bzip2
  PKG_DIFFUTILS                    = diffutils
@@ -20165,7 +20185,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  PKG_SYSCONFIG                    = sysconfig
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/sysconfig.lkc ltib/config/userspace/sysconfig.lkc
 --- ltib.reference/config/userspace/sysconfig.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/userspace/sysconfig.lkc	2015-12-03 15:48:35.062564765 +0100
++++ ltib/config/userspace/sysconfig.lkc	2015-12-10 17:26:19.042698008 +0100
 @@ -126,6 +126,16 @@
         These will be passed to boa as command line arguments.
         The default is '-c /etc' and '-c /etc -e' for MMUless.
@@ -20205,7 +20225,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  endmenu
 diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/toolchain.lkc ltib/config/userspace/toolchain.lkc
 --- ltib.reference/config/userspace/toolchain.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/userspace/toolchain.lkc	2015-12-03 15:48:35.062564765 +0100
++++ ltib/config/userspace/toolchain.lkc	2015-12-10 17:26:19.042698008 +0100
 @@ -541,21 +541,6 @@
              list of choices select the custom option and enter the
              toolchain path and prefix in the appropriate boxes.
@@ -20263,7 +20283,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
      default "-O2 -march=armv5te" if (( PLATFORM = imx21ads || PLATFORM = imx233 || PLATFORM = imx25_3stack || PLATFORM = imx27ads || PLATFORM = imx28 ) && TOOLCHAIN_ARMEABI_FSL_GCC_MULTILIB)
  
 --- ltib.reference/.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/.config	2015-12-03 15:48:35.062564765 +0100
++++ ltib/.config	2015-12-10 17:26:19.042698008 +0100
 @@ -0,0 +1,7 @@
 +#
 +# Automatically generated make config: don't edit
@@ -20273,7 +20293,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +CONFIG_PLATFORM_imx=y
 +CONFIG_PLATFORM_DIR="config/platform/imx"
 --- ltib.reference/.config.cmd	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/.config.cmd	2015-12-03 15:48:35.062564765 +0100
++++ ltib/.config.cmd	2015-12-10 17:26:19.042698008 +0100
 @@ -0,0 +1,6 @@
 +deps_config := \
 +	/home/imx28/mect/ltib/config/main.lkc
@@ -20282,7 +20302,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +$(deps_config):
 --- ltib.reference/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/.tmpconfig.h	2015-12-03 15:48:35.062564765 +0100
++++ ltib/.tmpconfig.h	2015-12-10 17:26:19.042698008 +0100
 @@ -0,0 +1,8 @@
 +/*
 + * Automatically generated C config: don't edit

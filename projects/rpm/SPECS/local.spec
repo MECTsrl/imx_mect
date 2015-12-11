@@ -3,7 +3,7 @@
 Summary         : Application files for the embedded root filesystem
 Name            : local
 Version         : 1.0
-Release         : 1_%{rel}
+Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
 License         : GPL
 Vendor          : MECT s.r.l.
 Packager        : Mihai Lazarescu
@@ -18,6 +18,8 @@ AutoReqProv     : no
 
 %Package ATCMcontrol_RunTimeSystem
 Summary         : ATCM control runtime system application
+Version         : %(echo ${MECT_BUILD_ATCMCRT_TAG})
+Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
 Group           : Applications/File
 AutoReqProv     : no
 %Description ATCMcontrol_RunTimeSystem

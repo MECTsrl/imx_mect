@@ -1,7 +1,15 @@
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec ltib/dist/lfs-5.1/base_libs/base_libs.spec
 --- ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/base_libs/base_libs.spec	2015-12-04 00:53:14.994247687 +0100
-@@ -11,6 +11,19 @@
++++ ltib/dist/lfs-5.1/base_libs/base_libs.spec	2015-12-10 17:26:19.066698008 +0100
+@@ -4,13 +4,26 @@
+ Summary         : Base Libraries (from toolchain).
+ Name            : base_libs
+ Version         : 1.2
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : LGPL
+ Vendor          : Freescale Inc.
+ Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Libraries
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -258,7 +266,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bison/bison.spec ltib/dist/lfs-5.1/bison/bison.spec
 --- ltib.reference/dist/lfs-5.1/bison/bison.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/bison/bison.spec	2015-12-03 15:48:35.114564111 +0100
++++ ltib/dist/lfs-5.1/bison/bison.spec	2015-12-10 17:26:19.066698008 +0100
 @@ -20,7 +20,7 @@
  
  %Build
@@ -270,8 +278,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boa/boa.spec ltib/dist/lfs-5.1/boa/boa.spec
 --- ltib.reference/dist/lfs-5.1/boa/boa.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/boa/boa.spec	2015-12-04 00:52:47.846588979 +0100
-@@ -11,9 +11,26 @@
++++ ltib/dist/lfs-5.1/boa/boa.spec	2015-12-10 17:26:19.066698008 +0100
+@@ -5,15 +5,32 @@
+ Summary         : Lightweight http server for embedded systems
+ Name            : boa
+ Version         : 0.94.14rc21
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : GPL
+ Vendor          : Freescale
  Packager        : Stuart Hughes
  Group           : System/Servers
  Source          : %{name}-%{version}.tar.gz
@@ -372,8 +387,14 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
 --- ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec	2015-12-04 00:53:52.205779875 +0100
-@@ -8,39 +8,109 @@
++++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec	2015-12-10 17:26:19.066698008 +0100
+@@ -3,44 +3,97 @@
+ Summary         : imx233/imx28-style boot stream image creation
+ Name            : imx-bootlets-src
+ Version         : 2.6.35.3
+-Release         : 1.1.0
++Release         : 1.1.0_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : GPL
  Vendor          : Freescale
  Packager        : Terry Lv
  Group           : Tools
@@ -390,17 +411,6 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  Prefix          : %{pfx}
 +AutoReqProv     : no
  
-+
-+%Package rfs
-+Summary         : Trimmed imx-bootlets-src for root file system requirements.
-+Vendor          : MECT s.r.l.
-+Packager        : Mihai Lazarescu
-+Group           : Tools
-+AutoReqProv     : no
-+
-+%Description rfs
-+imx-bootlets-src package contents restricted to just the files
-+that are needed at run time on the target.
 +
 +%Package mfg
 +Summary         : Trimmed imx-bootlets-src for manufacturing tool requirements.
@@ -465,9 +475,6 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +cd %{_builddir}/%{name}-11.01.00
 +( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}/boot, d;
-+' all_files.lst > rfs_files.lst
 +
  %Clean
 +export LC_ALL
@@ -481,9 +488,6 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files -f all_files.lst
 +%defattr(-,root,root)
 +
-+%Files rfs -f rfs_files.lst
-+%defattr(-,root,root)
-+
 +%Files mfg
  %defattr(-,root,root)
 -%{pfx}/*
@@ -491,14 +495,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{pfx}/boot/updater_ivt.sb
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/busybox/busybox.spec ltib/dist/lfs-5.1/busybox/busybox.spec
 --- ltib.reference/dist/lfs-5.1/busybox/busybox.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/busybox/busybox.spec	2015-12-04 00:53:06.122359222 +0100
++++ ltib/dist/lfs-5.1/busybox/busybox.spec	2015-12-10 17:26:19.066698008 +0100
 @@ -3,24 +3,46 @@
  
  Summary         : A small executable that replaces many UNIX utilities
  Name            : busybox
 -Version         : 1.20.2
+-Release         : 1
 +Version         : 1.15.0
- Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
  License         : GPL
  URL             : http://www.busybox.net/
  Vendor          : Freescale
@@ -578,7 +583,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec ltib/dist/lfs-5.1/bzip2/bzip2.spec
 --- ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/bzip2/bzip2.spec	2015-12-04 00:53:19.398192322 +0100
++++ ltib/dist/lfs-5.1/bzip2/bzip2.spec	2015-12-10 17:26:19.066698008 +0100
 @@ -15,31 +15,65 @@
  Patch2          : %{name}-%{version}-armv7a-cross-compile-fix.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -651,8 +656,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cantest/cantest.spec ltib/dist/lfs-5.1/cantest/cantest.spec
 --- ltib.reference/dist/lfs-5.1/cantest/cantest.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/cantest/cantest.spec	2015-12-04 00:53:10.886299331 +0100
-@@ -9,18 +9,35 @@
++++ ltib/dist/lfs-5.1/cantest/cantest.spec	2015-12-10 17:26:19.066698008 +0100
+@@ -3,24 +3,41 @@
+ Summary         : cantest
+ Name            : cantest
+ Version         : 1.0
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : GPL
+ Vendor          : Freescale
  Packager        : Chen Hongjun
  Group           : Applications/System
  Source          : %{name}-%{version}.tar.gz
@@ -730,8 +742,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/dhcp/dhcp.spec	2015-12-04 00:52:16.134987648 +0100
-@@ -10,6 +10,7 @@
++++ ltib/dist/lfs-5.1/dhcp/dhcp.spec	2015-12-10 17:26:19.066698008 +0100
+@@ -4,12 +4,13 @@
+ Summary         : Internet Systems Consortium DHCP server, client, and relay agent
+ Name            : dhcp
+ Version         : 3.0.3b1
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : Internet Systems Consortium (distributable)
+ Vendor          : Freescale
  Packager        : John Faith
  Group           : Applications/Internet
  Source          : dhcp-3.0.3b1.tgz
@@ -823,8 +842,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec ltib/dist/lfs-5.1/dropbear/dropbear.spec
 --- ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/dropbear/dropbear.spec	2015-12-04 00:53:21.190169794 +0100
-@@ -10,16 +10,37 @@
++++ ltib/dist/lfs-5.1/dropbear/dropbear.spec	2015-12-10 17:26:19.066698008 +0100
+@@ -3,23 +3,44 @@
+ Summary         : Dropbear SSH server and client (embedded)
+ Name            : dropbear
+ Version         : 0.52
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : MIT
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
  Group           : Applications/Internet
  Source          : %{name}-%{version}.tar.gz
  Source1         : dropbear_hackable_rsa_host_key
@@ -900,7 +927,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 --- ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec	2015-12-04 00:53:50.829797173 +0100
++++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec	2015-12-10 17:26:19.066698008 +0100
+@@ -3,7 +3,7 @@
+ Summary		: Second extended (ext2) filesystem and ext3 utilities
+ Name		: e2fsprogs
+ Version		: 1.41.4
+-Release		: 1
++Release		: 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License		: GPL
+ Vendor		: Freescale
+ Packager	: Stuart Hughes, Emil Medve
 @@ -13,25 +13,65 @@
  Patch1          : e2fsprogs-1.41.4-fix-lib-links.patch
  BuildRoot	: %{_tmppath}/%{name}
@@ -972,7 +1008,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec ltib/dist/lfs-5.1/elftosb/elftosb.spec
 --- ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/elftosb/elftosb.spec	2015-12-03 15:48:35.118564061 +0100
++++ ltib/dist/lfs-5.1/elftosb/elftosb.spec	2015-12-10 17:26:19.066698008 +0100
 @@ -9,6 +9,7 @@
  Packager        : Frank Li
  Group           : System Environment/Libraries
@@ -991,7 +1027,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  make
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/expat/expat.spec ltib/dist/lfs-5.1/expat/expat.spec
 --- ltib.reference/dist/lfs-5.1/expat/expat.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/expat/expat.spec	2015-12-04 00:53:54.101756039 +0100
++++ ltib/dist/lfs-5.1/expat/expat.spec	2015-12-10 17:26:19.066698008 +0100
+@@ -3,7 +3,7 @@
+ Summary         : XML 1.0 parser
+ Name            : expat
+ Version         : 1.95.8
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : MIT/X Consortium License
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
 @@ -14,30 +14,64 @@
  Patch2          : expat-1.95.8-man1dir.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -1063,7 +1108,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec ltib/dist/lfs-5.1/fake-provides/fake-provides.spec
 --- ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/fake-provides/fake-provides.spec	2015-12-03 15:48:35.122564011 +0100
++++ ltib/dist/lfs-5.1/fake-provides/fake-provides.spec	2015-12-10 17:26:19.066698008 +0100
 @@ -5,83 +5,93 @@
  %define __os_install_post %{nil}
  %define  pfx /opt/freescale/rootfs/%{_target_cpu}
@@ -1091,7 +1136,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -Provides : libgcc_s.so.1(GLIBC_2.0)
 +Name            : fake-provides
 +Version         : 1.0
-+Release         : 5
++Release         : 5_ms%(echo ${MECT_BUILD_RELEASE})
 +Group           : Bootstrap
 +Summary         : Fake provides to satisfy package dependancies
 +License         : GPL
@@ -1220,8 +1265,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec ltib/dist/lfs-5.1/fontconfig/fontconfig.spec
 --- ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/fontconfig/fontconfig.spec	2015-12-04 00:53:38.949946523 +0100
-@@ -10,27 +10,53 @@
++++ ltib/dist/lfs-5.1/fontconfig/fontconfig.spec	2015-12-10 17:26:19.066698008 +0100
+@@ -3,34 +3,60 @@
+ Summary         : Font configuration and customization library
+ Name            : fontconfig
+ Version         : 2.4.2
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : MIT
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
  Group           : System Environment/Libraries
  Source          : %{name}-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -1310,7 +1363,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/freetype/freetype.spec ltib/dist/lfs-5.1/freetype/freetype.spec
 --- ltib.reference/dist/lfs-5.1/freetype/freetype.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/freetype/freetype.spec	2015-12-04 00:53:08.074334682 +0100
++++ ltib/dist/lfs-5.1/freetype/freetype.spec	2015-12-10 17:26:19.066698008 +0100
+@@ -3,7 +3,7 @@
+ Summary         : TrueType font rasterizer
+ Name            : freetype
+ Version         : 2.3.9
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : GPL or FTL
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
 @@ -12,29 +12,63 @@
  Patch1          : proper-armel-asm-declaration.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -1380,7 +1442,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/git/git.spec ltib/dist/lfs-5.1/git/git.spec
 --- ltib.reference/dist/lfs-5.1/git/git.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/git/git.spec	2015-12-03 15:48:35.122564011 +0100
++++ ltib/dist/lfs-5.1/git/git.spec	2015-12-10 17:26:19.066698008 +0100
 @@ -27,7 +27,7 @@
  config_opts='ac_cv_c_c99_format=yes ac_cv_fread_reads_directories=no ac_cv_snprintf_returns_bogus=no' 
  eval $config_opts \
@@ -1392,7 +1454,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %Install
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/glib2/glib2.spec ltib/dist/lfs-5.1/glib2/glib2.spec
 --- ltib.reference/dist/lfs-5.1/glib2/glib2.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/glib2/glib2.spec	2015-12-04 00:52:40.350683216 +0100
++++ ltib/dist/lfs-5.1/glib2/glib2.spec	2015-12-10 17:26:19.066698008 +0100
 @@ -1,47 +1,82 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archname glib
@@ -1400,8 +1462,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  Summary         : A library of functions used by GDK, GTK+, and many applications
  Name            : glib2
 -Version         : 2.22.1
+-Release         : 1
 +Version         : 2.18.1
- Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
  License         : LGPL
  Vendor          : Freescale
  Packager        : Stuart Hughes/Kurt Mahan
@@ -1490,7 +1553,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/hotplug/hotplug.spec ltib/dist/lfs-5.1/hotplug/hotplug.spec
 --- ltib.reference/dist/lfs-5.1/hotplug/hotplug.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/hotplug/hotplug.spec	2015-12-04 00:53:03.126396886 +0100
++++ ltib/dist/lfs-5.1/hotplug/hotplug.spec	2015-12-10 17:26:19.066698008 +0100
 @@ -13,26 +13,60 @@
  Patch2          : hotplug-2004_03_29-dash.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -1558,22 +1621,25 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/iproute/iproute.spec ltib/dist/lfs-5.1/iproute/iproute.spec
 --- ltib.reference/dist/lfs-5.1/iproute/iproute.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/iproute/iproute.spec	2015-12-04 00:53:23.142145254 +0100
-@@ -3,16 +3,34 @@
++++ ltib/dist/lfs-5.1/iproute/iproute.spec	2015-12-10 17:26:19.066698008 +0100
+@@ -1,18 +1,37 @@
+ %define base %(echo %{_prefix} | sed -e s,/usr.*$,,)
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
++%define verrel 050330
  
  Summary         : Advanced IP routing and network device configuration tools
  Name            : iproute
 -Version         : 2.6.38
 -Release         : 1
 +Version         : 2.6.37
-+Release         : 050330
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
  License         : GPL
  Vendor          : Freescale
  Packager        : Jaksa Djordjevic, Stuart Hughes
  Group           : Applications/System
 -Source          : %{name}2-%{version}.tar.bz2
 -Patch0          : iproute2-do-not-build-arpd.patch
-+Source          : %{name}2-%{version}-%{release}.tar.bz2
++Source          : %{name}2-%{version}-%{verrel}.tar.bz2
 +Patch0          : iproute-2.6.11-socket_h_warning.patch
 +Patch1          : iproute2-paretonormal-overflow.patch
 +Patch2          : iproute-2.6.37-1317825720.patch
@@ -1598,7 +1664,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Description
  %{summary}
-@@ -22,20 +40,43 @@
+@@ -22,20 +41,43 @@
  capabilities of the Linux kernel.
  
  %Prep
@@ -1606,7 +1672,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup -n %{name}2-%{version}-%{release}
++%setup -n %{name}2-%{version}-%{verrel}
  %patch0 -p1
 +%patch1 -p0
 +%patch2 -p1
@@ -1624,7 +1690,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
  make -j1 install SBINDIR=%{base}/sbin DESTDIR=$RPM_BUILD_ROOT/%{pfx}
  
-+cd %{_builddir}/%{name}2-%{version}-%{release}
++cd %{_builddir}/%{name}2-%{version}-%{verrel}
 +( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}/share/doc, d;
@@ -1647,7 +1713,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl ltib/dist/lfs-5.1/kernel/kernel-common.tmpl
 --- ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/kernel/kernel-common.tmpl	2015-12-04 00:53:38.045957888 +0100
++++ ltib/dist/lfs-5.1/kernel/kernel-common.tmpl	2015-12-10 17:26:19.066698008 +0100
 @@ -182,10 +182,10 @@
  #
  # build the kernel and optionally the modules
@@ -1688,207 +1754,207 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 +
-+%Files dev-usbserial
++%Files rfs-dev-usbserial
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/usbserial.ko
 +
-+%Files dev-usbserial-aircable
++%Files rfs-dev-usbserial-aircable
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/aircable.ko
 +
-+%Files dev-usbserial-ark3116
++%Files rfs-dev-usbserial-ark3116
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ark3116.ko
 +
-+%Files dev-usbserial-belkin_sa
++%Files rfs-dev-usbserial-belkin_sa
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/belkin_sa.ko
 +
-+%Files dev-usbserial-ch341
++%Files rfs-dev-usbserial-ch341
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ch341.ko
 +
-+%Files dev-usbserial-cp210x
++%Files rfs-dev-usbserial-cp210x
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/cp210x.ko
 +
-+%Files dev-usbserial-cyberjack
++%Files rfs-dev-usbserial-cyberjack
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/cyberjack.ko
 +
-+%Files dev-usbserial-cypress_m8
++%Files rfs-dev-usbserial-cypress_m8
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/cypress_m8.ko
 +
-+%Files dev-usbserial-digi_acceleport
++%Files rfs-dev-usbserial-digi_acceleport
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/digi_acceleport.ko
 +
-+%Files dev-usbserial-empeg
++%Files rfs-dev-usbserial-empeg
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/empeg.ko
 +
-+%Files dev-usbserial-ftdi_sio
++%Files rfs-dev-usbserial-ftdi_sio
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ftdi_sio.ko
 +
-+%Files dev-usbserial-funsoft
++%Files rfs-dev-usbserial-funsoft
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/funsoft.ko
 +
-+%Files dev-usbserial-garmin_gps
++%Files rfs-dev-usbserial-garmin_gps
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/garmin_gps.ko
 +
-+%Files dev-usbserial-hp4x
++%Files rfs-dev-usbserial-hp4x
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/hp4x.ko
 +
-+%Files dev-usbserial-io_edgeport
++%Files rfs-dev-usbserial-io_edgeport
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/io_edgeport.ko
 +
-+%Files dev-usbserial-io_ti
++%Files rfs-dev-usbserial-io_ti
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/io_ti.ko
 +
-+%Files dev-usbserial-ipaq
++%Files rfs-dev-usbserial-ipaq
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ipaq.ko
 +
-+%Files dev-usbserial-ipw
++%Files rfs-dev-usbserial-ipw
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ipw.ko
 +
-+%Files dev-usbserial-ir
++%Files rfs-dev-usbserial-ir
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ir-usb.ko
 +
-+%Files dev-usbserial-iuu_phoenix
++%Files rfs-dev-usbserial-iuu_phoenix
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/iuu_phoenix.ko
 +
-+%Files dev-usbserial-keyspan
++%Files rfs-dev-usbserial-keyspan
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/keyspan.ko
 +
-+%Files dev-usbserial-keyspan_pda
++%Files rfs-dev-usbserial-keyspan_pda
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/keyspan_pda.ko
 +
-+%Files dev-usbserial-kl5kusb105
++%Files rfs-dev-usbserial-kl5kusb105
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/kl5kusb105.ko
 +
-+%Files dev-usbserial-kobil_sct
++%Files rfs-dev-usbserial-kobil_sct
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/kobil_sct.ko
 +
-+%Files dev-usbserial-mct_u232
++%Files rfs-dev-usbserial-mct_u232
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/mct_u232.ko
 +
-+%Files dev-usbserial-mos7720
++%Files rfs-dev-usbserial-mos7720
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/mos7720.ko
 +
-+%Files dev-usbserial-mos7840
++%Files rfs-dev-usbserial-mos7840
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/mos7840.ko
 +
-+%Files dev-usbserial-moto_modem
++%Files rfs-dev-usbserial-moto_modem
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/moto_modem.ko
 +
-+%Files dev-usbserial-navman
++%Files rfs-dev-usbserial-navman
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/navman.ko
 +
-+%Files dev-usbserial-omninet
++%Files rfs-dev-usbserial-omninet
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/omninet.ko
 +
-+%Files dev-usbserial-opticon
++%Files rfs-dev-usbserial-opticon
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/opticon.ko
 +
-+%Files dev-usbserial-option
++%Files rfs-dev-usbserial-option
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/option.ko
 +
-+%Files dev-usbserial-oti6858
++%Files rfs-dev-usbserial-oti6858
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/oti6858.ko
 +
-+%Files dev-usbserial-pl2303
++%Files rfs-dev-usbserial-pl2303
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/pl2303.ko
 +
-+%Files dev-usbserial-qcaux
++%Files rfs-dev-usbserial-qcaux
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/qcaux.ko
 +
-+%Files dev-usbserial-qcserial
++%Files rfs-dev-usbserial-qcserial
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/qcserial.ko
 +
-+%Files dev-usbserial-safe_serial
++%Files rfs-dev-usbserial-safe_serial
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/safe_serial.ko
 +
-+%Files dev-usbserial-siemens_mpi
++%Files rfs-dev-usbserial-siemens_mpi
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/siemens_mpi.ko
 +
-+%Files dev-usbserial-sierra
++%Files rfs-dev-usbserial-sierra
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/sierra.ko
 +
-+%Files dev-usbserial-spcp8x5
++%Files rfs-dev-usbserial-spcp8x5
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/spcp8x5.ko
 +
-+%Files dev-usbserial-symbolserial
++%Files rfs-dev-usbserial-symbolserial
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/symbolserial.ko
 +
-+%Files dev-usbserial-ti_3410_5052
++%Files rfs-dev-usbserial-ti_3410_5052
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ti_usb_3410_5052.ko
 +
-+%Files dev-usbserial-debug
++%Files rfs-dev-usbserial-debug
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/usb_debug.ko
 +
-+%Files dev-usbserial-wwan
++%Files rfs-dev-usbserial-wwan
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/usb_wwan.ko
 +
-+%Files dev-usbserial-visor
++%Files rfs-dev-usbserial-visor
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/visor.ko
 +
-+%Files dev-usbserial-vivopay-serial
++%Files rfs-dev-usbserial-vivopay-serial
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/vivopay-serial.ko
 +
-+%Files dev-usbserial-whiteheat
++%Files rfs-dev-usbserial-whiteheat
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/whiteheat.ko
 +
-+%Files dev-usbserial-zio
++%Files rfs-dev-usbserial-zio
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/zio.ko
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec
 --- ltib.reference/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec	2015-12-03 15:48:35.126563961 +0100
++++ ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec	2015-12-10 17:26:19.070698008 +0100
 @@ -0,0 +1,39 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Used to timestamp of the last kernel build.
 +Name            : last-kernel-build
 +Version         : 1.0
-+Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
 +License         : GPL
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
@@ -1924,14 +1990,14 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 --- ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec	2015-12-04 00:53:49.661811857 +0100
++++ ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec	2015-12-10 17:26:19.070698008 +0100
 @@ -0,0 +1,77 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Library to allow control of basic functions in socketcan from userspace
 +Name            : libsocketcan
 +Version         : 0.0.8
-+Release         : 0
++Release         : 0_ms%(echo ${MECT_BUILD_RELEASE})
 +License         : GNU LGPLv2.1
 +Vendor          : Freescale
 +Packager        : Rogerio Pimentel
@@ -2005,14 +2071,17 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec ltib/dist/lfs-5.1/libtermcap/libtermcap.spec
 --- ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/libtermcap/libtermcap.spec	2015-12-04 00:53:08.858324826 +0100
-@@ -1,4 +1,5 @@
++++ ltib/dist/lfs-5.1/libtermcap/libtermcap.spec	2015-12-10 17:26:19.070698008 +0100
+@@ -1,28 +1,43 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archname termcap
  
  Summary         : A basic system library for accessing the termcap database.
  Name            : libtermcap
-@@ -8,21 +9,35 @@
+ Version         : 2.0.8
+-Release         : 31_1
++Release         : 31_1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : LGPL
  Vendor          : Freescale Inc
  Packager        : Steve Papacharalambous
  Group           : System Environment/Libraries
@@ -2157,7 +2226,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb.spec ltib/dist/lfs-5.1/libusb/libusb.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/libusb/libusb.spec	2015-12-04 00:53:17.982210123 +0100
++++ ltib/dist/lfs-5.1/libusb/libusb.spec	2015-12-10 17:26:19.070698008 +0100
 @@ -11,15 +11,35 @@
  Source          : %{name}-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -2228,7 +2297,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb1.spec ltib/dist/lfs-5.1/libusb/libusb1.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb1.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/libusb/libusb1.spec	2015-12-04 00:53:17.038221991 +0100
++++ ltib/dist/lfs-5.1/libusb/libusb1.spec	2015-12-10 17:26:19.070698008 +0100
 @@ -0,0 +1,72 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define libname libusb
@@ -2236,7 +2305,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : A library which allows userspace access to USB devices 
 +Name            : %{libname}1
 +Version         : 1.0.20
-+Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
 +License         : LGPL
 +Vendor          : MECT
 +Packager        : Mihai Lazarescu
@@ -2304,8 +2373,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
 --- ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec	2015-12-04 00:53:20.166182667 +0100
-@@ -10,38 +10,72 @@
++++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec	2015-12-10 17:26:19.070698008 +0100
+@@ -3,45 +3,79 @@
+ Summary         : The lrz and lsz modem communications programs.
+ Name            : lrzsz
+ Version         : 0.12.21
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : GPL
+ Vendor          : Freescale
+ Packager        : Alan Tull
  Group           : Applications/Communications
  Source          : lrzsz_0.12.21.orig.tar.gz
  Patch0          : lrzsz_0.12.21-4.diff
@@ -2386,7 +2463,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lzo/lzo.spec ltib/dist/lfs-5.1/lzo/lzo.spec
 --- ltib.reference/dist/lfs-5.1/lzo/lzo.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/lzo/lzo.spec	2015-12-04 00:52:24.958876717 +0100
++++ ltib/dist/lfs-5.1/lzo/lzo.spec	2015-12-10 17:26:19.070698008 +0100
+@@ -3,7 +3,7 @@
+ Summary         : LZO is a portable lossless data compression library written in ANSI C.
+ Name            : lzo
+ Version         : 2.03
+-Release         : 0
++Release         : 0_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : GPL
+ Vendor          : Freescale
+ Packager        : Ross Wille
 @@ -11,14 +11,34 @@
  Source          : lzo-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -2454,11 +2540,237 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
+diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
+--- ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec	1970-01-01 01:00:00.000000000 +0100
++++ ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec	2015-12-10 17:26:19.070698008 +0100
+@@ -0,0 +1,210 @@
++%define MECT_PROJECTS ${TOP}/../projects
++
++Summary         : Custom Qt plugins for HMI development.
++Name            : mect_plugins
++Version         : %{ver}
++Release         : 1_%{rel}
++License         : GPL
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System Environment/Libraries
++URL             : http://www.mect.it/
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{MECT_RFSDIR}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed %{name} to just the run-times needed in the root file system.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System Environment/Libraries
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents limited to just the run-times needed
++on the target.
++
++
++%Description
++%{summary}
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++tar cf $(MECT_RPMBASEDIR)/SOURCES/mect_plugins-$(MECT_PRJVER).tar -C $(MECT_PRJDIR) --exclude=.git --transform='s/^\./mect_plugins-$(MECT_PRJVER)/' .
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++%{MECT_QMAKE} -spec qws/linux-g++-mx qt_atcm.pro
++#make -j`grep -c ^processor /proc/cpuinfo`
++make -j1
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++make -j1 INSTALL_ROOT=%{buildroot} install
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++%Files
++%defattr(-,root,root)
++%{MECT_RFSDIR}/usr/include/alarms.h
++%{MECT_RFSDIR}/usr/include/alarms_history.h
++%{MECT_RFSDIR}/usr/include/alphanumpad.h
++%{MECT_RFSDIR}/usr/include/app_cfg_file.h
++%{MECT_RFSDIR}/usr/include/app_config.h
++%{MECT_RFSDIR}/usr/include/app_logprint.h
++%{MECT_RFSDIR}/usr/include/app_usb.h
++%{MECT_RFSDIR}/usr/include/app_var_list.h
++%{MECT_RFSDIR}/usr/include/atcmanimation.h
++%{MECT_RFSDIR}/usr/include/atcmbutton.h
++%{MECT_RFSDIR}/usr/include/atcmcombobox.h
++%{MECT_RFSDIR}/usr/include/atcmdate.h
++%{MECT_RFSDIR}/usr/include/atcmgraph.h
++%{MECT_RFSDIR}/usr/include/atcmlabel.h
++%{MECT_RFSDIR}/usr/include/atcmlcdnumber.h
++%{MECT_RFSDIR}/usr/include/atcmled.h
++%{MECT_RFSDIR}/usr/include/atcmplugin.h
++%{MECT_RFSDIR}/usr/include/atcmprogressbar.h
++%{MECT_RFSDIR}/usr/include/atcmslider.h
++%{MECT_RFSDIR}/usr/include/atcmspinbox.h
++%{MECT_RFSDIR}/usr/include/atcmstyle.h
++%{MECT_RFSDIR}/usr/include/atcmtime.h
++%{MECT_RFSDIR}/usr/include/buzzer_settings.h
++%{MECT_RFSDIR}/usr/include/comm_status.h
++%{MECT_RFSDIR}/usr/include/common.h
++%{MECT_RFSDIR}/usr/include/commpar_rtu.h
++%{MECT_RFSDIR}/usr/include/commpar_tcp.h
++%{MECT_RFSDIR}/usr/include/commpar_tcprtu.h
++%{MECT_RFSDIR}/usr/include/cross_table_utility.h
++%{MECT_RFSDIR}/usr/include/data_manager.h
++%{MECT_RFSDIR}/usr/include/datalog_set.h
++%{MECT_RFSDIR}/usr/include/defines.h
++%{MECT_RFSDIR}/usr/include/display_settings.h
++%{MECT_RFSDIR}/usr/include/global_functions.h
++%{MECT_RFSDIR}/usr/include/global_var.h
++%{MECT_RFSDIR}/usr/include/hmi_logger.h
++%{MECT_RFSDIR}/usr/include/info.h
++%{MECT_RFSDIR}/usr/include/io_layer_comm.h
++%{MECT_RFSDIR}/usr/include/item_selector.h
++%{MECT_RFSDIR}/usr/include/main.h
++%{MECT_RFSDIR}/usr/include/menu.h
++%{MECT_RFSDIR}/usr/include/numpad.h
++%{MECT_RFSDIR}/usr/include/options.h
++%{MECT_RFSDIR}/usr/include/page0.h
++%{MECT_RFSDIR}/usr/include/pagebrowser.h
++%{MECT_RFSDIR}/usr/include/recipe.h
++%{MECT_RFSDIR}/usr/include/recipe_select.h
++%{MECT_RFSDIR}/usr/include/screensaver.h
++%{MECT_RFSDIR}/usr/include/setstyle.h
++%{MECT_RFSDIR}/usr/include/sgdd.h
++%{MECT_RFSDIR}/usr/include/store.h
++%{MECT_RFSDIR}/usr/include/store_extract.h
++%{MECT_RFSDIR}/usr/include/store_filter.h
++%{MECT_RFSDIR}/usr/include/time_set.h
++%{MECT_RFSDIR}/usr/include/trend.h
++%{MECT_RFSDIR}/usr/include/trend_option.h
++%{MECT_RFSDIR}/usr/include/trend_other.h
++%{MECT_RFSDIR}/usr/include/trend_range.h
++%{MECT_RFSDIR}/usr/include/utility.h
++%{MECT_RFSDIR}/usr/lib/libATCMalarms.so
++%{MECT_RFSDIR}/usr/lib/libATCMalarms.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMalarms.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMalarms.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMcommon.so
++%{MECT_RFSDIR}/usr/lib/libATCMcommon.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMcommon.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMcommon.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMcommunication.so
++%{MECT_RFSDIR}/usr/lib/libATCMcommunication.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMcommunication.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMcommunication.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMinputdialog.so
++%{MECT_RFSDIR}/usr/lib/libATCMinputdialog.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMinputdialog.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMinputdialog.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMlogger.so
++%{MECT_RFSDIR}/usr/lib/libATCMlogger.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMlogger.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMlogger.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMplugin.so
++%{MECT_RFSDIR}/usr/lib/libATCMplugin.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMplugin.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMplugin.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMrecipe.so
++%{MECT_RFSDIR}/usr/lib/libATCMrecipe.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMrecipe.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMrecipe.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMstore.so
++%{MECT_RFSDIR}/usr/lib/libATCMstore.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMstore.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMstore.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMsystem.so
++%{MECT_RFSDIR}/usr/lib/libATCMsystem.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMsystem.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMsystem.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMtrend.so
++%{MECT_RFSDIR}/usr/lib/libATCMtrend.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMtrend.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMtrend.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMutility.so
++%{MECT_RFSDIR}/usr/lib/libATCMutility.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMutility.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMutility.so.1.0.0
++
++%files rfs
++%defattr(-,root,root)
++%{MECT_RFSDIR}/usr/lib/libATCMalarms.so
++%{MECT_RFSDIR}/usr/lib/libATCMalarms.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMalarms.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMalarms.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMcommon.so
++%{MECT_RFSDIR}/usr/lib/libATCMcommon.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMcommon.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMcommon.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMcommunication.so
++%{MECT_RFSDIR}/usr/lib/libATCMcommunication.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMcommunication.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMcommunication.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMinputdialog.so
++%{MECT_RFSDIR}/usr/lib/libATCMinputdialog.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMinputdialog.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMinputdialog.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMlogger.so
++%{MECT_RFSDIR}/usr/lib/libATCMlogger.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMlogger.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMlogger.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMplugin.so
++%{MECT_RFSDIR}/usr/lib/libATCMplugin.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMplugin.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMplugin.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMrecipe.so
++%{MECT_RFSDIR}/usr/lib/libATCMrecipe.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMrecipe.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMrecipe.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMstore.so
++%{MECT_RFSDIR}/usr/lib/libATCMstore.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMstore.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMstore.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMsystem.so
++%{MECT_RFSDIR}/usr/lib/libATCMsystem.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMsystem.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMsystem.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMtrend.so
++%{MECT_RFSDIR}/usr/lib/libATCMtrend.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMtrend.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMtrend.so.1.0.0
++%{MECT_RFSDIR}/usr/lib/libATCMutility.so
++%{MECT_RFSDIR}/usr/lib/libATCMutility.so.1
++%{MECT_RFSDIR}/usr/lib/libATCMutility.so.1.0
++%{MECT_RFSDIR}/usr/lib/libATCMutility.so.1.0.0
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/merge/merge.spec	2015-12-04 15:21:27.000000000 +0100
-@@ -13,37 +13,69 @@
- # We have assume the user knows merge file dependencies.
++++ ltib/dist/lfs-5.1/merge/merge.spec	2015-12-10 17:35:23.000000000 +0100
+@@ -3,47 +3,79 @@
+ Summary         : Merge files for an embedded root filesystem
+ Name            : merge
+ Version         : 0.1
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : GPL
+ Vendor          : Freescale
+ Packager        : Steve Papacharalambous/Stuart Hughes
+ Group           : System Environment/Utilities
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
+-# We have assume the user knows merge file dependencies.
++# We assume that the user knows the dependencies of the merge file(s).
  Autoreqprov     : no
  
 +
@@ -2542,14 +2854,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 --- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec	2015-12-04 00:52:22.854903167 +0100
++++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec	2015-12-10 17:26:19.070698008 +0100
 @@ -2,15 +2,31 @@
  
  Summary		: Memory Technology Device tools
  Name		: mtd-utils
 -Version		: 1.5.0
+-Release		: 1
 +Version		: 201006
- Release		: 1
++Release		: 1_ms%(echo ${MECT_BUILD_RELEASE})
  License		: GPL
  Vendor		: Freescale Semiconductor
  Packager	: Ross Wille
@@ -2632,7 +2945,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec ltib/dist/lfs-5.1/mxc-misc/imx-test.spec
 --- ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/mxc-misc/imx-test.spec	2015-12-04 00:53:04.442380342 +0100
++++ ltib/dist/lfs-5.1/mxc-misc/imx-test.spec	2015-12-10 17:26:19.070698008 +0100
 @@ -2,23 +2,43 @@
  
  Summary         : platform specific unit tests for mxc platform
@@ -2718,7 +3031,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mysql/mysql.spec ltib/dist/lfs-5.1/mysql/mysql.spec
 --- ltib.reference/dist/lfs-5.1/mysql/mysql.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/mysql/mysql.spec	2015-12-04 00:54:01.393664367 +0100
++++ ltib/dist/lfs-5.1/mysql/mysql.spec	2015-12-10 17:26:19.070698008 +0100
+@@ -3,7 +3,7 @@
+ Summary         : MySQL SQL database, client programs and shared library
+ Name            : mysql
+ Version         : 4.1.12
+-Release         : 0
++Release         : 0_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : GPL
+ Vendor          : Freescale
+ Packager        : Jason Jin
 @@ -13,16 +13,36 @@
  Patch1          : mysql-4.1.12-gcc-4.2.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -2804,7 +3126,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec ltib/dist/lfs-5.1/ncurses/ncurses.spec
 --- ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/ncurses/ncurses.spec	2015-12-04 00:52:53.402519132 +0100
++++ ltib/dist/lfs-5.1/ncurses/ncurses.spec	2015-12-10 17:26:19.070698008 +0100
+@@ -3,7 +3,7 @@
+ Summary         : CRT screen handling and optimization package
+ Name            : ncurses
+ Version         : 5.3
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : Distributable
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
 @@ -14,17 +14,37 @@
  Patch2          : ncurses-5.3-wint_t.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -2883,7 +3214,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec
 --- ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec	2015-12-03 15:48:35.126563961 +0100
++++ ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec	2015-12-10 17:26:19.070698008 +0100
 @@ -24,7 +24,7 @@
  # don't add --build as glib will fail for a host build due to 
  # stupid incorrect cross compile detection
@@ -2895,7 +3226,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ppp/ppp.spec ltib/dist/lfs-5.1/ppp/ppp.spec
 --- ltib.reference/dist/lfs-5.1/ppp/ppp.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/ppp/ppp.spec	2015-12-04 00:52:47.034599187 +0100
++++ ltib/dist/lfs-5.1/ppp/ppp.spec	2015-12-10 17:26:19.070698008 +0100
+@@ -3,7 +3,7 @@
+ Summary         : Point-to-Point Protocol daemon
+ Name            : ppp
+ Version         : 2.4.4
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : BSD-like and GPL and Public Domain
+ Vendor          : Freescale
+ Packager        : Michael Barkowski
 @@ -13,16 +13,36 @@
  Patch1          : ppp-2.4.3-hspeed.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -2969,7 +3309,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/prelink/prelink.spec ltib/dist/lfs-5.1/prelink/prelink.spec
 --- ltib.reference/dist/lfs-5.1/prelink/prelink.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/prelink/prelink.spec	2015-12-03 15:48:35.126563961 +0100
++++ ltib/dist/lfs-5.1/prelink/prelink.spec	2015-12-10 17:26:19.070698008 +0100
 @@ -0,0 +1,35 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -3008,7 +3348,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec ltib/dist/lfs-5.1/qt/qt-embedded.spec
 --- ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/qt/qt-embedded.spec	2015-12-04 00:53:21.966160038 +0100
++++ ltib/dist/lfs-5.1/qt/qt-embedded.spec	2015-12-10 17:26:19.074698008 +0100
 @@ -1,165 +1,163 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archivename qt-everywhere-opensource-src
@@ -3020,7 +3360,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -License         : GNU GPL
 +Name            : qt-embedded
 +Version         : 4.8.5
-+Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
 +License         : LGPL v2.1
  Vendor          : Freescale
  Packager        : Rogerio Pimentel
@@ -3453,7 +3793,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%endif
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec	2015-12-04 00:52:26.946851725 +0100
++++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec	2015-12-10 17:26:19.074698008 +0100
 @@ -0,0 +1,93 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define variant multiaxes
@@ -3461,7 +3801,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Summary         : Qwt widget library with multiaxes capability
 +Name            : qwt
 +Version         : 6.1
-+Release         : 1_%{variant}
++Release         : 1_%{variant}_ms%(echo ${MECT_BUILD_RELEASE})
 +License         : GNU LGPLv2.1
 +Vendor          : Qwt Widget Library
 +Packager        : Mihai Lazarescu
@@ -3550,7 +3890,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt.spec ltib/dist/lfs-5.1/qwt/qwt.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/qwt/qwt.spec	2015-12-04 00:52:25.746866810 +0100
++++ ltib/dist/lfs-5.1/qwt/qwt.spec	2015-12-10 17:26:19.074698008 +0100
 @@ -0,0 +1,80 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -3634,7 +3974,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rpm/rpm-fs.spec ltib/dist/lfs-5.1/rpm/rpm-fs.spec
 --- ltib.reference/dist/lfs-5.1/rpm/rpm-fs.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/rpm/rpm-fs.spec	2015-12-03 15:48:35.126563961 +0100
++++ ltib/dist/lfs-5.1/rpm/rpm-fs.spec	2015-12-10 17:26:19.074698008 +0100
 @@ -83,7 +83,7 @@
  ./configure --prefix=%{_prefix} --localstatedir=$var --sysconfdir=$etc \
  --without-python --without-javaglue
@@ -3646,7 +3986,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %Install
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rsync/rsync.spec ltib/dist/lfs-5.1/rsync/rsync.spec
 --- ltib.reference/dist/lfs-5.1/rsync/rsync.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/rsync/rsync.spec	2015-12-04 00:53:53.157767907 +0100
++++ ltib/dist/lfs-5.1/rsync/rsync.spec	2015-12-10 17:26:19.074698008 +0100
+@@ -3,7 +3,7 @@
+ Summary         : A program for synchronizing files over a network
+ Name            : rsync
+ Version         : 2.6.5
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : GPL
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
 @@ -12,26 +12,61 @@
  Patch1          : rsync-2.6.5-va_copy-2.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -3713,14 +4062,14 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
 --- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec	2015-12-04 00:53:24.022134191 +0100
++++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec	2015-12-10 17:26:19.074698008 +0100
 @@ -0,0 +1,123 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Just the sftp-server executable from OpenSSH
 +Name            : sftp-server
 +Version         : 4.3p2
-+Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
 +License         : BSD
 +Vendor          : Avid Technology
 +Packager        : Fritz Mueller
@@ -3840,8 +4189,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/skell/skell.spec	2015-12-04 14:41:02.622765878 +0100
-@@ -9,20 +9,91 @@
++++ ltib/dist/lfs-5.1/skell/skell.spec	2015-12-10 17:26:19.074698008 +0100
+@@ -3,26 +3,97 @@
+ Summary         : Skelleton files for an embedded root filesystem
+ Name            : skell
+ Version         : 1.18
+-Release         : 2
++Release         : 2_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : GPL
+ Vendor          : Freescale
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -4058,7 +4414,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec ltib/dist/lfs-5.1/sqlite/sqlite.spec
 --- ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sqlite/sqlite.spec	2015-12-04 00:53:36.121982075 +0100
++++ ltib/dist/lfs-5.1/sqlite/sqlite.spec	2015-12-10 17:26:19.074698008 +0100
+@@ -3,7 +3,7 @@
+ Summary         : SQLite database engine
+ Name            : sqlite
+ Version         : 3.6.12
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : Public Domain
+ Vendor          : SQLite Consortium
+ Packager        : ProFUSION embedded systems <contact@profusion.mobi>
 @@ -12,26 +12,61 @@
  Source          : %{name}-amalgamation-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -4127,8 +4492,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec ltib/dist/lfs-5.1/sysconfig/modeps.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sysconfig/modeps.spec	2015-12-04 00:52:21.814916242 +0100
-@@ -10,32 +10,70 @@
++++ ltib/dist/lfs-5.1/sysconfig/modeps.spec	2015-12-10 17:26:19.074698008 +0100
+@@ -3,39 +3,77 @@
+ Summary         : Generate module dependency file
+ Name            : modeps
+ Version         : 1.0
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : GPL
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
  Group           : System Environment/Base
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -4207,8 +4580,14 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-12-04 00:52:20.674930573 +0100
-@@ -8,18 +8,41 @@
++++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2015-12-10 17:26:19.074698008 +0100
+@@ -3,23 +3,46 @@
+ Summary		: System configuration package
+ Name		: sysconfig
+ Version		: 1.2
+-Release		: 5
++Release		: 5_ms%(echo ${MECT_BUILD_RELEASE})
+ License		: GPL
  Vendor		: Freescale
  Packager	: Stuart Hughes
  Group		: System Environment/Base
@@ -4460,7 +4839,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec ltib/dist/lfs-5.1/texinfo/texinfo.spec
 --- ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/texinfo/texinfo.spec	2015-12-03 15:48:35.134563860 +0100
++++ ltib/dist/lfs-5.1/texinfo/texinfo.spec	2015-12-10 17:26:19.074698008 +0100
 @@ -31,7 +31,7 @@
  else
                ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
@@ -4472,7 +4851,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/tslib/tslib.spec ltib/dist/lfs-5.1/tslib/tslib.spec
 --- ltib.reference/dist/lfs-5.1/tslib/tslib.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/tslib/tslib.spec	2015-12-04 00:53:06.942348913 +0100
++++ ltib/dist/lfs-5.1/tslib/tslib.spec	2015-12-10 17:26:19.074698008 +0100
+@@ -3,7 +3,7 @@
+ Summary         : Abstraction layer for touchscreen panel events 
+ Name            : tslib
+ Version         : 1.0
+-Release         : 3
++Release         : 3_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : LGPL
+ Vendor          : Freescale
+ Packager        : Ross Wille
 @@ -13,14 +13,32 @@
  Patch2          : tslib-1.0-mx-pre_gen-2.patch
  Patch3          : tslib-1.0-mx-pre_config.patch
@@ -4569,7 +4957,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl
 --- ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl	2015-12-03 15:48:35.134563860 +0100
++++ ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl	2015-12-10 17:26:19.074698008 +0100
 @@ -18,7 +18,8 @@
      make HOSTCC="$BUILDCC" CROSS_COMPILE=$TOOLCHAIN_PREFIX O=$BUILD_DIR distclean
  fi
@@ -4582,7 +4970,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec ltib/dist/lfs-5.1/u-boot/u-boot.spec
 --- ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/u-boot/u-boot.spec	2015-12-03 15:48:35.134563860 +0100
++++ ltib/dist/lfs-5.1/u-boot/u-boot.spec	2015-12-10 17:26:19.074698008 +0100
+@@ -3,7 +3,7 @@
+ Summary         : Universal Bootloader firmware
+ Name            : u-boot
+ Version         : 1.1.2
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : GPL
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
 @@ -17,16 +17,25 @@
  %{summary}
  
@@ -4621,7 +5018,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %Files
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/udev/udev.spec ltib/dist/lfs-5.1/udev/udev.spec
 --- ltib.reference/dist/lfs-5.1/udev/udev.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/udev/udev.spec	2015-12-04 00:53:51.525788423 +0100
++++ ltib/dist/lfs-5.1/udev/udev.spec	2015-12-10 17:26:19.074698008 +0100
 @@ -25,12 +25,9 @@
  Patch13         : udev-117-mxc-ipu-dev-privilege.patch
  Patch14         : udev-117-mxc-vpu.patch
@@ -4736,7 +5133,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/unzip/unzip.spec ltib/dist/lfs-5.1/unzip/unzip.spec
 --- ltib.reference/dist/lfs-5.1/unzip/unzip.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/unzip/unzip.spec	2015-12-04 00:53:05.302369530 +0100
++++ ltib/dist/lfs-5.1/unzip/unzip.spec	2015-12-10 17:26:19.078698008 +0100
 @@ -12,24 +12,59 @@
  Source          : unzip552.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -4801,14 +5198,14 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	2015-12-04 00:54:02.197654260 +0100
++++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	2015-12-10 17:26:19.078698008 +0100
 @@ -0,0 +1,71 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : USB Modeswitch gets mobile broadband cards in operational mode
 +Name            : usb-modeswitch
 +Version         : 2.2.5
-+Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
 +License         : LGPL
 +Vendor          : MECT
 +Packager        : Mihai Lazarescu
@@ -4876,14 +5273,14 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	2015-12-04 00:54:03.329640029 +0100
++++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	2015-12-10 17:26:19.078698008 +0100
 @@ -0,0 +1,67 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Data for the USB Modeswitch tool
 +Name            : usb-modeswitch-data
 +Version         : 20150627
-+Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
 +License         : LGPL
 +Vendor          : MECT
 +Packager        : Mihai Lazarescu
@@ -4947,8 +5344,13 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
 --- ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec	2015-12-04 00:53:16.282231495 +0100
-@@ -7,10 +7,24 @@
++++ ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec	2015-12-10 17:26:19.078698008 +0100
+@@ -3,14 +3,28 @@
+ Summary         : WPA Supplicant for wifi
+ Name            : wpa_supplicant
+ Version         : 0.5.9
+-Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
  License         : GPL
  Vendor          : Freescale
  Packager        : Sam Yang
@@ -5024,14 +5426,14 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec ltib/dist/lfs-5.1/xenomai/xenomai.spec
 --- ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/xenomai/xenomai.spec	2015-12-04 00:53:39.645937773 +0100
++++ ltib/dist/lfs-5.1/xenomai/xenomai.spec	2015-12-10 17:26:19.078698008 +0100
 @@ -0,0 +1,76 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : xenomai - Real Time extension for the Linux kernel
 +Name            : xenomai
 +Version         : 2.6.0
-+Release         : 1
++Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
 +License         : GPL
 +Vendor          : Freescale
 +Packager        : Mect
@@ -5104,14 +5506,14 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zip30/zip30.spec ltib/dist/lfs-5.1/zip30/zip30.spec
 --- ltib.reference/dist/lfs-5.1/zip30/zip30.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/zip30/zip30.spec	2015-12-04 00:53:09.878312003 +0100
++++ ltib/dist/lfs-5.1/zip30/zip30.spec	2015-12-10 17:26:19.078698008 +0100
 @@ -0,0 +1,70 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : A file compression utility.
 +Name            : zip
 +Version         : 3.0.0
-+Release         : 0
++Release         : 0_ms%(echo ${MECT_BUILD_RELEASE})
 +License         : BSD
 +Vendor          : Mect srl
 +Packager        : Monica Donno
@@ -5178,7 +5580,16 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zlib/zlib.spec ltib/dist/lfs-5.1/zlib/zlib.spec
 --- ltib.reference/dist/lfs-5.1/zlib/zlib.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/zlib/zlib.spec	2015-12-04 00:53:18.722200820 +0100
++++ ltib/dist/lfs-5.1/zlib/zlib.spec	2015-12-10 17:26:19.078698008 +0100
+@@ -3,7 +3,7 @@
+ Summary         : zlib compression utilities and libraries
+ Name            : zlib
+ Version         : 1.2.3
+-Release         : 2
++Release         : 2_ms%(echo ${MECT_BUILD_RELEASE})
+ License         : zlib (Distributable)
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
 @@ -12,15 +12,35 @@
  Patch1          : zlib-1.2.3-arflags-1.patch
  BuildRoot       : %{_tmppath}/%{name}

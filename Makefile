@@ -868,7 +868,8 @@ $(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM)): $(MECT_LT
 	test -n "$(MECT_SUFFIX)" -a -n "$(MECT_KERNEL_TARGET_CONF)"
 	touch -r $(MECT_LTIB_KERNEL_TS_RPM) /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp)
 	rm -rf $(MECT_LTIBDIR)/rpm/BUILD/linux-*
-	ln -sf $(MECT_KERNEL_TARGET_CONF) $(MECT_KERNEL_CONF)
+	rm -f $(MECT_KERNEL_CONF) $(MECT_KERNEL_CONF).dev
+	ln -s $(MECT_KERNEL_TARGET_CONF) $(MECT_KERNEL_CONF)
 	cd $(MECT_LTIBDIR); ./ltib -f -p kernel
 	touch -r /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp) $(MECT_LTIB_KERNEL_TS_RPM); rm -f /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp)
 	set -e; cd $(MECT_RPMDIR); for rpm in '' `ls kernel-rfs-*_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm imx-bootlets-src-mfg-*_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm 2>/dev/null | sed '/-tpac_/ d;'`; do \
@@ -934,17 +935,18 @@ target_lfs: $(MECT_LFSPKGS)
 target_mfg:
 	test -n '$(MECT_MFGDIR)' -a -n '$(MECT_FTPDIR)' -a -n '$(MECT_RFSDIR)' -a -n '$(MECT_LFSDIR)' -a -n '$(MECT_TGTDIR)' -a -n '$(MECT_BOOTDIR)' -a -n '$(MECT_MFGZIP)'
 	sudo rm -rf $(MECT_MFGDIR)
-	mkdir -p $(MECT_MFGDIR)/'OS firmware'/img $(MECT_MFGDIR)/'OS firmware'/sys
+	mkdir -p $(MECT_MFGDIR)/'OS firmware'/img $(MECT_MFGDIR)/'OS firmware'/sys $(MECT_TGTDIR)
 	sed "s/@@PLAYER@@/$(shell basename $(MECT_MFGDIR))/" $(MECT_FTPDIR)/player.ini > $(MECT_MFGDIR)/player.ini
 	install -m 644 $(MECT_FTPDIR)/fdisk-u.input $(MECT_MFGDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(MECT_FTPDIR)/ucl.xml $(MECT_MFGDIR)/'OS firmware'/ucl.xml
 	sudo tar cf $(MECT_MFGDIR)/'OS firmware'/img/rootfs.tar -C $(MECT_RFSDIR) .
-	sudo tar cf $(MECT_MFGDIR)/'OS firmware'/img/localfs.tar -C $(MECT_LFSDIR) .
-	sudo tar cjf $(MECT_TGTDIR)/local.tar.bz2 -C $(MECT_LFSDIR) .
+	tar cf $(MECT_MFGDIR)/'OS firmware'/img/localfs.tar -C $(MECT_LFSDIR) .
+	tar cjf $(MECT_TGTDIR)/local.tar.bz2 -C $(MECT_LFSDIR) .
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_MFGDIR)/'OS firmware'/img
 	install -m 644 $(MECT_BOOTDIR)/boot/updater_ivt.sb $(MECT_MFGDIR)/'OS firmware'/sys
-	sudo rm -f $(MECT_MFGZIP)
-	cd $(MECT_MFGDIR); sudo zip -0r $(MECT_MFGZIP) *
+	rm -f $(MECT_MFGZIP)
+	cd $(MECT_MFGDIR); zip -0r $(MECT_MFGZIP) *
+	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_MFGDIR)
 
 # Build the archive for target-specific development.
 .PHONY: target_dev
@@ -957,11 +959,6 @@ target_dev:
 	done
 	cd $(MECT_IMGDIR)/dev; sudo zip -1r $(MECT_IMGDIR)/rootfs_dev.zip rootfs
 	sudo rm -rf $(MECT_IMGDIR)/dev
-
-.PHONY: images_check
-images_check:
-	sudo diff -r --brief images-all-golden images-all 2>&1 | grep -v 'No such file or directory' > images_check.diff
-	diff -u images_check-golden.diff images_check.diff && echo "Images OK."
 
 # Handle the patches for LTIB configuration and spec files.
 # 

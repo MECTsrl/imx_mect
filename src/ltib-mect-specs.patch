@@ -387,7 +387,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
 --- ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec	2015-12-11 15:28:09.279956500 +0100
++++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec	2015-12-12 01:48:05.376705097 +0100
 @@ -3,44 +3,97 @@
  Summary         : imx233/imx28-style boot stream image creation
  Name            : imx-bootlets-src
@@ -420,8 +420,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +AutoReqProv     : no
 +
 +%Description mfg
-+imx-bootlets-src package contents restricted to just the files
-+that are needed for programming the target.
++imx-bootlets-src package contents restricted to the files
++needed to program the target.
 +
 +
 +# patch1 imx-bootlets-src-11.01.00-1315841439.patch: modify the boot arguments in order to boot from flash instead of memory card.

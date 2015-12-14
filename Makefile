@@ -11,7 +11,7 @@ export MECT_BUILD_ATCMCRT_TAG := v0.3
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to skip tag checkout
-export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc2
+export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc3
 
 # Default target image.
 # NOTE: uncomment only one.

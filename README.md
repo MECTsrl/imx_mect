@@ -51,7 +51,7 @@ LTIB is built and installed as an unprivileged user, but it requires root privil
         make clean
 	make
 
-More uild options can be found in the [extended developer documentaiton](https://github.com/MECTsrl/imx_mect/wiki).
+More build options can be found in the [extended developer documentaiton](https://github.com/MECTsrl/imx_mect/wiki).
 
 At the end, the build flow creates the archive needed to program TPAC 1007 480x272 devices in *~/imx_mect/images-all/TPAC1007_480x272_r\<version\>/TPAC1007_480x272_r\<version\>.zip*.
 

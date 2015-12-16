@@ -3,7 +3,7 @@
 Summary         : Application files for the embedded root filesystem
 Name            : local
 Version         : 1.0
-Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+Release         : 1
 License         : GPL
 Vendor          : MECT s.r.l.
 Packager        : Mihai Lazarescu
@@ -19,7 +19,7 @@ AutoReqProv     : no
 %Package ATCMcontrol_RunTimeSystem
 Summary         : ATCM control runtime system application
 Version         : %(echo ${MECT_BUILD_ATCMCRT_TAG})
-Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+Release         : 1
 Group           : Applications/File
 AutoReqProv     : no
 %Description ATCMcontrol_RunTimeSystem
@@ -90,13 +90,8 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/flash/data/recipe/test/test1.csv
 %{pfx}/local/flash/data/store
 %{pfx}/local/flash/data/trends
-%{pfx}/local/flash/etc/sysconfig/Alarms.csv
-%{pfx}/local/flash/etc/sysconfig/application.conf
-%{pfx}/local/flash/etc/sysconfig/atn01.conf
 %{pfx}/local/flash/etc/sysconfig/brightness
 %{pfx}/local/flash/etc/sysconfig/chatscripts
-%{pfx}/local/flash/etc/sysconfig/Commpar.csv
-%{pfx}/local/flash/etc/sysconfig/Crosstable.csv
 %{pfx}/local/flash/etc/sysconfig/img/splash.png
 %{pfx}/local/flash/etc/sysconfig/img/systool.png
 %{pfx}/local/flash/etc/sysconfig/net.conf

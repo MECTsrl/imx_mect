@@ -89,7 +89,7 @@ local_prepare_build:
 
 .PHONY: local_prepare_install
 local_prepare_install:
-	sudo rpm --nodeps --root $(MECT_LDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --define '_tmppath /tmp/rpm' $(MECT_RPMBASEDIR)/RPMS/arm/skell-lfs-$(SKELL_LFS_VER)_ms$(MECT_BUILD_RELEASE).arm.rpm
+	sudo rpm --nodeps --root $(MECT_LDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -Uvh --define '_tmppath /tmp/rpm' $(MECT_RPMBASEDIR)/RPMS/arm/skell-lfs-$(SKELL_LFS_VER).arm.rpm
 	sudo chown -R $(USER) $(MECT_LDIR)
 	sudo rm -rf $(MECT_LDIR)/var/lib/rpm
 	-sudo rmdir $(MECT_LDIR)/var/lib

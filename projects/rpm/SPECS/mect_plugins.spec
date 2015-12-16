@@ -1,7 +1,7 @@
 Summary         : Custom Qt plugins for HMI development.
 Name            : mect_plugins
 Version         : %(echo ${MECT_BUILD_PLUGINSCRT_TAG})
-Release         : 1_ms%(echo ${MECT_BUILD_RELEASE})
+Release         : 1
 License         : GPL
 Vendor          : MECT s.r.l.
 Packager        : Mihai Lazarescu

@@ -86,119 +86,119 @@ MECT_MD5EXT := md5
 # Packages for USB serial kernel modules.
 #
 
-MECT_RFSPKG_USBSERIAL_USBSERIAL := kernel-rfs-dev-usbserial-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_AIRCABLE := kernel-rfs-dev-usbserial-aircable-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_ARK3116 := kernel-rfs-dev-usbserial-ark3116-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_BELKIN := kernel-rfs-dev-usbserial-belkin_sa-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_CH341 := kernel-rfs-dev-usbserial-ch341-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_CP210X := kernel-rfs-dev-usbserial-cp210x-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_CYBERJACK := kernel-rfs-dev-usbserial-cyberjack-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_CYPRESS_M8 := kernel-rfs-dev-usbserial-cypress_m8-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_DEBUG := kernel-rfs-dev-usbserial-debug-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_DIGI_ACCELEPORT := kernel-rfs-dev-usbserial-digi_acceleport-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_EMPEG := kernel-rfs-dev-usbserial-empeg-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_FTDI_SIO := kernel-rfs-dev-usbserial-ftdi_sio-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_FUNSOFT := kernel-rfs-dev-usbserial-funsoft-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_GARMIN_GPS := kernel-rfs-dev-usbserial-garmin_gps-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_HP4X := kernel-rfs-dev-usbserial-hp4x-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IO_EDGEPORT := kernel-rfs-dev-usbserial-io_edgeport-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IO_TI := kernel-rfs-dev-usbserial-io_ti-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IPAQ := kernel-rfs-dev-usbserial-ipaq-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IPW := kernel-rfs-dev-usbserial-ipw-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IR := kernel-rfs-dev-usbserial-ir-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IUU_PHOENIX := kernel-rfs-dev-usbserial-iuu_phoenix-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_KEYSPAN := kernel-rfs-dev-usbserial-keyspan-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_KEYSPAN_PDA := kernel-rfs-dev-usbserial-keyspan_pda-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_KL5KUSB105 := kernel-rfs-dev-usbserial-kl5kusb105-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_KOBIL_SCT := kernel-rfs-dev-usbserial-kobil_sct-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_MCT_U232 := kernel-rfs-dev-usbserial-mct_u232-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_MOS7720 := kernel-rfs-dev-usbserial-mos7720-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_MOS7840 := kernel-rfs-dev-usbserial-mos7840-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_MOTO_MODEM := kernel-rfs-dev-usbserial-moto_modem-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_NAVMAN := kernel-rfs-dev-usbserial-navman-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_OMNINET := kernel-rfs-dev-usbserial-omninet-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_OPTICON := kernel-rfs-dev-usbserial-opticon-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_OPTION := kernel-rfs-dev-usbserial-option-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_OTI6858 := kernel-rfs-dev-usbserial-oti6858-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_PL2303 := kernel-rfs-dev-usbserial-pl2303-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_QCAUX := kernel-rfs-dev-usbserial-qcaux-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_QCSERIAL := kernel-rfs-dev-usbserial-qcserial-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SAFE_SERIAL := kernel-rfs-dev-usbserial-safe_serial-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SIEMENS_MPI := kernel-rfs-dev-usbserial-siemens_mpi-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SIERRA := kernel-rfs-dev-usbserial-sierra-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SPCP8X5 := kernel-rfs-dev-usbserial-spcp8x5-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SYMBOLSERIAL := kernel-rfs-dev-usbserial-symbolserial-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_TI_3410_5052 := kernel-rfs-dev-usbserial-ti_3410_5052-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_VISOR := kernel-rfs-dev-usbserial-visor-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_VIVOPAY := kernel-rfs-dev-usbserial-vivopay-serial-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_WHITEHEAT := kernel-rfs-dev-usbserial-whiteheat-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_WWAN := kernel-rfs-dev-usbserial-wwan-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_ZIO := kernel-rfs-dev-usbserial-zio-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_USBSERIAL := kernel-rfs-dev-usbserial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_AIRCABLE := kernel-rfs-dev-usbserial-aircable-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_ARK3116 := kernel-rfs-dev-usbserial-ark3116-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_BELKIN := kernel-rfs-dev-usbserial-belkin_sa-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_CH341 := kernel-rfs-dev-usbserial-ch341-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_CP210X := kernel-rfs-dev-usbserial-cp210x-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_CYBERJACK := kernel-rfs-dev-usbserial-cyberjack-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_CYPRESS_M8 := kernel-rfs-dev-usbserial-cypress_m8-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_DEBUG := kernel-rfs-dev-usbserial-debug-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_DIGI_ACCELEPORT := kernel-rfs-dev-usbserial-digi_acceleport-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_EMPEG := kernel-rfs-dev-usbserial-empeg-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_FTDI_SIO := kernel-rfs-dev-usbserial-ftdi_sio-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_FUNSOFT := kernel-rfs-dev-usbserial-funsoft-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_GARMIN_GPS := kernel-rfs-dev-usbserial-garmin_gps-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_HP4X := kernel-rfs-dev-usbserial-hp4x-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IO_EDGEPORT := kernel-rfs-dev-usbserial-io_edgeport-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IO_TI := kernel-rfs-dev-usbserial-io_ti-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IPAQ := kernel-rfs-dev-usbserial-ipaq-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IPW := kernel-rfs-dev-usbserial-ipw-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IR := kernel-rfs-dev-usbserial-ir-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IUU_PHOENIX := kernel-rfs-dev-usbserial-iuu_phoenix-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_KEYSPAN := kernel-rfs-dev-usbserial-keyspan-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_KEYSPAN_PDA := kernel-rfs-dev-usbserial-keyspan_pda-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_KL5KUSB105 := kernel-rfs-dev-usbserial-kl5kusb105-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_KOBIL_SCT := kernel-rfs-dev-usbserial-kobil_sct-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_MCT_U232 := kernel-rfs-dev-usbserial-mct_u232-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_MOS7720 := kernel-rfs-dev-usbserial-mos7720-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_MOS7840 := kernel-rfs-dev-usbserial-mos7840-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_MOTO_MODEM := kernel-rfs-dev-usbserial-moto_modem-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_NAVMAN := kernel-rfs-dev-usbserial-navman-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_OMNINET := kernel-rfs-dev-usbserial-omninet-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_OPTICON := kernel-rfs-dev-usbserial-opticon-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_OPTION := kernel-rfs-dev-usbserial-option-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_OTI6858 := kernel-rfs-dev-usbserial-oti6858-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_PL2303 := kernel-rfs-dev-usbserial-pl2303-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_QCAUX := kernel-rfs-dev-usbserial-qcaux-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_QCSERIAL := kernel-rfs-dev-usbserial-qcserial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SAFE_SERIAL := kernel-rfs-dev-usbserial-safe_serial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SIEMENS_MPI := kernel-rfs-dev-usbserial-siemens_mpi-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SIERRA := kernel-rfs-dev-usbserial-sierra-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SPCP8X5 := kernel-rfs-dev-usbserial-spcp8x5-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SYMBOLSERIAL := kernel-rfs-dev-usbserial-symbolserial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_TI_3410_5052 := kernel-rfs-dev-usbserial-ti_3410_5052-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_VISOR := kernel-rfs-dev-usbserial-visor-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_VIVOPAY := kernel-rfs-dev-usbserial-vivopay-serial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_WHITEHEAT := kernel-rfs-dev-usbserial-whiteheat-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_WWAN := kernel-rfs-dev-usbserial-wwan-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_ZIO := kernel-rfs-dev-usbserial-zio-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
 
 # Packages for USB 3G modems
 #
 
-MECT_RFSPKG_USB3G_MODESWITCH := usb-modeswitch-rfs-2.2.5-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USB3G_MODESWITCH_DATA := usb-modeswitch-data-rfs-20150627-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USB3G_LIBUSB1 := libusb1-rfs-1.0.20-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USB3G_MODESWITCH := usb-modeswitch-rfs-2.2.5-1.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USB3G_MODESWITCH_DATA := usb-modeswitch-data-rfs-20150627-1.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USB3G_LIBUSB1 := libusb1-rfs-1.0.20-1.$(MECT_TARGET_ARCH).rpm
 
 # Package list for creating the root file system for various targets.
 #
 
 MECT_COMMON_RFSPKGS := \
-	base_libs-rfs-1.2-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	boa-rfs-0.94.14rc21-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	busybox-rfs-1.15.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	cantest-rfs-1.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	dhcp-rfs-3.0.3b1-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	dropbear-rfs-0.52-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	e2fsprogs-rfs-1.41.4-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	expat-rfs-1.95.8-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	fontconfig-rfs-2.4.2-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	freetype-rfs-2.3.9-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	glib2-rfs-2.18.1-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	iproute-rfs-2.6.37-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	libsocketcan-rfs-0.0.8-0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	libtermcap-rfs-2.0.8-31_1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	libusb1-rfs-1.0.20-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	lrzsz-rfs-0.12.21-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	lzo-rfs-2.03-0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	mect_plugins-rfs-$(MECT_BUILD_PLUGINSCRT_TAG)-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	merge-rfs-0.1-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	modeps-rfs-1.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	mtd-utils-rfs-201006-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	mysql-rfs-4.1.12-0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	ncurses-rfs-5.3-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	ppp-rfs-2.4.4-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	qt-embedded-rfs-4.8.5-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	qwt-rfs-6.1-1_multiaxes_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	rsync-rfs-2.6.5-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	sftp-server-rfs-4.3p2-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	skell-rfs-1.18-2_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	sqlite-rfs-3.6.12-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	sysconfig-rfs-1.2-5_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	tslib-rfs-1.0-3_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	usb-modeswitch-data-rfs-20150627-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	usb-modeswitch-rfs-2.2.5-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	wpa_supplicant-rfs-0.5.9-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	xenomai-rfs-2.6.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	zip-rfs-3.0.0-0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	zlib-rfs-1.2.3-2_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	base_libs-rfs-1.2-1.$(MECT_TARGET_ARCH).rpm \
+	boa-rfs-0.94.14rc21-1.$(MECT_TARGET_ARCH).rpm \
+	busybox-rfs-1.15.0-1.$(MECT_TARGET_ARCH).rpm \
+	cantest-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
+	dhcp-rfs-3.0.3b1-1.$(MECT_TARGET_ARCH).rpm \
+	dropbear-rfs-0.52-1.$(MECT_TARGET_ARCH).rpm \
+	e2fsprogs-rfs-1.41.4-1.$(MECT_TARGET_ARCH).rpm \
+	expat-rfs-1.95.8-1.$(MECT_TARGET_ARCH).rpm \
+	fontconfig-rfs-2.4.2-1.$(MECT_TARGET_ARCH).rpm \
+	freetype-rfs-2.3.9-1.$(MECT_TARGET_ARCH).rpm \
+	glib2-rfs-2.18.1-1.$(MECT_TARGET_ARCH).rpm \
+	iproute-rfs-2.6.37-1.$(MECT_TARGET_ARCH).rpm \
+	libsocketcan-rfs-0.0.8-0.$(MECT_TARGET_ARCH).rpm \
+	libtermcap-rfs-2.0.8-31_1.$(MECT_TARGET_ARCH).rpm \
+	libusb1-rfs-1.0.20-1.$(MECT_TARGET_ARCH).rpm \
+	lrzsz-rfs-0.12.21-1.$(MECT_TARGET_ARCH).rpm \
+	lzo-rfs-2.03-0.$(MECT_TARGET_ARCH).rpm \
+	mect_plugins-rfs-$(MECT_BUILD_PLUGINSCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm \
+	merge-rfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
+	modeps-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
+	mtd-utils-rfs-201006-1.$(MECT_TARGET_ARCH).rpm \
+	mysql-rfs-4.1.12-0.$(MECT_TARGET_ARCH).rpm \
+	ncurses-rfs-5.3-1.$(MECT_TARGET_ARCH).rpm \
+	ppp-rfs-2.4.4-1.$(MECT_TARGET_ARCH).rpm \
+	qt-embedded-rfs-4.8.5-1.$(MECT_TARGET_ARCH).rpm \
+	qwt-rfs-6.1-1_multiaxes.$(MECT_TARGET_ARCH).rpm \
+	rsync-rfs-2.6.5-1.$(MECT_TARGET_ARCH).rpm \
+	sftp-server-rfs-4.3p2-1.$(MECT_TARGET_ARCH).rpm \
+	skell-rfs-1.18-2.$(MECT_TARGET_ARCH).rpm \
+	sqlite-rfs-3.6.12-1.$(MECT_TARGET_ARCH).rpm \
+	sysconfig-rfs-1.2-5.$(MECT_TARGET_ARCH).rpm \
+	tslib-rfs-1.0-3.$(MECT_TARGET_ARCH).rpm \
+	usb-modeswitch-data-rfs-20150627-1.$(MECT_TARGET_ARCH).rpm \
+	usb-modeswitch-rfs-2.2.5-1.$(MECT_TARGET_ARCH).rpm \
+	wpa_supplicant-rfs-0.5.9-1.$(MECT_TARGET_ARCH).rpm \
+	xenomai-rfs-2.6.0-1.$(MECT_TARGET_ARCH).rpm \
+	zip-rfs-3.0.0-0.$(MECT_TARGET_ARCH).rpm \
+	zlib-rfs-1.2.3-2.$(MECT_TARGET_ARCH).rpm \
 
 MECT_COMMON_RFSPKGS := $(MECT_COMMON_RFSPKGS:%=$(MECT_RPMDIR)/%)
 
 MECT_LFSPKGS := \
-	local-1.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	local-ATCMcontrol_RunTimeSystem-$(MECT_BUILD_ATCMCRT_TAG)-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	local-cgic_work-1.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	local-factory_data-1.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	local-setup_time-1.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
-	local-splash-1.0-1_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm \
+	local-1.0-1.$(MECT_TARGET_ARCH).rpm \
+	local-ATCMcontrol_RunTimeSystem-$(MECT_BUILD_ATCMCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm \
+	local-cgic_work-1.0-1.$(MECT_TARGET_ARCH).rpm \
+	local-factory_data-1.0-1.$(MECT_TARGET_ARCH).rpm \
+	local-setup_time-1.0-1.$(MECT_TARGET_ARCH).rpm \
+	local-splash-1.0-1.$(MECT_TARGET_ARCH).rpm \
 
 MECT_LFSPKGS := $(MECT_LFSPKGS:%=$(MECT_RPMDIR)/%)
 
 MECT_TARGET_RFSPKGS := \
-	kernel-rfs-2.6.35.3-imx_1.1.0_ms$(MECT_BUILD_RELEASE).arm.rpm \
+	kernel-rfs-2.6.35.3-imx_1.1.0.arm.rpm \
 	$(MECT_RFSPKG_USBSERIAL_PL2303) \
 	$(MECT_RFSPKG_USBSERIAL_USBSERIAL) \
 	$(MECT_RFSPKG_USB3G_MODESWITCH) \
@@ -872,7 +872,7 @@ $(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM)): $(MECT_LT
 	ln -s $(MECT_KERNEL_TARGET_CONF) $(MECT_KERNEL_CONF)
 	cd $(MECT_LTIBDIR); ./ltib -f -p kernel
 	touch -r /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp) $(MECT_LTIB_KERNEL_TS_RPM); rm -f /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp)
-	set -e; cd $(MECT_RPMDIR); for rpm in '' `ls kernel-rfs-*_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm imx-bootlets-src-mfg-*_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm 2>/dev/null | sed '/-tpac_/ d;'`; do \
+	set -e; cd $(MECT_RPMDIR); for rpm in '' `ls kernel-rfs-*.$(MECT_TARGET_ARCH).rpm imx-bootlets-src-mfg-*.$(MECT_TARGET_ARCH).rpm 2>/dev/null | sed '/-tpac_/ d;'`; do \
 		test -n "$$rpm" || continue; \
 		mv $$rpm `echo $$rpm | sed 's/^\(kernel\|imx-bootlets-src\)-\(rfs\|mfg\)-/\1-\2-$(MECT_SUFFIX)-/'`; \
 	done
@@ -887,7 +887,7 @@ target_boot: $(MECT_COMMON_RFSPKGS)
 	$(MAKE) MECT_SUFFIX=$(MECT_SUFFIX) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
 	sudo rm -rf $(MECT_BOOTDIR)
 	mkdir -p $(MECT_BOOTDIR)/var/lib/rpm
-	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_RPMDIR)/imx-bootlets-src-mfg-$(MECT_SUFFIX)-2.6.35.3-1.1.0_ms$(MECT_BUILD_RELEASE).$(MECT_TARGET_ARCH).rpm
+	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_RPMDIR)/imx-bootlets-src-mfg-$(MECT_SUFFIX)-2.6.35.3-1.1.0.$(MECT_TARGET_ARCH).rpm
 	sudo rm -f $(MECT_BOOTDIR)/var/lib/rpm/*
 	sudo rmdir $(MECT_BOOTDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_BOOTDIR)/var/lib

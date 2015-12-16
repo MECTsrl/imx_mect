@@ -90,13 +90,8 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/flash/data/recipe/test/test1.csv
 %{pfx}/local/flash/data/store
 %{pfx}/local/flash/data/trends
-%{pfx}/local/flash/etc/sysconfig/Alarms.csv
-%{pfx}/local/flash/etc/sysconfig/application.conf
-%{pfx}/local/flash/etc/sysconfig/atn01.conf
 %{pfx}/local/flash/etc/sysconfig/brightness
 %{pfx}/local/flash/etc/sysconfig/chatscripts
-%{pfx}/local/flash/etc/sysconfig/Commpar.csv
-%{pfx}/local/flash/etc/sysconfig/Crosstable.csv
 %{pfx}/local/flash/etc/sysconfig/img/splash.png
 %{pfx}/local/flash/etc/sysconfig/img/systool.png
 %{pfx}/local/flash/etc/sysconfig/net.conf

@@ -6,12 +6,12 @@ export MECT_BUILD_RELEASE := 2.0alpha_rc1
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := master
 # Set to 0.0 to skip tag checkout
-export MECT_BUILD_ATCMCRT_TAG := v0.3
+export MECT_BUILD_ATCMCRT_TAG := v0.4
 
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to skip tag checkout
-export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc5
+export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc6
 
 # Default target image.
 # NOTE: uncomment only one.
@@ -508,7 +508,7 @@ TPAC1006_IP112_320x240_lfs:
 TPAC1006_IP112_320x240_config:
 	test -n '$(MECT_LFSDIR)'
 	sudo sed -i '/^\s*\bIPADDR0\b\s*=/ s/=.*/=192.168.5.112/;'  $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
-	sudo sed -i '/^\s*\bMAC0\b\s*=/ s/=.*/=00:11:22:22:51:70/;' $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
+	sudo sed -i '/^\s*\bMAC0\b\s*=/ s/=.*/=00:11:22:22:51:12/;' $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
 
 .PHONY: TPAC1006_IP112_320x240_mfg
 TPAC1006_IP112_320x240_mfg: TPAC1006_IP112_320x240_boot TPAC1006_IP112_320x240_rfs TPAC1006_IP112_320x240_lfs TPAC1006_IP112_320x240_config
@@ -545,7 +545,7 @@ TPAC1006_IP118_320x240_lfs:
 TPAC1006_IP118_320x240_config:
 	test -n '$(MECT_LFSDIR)'
 	sudo sed -i '/^\s*\bIPADDR0\b\s*=/ s/=.*/=192.168.5.118/;'  $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
-	sudo sed -i '/^\s*\bMAC0\b\s*=/ s/=.*/=00:11:22:22:51:76/;' $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
+	sudo sed -i '/^\s*\bMAC0\b\s*=/ s/=.*/=00:11:22:22:51:18/;' $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
 
 .PHONY: TPAC1006_IP118_320x240_mfg
 TPAC1006_IP118_320x240_mfg: TPAC1006_IP118_320x240_boot TPAC1006_IP118_320x240_rfs TPAC1006_IP118_320x240_lfs TPAC1006_IP118_320x240_config
@@ -613,7 +613,7 @@ TPAC1006_IP119_640x480_lfs:
 TPAC1006_IP119_640x480_config:
 	test -n '$(MECT_LFSDIR)'
 	sudo sed -i '/^\s*\bIPADDR0\b\s*=/ s/=.*/=192.168.5.119/;'  $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
-	sudo sed -i '/^\s*\bMAC0\b\s*=/ s/=.*/=00:11:22:22:51:77/;' $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
+	sudo sed -i '/^\s*\bMAC0\b\s*=/ s/=.*/=00:11:22:22:51:19/;' $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
 
 .PHONY: TPAC1006_IP119_640x480_mfg
 TPAC1006_IP119_640x480_mfg: TPAC1006_IP119_640x480_boot TPAC1006_IP119_640x480_rfs TPAC1006_IP119_640x480_lfs TPAC1006_IP119_640x480_config
@@ -681,7 +681,7 @@ TPAC1007_IP113_480x272_lfs:
 TPAC1007_IP113_480x272_config:
 	test -n '$(MECT_LFSDIR)'
 	sudo sed -i '/^\s*\bIPADDR0\b\s*=/ s/=.*/=192.168.5.113/;'  $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
-	sudo sed -i '/^\s*\bMAC0\b\s*=/ s/=.*/=00:11:22:22:51:71/;' $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
+	sudo sed -i '/^\s*\bMAC0\b\s*=/ s/=.*/=00:11:22:22:51:13/;' $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
 
 .PHONY: TPAC1007_IP113_480x272_mfg
 TPAC1007_IP113_480x272_mfg: TPAC1007_IP113_480x272_boot TPAC1007_IP113_480x272_rfs TPAC1007_IP113_480x272_lfs TPAC1007_IP113_480x272_config
@@ -718,7 +718,7 @@ TPAC1007_IP114_480x272_lfs:
 TPAC1007_IP114_480x272_config:
 	test -n '$(MECT_LFSDIR)'
 	sudo sed -i '/^\s*\bIPADDR0\b\s*=/ s/=.*/=192.168.5.114/;'  $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
-	sudo sed -i '/^\s*\bMAC0\b\s*=/ s/=.*/=00:11:22:22:51:72/;' $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
+	sudo sed -i '/^\s*\bMAC0\b\s*=/ s/=.*/=00:11:22:22:51:14/;' $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
 
 .PHONY: TPAC1007_IP114_480x272_mfg
 TPAC1007_IP114_480x272_mfg: TPAC1007_IP114_480x272_boot TPAC1007_IP114_480x272_rfs TPAC1007_IP114_480x272_lfs TPAC1007_IP114_480x272_config
@@ -755,7 +755,7 @@ TPAC1007_IP120_480x272_lfs:
 TPAC1007_IP120_480x272_config:
 	test -n '$(MECT_LFSDIR)'
 	sudo sed -i '/^\s*\bIPADDR0\b\s*=/ s/=.*/=192.168.5.120/;'  $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
-	sudo sed -i '/^\s*\bMAC0\b\s*=/ s/=.*/=00:11:22:22:51:78/;' $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
+	sudo sed -i '/^\s*\bMAC0\b\s*=/ s/=.*/=00:11:22:22:51:20/;' $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
 
 .PHONY: TPAC1007_IP120_480x272_mfg
 TPAC1007_IP120_480x272_mfg: TPAC1007_IP120_480x272_boot TPAC1007_IP120_480x272_rfs TPAC1007_IP120_480x272_lfs TPAC1007_IP120_480x272_config
@@ -823,7 +823,7 @@ TPAC1008_IP208_800x480_lfs:
 TPAC1008_IP208_800x480_config:
 	test -n '$(MECT_LFSDIR)'
 	sudo sed -i '/^\s*\bIPADDR0\b\s*=/ s/=.*/=192.168.5.208/;'  $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
-	sudo sed -i '/^\s*\bMAC0\b\s*=/ s/=.*/=00:11:22:22:51:D0/;' $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
+	sudo sed -i '/^\s*\bMAC0\b\s*=/ s/=.*/=00:11:22:22:52:08/;' $(MECT_LFSDIR)/flash/etc/sysconfig/net.conf
 
 .PHONY: TPAC1008_IP208_800x480_mfg
 TPAC1008_IP208_800x480_mfg: TPAC1008_IP208_800x480_boot TPAC1008_IP208_800x480_rfs TPAC1008_IP208_800x480_lfs TPAC1008_IP208_800x480_config

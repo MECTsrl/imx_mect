@@ -15,10 +15,10 @@ export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc6
 
 # Default target image.
 # NOTE: uncomment only one.
-MECT_DEFAULT_IMAGE := TPAC1007_480x272
-#MECT_DEFAULT_IMAGE := TPAC1006_320x240
-#MECT_DEFAULT_IMAGE := TPAC1006_640x480
-#MECT_DEFAULT_IMAGE := TPAC1008_800x480
+MECT_DEFAULT_IMAGE = $(MECT_BUILD_TARGET_TPAC1007_480x272)
+#MECT_DEFAULT_IMAGE = $(MECT_BUILD_TARGET_TPAC1006_320x240)
+#MECT_DEFAULT_IMAGE = $(MECT_BUILD_TARGET_TPAC1006_640x480)
+#MECT_DEFAULT_IMAGE = $(MECT_BUILD_TARGET_TPAC1008_800x480)
 
 MECT_QT_VERSION := 4.8.5
 MECT_QWT_VERSION := 6.1-multiaxes
@@ -970,7 +970,7 @@ ltib_genpatch: ltib_genpatch_config ltib_genpatch_specs ltib_genpatch_bin
 
 .PHONY: ltib_genpatch_config
 ltib_genpatch_config: $(MECT_LTIBDIR_REF)/config
-	cd $(MECT_LTIBDIR)/.. && { diff -urN --exclude=.config.old --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/config $(shell basename $(MECT_LTIBDIR))/config; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.config $(shell basename $(MECT_LTIBDIR))/.config; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.config.cmd $(shell basename $(MECT_LTIBDIR))/.config.cmd; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.tmpconfig.h $(shell basename $(MECT_LTIBDIR))/.tmpconfig.h; } > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_CONFIG_PATCH); true
+	cd $(MECT_LTIBDIR)/.. && { diff -urN --exclude=.config.old --exclude=*.config.dev --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/config $(shell basename $(MECT_LTIBDIR))/config; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.config $(shell basename $(MECT_LTIBDIR))/.config; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.config.cmd $(shell basename $(MECT_LTIBDIR))/.config.cmd; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.tmpconfig.h $(shell basename $(MECT_LTIBDIR))/.tmpconfig.h; } > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_CONFIG_PATCH); true
 	cd $(MECT_FTPDIR); md5sum $(MECT_LTIB_MECT_CONFIG_PATCH) > $(MECT_LTIB_MECT_CONFIG_PATCH).$(MECT_MD5EXT)
 
 .PHONY: ltib_genpatch_specs

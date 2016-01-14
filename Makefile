@@ -14,22 +14,53 @@ MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
 export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc6
 
 # Default target image.
-# NOTE: uncomment only one.
-MECT_DEFAULT_IMAGE = $(MECT_BUILD_TARGET_TPAC1007_480x272)
-#MECT_DEFAULT_IMAGE = $(MECT_BUILD_TARGET_TPAC1006_320x240)
-#MECT_DEFAULT_IMAGE = $(MECT_BUILD_TARGET_TPAC1006_640x480)
-#MECT_DEFAULT_IMAGE = $(MECT_BUILD_TARGET_TPAC1008_800x480)
+MECT_DEFAULT_IMAGE = $(MECT_BUILD_TARGET_TPAC1007_3)
 
-MECT_QT_VERSION := 4.8.5
-MECT_QWT_VERSION := 6.1-multiaxes
+### TP1043_485, TP1043_232, TPAC1007_3, TPAC1007_4AA, TPAC1007_4AB:
+###      TPAC1007_480x272 con 4Control preso da git
 
-MECT_BUILD_TARGET_TPAC1006_320x240 := TPAC1006_320x240
-MECT_BUILD_TARGET_TPAC1006_640x480 := TPAC1006_640x480
-MECT_BUILD_TARGET_TPAC1007_480x272 := TPAC1007_480x272
-MECT_BUILD_TARGET_TPAC1008_800x480 := TPAC1008_800x480
+### TP1057:
+###     TPAC1006_320x240 con 4Control preso da git
+
+### TP1070:
+###      TPAC1008_800x480 con 4Control preso da git
+
+### TPAC1008, TP1070_CAN:
+###      TPAC1008_800x480 con 4Control preso da svn (base_2)
+
+### TPAC1006, TPAC1006_GSM, TP1057_CAN:
+###     TPAC1006_320x240 con 4Control preso da svn (base_2)
+
+### TPAC1006_HR:
+###     TPAC1006_640x480 con 4Control preso da svn (base_2)
+
+### TP1043_CAN, TPLC100, TPLC150:
+###      TPAC1007_480x272 con 4Control preso da svn (base_2)
+
+MECT_TARGET_PREFIX              :=  MECT_
+
+MECT_BUILD_TARGET_TP1043_485    :=  TP1043_485
+MECT_BUILD_TARGET_TP1043_232    :=  TP1043_232
+MECT_BUILD_TARGET_TPAC1007_3    :=  TPAC1007_3
+MECT_BUILD_TARGET_TPAC1007_4AA  :=  TPAC1007_4AA
+MECT_BUILD_TARGET_TPAC1007_4AB  :=  TPAC1007_4AB
+MECT_BUILD_TARGET_TP1057        :=  TP1057
+MECT_BUILD_TARGET_TP1070        :=  TP1070
+MECT_BUILD_TARGET_TPAC1008      :=  TPAC1008
+MECT_BUILD_TARGET_TP1070_CAN    :=  TP1070_CAN
+MECT_BUILD_TARGET_TPAC1006      :=  TPAC1006
+MECT_BUILD_TARGET_TPAC1006_GSM  :=  TPAC1006_GSM
+MECT_BUILD_TARGET_TP1057_CAN    :=  TP1057_CAN
+MECT_BUILD_TARGET_TPAC1006_HR   :=  TPAC1006_HR
+MECT_BUILD_TARGET_TP1043_CAN    :=  TP1043_CAN
+MECT_BUILD_TARGET_TPLC100       :=  TPLC100
+MECT_BUILD_TARGET_TPLC150       :=  TPLC150
 MECT_BUILD_QTVERSION = $(MECT_QT_VERSION)
 MECT_BUILD_QWTVERSION = $(MECT_QWT_VERSION)
 
+# Qt and related versions
+MECT_QT_VERSION := 4.8.5
+MECT_QWT_VERSION := 6.1-multiaxes
 
 # Name of the root file system version file
 MECT_RFS_VERSION_FILE := rootfs_version
@@ -474,47 +505,80 @@ image: $(MECT_DEFAULT_IMAGE)
 
 # Generate all manufacturing images.
 .PHONY: images
-images: TPAC1006_IP112_320x240 TPAC1006_IP118_320x240 TPAC1006_320x240 TPAC1006_IP119_640x480 TPAC1006_640x480 TPAC1007_IP113_480x272 TPAC1007_IP114_480x272 TPAC1007_480x272 TPAC1008_IP208_800x480 TPAC1008_800x480
+images: \
+	TP1043_485 \
+	TP1043_232 \
+	TPAC1007_3 \
+	TPAC1007_4AA \
+	TPAC1007_4AB \
+	TP1057 \
+	TP1070 \
+	TPAC1008 \
+	TP1070_CAN \
+	TPAC1006 \
+	TPAC1006_GSM \
+	TP1057_CAN \
+	TPAC1006_HR \
+	TP1043_CAN \
+	TPLC100 \
+	TPLC150 \
 
-# Target TPAC 1006, 320x240, IP 192.168.5.112
-include targets/Makefile-TPAC1006_IP112_320x240.in
 
-# Target TPAC 1006, 320x240, IP 192.168.5.118
-include targets/Makefile-TPAC1006_IP118_320x240.in
+# Target TP1043_485
+include targets/Makefile-TP1043_485.in
 
-# Target TPAC 1006, 320x240
-include targets/Makefile-TPAC1006_320x240.in
+# Target TP1043_232
+include targets/Makefile-TP1043_232.in
 
-# Target TPAC 1006, 640x480, IP 192.168.5.119
-include targets/Makefile-TPAC1006_IP119_640x480.in
+# Target TPAC1007_3
+include targets/Makefile-TPAC1007_3.in
 
-# Target TPAC 1006, 640x480
-include targets/Makefile-TPAC1006_640x480.in
+# Target TPAC1007_4AA
+include targets/Makefile-TPAC1007_4AA.in
 
-# Target TPAC 1007, 480x272 pixels, IP 192.168.5.113
-include targets/Makefile-TPAC1007_IP113_480x272.in
+# Target TPAC1007_4AB
+include targets/Makefile-TPAC1007_4AB.in
 
-# Target TPAC 1007, 480x272 pixels, IP 192.168.5.114
-include targets/Makefile-TPAC1007_IP114_480x272.in
+# Target TP1057
+include targets/Makefile-TP1057.in
 
-# Target TPAC 1007, 480x272 pixels, IP 192.168.5.120
-include targets/Makefile-TPAC1007_IP120_480x272.in
+# Target TP1070
+include targets/Makefile-TP1070.in
 
-# Target TPAC 1007, 480x272
-include targets/Makefile-TPAC1007_480x272.in
 
-# Target TPAC 1008, 800x480, IP 192.168.5.208
-include targets/Makefile-TPAC1008_IP208_800x480.in
+# Target TPAC1008
+include targets/Makefile-TPAC1008.in
 
-# Target TPAC 1008, 800x480
-include targets/Makefile-TPAC1008_800x480.in
+# Target TP1070_CAN
+include targets/Makefile-TP1070_CAN.in
+
+# Target TPAC1006
+include targets/Makefile-TPAC1006.in
+
+# Target TPAC1006_GSM
+include targets/Makefile-TPAC1006_GSM.in
+
+# Target TP1057_CAN
+include targets/Makefile-TP1057_CAN.in
+
+# Target TPAC1006_HR
+include targets/Makefile-TPAC1006_HR.in
+
+# Target TP1043_CAN
+include targets/Makefile-TP1043_CAN.in
+
+# Target TPLC100
+include targets/Makefile-TPLC100.in
+
+# Target TPLC150
+include targets/Makefile-TPLC150.in
 
 
 # Common target rules
 #
 
 # Build the target-specific kernel.
-$(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM)): $(MECT_LTIB_KERNEL_TS_RPM)
+$(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM)): $(MECT_LTIB_KERNEL_TS_RPM)
 	test -n "$(MECT_SUFFIX)" -a -n "$(MECT_KERNEL_TARGET_CONF)"
 	touch -r $(MECT_LTIB_KERNEL_TS_RPM) /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp)
 	rm -rf $(MECT_LTIBDIR)/rpm/BUILD/linux-*
@@ -522,9 +586,9 @@ $(subst /kernel-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM)): $(MECT_LT
 	ln -s $(MECT_KERNEL_TARGET_CONF) $(MECT_KERNEL_CONF)
 	cd $(MECT_LTIBDIR); ./ltib -f -p kernel
 	touch -r /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp) $(MECT_LTIB_KERNEL_TS_RPM); rm -f /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp)
-	set -e; cd $(MECT_RPMDIR); for rpm in '' `ls kernel-rfs-*.$(MECT_TARGET_ARCH).rpm imx-bootlets-src-mfg-*.$(MECT_TARGET_ARCH).rpm 2>/dev/null | sed '/-tpac_/ d;'`; do \
+	set -e; cd $(MECT_RPMDIR); for rpm in '' `ls kernel-rfs-*.$(MECT_TARGET_ARCH).rpm imx-bootlets-src-mfg-*.$(MECT_TARGET_ARCH).rpm 2>/dev/null | sed '/-$(MECT_TARGET_PREFIX)/ d;'`; do \
 		test -n "$$rpm" || continue; \
-		mv $$rpm `echo $$rpm | sed 's/^\(kernel\|imx-bootlets-src\)-\(rfs\|mfg\)-/\1-\2-$(MECT_SUFFIX)-/'`; \
+		mv $$rpm `echo $$rpm | sed 's/^\(kernel\|imx-bootlets-src\)-\(rfs\|mfg\)-/\1-\2-$(MECT_TARGET_PREFIX)$(MECT_SUFFIX)-/'`; \
 	done
 
 $(MECT_LTIB_KERNEL_TS_RPM):
@@ -537,7 +601,7 @@ target_boot: $(MECT_COMMON_RFSPKGS)
 	$(MAKE) MECT_SUFFIX=$(MECT_SUFFIX) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
 	sudo rm -rf $(MECT_BOOTDIR)
 	mkdir -p $(MECT_BOOTDIR)/var/lib/rpm
-	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_RPMDIR)/imx-bootlets-src-mfg-$(MECT_SUFFIX)-2.6.35.3-1.1.0.$(MECT_TARGET_ARCH).rpm
+	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_RPMDIR)/imx-bootlets-src-mfg-$(MECT_TARGET_PREFIX)$(MECT_SUFFIX)-2.6.35.3-1.1.0.$(MECT_TARGET_ARCH).rpm
 	sudo rm -f $(MECT_BOOTDIR)/var/lib/rpm/*
 	sudo rmdir $(MECT_BOOTDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_BOOTDIR)/var/lib
@@ -550,7 +614,7 @@ target_rfs: $(MECT_COMMON_RFSPKGS)
 	$(MAKE) MECT_SUFFIX=$(MECT_SUFFIX) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
 	sudo rm -rf $(MECT_RFSDIR)
 	mkdir -p $(MECT_RFSDIR)/var/lib/rpm $(MECT_RFSDIR)/tmp/ltib
-	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_COMMON_RFSPKGS) $(subst /kernel-rfs-,/kernel-rfs-$(MECT_SUFFIX)-,$(MECT_TARGET_RFSPKGS))
+	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_COMMON_RFSPKGS) $(subst /kernel-rfs-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_SUFFIX)-,$(MECT_TARGET_RFSPKGS))
 	sudo rm -f $(MECT_RFSDIR)/var/lib/rpm/*
 	sudo rmdir $(MECT_RFSDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_RFSDIR)/var/lib

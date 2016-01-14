@@ -30,6 +30,7 @@ MECT_ALL_TARGETS = \
 	splash \
 	cgic_work \
 	ATCMcontrol_RunTimeSystem \
+	4c_runtime \
 	mect_plugins
 
 ifneq ($(wildcard factory_test/trunk/.*),)
@@ -227,11 +228,37 @@ ATCMcontrol_RunTimeSystem_build:
 ATCMcontrol_RunTimeSystem_install: MECT_PRJDIR := $(CURDIR)/ATCMcontrol_RunTimeSystem
 ATCMcontrol_RunTimeSystem_install:
 	test -n $(MECT_PRJDIR)
-	install -D -m 0755 $(MECT_PRJDIR)/bin/fcrts $(MECT_LDIR)/root/fcrts
+	install -D -m 0755 $(MECT_PRJDIR)/bin/fcrts $(MECT_LDIR)/root/fcrts.ATCMcontrol_RunTimeSystem
 
 .PHONY: ATCMcontrol_RunTimeSystem_clean
 ATCMcontrol_RunTimeSystem_clean: MECT_PRJDIR := $(CURDIR)/ATCMcontrol_RunTimeSystem
 ATCMcontrol_RunTimeSystem_clean:
+	test -n $(MECT_PRJDIR)
+	-test -d $(MECT_PRJDIR) && $(MAKE) -j1 -C $(MECT_PRJDIR) -f _fcrts.mak TARGET=4CPC DEBUG=0 PRODUCT="USE_CROSSTABLE" $(MECT_TOOLCHAIN_FLAG) MECT_ROOTFS='$(MECT_LTIB_RFSDIR)' MECT_CC_VERSION='$(MECT_CC_VERSION)' MECT_CC_DIRECTORY='$(MECT_CC_DIRECTORY)' MECT_CC_RADIX='$(MECT_CC_RADIX)' clobber
+
+# ###############################################################
+#
+# Project 4c_runtime
+#
+
+.PHONY: 4c_runtime
+4c_runtime: 4c_runtime_clean 4c_runtime_build 4c_runtime_install
+
+.PHONY: 4c_runtime_build
+4c_runtime_build: MECT_PRJDIR := $(CURDIR)/4c_runtime
+4c_runtime_build:
+	test -n $(MECT_PRJDIR)
+	-test -d $(MECT_PRJDIR) && $(MAKE) -j1 -C $(MECT_PRJDIR) -f _fcrts.mak TARGET=4CPC DEBUG=0 PRODUCT="USE_CROSSTABLE" $(MECT_TOOLCHAIN_FLAG) MECT_ROOTFS='$(MECT_LTIB_RFSDIR)' MECT_CC_VERSION='$(MECT_CC_VERSION)' MECT_CC_DIRECTORY='$(MECT_CC_DIRECTORY)' MECT_CC_RADIX='$(MECT_CC_RADIX)' all
+
+.PHONY: 4c_runtime_install
+4c_runtime_install: MECT_PRJDIR := $(CURDIR)/4c_runtime
+4c_runtime_install:
+	test -n $(MECT_PRJDIR)
+	-test -d $(MECT_PRJDIR) && install -D -m 0755 $(MECT_PRJDIR)/bin/fcrts $(MECT_LDIR)/root/fcrts.4c_runtime
+
+.PHONY: 4c_runtime_clean
+4c_runtime_clean: MECT_PRJDIR := $(CURDIR)/4c_runtime
+4c_runtime_clean:
 	test -n $(MECT_PRJDIR)
 	-test -d $(MECT_PRJDIR) && $(MAKE) -j1 -C $(MECT_PRJDIR) -f _fcrts.mak TARGET=4CPC DEBUG=0 PRODUCT="USE_CROSSTABLE" $(MECT_TOOLCHAIN_FLAG) MECT_ROOTFS='$(MECT_LTIB_RFSDIR)' MECT_CC_VERSION='$(MECT_CC_VERSION)' MECT_CC_DIRECTORY='$(MECT_CC_DIRECTORY)' MECT_CC_RADIX='$(MECT_CC_RADIX)' clobber
 
@@ -280,7 +307,9 @@ localfs_rpm_install:
 	test -n $(MECT_PRJDIR)
 	tar cjvf $(MECT_RPMBASEDIR)/SOURCES/local.tar.bz2 --exclude=.svn -C $(MECT_LDIR) .
 	rm -rf $(MECT_RPMTMPDIR)/{*,.??*}
-	rpmbuild --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean --rmsource $(MECT_SPECDIR)/local.spec
+	rpmbuild --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean $(MECT_SPECDIR)/local.spec
+	rpmbuild --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean $(MECT_SPECDIR)/local-4c_runtime.spec
+	rpmbuild --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean --rmsource $(MECT_SPECDIR)/local-ATCMcontrol_RunTimeSystem.spec
 
 .PHONY: localfs_rpm_clean
 localfs_rpm_clean: MECT_PRJDIR := $(CURDIR)

@@ -16,17 +16,6 @@ AutoReqProv     : no
 %description
 %{summary}
 
-%Package ATCMcontrol_RunTimeSystem
-Summary         : ATCM control runtime system application
-Version         : %(echo ${MECT_BUILD_ATCMCRT_TAG})
-Release         : 1
-Group           : Applications/File
-AutoReqProv     : no
-%Description ATCMcontrol_RunTimeSystem
-ATCM control runtime system provides the run-time execution
-environment for the PLC applications built using the ATCM
-control engineering SDK.
-
 %Package cgic_work
 Summary         : CGI C workers for MECT operator panels
 Group           : Applications/File
@@ -74,6 +63,7 @@ LC_ALL=C
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{pfx}/local
 tar xjvf %{SOURCE0} -C $RPM_BUILD_ROOT/%{pfx}/local
+rm -f $RPM_BUILD_ROOT/%{pfx}/local/flash/root/fcrts
 
 %clean
 sudo rm -rf $RPM_BUILD_ROOT
@@ -98,7 +88,8 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/flash/etc/sysconfig/.passwd
 %{pfx}/local/flash/etc/sysconfig/ppp
 %{pfx}/local/flash/root/backing_file
-%{pfx}/local/flash/root/fcrts
+%{pfx}/local/flash/root/fcrts.4c_runtime
+%{pfx}/local/flash/root/fcrts.ATCMcontrol_RunTimeSystem
 %{pfx}/local/flash/root/make_usb_device
 %{pfx}/local/flash/root/safe_hmi
 %{pfx}/local/flash/root/setparam
@@ -153,10 +144,6 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/www/updatetime.cgi
 %{pfx}/local/www/upgrade.cgi
 %{pfx}/local/www/upload.cgi
-
-%files ATCMcontrol_RunTimeSystem
-%defattr(-,root,root)
-%{pfx}/local/flash/root/fcrts
 
 %files cgic_work
 %defattr(-,root,root)

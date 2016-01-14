@@ -179,7 +179,7 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/local/etc/sysconfig/net.conf s
 +#
 +# set up the network interfaces
 +#
-+MAC0=00:11:22:22:51:14
++MAC0=00:11:22:22:11:00
 +IPADDR0=192.168.5.211
 +NETMASK0=255.255.255.0
 +GATEWAY0=192.168.5.10

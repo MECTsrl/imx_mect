@@ -13,54 +13,18 @@ MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to skip tag checkout
 export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc6
 
-# Default target image.
-MECT_DEFAULT_IMAGE = $(MECT_BUILD_TARGET_TPAC1007_3)
+# Mandatory prefix for all target device names.
+MECT_TARGET_PREFIX := MECT_
 
-### TP1043_485, TP1043_232, TPAC1007_3, TPAC1007_4AA, TPAC1007_4AB:
-###      TPAC1007_480x272 con 4Control preso da git
-
-### TP1057:
-###     TPAC1006_320x240 con 4Control preso da git
-
-### TP1070:
-###      TPAC1008_800x480 con 4Control preso da git
-
-### TPAC1008, TP1070_CAN:
-###      TPAC1008_800x480 con 4Control preso da svn (base_2)
-
-### TPAC1006, TPAC1006_GSM, TP1057_CAN:
-###     TPAC1006_320x240 con 4Control preso da svn (base_2)
-
-### TPAC1006_HR:
-###     TPAC1006_640x480 con 4Control preso da svn (base_2)
-
-### TP1043_CAN, TPLC100, TPLC150:
-###      TPAC1007_480x272 con 4Control preso da svn (base_2)
-
-MECT_TARGET_PREFIX              :=  MECT_
-
-MECT_BUILD_TARGET_TP1043_485    :=  TP1043_485
-MECT_BUILD_TARGET_TP1043_232    :=  TP1043_232
-MECT_BUILD_TARGET_TPAC1007_3    :=  TPAC1007_3
-MECT_BUILD_TARGET_TPAC1007_4AA  :=  TPAC1007_4AA
-MECT_BUILD_TARGET_TPAC1007_4AB  :=  TPAC1007_4AB
-MECT_BUILD_TARGET_TP1057        :=  TP1057
-MECT_BUILD_TARGET_TP1070        :=  TP1070
-MECT_BUILD_TARGET_TPAC1008      :=  TPAC1008
-MECT_BUILD_TARGET_TP1070_CAN    :=  TP1070_CAN
-MECT_BUILD_TARGET_TPAC1006      :=  TPAC1006
-MECT_BUILD_TARGET_TPAC1006_GSM  :=  TPAC1006_GSM
-MECT_BUILD_TARGET_TP1057_CAN    :=  TP1057_CAN
-MECT_BUILD_TARGET_TPAC1006_HR   :=  TPAC1006_HR
-MECT_BUILD_TARGET_TP1043_CAN    :=  TP1043_CAN
-MECT_BUILD_TARGET_TPLC100       :=  TPLC100
-MECT_BUILD_TARGET_TPLC150       :=  TPLC150
-MECT_BUILD_QTVERSION = $(MECT_QT_VERSION)
-MECT_BUILD_QWTVERSION = $(MECT_QWT_VERSION)
+# Name of the default target device image that is part of the default build.
+MECT_DEFAULT_IMAGE := TPAC1007_3
 
 # Qt and related versions
 MECT_QT_VERSION := 4.8.5
 MECT_QWT_VERSION := 6.1-multiaxes
+
+MECT_BUILD_QTVERSION = $(MECT_QT_VERSION)
+MECT_BUILD_QWTVERSION = $(MECT_QWT_VERSION)
 
 # Name of the root file system version file
 MECT_RFS_VERSION_FILE := rootfs_version
@@ -218,15 +182,17 @@ MECT_COMMON_RFSPKGS := \
 
 MECT_COMMON_RFSPKGS := $(MECT_COMMON_RFSPKGS:%=$(MECT_RPMDIR)/%)
 
-MECT_LFSPKGS := \
+MECT_COMMON_LFSPKGS := \
 	local-1.0-1.$(MECT_TARGET_ARCH).rpm \
-	local-ATCMcontrol_RunTimeSystem-$(MECT_BUILD_ATCMCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm \
 	local-cgic_work-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	local-factory_data-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	local-setup_time-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	local-splash-1.0-1.$(MECT_TARGET_ARCH).rpm \
 
-MECT_LFSPKGS := $(MECT_LFSPKGS:%=$(MECT_RPMDIR)/%)
+MECT_COMMON_LFSPKGS := $(MECT_COMMON_LFSPKGS:%=$(MECT_RPMDIR)/%)
+
+MECT_TARGET_LFSPKG_ATCMCONTROL_RUNTIMESYSTEM := $(MECT_RPMDIR)/local-ATCMcontrol_RunTimeSystem-$(MECT_BUILD_ATCMCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm
+MECT_TARGET_LFSPKG_4C_RUNTIME := $(MECT_RPMDIR)/local-4c_runtime-$(MECT_BUILD_ATCMCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm
 
 MECT_TARGET_RFSPKGS := \
 	kernel-rfs-2.6.35.3-imx_1.1.0.arm.rpm \
@@ -470,6 +436,9 @@ projects_setup_ATCMcontrol_RunTimeSystem:
 	cd projects; if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; fi
 	cd projects; if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_BRANCH)'; then cd ATCMcontrol_RunTimeSystem; git checkout $(MECT_BUILD_ATCMCRT_BRANCH); git pull; fi
 	cd projects; if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)' -a '$(MECT_BUILD_ATCMCRT_TAG)' != '0.0'; then cd ATCMcontrol_RunTimeSystem; git checkout tags/$(MECT_BUILD_ATCMCRT_TAG); fi
+	ping -c1 192.168.0.254 || exit 0; \
+	svn info svn://192.168.0.254/4c_runtime/branches/base_2 || exit 0; \
+		cd projects; rm -rf 4c_runtime; svn checkout svn://192.168.0.254/4c_runtime/branches/base_2 4c_runtime
 
 # Setup the local projects: mect_plugins.
 .PHONY: projects_setup_mect_plugins
@@ -506,71 +475,38 @@ image: $(MECT_DEFAULT_IMAGE)
 # Generate all manufacturing images.
 .PHONY: images
 images: \
-	TP1043_485 \
 	TP1043_232 \
-	TPAC1007_3 \
-	TPAC1007_4AA \
-	TPAC1007_4AB \
+	TP1043_485 \
+	TP1043_CAN \
 	TP1057 \
+	TP1057_CAN \
 	TP1070 \
-	TPAC1008 \
 	TP1070_CAN \
 	TPAC1006 \
 	TPAC1006_GSM \
-	TP1057_CAN \
 	TPAC1006_HR \
-	TP1043_CAN \
+	TPAC1007_3 \
+	TPAC1007_4AA \
+	TPAC1007_4AB \
+	TPAC1008 \
 	TPLC100 \
 	TPLC150 \
 
-
-# Target TP1043_485
-include targets/Makefile-TP1043_485.in
-
-# Target TP1043_232
 include targets/Makefile-TP1043_232.in
-
-# Target TPAC1007_3
-include targets/Makefile-TPAC1007_3.in
-
-# Target TPAC1007_4AA
-include targets/Makefile-TPAC1007_4AA.in
-
-# Target TPAC1007_4AB
-include targets/Makefile-TPAC1007_4AB.in
-
-# Target TP1057
-include targets/Makefile-TP1057.in
-
-# Target TP1070
-include targets/Makefile-TP1070.in
-
-
-# Target TPAC1008
-include targets/Makefile-TPAC1008.in
-
-# Target TP1070_CAN
-include targets/Makefile-TP1070_CAN.in
-
-# Target TPAC1006
-include targets/Makefile-TPAC1006.in
-
-# Target TPAC1006_GSM
-include targets/Makefile-TPAC1006_GSM.in
-
-# Target TP1057_CAN
-include targets/Makefile-TP1057_CAN.in
-
-# Target TPAC1006_HR
-include targets/Makefile-TPAC1006_HR.in
-
-# Target TP1043_CAN
+include targets/Makefile-TP1043_485.in
 include targets/Makefile-TP1043_CAN.in
-
-# Target TPLC100
+include targets/Makefile-TP1057.in
+include targets/Makefile-TP1057_CAN.in
+include targets/Makefile-TP1070.in
+include targets/Makefile-TP1070_CAN.in
+include targets/Makefile-TPAC1006.in
+include targets/Makefile-TPAC1006_GSM.in
+include targets/Makefile-TPAC1006_HR.in
+include targets/Makefile-TPAC1007_3.in
+include targets/Makefile-TPAC1007_4AA.in
+include targets/Makefile-TPAC1007_4AB.in
+include targets/Makefile-TPAC1008.in
 include targets/Makefile-TPLC100.in
-
-# Target TPLC150
 include targets/Makefile-TPLC150.in
 
 
@@ -631,11 +567,11 @@ target_rfs: $(MECT_COMMON_RFSPKGS)
 
 # Build the target-specific local file system.
 .PHONY: target_lfs
-target_lfs: $(MECT_LFSPKGS)
-	test -n '$(MECT_LFSDIR)' -a -n '$(MECT_FSDIR)' -a -n '$(MECT_LFSPKGS)'
+target_lfs: $(MECT_COMMON_LFSPKGS)
+	test -n '$(MECT_LFSDIR)' -a -n '$(MECT_FSDIR)' -a -n '$(MECT_COMMON_LFSPKGS)'
 	sudo rm -rf $(MECT_LFSDIR)
 	mkdir -p $(MECT_LFSDIR)/var/lib/rpm $(MECT_LFSDIR)/tmp/ltib
-	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_LFSPKGS)
+	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_COMMON_LFSPKGS) $(MECT_LFSPKGS)
 	sudo rm -f $(MECT_LFSDIR)/var/lib/rpm/*
 	sudo rmdir $(MECT_LFSDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_LFSDIR)/var/lib

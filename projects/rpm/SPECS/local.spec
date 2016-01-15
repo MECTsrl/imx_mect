@@ -24,14 +24,6 @@ AutoReqProv     : no
 CGI C workers provide various configuration pages and data
 colletion and set utilities.
 
-%Package setup_time
-Summary         : Application for setting the time and date of the panel
-Group           : Applications/File
-AutoReqProv     : no
-%Description setup_time
-Application that provides the operator input for setting the
-time and date of the panel.
-
 %Package splash
 Summary         : Notifies that panel update is in progress
 Group           : Applications/File
@@ -94,7 +86,6 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/flash/root/make_usb_device
 %{pfx}/local/flash/root/safe_hmi
 %{pfx}/local/flash/root/setparam
-%{pfx}/local/flash/root/setup_time
 %{pfx}/local/flash/root/splash
 %{pfx}/local/flash/root/sqldrivers/libqsqlite.so
 %{pfx}/local/flash/root/sqldrivers/libqsqlmysql.so
@@ -152,10 +143,6 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/www/upgrade.cgi
 %{pfx}/local/www/getdatesinterval
 %{pfx}/local/www/extract
-
-%files setup_time
-%defattr(-,root,root)
-%{pfx}/local/flash/root/setup_time
 
 %files splash
 %defattr(-,root,root)

@@ -188,7 +188,6 @@ MECT_COMMON_LFSPKGS := \
 	local-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	local-cgic_work-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	local-factory_data-1.0-1.$(MECT_TARGET_ARCH).rpm \
-	local-setup_time-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	local-splash-1.0-1.$(MECT_TARGET_ARCH).rpm \
 
 MECT_COMMON_LFSPKGS := $(MECT_COMMON_LFSPKGS:%=$(MECT_RPMDIR)/%)

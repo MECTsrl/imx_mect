@@ -26,7 +26,6 @@ export PATH := /usr/lib/ccache:$(PATH)
 # All build targets
 MECT_ALL_TARGETS := \
 	local_prepare \
-	setup_time \
 	splash \
 	cgic_work \
 	ATCMcontrol_RunTimeSystem \
@@ -51,7 +50,6 @@ MECT_ALL_TARGETS += \
 # All clean targets
 MECT_CLEAN_TARGETS := \
 	local_prepare_clean \
-	setup_time_clean \
 	splash_clean \
 	cgic_work_clean \
 	ATCMcontrol_RunTimeSystem_clean \

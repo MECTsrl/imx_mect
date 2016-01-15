@@ -24,14 +24,17 @@ MECT_SMP_FLAG := -j$(shell grep -c ^processor /proc/cpuinfo)
 export PATH := /usr/lib/ccache:$(PATH)
 
 # All build targets
-MECT_ALL_TARGETS = \
+MECT_ALL_TARGETS := \
 	local_prepare \
 	setup_time \
 	splash \
 	cgic_work \
 	ATCMcontrol_RunTimeSystem \
-	4c_runtime \
-	mect_plugins
+	mect_plugins \
+
+ifneq ($(wildcard 4c_runtime/.*),)
+MECT_ALL_TARGETS += 4c_runtime
+endif
 
 ifneq ($(wildcard factory_test/trunk/.*),)
 MECT_ALL_TARGETS += factory_test
@@ -43,10 +46,10 @@ endif
 
 MECT_ALL_TARGETS += \
 	factory_data \
-	localfs_rpm
+	localfs_rpm \
 
 # All clean targets
-MECT_CLEAN_TARGETS = \
+MECT_CLEAN_TARGETS := \
 	local_prepare_clean \
 	setup_time_clean \
 	splash_clean \
@@ -63,7 +66,17 @@ endif
 
 MECT_CLEAN_TARGETS += \
 	factory_data_clean \
-	localfs_rpm_clean
+	localfs_rpm_clean \
+
+MECT_LOCAL_SPECS := \
+	local.spec \
+	local-ATCMcontrol_RunTimeSystem.spec \
+
+ifneq ($(wildcard 4c_runtime/.*),)
+MECT_LOCAL_SPECS += local-4c_runtime.spec
+endif
+
+MECT_LOCAL_SPECS := $(MECT_LOCAL_SPECS:%=$(MECT_SPECDIR)/%)
 
 
 # ###############################################################
@@ -248,13 +261,13 @@ ATCMcontrol_RunTimeSystem_clean:
 4c_runtime_build: MECT_PRJDIR := $(CURDIR)/4c_runtime
 4c_runtime_build:
 	test -n $(MECT_PRJDIR)
-	-test -d $(MECT_PRJDIR) && $(MAKE) -j1 -C $(MECT_PRJDIR) -f _fcrts.mak TARGET=4CPC DEBUG=0 PRODUCT="USE_CROSSTABLE" $(MECT_TOOLCHAIN_FLAG) MECT_ROOTFS='$(MECT_LTIB_RFSDIR)' MECT_CC_VERSION='$(MECT_CC_VERSION)' MECT_CC_DIRECTORY='$(MECT_CC_DIRECTORY)' MECT_CC_RADIX='$(MECT_CC_RADIX)' all
+	$(MAKE) -j1 -C $(MECT_PRJDIR) -f _fcrts.mak TARGET=4CPC DEBUG=0 PRODUCT="USE_CROSSTABLE" $(MECT_TOOLCHAIN_FLAG) MECT_ROOTFS='$(MECT_LTIB_RFSDIR)' MECT_CC_VERSION='$(MECT_CC_VERSION)' MECT_CC_DIRECTORY='$(MECT_CC_DIRECTORY)' MECT_CC_RADIX='$(MECT_CC_RADIX)' all
 
 .PHONY: 4c_runtime_install
 4c_runtime_install: MECT_PRJDIR := $(CURDIR)/4c_runtime
 4c_runtime_install:
 	test -n $(MECT_PRJDIR)
-	-test -d $(MECT_PRJDIR) && install -D -m 0755 $(MECT_PRJDIR)/bin/fcrts $(MECT_LDIR)/root/fcrts.4c_runtime
+	install -D -m 0755 $(MECT_PRJDIR)/bin/fcrts $(MECT_LDIR)/root/fcrts.4c_runtime
 
 .PHONY: 4c_runtime_clean
 4c_runtime_clean: MECT_PRJDIR := $(CURDIR)/4c_runtime
@@ -307,9 +320,9 @@ localfs_rpm_install:
 	test -n $(MECT_PRJDIR)
 	tar cjvf $(MECT_RPMBASEDIR)/SOURCES/local.tar.bz2 --exclude=.svn -C $(MECT_LDIR) .
 	rm -rf $(MECT_RPMTMPDIR)/{*,.??*}
-	rpmbuild --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean $(MECT_SPECDIR)/local.spec
-	rpmbuild --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean $(MECT_SPECDIR)/local-4c_runtime.spec
-	rpmbuild --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean --rmsource $(MECT_SPECDIR)/local-ATCMcontrol_RunTimeSystem.spec
+	for s in $(MECT_LOCAL_SPECS); do \
+		rpmbuild --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean $$s; \
+	done
 
 .PHONY: localfs_rpm_clean
 localfs_rpm_clean: MECT_PRJDIR := $(CURDIR)

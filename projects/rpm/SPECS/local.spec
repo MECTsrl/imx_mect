@@ -61,9 +61,12 @@ export LC_ALL
 LC_ALL=C
 
 rm -rf $RPM_BUILD_ROOT
+
 mkdir -p $RPM_BUILD_ROOT/%{pfx}/local
 tar xjvf %{SOURCE0} -C $RPM_BUILD_ROOT/%{pfx}/local
-rm -f $RPM_BUILD_ROOT/%{pfx}/local/flash/root/fcrts
+
+cd $RPM_BUILD_ROOT/%{pfx}/local/flash/root
+rm -f fcrts fcrts.4c_runtime fcrts.ATCMcontrol_RunTimeSystem
 
 %clean
 sudo rm -rf $RPM_BUILD_ROOT
@@ -88,8 +91,6 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/flash/etc/sysconfig/.passwd
 %{pfx}/local/flash/etc/sysconfig/ppp
 %{pfx}/local/flash/root/backing_file
-%{pfx}/local/flash/root/fcrts.4c_runtime
-%{pfx}/local/flash/root/fcrts.ATCMcontrol_RunTimeSystem
 %{pfx}/local/flash/root/make_usb_device
 %{pfx}/local/flash/root/safe_hmi
 %{pfx}/local/flash/root/setparam

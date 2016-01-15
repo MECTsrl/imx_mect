@@ -62,8 +62,10 @@ export MECT_RPMBIN = $(MECT_FSBINDIR)/rpm
 export MECT_RPMBASEDIR = $(CURDIR)/ltib/rpm
 MECT_RPMBUILDDIR = $(MECT_RPMBASEDIR)/BUILD
 export MECT_RPMDIR = $(MECT_RPMBASEDIR)/RPMS/$(MECT_TARGET_ARCH)
-# Root file system top-level directory
+# Top-level directory of target device images
 MECT_IMGDIR = $(CURDIR)/images-all
+# Projects directory
+MECT_PRJDIR = $(CURDIR)/projects
 # Draft directory for rpmbuild
 MECT_TMPRPMDIR = /tmp/rpm-$(USER)
 # Expand to the name of the kernel RPM built by LTIB.
@@ -431,23 +433,23 @@ qt:
 # Setup the local projects: ATCMcontrol_RunTimeSystem.
 .PHONY: projects_setup_ATCMcontrol_RunTimeSystem
 projects_setup_ATCMcontrol_RunTimeSystem:
-	test -d projects
+	test -d $(MECT_PRJDIR)
 	test -n '$(MECT_BUILD_ATCMCRT_BRANCH)'
-	cd projects; if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; fi
-	cd projects; if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_BRANCH)'; then cd ATCMcontrol_RunTimeSystem; git checkout $(MECT_BUILD_ATCMCRT_BRANCH); git pull; fi
-	cd projects; if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)' -a '$(MECT_BUILD_ATCMCRT_TAG)' != '0.0'; then cd ATCMcontrol_RunTimeSystem; git checkout tags/$(MECT_BUILD_ATCMCRT_TAG); fi
+	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; fi
+	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_BRANCH)'; then cd ATCMcontrol_RunTimeSystem; git checkout $(MECT_BUILD_ATCMCRT_BRANCH); git pull; fi
+	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)' -a '$(MECT_BUILD_ATCMCRT_TAG)' != '0.0'; then cd ATCMcontrol_RunTimeSystem; git checkout tags/$(MECT_BUILD_ATCMCRT_TAG); fi
 	ping -c1 192.168.0.254 || exit 0; \
 	svn info svn://192.168.0.254/4c_runtime/branches/base_2 || exit 0; \
-		cd projects; rm -rf 4c_runtime; svn checkout svn://192.168.0.254/4c_runtime/branches/base_2 4c_runtime
+		cd $(MECT_PRJDIR); rm -rf 4c_runtime; svn checkout svn://192.168.0.254/4c_runtime/branches/base_2 4c_runtime
 
 # Setup the local projects: mect_plugins.
 .PHONY: projects_setup_mect_plugins
 projects_setup_mect_plugins:
-	test -d projects
+	test -d $(MECT_PRJDIR)
 	test -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'
-	cd projects; if test -d mect_plugins; then cd mect_plugins; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins; fi
-	cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'; then cd mect_plugins; git checkout $(MECT_BUILD_PLUGINSCRT_BRANCH); git pull; fi
-	cd projects; if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)' -a '$(MECT_BUILD_PLUGINSCRT_TAG)' != '0.0'; then cd mect_plugins; git checkout tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
+	cd $(MECT_PRJDIR); if test -d mect_plugins; then cd mect_plugins; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins; fi
+	cd $(MECT_PRJDIR); if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'; then cd mect_plugins; git checkout $(MECT_BUILD_PLUGINSCRT_BRANCH); git pull; fi
+	cd $(MECT_PRJDIR); if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)' -a '$(MECT_BUILD_PLUGINSCRT_TAG)' != '0.0'; then cd mect_plugins; git checkout tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
 
 # Setup the local projects.
 .PHONY: projects_setup
@@ -456,7 +458,7 @@ projects_setup: projects_setup_ATCMcontrol_RunTimeSystem projects_setup_mect_plu
 # Build the local projects.
 .PHONY: projects_build
 projects_build:
-	test -d projects
+	test -d $(MECT_PRJDIR)
 	$(MAKE) -C projects clean all
 
 # Setup and build the local projects.
@@ -472,25 +474,33 @@ image: $(MECT_DEFAULT_IMAGE)
 # Rules to build target root file systems
 #
 
-# Generate all manufacturing images.
-.PHONY: images
-images: \
+MECT_DEFAULT_IMAGES := \
 	TP1043_232 \
 	TP1043_485 \
-	TP1043_CAN \
 	TP1057 \
-	TP1057_CAN \
 	TP1070 \
+	TPAC1007_3 \
+	TPAC1007_4AA \
+	TPAC1007_4AB \
+
+ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
+MECT_DEFAULT_IMAGES += \
+	TP1043_CAN \
+	TP1057_CAN \
 	TP1070_CAN \
 	TPAC1006 \
 	TPAC1006_GSM \
 	TPAC1006_HR \
-	TPAC1007_3 \
-	TPAC1007_4AA \
-	TPAC1007_4AB \
 	TPAC1008 \
 	TPLC100 \
 	TPLC150 \
+
+endif
+
+# Generate all manufacturing images.
+.PHONY: images
+images: $(MECT_DEFAULT_IMAGES)
+
 
 include targets/Makefile-TP1043_232.in
 include targets/Makefile-TP1043_485.in
@@ -671,7 +681,7 @@ ltib_rebuild:
 
 .PHONY: clean_projects
 clean_projects:
-	if test -d projects; then $(MAKE) -C projects clean; fi
+	if test -d $(MECT_PRJDIR); then $(MAKE) -C $(MECT_PRJDIR) clean; fi
 
 .PHONY: clean
 clean: clean_projects

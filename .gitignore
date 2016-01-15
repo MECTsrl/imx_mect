@@ -11,11 +11,6 @@ projects/cgic_work/extract
 projects/cgic_work/getdatesinterval
 projects/cgic_work/updateall.cgi
 projects/cgic_work/upgrade.cgi
-projects/setup_time/Makefile
-projects/setup_time/moc_setuptime.cpp
-projects/setup_time/qrc_hmi.cpp
-projects/setup_time/setup_time
-projects/setup_time/ui_setuptime.h
 projects/splash/Makefile
 projects/splash/moc_splash.cpp
 projects/splash/splash

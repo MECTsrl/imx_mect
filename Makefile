@@ -497,8 +497,13 @@ MECT_DEFAULT_IMAGES += \
 endif
 
 # Generate all manufacturing images.
+
+# Recurse to properly evaluate the targets.
 .PHONY: images
-images: $(MECT_DEFAULT_IMAGES)
+images:
+	$(MAKE) $@_do
+
+images_do: $(MECT_DEFAULT_IMAGES)
 
 
 include targets/Makefile-TP1043_232.in

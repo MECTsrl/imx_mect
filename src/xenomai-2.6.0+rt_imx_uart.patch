@@ -6,7 +6,7 @@ diff -aurN xenomai-2.6.0/ksrc/drivers/serial/Kconfig ./ksrc/drivers/serial/Kconf
  	  CP-168U
  
 +config XENO_DRIVERS_IMX_UART
-+	depends on XENO_SKIN_RTDM && (ARCH_IMX || ARCH_MXC)
++	depends on XENO_SKIN_RTDM && (ARCH_IMX || ARCH_MXC || ARCH_MXS)
 +	tristate "RT IMX UART driver"
 +	select RATIONAL
 +	help
@@ -31,7 +31,7 @@ diff -aurN xenomai-2.6.0/ksrc/drivers/serial/Makefile ./ksrc/drivers/serial/Make
 diff -aurN xenomai-2.6.0/ksrc/drivers/serial/rt_imx_uart.c ./ksrc/drivers/serial/rt_imx_uart.c
 --- xenomai-2.6.0/ksrc/drivers/serial/rt_imx_uart.c	1970-01-01 01:00:00.000000000 +0100
 +++ ./ksrc/drivers/serial/rt_imx_uart.c	2012-12-21 08:34:10.000000000 +0100
-@@ -0,0 +1,1560 @@
+@@ -0,0 +1,1576 @@
 +/*
 + * Copyright 2012 Wolfgang Grandegger <wg@denx.de>
 + *
@@ -71,7 +71,23 @@ diff -aurN xenomai-2.6.0/ksrc/drivers/serial/rt_imx_uart.c ./ksrc/drivers/serial
 +#include <asm/dma.h>
 +#include <asm/div64.h>
 +#include <mach/hardware.h>
++
++#if defined CONFIG_ARCH_MXC && CONFIG_ARCH_MXC
 +#include <mach/imx-uart.h>
++#else
++#define IMXUART_HAVE_RTSCTS (1<<0)
++#define IMXUART_IRDA        (1<<1)
++
++struct imxuart_platform_data {
++	int (*init)(struct platform_device *pdev);
++	void (*exit)(struct platform_device *pdev);
++	unsigned int flags;
++	void (*irda_enable)(int enable);
++	unsigned int irda_inv_rx:1;
++	unsigned int irda_inv_tx:1;
++	unsigned short transceiver_delay;
++};
++#endif
 +
 +#include <rtdm/rtserial.h>
 +#include <rtdm/rtdm_driver.h>
@@ -79,22 +95,22 @@ diff -aurN xenomai-2.6.0/ksrc/drivers/serial/rt_imx_uart.c ./ksrc/drivers/serial
 +#define DRIVER_NAME	"xeno_imx_uart"
 +
 +/* Register definitions */
-+#define URXD0	0x0  /* Receiver Register */
-+#define URTX0	0x40 /* Transmitter Register */
-+#define UCR1	0x80 /* Control Register 1 */
-+#define UCR2	0x84 /* Control Register 2 */
-+#define UCR3	0x88 /* Control Register 3 */
-+#define UCR4	0x8c /* Control Register 4 */
-+#define UFCR	0x90 /* FIFO Control Register */
-+#define USR1	0x94 /* Status Register 1 */
-+#define USR2	0x98 /* Status Register 2 */
-+#define UESC	0x9c /* Escape Character Register */
-+#define UTIM	0xa0 /* Escape Timer Register */
-+#define UBIR	0xa4 /* BRM Incremental Register */
-+#define UBMR	0xa8 /* BRM Modulator Register */
-+#define UBRC	0xac /* Baud Rate Count Register */
-+#define MX2_ONEMS 0xb0 /* One Millisecond register */
-+#define UTS (cpu_is_mx1() ? 0xd0 : 0xb4) /* UART Test Register */
++#define URXD0		0x0  /* Receiver Register */
++#define URTX0		0x40 /* Transmitter Register */
++#define UCR1		0x80 /* Control Register 1 */
++#define UCR2		0x84 /* Control Register 2 */
++#define UCR3		0x88 /* Control Register 3 */
++#define UCR4		0x8c /* Control Register 4 */
++#define UFCR		0x90 /* FIFO Control Register */
++#define USR1		0x94 /* Status Register 1 */
++#define USR2		0x98 /* Status Register 2 */
++#define UESC		0x9c /* Escape Character Register */
++#define UTIM		0xa0 /* Escape Timer Register */
++#define UBIR		0xa4 /* BRM Incremental Register */
++#define UBMR		0xa8 /* BRM Modulator Register */
++#define UBRC		0xac /* Baud Rate Count Register */
++#define MX2_ONEMS	0xb0 /* One Millisecond register */
++#define UTS		0xb4 /* FIXME: Check it! UART Test Register */
 +
 +/* UART Control Register Bit Fields.*/
 +#define URXD_CHARRDY	(1<<15)

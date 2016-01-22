@@ -17,10 +17,10 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell
  stop() {
  echo -n "Shutting down 'autoexec'... "
 -killall -q keyGenerator factory_test safe_hmi fcrts hmi 
-+killall -q keyGenerator factory_test safe_hmi fcrts hmi setup_time ts_calibrate splash
++killall -q keyGenerator factory_test safe_hmi fcrts hmi ts_calibrate splash
  sleep 1
 -killall -9 -q keyGenerator factory_test safe_hmi fcrts hmi 
-+killall -9 -q keyGenerator factory_test safe_hmi fcrts hmi setup_time ts_calibrate splash
++killall -9 -q keyGenerator factory_test safe_hmi fcrts hmi ts_calibrate splash
  dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
  echo "Done."
  }

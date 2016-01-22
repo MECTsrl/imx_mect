@@ -18,9 +18,9 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell
  if [ ! -e $TSLIB_CALIBFILE ]; then
  	echo -n "Starting 'calibration'... "
  	/usr/bin/ts_calibrate
-@@ -46,15 +56,6 @@
- 	echo "done."
- fi 
+@@ -50,15 +60,6 @@
+ # Make sure / is mounted R/O
+ mount -oro,remount /
  
 -# set the brightness
 -if [ -e $LOCAL_ETC_DIR/brightness ]
@@ -31,6 +31,6 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell
 -fi
 -echo "setting brightness level at `cat /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness`"
 -
- # if date is equal 1970 statr the set time tool
- if [ `date '+%Y'` -eq "1970" ]; then                          
- 	echo "setting time ..."  
+ if [ -x $LOCAL_ROOT_DIR/systool ] && [ ! -x $LOCAL_ROOT_DIR/factory_test ]
+ then
+ 	echo "Starting systool application."

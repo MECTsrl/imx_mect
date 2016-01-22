@@ -113,33 +113,6 @@ local_prepare_clean:
 
 # ###############################################################
 #
-# Project setup_time
-#
-
-.PHONY: setup_time
-setup_time: setup_time_clean setup_time_build setup_time_install
-
-.PHONY: setup_time_build
-setup_time_build: MECT_PRJDIR := $(CURDIR)/setup_time
-setup_time_build:
-	test -n $(MECT_PRJDIR)
-	cd $(MECT_PRJDIR); $(MECT_QMAKE) -spec qws/linux-g++-mx
-	$(MAKE) $(MECT_SMP_FLAG) -C $(MECT_PRJDIR)
-
-.PHONY: setup_time_install
-setup_time_install: MECT_PRJDIR := $(CURDIR)/setup_time
-setup_time_install:
-	test -n $(MECT_PRJDIR)
-	install -D -m 0755 $(MECT_PRJDIR)/setup_time $(MECT_LDIR)/root/setup_time
-
-.PHONY: setup_time_clean
-setup_time_clean: MECT_PRJDIR := $(CURDIR)/setup_time
-setup_time_clean:
-	test -n $(MECT_PRJDIR)
-	-test -d $(MECT_PRJDIR) && $(MAKE) -C $(MECT_PRJDIR) distclean
-
-# ###############################################################
-#
 # Project mect_plugins
 #
 # TODO Convert to LTIB package (depends on several Makefile variables).

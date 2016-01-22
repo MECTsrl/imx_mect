@@ -16897,7 +16897,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec	1970-01-01 01:00:00.000000000 +0100
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec	2015-12-19 16:59:07.144771292 +0100
-@@ -0,0 +1,187 @@
+@@ -0,0 +1,178 @@
 +#!/bin/sh
 +
 +LOCAL_ETC_DIR="/local/etc/sysconfig"
@@ -16950,15 +16950,6 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# Make sure / is mounted R/O
 +mount -oro,remount /
 +
-+# if date is equal 1970 statr the set time tool
-+if [ `date '+%Y'` -eq "1970" ]; then                          
-+	echo "setting time ..."  
-+	if [ -x $LOCAL_ROOT_DIR/setup_time ]; then                                                           
-+		$LOCAL_ROOT_DIR/setup_time -qws > /dev/null 2>&1 
-+	fi                                                       
-+fi                                                                                                                 
-+echo "time set."
-+
 +if [ -x $LOCAL_ROOT_DIR/systool ] && [ ! -x $LOCAL_ROOT_DIR/factory_test ]
 +then
 +	echo "Starting systool application."
@@ -16994,9 +16985,9 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +
 +stop() {
 +echo -n "Shutting down 'autoexec'... "
-+killall -q keyGenerator factory_test safe_hmi fcrts hmi setup_time ts_calibrate splash
++killall -q keyGenerator factory_test safe_hmi fcrts hmi ts_calibrate splash
 +sleep 1
-+killall -9 -q keyGenerator factory_test safe_hmi fcrts hmi setup_time ts_calibrate splash
++killall -9 -q keyGenerator factory_test safe_hmi fcrts hmi ts_calibrate splash
 +dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
 +echo "Done."
 +}

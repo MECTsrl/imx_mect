@@ -1,0 +1,242 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell-1.18.modified/etc/rc.d/init.d/autoexec
+--- skell-1.18/etc/rc.d/init.d/autoexec	2016-01-22 17:13:30.973505171 +0100
++++ skell-1.18.modified/etc/rc.d/init.d/autoexec	1970-01-01 01:00:00.000000000 +0100
+@@ -1,117 +0,0 @@
+-#!/bin/sh
+-
+-LOCAL_ETC_DIR="/local/etc/sysconfig"
+-LOCAL_ROOT_DIR="/local/root"
+-
+-start() {
+-
+-# ts variable
+-export TSLIB_CONFFILE=/usr/etc/ts.conf
+-export TSLIB_PLUGINDIR=/usr/lib/ts
+-export TSLIB_TSDEVICE=/dev/input/ts0
+-export TSLIB_CONSOLEDEVICE=none
+-export TSLIB_CALIBFILE=$LOCAL_ETC_DIR/pointercal
+-
+-# qt variable
+-export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
+-export QT_QWS_FONTDIR=/usr/lib/fonts
+-export POINTERCAL_FILE=$TSLIB_CALIBFILE
+-
+-# set the brightness
+-if [ -e $LOCAL_ETC_DIR/brightness ]
+-then
+-	source $LOCAL_ETC_DIR/brightness
+-else
+-	echo 70 > /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness
+-fi
+-echo "setting brightness level at `cat /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness`"
+-
+-# if necessary calibrate the touch screen
+-if [ ! -e $TSLIB_CALIBFILE ]; then
+-	echo -n "Starting 'calibration'... "
+-	/usr/bin/ts_calibrate
+-	sync
+-	echo "Done."
+-fi
+-
+-# Check if we are updating the system, if yes wait
+-usb_string=`df | cut -d ' ' -f1 | grep /dev/sd`
+-
+-while [ "${usb_string:0:7}" == "/dev/sd" ]
+-do
+-	sleep 1
+-	echo "waiting for usb umount"
+-	usb_string=`df | cut -d ' ' -f1 | grep /dev/sd`
+-	
+-done
+-
+-echo "NO update in progress, move on..."
+-
+-# Make sure / is mounted R/O
+-mount -oro,remount /
+-
+-if [ -x $LOCAL_ROOT_DIR/systool ] && [ ! -x $LOCAL_ROOT_DIR/factory_test ]
+-then
+-	echo "Starting systool application."
+-	$LOCAL_ROOT_DIR/systool -qws > /dev/null 2>&1
+-	echo "Done."
+-fi
+-
+-# if factory test is preset and executable, start it
+-if [ -x $LOCAL_ROOT_DIR/factory_test ]
+-then
+-	echo "Starting test application."
+-	$LOCAL_ROOT_DIR/factory_test -qws > /dev/null 2>&1 &
+-	echo "Done."
+-elif [ -x /local/root/keyGenerator ]
+-then
+-	echo "Starting keyGenerator application."
+-	/local/root/keyGenerator -qws > /dev/null 2>&1 &
+-elif [ -x $LOCAL_ROOT_DIR/fcrts ]
+-then
+-	echo "Starting applications."
+-	#dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
+-
+-	$LOCAL_ROOT_DIR/fcrts > /dev/null 2>&1 & 
+-	if [ -x $LOCAL_ROOT_DIR/safe_hmi -a ! -e /var/tmp/dont_run_safe_hmi ]; then 
+-		#sleep 2
+-		$LOCAL_ROOT_DIR/safe_hmi > /dev/null 2>&1 &
+-	fi
+-fi
+-
+-echo "Done."
+-
+-}
+-
+-stop() {
+-echo -n "Shutting down 'autoexec'... "
+-killall -q keyGenerator factory_test safe_hmi fcrts hmi ts_calibrate splash
+-sleep 1
+-killall -9 -q keyGenerator factory_test safe_hmi fcrts hmi ts_calibrate splash
+-dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
+-echo "Done."
+-}
+-
+-restart() {
+-stop
+-sleep 1
+-start
+-}
+-
+-case "$1" in
+-start)
+-    start
+-;;
+-stop)
+-    stop
+-;;
+-restart)
+-    restart
+-;;
+-*)
+-  echo $"Usage: $0 {start|stop|restart}"
+-        exit 1
+-    ;;
+-    
+-esac
+-
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec.orig skell-1.18.modified/etc/rc.d/init.d/autoexec.orig
+--- skell-1.18/etc/rc.d/init.d/autoexec.orig	2016-01-22 17:13:30.965505271 +0100
++++ skell-1.18.modified/etc/rc.d/init.d/autoexec.orig	1970-01-01 01:00:00.000000000 +0100
+@@ -1,117 +0,0 @@
+-#!/bin/sh
+-
+-LOCAL_ETC_DIR="/local/etc/sysconfig"
+-LOCAL_ROOT_DIR="/local/root"
+-
+-start() {
+-
+-# ts variable
+-export TSLIB_CONFFILE=/usr/etc/ts.conf
+-export TSLIB_PLUGINDIR=/usr/lib/ts
+-export TSLIB_TSDEVICE=/dev/input/ts0
+-export TSLIB_CONSOLEDEVICE=none
+-export TSLIB_CALIBFILE=$LOCAL_ETC_DIR/pointercal
+-
+-# qt variable
+-export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
+-export QT_QWS_FONTDIR=/usr/lib/fonts
+-export POINTERCAL_FILE=$TSLIB_CALIBFILE
+-
+-# set the brightness
+-if [ -e $LOCAL_ETC_DIR/brightness ]
+-then
+-	source $LOCAL_ETC_DIR/brightness
+-else
+-	echo 70 > /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness
+-fi
+-echo "setting brightness level at `cat /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness`"
+-
+-# if necessary calibrate the touch screen
+-if [ ! -e $TSLIB_CALIBFILE ]; then
+-	echo -n "Starting 'calibration'... "
+-	/usr/bin/ts_calibrate
+-	sync
+-	echo "Done."
+-fi
+-
+-# Check if we are updating the system, if yes wait
+-usb_string=`df | cut -d ' ' -f1 | grep /dev/sd`
+-
+-while [ "${usb_string:0:7}" == "/dev/sd" ]
+-do
+-	sleep 1
+-	echo "waiting for usb umount"
+-	usb_string=`df | cut -d ' ' -f1 | grep /dev/sd`
+-	
+-done
+-
+-echo "NO update in progress, move on..."
+-
+-# Make sure / is mounted R/O
+-mount -oro,remount /
+-
+-if [ -x $LOCAL_ROOT_DIR/systool ] && [ ! -x $LOCAL_ROOT_DIR/factory_test ]
+-then
+-	echo "Starting systool application."
+-	$LOCAL_ROOT_DIR/systool -qws > /dev/null 2>&1
+-	echo "Done."
+-fi
+-
+-# if factory test is preset and executable, start it
+-if [ -x $LOCAL_ROOT_DIR/factory_test ]
+-then
+-	echo "Starting test application."
+-	$LOCAL_ROOT_DIR/factory_test -qws > /dev/null 2>&1 &
+-	echo "Done."
+-elif [ -x /local/root/keyGenerator ]
+-then
+-	echo "Starting keyGenerator application."
+-	/local/root/keyGenerator -qws > /dev/null 2>&1 &
+-elif [ -x $LOCAL_ROOT_DIR/fcrts ]
+-then
+-	echo "Starting applications."
+-	#dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
+-
+-	$LOCAL_ROOT_DIR/fcrts > /dev/null 2>&1 & 
+-	if [ -x $LOCAL_ROOT_DIR/safe_hmi ]; then 
+-		#sleep 2
+-		$LOCAL_ROOT_DIR/safe_hmi > /dev/null 2>&1 &
+-	fi
+-fi
+-
+-echo "Done."
+-
+-}
+-
+-stop() {
+-echo -n "Shutting down 'autoexec'... "
+-killall -q keyGenerator factory_test safe_hmi fcrts hmi ts_calibrate splash
+-sleep 1
+-killall -9 -q keyGenerator factory_test safe_hmi fcrts hmi ts_calibrate splash
+-dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
+-echo "Done."
+-}
+-
+-restart() {
+-stop
+-sleep 1
+-start
+-}
+-
+-case "$1" in
+-start)
+-    start
+-;;
+-stop)
+-    stop
+-;;
+-restart)
+-    restart
+-;;
+-*)
+-  echo $"Usage: $0 {start|stop|restart}"
+-        exit 1
+-    ;;
+-    
+-esac
+-

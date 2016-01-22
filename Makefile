@@ -497,8 +497,13 @@ MECT_DEFAULT_IMAGES += \
 endif
 
 # Generate all manufacturing images.
+
+# Recurse to properly evaluate the targets.
 .PHONY: images
-images: $(MECT_DEFAULT_IMAGES)
+images:
+	$(MAKE) $@_do
+
+images_do: $(MECT_DEFAULT_IMAGES)
 
 
 include targets/Makefile-TP1043_232.in
@@ -523,8 +528,8 @@ include targets/Makefile-TPLC150.in
 #
 
 # Build the target-specific kernel.
-$(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_SUFFIX)-,$(MECT_LTIB_KERNEL_RPM)): $(MECT_LTIB_KERNEL_TS_RPM)
-	test -n "$(MECT_SUFFIX)" -a -n "$(MECT_KERNEL_TARGET_CONF)"
+$(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM)): $(MECT_LTIB_KERNEL_TS_RPM)
+	test -n "$(MECT_BUILD_TARGET)" -a -n "$(MECT_KERNEL_TARGET_CONF)"
 	touch -r $(MECT_LTIB_KERNEL_TS_RPM) /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp)
 	rm -rf $(MECT_LTIBDIR)/rpm/BUILD/linux-*
 	rm -f $(MECT_KERNEL_CONF) $(MECT_KERNEL_CONF).dev
@@ -533,7 +538,7 @@ $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_SUFFIX)-,$(MECT_LTIB_KE
 	touch -r /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp) $(MECT_LTIB_KERNEL_TS_RPM); rm -f /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp)
 	set -e; cd $(MECT_RPMDIR); for rpm in '' `ls kernel-rfs-*.$(MECT_TARGET_ARCH).rpm imx-bootlets-src-mfg-*.$(MECT_TARGET_ARCH).rpm 2>/dev/null | sed '/-$(MECT_TARGET_PREFIX)/ d;'`; do \
 		test -n "$$rpm" || continue; \
-		mv $$rpm `echo $$rpm | sed 's/^\(kernel\|imx-bootlets-src\)-\(rfs\|mfg\)-/\1-\2-$(MECT_TARGET_PREFIX)$(MECT_SUFFIX)-/'`; \
+		mv $$rpm `echo $$rpm | sed 's/^\(kernel\|imx-bootlets-src\)-\(rfs\|mfg\)-/\1-\2-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-/'`; \
 	done
 
 $(MECT_LTIB_KERNEL_TS_RPM):
@@ -541,12 +546,14 @@ $(MECT_LTIB_KERNEL_TS_RPM):
 
 # Build the target-specific boot.
 .PHONY: target_boot
+target_boot: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
+target_boot: MECT_BOOTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)_ms$(MECT_BUILD_RELEASE)/boot
 target_boot: $(MECT_COMMON_RFSPKGS)
-	test -n '$(MECT_BOOTDIR)' -a -n '$(MECT_SUFFIX)' -a -n '$(MECT_KERNEL_TARGET_CONF)' -a -n '$(MECT_KERNELRPM)' -a -n '$(MECT_FSDIR)' -a -n '$(MECT_RPMDIR)' -a -n '$(MECT_TARGET_ARCH)'
-	$(MAKE) MECT_SUFFIX=$(MECT_SUFFIX) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
+	test -n '$(MECT_BUILD_TARGET)' -a -n '$(MECT_KERNEL_TARGET_CONF)'
+	$(MAKE) MECT_BUILD_TARGET=$(MECT_BUILD_TARGET) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
 	sudo rm -rf $(MECT_BOOTDIR)
 	mkdir -p $(MECT_BOOTDIR)/var/lib/rpm
-	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_RPMDIR)/imx-bootlets-src-mfg-$(MECT_TARGET_PREFIX)$(MECT_SUFFIX)-2.6.35.3-1.1.0.$(MECT_TARGET_ARCH).rpm
+	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_RPMDIR)/imx-bootlets-src-mfg-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-2.6.35.3-1.1.0.$(MECT_TARGET_ARCH).rpm
 	sudo rm -f $(MECT_BOOTDIR)/var/lib/rpm/*
 	sudo rmdir $(MECT_BOOTDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_BOOTDIR)/var/lib
@@ -554,12 +561,14 @@ target_boot: $(MECT_COMMON_RFSPKGS)
 
 # Build the target-specific root file system.
 .PHONY: target_rfs
+target_rfs: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
+target_rfs: MECT_RFSDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)_ms$(MECT_BUILD_RELEASE)/rootfs
 target_rfs: $(MECT_COMMON_RFSPKGS)
-	test -n '$(BUILD_TARGET)' -a -n '$(MECT_RFSDIR)' -a -n '$(MECT_SUFFIX)' -a -n '$(MECT_KERNEL_TARGET_CONF)' -a -n '$(MECT_KERNELRPM)' -a -n '$(MECT_RFSDIR)' -a -n '$(MECT_FSDIR)' -a -n '$(MECT_COMMON_RFSPKGS)' -a -n '$(MECT_TARGET_RFSPKGS)' -a -n '$(MECT_CSXCDIR)' -a -n '$(MECT_RFS_VERSION_FILE)'
-	$(MAKE) MECT_SUFFIX=$(MECT_SUFFIX) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
+	test -n '$(MECT_BUILD_TARGET)' -a -n '$(MECT_KERNEL_TARGET_CONF)'
+	$(MAKE) MECT_BUILD_TARGET=$(MECT_BUILD_TARGET) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
 	sudo rm -rf $(MECT_RFSDIR)
 	mkdir -p $(MECT_RFSDIR)/var/lib/rpm $(MECT_RFSDIR)/tmp/ltib
-	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_COMMON_RFSPKGS) $(subst /kernel-rfs-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_SUFFIX)-,$(MECT_TARGET_RFSPKGS))
+	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_COMMON_RFSPKGS) $(subst /kernel-rfs-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_TARGET_RFSPKGS))
 	sudo rm -f $(MECT_RFSDIR)/var/lib/rpm/*
 	sudo rmdir $(MECT_RFSDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_RFSDIR)/var/lib
@@ -568,7 +577,7 @@ target_rfs: $(MECT_COMMON_RFSPKGS)
 	sudo qemu-arm $(MECT_CSXCDIR)/arm-none-linux-gnueabi/libc/sbin/ldconfig -r $(MECT_RFSDIR)
 	( \
 		echo "Release: rel$(MECT_BUILD_RELEASE)"; \
-		echo "Target:  $(BUILD_TARGET)"; \
+		echo "Target:  $(MECT_BUILD_TARGET)"; \
 		echo "Qt:      $(MECT_BUILD_QTVERSION)"; \
 		echo "Qwt:     $(MECT_BUILD_QWTVERSION)" \
 	) > $(MECT_RFSDIR)/$(MECT_RFS_VERSION_FILE)
@@ -576,8 +585,10 @@ target_rfs: $(MECT_COMMON_RFSPKGS)
 
 # Build the target-specific local file system.
 .PHONY: target_lfs
+target_lfs: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
+target_lfs: MECT_LFSDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)_ms$(MECT_BUILD_RELEASE)/localfs
 target_lfs: $(MECT_COMMON_LFSPKGS)
-	test -n '$(MECT_LFSDIR)' -a -n '$(MECT_FSDIR)' -a -n '$(MECT_COMMON_LFSPKGS)'
+	test -n '$(MECT_BUILD_TARGET)'
 	sudo rm -rf $(MECT_LFSDIR)
 	mkdir -p $(MECT_LFSDIR)/var/lib/rpm $(MECT_LFSDIR)/tmp/ltib
 	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_COMMON_LFSPKGS) $(MECT_LFSPKGS)
@@ -591,8 +602,15 @@ target_lfs: $(MECT_COMMON_LFSPKGS)
 
 # Build the target-specific project for Freescale manufacturing tool.
 .PHONY: target_mfg
+target_mfg: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
+target_mfg: MECT_TGTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)_ms$(MECT_BUILD_RELEASE)
+target_mfg: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
+target_mfg: MECT_MFGZIP = $(MECT_MFGDIR)/../$(shell basename $(MECT_MFGDIR)).zip
+target_mfg: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
+target_mfg: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
+target_mfg: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
 target_mfg:
-	test -n '$(MECT_MFGDIR)' -a -n '$(MECT_FTPDIR)' -a -n '$(MECT_RFSDIR)' -a -n '$(MECT_LFSDIR)' -a -n '$(MECT_TGTDIR)' -a -n '$(MECT_BOOTDIR)' -a -n '$(MECT_MFGZIP)'
+	test -n '$(MECT_BUILD_TARGET)'
 	sudo rm -rf $(MECT_MFGDIR)
 	mkdir -p $(MECT_MFGDIR)/'OS firmware'/img $(MECT_MFGDIR)/'OS firmware'/sys $(MECT_TGTDIR)
 	sed "s/@@PLAYER@@/$(shell basename $(MECT_MFGDIR))/" $(MECT_FTPDIR)/player.ini > $(MECT_MFGDIR)/player.ini
@@ -610,7 +628,6 @@ target_mfg:
 # Build the archive for target-specific development.
 .PHONY: target_dev
 target_dev:
-	test -n '$(MECT_IMGDIR)' -a -n '$(MECT_LTIB_RFSDIR)'
 	sudo rm -rf $(MECT_IMGDIR)/dev $(MECT_IMGDIR)/rootfs_dev.zip
 	-for d in /usr/include /usr/lib /lib /usr/src/linux/include; do \
 		mkdir -p $(MECT_IMGDIR)/dev/rootfs$$d; \

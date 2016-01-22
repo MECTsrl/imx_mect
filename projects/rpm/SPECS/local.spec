@@ -84,7 +84,6 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/flash/etc/sysconfig/ppp
 %{pfx}/local/flash/root/backing_file
 %{pfx}/local/flash/root/make_usb_device
-%{pfx}/local/flash/root/safe_hmi
 %{pfx}/local/flash/root/setparam
 %{pfx}/local/flash/root/splash
 %{pfx}/local/flash/root/sqldrivers/libqsqlite.so

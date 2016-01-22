@@ -1,5 +1,5 @@
 diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell-1.18.modified/etc/rc.d/init.d/autoexec
---- skell-1.18/etc/rc.d/init.d/autoexec	2016-01-22 17:13:30.973505171 +0100
+--- skell-1.18/etc/rc.d/init.d/autoexec	2016-01-22 18:02:53.956255433 +0100
 +++ skell-1.18.modified/etc/rc.d/init.d/autoexec	1970-01-01 01:00:00.000000000 +0100
 @@ -1,117 +0,0 @@
 -#!/bin/sh
@@ -77,7 +77,7 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell
 -	#dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
 -
 -	$LOCAL_ROOT_DIR/fcrts > /dev/null 2>&1 & 
--	if [ -x $LOCAL_ROOT_DIR/safe_hmi -a ! -e /var/tmp/dont_run_safe_hmi ]; then 
+-	if [ -x $LOCAL_ROOT_DIR/safe_hmi ]; then 
 -		#sleep 2
 -		$LOCAL_ROOT_DIR/safe_hmi > /dev/null 2>&1 &
 -	fi
@@ -120,9 +120,9 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell
 -esac
 -
 diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec.orig skell-1.18.modified/etc/rc.d/init.d/autoexec.orig
---- skell-1.18/etc/rc.d/init.d/autoexec.orig	2016-01-22 17:13:30.965505271 +0100
+--- skell-1.18/etc/rc.d/init.d/autoexec.orig	2016-01-22 18:02:53.952255483 +0100
 +++ skell-1.18.modified/etc/rc.d/init.d/autoexec.orig	1970-01-01 01:00:00.000000000 +0100
-@@ -1,117 +0,0 @@
+@@ -1,116 +0,0 @@
 -#!/bin/sh
 -
 -LOCAL_ETC_DIR="/local/etc/sysconfig"
@@ -142,16 +142,6 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec.orig 
 -export QT_QWS_FONTDIR=/usr/lib/fonts
 -export POINTERCAL_FILE=$TSLIB_CALIBFILE
 -
--# set the brightness
--if [ -e $LOCAL_ETC_DIR/brightness ]
--then
--	source $LOCAL_ETC_DIR/brightness
--else
--	echo 70 > /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness
--fi
--echo "setting brightness level at `cat /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness`"
--
--# if necessary calibrate the touch screen
 -if [ ! -e $TSLIB_CALIBFILE ]; then
 -	echo -n "Starting 'calibration'... "
 -	/usr/bin/ts_calibrate
@@ -174,6 +164,15 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec.orig 
 -
 -# Make sure / is mounted R/O
 -mount -oro,remount /
+-
+-# set the brightness
+-if [ -e $LOCAL_ETC_DIR/brightness ]
+-then
+-	source $LOCAL_ETC_DIR/brightness
+-else
+-	echo 70 > /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness
+-fi
+-echo "setting brightness level at `cat /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness`"
 -
 -if [ -x $LOCAL_ROOT_DIR/systool ] && [ ! -x $LOCAL_ROOT_DIR/factory_test ]
 -then

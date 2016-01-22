@@ -2603,7 +2603,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{MECT_RFSDIR}/usr/lib/libATCMutility.so.*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/merge/merge.spec	2016-01-22 16:46:05.000000000 +0100
++++ ltib/dist/lfs-5.1/merge/merge.spec	2016-01-22 17:54:42.000000000 +0100
 @@ -10,40 +10,75 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
@@ -3990,8 +3990,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/skell/skell.spec	2016-01-22 17:13:31.001504819 +0100
-@@ -9,20 +9,91 @@
++++ ltib/dist/lfs-5.1/skell/skell.spec	2016-01-22 18:04:21.479155121 +0100
+@@ -9,20 +9,90 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -4029,11 +4029,10 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Patch27         : skell-1.18-mect-remove-inittab.patch
 +Patch28         : skell-1.18-mect-remove-issue.patch
 +Patch29         : skell-1.18-mect-remove-rc.local.patch
-+Patch30         : skell-mect-cond-safe_hmi-in-autoexec.patch
 +Patch31         : skell-mect-dev-fixes-in-init.d.patch
 +Patch32         : skell-1.18-1448375293.patch
 +Patch33         : skell-1.18-1448558592.patch
-+Patch34          : skell-1.18-1453479210.patch
++Patch34         : skell-1.18-1453482173.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -4085,7 +4084,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +102,109 @@
+@@ -31,24 +101,108 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -4113,7 +4112,6 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%patch27 -p1
 +%patch28 -p1
 +%patch29 -p1
-+%patch30 -p1
 +%patch31 -p1
 +%patch32 -p1
 +%patch33 -p1

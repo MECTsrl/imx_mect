@@ -77,13 +77,11 @@ rm -rf $RPM_BUILD_ROOT
 %{MECT_RFSDIR}/usr/include/atcmspinbox.h
 %{MECT_RFSDIR}/usr/include/atcmstyle.h
 %{MECT_RFSDIR}/usr/include/atcmtime.h
-%{MECT_RFSDIR}/usr/include/buzzer_settings.h
 %{MECT_RFSDIR}/usr/include/comm_status.h
 %{MECT_RFSDIR}/usr/include/common.h
 %{MECT_RFSDIR}/usr/include/system_ini.h
 %{MECT_RFSDIR}/usr/include/cross_table_utility.h
 %{MECT_RFSDIR}/usr/include/data_manager.h
-%{MECT_RFSDIR}/usr/include/datalog_set.h
 %{MECT_RFSDIR}/usr/include/defines.h
 %{MECT_RFSDIR}/usr/include/display_settings.h
 %{MECT_RFSDIR}/usr/include/global_functions.h
@@ -102,7 +100,6 @@ rm -rf $RPM_BUILD_ROOT
 %{MECT_RFSDIR}/usr/include/recipe_select.h
 %{MECT_RFSDIR}/usr/include/screensaver.h
 %{MECT_RFSDIR}/usr/include/setstyle.h
-%{MECT_RFSDIR}/usr/include/sgdd.h
 %{MECT_RFSDIR}/usr/include/store.h
 %{MECT_RFSDIR}/usr/include/store_extract.h
 %{MECT_RFSDIR}/usr/include/store_filter.h

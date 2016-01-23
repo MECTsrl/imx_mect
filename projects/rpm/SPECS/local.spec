@@ -54,10 +54,10 @@ LC_ALL=C
 
 rm -rf $RPM_BUILD_ROOT
 
-mkdir -p $RPM_BUILD_ROOT/%{pfx}/local
-tar xjvf %{SOURCE0} -C $RPM_BUILD_ROOT/%{pfx}/local
+mkdir -p $RPM_BUILD_ROOT%{pfx}/local
+tar xjvf %{SOURCE0} -C $RPM_BUILD_ROOT%{pfx}/local
 
-cd $RPM_BUILD_ROOT/%{pfx}/local/flash/root
+cd $RPM_BUILD_ROOT%{pfx}/local/flash/root
 rm -f fcrts fcrts.4c_runtime fcrts.ATCMcontrol_RunTimeSystem
 
 %clean
@@ -71,7 +71,6 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/factory_data.tar.gz
 %{pfx}/local/flash/control
 %{pfx}/local/flash/data/customstore/test.csv
-%{pfx}/local/flash/data/customtrend/trend1.csv
 %{pfx}/local/flash/data/recipe/test/test1.csv
 %{pfx}/local/flash/data/store
 %{pfx}/local/flash/data/trends

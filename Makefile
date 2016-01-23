@@ -2,16 +2,23 @@ export LC_ALL := C
 
 # MECT Suite version
 export MECT_BUILD_RELEASE := 2.0alpha_rc1
+#export MECT_BUILD_RELEASE := 2.0alpha5
 
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := master
 # Set to 0.0 to skip tag checkout
 export MECT_BUILD_ATCMCRT_TAG := v0.4
+#export MECT_BUILD_ATCMCRT_TAG := v0.7
 
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to skip tag checkout
-export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc6
+export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc9
+
+# git branch and tag for the mect_apps project
+MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0
+# Set to 0.0 to skip tag checkout
+export MECT_BUILD_APPSCRT_TAG := 0.0
 
 # Mandatory prefix for all target device names.
 MECT_TARGET_PREFIX := MECT_
@@ -161,6 +168,7 @@ MECT_COMMON_RFSPKGS := \
 	lrzsz-rfs-0.12.21-1.$(MECT_TARGET_ARCH).rpm \
 	lzo-rfs-2.03-0.$(MECT_TARGET_ARCH).rpm \
 	mect_plugins-rfs-$(MECT_BUILD_PLUGINSCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm \
+	mect_apps-rfs-$(MECT_BUILD_APPSCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm \
 	merge-rfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 	modeps-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	mtd-utils-rfs-201006-1.$(MECT_TARGET_ARCH).rpm \
@@ -450,9 +458,18 @@ projects_setup_mect_plugins:
 	cd $(MECT_PRJDIR); if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'; then cd mect_plugins; git checkout $(MECT_BUILD_PLUGINSCRT_BRANCH); git pull; fi
 	cd $(MECT_PRJDIR); if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)' -a '$(MECT_BUILD_PLUGINSCRT_TAG)' != '0.0'; then cd mect_plugins; git checkout tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
 
+# Setup the local projects: mect_apps.
+.PHONY: projects_setup_mect_apps
+projects_setup_mect_apps:
+	test -d projects
+	test -n '$(MECT_BUILD_APPSCRT_BRANCH)'
+	cd projects; if test -d mect_apps; then cd mect_apps; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/mect_apps.git mect_apps; fi
+	cd projects; if test -d mect_apps -a -n '$(MECT_BUILD_APPSCRT_BRANCH)'; then cd mect_apps; git checkout $(MECT_BUILD_APPSCRT_BRANCH); git pull; fi
+	cd projects; if test -d mect_apps -a -n '$(MECT_BUILD_APPSCRT_TAG)' -a '$(MECT_BUILD_APPSCRT_TAG)' != '0.0'; then cd mect_apps; git checkout tags/$(MECT_BUILD_APPSCRT_TAG); fi
+
 # Setup the local projects.
 .PHONY: projects_setup
-projects_setup: projects_setup_ATCMcontrol_RunTimeSystem projects_setup_mect_plugins
+projects_setup: projects_setup_ATCMcontrol_RunTimeSystem projects_setup_mect_plugins projects_setup_mect_apps
 
 # Build the local projects.
 .PHONY: projects_build

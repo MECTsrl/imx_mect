@@ -30,6 +30,7 @@ MECT_ALL_TARGETS := \
 	cgic_work \
 	ATCMcontrol_RunTimeSystem \
 	mect_plugins \
+	mect_apps \
 
 ifneq ($(wildcard 4c_runtime/.*),)
 MECT_ALL_TARGETS += 4c_runtime
@@ -138,6 +139,36 @@ mect_plugins_install:
 .PHONY: mect_plugins_clean
 mect_plugins_clean: MECT_PRJDIR := $(CURDIR)/mect_plugins
 mect_plugins_clean:
+	test -n $(MECT_PRJDIR)
+	-test -d $(MECT_PRJDIR) && $(MAKE) -C $(MECT_PRJDIR) distclean
+
+# ###############################################################
+#
+# Project mect_apps
+#
+# TODO Convert to LTIB package (depends on several Makefile variables).
+#
+
+.PHONY: mect_apps
+mect_apps: mect_apps_clean mect_apps_build mect_apps_install
+
+.PHONY: mect_apps_build
+mect_apps_build: MECT_PRJDIR := $(CURDIR)/mect_apps
+mect_apps_build:
+	test -n $(MECT_PRJDIR)
+	tar cf $(MECT_RPMBASEDIR)/SOURCES/mect_apps-$(MECT_BUILD_APPSCRT_TAG).tar -C $(MECT_PRJDIR) --exclude=.git --transform='s/^\./mect_apps-$(MECT_BUILD_APPSCRT_TAG)/' .
+	rpmbuild --define 'MECT_RFSDIR $(MECT_RFSDIR)' --define 'MECT_QMAKE $(MECT_QMAKE)' --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean --rmsource $(MECT_SPECDIR)/mect_apps.spec
+
+.PHONY: mect_apps_install
+mect_apps_install: MECT_PRJDIR := $(CURDIR)/mect_apps
+mect_apps_install:
+	test -n $(MECT_PRJDIR)
+	-sudo $(MECT_RPMBIN) --root $(MECT_RFSDIR) --dbpath /var/lib/rpm -e --allmatches --nodeps --define '_tmppath /tmp/ltib' mect_apps 2>/dev/null
+	sudo $(MECT_RPMBIN) --root $(MECT_RFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -ivh --force --excludedocs --define '_tmppath /tmp/ltib' $(MECT_RPMDIR)/mect_apps-$(MECT_BUILD_PLUGINSCRT_TAG)-*.$(MECT_TARGET_ARCH).rpm
+
+.PHONY: mect_apps_clean
+mect_apps_clean: MECT_PRJDIR := $(CURDIR)/mect_apps
+mect_apps_clean:
 	test -n $(MECT_PRJDIR)
 	-test -d $(MECT_PRJDIR) && $(MAKE) -C $(MECT_PRJDIR) distclean
 

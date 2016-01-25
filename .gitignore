@@ -4,6 +4,7 @@ images-all
 ltib.reference
 ltib
 projects/mect_plugins
+projects/mect_apps
 projects/ATCMcontrol_RunTimeSystem
 projects/4c_runtime
 projects/localfs

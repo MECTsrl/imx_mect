@@ -9,17 +9,36 @@ Vendor          : MECT s.r.l.
 Packager        : Mihai Lazarescu
 Group           : Applications/System
 Source          : %{name}-%{version}.tar
+Patch0          : mect_apps-TPAC1007_3-windows-to-linux.patch
+Patch1          : mect_apps-TPAC1007_4AA-windows-to-linux.patch
 BuildRoot       : %{_tmppath}/%{name}
 Prefix          : %{pfx}/local
 AutoReqProv     : no
 
 
+# TPAC1007_3
+#
+%Package lfs-TPAC1007_3
+Summary         : Trimmed %{name} to just the run-times needed for local file system.
+Vendor          : MECT s.r.l.
+Packager        : Mihai Lazarescu
+Group           : Applications/System
+AutoReqProv     : no
+Prefix          : %{pfx}/TPAC1007_3/local
+
+%Description lfs-TPAC1007_3
+%{name} package contents limited to just the run-times needed
+on the target.
+
+# TPAC1007_4AA
+#
 %Package lfs-TPAC1007_4AA
 Summary         : Trimmed %{name} to just the run-times needed for local file system.
 Vendor          : MECT s.r.l.
 Packager        : Mihai Lazarescu
 Group           : Applications/System
 AutoReqProv     : no
+Prefix          : %{pfx}/TPAC1007_4AA/local
 
 %Description lfs-TPAC1007_4AA
 %{name} package contents limited to just the run-times needed
@@ -35,10 +54,32 @@ LC_ALL=C
 
 %setup
 
+%patch0 -p1
+%patch1 -p1
+
 %build
 export LC_ALL
 LC_ALL=C
 
+# TPAC1007_3
+#
+d=TPAC1007/Local_IO_HMI
+if test -d $d; then
+	cd $d
+
+	%{MECT_QMAKE} \
+		-spec qws/linux-g++-mx \
+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
+		"DEFINES+=TARGET_ARM" \
+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
+		Local_IO_HMI.pro
+	make -j`grep -c ^processor /proc/cpuinfo`
+
+	cd -
+fi
+
+# TPAC1007_4AA
+#
 d=TPAC1007_04_AA/Local_IO_HMI
 if test -d $d; then
 	cd $d
@@ -60,18 +101,38 @@ LC_ALL=C
 
 rm -rf $RPM_BUILD_ROOT
 
+# TPAC1007_3
+#
+d=TPAC1007/Local_IO_HMI
+if test -d $d; then
+	cd $d
+
+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/flash/root/hmi
+	install -m644 -D config/Alarms.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/etc/sysconfig/Alarms.csv
+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/etc/sysconfig/Crosstable.csv
+	install -m644 -D config/lang_table.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/etc/sysconfig/lang_table.csv
+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/etc/sysconfig/img/splash.png
+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/etc/sysconfig/system.ini
+	install -m644 -D config/store1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/flash/data/customstore/store1.csv
+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/flash/data/customtrend/trend1.csv
+
+	cd -
+fi
+
+# TPAC1007_4AA
+#
 d=TPAC1007_04_AA/Local_IO_HMI
 if test -d $d; then
 	cd $d
 
-	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/local/flash/root/hmi
-	install -m644 -D config/Alarms.csv     $RPM_BUILD_ROOT%{pfx}/local/etc/sysconfig/Alarms.csv
-	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/local/etc/sysconfig/Crosstable.csv
-	install -m644 -D config/lang_table.csv $RPM_BUILD_ROOT%{pfx}/local/etc/sysconfig/lang_table.csv
-	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/local/etc/sysconfig/img/splash.png
-	install -m644 -D config/store1.csv     $RPM_BUILD_ROOT%{pfx}/local/flash/data/customstore/store1.csv
-	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/local/etc/system/system.ini
-	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/local/flash/data/customtrend/trend1.csv
+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/flash/root/hmi
+	install -m644 -D config/Alarms.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/etc/sysconfig/Alarms.csv
+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/etc/sysconfig/Crosstable.csv
+	install -m644 -D config/lang_table.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/etc/sysconfig/lang_table.csv
+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/etc/sysconfig/img/splash.png
+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/etc/sysconfig/system.ini
+	install -m644 -D config/store1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/flash/data/customstore/store1.csv
+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/flash/data/customtrend/trend1.csv
 
 	cd -
 fi
@@ -84,22 +145,25 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%{pfx}/local/flash/root/hmi
-%{pfx}/local/etc/sysconfig/Alarms.csv
-%{pfx}/local/etc/sysconfig/Crosstable.csv
-%{pfx}/local/etc/sysconfig/img/splash.png
-%{pfx}/local/etc/sysconfig/lang_table.csv
-%{pfx}/local/etc/system/system.ini
-%{pfx}/local/flash/data/customstore/store1.csv
-%{pfx}/local/flash/data/customtrend/trend1.csv
+
+%files lfs-TPAC1007_3
+%defattr(-,root,root)
+%{pfx}/TPAC1007_3/local/flash/root/hmi
+%{pfx}/TPAC1007_3/local/etc/sysconfig/Alarms.csv
+%{pfx}/TPAC1007_3/local/etc/sysconfig/Crosstable.csv
+%{pfx}/TPAC1007_3/local/etc/sysconfig/img/splash.png
+%{pfx}/TPAC1007_3/local/etc/sysconfig/lang_table.csv
+%{pfx}/TPAC1007_3/local/etc/system/system.ini
+%{pfx}/TPAC1007_3/local/flash/data/customstore/store1.csv
+%{pfx}/TPAC1007_3/local/flash/data/customtrend/trend1.csv
 
 %files lfs-TPAC1007_4AA
 %defattr(-,root,root)
-%{pfx}/local/flash/root/hmi
-%{pfx}/local/etc/sysconfig/Alarms.csv
-%{pfx}/local/etc/sysconfig/Crosstable.csv
-%{pfx}/local/etc/sysconfig/img/splash.png
-%{pfx}/local/etc/sysconfig/lang_table.csv
-%{pfx}/local/etc/system/system.ini
-%{pfx}/local/flash/data/customstore/store1.csv
-%{pfx}/local/flash/data/customtrend/trend1.csv
+%{pfx}/TPAC1007_4AA/local/flash/root/hmi
+%{pfx}/TPAC1007_4AA/local/etc/sysconfig/Alarms.csv
+%{pfx}/TPAC1007_4AA/local/etc/sysconfig/Crosstable.csv
+%{pfx}/TPAC1007_4AA/local/etc/sysconfig/img/splash.png
+%{pfx}/TPAC1007_4AA/local/etc/sysconfig/lang_table.csv
+%{pfx}/TPAC1007_4AA/local/etc/system/system.ini
+%{pfx}/TPAC1007_4AA/local/flash/data/customstore/store1.csv
+%{pfx}/TPAC1007_4AA/local/flash/data/customtrend/trend1.csv

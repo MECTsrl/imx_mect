@@ -677,8 +677,10 @@ ltib_genpatch_bin: $(MECT_LTIBDIR_REF)/bin
 
 .PHONY: ltib_update
 ltib_update:
-	# FIXME: adapt for branches
-	git pull
+	git fetch origin
+	git reset --hard origin/master
+	if test -n '$(MECT_BUILD_IMXMECT_BRANCH)'; then git checkout $(MECT_BUILD_IMXMECT_BRANCH); git pull; fi
+	if test -n '$(MECT_BUILD_IMXMECT_TAG)' -a '$(MECT_BUILD_IMXMECT_TAG)' != '0.0'; then git checkout tags/$(MECT_BUILD_IMXMECT_TAG); fi
 	if ! test -d $(MECT_LTIBDIR_REF); then \
 		mv $(MECT_LTIBDIR) $(MECT_LTIBDIR).precious; \
 		$(MAKE) ltibinst ltibpatch; \

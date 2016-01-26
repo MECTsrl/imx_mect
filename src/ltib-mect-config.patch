@@ -474,8 +474,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 -PKG_UBUNTU_ARM_LIB = ubuntu_arm_lib
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.config	2016-01-24 21:22:23.000000000 +0100
-@@ -0,0 +1,650 @@
++++ ltib/config/platform/imx/.config	2016-01-26 17:08:57.438582456 +0100
+@@ -0,0 +1,648 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -1028,8 +1028,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# Options
 +#
 +CONFIG_SYSCFG_HOSTNAME="mect"
-+CONFIG_SYSCFG_WANT_LOGIN_TTY=y
-+CONFIG_SYSCFG_LOGING_TTY="::respawn:/sbin/getty -L ttyAM0 115200 vt100"
++# CONFIG_SYSCFG_WANT_LOGIN_TTY is not set
 +CONFIG_SYSCFG_MODLIST=""
 +CONFIG_SYSCFG_START_MDEV=y
 +CONFIG_SYSCFG_START_NETWORK=y
@@ -1073,11 +1072,10 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_SYSCFG_START_SYSLOG is not set
 +CONFIG_SYSCFG_START_INETD=y
 +CONFIG_SYSCFG_INETD_ARGS=""
-+CONFIG_SYSCFG_START_DROPBEAR_SSH=y
-+CONFIG_SYSCFG_DROPBEAR_ARGS=""
++# CONFIG_SYSCFG_START_DROPBEAR_SSH is not set
 +CONFIG_SYSCFG_START_BOA=y
 +CONFIG_SYSCFG_BOA_ARGS="-c /etc"
-+CONFIG_SYSCFG_START_TELNET=y
++# CONFIG_SYSCFG_START_TELNET is not set
 +CONFIG_SYSCFG_START_AUTOEXEC=y
 +CONFIG_SYSCFG_START_S10SETUP=y
 +
@@ -1128,7 +1126,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_LTIB_RELEASE="8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config.cmd ltib/config/platform/imx/.config.cmd
 --- ltib.reference/config/platform/imx/.config.cmd	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.config.cmd	2016-01-24 21:22:23.614076264 +0100
++++ ltib/config/platform/imx/.config.cmd	2016-01-26 17:08:57.438582456 +0100
 @@ -0,0 +1,22 @@
 +deps_config := \
 +	../../userspace/defaults.lkc \
@@ -1154,8 +1152,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +$(deps_config):
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.tmpconfig.h	2016-01-24 21:22:23.614076264 +0100
-@@ -0,0 +1,651 @@
++++ ltib/config/platform/imx/.tmpconfig.h	2016-01-26 17:08:57.438582456 +0100
+@@ -0,0 +1,649 @@
 +/*
 + * Automatically generated C config: don't edit
 + * LTIB version: 8.1.2
@@ -1709,8 +1707,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 + * Options
 + */
 +#define CONFIG_SYSCFG_HOSTNAME "mect"
-+#define CONFIG_SYSCFG_WANT_LOGIN_TTY 1
-+#define CONFIG_SYSCFG_LOGING_TTY "::respawn:/sbin/getty -L ttyAM0 115200 vt100"
++#undef CONFIG_SYSCFG_WANT_LOGIN_TTY
 +#define CONFIG_SYSCFG_MODLIST ""
 +#define CONFIG_SYSCFG_START_MDEV 1
 +#define CONFIG_SYSCFG_START_NETWORK 1
@@ -1754,11 +1751,10 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#undef CONFIG_SYSCFG_START_SYSLOG
 +#define CONFIG_SYSCFG_START_INETD 1
 +#define CONFIG_SYSCFG_INETD_ARGS ""
-+#define CONFIG_SYSCFG_START_DROPBEAR_SSH 1
-+#define CONFIG_SYSCFG_DROPBEAR_ARGS ""
++#undef CONFIG_SYSCFG_START_DROPBEAR_SSH
 +#define CONFIG_SYSCFG_START_BOA 1
 +#define CONFIG_SYSCFG_BOA_ARGS "-c /etc"
-+#define CONFIG_SYSCFG_START_TELNET 1
++#undef CONFIG_SYSCFG_START_TELNET
 +#define CONFIG_SYSCFG_START_AUTOEXEC 1
 +#define CONFIG_SYSCFG_START_S10SETUP 1
 +
@@ -2809,8 +2805,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  CONFIG_LOGGER=y
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/defconfig.dev	2016-01-24 21:22:23.614076264 +0100
-@@ -0,0 +1,650 @@
++++ ltib/config/platform/imx/defconfig.dev	2016-01-26 17:08:57.454582456 +0100
+@@ -0,0 +1,648 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -3363,8 +3359,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# Options
 +#
 +CONFIG_SYSCFG_HOSTNAME="mect"
-+CONFIG_SYSCFG_WANT_LOGIN_TTY=y
-+CONFIG_SYSCFG_LOGING_TTY="::respawn:/sbin/getty -L ttyAM0 115200 vt100"
++# CONFIG_SYSCFG_WANT_LOGIN_TTY is not set
 +CONFIG_SYSCFG_MODLIST=""
 +CONFIG_SYSCFG_START_MDEV=y
 +CONFIG_SYSCFG_START_NETWORK=y
@@ -3408,11 +3403,10 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_SYSCFG_START_SYSLOG is not set
 +CONFIG_SYSCFG_START_INETD=y
 +CONFIG_SYSCFG_INETD_ARGS=""
-+CONFIG_SYSCFG_START_DROPBEAR_SSH=y
-+CONFIG_SYSCFG_DROPBEAR_ARGS=""
++# CONFIG_SYSCFG_START_DROPBEAR_SSH is not set
 +CONFIG_SYSCFG_START_BOA=y
 +CONFIG_SYSCFG_BOA_ARGS="-c /etc"
-+CONFIG_SYSCFG_START_TELNET=y
++# CONFIG_SYSCFG_START_TELNET is not set
 +CONFIG_SYSCFG_START_AUTOEXEC=y
 +CONFIG_SYSCFG_START_S10SETUP=y
 +
@@ -16895,6 +16889,108 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 -type hw
 -card 0
 -}
+diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/inetd.conf ltib/config/platform/imx/merge/etc/inetd.conf
+--- ltib.reference/config/platform/imx/merge/etc/inetd.conf	1970-01-01 01:00:00.000000000 +0100
++++ ltib/config/platform/imx/merge/etc/inetd.conf	2016-01-26 17:03:04.710581323 +0100
+@@ -0,0 +1,98 @@
++# seh: from netkit-base-0.17 but with shell enable for auto-test
++# See "man 8 inetd" for more information.
++#
++# If you make changes to this file, either reboot your machine or send the
++# inetd a HUP signal:
++# Do a "ps x" as root and look up the pid of inetd. Then do a
++# "kill -HUP <pid of inetd>".
++# The inetd will re-read this file whenever it gets that signal.
++#
++# <service_name> <sock_type> <proto> <flags> <user> <server_path> <args>
++#
++# It is generally considered safer to keep these off.
++#echo         stream  tcp      nowait  root    internal
++#echo         dgram   udp      wait    root    internal
++#discard      stream  tcp      nowait  root    internal
++#discard      dgram   udp      wait    root    internal
++#daytime      stream  tcp      nowait  root    internal
++#daytime      dgram   udp      wait    root    internal
++#chargen      stream  tcp      nowait  root    internal
++#chargen      dgram   udp      wait    root    internal
++#time         stream  tcp      nowait  root    internal
++#time         dgram   udp      wait    root    internal
++#
++# These are standard services.
++#
++#ftp          stream  tcp      nowait  root    /usr/sbin/ftpd       ftpd       -w
++telnet       stream  tcp      nowait  root    /usr/sbin/telnetd    telnetd    -i
++#http         stream  tcp      nowait  root    /usr/sbin/httpd      httpd
++
++#nntp         stream  tcp      nowait  root    tcpd                 in.nntpd
++#smtp         stream  tcp      nowait  root    tcpd                 sendmail   -v
++#
++# Shell, login, exec and talk are BSD protocols.
++#
++# If you run an ntalk daemon (such as netkit-ntalk) on the old talk 
++# port, that is, "talk" as opposed to "ntalk", it won't work and may
++# cause certain broken talk clients to malfunction.
++#
++# The talkd from netkit-ntalk 0.12 and higher, however, can speak the
++# old talk protocol and can be used safely.
++#
++#shell        stream  tcp      nowait  root    /usr/sbin/rshd       rshd
++#login        stream  tcp      nowait  root    /usr/sbin/rlogind    rlogind    -o
++#exec         stream  tcp      nowait  root    /usr/sbin/rexecd     rexecd
++#talk         dgram   udp      wait    root    /usr/sbin/talkd      talkd
++#ntalk        dgram   udp      wait    root    /usr/sbin/talkd      talkd
++#
++# Kerberos authenticated services
++#
++#klogin       stream  tcp      nowait  root    /usr/sbin/rlogind    rlogind    -k
++#eklogin      stream  tcp      nowait  root    /usr/sbin/rlogind    rlogind    -k  -x
++#kshell       stream  tcp      nowait  root    /usr/sbin/rshd       rshd       -k
++#
++# Services run ONLY on the Kerberos server
++#
++#krbupdate    stream  tcp      nowait  root    /usr/sbin/registerd  registerd
++#kpasswd      stream  tcp      nowait  root    /usr/sbin/kpasswdd   kpasswdd
++#
++# Pop et al
++# Leave these off unless you're using them.
++#
++#pop2         stream  tcp      nowait  root    /usr/sbin/tcpd       in.pop2d
++#pop3         stream  tcp      nowait  root    /usr/sbin/tcpd       in.pop3d
++#
++# Comsat - asynchronous new mail notification. Recommended to leave it off.
++#
++#comsat       dgram   udp      wait    root    /usr/sbin/tcpd       in.comsat
++#
++# The Internet UUCP service.
++#
++#uucp         stream  tcp      nowait  uucp    /usr/sbin/tcpd       /usr/lib/uucp/uucico  -l
++#
++# Tftp service is provided primarily for booting.  Most sites
++# run this only on machines acting as "boot servers." If you don't
++# need it, don't use it. 
++#
++#tftp         dgram   udp      wait    nobody  /usr/sbin/tcpd       in.tftpd
++#bootps       dgram   udp      wait    root    /usr/sbin/in.bootpd  in.bootpd
++#
++# Finger, systat and netstat give out user information which may be
++# valuable to potential "system crackers."  Many sites choose to disable 
++# some or all of these services to improve security.
++#
++#finger       stream  tcp      nowait  nobody  /usr/sbin/tcpd       in.fingerd    -w
++#systat       stream  tcp      nowait  nobody  /usr/sbin/tcpd       /bin/ps       -auwwx
++#netstat      stream  tcp      nowait  root    /usr/sbin/tcpd       /bin/netstat  -a
++#ident        stream  tcp      nowait  root    /usr/sbin/in.identd  in.identd
++#
++# Sun-RPC based services.
++# <service name/version><sock_type><rpc/prot><flags><user><server><args>
++#
++#rstatd/1-3   dgram   rpc/udp  wait    root    /usr/sbin/tcpd       rpc.rstatd
++#rusersd/2-3  dgram   rpc/udp  wait    root    /usr/sbin/tcpd       rpc.rusersd
++#walld/1      dgram   rpc/udp  wait    root    /usr/sbin/tcpd       rpc.rwalld
++#
++# Secure shell
++ssh          stream  tcp      nowait  root    /usr/sbin/dropbear   dropbear      -i
++# End.
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec	1970-01-01 01:00:00.000000000 +0100
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec	2016-01-25 17:37:54.422310518 +0100
@@ -17069,6 +17165,15 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +	    ;;
 +esac
 +
+diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh ltib/config/platform/imx/merge/usr/bin/fcrts.sh
+--- ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh	1970-01-01 01:00:00.000000000 +0100
++++ ltib/config/platform/imx/merge/usr/bin/fcrts.sh	2016-01-26 17:51:19.662590621 +0100
+@@ -0,0 +1,5 @@
++#!/bin/sh
++
++ulimit -s unlimited
++
++exec /local/flash/root/fcrts
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/min.profile ltib/config/platform/imx/min.profile
 --- ltib.reference/config/platform/imx/min.profile	2013-01-09 04:58:38.000000000 +0100
 +++ ltib/config/platform/imx/min.profile	2016-01-24 21:22:23.622076264 +0100

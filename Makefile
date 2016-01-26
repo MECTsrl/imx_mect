@@ -6,8 +6,7 @@ export MECT_BUILD_RELEASE := 2.0alpha5
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := master
 # Set to 0.0 to skip tag checkout
-export MECT_BUILD_ATCMCRT_TAG := v0.4
-#export MECT_BUILD_ATCMCRT_TAG := v0.7
+export MECT_BUILD_ATCMCRT_TAG := v0.7
 
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0

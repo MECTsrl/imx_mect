@@ -153,7 +153,7 @@ rm -rf $RPM_BUILD_ROOT
 %{pfx}/TPAC1007_3/local/etc/sysconfig/Crosstable.csv
 %{pfx}/TPAC1007_3/local/etc/sysconfig/img/splash.png
 %{pfx}/TPAC1007_3/local/etc/sysconfig/lang_table.csv
-%{pfx}/TPAC1007_3/local/etc/system/system.ini
+%{pfx}/TPAC1007_3/local/etc/sysconfig/system.ini
 %{pfx}/TPAC1007_3/local/flash/data/customstore/store1.csv
 %{pfx}/TPAC1007_3/local/flash/data/customtrend/trend1.csv
 
@@ -164,6 +164,6 @@ rm -rf $RPM_BUILD_ROOT
 %{pfx}/TPAC1007_4AA/local/etc/sysconfig/Crosstable.csv
 %{pfx}/TPAC1007_4AA/local/etc/sysconfig/img/splash.png
 %{pfx}/TPAC1007_4AA/local/etc/sysconfig/lang_table.csv
-%{pfx}/TPAC1007_4AA/local/etc/system/system.ini
+%{pfx}/TPAC1007_4AA/local/etc/sysconfig/system.ini
 %{pfx}/TPAC1007_4AA/local/flash/data/customstore/store1.csv
 %{pfx}/TPAC1007_4AA/local/flash/data/customtrend/trend1.csv

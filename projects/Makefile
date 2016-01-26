@@ -153,10 +153,13 @@ mect_plugins_clean:
 mect_apps: mect_apps_clean mect_apps_build mect_apps_install
 
 .PHONY: mect_apps_build
+# FIXME Convert to LTIB the projects that generate RPMs
 mect_apps_build: MECT_PRJDIR := $(CURDIR)/mect_apps
 mect_apps_build:
 	test -n $(MECT_PRJDIR)
 	tar cf $(MECT_RPMBASEDIR)/SOURCES/mect_apps-$(MECT_BUILD_APPSCRT_TAG).tar -C $(MECT_PRJDIR) --exclude=.git --transform='s/^\./mect_apps-$(MECT_BUILD_APPSCRT_TAG)/' .
+	cp $(MECT_FTPDIR)/mect_apps-TPAC1007_3-windows-to-linux.patch $(MECT_RPMBASEDIR)/SOURCES
+	cp $(MECT_FTPDIR)/mect_apps-TPAC1007_4AA-windows-to-linux.patch $(MECT_RPMBASEDIR)/SOURCES
 	rpmbuild --define 'MECT_RFSDIR $(MECT_RFSDIR)' --define 'MECT_QMAKE $(MECT_QMAKE)' --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean --rmsource $(MECT_SPECDIR)/mect_apps.spec
 
 .PHONY: mect_apps_install

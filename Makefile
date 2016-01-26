@@ -1,8 +1,7 @@
 export LC_ALL := C
 
 # MECT Suite version
-export MECT_BUILD_RELEASE := 2.0alpha_rc1
-#export MECT_BUILD_RELEASE := 2.0alpha5
+export MECT_BUILD_RELEASE := 2.0alpha5
 
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := master
@@ -46,7 +45,7 @@ MECT_USER_NAME := "Embedded developer"
 MECT_HOST_NAME := "development.localdomain"
 
 # Download the archives here.
-MECT_FTPDIR = $(CURDIR)/src
+export MECT_FTPDIR = $(CURDIR)/src
 # LTIB is installed here.
 MECT_LTIBDIR = $(CURDIR)/ltib
 # LTIB (config and dist) before MECT patches is saved here.

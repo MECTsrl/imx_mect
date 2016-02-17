@@ -94,22 +94,6 @@ diff --exclude CVS --exclude .git -uNr skell-1.18/etc/profile skell-1.18.modifie
 -fi
 +export LOCAL_ETC_DIR=/local/etc/sysconfig
 +export LOCAL_ROOT_DIR=/local/root
-diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/S10setup skell-1.18.modified/etc/rc.d/init.d/S10setup
---- skell-1.18/etc/rc.d/init.d/S10setup	2015-01-20 10:17:47.587536986 +0100
-+++ skell-1.18.modified/etc/rc.d/init.d/S10setup	2015-01-20 09:41:40.775508985 +0100
-@@ -7,11 +7,7 @@
- 
- mntdir=/tmp/mnt
- 
--LOCAL_ETC_DIR=`grep BaseEtcDir /local/path.conf | awk '{print $2}'`
--if [ "$LOCAL_ETC_DIR" == "" ]
--then
--	LOCAL_ETC_DIR="/local/etc/sysconfig"
--fi
-+LOCAL_ETC_DIR="/local/etc/sysconfig"
- 
- [ -d $mntdir ] || { mntdir=/tmp/mnt; /bin/mkdir $mntdir; }
- [ -d $mntdir ] || exit 1
 diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/autoexec skell-1.18.modified/etc/rc.d/init.d/autoexec
 --- skell-1.18/etc/rc.d/init.d/autoexec	2015-01-20 10:17:47.587536986 +0100
 +++ skell-1.18.modified/etc/rc.d/init.d/autoexec	2015-01-20 10:11:41.831751044 +0100

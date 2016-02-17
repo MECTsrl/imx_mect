@@ -406,4 +406,3 @@ endif
 
 .PHONY: clean
 clean: $(MECT_CLEAN_TARGETS)
-	sudo rm -rf $(MECT_LDIR)

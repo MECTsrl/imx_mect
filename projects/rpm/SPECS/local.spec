@@ -70,8 +70,6 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/etc
 %{pfx}/local/factory_data.tar.gz
 %{pfx}/local/flash/control
-%{pfx}/local/flash/data/customstore/test.csv
-%{pfx}/local/flash/data/recipe/test/test1.csv
 %{pfx}/local/flash/data/store
 %{pfx}/local/flash/data/trends
 %{pfx}/local/flash/etc/sysconfig/brightness

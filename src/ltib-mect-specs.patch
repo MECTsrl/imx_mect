@@ -1,6 +1,6 @@
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec ltib/dist/lfs-5.1/base_libs/base_libs.spec
 --- ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/base_libs/base_libs.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/base_libs/base_libs.spec	2016-02-04 17:29:11.614825458 +0100
 @@ -11,6 +11,19 @@
  Group           : System Environment/Libraries
  BuildRoot       : %{_tmppath}/%{name}
@@ -258,7 +258,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bison/bison.spec ltib/dist/lfs-5.1/bison/bison.spec
 --- ltib.reference/dist/lfs-5.1/bison/bison.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/bison/bison.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/bison/bison.spec	2016-02-04 17:29:11.614825458 +0100
 @@ -20,7 +20,7 @@
  
  %Build
@@ -270,7 +270,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boa/boa.spec ltib/dist/lfs-5.1/boa/boa.spec
 --- ltib.reference/dist/lfs-5.1/boa/boa.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/boa/boa.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/boa/boa.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -11,9 +11,26 @@
  Packager        : Stuart Hughes
  Group           : System/Servers
@@ -372,7 +372,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
 --- ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -8,39 +8,92 @@
  Vendor          : Freescale
  Packager        : Terry Lv
@@ -474,7 +474,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{pfx}/boot/updater_ivt.sb
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/busybox/busybox.spec ltib/dist/lfs-5.1/busybox/busybox.spec
 --- ltib.reference/dist/lfs-5.1/busybox/busybox.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/busybox/busybox.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/busybox/busybox.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -3,24 +3,46 @@
  
  Summary         : A small executable that replaces many UNIX utilities
@@ -561,7 +561,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec ltib/dist/lfs-5.1/bzip2/bzip2.spec
 --- ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/bzip2/bzip2.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/bzip2/bzip2.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -15,31 +15,65 @@
  Patch2          : %{name}-%{version}-armv7a-cross-compile-fix.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -634,7 +634,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cantest/cantest.spec ltib/dist/lfs-5.1/cantest/cantest.spec
 --- ltib.reference/dist/lfs-5.1/cantest/cantest.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/cantest/cantest.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/cantest/cantest.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -9,18 +9,35 @@
  Packager        : Chen Hongjun
  Group           : Applications/System
@@ -713,7 +713,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/dhcp/dhcp.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/dhcp/dhcp.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -10,6 +10,7 @@
  Packager        : John Faith
  Group           : Applications/Internet
@@ -806,7 +806,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec ltib/dist/lfs-5.1/dropbear/dropbear.spec
 --- ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/dropbear/dropbear.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/dropbear/dropbear.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -10,16 +10,37 @@
  Group           : Applications/Internet
  Source          : %{name}-%{version}.tar.gz
@@ -883,7 +883,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 --- ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -13,25 +13,65 @@
  Patch1          : e2fsprogs-1.41.4-fix-lib-links.patch
  BuildRoot	: %{_tmppath}/%{name}
@@ -955,7 +955,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec ltib/dist/lfs-5.1/elftosb/elftosb.spec
 --- ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/elftosb/elftosb.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/elftosb/elftosb.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -9,6 +9,7 @@
  Packager        : Frank Li
  Group           : System Environment/Libraries
@@ -974,7 +974,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  make
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/expat/expat.spec ltib/dist/lfs-5.1/expat/expat.spec
 --- ltib.reference/dist/lfs-5.1/expat/expat.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/expat/expat.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/expat/expat.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -14,30 +14,64 @@
  Patch2          : expat-1.95.8-man1dir.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -1046,7 +1046,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec ltib/dist/lfs-5.1/fake-provides/fake-provides.spec
 --- ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/fake-provides/fake-provides.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/fake-provides/fake-provides.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -5,83 +5,93 @@
  %define __os_install_post %{nil}
  %define  pfx /opt/freescale/rootfs/%{_target_cpu}
@@ -1203,7 +1203,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec ltib/dist/lfs-5.1/fontconfig/fontconfig.spec
 --- ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/fontconfig/fontconfig.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/fontconfig/fontconfig.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -10,27 +10,53 @@
  Group           : System Environment/Libraries
  Source          : %{name}-%{version}.tar.gz
@@ -1293,7 +1293,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/freetype/freetype.spec ltib/dist/lfs-5.1/freetype/freetype.spec
 --- ltib.reference/dist/lfs-5.1/freetype/freetype.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/freetype/freetype.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/freetype/freetype.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -12,29 +12,63 @@
  Patch1          : proper-armel-asm-declaration.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -1363,7 +1363,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/git/git.spec ltib/dist/lfs-5.1/git/git.spec
 --- ltib.reference/dist/lfs-5.1/git/git.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/git/git.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/git/git.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -27,7 +27,7 @@
  config_opts='ac_cv_c_c99_format=yes ac_cv_fread_reads_directories=no ac_cv_snprintf_returns_bogus=no' 
  eval $config_opts \
@@ -1375,7 +1375,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %Install
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/glib2/glib2.spec ltib/dist/lfs-5.1/glib2/glib2.spec
 --- ltib.reference/dist/lfs-5.1/glib2/glib2.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/glib2/glib2.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/glib2/glib2.spec	2016-02-04 17:29:11.618825458 +0100
 @@ -1,47 +1,82 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archname glib
@@ -1473,7 +1473,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/hotplug/hotplug.spec ltib/dist/lfs-5.1/hotplug/hotplug.spec
 --- ltib.reference/dist/lfs-5.1/hotplug/hotplug.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/hotplug/hotplug.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/hotplug/hotplug.spec	2016-02-04 17:29:11.622825458 +0100
 @@ -13,26 +13,60 @@
  Patch2          : hotplug-2004_03_29-dash.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -1541,7 +1541,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/iproute/iproute.spec ltib/dist/lfs-5.1/iproute/iproute.spec
 --- ltib.reference/dist/lfs-5.1/iproute/iproute.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/iproute/iproute.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/iproute/iproute.spec	2016-02-04 17:29:11.622825458 +0100
 @@ -1,18 +1,37 @@
  %define base %(echo %{_prefix} | sed -e s,/usr.*$,,)
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
@@ -1632,7 +1632,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl ltib/dist/lfs-5.1/kernel/kernel-common.tmpl
 --- ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/kernel/kernel-common.tmpl	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/kernel/kernel-common.tmpl	2016-02-04 17:29:11.622825458 +0100
 @@ -182,10 +182,10 @@
  #
  # build the kernel and optionally the modules
@@ -1866,7 +1866,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/zio.ko
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec
 --- ltib.reference/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec	2016-02-04 17:29:11.622825458 +0100
 @@ -0,0 +1,39 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -1909,7 +1909,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 --- ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec	2016-02-04 17:29:11.622825458 +0100
 @@ -0,0 +1,77 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -1990,7 +1990,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec ltib/dist/lfs-5.1/libtermcap/libtermcap.spec
 --- ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/libtermcap/libtermcap.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/libtermcap/libtermcap.spec	2016-02-04 17:29:11.622825458 +0100
 @@ -1,4 +1,5 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archname termcap
@@ -2142,7 +2142,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb.spec ltib/dist/lfs-5.1/libusb/libusb.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/libusb/libusb.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/libusb/libusb.spec	2016-02-04 17:29:11.622825458 +0100
 @@ -11,15 +11,35 @@
  Source          : %{name}-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -2213,7 +2213,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb1.spec ltib/dist/lfs-5.1/libusb/libusb1.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb1.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/libusb/libusb1.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/libusb/libusb1.spec	2016-02-04 17:29:11.622825458 +0100
 @@ -0,0 +1,72 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define libname libusb
@@ -2289,7 +2289,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
 --- ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec	2016-02-04 17:29:11.622825458 +0100
 @@ -10,38 +10,72 @@
  Group           : Applications/Communications
  Source          : lrzsz_0.12.21.orig.tar.gz
@@ -2371,7 +2371,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lzo/lzo.spec ltib/dist/lfs-5.1/lzo/lzo.spec
 --- ltib.reference/dist/lfs-5.1/lzo/lzo.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/lzo/lzo.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/lzo/lzo.spec	2016-02-04 17:29:11.622825458 +0100
 @@ -11,14 +11,34 @@
  Source          : lzo-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -2441,7 +2441,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 --- ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -0,0 +1,158 @@
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
@@ -2603,7 +2603,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{MECT_RFSDIR}/usr/lib/libATCMutility.so.*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/merge/merge.spec	2016-01-26 17:52:46.718590901 +0100
++++ ltib/dist/lfs-5.1/merge/merge.spec	2016-02-04 17:38:09.000000000 +0100
 @@ -10,40 +10,78 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
@@ -2699,7 +2699,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 --- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -2,15 +2,31 @@
  
  Summary		: Memory Technology Device tools
@@ -2789,7 +2789,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec ltib/dist/lfs-5.1/mxc-misc/imx-test.spec
 --- ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/mxc-misc/imx-test.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/mxc-misc/imx-test.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -2,23 +2,43 @@
  
  Summary         : platform specific unit tests for mxc platform
@@ -2875,7 +2875,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mysql/mysql.spec ltib/dist/lfs-5.1/mysql/mysql.spec
 --- ltib.reference/dist/lfs-5.1/mysql/mysql.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/mysql/mysql.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/mysql/mysql.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -13,16 +13,36 @@
  Patch1          : mysql-4.1.12-gcc-4.2.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -2961,7 +2961,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec ltib/dist/lfs-5.1/ncurses/ncurses.spec
 --- ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/ncurses/ncurses.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/ncurses/ncurses.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -14,17 +14,37 @@
  Patch2          : ncurses-5.3-wint_t.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -3040,7 +3040,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec
 --- ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -24,7 +24,7 @@
  # don't add --build as glib will fail for a host build due to 
  # stupid incorrect cross compile detection
@@ -3052,7 +3052,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ppp/ppp.spec ltib/dist/lfs-5.1/ppp/ppp.spec
 --- ltib.reference/dist/lfs-5.1/ppp/ppp.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/ppp/ppp.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/ppp/ppp.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -13,16 +13,36 @@
  Patch1          : ppp-2.4.3-hspeed.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -3126,7 +3126,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/prelink/prelink.spec ltib/dist/lfs-5.1/prelink/prelink.spec
 --- ltib.reference/dist/lfs-5.1/prelink/prelink.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/prelink/prelink.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/prelink/prelink.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -0,0 +1,35 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -3165,7 +3165,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec ltib/dist/lfs-5.1/qt/qt-embedded.spec
 --- ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/qt/qt-embedded.spec	2016-01-24 21:22:23.626076264 +0100
++++ ltib/dist/lfs-5.1/qt/qt-embedded.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -1,165 +1,163 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archivename qt-everywhere-opensource-src
@@ -3610,7 +3610,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%endif
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -0,0 +1,93 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define variant multiaxes
@@ -3707,7 +3707,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt.spec ltib/dist/lfs-5.1/qwt/qwt.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/qwt/qwt.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/qwt/qwt.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -0,0 +1,80 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -3791,7 +3791,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rpm/rpm-fs.spec ltib/dist/lfs-5.1/rpm/rpm-fs.spec
 --- ltib.reference/dist/lfs-5.1/rpm/rpm-fs.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/rpm/rpm-fs.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/rpm/rpm-fs.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -83,7 +83,7 @@
  ./configure --prefix=%{_prefix} --localstatedir=$var --sysconfdir=$etc \
  --without-python --without-javaglue
@@ -3803,7 +3803,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %Install
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rsync/rsync.spec ltib/dist/lfs-5.1/rsync/rsync.spec
 --- ltib.reference/dist/lfs-5.1/rsync/rsync.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/rsync/rsync.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/rsync/rsync.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -12,26 +12,61 @@
  Patch1          : rsync-2.6.5-va_copy-2.patch
  BuildRoot       : %{_tmppath}/%{name}
@@ -3870,7 +3870,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
 --- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -0,0 +1,119 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -3993,13 +3993,13 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/skell/skell.spec	2016-01-26 17:13:20.674583301 +0100
++++ ltib/dist/lfs-5.1/skell/skell.spec	2016-02-17 12:58:56.269291960 +0100
 @@ -9,20 +9,91 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
 +Source2         : rootfs_patch-1.2.tar.bz2
-+Source3         : skell-local-1.3.tar.bz2
++Source3         : skell-local-1.4.tar.bz2
 +Source4         : gdbserver
  Patch1          : skell-1.18-dropbear_args.patch
  Patch2          : skell-1.17-imx.patch
@@ -4211,7 +4211,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec ltib/dist/lfs-5.1/sqlite/sqlite.spec
 --- ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sqlite/sqlite.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/sqlite/sqlite.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -12,26 +12,61 @@
  Source          : %{name}-amalgamation-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -4280,7 +4280,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec ltib/dist/lfs-5.1/sysconfig/modeps.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sysconfig/modeps.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/sysconfig/modeps.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -10,32 +10,70 @@
  Group           : System Environment/Base
  BuildRoot       : %{_tmppath}/%{name}
@@ -4360,7 +4360,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2016-01-26 17:18:51.210584363 +0100
++++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec	2016-02-04 17:29:11.626825458 +0100
 @@ -8,72 +8,125 @@
  Vendor		: Freescale
  Packager	: Stuart Hughes
@@ -4679,7 +4679,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec ltib/dist/lfs-5.1/texinfo/texinfo.spec
 --- ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/texinfo/texinfo.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/texinfo/texinfo.spec	2016-02-04 17:29:11.630825458 +0100
 @@ -31,7 +31,7 @@
  else
                ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
@@ -4691,7 +4691,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/tslib/tslib.spec ltib/dist/lfs-5.1/tslib/tslib.spec
 --- ltib.reference/dist/lfs-5.1/tslib/tslib.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/tslib/tslib.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/tslib/tslib.spec	2016-02-04 17:29:11.630825458 +0100
 @@ -13,14 +13,32 @@
  Patch2          : tslib-1.0-mx-pre_gen-2.patch
  Patch3          : tslib-1.0-mx-pre_config.patch
@@ -4788,7 +4788,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl
 --- ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl	2016-02-04 17:29:11.630825458 +0100
 @@ -18,7 +18,8 @@
      make HOSTCC="$BUILDCC" CROSS_COMPILE=$TOOLCHAIN_PREFIX O=$BUILD_DIR distclean
  fi
@@ -4801,7 +4801,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec ltib/dist/lfs-5.1/u-boot/u-boot.spec
 --- ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/u-boot/u-boot.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/u-boot/u-boot.spec	2016-02-04 17:29:11.630825458 +0100
 @@ -17,16 +17,25 @@
  %{summary}
  
@@ -4840,7 +4840,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %Files
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/udev/udev.spec ltib/dist/lfs-5.1/udev/udev.spec
 --- ltib.reference/dist/lfs-5.1/udev/udev.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/udev/udev.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/udev/udev.spec	2016-02-04 17:29:11.630825458 +0100
 @@ -25,12 +25,9 @@
  Patch13         : udev-117-mxc-ipu-dev-privilege.patch
  Patch14         : udev-117-mxc-vpu.patch
@@ -4955,7 +4955,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/unzip/unzip.spec ltib/dist/lfs-5.1/unzip/unzip.spec
 --- ltib.reference/dist/lfs-5.1/unzip/unzip.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/unzip/unzip.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/unzip/unzip.spec	2016-02-04 17:29:11.630825458 +0100
 @@ -12,24 +12,59 @@
  Source          : unzip552.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -5020,7 +5020,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec	2016-02-04 17:29:11.630825458 +0100
 @@ -0,0 +1,71 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -5095,7 +5095,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec	2016-02-04 17:29:11.630825458 +0100
 @@ -0,0 +1,67 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -5166,7 +5166,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
 --- ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec	2016-02-04 17:29:11.630825458 +0100
 @@ -7,10 +7,24 @@
  License         : GPL
  Vendor          : Freescale
@@ -5243,7 +5243,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec ltib/dist/lfs-5.1/xenomai/xenomai.spec
 --- ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/xenomai/xenomai.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/xenomai/xenomai.spec	2016-02-04 17:29:11.630825458 +0100
 @@ -0,0 +1,76 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -5323,7 +5323,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zip30/zip30.spec ltib/dist/lfs-5.1/zip30/zip30.spec
 --- ltib.reference/dist/lfs-5.1/zip30/zip30.spec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/dist/lfs-5.1/zip30/zip30.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/zip30/zip30.spec	2016-02-04 17:29:11.630825458 +0100
 @@ -0,0 +1,70 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
@@ -5397,7 +5397,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zlib/zlib.spec ltib/dist/lfs-5.1/zlib/zlib.spec
 --- ltib.reference/dist/lfs-5.1/zlib/zlib.spec	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/dist/lfs-5.1/zlib/zlib.spec	2016-01-24 21:22:23.630076264 +0100
++++ ltib/dist/lfs-5.1/zlib/zlib.spec	2016-02-04 17:29:11.630825458 +0100
 @@ -12,15 +12,35 @@
  Patch1          : zlib-1.2.3-arflags-1.patch
  BuildRoot       : %{_tmppath}/%{name}

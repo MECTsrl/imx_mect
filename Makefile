@@ -595,6 +595,10 @@ target_rfs: $(MECT_COMMON_RFSPKGS)
 		echo "Qt:      $(MECT_BUILD_QTVERSION)"; \
 		echo "Qwt:     $(MECT_BUILD_QWTVERSION)" \
 	) > $(MECT_RFSDIR)/$(MECT_RFS_VERSION_FILE)
+	# Target-specific tuning (better build target-specific packages?)
+	if test "$(MECT_BUILD_TARGET)" = "TPLC100" -o "$(MECT_BUILD_TARGET)" = "TPLC150"; then \
+		sudo rm -f $(MECT_RFSDIR)/usr/bin/ts_calibrate; \
+	fi
 	sudo du -sh --apparent-size $(MECT_RFSDIR)
 
 # Build the target-specific local file system.

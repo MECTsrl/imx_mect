@@ -1,6 +1,6 @@
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.config ltib/config/.config
 --- ltib.reference/config/.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/.config	2016-01-27 15:20:36.395697662 +0100
++++ ltib/config/.config	2016-02-17 14:37:21.805347796 +0100
 @@ -0,0 +1,56 @@
 +#
 +# Automatically generated make config: don't edit
@@ -60,7 +60,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_LTIB_RELEASE="8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.config.cmd ltib/config/.config.cmd
 --- ltib.reference/config/.config.cmd	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/.config.cmd	2016-01-27 15:20:36.395697662 +0100
++++ ltib/config/.config.cmd	2016-02-17 14:37:21.805347796 +0100
 @@ -0,0 +1,7 @@
 +deps_config := \
 +	userspace/defaults.lkc \
@@ -71,7 +71,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +$(deps_config):
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.tmpconfig.h ltib/config/.tmpconfig.h
 --- ltib.reference/config/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/.tmpconfig.h	2016-01-27 15:20:36.395697662 +0100
++++ ltib/config/.tmpconfig.h	2016-02-17 14:37:21.805347796 +0100
 @@ -0,0 +1,59 @@
 +/*
 + * Automatically generated C config: don't edit
@@ -134,7 +134,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#define CONFIG_LTIB_RELEASE "8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/defaults/busybox.config ltib/config/defaults/busybox.config
 --- ltib.reference/config/defaults/busybox.config	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/defaults/busybox.config	2016-01-27 15:20:36.395697662 +0100
++++ ltib/config/defaults/busybox.config	2016-02-17 14:37:21.805347796 +0100
 @@ -487,11 +487,11 @@
  CONFIG_LOSETUP=y
  CONFIG_MDEV=y
@@ -172,7 +172,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  # CONFIG_FEATURE_LESS_FLAGCS is not set
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/main.lkc ltib/config/main.lkc
 --- ltib.reference/config/main.lkc	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/main.lkc	2016-01-27 15:20:36.395697662 +0100
++++ ltib/config/main.lkc	2016-02-17 14:37:21.805347796 +0100
 @@ -0,0 +1,18 @@
 +config CONFIG_TITLE
 +    string
@@ -194,7 +194,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +    default "config/platform/imx" if PLATFORM_imx
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/ltib.preconfig ltib/config/platform/host/ltib.preconfig
 --- ltib.reference/config/platform/host/ltib.preconfig	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/host/ltib.preconfig	2016-01-27 15:20:36.395697662 +0100
++++ ltib/config/platform/host/ltib.preconfig	2016-02-17 14:37:21.805347796 +0100
 @@ -56,8 +56,6 @@
  CONFIG_KERNEL_NONE=y
  # CONFIG_PKG_KERNEL_FORCE is not set
@@ -451,7 +451,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  CONFIG_GLIBC_DYNAMIC_LINKER="/lib/ld.so.1"
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/main.lkc ltib/config/platform/host/main.lkc
 --- ltib.reference/config/platform/host/main.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/host/main.lkc	2016-01-27 15:20:36.395697662 +0100
++++ ltib/config/platform/host/main.lkc	2016-02-17 14:37:21.809347796 +0100
 @@ -127,12 +127,6 @@
       help 
       	This is imx233 boot stream convert tools
@@ -467,14 +467,14 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  source ../../userspace/defaults.lkc
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/pkg_map ltib/config/platform/host/pkg_map
 --- ltib.reference/config/platform/host/pkg_map	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/host/pkg_map	2016-01-27 15:20:36.395697662 +0100
++++ ltib/config/platform/host/pkg_map	2016-02-17 14:37:21.809347796 +0100
 @@ -1,3 +1,2 @@
  PKG_MTD_UTILS = mtd-utils
  PKG_ELFTOSB = elftosb
 -PKG_UBUNTU_ARM_LIB = ubuntu_arm_lib
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.config	2016-01-27 15:20:36.000000000 +0100
++++ ltib/config/platform/imx/.config	2016-02-17 14:37:21.000000000 +0100
 @@ -0,0 +1,648 @@
 +#
 +# Automatically generated make config: don't edit
@@ -1126,7 +1126,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_LTIB_RELEASE="8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config.cmd ltib/config/platform/imx/.config.cmd
 --- ltib.reference/config/platform/imx/.config.cmd	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.config.cmd	2016-01-27 15:20:36.399697611 +0100
++++ ltib/config/platform/imx/.config.cmd	2016-02-17 14:37:21.809347796 +0100
 @@ -0,0 +1,22 @@
 +deps_config := \
 +	../../userspace/defaults.lkc \
@@ -1152,7 +1152,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +$(deps_config):
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/.tmpconfig.h	2016-01-27 15:20:36.399697611 +0100
++++ ltib/config/platform/imx/.tmpconfig.h	2016-02-17 14:37:21.813347797 +0100
 @@ -0,0 +1,649 @@
 +/*
 + * Automatically generated C config: don't edit
@@ -1805,7 +1805,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#define CONFIG_LTIB_RELEASE "8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/busybox.config ltib/config/platform/imx/busybox.config
 --- ltib.reference/config/platform/imx/busybox.config	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/busybox.config	2016-01-27 15:20:36.399697611 +0100
++++ ltib/config/platform/imx/busybox.config	2016-02-17 14:37:21.813347797 +0100
 @@ -1,7 +1,6 @@
  #
  # Automatically generated make config: don't edit
@@ -2805,7 +2805,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  CONFIG_LOGGER=y
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/defconfig.dev	2016-01-27 15:20:36.399697611 +0100
++++ ltib/config/platform/imx/defconfig.dev	2016-02-17 14:37:21.813347797 +0100
 @@ -0,0 +1,648 @@
 +#
 +# Automatically generated make config: don't edit
@@ -3457,7 +3457,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_LTIB_RELEASE="8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/dev.profile ltib/config/platform/imx/dev.profile
 --- ltib.reference/config/platform/imx/dev.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/dev.profile	2016-01-27 15:20:36.399697611 +0100
++++ ltib/config/platform/imx/dev.profile	2016-02-17 14:37:21.813347797 +0100
 @@ -41,4 +41,3 @@
  CONFIG_PKG_USBUTILS=y
  CONFIG_PKG_UUC=y
@@ -3465,7 +3465,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 -CONFIG_PKG_PERF=y
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/fsl_mm.lkc ltib/config/platform/imx/fsl_mm.lkc
 --- ltib.reference/config/platform/imx/fsl_mm.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/fsl_mm.lkc	2016-01-27 15:20:36.399697611 +0100
++++ ltib/config/platform/imx/fsl_mm.lkc	2016-02-17 14:37:21.813347797 +0100
 @@ -1,63 +1,46 @@
  menu "Freescale Multimedia Plugins/Codecs"
  
@@ -3560,7 +3560,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  endmenu
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx28_updater.cf ltib/config/platform/imx/imx28_updater.cf
 --- ltib.reference/config/platform/imx/imx28_updater.cf	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/imx28_updater.cf	2016-01-27 15:20:36.399697611 +0100
++++ ltib/config/platform/imx/imx28_updater.cf	2016-02-17 14:37:21.813347797 +0100
 @@ -576,3 +576,4 @@
  CONFIG_SYSCFG_CUTARG="zImage"
  CONFIG_CAP_FSL_INT=y
@@ -3568,7 +3568,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_SYSCFG_AUTOEXEC=y
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx51.cf ltib/config/platform/imx/imx51.cf
 --- ltib.reference/config/platform/imx/imx51.cf	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/imx51.cf	2016-01-27 15:20:36.399697611 +0100
++++ ltib/config/platform/imx/imx51.cf	2016-02-17 14:37:21.813347797 +0100
 @@ -221,7 +221,7 @@
  # CONFIG_PKG_I2C_TOOLS is not set
  # CONFIG_PKG_IOZONE is not set
@@ -3580,7 +3580,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  # CONFIG_PKG_OPENSWAN is not set
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config	2016-01-27 15:20:36.403697561 +0100
++++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config	2016-02-17 14:37:21.817347797 +0100
 @@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
@@ -6008,7 +6008,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_GENERIC_ATOMIC64=y
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config	2016-01-27 15:20:36.403697561 +0100
++++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config	2016-02-17 14:37:21.817347797 +0100
 @@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
@@ -8436,7 +8436,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_GENERIC_ATOMIC64=y
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config	2016-01-27 15:20:36.403697561 +0100
++++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config	2016-02-17 14:37:21.817347797 +0100
 @@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
@@ -10864,7 +10864,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_GENERIC_ATOMIC64=y
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config	2016-01-27 15:20:36.403697561 +0100
++++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config	2016-02-17 14:37:21.817347797 +0100
 @@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
@@ -13292,7 +13292,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_GENERIC_ATOMIC64=y
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config	2016-01-27 15:20:36.403697561 +0100
++++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config	2016-02-17 14:37:21.817347797 +0100
 @@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
@@ -15720,7 +15720,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_GENERIC_ATOMIC64=y
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35.spec.in ltib/config/platform/imx/kernel-2.6.35.spec.in
 --- ltib.reference/config/platform/imx/kernel-2.6.35.spec.in	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/kernel-2.6.35.spec.in	2016-01-27 15:20:36.407697511 +0100
++++ ltib/config/platform/imx/kernel-2.6.35.spec.in	2016-02-17 14:37:21.817347797 +0100
 @@ -2,6 +2,8 @@
  
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
@@ -16353,7 +16353,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/main.lkc ltib/config/platform/imx/main.lkc
 --- ltib.reference/config/platform/imx/main.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/main.lkc	2016-01-27 15:20:36.407697511 +0100
++++ ltib/config/platform/imx/main.lkc	2016-02-17 14:37:21.817347797 +0100
 @@ -15,7 +15,6 @@
      default "Freescale iMX37 3-Stack Board" if PLATFORM = "imx37_3stack"
      default "Freescale iMX51 3-Stack Board" if PLATFORM = "imx51_3stack"
@@ -16586,7 +16586,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  source ../../userspace/distro.lkc
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/max.profile ltib/config/platform/imx/max.profile
 --- ltib.reference/config/platform/imx/max.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/max.profile	2016-01-27 15:20:36.407697511 +0100
++++ ltib/config/platform/imx/max.profile	2016-02-17 14:37:21.817347797 +0100
 @@ -7,8 +7,8 @@
  CONFIG_PKG_AMD_GPU_BIN_MX35=y
  CONFIG_PKG_AMD_GPU_BIN_MX51=y
@@ -16891,7 +16891,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 -}
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/inetd.conf ltib/config/platform/imx/merge/etc/inetd.conf
 --- ltib.reference/config/platform/imx/merge/etc/inetd.conf	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/merge/etc/inetd.conf	2016-01-27 15:20:36.407697511 +0100
++++ ltib/config/platform/imx/merge/etc/inetd.conf	2016-02-17 14:37:21.821347797 +0100
 @@ -0,0 +1,98 @@
 +# seh: from netkit-base-0.17 but with shell enable for auto-test
 +# See "man 8 inetd" for more information.
@@ -16991,9 +16991,278 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# Secure shell
 +ssh          stream  tcp      nowait  root    /usr/sbin/dropbear   dropbear      -i
 +# End.
+diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
+--- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup	1970-01-01 01:00:00.000000000 +0100
++++ ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup	2016-02-17 16:31:47.941412716 +0100
+@@ -0,0 +1,265 @@
++#!/bin/sh
++#
++# Load a new setup from USB or reset the PLC/CAN configurations.
++#
++
++countsys=0
++
++mntdir=/tmp/mnt
++
++LOCAL_ETC_DIR="/local/etc/sysconfig"
++
++logfile=$mntdir/update.log
++UPDATE_DESCR_FILE=/local/kindofupdate.lck
++
++start() {
++	sleep 1
++	rm -f $UPDATE_DESCR_FILE
++	echo -n "Checking for configuration USB key...  "
++        if [ -e /sys/block/sda/sda1 ] || [ -e /sys/block/sda ]
++        then
++           	[ -e /sys/block/sda ] && usbdev=/dev/sda
++	        [ -e /sys/block/sda/sda1 ] && usbdev=/dev/sda1
++		[ -d $mntdir ] || { mntdir=/tmp/mnt; /bin/mkdir $mntdir; }
++		[ -d $mntdir ] || exit 1
++		echo "Found scsi device: $usb_string" | tee -a $logfile
++		if /bin/mount -orw $usbdev $mntdir 2>$logfile
++		then
++			rm -f $logfile
++			echo "current mount point is $usbdev" | tee -a $logfile
++			/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
++			if [ -x /local/flash/root/splash ]
++			then
++				# ts variable
++				export TSLIB_CONFFILE=/usr/etc/ts.conf
++				export TSLIB_PLUGINDIR=/usr/lib/ts
++				export TSLIB_TSDEVICE=/dev/input/ts0
++				export TSLIB_CONSOLEDEVICE=none
++				export TSLIB_CALIBFILE=$LOCAL_ETC_DIR/pointercal
++
++				# qt variable
++				export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
++				export QT_QWS_FONTDIR=/usr/lib/fonts
++				export POINTERCAL_FILE=$TSLIB_CALIBFILE
++
++				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Found an update...</h1>" --dimension 12 >/dev/null 2>&1 &
++			fi
++		else
++			if [ -x /local/flash/root/splash ]
++			then
++				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Sysupdate status:</h1><BR>`cat $logfile`" --dimension 12 >/dev/null 2>&1
++			fi
++		fi
++	else
++		echo "no usb key found in dmesg"
++		echo "exit from configuration script"
++		return
++	fi
++
++	echo -n "Starting the configuration process...  "
++	if [ -f $mntdir/reset.conf ]
++	then
++		echo " Resetting all!" | tee -a $logfile
++		/bin/mount -orw,remount $mntdir 2>/dev/null || { echo ""; echo "Cannot mount the USB device RW.  Aborting device reset." | tee -a $logfile; return; }
++		/bin/rm -f $mntdir/reset.conf
++
++		# Just apply factory defaults
++		FACTORY_DATA="/local/factory_data.tar.gz"
++		if [ -e $FACTORY_DATA ]
++		then
++			tar xzf /local/$FACTORY_DATA -C /
++			if [ $? == 0 ]
++			then
++				chown root:root -R /local
++				#reset also network configuration and put factory_test with exe permission
++				chmod +x /local/root/factory_test
++				sed -i /IPADDR0/d  "$LOCAL_ETC_DIR/net.conf"
++				sed -i /NETMASK0/d  "$LOCAL_ETC_DIR/net.conf"
++				sed -i /GATEWAY0/d  "$LOCAL_ETC_DIR/net.conf"
++				sed -i /NAMESERVER01/d  "$LOCAL_ETC_DIR/net.conf"
++				sed -i /NAMESERVER02/d  "$LOCAL_ETC_DIR/net.conf"
++				sed -i '2i\IPADDR0=192.168.5.211' "$LOCAL_ETC_DIR/net.conf"
++				sed -i '3i\NETMASK0=255.255.255.0' "$LOCAL_ETC_DIR/net.conf"
++				sed -i '4i\GATEWAY0=192.168.5.10' "$LOCAL_ETC_DIR/net.conf"
++				sed -i '5i\NAMESERVER01=' "$LOCAL_ETC_DIR/net.conf"
++				sed -i '6i\NAMESERVER02=' "$LOCAL_ETC_DIR/net.conf"
++
++				echo "The target has been reset." | tee -a $logfile
++				echo "RESET" >> $UPDATE_DESCR_FILE
++			else
++				echo "Error in restoring defaults" | tee -a $logfile
++			fi
++		else
++			echo "Error missing factory data" | tee -a $logfile
++		fi
++
++		#Eventually add other configuration files to be removed for reset operations
++		echo " Reset done!" | tee -a $logfile
++
++	elif [ `ls /local | grep sysupdate | wc -l` -gt  1 ]
++	then
++
++		echo "Error multiple sysupdate file." | tee -a $logfile
++
++	elif [ `ls /local | grep sysupdate | wc -l` -eq  1 ]
++	then
++
++		echo " Found one sysupdate!" | tee -a $logfile
++		countsys=1
++		sysupdatename=`ls /local | grep sysupdate`
++		/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process." | tee -a $logfile; return; }
++		/usr/bin/dos2unix /local/$sysupdatename 2>&1 | tee -a $logfile
++		/bin/sh /local/$sysupdatename 2>&1 | tee -a $logfile
++
++		if [ $? == 0 ]
++		then
++			echo " Update '/local/$sysupdatename' applied!!!" | tee -a $logfile
++			rm -f /local/$sysupdatename
++			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
++		else
++			echo " Cannot update '/local/$sysupdatename'." | tee -a $logfile
++		fi
++
++	elif [ `ls $mntdir | grep sysupdate_ | wc -l` -gt  1 ]
++	then
++
++		echo "Error multiple sysupdate file." | tee -a $logfile
++
++	elif [ `ls $mntdir | grep sysupdate_ | wc -l` -eq  1 ]
++	then
++
++		echo " Found one sysupdate!" | tee -a $logfile
++		countsys=1
++		sysupdatename=`ls $mntdir | grep sysupdate_`
++		/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process." | tee -a $logfile; return; }
++		/usr/bin/dos2unix $mntdir/$sysupdatename 2>&1 | tee -a $logfile
++		/bin/sh $mntdir/$sysupdatename 2>&1 | tee -a $logfile
++		if [ $? == 0 ]
++		then
++			echo " Update '$mntdir/$sysupdatename' applied!!!" | tee -a $logfile
++			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
++		else
++			echo " Cannot update '/local/$sysupdatename'." | tee -a $logfile
++		fi
++
++	elif [ -f $mntdir/sysupdate.sh ] && [ $countsys -eq 0 ]
++	then
++
++		echo " Performing standard sysupdate!" | tee -a $logfile
++		/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process."; return; }
++		/usr/bin/dos2unix $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
++		/bin/sh $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
++		if [ $? == 0 ]
++		then
++			echo " Update '$mntdir/sysupdate.sh' applied!!!" | tee -a $logfile
++			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
++		else
++			echo " Cannot update '$mntdir/sysupdate.sh'." | tee -a $logfile
++		fi
++
++	else
++		# Perform any other configurations
++		/bin/mount -orw,remount $mntdir 2>/dev/null || { echo ""; echo "Cannot mount the USB device RW. Configuration files will be not deleted."; }
++
++		if [ -f $mntdir/application.conf ]
++		then
++			echo " Found a new configuration file '$mntdir/application.conf'" | tee -a $logfile
++			/usr/bin/dos2unix $mntdir/application.conf 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/application.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
++			echo " Configuration file '$mntdir/application.conf' updated!" | tee -a $logfile
++			echo "APPLICATION CONF" >> $UPDATE_DESCR_FILE
++		fi
++		if [ -f $mntdir/atn01.conf ]
++		then
++			echo " Found a new configuration file '$mntdir/atn01.conf'" | tee -a $logfile
++			/usr/bin/dos2unix $mntdir/atn01.conf 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/atn01.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
++			echo " Configuration file '$mntdir/atn01.conf' updated!" | tee -a $logfile
++			echo "ATN01 CONF" >> $UPDATE_DESCR_FILE
++		fi
++		if [ -f $mntdir/Crosstable.csv ]
++		then
++			echo " Found a new configuration file '$mntdir/Crosstable.csv'" | tee -a $logfile
++			/usr/bin/dos2unix $mntdir/Crosstable.csv 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/Crosstable.csv $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
++			echo " Configuration file '$mntdir/Crosstable.csv' updated!" | tee -a $logfile
++			echo "CROSSTABLE" >> $UPDATE_DESCR_FILE
++		fi
++		if [ -f $mntdir/Commpar.csv ]
++		then
++			echo " Found a new configuration file '$mntdir/Commpar.csv'" | tee -a $logfile
++			/usr/bin/dos2unix $mntdir/Commpar.csv 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/Commpar.csv $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
++			echo " Configuration file '$mntdir/Commpar.csv' updated!" | tee -a $logfile
++			echo "COMMPAR" >> $UPDATE_DESCR_FILE
++		fi
++		if [ -f $mntdir/Alarms.csv ]
++		then
++			echo " Found a new configuration file '$mntdir/Alarms.csv'" | tee -a $logfile
++			/usr/bin/dos2unix $mntdir/Alarms.csv 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/Alarms.csv $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
++			echo " Configuration file '$mntdir/Alarms.csv' updated!" | tee -a $logfile
++			echo "ALARMS" >> $UPDATE_DESCR_FILE
++		fi
++		if [ -f $mntdir/net.conf ]
++		then
++			echo " Found a new network configuration file '$mntdir/net.conf'" | tee -a $logfile
++			/usr/bin/dos2unix $mntdir/net.conf 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/net.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
++			echo " Network configuration file '$mntdir/net.conf' updated!" | tee -a $logfile
++			echo "NETWORK" >> $UPDATE_DESCR_FILE
++		fi
++		if [ -f $mntdir/autoexec ]
++		then
++			echo " Found a new autoexec file file '$mntdir/autoexec'" | tee -a $logfile
++			/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting autoexec update process."; return; }
++			/usr/bin/dos2unix $mntdir/autoexec 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/autoexec /usr/bin/autoexec 2>&1 | tee -a $logfile
++			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
++			echo " Autoexec file '$mntdir/autoexec' updated!" | tee -a $logfile
++			echo "AUTOEXEC" >> $UPDATE_DESCR_FILE
++		fi
++	fi
++	#Sync for ubifs
++	/bin/sync
++	if [ -n "$usb_string" ]
++	then
++		/bin/umount $mntdir
++	fi
++
++	if [ -x /local/flash/root/splash ]
++	then
++		/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Sysupdate status:</h1><BR>`cat $logfile`" --dimension 12 >/dev/null 2>&1
++	fi
++
++	/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
++	echo "  Done."
++}
++
++stop() {
++#echo -n "Shutting down 'S10setup'... "
++#start-stop-daemon  -K -q -x /usr/bin/S10setup
++echo "Done."
++}
++
++restart() {
++stop
++sleep 1
++start
++}
++
++case "$1" in
++start)
++	start
++;;
++stop)
++	stop
++;;
++restart)
++	restart
++;;
++*)
++  echo $"Usage: $0 {start|stop|restart}"
++		exit 1
++	;;
++esac
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec	2016-02-04 17:03:01.954810617 +0100
++++ ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec	2016-02-17 14:37:21.821347797 +0100
 @@ -0,0 +1,181 @@
 +#!/bin/sh
 +
@@ -17178,7 +17447,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +esac
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh ltib/config/platform/imx/merge/usr/bin/fcrts.sh
 --- ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/config/platform/imx/merge/usr/bin/fcrts.sh	2016-01-27 15:20:36.407697511 +0100
++++ ltib/config/platform/imx/merge/usr/bin/fcrts.sh	2016-02-17 14:37:21.821347797 +0100
 @@ -0,0 +1,5 @@
 +#!/bin/sh
 +
@@ -17187,7 +17456,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +exec /local/flash/root/fcrts
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/min.profile ltib/config/platform/imx/min.profile
 --- ltib.reference/config/platform/imx/min.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/min.profile	2016-01-27 15:20:36.407697511 +0100
++++ ltib/config/platform/imx/min.profile	2016-02-17 14:37:21.821347797 +0100
 @@ -12,5 +12,3 @@
  CONFIG_PKG_UDEV=y
  CONFIG_PKG_UDEV_WANT_NON_RAID=y
@@ -17196,7 +17465,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 -CONFIG_PKG_PYTHON=y
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/packages.lkc ltib/config/platform/imx/packages.lkc
 --- ltib.reference/config/platform/imx/packages.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/packages.lkc	2016-01-27 15:20:36.407697511 +0100
++++ ltib/config/platform/imx/packages.lkc	2016-02-17 14:37:21.821347797 +0100
 @@ -32,7 +32,7 @@
  
  config PKG_FIRMWARE_IMX
@@ -17280,7 +17549,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 -
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/pkg_map ltib/config/platform/imx/pkg_map
 --- ltib.reference/config/platform/imx/pkg_map	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/pkg_map	2016-01-27 15:20:36.407697511 +0100
++++ ltib/config/platform/imx/pkg_map	2016-02-17 14:37:21.821347797 +0100
 @@ -9,11 +9,19 @@
  PKG_IMX_TEST = imx-test
  PKG_KOBS_NG = kobs-ng
@@ -17326,7 +17595,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 -PKG_PERF = perf
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/preconfigs.lkc ltib/config/platform/imx/preconfigs.lkc
 --- ltib.reference/config/platform/imx/preconfigs.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/preconfigs.lkc	2016-01-27 15:20:36.407697511 +0100
++++ ltib/config/platform/imx/preconfigs.lkc	2016-02-17 14:37:21.821347797 +0100
 @@ -21,12 +21,10 @@
          bool imx35_3stack
      config PCF_PLATFORM_IMX37_3STACK
@@ -17364,7 +17633,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
      string
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/release.profile ltib/config/platform/imx/release.profile
 --- ltib.reference/config/platform/imx/release.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/release.profile	2016-01-27 15:20:36.407697511 +0100
++++ ltib/config/platform/imx/release.profile	2016-02-17 14:37:21.821347797 +0100
 @@ -3,7 +3,6 @@
  CONFIG_PKG_AMD_GPU_BIN_MX35=y
  CONFIG_PKG_AMD_GPU_BIN_MX51=y
@@ -17381,7 +17650,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 -CONFIG_PKG_PYTHON=y
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/release_gnome.profile ltib/config/platform/imx/release_gnome.profile
 --- ltib.reference/config/platform/imx/release_gnome.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/release_gnome.profile	2016-01-27 15:20:36.407697511 +0100
++++ ltib/config/platform/imx/release_gnome.profile	2016-02-17 14:37:21.821347797 +0100
 @@ -7,8 +7,8 @@
  CONFIG_PKG_AMD_GPU_BIN_MX35=y
  CONFIG_PKG_AMD_GPU_BIN_MX51=y
@@ -17441,7 +17710,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 -CONFIG_PKG_PYTHON=y
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/u-boot.spec.in ltib/config/platform/imx/u-boot.spec.in
 --- ltib.reference/config/platform/imx/u-boot.spec.in	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/u-boot.spec.in	2016-01-27 15:20:36.407697511 +0100
++++ ltib/config/platform/imx/u-boot.spec.in	2016-02-17 14:37:21.821347797 +0100
 @@ -1,18 +1,20 @@
  # template = u-boot-common.tmpl
  
@@ -17474,7 +17743,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/updater.profile ltib/config/platform/imx/updater.profile
 --- ltib.reference/config/platform/imx/updater.profile	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/platform/imx/updater.profile	2016-01-27 15:20:36.407697511 +0100
++++ ltib/config/platform/imx/updater.profile	2016-02-17 14:37:21.821347797 +0100
 @@ -10,8 +10,4 @@
  CONFIG_PKG_MTD_UTILS=y
  CONFIG_PKG_E2FSPROGS=y
@@ -17487,7 +17756,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_PKG_DOSFSTOOLS=y
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/deployment.lkc ltib/config/userspace/deployment.lkc
 --- ltib.reference/config/userspace/deployment.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/userspace/deployment.lkc	2016-01-27 15:20:36.411697460 +0100
++++ ltib/config/userspace/deployment.lkc	2016-02-17 14:37:21.821347797 +0100
 @@ -177,8 +177,8 @@
  config SYSCFG_RAM_DIRS
      depends SYSCFG_READONLY_FS || DEPLOYMENT_JFFS2
@@ -17501,7 +17770,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
         of 100000 times for a NOR device).  If you deploy to Flash,
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/packages.lkc ltib/config/userspace/packages.lkc
 --- ltib.reference/config/userspace/packages.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/userspace/packages.lkc	2016-01-27 15:20:36.411697460 +0100
++++ ltib/config/userspace/packages.lkc	2016-02-17 14:37:21.821347797 +0100
 @@ -229,6 +229,13 @@
        --with : debug access poll
        --without : gzip sendfile
@@ -17673,7 +17942,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  endmenu
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/pkg_map ltib/config/userspace/pkg_map
 --- ltib.reference/config/userspace/pkg_map	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/userspace/pkg_map	2016-01-27 15:20:36.411697460 +0100
++++ ltib/config/userspace/pkg_map	2016-02-17 14:37:21.821347797 +0100
 @@ -53,7 +53,6 @@
  PKG_BZIP2                        = bzip2
  PKG_DIFFUTILS                    = diffutils
@@ -17721,7 +17990,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  PKG_SYSCONFIG                    = sysconfig
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/sysconfig.lkc ltib/config/userspace/sysconfig.lkc
 --- ltib.reference/config/userspace/sysconfig.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/userspace/sysconfig.lkc	2016-01-27 15:20:36.411697460 +0100
++++ ltib/config/userspace/sysconfig.lkc	2016-02-17 14:37:21.821347797 +0100
 @@ -126,6 +126,16 @@
         These will be passed to boa as command line arguments.
         The default is '-c /etc' and '-c /etc -e' for MMUless.
@@ -17761,7 +18030,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  endmenu
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/toolchain.lkc ltib/config/userspace/toolchain.lkc
 --- ltib.reference/config/userspace/toolchain.lkc	2013-01-09 04:58:38.000000000 +0100
-+++ ltib/config/userspace/toolchain.lkc	2016-01-27 15:20:36.411697460 +0100
++++ ltib/config/userspace/toolchain.lkc	2016-02-17 14:37:21.821347797 +0100
 @@ -541,21 +541,6 @@
              list of choices select the custom option and enter the
              toolchain path and prefix in the appropriate boxes.
@@ -17819,7 +18088,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
      default "-O2 -march=armv5te" if (( PLATFORM = imx21ads || PLATFORM = imx233 || PLATFORM = imx25_3stack || PLATFORM = imx27ads || PLATFORM = imx28 ) && TOOLCHAIN_ARMEABI_FSL_GCC_MULTILIB)
  
 --- ltib.reference/.config	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/.config	2016-01-27 15:20:36.411697460 +0100
++++ ltib/.config	2016-02-17 14:37:21.821347797 +0100
 @@ -0,0 +1,7 @@
 +#
 +# Automatically generated make config: don't edit
@@ -17829,7 +18098,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_PLATFORM_imx=y
 +CONFIG_PLATFORM_DIR="config/platform/imx"
 --- ltib.reference/.config.cmd	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/.config.cmd	2016-01-27 15:20:36.411697460 +0100
++++ ltib/.config.cmd	2016-02-17 14:37:21.821347797 +0100
 @@ -0,0 +1,6 @@
 +deps_config := \
 +	/home/imx28/mect/ltib/config/main.lkc
@@ -17838,7 +18107,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +
 +$(deps_config):
 --- ltib.reference/.tmpconfig.h	1970-01-01 01:00:00.000000000 +0100
-+++ ltib/.tmpconfig.h	2016-01-27 15:20:36.411697460 +0100
++++ ltib/.tmpconfig.h	2016-02-17 14:37:21.821347797 +0100
 @@ -0,0 +1,8 @@
 +/*
 + * Automatically generated C config: don't edit

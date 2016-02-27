@@ -344,7 +344,7 @@ env:
 		echo "Aborting."; \
 		exit 1; \
 	fi
-	-sudo apt-get update
+	#-sudo apt-get update
 	sudo apt-get install $(MECT_PACKAGES)
 
 # Initial downloads (toolchain, LTIB, LTIB patches, spec files patches, ...)

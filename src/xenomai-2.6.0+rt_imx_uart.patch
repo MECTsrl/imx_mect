@@ -351,7 +351,7 @@ diff -urN a/ksrc/drivers/serial/regs-uartapp.h b/ksrc/drivers/serial/regs-uartap
 diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_mxs_auart.c
 --- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	1970-01-01 01:00:00.000000000 +0100
 +++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-02-27 18:37:45.090170000 +0100
-@@ -0,0 +1,1390 @@
+@@ -0,0 +1,1373 @@
 +/*
 + * Copyright 2016 MECT s.r.l. <info@mect.it>
 + *
@@ -400,7 +400,6 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +#include "regs-uartapp.h"
 +
 +#ifdef CONFIG_MECT_CUSTOMIZATION
-+#undef CONFIG_MECT_CUSTOMIZATION
 +/* For EWK board */
 +#define MECT_RTS_TX_ACTIVE_LOW
 +#endif
@@ -1571,6 +1570,7 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +	pdata = pdev->dev.platform_data;
 +	if (pdata == NULL) {
 +		err = -ENOMEM;
++
 +		goto kfree_out;
 +	}
 +
@@ -1580,6 +1580,7 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +		port->clk = clk_get(NULL, "uart");
 +	if (IS_ERR(port->clk)) {
 +		err = PTR_ERR(port->clk);
++
 +		goto kfree_out;
 +	}
 +
@@ -1588,10 +1589,12 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 +	if (!res) {
 +		err = -ENXIO;
++
 +		goto clk_disable_out;
 +	}
 +
 +	port->port.mapbase = res->start;
++	port->port.membase = (void __iomem *)IO_ADDRESS(res->start);
 +	port->port.fifosize = pdata->fifo_size;
 +	port->port.timeout = pdata->timeout ? pdata->timeout : (HZ / 10);
 +	port->port.uartclk = clk_get_rate(port->clk);
@@ -1600,23 +1603,12 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +
 +	port->flags = 0;
 +
-+	if (!request_mem_region(port->port.mapbase, PAGE_SIZE, DRIVER_NAME)) {
-+		err = -EBUSY;
-+		goto clk_disable_out;
-+	}
-+
-+	/* FIXME IMX-yes, MXS-no */
-+	port->port.membase = ioremap(port->port.mapbase, PAGE_SIZE);
-+	if (!port->port.membase) {
-+		err = -ENOMEM;
-+		goto release_mem_region_out;	// FIXME Sync with flow above.
-+	}
-+
 +	for (i = 0; i < ARRAY_SIZE(port->irq); i++) {
 +		port->irq[i] = platform_get_irq(pdev, i);
 +		if (port->irq[i] < 0) {
 +			err = port->irq[i];
-+			goto iounmap_out;	// FIXME Sync with flow above.
++
++			goto clk_disable_out;
 +		}
 +	}
 +
@@ -1636,7 +1628,7 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +
 +	err = rtdm_dev_register(dev);
 +	if (err)
-+		goto iounmap_out;
++		goto clk_disable_out;
 +
 +	port->use_hwflow = 1;
 +
@@ -1661,12 +1653,6 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +
 +	return 0;
 +
-+iounmap_out:
-+	iounmap(port->port.membase);
-+
-+release_mem_region_out:
-+	release_mem_region(port->port.mapbase, SZ_4K);
-+
 +clk_disable_out:
 +	if (!IS_ERR(port->clk)) {
 +		clk_put(port->clk);
@@ -1682,26 +1668,23 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +static int __devexit
 +rt_imx_mxs_auart_remove(struct platform_device *pdev)
 +{
++	struct rt_imx_mxs_auart_port *port;	// s
 +	struct mxsauart_platform_data *pdata;
-+	struct rt_imx_mxs_auart_port *port = platform_get_drvdata(pdev);	// s
-+	struct rtdm_device *dev = &port->rtdm_dev;
++	struct rtdm_device *dev;
 +
++	port = platform_get_drvdata(pdev);
 +	pdata = pdev->dev.platform_data;
++	dev = &port->rtdm_dev;
++
 +	platform_set_drvdata(pdev, NULL);
 +
 +	rtdm_dev_unregister(dev, 1000);
 +
 +	if (port) {
-+		put_device(port->dev);
-+
 +		if (port->clk) {
 +			clk_disable(port->clk);
 +			clk_put(port->clk);
 +		}
-+
-+		iounmap(port->port.membase);
-+
-+		release_mem_region(port->port.mapbase, PAGE_SIZE);
 +
 +		kfree(port);
 +	}

@@ -351,7 +351,7 @@ diff -urN a/ksrc/drivers/serial/regs-uartapp.h b/ksrc/drivers/serial/regs-uartap
 diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_mxs_auart.c
 --- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	1970-01-01 01:00:00.000000000 +0100
 +++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-02-27 18:37:45.090170000 +0100
-@@ -0,0 +1,1392 @@
+@@ -0,0 +1,1390 @@
 +/*
 + * Copyright 2016 MECT s.r.l. <info@mect.it>
 + *
@@ -1030,8 +1030,6 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +{
 +	rtdm_lockctx_t lock_ctx;
 +	int err = 0;
-+
-+	pr_info("In %s\n", __func__);
 +
 +	rtdm_lock_get_irqsave(&ctx->lock, lock_ctx);
 +

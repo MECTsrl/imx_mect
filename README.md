@@ -31,7 +31,7 @@ LTIB is built and installed as an unprivileged user, but it requires root privil
 1. Enable the build user for sudo (optionally without a password).  
    Edit */etc/sudoers* and append a line as follows:
 
-        <user name> ALL=(ALL:ALL) ALL
+        <user name> ALL=NOPASSWD: /usr/bin/rpm, /opt/freescale/ltib/usr/bin/rpm
 
    or without a password (security risk):
 

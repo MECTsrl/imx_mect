@@ -590,10 +590,13 @@ target_rfs: $(MECT_COMMON_RFSPKGS)
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_RFSDIR)/tmp/ltib
 	sudo qemu-arm $(MECT_CSXCDIR)/arm-none-linux-gnueabi/libc/sbin/ldconfig -r $(MECT_RFSDIR)
 	( \
-		echo "Release: rel$(MECT_BUILD_RELEASE)"; \
+		echo "Release: $(MECT_BUILD_RELEASE)"; \
 		echo "Target:  $(MECT_BUILD_TARGET)"; \
 		echo "Qt:      $(MECT_BUILD_QTVERSION)"; \
 		echo "Qwt:     $(MECT_BUILD_QWTVERSION)" \
+		echo "RunTime: $(MECT_BUILD_ATCMCRT_BRANCH)/$(MECT_BUILD_ATCMCRT_TAG)"; \
+		echo "MectPlugin: $(MECT_BUILD_PLUGINSCRT_BRANCH)/$(MECT_BUILD_PLUGINSCRT_TAG)"; \
+		echo "MectApps: $(MECT_BUILD_APPSCRT_BRANCH)/$(MECT_BUILD_APPSCRT_TAG)"; \
 	) > $(MECT_RFSDIR)/$(MECT_RFS_VERSION_FILE)
 	# Target-specific tuning (better build target-specific packages?)
 	if test "$(MECT_BUILD_TARGET)" = "TPLC100" -o "$(MECT_BUILD_TARGET)" = "TPLC150"; then \

@@ -209,7 +209,7 @@ int cgiMain() {
 	/* Finish up the page */
 	fprintf(cgiOut, "<center>\n");
 	fprintf(cgiOut, "<form>\n");
-	fprintf(cgiOut, "<input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='index.cgi'\">\n");
+	fprintf(cgiOut, "<input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='menu.cgi'\">\n");
 	fprintf(cgiOut, "</form>\n");
 	fprintf(cgiOut, "</center>\n");
 

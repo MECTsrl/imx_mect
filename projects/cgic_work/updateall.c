@@ -45,26 +45,6 @@ static void ShowForm()
 	fprintf(cgiOut, "<tbody>\n");
 	fprintf(cgiOut, "<tr>\n");
 	fprintf(cgiOut, "<td>\n");	
-	fprintf(cgiOut, "<span class=\"nowrap\">Choose Alarms.csv file:</span>\n");
-	fprintf(cgiOut, "</td>\n"); 	 
-	fprintf(cgiOut, "<td>\n");
-	fprintf(cgiOut, "<input type=\"file\" name=\"ALARMTBL\">\n");
-	fprintf(cgiOut, "</td>\n");
-	fprintf(cgiOut, "<td>\n");	
-	fprintf(cgiOut, "</td>\n");
-	fprintf(cgiOut, "</tr>\n");
-	fprintf(cgiOut, "</tbody>\n");
-	fprintf(cgiOut, "</table>\n");
-
-	fprintf(cgiOut, "</tr>\n");
-	fprintf(cgiOut, "</td>\n");	
-	fprintf(cgiOut, "<tr>\n");
-	fprintf(cgiOut, "<td>\n");	
-
-	fprintf(cgiOut, "<table cellspacing=1 cellpadding=4 align=right>");
-	fprintf(cgiOut, "<tbody>\n");
-	fprintf(cgiOut, "<tr>\n");
-	fprintf(cgiOut, "<td>\n");	
 	fprintf(cgiOut, "<span class=\"nowrap\">Choose Crosstable.csv:</span>\n");
 	fprintf(cgiOut, "</td>\n"); 	 
 	fprintf(cgiOut, "<td>\n");
@@ -85,10 +65,10 @@ static void ShowForm()
 	fprintf(cgiOut, "<tbody>\n");
 	fprintf(cgiOut, "<tr>\n");
 	fprintf(cgiOut, "<td>\n");	
-	fprintf(cgiOut, "<span class=\"nowrap\">Choose Commpar.csv file:</span>\n");
+	fprintf(cgiOut, "<span class=\"nowrap\">Choose system.ini file:</span>\n");
 	fprintf(cgiOut, "</td>\n"); 	 
 	fprintf(cgiOut, "<td>\n");
-	fprintf(cgiOut, "<input type=\"file\" name=\"CFGTBL\">\n");
+	fprintf(cgiOut, "<input type=\"file\" name=\"SYSINI\">\n");
 	fprintf(cgiOut, "</td>\n");
 	fprintf(cgiOut, "<td>\n");	
 	fprintf(cgiOut, "</td>\n");
@@ -101,26 +81,6 @@ static void ShowForm()
 	fprintf(cgiOut, "<tr>\n");
 	fprintf(cgiOut, "<td>\n");	
 
-	fprintf(cgiOut, "<table cellspacing=1 cellpadding=4 align=right>");
-	fprintf(cgiOut, "<tbody>\n");
-	fprintf(cgiOut, "<tr>\n");
-	fprintf(cgiOut, "<td>\n");	
-	fprintf(cgiOut, "<span class=\"nowrap\">Choose config file:</span>\n");
-	fprintf(cgiOut, "</td>\n"); 	 
-	fprintf(cgiOut, "<td>\n");
-	fprintf(cgiOut, "<input type=\"file\" name=\"ATNCFG\">\n");
-	fprintf(cgiOut, "</td>\n");
-	fprintf(cgiOut, "<td>\n");	
-	fprintf(cgiOut, "</td>\n");
-	fprintf(cgiOut, "</tr>\n");
-	fprintf(cgiOut, "</tbody>\n");
-	fprintf(cgiOut, "</table>\n");
-
-	fprintf(cgiOut, "</td>\n");	
-	fprintf(cgiOut, "</tr>\n");
-	fprintf(cgiOut, "<tr>\n");
-	fprintf(cgiOut, "<td>\n");	
-	
 	fprintf(cgiOut, "<table cellspacing=1 cellpadding=4 align=right>");
 	fprintf(cgiOut, "<tbody>\n");
 	fprintf(cgiOut, "<tr>\n");
@@ -173,10 +133,8 @@ static void ShowForm()
 
 int cgiMain() {
 
-	int updatedALARMTBL =-1;
 	int updatedCROSSTBL =-1;
-	int updatedCFGTBL =-1;
-	int updatedATNCFG =-1;
+	int updatedSYSINI =-1;
 	int updatedSPLASH =-1;
 	int updatedHMI =-1;
 	char Action [32] = "";
@@ -191,27 +149,18 @@ int cgiMain() {
 	// updated = 1;
 	/* If a submit button has already been clicked, act on the 
 	   submission of the form. */
-	if (cgiFormFileName("ALARMTBL", filename, FILENAME_MAX) == cgiFormSuccess 
-	 || cgiFormFileName("CROSSTBL", filename, FILENAME_MAX) == cgiFormSuccess
-	 || cgiFormFileName("CFGTBL", filename, FILENAME_MAX) == cgiFormSuccess
-	 || cgiFormFileName("ATNCFG", filename, FILENAME_MAX) == cgiFormSuccess
+	if (cgiFormFileName("CROSSTBL", filename, FILENAME_MAX) == cgiFormSuccess
+	 || cgiFormFileName("SYSINI", filename, FILENAME_MAX) == cgiFormSuccess
 	 || cgiFormFileName("SPLASH", filename, FILENAME_MAX) == cgiFormSuccess
 	 || cgiFormFileName("HMI", filename, FILENAME_MAX) == cgiFormSuccess
 	) {
 		/* stop */
 		system("/etc/rc.d/init.d/autoexec stop > /dev/null 2>&1");
-		sleep(1);
-		if (cgiFormFileName("ALARMTBL", filename, FILENAME_MAX) == cgiFormSuccess) {
-			updatedALARMTBL = HandleSubmitALARMTBL();
-		}
 		if (cgiFormFileName("CROSSTBL", filename, FILENAME_MAX) == cgiFormSuccess) {
 			updatedCROSSTBL = HandleSubmitCROSSTBL();
 		}
-		if (cgiFormFileName("CFGTBL", filename, FILENAME_MAX) == cgiFormSuccess) {
-			updatedCFGTBL = HandleSubmitCFGTBL();
-		}
-		if (cgiFormFileName("ATNCFG", filename, FILENAME_MAX) == cgiFormSuccess) {
-			updatedATNCFG = HandleSubmitATNCFG();
+		if (cgiFormFileName("SYSINI", filename, FILENAME_MAX) == cgiFormSuccess) {
+			updatedSYSINI = HandleSubmitSYSINI();
 		}
 		if (cgiFormFileName("SPLASH", filename, FILENAME_MAX) == cgiFormSuccess) {
 			updatedSPLASH = HandleSubmitSPLASH();
@@ -219,7 +168,7 @@ int cgiMain() {
 		if (cgiFormFileName("HMI", filename, FILENAME_MAX) == cgiFormSuccess) {
 			updatedHMI = HandleSubmitHMI();
 		}
-		system("/etc/rc.d/init.d/autoexec start > /dev/null 2>&1");
+		system("sync; /etc/rc.d/init.d/autoexec start > /dev/null 2>&1");
 		/* start */
 
 		fprintf(cgiOut, "<br>\n");
@@ -228,7 +177,7 @@ int cgiMain() {
 			"<font color=\"#00FF00\">Done</font>", // updated... = 0
 			"<font color=\"#FF0000\">Fail</font>", // updated... = +1
 		};
-		if (updatedALARMTBL + updatedCROSSTBL + updatedCFGTBL + updatedATNCFG + updatedSPLASH + updatedHMI < 6) {
+		if (updatedCROSSTBL + updatedSYSINI + updatedSPLASH + updatedHMI < 6) {
 			fprintf(cgiOut, "<table style=\"border:3px solid #335970;\" align=center cellpadding=4 >\n");
 			fprintf(cgiOut, "<tbody>\n");
 			fprintf(cgiOut, "<tr>\n");
@@ -236,14 +185,6 @@ int cgiMain() {
 			fprintf(cgiOut, "		Report:<br>\n");
 			fprintf(cgiOut, "	</td>\n");	
 			fprintf(cgiOut, "	<td>\n");	
-			fprintf(cgiOut, "	</td>\n");	
-			fprintf(cgiOut, "</tr>\n");
-			fprintf(cgiOut, "<tr>\n");
-			fprintf(cgiOut, "	<td align=\"right\">\n");	
-			fprintf(cgiOut, "		Alarms table:\n");
-			fprintf(cgiOut, "	</td>\n");	
-			fprintf(cgiOut, "	<td>\n");	
-			fprintf(cgiOut, "		%s\n", msgarray[updatedALARMTBL + 1]);
 			fprintf(cgiOut, "	</td>\n");	
 			fprintf(cgiOut, "</tr>\n");
 			fprintf(cgiOut, "<tr>\n");
@@ -256,18 +197,10 @@ int cgiMain() {
 			fprintf(cgiOut, "</tr>\n");
 			fprintf(cgiOut, "<tr>\n");
 			fprintf(cgiOut, "	<td align=\"right\">\n");	
-			fprintf(cgiOut, "		Commpar:\n");
+			fprintf(cgiOut, "		system.ini:\n");
 			fprintf(cgiOut, "	</td>\n");	
 			fprintf(cgiOut, "	<td>\n");	
-			fprintf(cgiOut, "		%s\n", msgarray[updatedCFGTBL + 1]);
-			fprintf(cgiOut, "	</td>\n");	
-			fprintf(cgiOut, "</tr>\n");
-			fprintf(cgiOut, "<tr>\n");
-			fprintf(cgiOut, "	<td align=\"right\">\n");	
-			fprintf(cgiOut, "		Config file:\n");
-			fprintf(cgiOut, "	</td>\n");	
-			fprintf(cgiOut, "	<td>\n");	
-			fprintf(cgiOut, "		%s\n", msgarray[updatedATNCFG + 1]);
+			fprintf(cgiOut, "		%s\n", msgarray[updatedSYSINI + 1]);
 			fprintf(cgiOut, "	</td>\n");	
 			fprintf(cgiOut, "</tr>\n");
 			fprintf(cgiOut, "<tr>\n");
@@ -289,7 +222,7 @@ int cgiMain() {
 			fprintf(cgiOut, "</tbody>\n");
 			fprintf(cgiOut, "</table>\n");
 		}
-		else if (updatedALARMTBL + updatedCROSSTBL + updatedCFGTBL + updatedATNCFG + updatedSPLASH + updatedHMI == 6) {
+		else if (updatedCROSSTBL + updatedSYSINI + updatedSPLASH + updatedHMI == 6) {
 			fprintf(cgiOut, "<table style=\"border:3px solid #FF0000;\" align=center cellpadding=4 >\n");
 			fprintf(cgiOut, "<tbody>\n");
 			fprintf(cgiOut, "<tr>\n");

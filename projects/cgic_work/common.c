@@ -27,14 +27,6 @@ int HandleSubmitHMI(void)
 		" && chmod 754 /local/root/hmi");
 }
 
-int HandleSubmitALARMTBL(void)
-{
-	return Update("ALARMTBL", "/local/etc/sysconfig/Alarms.csv",
-		"sync"
-		" && /bin/chmod 644 /local/etc/sysconfig/Alarms.csv"
-		" && /usr/bin/dos2unix /local/etc/sysconfig/Alarms.csv");
-}
-
 int HandleSubmitCROSSTBL(void)
 {
 	return Update("CROSSTBL", "/local/etc/sysconfig/Crosstable.csv",
@@ -43,20 +35,12 @@ int HandleSubmitCROSSTBL(void)
 		" && /usr/bin/dos2unix /local/etc/sysconfig/Crosstable.csv");
 }
 
-int HandleSubmitCFGTBL(void)
+int HandleSubmitSYSINI(void)
 {
-	return Update("CFGTBL", "/local/etc/sysconfig/Commpar.csv",
+	return Update("SYSINI", "/local/etc/sysconfig/system.ini",
 		"sync"
-		" && /bin/chmod 644 /local/etc/sysconfig/Commpar.csv"
-		" && /usr/bin/dos2unix /local/etc/sysconfig/Commpar.csv");
-}
-
-int HandleSubmitATNCFG(void)
-{
-	return Update("ATNCFG", "/local/etc/sysconfig/atn01.conf",
-		"sync"
-		" && /bin/chmod 644 /local/etc/sysconfig/atn01.conf"
-		" && /usr/bin/dos2unix /local/etc/sysconfig/atn01.conf");
+		" && /bin/chmod 644 /local/etc/sysconfig/system.ini"
+		" && /usr/bin/dos2unix /local/etc/sysconfig/system.ini");
 }
 
 int HandleSubmitSPLASH(void)

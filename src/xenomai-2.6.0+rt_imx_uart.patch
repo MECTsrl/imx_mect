@@ -351,7 +351,7 @@ diff -urN a/ksrc/drivers/serial/regs-uartapp.h b/ksrc/drivers/serial/regs-uartap
 diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_mxs_auart.c
 --- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	1970-01-01 01:00:00.000000000 +0100
 +++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-02-27 18:37:45.090170000 +0100
-@@ -0,0 +1,1421 @@
+@@ -0,0 +1,1381 @@
 +/*
 + * Copyright 2016 MECT s.r.l. <info@mect.it>
 + *
@@ -399,17 +399,13 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +
 +#include "regs-uartapp.h"
 +
-+#ifdef CONFIG_MECT_CUSTOMIZATION
-+#undef CONFIG_MECT_CUSTOMIZATION
-+/* For EWK board */
-+#define MECT_RTS_TX_ACTIVE_LOW
-+#endif
-+
-+/* Disable execution trace */
++/* TODO MTL: Disable execution trace */
++#if 1
 +#ifdef pr_info
 +#undef pr_info
 +#endif
 +#define pr_info(...)
++#endif
 +
 +
 +#define DRIVER_NAME		"xeno_imx_mxs_auart"
@@ -421,6 +417,14 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +#define IER_TX			0x02
 +#define IER_STAT		0x04
 +#define IER_MODEM		0x08
++
++/* TODO MTL: TX/RX monitor. */
++static struct monitor_s {
++	uint8_t rx[IN_BUFFER_SIZE];
++	uint16_t irx;
++	uint8_t tx[OUT_BUFFER_SIZE];
++	uint16_t itx;
++} monitor;
 +
 +struct rt_imx_mxs_auart_port {
 +	struct uart_port port;
@@ -509,28 +513,6 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +	return container_of(u, struct rt_imx_mxs_auart_port, port);
 +}
 +
-+static void
-+rt_imx_mxs_auart_set_mctrl(struct uart_port *u, unsigned mctrl)
-+{
-+	struct rt_imx_mxs_auart_port *port = NULL;
-+	u32 ctrl = 0;
-+
-+	pr_info("In %s\n", __func__);
-+
-+	port = to_auart_port(u);
-+	ctrl = __raw_readl(u->membase + HW_UARTAPP_CTRL2);
-+
-+	ctrl &= ~BM_UARTAPP_CTRL2_RTS;
-+#ifdef CONFIG_MECT_CUSTOMIZATION
-+	if ((mctrl & TIOCM_RTS) == TIOCM_RTS)
-+#else
-+	if (mctrl & TIOCM_RTS)
-+#endif
-+		ctrl |= BM_UARTAPP_CTRL2_RTS;
-+
-+	__raw_writel(ctrl, u->membase + HW_UARTAPP_CTRL2);
-+}
-+
 +static inline void
 +rt_imx_mxs_auart_tx_chars(struct rt_imx_mxs_auart_ctx *ctx)
 +{
@@ -542,28 +524,16 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +
 +	for (count = port->port.fifosize; (!(__raw_readl(port->port.membase + HW_UARTAPP_STAT) & BM_UARTAPP_STAT_TXFF)) && (count > 0) && (ctx->out_npend > 0); count--, ctx->out_npend--) {
 +		ch = ctx->out_buf[ctx->out_head++];
++		//monitor.tx[monitor.itx++] = ch;		// TODO MTL: Remove.
 +		__raw_writel(ch, port->port.membase + HW_UARTAPP_DATA);
 +
 +		ctx->out_head &= (OUT_BUFFER_SIZE - 1);
 +	}
 +
-+	if (port->port.fifosize)
++	if (ctx->out_npend > 0)
 +		__raw_writel(BM_UARTAPP_INTR_TXIEN, port->port.membase + HW_UARTAPP_INTR_SET);
-+	else {
++	else
 +		__raw_writel(BM_UARTAPP_INTR_TXIEN, port->port.membase + HW_UARTAPP_INTR_CLR);
-+#ifdef CONFIG_MECT_CUSTOMIZATION
-+		/* Wait for transmitter to become empty and restore RTS */
-+		while (__raw_readl(port->port.membase + HW_UARTAPP_STAT) & BM_UARTAPP_STAT_BUSY) ;
-+
-+#ifdef MECT_RTS_TX_ACTIVE_LOW
-+		rt_imx_mxs_auart_set_mctrl(&port->port, TIOCM_RTS);
-+#else
-+		rt_imx_mxs_auart_set_mctrl(&port->port, 0);
-+#endif
-+		/* Start RX */
-+		__raw_writel(BM_UARTAPP_CTRL2_RXE, port->port.membase + HW_UARTAPP_CTRL2_SET);
-+#endif
-+	}
 +}
 +
 +static int
@@ -584,6 +554,7 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +			break;
 +
 +		c = __raw_readl(port->port.membase + HW_UARTAPP_DATA);
++		//monitor.rx[monitor.irx++] = c;		// TODO MTL: Remove.
 +
 +		if (stat & BM_UARTAPP_STAT_BERR) {
 +			stat &= ~BM_UARTAPP_STAT_BERR;
@@ -644,13 +615,10 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +static unsigned int
 +rt_imx_mxs_auart_get_msr(struct rt_imx_mxs_auart_ctx *ctx)
 +{
-+	unsigned int msr = 0;
-+
 +	pr_info("In %s\n", __func__);
 +
 +	/* Nothing to report. */
-+
-+	return msr;
++	return 0;
 +}
 +
 +static void
@@ -716,8 +684,8 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +				config = &config_buf;
 +			}
 +
-+			if (testbits(config->config_mask, RTSER_SET_BAUD) && (config->baud_rate > clk_get_rate(ctx->port->clk) * 32 || config->baud_rate <= 0))
-+				/* invalid baudrate for this port */
++			/* Invalid baudrate? */
++			if (testbits(config->config_mask, RTSER_SET_BAUD) && (config->baud_rate > clk_get_rate(ctx->port->clk) / 16 || config->baud_rate <= 0))
 +				return -EINVAL;
 +
 +			if (testbits(config->config_mask, RTSER_SET_TIMESTAMP_HISTORY)) {
@@ -880,32 +848,30 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +	pr_info("In %s\n", __func__);
 +
 +	ctx = rtdm_irq_get_arg(irq_context, struct rt_imx_mxs_auart_ctx);
++	port = ctx->port;
 +
 +	rtdm_lock_get(&ctx->lock);
 +
-+	port = ctx->port;
-+
 +	stat = __raw_readl(port->port.membase + HW_UARTAPP_STAT);
-+
 +	istatus = istat = __raw_readl(port->port.membase + HW_UARTAPP_INTR);
 +
 +	/* RX data ready or RX timeout */
 +	if (istat & (BM_UARTAPP_INTR_RXIS | BM_UARTAPP_INTR_RTIS)) {
 +		rbytes += rt_imx_mxs_auart_rx_chars(ctx, &timestamp);
 +
++		istat &= ~(BM_UARTAPP_INTR_RTIS | BM_UARTAPP_INTR_RXIS);
++
 +		events |= RTSER_EVENT_RXPEND;
 +		ret = RTDM_IRQ_HANDLED;
-+
-+		istat &= ~(BM_UARTAPP_INTR_RTIS | BM_UARTAPP_INTR_RXIS);
 +	}
 +
 +	/* TX ready */
 +	if (istat & BM_UARTAPP_INTR_TXIS) {
 +		rt_imx_mxs_auart_tx_chars(ctx);
 +
-+		ret = RTDM_IRQ_HANDLED;
-+
 +		istat &= ~BM_UARTAPP_INTR_TXIS;
++
++		ret = RTDM_IRQ_HANDLED;
 +	}
 +
 +	/* Modem CTS */
@@ -913,8 +879,6 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +		__raw_writel(BM_UARTAPP_INTR_CTSMIS, port->port.membase + HW_UARTAPP_INTR_CLR);
 +
 +		istat &= ~BM_UARTAPP_INTR_CTSMIS;
-+
-+		/* FIXME: should generate an RTDM event. */
 +
 +		ret = RTDM_IRQ_HANDLED;
 +	}
@@ -931,6 +895,19 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +		     | BM_UARTAPP_INTR_RXIS
 +		     | BM_UARTAPP_INTR_CTSMIS))
 +		dev_info(port->dev, "Unhandled status %x\n", istat);
++
++#if 0
++	/* TODO MTL Debug */
++	if (istat & BM_UARTAPP_INTR_ABDIS)	dev_info(port->dev, "Unhandled status BM_UARTAPP_INTR_ABDIS 0x%x\n", BM_UARTAPP_INTR_ABDIS);
++	if (istat & BM_UARTAPP_INTR_OEIS)	dev_info(port->dev, "Unhandled status BM_UARTAPP_INTR_OEIS 0x%x\n", BM_UARTAPP_INTR_OEIS);
++	if (istat & BM_UARTAPP_INTR_BEIS)	dev_info(port->dev, "Unhandled status BM_UARTAPP_INTR_BEIS 0x%x\n", BM_UARTAPP_INTR_BEIS);
++	if (istat & BM_UARTAPP_INTR_PEIS)	dev_info(port->dev, "Unhandled status BM_UARTAPP_INTR_PEIS 0x%x\n", BM_UARTAPP_INTR_PEIS);
++	if (istat & BM_UARTAPP_INTR_FEIS)	dev_info(port->dev, "Unhandled status BM_UARTAPP_INTR_FEIS 0x%x\n", BM_UARTAPP_INTR_FEIS);
++	if (istat & BM_UARTAPP_INTR_RTIS)	dev_info(port->dev, "Unhandled status BM_UARTAPP_INTR_RTIS 0x%x\n", BM_UARTAPP_INTR_RTIS);
++	if (istat & BM_UARTAPP_INTR_TXIS)	dev_info(port->dev, "Unhandled status BM_UARTAPP_INTR_TXIS 0x%x\n", BM_UARTAPP_INTR_TXIS);
++	if (istat & BM_UARTAPP_INTR_RXIS)	dev_info(port->dev, "Unhandled status BM_UARTAPP_INTR_RXIS 0x%x\n", BM_UARTAPP_INTR_RXIS);
++	if (istat & BM_UARTAPP_INTR_CTSMIS)	dev_info(port->dev, "Unhandled status BM_UARTAPP_INTR_CTSMIS 0x%x\n", BM_UARTAPP_INTR_CTSMIS);
++#endif
 +
 +	__raw_writel(istatus & (BM_UARTAPP_INTR_ABDIS
 +				| BM_UARTAPP_INTR_OEIS
@@ -1007,36 +984,24 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +}
 +
 +static void
++rt_imx_mxs_auart_stop_tx(struct rt_imx_mxs_auart_ctx *ctx)
++{
++	pr_info("In %s\n", __func__);
++
++	__raw_writel(BM_UARTAPP_CTRL2_TXE, ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
++}
++
++static void
 +rt_imx_mxs_auart_start_tx(struct rt_imx_mxs_auart_ctx *ctx)
 +{
 +	struct rt_imx_mxs_auart_port *port = ctx->port;
 +
 +	pr_info("In %s\n", __func__);
 +
-+#ifdef CONFIG_MECT_CUSTOMIZATION
-+	/* RTS set */
-+
-+	/* Stop RX */
-+	__raw_writel(BM_UARTAPP_CTRL2_RXE, port->port.membase + HW_UARTAPP_CTRL2_CLR);
-+#ifdef MECT_RTS_TX_ACTIVE_LOW
-+	rt_imx_mxs_auart_set_mctrl(&port->port, 0);
-+#else
-+	rt_imx_mxs_auart_set_mctrl(&port->port, TIOCM_RTS);
-+#endif
-+#endif
-+
 +	/* Enable TX */
 +	__raw_writel(BM_UARTAPP_CTRL2_TXE, port->port.membase + HW_UARTAPP_CTRL2_SET);
 +
 +	rt_imx_mxs_auart_tx_chars(ctx);
-+}
-+
-+static void
-+rt_imx_mxs_auart_stop_tx(struct rt_imx_mxs_auart_ctx *ctx)
-+{
-+	pr_info("In %s\n", __func__);
-+
-+	__raw_writel(BM_UARTAPP_CTRL2_TXE, ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
 +}
 +
 +static void
@@ -1459,17 +1424,6 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +	return ret;
 +}
 +
-+static void
-+rt_imx_mxs_auart_cleanup_ctx(struct rt_imx_mxs_auart_ctx *ctx)
-+{
-+	pr_info("In %s\n", __func__);
-+
-+	rtdm_event_destroy(&ctx->in_event);
-+	rtdm_event_destroy(&ctx->out_event);
-+	rtdm_event_destroy(&ctx->ioc_event);
-+	rtdm_mutex_destroy(&ctx->out_lock);
-+}
-+
 +static int
 +rt_imx_mxs_auart_close(struct rtdm_dev_context *context, rtdm_user_info_t *user_info)
 +{
@@ -1481,10 +1435,9 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +	pr_info("In %s\n", __func__);
 +
 +	ctx = (struct rt_imx_mxs_auart_ctx *)context->dev_private;
++	port = ctx->port;
 +
 +	rtdm_lock_get_irqsave(&ctx->lock, lock_ctx);
-+
-+	port = ctx->port;
 +
 +	__raw_writel(BM_UARTAPP_CTRL0_SFTRST, port->port.membase + HW_UARTAPP_CTRL0_SET);
 +
@@ -1496,7 +1449,11 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +	rtdm_lock_put_irqrestore(&ctx->lock, lock_ctx);
 +
 +	rtdm_irq_free(&ctx->irq_handle);
-+	rt_imx_mxs_auart_cleanup_ctx(ctx);
++
++	rtdm_event_destroy(&ctx->in_event);
++	rtdm_event_destroy(&ctx->out_event);
++	rtdm_event_destroy(&ctx->ioc_event);
++	rtdm_mutex_destroy(&ctx->out_lock);
 +
 +	if (in_history)
 +		kfree(in_history);
@@ -1513,6 +1470,10 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +	uint64_t *dummy;
 +
 +	pr_info("In %s\n", __func__);
++
++	// TODO MTL: Debug
++	monitor.itx = 0;
++	monitor.irx = 0;
 +
 +	ctx = (struct rt_imx_mxs_auart_ctx *)context->dev_private;
 +	ctx->port = (struct rt_imx_mxs_auart_port *)context->device->device_data;
@@ -1572,7 +1533,6 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +	.device_name		= "",
 +
 +	.open_nrt		= rt_imx_mxs_auart_open,
-+
 +	.ops = {
 +		.close_nrt	= rt_imx_mxs_auart_close,
 +		.ioctl_rt	= rt_imx_mxs_auart_ioctl,

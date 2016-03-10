@@ -17459,7 +17459,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 @@ -0,0 +1,3 @@
 +#!/bin/sh
 +
-+exec /local/flash/root/fcrts
++exec /local/flash/root/fcrts --daemon
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/min.profile ltib/config/platform/imx/min.profile
 --- ltib.reference/config/platform/imx/min.profile	2013-01-09 04:58:38.000000000 +0100
 +++ ltib/config/platform/imx/min.profile	2016-03-10 01:00:27.287455104 +0100

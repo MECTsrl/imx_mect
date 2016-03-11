@@ -22,7 +22,7 @@ export MECT_BUILD_APPSCRT_TAG := 0.0
 MECT_TARGET_PREFIX := MECT_
 
 # Name of the default target device image that is part of the default build.
-MECT_DEFAULT_IMAGE := TPAC1007_3
+MECT_DEFAULT_IMAGE := TPAC1007_4AA
 
 # Qt and related versions
 MECT_QT_VERSION := 4.8.5

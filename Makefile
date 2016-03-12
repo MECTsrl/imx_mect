@@ -373,6 +373,7 @@ ltibinst: $(MECT_TMPDIR) downloads
 	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); patch -p1 < $(MECT_FTPDIR)/$(MECT_LTIBINST_TARGETDIR_PATHCH)
 	if test -n "$(MECT_FSPKG)"; then cp -pv $(MECT_FSPKG) $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)/pkgs; fi
 	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); (echo -e "qy\nyes" ) | ./install
+	chmod 0775 $(MECT_LTIBDIR)
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 
 $(MECT_TMPDIR):

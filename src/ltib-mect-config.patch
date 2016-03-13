@@ -3581,7 +3581,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
-@@ -0,0 +1,2423 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
@@ -4622,6 +4622,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_WL12XX is not set
 +# CONFIG_ZD1211RW is not set
 +# CONFIG_ATH6K_LEGACY is not set
++CONFIG_RTL8192CU=m
 +
 +#
 +# Enable WiMAX (Networking options) to see the WiMAX drivers
@@ -6008,7 +6009,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
-@@ -0,0 +1,2423 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
@@ -7049,6 +7050,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_WL12XX is not set
 +# CONFIG_ZD1211RW is not set
 +# CONFIG_ATH6K_LEGACY is not set
++CONFIG_RTL8192CU=m
 +
 +#
 +# Enable WiMAX (Networking options) to see the WiMAX drivers
@@ -8435,7 +8437,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
-@@ -0,0 +1,2423 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
@@ -9476,6 +9478,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_WL12XX is not set
 +# CONFIG_ZD1211RW is not set
 +# CONFIG_ATH6K_LEGACY is not set
++CONFIG_RTL8192CU=m
 +
 +#
 +# Enable WiMAX (Networking options) to see the WiMAX drivers
@@ -10862,7 +10865,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
-@@ -0,0 +1,2423 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
@@ -11903,6 +11906,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_WL12XX is not set
 +# CONFIG_ZD1211RW is not set
 +# CONFIG_ATH6K_LEGACY is not set
++CONFIG_RTL8192CU=m
 +
 +#
 +# Enable WiMAX (Networking options) to see the WiMAX drivers
@@ -13289,7 +13293,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
-@@ -0,0 +1,2423 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
@@ -14330,6 +14334,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_WL12XX is not set
 +# CONFIG_ZD1211RW is not set
 +# CONFIG_ATH6K_LEGACY is not set
++CONFIG_RTL8192CU=m
 +
 +#
 +# Enable WiMAX (Networking options) to see the WiMAX drivers
@@ -15725,7 +15730,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  
  Summary         : Linux kernel (core of the Linux operating system)
  Name            : kernel
-@@ -12,22 +14,618 @@
+@@ -12,22 +14,620 @@
  Packager        : Rob Herring
  Group           : System Environment/Kernel
  Source          : %{pkg_name}-%{version}.tar.bz2
@@ -15790,6 +15795,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# Generic kernel patches
 +Patch41         : %{name}-%{version}-mxs_reset_block-undefined.patch
 +Patch42         : %{name}-%{version}-unlimited_stack.patch
++Patch43         : %{name}-%{version}-wifi_rtl8192cu.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -16347,6 +16353,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +
 +%patch41 -p1
 +%patch42 -p1
++%patch43 -p1
  
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/main.lkc ltib/config/platform/imx/main.lkc
 --- ltib.reference/config/platform/imx/main.lkc

@@ -77,7 +77,6 @@ rm -rf $RPM_BUILD_ROOT
 %{MECT_RFSDIR}/usr/include/atcmspinbox.h
 %{MECT_RFSDIR}/usr/include/atcmstyle.h
 %{MECT_RFSDIR}/usr/include/atcmtime.h
-%{MECT_RFSDIR}/usr/include/comm_status.h
 %{MECT_RFSDIR}/usr/include/common.h
 %{MECT_RFSDIR}/usr/include/system_ini.h
 %{MECT_RFSDIR}/usr/include/cross_table_utility.h

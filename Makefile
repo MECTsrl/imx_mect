@@ -148,6 +148,7 @@ MECT_RFSPKG_USB3G_LIBUSB1 := libusb1-rfs-1.0.20-1.$(MECT_TARGET_ARCH).rpm
 #
 
 MECT_COMMON_RFSPKGS := \
+	backports-rfs-3.12.8-1.$(MECT_TARGET_ARCH).rpm \
 	base_libs-rfs-1.2-1.$(MECT_TARGET_ARCH).rpm \
 	boa-rfs-0.94.14rc21-1.$(MECT_TARGET_ARCH).rpm \
 	busybox-rfs-1.15.0-1.$(MECT_TARGET_ARCH).rpm \
@@ -170,7 +171,6 @@ MECT_COMMON_RFSPKGS := \
 	modeps-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	mtd-utils-rfs-201006-1.$(MECT_TARGET_ARCH).rpm \
 	mysql-rfs-4.1.12-0.$(MECT_TARGET_ARCH).rpm \
-	wireless_tools-rfs-29-1.$(MECT_TARGET_ARCH).rpm \
 	ncurses-rfs-5.3-1.$(MECT_TARGET_ARCH).rpm \
 	ppp-rfs-2.4.4-1.$(MECT_TARGET_ARCH).rpm \
 	qt-embedded-rfs-4.8.5-1.$(MECT_TARGET_ARCH).rpm \
@@ -183,6 +183,7 @@ MECT_COMMON_RFSPKGS := \
 	tslib-rfs-1.0-3.$(MECT_TARGET_ARCH).rpm \
 	usb-modeswitch-data-rfs-20150627-1.$(MECT_TARGET_ARCH).rpm \
 	usb-modeswitch-rfs-2.2.5-1.$(MECT_TARGET_ARCH).rpm \
+	wireless_tools-rfs-29-1.$(MECT_TARGET_ARCH).rpm \
 	wpa_supplicant-rfs-0.5.9-1.$(MECT_TARGET_ARCH).rpm \
 	xenomai-rfs-2.6.0-1.$(MECT_TARGET_ARCH).rpm \
 	zip-rfs-3.0.0-0.$(MECT_TARGET_ARCH).rpm \

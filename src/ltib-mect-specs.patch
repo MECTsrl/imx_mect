@@ -1,7 +1,7 @@
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/backports/backports.spec ltib/dist/lfs-5.1/backports/backports.spec
 --- ltib.reference/dist/lfs-5.1/backports/backports.spec
 +++ ltib/dist/lfs-5.1/backports/backports.spec
-@@ -0,0 +1,122 @@
+@@ -0,0 +1,103 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Drivers ported from newer to older kernel versions.
@@ -15,6 +15,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +URL             : http://www.kernel.org/pub/linux/kernel/projects/backports/stable/v%{version}/backports-%{version}-%{release}.tar.xz
 +Source          : %{name}-%{version}-%{release}.tar.xz
 +Source1         : firmware-realtek_20160110-1_all.deb
++Patch1          : backports-3.12.8-no_depmod_etc.patch
 +BuildRoot       : %{_tmppath}/%{name}
 +Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -41,6 +42,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +LC_ALL=C
 +
 +%setup -n %{name}-%{version}-%{release}
++%patch1 -p1
 +
 +%Build
 +export LC_ALL
@@ -76,6 +78,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +cd -
 +
 +make install \
++	DEPMOD=/bin/true \
 +	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
@@ -83,29 +86,12 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
 +	KLIB_BUILD=${TOP}/rpm/BUILD/linux
 +
-+rm $RPM_BUILD_ROOT/%{pfx}/lib/firmware/rtlwifi/rtl8192cufw_TMSC.bin
-+rm $RPM_BUILD_ROOT/%{pfx}/lib/firmware/rtlwifi/rtl8192cufw_A.bin
-+rm $RPM_BUILD_ROOT/%{pfx}/lib/firmware/rtlwifi/rtl8192cufw_B.bin
-+rm $RPM_BUILD_ROOT/%{pfx}/lib/modules/2.6.35.3/modules.alias
-+rm $RPM_BUILD_ROOT/%{pfx}/lib/modules/2.6.35.3/modules.devname
-+rm $RPM_BUILD_ROOT/%{pfx}/lib/modules/2.6.35.3/modules.alias.bin
-+rm $RPM_BUILD_ROOT/%{pfx}/lib/modules/2.6.35.3/modules.symbols
-+rm $RPM_BUILD_ROOT/%{pfx}/lib/modules/2.6.35.3/modules.dep.bin
-+rm $RPM_BUILD_ROOT/%{pfx}/lib/modules/2.6.35.3/modules.dep
-+rm $RPM_BUILD_ROOT/%{pfx}/lib/modules/2.6.35.3/modules.builtin.bin
-+rm $RPM_BUILD_ROOT/%{pfx}/lib/modules/2.6.35.3/modules.softdep
-+rm $RPM_BUILD_ROOT/%{pfx}/lib/modules/2.6.35.3/modules.symbols.bin
-+
-+# Keep
-+#
-+# /lib/firmware/rtlwifi/rtl8192cufw.bin
-+# /lib/modules/2.6.35.3/updates/compat/compat.ko
-+# /lib/modules/2.6.35.3/updates/net/mac80211/mac80211.ko
-+# /lib/modules/2.6.35.3/updates/net/wireless/cfg80211.ko
-+# /lib/modules/2.6.35.3/updates/drivers/net/wireless/rtlwifi/rtl8192c/rtl8192c-common.ko
-+# /lib/modules/2.6.35.3/updates/drivers/net/wireless/rtlwifi/rtl_usb.ko
-+# /lib/modules/2.6.35.3/updates/drivers/net/wireless/rtlwifi/rtl8192cu/rtl8192cu.ko
-+# /lib/modules/2.6.35.3/updates/drivers/net/wireless/rtlwifi/rtlwifi.ko
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/%{_lib}/firmware/rtlwifi/rtl8192cufw_TMSC.bin, d;
++    \,^%{pfx}/%{_lib}/firmware/rtlwifi/rtl8192cufw_A.bin, d;
++    \,^%{pfx}/%{_lib}/firmware/rtlwifi/rtl8192cufw_B.bin, d;
++' all_files.lst > rfs_files.lst
 +
 +
 +%Clean
@@ -114,16 +100,11 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +rm -rf $RPM_BUILD_ROOT
 +
-+%Files
++%Files -f all_files.lst
 +%defattr(-,root,root)
-+%{pfx}/lib/firmware/rtlwifi/rtl8192cufw.bin
-+%{pfx}/lib/modules/2.6.35.3/updates/compat/compat.ko
-+%{pfx}/lib/modules/2.6.35.3/updates/net/mac80211/mac80211.ko
-+%{pfx}/lib/modules/2.6.35.3/updates/net/wireless/cfg80211.ko
-+%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/rtlwifi/rtl8192c/rtl8192c-common.ko
-+%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/rtlwifi/rtl_usb.ko
-+%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/rtlwifi/rtl8192cu/rtl8192cu.ko
-+%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/rtlwifi/rtlwifi.ko
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec ltib/dist/lfs-5.1/base_libs/base_libs.spec
 --- ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec
 +++ ltib/dist/lfs-5.1/base_libs/base_libs.spec

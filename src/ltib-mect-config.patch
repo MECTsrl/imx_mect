@@ -15787,7 +15787,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  
  Summary         : Linux kernel (core of the Linux operating system)
  Name            : kernel
-@@ -12,22 +14,618 @@
+@@ -12,22 +14,620 @@
  Packager        : Rob Herring
  Group           : System Environment/Kernel
  Source          : %{pkg_name}-%{version}.tar.bz2
@@ -15852,6 +15852,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# Generic kernel patches
 +Patch41         : %{name}-%{version}-mxs_reset_block-undefined.patch
 +Patch42         : %{name}-%{version}-unlimited_stack.patch
++Patch43         : %{name}-%{version}-independent_wext_config.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -16409,6 +16410,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +
 +%patch41 -p1
 +%patch42 -p1
++%patch43 -p1
  
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/main.lkc ltib/config/platform/imx/main.lkc
 --- ltib.reference/config/platform/imx/main.lkc

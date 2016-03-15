@@ -4367,6 +4367,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_BT is not set
 +# CONFIG_AF_RXRPC is not set
 +CONFIG_WIRELESS=y
++CONFIG_WIRELESS_EXT=y
 +CONFIG_WEXT_CORE=y
 +CONFIG_WEXT_PROC=y
 +CONFIG_CFG80211=m
@@ -4377,7 +4378,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_CFG80211_DEBUGFS is not set
 +# CONFIG_CFG80211_INTERNAL_REGDB is not set
 +CONFIG_CFG80211_WEXT=y
-+CONFIG_WIRELESS_EXT_SYSFS=y
++# CONFIG_WIRELESS_EXT_SYSFS is not set
 +# CONFIG_LIB80211 is not set
 +CONFIG_MAC80211=m
 +CONFIG_MAC80211_HAS_RC=y
@@ -6795,6 +6796,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_BT is not set
 +# CONFIG_AF_RXRPC is not set
 +CONFIG_WIRELESS=y
++CONFIG_WIRELESS_EXT=y
 +CONFIG_WEXT_CORE=y
 +CONFIG_WEXT_PROC=y
 +CONFIG_CFG80211=m
@@ -6805,7 +6807,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_CFG80211_DEBUGFS is not set
 +# CONFIG_CFG80211_INTERNAL_REGDB is not set
 +CONFIG_CFG80211_WEXT=y
-+CONFIG_WIRELESS_EXT_SYSFS=y
++# CONFIG_WIRELESS_EXT_SYSFS is not set
 +# CONFIG_LIB80211 is not set
 +CONFIG_MAC80211=m
 +CONFIG_MAC80211_HAS_RC=y
@@ -9223,6 +9225,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_BT is not set
 +# CONFIG_AF_RXRPC is not set
 +CONFIG_WIRELESS=y
++CONFIG_WIRELESS_EXT=y
 +CONFIG_WEXT_CORE=y
 +CONFIG_WEXT_PROC=y
 +CONFIG_CFG80211=m
@@ -9233,7 +9236,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_CFG80211_DEBUGFS is not set
 +# CONFIG_CFG80211_INTERNAL_REGDB is not set
 +CONFIG_CFG80211_WEXT=y
-+CONFIG_WIRELESS_EXT_SYSFS=y
++# CONFIG_WIRELESS_EXT_SYSFS is not set
 +# CONFIG_LIB80211 is not set
 +CONFIG_MAC80211=m
 +CONFIG_MAC80211_HAS_RC=y
@@ -11651,6 +11654,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_BT is not set
 +# CONFIG_AF_RXRPC is not set
 +CONFIG_WIRELESS=y
++CONFIG_WIRELESS_EXT=y
 +CONFIG_WEXT_CORE=y
 +CONFIG_WEXT_PROC=y
 +CONFIG_CFG80211=m
@@ -11661,7 +11665,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_CFG80211_DEBUGFS is not set
 +# CONFIG_CFG80211_INTERNAL_REGDB is not set
 +CONFIG_CFG80211_WEXT=y
-+CONFIG_WIRELESS_EXT_SYSFS=y
++# CONFIG_WIRELESS_EXT_SYSFS is not set
 +# CONFIG_LIB80211 is not set
 +CONFIG_MAC80211=m
 +CONFIG_MAC80211_HAS_RC=y
@@ -14079,6 +14083,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_BT is not set
 +# CONFIG_AF_RXRPC is not set
 +CONFIG_WIRELESS=y
++CONFIG_WIRELESS_EXT=y
 +CONFIG_WEXT_CORE=y
 +CONFIG_WEXT_PROC=y
 +CONFIG_CFG80211=m
@@ -14089,7 +14094,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_CFG80211_DEBUGFS is not set
 +# CONFIG_CFG80211_INTERNAL_REGDB is not set
 +CONFIG_CFG80211_WEXT=y
-+CONFIG_WIRELESS_EXT_SYSFS=y
++# CONFIG_WIRELESS_EXT_SYSFS is not set
 +# CONFIG_LIB80211 is not set
 +CONFIG_MAC80211=m
 +CONFIG_MAC80211_HAS_RC=y
@@ -18038,7 +18043,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  PKG_I2C_TOOLS                    = i2c-tools
  PKG_WATCHDOG                     = watchdog
  PKG_DSPI                         = dspi
-@@ -407,6 +410,12 @@
+@@ -407,6 +410,13 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
@@ -18048,6 +18053,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +PKG_USB_MODESWITCH               = usb_modeswitch
 +PKG_USB_MODESWITCH_DATA          = usb_modeswitch_data
 +PKG_LAST_KERNEL_BUILD            = last-kernel-build
++PKG_BACKPORTS                    = backports
  
  # leave these as the last 3 packages in the build order
  PKG_SYSCONFIG                    = sysconfig

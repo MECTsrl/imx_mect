@@ -475,7 +475,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config
 +++ ltib/config/platform/imx/.config
-@@ -0,0 +1,648 @@
+@@ -0,0 +1,674 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -949,7 +949,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_PKG_WATCHDOG is not set
 +# CONFIG_PKG_WGET is not set
 +# CONFIG_PKG_WHICH is not set
-+# CONFIG_PKG_WIRELESS_TOOLS is not set
++CONFIG_PKG_WIRELESS_TOOLS=y
 +# CONFIG_PKG_XFSPROGS is not set
 +
 +#
@@ -1109,6 +1109,32 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_CAP_HAS_MMU=y
 +CONFIG_CAP_HAS_SHARED=y
 +CONFIG_PKG_GCC_NAME="nobuild"
++CONFIG_SYSCFG_TMPFS="tmpfs"
++CONFIG_INITTAB_LINE="::respawn:-/sbin/getty -L console 0 screen"
++CONFIG_UCLIBC_DYNAMIC_LINKER="/lib/ld-uClibc.so.0"
++CONFIG_GLIBC_DYNAMIC_LINKER="/lib/ld.so.1"
++CONFIG_SYSCFG_BAUD="115200"
++CONFIG_SYSCFG_CONSOLEDEV="ttyS0"
++CONFIG_SYSCFG_BOOTLOADER="u-boot"
++CONFIG_U_BOOT_IMAGE_TYPE="ppc"
++CONFIG_SYSCFG_RUNKERNELADDR="0x0"
++CONFIG_SYSCFG_LOADKERNELADDR="0x800000"
++CONFIG_SYSCFG_LOADDTBADDR="0x9F0000"
++CONFIG_SYSCFG_LOADRAMADDR="0xB00000"
++CONFIG_SYSCFG_CUTARG="zImage"
++CONFIG_CAP_FSL_EXT=y
++CONFIG_LTIB_RELEASE="8.1.2"
++CONFIG_CONFIG_TITLE="Freescale i.MX development platforms"
++CONFIG_PLATFORM="imx28"
++CONFIG_ERASE_BLOCK_SIZE="64"
++CONFIG_CAP_UCLIBC=y
++CONFIG_CAP_GLIBC=y
++CONFIG_CAP_LFS_5_1=y
++CONFIG_CAP_HAS_MMU=y
++CONFIG_CAP_HAS_SHARED=y
++CONFIG_PKG_GCC_NAME="nobuild"
++CONFIG_DISTRO="dist/lfs-5.1"
++CONFIG_ENDIAN="little"
 +CONFIG_SYSCFG_TMPFS="tmpfs"
 +CONFIG_INITTAB_LINE="::respawn:-/sbin/getty -L console 0 screen"
 +CONFIG_UCLIBC_DYNAMIC_LINKER="/lib/ld-uClibc.so.0"
@@ -1628,7 +1654,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#undef CONFIG_PKG_WATCHDOG
 +#undef CONFIG_PKG_WGET
 +#undef CONFIG_PKG_WHICH
-+#undef CONFIG_PKG_WIRELESS_TOOLS
++#define CONFIG_PKG_WIRELESS_TOOLS 1
 +#undef CONFIG_PKG_XFSPROGS
 +
 +/*
@@ -2806,7 +2832,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev
 +++ ltib/config/platform/imx/defconfig.dev
-@@ -0,0 +1,648 @@
+@@ -0,0 +1,674 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -3280,7 +3306,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_PKG_WATCHDOG is not set
 +# CONFIG_PKG_WGET is not set
 +# CONFIG_PKG_WHICH is not set
-+# CONFIG_PKG_WIRELESS_TOOLS is not set
++CONFIG_PKG_WIRELESS_TOOLS=y
 +# CONFIG_PKG_XFSPROGS is not set
 +
 +#
@@ -3455,6 +3481,32 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_SYSCFG_CUTARG="zImage"
 +CONFIG_CAP_FSL_EXT=y
 +CONFIG_LTIB_RELEASE="8.1.2"
++CONFIG_CONFIG_TITLE="Freescale i.MX development platforms"
++CONFIG_PLATFORM="imx28"
++CONFIG_ERASE_BLOCK_SIZE="64"
++CONFIG_CAP_UCLIBC=y
++CONFIG_CAP_GLIBC=y
++CONFIG_CAP_LFS_5_1=y
++CONFIG_CAP_HAS_MMU=y
++CONFIG_CAP_HAS_SHARED=y
++CONFIG_PKG_GCC_NAME="nobuild"
++CONFIG_DISTRO="dist/lfs-5.1"
++CONFIG_ENDIAN="little"
++CONFIG_SYSCFG_TMPFS="tmpfs"
++CONFIG_INITTAB_LINE="::respawn:-/sbin/getty -L console 0 screen"
++CONFIG_UCLIBC_DYNAMIC_LINKER="/lib/ld-uClibc.so.0"
++CONFIG_GLIBC_DYNAMIC_LINKER="/lib/ld.so.1"
++CONFIG_SYSCFG_BAUD="115200"
++CONFIG_SYSCFG_CONSOLEDEV="ttyS0"
++CONFIG_SYSCFG_BOOTLOADER="u-boot"
++CONFIG_U_BOOT_IMAGE_TYPE="ppc"
++CONFIG_SYSCFG_RUNKERNELADDR="0x0"
++CONFIG_SYSCFG_LOADKERNELADDR="0x800000"
++CONFIG_SYSCFG_LOADDTBADDR="0x9F0000"
++CONFIG_SYSCFG_LOADRAMADDR="0xB00000"
++CONFIG_SYSCFG_CUTARG="zImage"
++CONFIG_CAP_FSL_EXT=y
++CONFIG_LTIB_RELEASE="8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/dev.profile ltib/config/platform/imx/dev.profile
 --- ltib.reference/config/platform/imx/dev.profile
 +++ ltib/config/platform/imx/dev.profile
@@ -3581,11 +3633,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
-@@ -0,0 +1,2424 @@
+@@ -0,0 +1,2425 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Jan  9 16:58:25 2016
++# Tue Mar 15 19:47:53 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -6009,11 +6061,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
-@@ -0,0 +1,2424 @@
+@@ -0,0 +1,2425 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Jan  9 16:58:25 2016
++# Tue Mar 15 19:47:53 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -8437,11 +8489,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
-@@ -0,0 +1,2424 @@
+@@ -0,0 +1,2425 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Jan  9 16:58:25 2016
++# Tue Mar 15 19:47:53 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -10865,11 +10917,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
-@@ -0,0 +1,2424 @@
+@@ -0,0 +1,2425 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Jan  9 16:58:25 2016
++# Tue Mar 15 19:47:53 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -13293,11 +13345,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
-@@ -0,0 +1,2424 @@
+@@ -0,0 +1,2425 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Jan  9 16:58:25 2016
++# Tue Mar 15 19:47:53 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y

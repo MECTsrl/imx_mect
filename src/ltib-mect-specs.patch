@@ -12,7 +12,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
 +Group           : System Environment/Kernel
-+URL             : http://www.kernel.org/pub/linux/kernel/projects/backports/stable/v%{version}/backports-%{version}-%{release}.tar.xz
++URL             : http://www.kernel.org/pub/linux/kernel/projects/backports/stable/v%{version}/%{name}-%{version}-%{release}.tar.xz
 +Source          : %{name}-%{version}-%{release}.tar.xz
 +Source1         : firmware-realtek_20160110-1_all.deb
 +Patch1          : backports-3.12.8-no_depmod_etc.patch
@@ -818,6 +818,108 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
+diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/compat-drivers/compat-drivers.spec ltib/dist/lfs-5.1/compat-drivers/compat-drivers.spec
+--- ltib.reference/dist/lfs-5.1/compat-drivers/compat-drivers.spec
++++ ltib/dist/lfs-5.1/compat-drivers/compat-drivers.spec
+@@ -0,0 +1,98 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++%define pkg_rc rc4
++%define pkg_bld su
++
++Summary         : Drivers ported from newer kernels.
++Name            : compat-drivers
++Version         : 3.9
++Release         : 2
++License         : GPL
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System Environment/Kernel
++URL             : https://www.kernel.org/pub/linux/kernel/projects/backports/stable/v%{version}-%{pkg_rc}/%{name}-%{version}-%{release}-%{pkg_bld}.tar.xz
++Source          : %{name}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}.tar.xz
++Source1         : firmware-realtek_20160110-1_all.deb
++Patch1          : compat-drivers-3.9-rc4-2-su-no_depmod_etc.patch
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Contents trimmed down to just the run time files.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System Environment/Kernel
++AutoReqProv     : no
++
++%Description rfs
++%name} package contents is trimmed to just
++the files that are needed at run time on the target.
++
++
++%Description
++%{name} provides drivers released on newer kernels
++backported for usage on older kernels.
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++%setup -n %{name}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
++%patch1 -p1
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++./scripts/driver-select rtlwifi
++
++make \
++	prefix=%{_prefix} \
++	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
++	ARCH=$LINTARCH \
++	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
++	KLIB_BUILD=${TOP}/rpm/BUILD/linux
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++mkdir -p $RPM_BUILD_ROOT/%{pfx}/usr/sbin
++
++cd $RPM_BUILD_ROOT/%{pfx}
++ar -p %{SOURCE1} data.tar.xz | tar xJvf - $( ar -p %{SOURCE1} data.tar.xz | tar tJf - | grep -i 8192cu )
++cd -
++
++make install \
++	DEPMOD=/bin/true \
++	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
++	prefix=%{_prefix} \
++	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
++	ARCH=$LINTARCH \
++	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
++	KLIB_BUILD=${TOP}/rpm/BUILD/linux
++
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,^%{pfx}/%{_lib}/firmware/rtlwifi/rtl8192cufw_TMSC.bin, d;
++    \,^%{pfx}/%{_lib}/firmware/rtlwifi/rtl8192cufw_A.bin, d;
++    \,^%{pfx}/%{_lib}/firmware/rtlwifi/rtl8192cufw_B.bin, d;
++    \,^%{pfx}%{_libdir}, d;
++    \,^%{pfx}%{_sbindir}, d;
++' all_files.lst > rfs_files.lst
++
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec

@@ -147,12 +147,14 @@ MECT_RFSPKG_USB3G_LIBUSB1 := libusb1-rfs-1.0.20-1.$(MECT_TARGET_ARCH).rpm
 # Package list for creating the root file system for various targets.
 #
 
+#backports-rfs-3.12.8-1.$(MECT_TARGET_ARCH).rpm \
+
 MECT_COMMON_RFSPKGS := \
-	backports-rfs-3.12.8-1.$(MECT_TARGET_ARCH).rpm \
 	base_libs-rfs-1.2-1.$(MECT_TARGET_ARCH).rpm \
 	boa-rfs-0.94.14rc21-1.$(MECT_TARGET_ARCH).rpm \
 	busybox-rfs-1.15.0-1.$(MECT_TARGET_ARCH).rpm \
 	cantest-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
+	compat-drivers-rfs-3.9-2.$(MECT_TARGET_ARCH).rpm \
 	dhcp-rfs-3.0.3b1-1.$(MECT_TARGET_ARCH).rpm \
 	dropbear-rfs-0.52-1.$(MECT_TARGET_ARCH).rpm \
 	e2fsprogs-rfs-1.41.4-1.$(MECT_TARGET_ARCH).rpm \

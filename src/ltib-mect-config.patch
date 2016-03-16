@@ -3633,11 +3633,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
-@@ -0,0 +1,2425 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Tue Mar 15 19:47:53 2016
++# Tue Mar 15 23:33:56 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -4675,7 +4675,6 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_WL12XX is not set
 +# CONFIG_ZD1211RW is not set
 +# CONFIG_ATH6K_LEGACY is not set
-+# CONFIG_RTL8192CU is not set
 +
 +#
 +# Enable WiMAX (Networking options) to see the WiMAX drivers
@@ -6062,11 +6061,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
-@@ -0,0 +1,2425 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Tue Mar 15 19:47:53 2016
++# Tue Mar 15 23:33:56 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -7104,7 +7103,6 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_WL12XX is not set
 +# CONFIG_ZD1211RW is not set
 +# CONFIG_ATH6K_LEGACY is not set
-+# CONFIG_RTL8192CU is not set
 +
 +#
 +# Enable WiMAX (Networking options) to see the WiMAX drivers
@@ -8491,11 +8489,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
-@@ -0,0 +1,2425 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Tue Mar 15 19:47:53 2016
++# Tue Mar 15 23:33:56 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -9533,7 +9531,6 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_WL12XX is not set
 +# CONFIG_ZD1211RW is not set
 +# CONFIG_ATH6K_LEGACY is not set
-+# CONFIG_RTL8192CU is not set
 +
 +#
 +# Enable WiMAX (Networking options) to see the WiMAX drivers
@@ -10920,11 +10917,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
-@@ -0,0 +1,2425 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Tue Mar 15 19:47:53 2016
++# Tue Mar 15 23:33:56 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -11962,7 +11959,6 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_WL12XX is not set
 +# CONFIG_ZD1211RW is not set
 +# CONFIG_ATH6K_LEGACY is not set
-+# CONFIG_RTL8192CU is not set
 +
 +#
 +# Enable WiMAX (Networking options) to see the WiMAX drivers
@@ -13349,11 +13345,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
-@@ -0,0 +1,2425 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Tue Mar 15 19:47:53 2016
++# Tue Mar 15 23:33:56 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -14391,7 +14387,6 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_WL12XX is not set
 +# CONFIG_ZD1211RW is not set
 +# CONFIG_ATH6K_LEGACY is not set
-+# CONFIG_RTL8192CU is not set
 +
 +#
 +# Enable WiMAX (Networking options) to see the WiMAX drivers
@@ -18045,7 +18040,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  PKG_I2C_TOOLS                    = i2c-tools
  PKG_WATCHDOG                     = watchdog
  PKG_DSPI                         = dspi
-@@ -407,6 +410,13 @@
+@@ -407,6 +410,14 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
@@ -18055,7 +18050,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +PKG_USB_MODESWITCH               = usb_modeswitch
 +PKG_USB_MODESWITCH_DATA          = usb_modeswitch_data
 +PKG_LAST_KERNEL_BUILD            = last-kernel-build
-+PKG_BACKPORTS                    = backports
++#PKG_BACKPORTS                    = backports
++PKG_COMPAT_DRIVERS               = compat-drivers
  
  # leave these as the last 3 packages in the build order
  PKG_SYSCONFIG                    = sysconfig

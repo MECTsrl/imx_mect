@@ -5463,40 +5463,47 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
 --- ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
 +++ ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
-@@ -7,10 +7,24 @@
+@@ -7,13 +7,28 @@
  License         : GPL
  Vendor          : Freescale
  Packager        : Sam Yang
 -Group           : Application/System
 +Group           : Applications/System
  Source          : %{name}-%{version}.tar.gz
++Patch1          : wpa_supplicant-0.5.9-install_prefix.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
 +
 +
 +%Package rfs
-+Summary         : Trimmed wpa_supplicant to just the runtimes needed on the root file system.
++Summary         : Trimmed %{name} to just the runtimes needed on the root file system.
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
 +Group           : Applications/System
 +AutoReqProv     : no
 +
 +%Description rfs
-+wpa_supplicant package contents restricted to just the runtimes
++%{name} package contents reduced to just the runtimes
 +that are needed on the target.
 +
  
  %Description
- wpa_supplicant is an implementation of the WPA Supplicant component,
-@@ -22,9 +36,15 @@
+-wpa_supplicant is an implementation of the WPA Supplicant component,
++%{name} is an implementation of the WPA Supplicant component,
+ i.e., the part that runs in the client stations. It implements WPA key
+ negotiation with a WPA Authenticator and EAP authentication with
+ Authentication Server. In addition, it controls the roaming and IEEE
+@@ -22,9 +37,16 @@
  %{summary}
  
  %Prep
+-%setup 
 +export LC_ALL
 +LC_ALL=C
 +
- %setup 
++%setup
++%patch1 -p1 
  
  %Build
 +export LC_ALL
@@ -5505,17 +5512,36 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  #Create .config file for build
  cat > .config << EOF
  #CONFIG_DRIVER_HOSTAP=n
-@@ -79,16 +99,29 @@
- make CONFIG_L2_PACKET=linux
+@@ -62,33 +84,31 @@
+ CONFIG_L2_PACKET=linux
+ EOF
+ 
+-#Create a default ap config file
+-cat > ap_config.conf << EOF
+-ctrl_interface=/var/run/wpa_supplicant
+-update_config=1
+-
+-network={
+-        ssid="cisco-2"
+-        key_mgmt=NONE
+-        auth_alg=OPEN
+-        disabled=1
+-        id_str="p2"
+-}
+-EOF
+-
+-make CONFIG_L2_PACKET=linux
++make CONFIG_L2_PACKET=linux prefix=%{_prefix}
  
  %Install
 +export LC_ALL
 +LC_ALL=C
 +
  rm -rf $RPM_BUILD_ROOT
++
  make install CONFIG_L2_PACKET=linux prefix=%{_prefix} DESTDIR=$RPM_BUILD_ROOT/%{pfx}
- mkdir -p  $RPM_BUILD_ROOT/%{pfx}/usr/etc/unifi
- cp ap_config.conf $RPM_BUILD_ROOT/%{pfx}/usr/etc/unifi
+-mkdir -p  $RPM_BUILD_ROOT/%{pfx}/usr/etc/unifi
+-cp ap_config.conf $RPM_BUILD_ROOT/%{pfx}/usr/etc/unifi
  
 +cd %{_builddir}/%{name}-%{version}
 +( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst

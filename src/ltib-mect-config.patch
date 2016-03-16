@@ -475,7 +475,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config
 +++ ltib/config/platform/imx/.config
-@@ -0,0 +1,674 @@
+@@ -0,0 +1,649 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -950,6 +950,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_PKG_WGET is not set
 +# CONFIG_PKG_WHICH is not set
 +CONFIG_PKG_WIRELESS_TOOLS=y
++CONFIG_PKG_COMPAT_DRIVERS=y
 +# CONFIG_PKG_XFSPROGS is not set
 +
 +#
@@ -1124,32 +1125,6 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_SYSCFG_CUTARG="zImage"
 +CONFIG_CAP_FSL_EXT=y
 +CONFIG_LTIB_RELEASE="8.1.2"
-+CONFIG_CONFIG_TITLE="Freescale i.MX development platforms"
-+CONFIG_PLATFORM="imx28"
-+CONFIG_ERASE_BLOCK_SIZE="64"
-+CONFIG_CAP_UCLIBC=y
-+CONFIG_CAP_GLIBC=y
-+CONFIG_CAP_LFS_5_1=y
-+CONFIG_CAP_HAS_MMU=y
-+CONFIG_CAP_HAS_SHARED=y
-+CONFIG_PKG_GCC_NAME="nobuild"
-+CONFIG_DISTRO="dist/lfs-5.1"
-+CONFIG_ENDIAN="little"
-+CONFIG_SYSCFG_TMPFS="tmpfs"
-+CONFIG_INITTAB_LINE="::respawn:-/sbin/getty -L console 0 screen"
-+CONFIG_UCLIBC_DYNAMIC_LINKER="/lib/ld-uClibc.so.0"
-+CONFIG_GLIBC_DYNAMIC_LINKER="/lib/ld.so.1"
-+CONFIG_SYSCFG_BAUD="115200"
-+CONFIG_SYSCFG_CONSOLEDEV="ttyS0"
-+CONFIG_SYSCFG_BOOTLOADER="u-boot"
-+CONFIG_U_BOOT_IMAGE_TYPE="ppc"
-+CONFIG_SYSCFG_RUNKERNELADDR="0x0"
-+CONFIG_SYSCFG_LOADKERNELADDR="0x800000"
-+CONFIG_SYSCFG_LOADDTBADDR="0x9F0000"
-+CONFIG_SYSCFG_LOADRAMADDR="0xB00000"
-+CONFIG_SYSCFG_CUTARG="zImage"
-+CONFIG_CAP_FSL_EXT=y
-+CONFIG_LTIB_RELEASE="8.1.2"
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config.cmd ltib/config/platform/imx/.config.cmd
 --- ltib.reference/config/platform/imx/.config.cmd
 +++ ltib/config/platform/imx/.config.cmd
@@ -1179,7 +1154,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h
 +++ ltib/config/platform/imx/.tmpconfig.h
-@@ -0,0 +1,649 @@
+@@ -0,0 +1,650 @@
 +/*
 + * Automatically generated C config: don't edit
 + * LTIB version: 8.1.2
@@ -1655,6 +1630,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#undef CONFIG_PKG_WGET
 +#undef CONFIG_PKG_WHICH
 +#define CONFIG_PKG_WIRELESS_TOOLS 1
++#define CONFIG_PKG_COMPAT_DRIVERS 1
 +#undef CONFIG_PKG_XFSPROGS
 +
 +/*
@@ -2832,7 +2808,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev
 +++ ltib/config/platform/imx/defconfig.dev
-@@ -0,0 +1,674 @@
+@@ -0,0 +1,649 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -3307,6 +3283,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_PKG_WGET is not set
 +# CONFIG_PKG_WHICH is not set
 +CONFIG_PKG_WIRELESS_TOOLS=y
++CONFIG_PKG_COMPAT_DRIVERS=y
 +# CONFIG_PKG_XFSPROGS is not set
 +
 +#
@@ -3466,32 +3443,6 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_CAP_HAS_MMU=y
 +CONFIG_CAP_HAS_SHARED=y
 +CONFIG_PKG_GCC_NAME="nobuild"
-+CONFIG_SYSCFG_TMPFS="tmpfs"
-+CONFIG_INITTAB_LINE="::respawn:-/sbin/getty -L console 0 screen"
-+CONFIG_UCLIBC_DYNAMIC_LINKER="/lib/ld-uClibc.so.0"
-+CONFIG_GLIBC_DYNAMIC_LINKER="/lib/ld.so.1"
-+CONFIG_SYSCFG_BAUD="115200"
-+CONFIG_SYSCFG_CONSOLEDEV="ttyS0"
-+CONFIG_SYSCFG_BOOTLOADER="u-boot"
-+CONFIG_U_BOOT_IMAGE_TYPE="ppc"
-+CONFIG_SYSCFG_RUNKERNELADDR="0x0"
-+CONFIG_SYSCFG_LOADKERNELADDR="0x800000"
-+CONFIG_SYSCFG_LOADDTBADDR="0x9F0000"
-+CONFIG_SYSCFG_LOADRAMADDR="0xB00000"
-+CONFIG_SYSCFG_CUTARG="zImage"
-+CONFIG_CAP_FSL_EXT=y
-+CONFIG_LTIB_RELEASE="8.1.2"
-+CONFIG_CONFIG_TITLE="Freescale i.MX development platforms"
-+CONFIG_PLATFORM="imx28"
-+CONFIG_ERASE_BLOCK_SIZE="64"
-+CONFIG_CAP_UCLIBC=y
-+CONFIG_CAP_GLIBC=y
-+CONFIG_CAP_LFS_5_1=y
-+CONFIG_CAP_HAS_MMU=y
-+CONFIG_CAP_HAS_SHARED=y
-+CONFIG_PKG_GCC_NAME="nobuild"
-+CONFIG_DISTRO="dist/lfs-5.1"
-+CONFIG_ENDIAN="little"
 +CONFIG_SYSCFG_TMPFS="tmpfs"
 +CONFIG_INITTAB_LINE="::respawn:-/sbin/getty -L console 0 screen"
 +CONFIG_UCLIBC_DYNAMIC_LINKER="/lib/ld-uClibc.so.0"
@@ -17993,7 +17944,28 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3862,6 +3929,11 @@
+@@ -3487,11 +3554,19 @@
+     depends CAP_HAS_MMU
+     bool "wireless-tools"
+     help
+-      This package contain the Wireless tools used to manipulate the
++      This package contains the Wireless tools used to manipulate the
+       Wireless Extension. The Wireless Extension is an interface allowing
+       you to set Wireless LAN specific parameters and get specific
+       statistics for wireless networking equipment.
+ 
++config PKG_COMPAT_DRIVERS
++    bool "compat-drivers"
++    help
++      This package contains device drivers from later kernel
++      versions that are backported for use on earlier versions.
++      Currently it provides the rtl8192cu driver needed to
++      support USB wireless cards based on Realtek 8192CU chip.
++
+ config PKG_XFSPROGS
+     bool "xfsprogs"
+     help
+@@ -3862,6 +3937,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  
@@ -18040,7 +18012,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  PKG_I2C_TOOLS                    = i2c-tools
  PKG_WATCHDOG                     = watchdog
  PKG_DSPI                         = dspi
-@@ -407,6 +410,14 @@
+@@ -407,6 +410,13 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
@@ -18050,7 +18022,6 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +PKG_USB_MODESWITCH               = usb_modeswitch
 +PKG_USB_MODESWITCH_DATA          = usb_modeswitch_data
 +PKG_LAST_KERNEL_BUILD            = last-kernel-build
-+#PKG_BACKPORTS                    = backports
 +PKG_COMPAT_DRIVERS               = compat-drivers
  
  # leave these as the last 3 packages in the build order

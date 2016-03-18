@@ -923,7 +923,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec
-@@ -10,6 +10,7 @@
+@@ -10,36 +10,62 @@
  Packager        : John Faith
  Group           : Applications/Internet
  Source          : dhcp-3.0.3b1.tgz
@@ -931,8 +931,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  Patch1          : dhcp-3.0.3b1-sip.patch
  Patch2          : dhcp-3.0.3b1-defaults.patch
  Patch3          : dhcp-3.0.3b1-types.patch
-@@ -17,12 +18,28 @@
+ Patch4          : dhcp-3.0.3b1-usesockets.patch
  Patch5          : dhcp-3.0.3b1-compat-with-linux-3.0.patch
++Patch6          : dhcp-3.0.3b1-fix_string_tests_script.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 -URL             : http://www.isc.org/sw/dhcp/
@@ -961,8 +962,10 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %setup -n %{name}-%{version}
  %patch1 -p1
  %patch2 -p1
-@@ -31,15 +48,22 @@
+ %patch3 -p1
+ %patch4 -p1
  %patch5 -p1
++%patch6 -p1
  
  %Build
 +export LC_ALL
@@ -989,7 +992,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  for i in %pfx/%base/etc/test %pfx/%base/etc/rc.d \
           %pfx/%base/sbin/S30dhclient %pfx/%_prefix/local
-@@ -86,10 +110,21 @@
+@@ -86,10 +112,21 @@
       done
  fi
  
@@ -2813,7 +2816,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,84 @@
+@@ -10,40 +10,87 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -2890,6 +2893,9 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +# Set execution permissions for fcrts.sh script.
 +test -x $RPM_BUILD_ROOT/%{pfx}/usr/bin/fcrts.sh || chmod 755 $RPM_BUILD_ROOT/%{pfx}/usr/bin/fcrts.sh
++
++# Set execution permissions for wifi.sh script.
++test -x $RPM_BUILD_ROOT/%{pfx}/usr/sbin/wifi.sh || chmod 755 $RPM_BUILD_ROOT/%{pfx}/usr/sbin/wifi.sh
 +
 +cd %{_builddir}
 +( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst

@@ -17470,6 +17470,124 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#!/bin/sh
 +
 +exec /local/root/fcrts
+diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh ltib/config/platform/imx/merge/usr/sbin/wifi.sh
+--- ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh
++++ ltib/config/platform/imx/merge/usr/sbin/wifi.sh
+@@ -0,0 +1,114 @@
++#!/bin/sh
++
++wlan="wlan0"
++ctrl_dir=/var/run/wpa_supplicant
++conf_dir=/etc/wpa_supplicant
++conf_file="$conf_dir/default.conf"
++
++
++setup()
++{
++    mkdir -p "$conf_dir"
++    mkdir -p "$ctrl_dir"
++
++cat > "$conf_file" <<EOF
++# File automatically created by $0.  Do not edit.
++
++ctrl_interface=$ctrl_dir
++
++update_config=0
++
++ap_scan=1
++
++network={
++    ssid="$1"
++    psk="$2"
++}
++EOF
++
++    # Reconfigure the interface if wpa_supplicant is active.
++    if wpa_cli status > /dev/null 2>&1; then
++        wpa_cli reconfigure
++        iwconfig "$wlan" essid ""
++    fi
++
++    return 0
++}
++
++start()
++{
++    if wpa_cli status > /dev/null 2>&1; then
++        iwconfig "$wlan" essid ""       # Force reassociation.
++
++        # TODO Force network (re)configuration.
++    else
++        wpa_supplicant -B -i "$wlan" -c "$conf_file"
++
++        # TODO Add network configuration.
++    fi
++}
++
++stop()
++{
++    wpa_cli terminate > /dev/null 2>&1
++    ifconfig "$wlan" down
++}
++
++scan()
++{
++    tf=/tmp/`basename $0`-$$.tmp
++
++        #/^\s*Quality=/ { s/^\s*//; s/\s+/\n/; s/^.*Signal \(level=\)/\1/; s/\s*dBm.*//; p; }
++    iwlist "$wlan" scanning > "$tf"
++    sed -n '
++        /^\s*ESSID:/ { s/^\s*//; s/:/=/; s/"//g; p; }
++        /^\s*Quality=/ { s/^\s*//; s/\s\+/\n/; s/Signal\s*//; s/\s\+dBm.*//; p; }
++    ' "$tf" \
++    | awk -F= '
++        /^ESSID/ {
++            essid = $2;
++
++            print essid "\t" level "\t" quality;
++
++            essid = "";
++            level = "";
++            quality = "";
++        }
++
++        /^Quality/ {
++            quality = $2;
++        }
++
++        /^level/ {
++            level = $2;
++        }
++    '
++
++    rm -f "$tf"
++}
++
++
++action="$1"
++shift
++
++case "$action" in
++    "setup")
++        setup "$@"
++    ;;
++
++    "start")
++        start
++    ;;
++
++    "stop")
++        stop
++    ;;
++
++    "scan")
++        scan
++    ;;
++
++    *)
++        echo "Unknown option \`$1'."
++    ;;
++esac
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/min.profile ltib/config/platform/imx/min.profile
 --- ltib.reference/config/platform/imx/min.profile
 +++ ltib/config/platform/imx/min.profile

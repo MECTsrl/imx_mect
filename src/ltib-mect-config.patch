@@ -17473,12 +17473,12 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh ltib/config/platform/imx/merge/usr/sbin/wifi.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/wifi.sh
-@@ -0,0 +1,114 @@
+@@ -0,0 +1,141 @@
 +#!/bin/sh
 +
 +wlan="wlan0"
-+ctrl_dir=/var/run/wpa_supplicant
-+conf_dir=/etc/wpa_supplicant
++ctrl_dir=/local/var/run/wpa_supplicant
++conf_dir=/local/etc/wpa_supplicant
 +conf_file="$conf_dir/default.conf"
 +
 +
@@ -17503,9 +17503,13 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +EOF
 +
 +    # Reconfigure the interface if wpa_supplicant is active.
-+    if wpa_cli status > /dev/null 2>&1; then
-+        wpa_cli reconfigure
++    if wpa_cli -p $ctrl_dir status; then
++        wpa_cli -p $ctrl_dir reconfigure
 +        iwconfig "$wlan" essid ""
++
++        killall dhclient 2>/dev/null
++        sleep 3         # Let the card associate to the AP
++        dhclient -nw $wlan
 +    fi
 +
 +    return 0
@@ -17513,29 +17517,50 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +
 +start()
 +{
-+    if wpa_cli status > /dev/null 2>&1; then
++    if wpa_cli -p $ctrl_dir status; then
 +        iwconfig "$wlan" essid ""       # Force reassociation.
 +
 +        # TODO Force network (re)configuration.
 +    else
-+        wpa_supplicant -B -i "$wlan" -c "$conf_file"
-+
-+        # TODO Add network configuration.
++        wpa_supplicant -B -i "$wlan" -c "$conf_file" || return 1
 +    fi
++
++    killall dhclient 2>/dev/null
++    sleep 3             # Let the card associate to the AP
++    dhclient -nw $wlan
++
++    return 0
 +}
 +
 +stop()
 +{
-+    wpa_cli terminate > /dev/null 2>&1
++    wpa_cli -p $ctrl_dir terminate
 +    ifconfig "$wlan" down
++    killall dhclient 2>/dev/null
++
++    return 0
 +}
 +
 +scan()
 +{
-+    tf=/tmp/`basename $0`-$$.tmp
++    # Silence any unrelated message on stdout.
 +
-+        #/^\s*Quality=/ { s/^\s*//; s/\s+/\n/; s/^.*Signal \(level=\)/\1/; s/\s*dBm.*//; p; }
-+    iwlist "$wlan" scanning > "$tf"
++    tf=/tmp/`basename $0`-$$.tmp || return 1
++
++    wpa_cli -p $ctrl_dir status > /dev/null
++    status=$?
++    
++    if test "$status" -ne 0; then
++        ifconfig $wlan up > /dev/null || return 1
++    fi
++
++    iwlist "$wlan" scanning > "$tf" || return 1
++    
++    if test "$status" -ne 0; then
++        ifconfig $wlan down > /dev/null
++    fi
++    
++    # stdout: <ESSID>\t<level>\t<quality>
 +    sed -n '
 +        /^\s*ESSID:/ { s/^\s*//; s/:/=/; s/"//g; p; }
 +        /^\s*Quality=/ { s/^\s*//; s/\s\+/\n/; s/Signal\s*//; s/\s\+dBm.*//; p; }
@@ -17561,6 +17586,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +    '
 +
 +    rm -f "$tf"
++
++    return 0
 +}
 +
 +
@@ -17585,7 +17612,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +    ;;
 +
 +    *)
-+        echo "Unknown option \`$1'."
++        echo "Unknown option \`$action'." >&2
 +    ;;
 +esac
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/min.profile ltib/config/platform/imx/min.profile

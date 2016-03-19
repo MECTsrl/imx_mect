@@ -4,9 +4,9 @@ export LC_ALL := C
 export MECT_BUILD_RELEASE := 2.0alpha13
 
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
-MECT_BUILD_ATCMCRT_BRANCH := master
+MECT_BUILD_ATCMCRT_BRANCH := rt_serial
 # Set to 0.0 to skip tag checkout
-export MECT_BUILD_ATCMCRT_TAG := v1.001
+export MECT_BUILD_ATCMCRT_TAG := 0.0
 
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
@@ -448,9 +448,9 @@ qt:
 projects_setup_ATCMcontrol_RunTimeSystem:
 	test -d $(MECT_PRJDIR)
 	test -n '$(MECT_BUILD_ATCMCRT_BRANCH)'
-	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; fi
-	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_BRANCH)'; then cd ATCMcontrol_RunTimeSystem; git checkout $(MECT_BUILD_ATCMCRT_BRANCH); git pull; fi
-	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)' -a '$(MECT_BUILD_ATCMCRT_TAG)' != '0.0'; then cd ATCMcontrol_RunTimeSystem; git checkout tags/$(MECT_BUILD_ATCMCRT_TAG); fi
+	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git reset --hard origin/master; git fetch; else git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; fi
+	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_BRANCH)'; then cd ATCMcontrol_RunTimeSystem; git checkout -f origin/$(MECT_BUILD_ATCMCRT_BRANCH); fi
+	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)' -a '$(MECT_BUILD_ATCMCRT_TAG)' != '0.0'; then cd ATCMcontrol_RunTimeSystem; git checkout -f tags/$(MECT_BUILD_ATCMCRT_TAG); fi
 	ping -c1 192.168.0.254 || exit 0; \
 	svn info svn://192.168.0.254/4c_runtime/branches/base_2 || exit 0; \
 		cd $(MECT_PRJDIR); rm -rf 4c_runtime; svn checkout svn://192.168.0.254/4c_runtime/branches/base_2 4c_runtime
@@ -460,18 +460,18 @@ projects_setup_ATCMcontrol_RunTimeSystem:
 projects_setup_mect_plugins:
 	test -d $(MECT_PRJDIR)
 	test -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'
-	cd $(MECT_PRJDIR); if test -d mect_plugins; then cd mect_plugins; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins; fi
-	cd $(MECT_PRJDIR); if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'; then cd mect_plugins; git checkout $(MECT_BUILD_PLUGINSCRT_BRANCH); git pull; fi
-	cd $(MECT_PRJDIR); if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)' -a '$(MECT_BUILD_PLUGINSCRT_TAG)' != '0.0'; then cd mect_plugins; git checkout tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
+	cd $(MECT_PRJDIR); if test -d mect_plugins; then cd mect_plugins; git reset --hard origin/master; git fetch; else git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins; fi
+	cd $(MECT_PRJDIR); if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'; then cd mect_plugins; git checkout -f origin/$(MECT_BUILD_PLUGINSCRT_BRANCH); fi
+	cd $(MECT_PRJDIR); if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)' -a '$(MECT_BUILD_PLUGINSCRT_TAG)' != '0.0'; then cd mect_plugins; git checkout -f tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
 
 # Setup the local projects: mect_apps.
 .PHONY: projects_setup_mect_apps
 projects_setup_mect_apps:
 	test -d projects
 	test -n '$(MECT_BUILD_APPSCRT_BRANCH)'
-	cd projects; if test -d mect_apps; then cd mect_apps; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/mect_apps.git mect_apps; fi
-	cd projects; if test -d mect_apps -a -n '$(MECT_BUILD_APPSCRT_BRANCH)'; then cd mect_apps; git checkout $(MECT_BUILD_APPSCRT_BRANCH); git pull; fi
-	cd projects; if test -d mect_apps -a -n '$(MECT_BUILD_APPSCRT_TAG)' -a '$(MECT_BUILD_APPSCRT_TAG)' != '0.0'; then cd mect_apps; git checkout tags/$(MECT_BUILD_APPSCRT_TAG); fi
+	cd projects; if test -d mect_apps; then cd mect_apps; git reset --hard origin/master; git fetch; else git clone https://github.com/MECTsrl/mect_apps.git mect_apps; fi
+	cd projects; if test -d mect_apps -a -n '$(MECT_BUILD_APPSCRT_BRANCH)'; then cd mect_apps; git checkout -f origin/$(MECT_BUILD_APPSCRT_BRANCH); fi
+	cd projects; if test -d mect_apps -a -n '$(MECT_BUILD_APPSCRT_TAG)' -a '$(MECT_BUILD_APPSCRT_TAG)' != '0.0'; then cd mect_apps; git checkout -f tags/$(MECT_BUILD_APPSCRT_TAG); fi
 
 # Setup the local projects.
 .PHONY: projects_setup

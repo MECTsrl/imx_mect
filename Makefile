@@ -331,7 +331,7 @@ MECT_PACKAGES = \
 
 
 .PHONY: all
-all: env downloads ltib projects image target_dev
+all: env downloads setup build image target_dev
 
 # Set up the build environment.
 .PHONY: env
@@ -362,12 +362,16 @@ downloads_fc:
 	    rm -f $$f.$(MECT_MD5EXT); \
 	done; exit 0		# Don't break the build if the download list is empty.
 
-# Install and build LTIB.
-.PHONY: ltib
-ltib: ltibinst ltibpatch ltibbuild
+# Set up LTIB and projects
+.PHONY: setup
+setup: ltib_setup projects_setup
 
-.PHONY: ltibinst
-ltibinst: $(MECT_TMPDIR) downloads
+# Install and build LTIB.
+.PHONY: ltib_setup
+ltib: ltib_inst ltib_patch
+
+.PHONY: ltib_inst
+ltib_inst: $(MECT_TMPDIR) downloads
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 	tar xzvf $(MECT_FTPDIR)/$(MECT_LTIB_EVKARCH) -C $(MECT_TMPDIR)
 	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); patch -p1 < $(MECT_FTPDIR)/$(MECT_LTIBINST_TARGETDIR_PATHCH)
@@ -380,8 +384,8 @@ $(MECT_TMPDIR):
 	rm -rf $(MECT_TMPDIR)
 	mkdir -p $(MECT_TMPDIR)
 
-.PHONY: ltibpatch
-ltibpatch: downloads
+.PHONY: ltib_patch
+ltib_patch: downloads
 	test -d $(MECT_LTIBDIR)
 	cd $(MECT_LTIBDIR); cp $(MECT_FTPDIR)/$(MECT_LTIB_UBUNTU_12_04_PATCH) .
 	cd $(MECT_LTIBDIR); cp $(MECT_FTPDIR)/$(MECT_LTIB_UBUNTU_12_04_PATCH_INCLUDE_SYS_PATCH) .
@@ -401,8 +405,12 @@ ltibpatch: downloads
 		patch -p1 < $(MECT_FTPDIR)/$$p; \
 	done
 
-.PHONY: ltibbuild
-ltibbuild: hosttools
+# Build LTIB and projects
+.PHONY: build
+build: ltib_build projects_build
+
+.PHONY: ltib_build
+ltib_build: hosttools
 	sudo rm -rf $(MECT_FSDIR)/rootfs
 	sudo mkdir -p $(MECT_FSDIR)/rootfs
 	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') $(MECT_FSDIR)
@@ -478,6 +486,13 @@ projects_build:
 # Setup and build the local projects.
 .PHONY: projects
 projects: projects_setup projects_build
+
+### .PHONY: SDcard
+### SDcard:
+### 	$(MAKE) -C projects SDcard
+### .PHONY: localfs_rpm
+### localfs_rpm:
+### 	$(MAKE) -C projects localfs_rpm
 
 
 # Build the default target image.
@@ -691,7 +706,7 @@ ltib_update:
 	if test -n '$(MECT_BUILD_IMXMECT_TAG)' -a '$(MECT_BUILD_IMXMECT_TAG)' != '0.0'; then git checkout tags/$(MECT_BUILD_IMXMECT_TAG); fi
 	if ! test -d $(MECT_LTIBDIR_REF); then \
 		mv $(MECT_LTIBDIR) $(MECT_LTIBDIR).precious; \
-		$(MAKE) ltibinst ltibpatch; \
+		$(MAKE) ltib_inst ltib_patch; \
 		rm -rf $(MECT_LTIBDIR); \
 		mv $(MECT_LTIBDIR).precious $(MECT_LTIBDIR); \
 	fi
@@ -708,12 +723,6 @@ ltib_update:
 	cp $(MECT_LTIBDIR_PATCH)/.tmpconfig.h $(MECT_LTIBDIR)/.tmpconfig.h
 	cp -a $(MECT_LTIBDIR_PATCH)/ltib $(MECT_LTIBDIR)/ltib
 	rm -rf $(MECT_LTIBDIR_PATCH)
-
-.PHONY: ltib_rebuild
-ltib_rebuild:
-	rm -rf $(MECT_RPMBUILDDIR)/* $(MECT_RPMDIR)/*.rpm
-	cd $(MECT_LTIBDIR); ./ltib -f
-	$(MAKE) projects image target_dev
 
 
 # Utilities

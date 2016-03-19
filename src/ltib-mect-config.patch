@@ -1034,7 +1034,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#
 +CONFIG_SYSCFG_HOSTNAME="mect"
 +# CONFIG_SYSCFG_WANT_LOGIN_TTY is not set
-+CONFIG_SYSCFG_MODLIST="mxs-mmc xeno-mxc-mxs-auart"
++CONFIG_SYSCFG_MODLIST="mxs-mmc xeno-imx-mxs-auart"
 +CONFIG_SYSCFG_START_MDEV=y
 +CONFIG_SYSCFG_START_NETWORK=y
 +
@@ -1718,7 +1718,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 + */
 +#define CONFIG_SYSCFG_HOSTNAME "mect"
 +#undef CONFIG_SYSCFG_WANT_LOGIN_TTY
-+#define CONFIG_SYSCFG_MODLIST "mxs-mmc xeno-mxc-mxs-auart"
++#define CONFIG_SYSCFG_MODLIST "mxs-mmc xeno-imx-mxs-auart"
 +#define CONFIG_SYSCFG_START_MDEV 1
 +#define CONFIG_SYSCFG_START_NETWORK 1
 +
@@ -3375,7 +3375,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#
 +CONFIG_SYSCFG_HOSTNAME="mect"
 +# CONFIG_SYSCFG_WANT_LOGIN_TTY is not set
-+CONFIG_SYSCFG_MODLIST="mxs-mmc xeno-mxc-mxs-auart"
++CONFIG_SYSCFG_MODLIST="mxs-mmc xeno-imx-mxs-auart"
 +CONFIG_SYSCFG_START_MDEV=y
 +CONFIG_SYSCFG_START_NETWORK=y
 +

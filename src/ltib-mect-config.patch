@@ -17012,6 +17012,20 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 -type hw
 -card 0
 -}
+diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/dhclient.conf ltib/config/platform/imx/merge/etc/dhclient.conf
+--- ltib.reference/config/platform/imx/merge/etc/dhclient.conf
++++ ltib/config/platform/imx/merge/etc/dhclient.conf
+@@ -0,0 +1,10 @@
++request 
++	subnet-mask,
++	broadcast-address,
++	routers,
++	domain-name,
++	domain-name-servers,
++	host-name;
++
++require
++	subnet-mask;
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/inetd.conf ltib/config/platform/imx/merge/etc/inetd.conf
 --- ltib.reference/config/platform/imx/merge/etc/inetd.conf
 +++ ltib/config/platform/imx/merge/etc/inetd.conf

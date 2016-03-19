@@ -1049,7 +1049,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec
-@@ -10,36 +10,62 @@
+@@ -10,36 +10,63 @@
  Packager        : John Faith
  Group           : Applications/Internet
  Source          : dhcp-3.0.3b1.tgz
@@ -1110,6 +1110,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/share
 -mv $RPM_BUILD_ROOT/%{pfx}/usr/man  $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/share
 -chmod 755 $RPM_BUILD_ROOT/%{pfx}/%base/sbin/dhclient-script
++
 +make install prefix=$RPM_BUILD_ROOT%{pfx}
 +
 +mkdir -p $RPM_BUILD_ROOT%{pfx}%{_prefix}/share
@@ -1118,7 +1119,37 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  for i in %pfx/%base/etc/test %pfx/%base/etc/rc.d \
           %pfx/%base/sbin/S30dhclient %pfx/%_prefix/local
-@@ -86,10 +112,21 @@
+@@ -47,8 +74,7 @@
+     rm -rf $RPM_BUILD_ROOT/$i
+ done
+ 
+-if [ -z "$PKG_DHCP_WANT_CLIENT" ]
+-then
++if [ -z "$PKG_DHCP_WANT_CLIENT" ]; then
+     for i in %pfx/%base/etc/dhclient.conf \
+              %pfx/%base/var/state/dhcp/dhclient.leases \
+              %pfx/%base/sbin/dhclient-script \
+@@ -61,11 +87,11 @@
+              %pfx/%_mandir/man8/dhclient-script.8 \
+              %pfx/%_mandir/man8/dhclient.8
+     do
+-        rm -rf $RPM_BUILD_ROOT/$i
++        rm -rf $RPM_BUILD_ROOT$i
+     done
+ fi
+-if [ -z "$PKG_DHCP_WANT_SERVER" ]
+-then
++
++if [ -z "$PKG_DHCP_WANT_SERVER" ]; then
+     for i in %pfx/%base/etc/dhcpd.conf \
+              %pfx/%_bindir/omshell \
+              %pfx/%_mandir/man1/omshell.1 \
+@@ -82,14 +108,26 @@
+              %pfx/%_sbindir/dhcrelay \
+              %pfx/%base/var/state/dhcp/dhcpd.leases
+      do
+-        rm -rf $RPM_BUILD_ROOT/$i
++        rm -rf $RPM_BUILD_ROOT$i
       done
  fi
  
@@ -1126,6 +1157,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
 +    \,^%{pfx}%{_prefix}/share/man, d;
++    \,^%{pfx}%{_sysconfdir}/dhclient.conf, d;
 +' all_files.lst > rfs_files.lst
 +
  %Clean

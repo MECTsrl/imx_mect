@@ -475,7 +475,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config
 +++ ltib/config/platform/imx/.config
-@@ -0,0 +1,648 @@
+@@ -0,0 +1,653 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -892,6 +892,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_PKG_USB_MODESWITCH_DATA=y
 +
 +#
++# MECT projects
++#
++CONFIG_PKG_SDCARD=y
++
++#
 +# Applications
 +#
 +
@@ -1029,7 +1034,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#
 +CONFIG_SYSCFG_HOSTNAME="mect"
 +# CONFIG_SYSCFG_WANT_LOGIN_TTY is not set
-+CONFIG_SYSCFG_MODLIST="mxs-auart"
++CONFIG_SYSCFG_MODLIST="mxs-auart mxs-mmc xeno-mxc-mxs-auart"
 +CONFIG_SYSCFG_START_MDEV=y
 +CONFIG_SYSCFG_START_NETWORK=y
 +
@@ -1153,7 +1158,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h
 +++ ltib/config/platform/imx/.tmpconfig.h
-@@ -0,0 +1,649 @@
+@@ -0,0 +1,654 @@
 +/*
 + * Automatically generated C config: don't edit
 + * LTIB version: 8.1.2
@@ -1571,6 +1576,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#define CONFIG_PKG_USB_MODESWITCH_DATA 1
 +
 +/*
++ * MECT projects
++ */
++#define CONFIG_PKG_SDCARD 1
++
++/*
 + * Applications
 + */
 +
@@ -1708,7 +1718,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 + */
 +#define CONFIG_SYSCFG_HOSTNAME "mect"
 +#undef CONFIG_SYSCFG_WANT_LOGIN_TTY
-+#define CONFIG_SYSCFG_MODLIST "mxs-auart"
++#define CONFIG_SYSCFG_MODLIST "mxs-auart mxs-mmc xeno-mxc-mxs-auart"
 +#define CONFIG_SYSCFG_START_MDEV 1
 +#define CONFIG_SYSCFG_START_NETWORK 1
 +
@@ -2806,7 +2816,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev
 +++ ltib/config/platform/imx/defconfig.dev
-@@ -0,0 +1,648 @@
+@@ -0,0 +1,653 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -3223,6 +3233,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_PKG_USB_MODESWITCH_DATA=y
 +
 +#
++# MECT projects
++#
++CONFIG_PKG_SDCARD=y
++
++#
 +# Applications
 +#
 +
@@ -3360,7 +3375,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#
 +CONFIG_SYSCFG_HOSTNAME="mect"
 +# CONFIG_SYSCFG_WANT_LOGIN_TTY is not set
-+CONFIG_SYSCFG_MODLIST="mxs-auart"
++CONFIG_SYSCFG_MODLIST="mxs-auart mxs-mmc xeno-mxc-mxs-auart"
 +CONFIG_SYSCFG_START_MDEV=y
 +CONFIG_SYSCFG_START_NETWORK=y
 +
@@ -16988,6 +17003,215 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# Secure shell
 +ssh          stream  tcp      nowait  root    /usr/sbin/dropbear   dropbear      -i
 +# End.
+diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/inid.d/sdcheck ltib/config/platform/imx/merge/etc/rc.d/inid.d/sdcheck
+--- ltib.reference/config/platform/imx/merge/etc/rc.d/inid.d/sdcheck
++++ ltib/config/platform/imx/merge/etc/rc.d/inid.d/sdcheck
+@@ -0,0 +1,205 @@
++#!/bin/sh
++
++mntdir=/local/sd_card
++
++APPLICATION="$mntdir/.application"
++STORAGE="$mntdir/.extrastorage"
++
++SD_MODE=0
++
++start() {
++    # Check if there is an SD card.
++    sd_string=`dmesg | awk '/mmcblk[0-9]: p[0-9]/'`
++    if [ -n "$sd_string" ]; then
++        echo "Found an SD card device: $sd_string"
++
++        mntpoint=${sd_string//[: ]/}
++        if [ -n "$mntpoint" ]; then
++            echo "Mount point: $mntpoint"
++
++            test -d $mntdir || { mntdir=/local/sd_card; mkdir -p $mntdir; }
++
++            if mount -orw /dev/$mntpoint $mntdir 2>/dev/null; then
++                echo "Mounted SD card device to $mntpoint"
++
++                # Set up the SD card if already recognised.
++                if [ -e $APPLICATION ]; then
++                    SD_MODE=1   # application
++                elif [ -e $STORAGE ]; then
++                    SD_MODE=2   # storage
++                else
++                    # Touchscreen variables
++                    export TSLIB_CONFFILE=/usr/etc/ts.conf
++                    export TSLIB_PLUGINDIR=/usr/lib/ts
++                    export TSLIB_TSDEVICE=/dev/input/ts0
++                    export TSLIB_CONSOLEDEVICE=none
++                    export TSLIB_CALIBFILE=/local/etc/sysconfig/pointercal
++
++                    # Qt variables
++                    export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
++                    export QT_QWS_FONTDIR=/usr/lib/fonts
++                    export POINTERCAL_FILE=$TSLIB_CALIBFILE
++
++                    # Ask for instructions if the SD card is not recognised.
++                    /usr/bin/SDcard -qws
++                    SD_MODE=$?
++                fi
++            else
++                echo "Cannot mount $mntpoint to $mntdir."
++            fi
++        else
++            echo "No suitable SD card mountpoint found."
++        fi
++    else
++        echo "No SD card found."
++    fi
++
++    if [ "$SD_MODE" == 1 ]; then
++        echo "Application mode."
++
++        cd /local 2>/dev/null
++
++        test -d /local/sd_card/data || rsync -arxL /local/flash/data /local/sd_card/
++        if [ "`readlink data`" != "sd_card/data" ]; then
++            rm -f data
++            ln -s sd_card/data 2>/dev/null
++        fi
++
++        test -d /local/sd_card/control || rsync -arxL /local/flash/control /local/sd_card/
++        if [ "`readlink control`" != "sd_card/control" ]; then
++            rm -f control
++            ln -s /local/sd_card/control control 2>/dev/null
++        fi
++
++        test -d /local/sd_card/root || rsync -arxL /local/flash/root /local/sd_card/
++        if [ "`readlink root`" != "sd_card/root" ]; then
++            rm -f root
++            ln -s /local/sd_card/root root 2>/dev/null
++        fi
++
++        test -d /local/sd_card/etc || rsync -arxL /local/flash/etc /local/sd_card/
++        if [ "`readlink etc`" != "sd_card/etc" ]; then
++            rm -f etc
++            ln -s /local/sd_card/etc etc 2>/dev/null
++        fi
++
++        touch $APPLICATION
++
++        echo "Updated the links."
++
++    elif [ "$SD_MODE" == 2 ]; then
++        echo "Storage mode."
++
++        cd /local 2>/dev/null
++
++        if [ "`readlink data`" != "sd_card/data" ]; then
++            rm -f data
++            ln -s sd_card/data 2>/dev/null
++        fi
++
++        if [ "`readlink control`" != "flash/control" ]; then
++            rm -f control
++            ln -s /local/flash/control control 2>/dev/null
++        fi
++
++        if [ "`readlink root`" != "flash/root" ]; then
++            rm -f root
++            ln -s /local/flash/root root 2>/dev/null
++        fi
++
++        if [ "`readlink etc`" != "flash/etc" ]; then
++            rm -f etc
++            ln -s /local/flash/etc etc 2>/dev/null
++        fi
++
++        mkdir -p /local/sd_card/data
++
++        touch $STORAGE
++
++        echo "Updated the links."
++    else
++        echo "All-in-flash mode."
++
++        cd /local 2>/dev/null
++
++        if [ "`readlink data`" != "flash/data" ]; then
++            rm -f data
++            ln -s flash/data 2>/dev/null
++        fi
++
++        if [ "`readlink control`" != "flash/control" ]; then
++            rm -f control
++            ln -s /local/flash/control control 2>/dev/null
++        fi
++
++        if [ "`readlink root`" != "flash/root" ]; then
++            rm -f root
++            ln -s /local/flash/root root 2>/dev/null
++        fi
++
++        if [ "`readlink etc`" != "flash/etc" ]; then
++            rm -f etc
++            ln -s /local/flash/etc etc 2>/dev/null
++        fi
++
++        echo "Updated the links."
++    fi
++}
++
++stop() {
++	umount $mntdir
++
++	echo "Reset to all-in-flash mode."
++
++	cd /local 2>/dev/null
++
++	if [ "`readlink data`" != "flash/data" ]; then
++		rm -f data
++		ln -s flash/data 2>/dev/null
++	fi
++
++	if [ "`readlink control`" != "flash/control" ]; then
++		rm -f control
++		ln -s /local/flash/control control 2>/dev/null
++	fi
++
++	if [ "`readlink root`" != "flash/root" ]; then
++		rm -f root
++		ln -s /local/flash/root root 2>/dev/null
++	fi
++
++	if [ "`readlink etc`" != "flash/etc" ]; then
++		rm -f etc 2>/dev/null
++		ln -s /local/flash/etc etc 2>/dev/null
++	fi
++
++	echo "Updated the links."
++
++	echo "Done."
++}
++
++restart() {
++    stop
++    sleep 1
++    start
++}
++
++case "$1" in
++    start)
++        start
++    ;;
++
++    stop)
++        stop
++    ;;
++
++    restart)
++        restart
++    ;;
++
++    *)
++        echo "Usage: $0 {start|stop|restart}"
++
++        exit 1
++    ;;
++esac
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
@@ -17901,7 +18125,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  endmenu
  
  menu "Qtopia"
-@@ -2767,6 +2817,23 @@
+@@ -2767,6 +2817,31 @@
         Some host tools are not used when building Qtopia within ltib.
         Not building these tools saves time when building.  Select y here
         to enable designer, linguist, and assistant GUI tools.
@@ -17922,10 +18146,18 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +    help
 +       Data for the USB Modeswitch utility.
 +endmenu
++
++menu "MECT projects"
++config PKG_SDCARD
++    bool "GUI for SD card configuration"
++    default y
++    help
++        GUI for the configuration of the SD card.
++endmenu
  
  menu "Applications"
  config PKG_QTOPIA_WANT_APP_CALCULATOR
-@@ -3346,7 +3413,7 @@
+@@ -3346,7 +3421,7 @@
      bool "totem-pl-parser"
      select PKG_EVOLUTION_DATA_SERVER
      select PKG_GTK2
@@ -17934,7 +18166,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3862,6 +3929,11 @@
+@@ -3862,6 +3937,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  
@@ -17981,7 +18213,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  PKG_I2C_TOOLS                    = i2c-tools
  PKG_WATCHDOG                     = watchdog
  PKG_DSPI                         = dspi
-@@ -407,6 +410,12 @@
+@@ -407,6 +410,13 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
@@ -17991,6 +18223,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +PKG_USB_MODESWITCH               = usb_modeswitch
 +PKG_USB_MODESWITCH_DATA          = usb_modeswitch_data
 +PKG_LAST_KERNEL_BUILD            = last-kernel-build
++PKG_SDCARD                       = SDcard
  
  # leave these as the last 3 packages in the build order
  PKG_SYSCONFIG                    = sysconfig

@@ -175,6 +175,7 @@ MECT_COMMON_RFSPKGS := \
 	qt-embedded-rfs-4.8.5-1.$(MECT_TARGET_ARCH).rpm \
 	qwt-rfs-6.1-1_multiaxes.$(MECT_TARGET_ARCH).rpm \
 	rsync-rfs-2.6.5-1.$(MECT_TARGET_ARCH).rpm \
+	SDcard-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	sftp-server-rfs-4.3p2-1.$(MECT_TARGET_ARCH).rpm \
 	skell-rfs-1.18-2.$(MECT_TARGET_ARCH).rpm \
 	sqlite-rfs-3.6.12-1.$(MECT_TARGET_ARCH).rpm \
@@ -344,7 +345,6 @@ env:
 		echo "Aborting."; \
 		exit 1; \
 	fi
-	#-sudo apt-get update
 	sudo apt-get install $(MECT_PACKAGES)
 
 # Initial downloads (toolchain, LTIB, LTIB patches, spec files patches, ...)
@@ -368,7 +368,7 @@ setup: ltib_setup projects_setup
 
 # Install and build LTIB.
 .PHONY: ltib_setup
-ltib: ltib_inst ltib_patch
+ltib_setup: ltib_inst ltib_patch
 
 .PHONY: ltib_inst
 ltib_inst: $(MECT_TMPDIR) downloads

@@ -4,7 +4,7 @@ export LC_ALL := C
 export MECT_BUILD_RELEASE := 2.0alpha13
 
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
-MECT_BUILD_ATCMCRT_BRANCH := rt_serial
+MECT_BUILD_ATCMCRT_BRANCH := master
 # Set to 0.0 to skip tag checkout
 export MECT_BUILD_ATCMCRT_TAG := 0.0
 
@@ -451,7 +451,7 @@ projects_setup_ATCMcontrol_RunTimeSystem:
 	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git reset --hard origin/master; git fetch; else git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; fi
 	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_BRANCH)'; then cd ATCMcontrol_RunTimeSystem; git checkout -f origin/$(MECT_BUILD_ATCMCRT_BRANCH); fi
 	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)' -a '$(MECT_BUILD_ATCMCRT_TAG)' != '0.0'; then cd ATCMcontrol_RunTimeSystem; git checkout -f tags/$(MECT_BUILD_ATCMCRT_TAG); fi
-	ping -c1 192.168.0.254 || exit 0; \
+	ping -W2 -c1 192.168.0.254 || exit 0; \
 	svn info svn://192.168.0.254/4c_runtime/branches/base_2 || exit 0; \
 		cd $(MECT_PRJDIR); rm -rf 4c_runtime; svn checkout svn://192.168.0.254/4c_runtime/branches/base_2 4c_runtime
 

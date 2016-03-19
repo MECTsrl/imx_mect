@@ -2942,7 +2942,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,86 @@
+@@ -10,40 +10,87 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -3018,12 +3018,10 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +	/etc/rc.d/init.d/S10setup \
 +	/etc/rc.d/rc.local \
 +	/usr/bin/fcrts.sh \
++	/usr/sbin/wifi.sh \
 +; do
 +	chmod 755 $RPM_BUILD_ROOT%{pfx}$f
 +done
-+
-+# Set execution permissions for wifi.sh script.
-+test -x $RPM_BUILD_ROOT/%{pfx}/usr/sbin/wifi.sh || chmod 755 $RPM_BUILD_ROOT/%{pfx}/usr/sbin/wifi.sh
 +
 +cd %{_builddir}
 +( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst

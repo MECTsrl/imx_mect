@@ -1,0 +1,25 @@
+diff --exclude CVS --exclude .git -uNr a/Makefile b/Makefile
+--- a/Makefile	2007-12-03 02:57:34.000000000 +0100
++++ b/Makefile	2016-03-16 17:17:19.826031674 +0100
+@@ -6,6 +6,10 @@
+ CFLAGS = -MMD -O2 -Wall -g
+ endif
+ 
++ifndef prefix
++prefix = /usr/local
++endif
++
+ # Include directories for CVS version
+ CFLAGS += -I. -I../utils -I../hostapd
+ 
+@@ -32,8 +36,8 @@
+ 	echo CONFIG_WIRELESS_EXTENSION=y >> .config
+ 
+ install: all
+-	mkdir -p $(DESTDIR)/usr/local/sbin/
+-	for i in $(ALL); do cp $$i $(DESTDIR)/usr/local/sbin/$$i; done
++	mkdir -p $(DESTDIR)$(prefix)/sbin/
++	for i in $(ALL); do cp $$i $(DESTDIR)$(prefix)/sbin/$$i; done
+ 
+ OBJS = config.o \
+ 	common.o md5.o md4.o \

@@ -1,0 +1,30 @@
+diff --exclude CVS --exclude .git -uNr a/Makefile.real b/Makefile.real
+--- a/Makefile.real	2014-01-19 19:13:37.000000000 +0100
++++ b/Makefile.real	2016-03-15 20:24:25.102713190 +0100
+@@ -87,16 +87,16 @@
+ 	@$(MAKE) -C $(KLIB_BUILD) M=$(BACKPORT_PWD)			\
+ 		INSTALL_MOD_DIR=$(KMODDIR) $(KMODPATH_ARG)		\
+ 		modules_install
+-	@./scripts/blacklist.sh $(KLIB)/ $(KLIB)/$(KMODDIR)
+-	@./scripts/compress_modules.sh $(KLIB)/$(KMODDIR)
+-	@./scripts/check_depmod.sh
+-	@./scripts/backport_firmware_install.sh
+-	@/sbin/depmod -a
+-	@./scripts/update-initramfs.sh $(KLIB)
+-	@echo
+-	@echo Your backported driver modules should be installed now.
+-	@echo Reboot.
+-	@echo
++	#@./scripts/blacklist.sh $(KLIB)/ $(KLIB)/$(KMODDIR)
++	#@./scripts/compress_modules.sh $(KLIB)/$(KMODDIR)
++	#@./scripts/check_depmod.sh
++	#@./scripts/backport_firmware_install.sh
++	#@/sbin/depmod -a
++	#@./scripts/update-initramfs.sh $(KLIB)
++	#@echo
++	#@echo Your backported driver modules should be installed now.
++	#@echo Reboot.
++	#@echo
+ 
+ .PHONY: modules_install
+ modules_install: install

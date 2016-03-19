@@ -152,6 +152,7 @@ MECT_COMMON_RFSPKGS := \
 	boa-rfs-0.94.14rc21-1.$(MECT_TARGET_ARCH).rpm \
 	busybox-rfs-1.15.0-1.$(MECT_TARGET_ARCH).rpm \
 	cantest-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
+	compat-drivers-rfs-3.9-2.$(MECT_TARGET_ARCH).rpm \
 	dhcp-rfs-3.0.3b1-1.$(MECT_TARGET_ARCH).rpm \
 	dropbear-rfs-0.52-1.$(MECT_TARGET_ARCH).rpm \
 	e2fsprogs-rfs-1.41.4-1.$(MECT_TARGET_ARCH).rpm \
@@ -183,6 +184,7 @@ MECT_COMMON_RFSPKGS := \
 	tslib-rfs-1.0-3.$(MECT_TARGET_ARCH).rpm \
 	usb-modeswitch-data-rfs-20150627-1.$(MECT_TARGET_ARCH).rpm \
 	usb-modeswitch-rfs-2.2.5-1.$(MECT_TARGET_ARCH).rpm \
+	wireless_tools-rfs-29-1.$(MECT_TARGET_ARCH).rpm \
 	wpa_supplicant-rfs-0.5.9-1.$(MECT_TARGET_ARCH).rpm \
 	xenomai-rfs-2.6.0-1.$(MECT_TARGET_ARCH).rpm \
 	zip-rfs-3.0.0-0.$(MECT_TARGET_ARCH).rpm \

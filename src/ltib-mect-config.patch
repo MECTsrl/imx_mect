@@ -954,7 +954,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_PKG_WATCHDOG is not set
 +# CONFIG_PKG_WGET is not set
 +# CONFIG_PKG_WHICH is not set
-+# CONFIG_PKG_WIRELESS_TOOLS is not set
++CONFIG_PKG_WIRELESS_TOOLS=y
++CONFIG_PKG_COMPAT_DRIVERS=y
 +# CONFIG_PKG_XFSPROGS is not set
 +
 +#
@@ -1638,7 +1639,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#undef CONFIG_PKG_WATCHDOG
 +#undef CONFIG_PKG_WGET
 +#undef CONFIG_PKG_WHICH
-+#undef CONFIG_PKG_WIRELESS_TOOLS
++#define CONFIG_PKG_WIRELESS_TOOLS 1
++#define CONFIG_PKG_COMPAT_DRIVERS 1
 +#undef CONFIG_PKG_XFSPROGS
 +
 +/*
@@ -3295,7 +3297,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_PKG_WATCHDOG is not set
 +# CONFIG_PKG_WGET is not set
 +# CONFIG_PKG_WHICH is not set
-+# CONFIG_PKG_WIRELESS_TOOLS is not set
++CONFIG_PKG_WIRELESS_TOOLS=y
++CONFIG_PKG_COMPAT_DRIVERS=y
 +# CONFIG_PKG_XFSPROGS is not set
 +
 +#
@@ -3596,11 +3599,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
-@@ -0,0 +1,2423 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Jan  9 16:58:25 2016
++# Tue Mar 15 23:33:56 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -3740,7 +3743,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_MODULE_FORCE_LOAD is not set
 +CONFIG_MODULE_UNLOAD=y
 +# CONFIG_MODULE_FORCE_UNLOAD is not set
-+CONFIG_MODVERSIONS=y
++# CONFIG_MODVERSIONS is not set
 +# CONFIG_MODULE_SRCVERSION_ALL is not set
 +CONFIG_BLOCK=y
 +CONFIG_LBDAF=y
@@ -4330,6 +4333,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_BT is not set
 +# CONFIG_AF_RXRPC is not set
 +CONFIG_WIRELESS=y
++CONFIG_WIRELESS_EXT=y
 +CONFIG_WEXT_CORE=y
 +CONFIG_WEXT_PROC=y
 +CONFIG_CFG80211=m
@@ -4340,7 +4344,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_CFG80211_DEBUGFS is not set
 +# CONFIG_CFG80211_INTERNAL_REGDB is not set
 +CONFIG_CFG80211_WEXT=y
-+CONFIG_WIRELESS_EXT_SYSFS=y
++# CONFIG_WIRELESS_EXT_SYSFS is not set
 +# CONFIG_LIB80211 is not set
 +CONFIG_MAC80211=m
 +CONFIG_MAC80211_HAS_RC=y
@@ -6023,11 +6027,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
-@@ -0,0 +1,2423 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Jan  9 16:58:25 2016
++# Tue Mar 15 23:33:56 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -6167,7 +6171,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_MODULE_FORCE_LOAD is not set
 +CONFIG_MODULE_UNLOAD=y
 +# CONFIG_MODULE_FORCE_UNLOAD is not set
-+CONFIG_MODVERSIONS=y
++# CONFIG_MODVERSIONS is not set
 +# CONFIG_MODULE_SRCVERSION_ALL is not set
 +CONFIG_BLOCK=y
 +CONFIG_LBDAF=y
@@ -6757,6 +6761,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_BT is not set
 +# CONFIG_AF_RXRPC is not set
 +CONFIG_WIRELESS=y
++CONFIG_WIRELESS_EXT=y
 +CONFIG_WEXT_CORE=y
 +CONFIG_WEXT_PROC=y
 +CONFIG_CFG80211=m
@@ -6767,7 +6772,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_CFG80211_DEBUGFS is not set
 +# CONFIG_CFG80211_INTERNAL_REGDB is not set
 +CONFIG_CFG80211_WEXT=y
-+CONFIG_WIRELESS_EXT_SYSFS=y
++# CONFIG_WIRELESS_EXT_SYSFS is not set
 +# CONFIG_LIB80211 is not set
 +CONFIG_MAC80211=m
 +CONFIG_MAC80211_HAS_RC=y
@@ -8450,11 +8455,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
-@@ -0,0 +1,2423 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Jan  9 16:58:25 2016
++# Tue Mar 15 23:33:56 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -8594,7 +8599,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_MODULE_FORCE_LOAD is not set
 +CONFIG_MODULE_UNLOAD=y
 +# CONFIG_MODULE_FORCE_UNLOAD is not set
-+CONFIG_MODVERSIONS=y
++# CONFIG_MODVERSIONS is not set
 +# CONFIG_MODULE_SRCVERSION_ALL is not set
 +CONFIG_BLOCK=y
 +CONFIG_LBDAF=y
@@ -9184,6 +9189,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_BT is not set
 +# CONFIG_AF_RXRPC is not set
 +CONFIG_WIRELESS=y
++CONFIG_WIRELESS_EXT=y
 +CONFIG_WEXT_CORE=y
 +CONFIG_WEXT_PROC=y
 +CONFIG_CFG80211=m
@@ -9194,7 +9200,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_CFG80211_DEBUGFS is not set
 +# CONFIG_CFG80211_INTERNAL_REGDB is not set
 +CONFIG_CFG80211_WEXT=y
-+CONFIG_WIRELESS_EXT_SYSFS=y
++# CONFIG_WIRELESS_EXT_SYSFS is not set
 +# CONFIG_LIB80211 is not set
 +CONFIG_MAC80211=m
 +CONFIG_MAC80211_HAS_RC=y
@@ -10877,11 +10883,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
-@@ -0,0 +1,2423 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Jan  9 16:58:25 2016
++# Tue Mar 15 23:33:56 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -11021,7 +11027,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_MODULE_FORCE_LOAD is not set
 +CONFIG_MODULE_UNLOAD=y
 +# CONFIG_MODULE_FORCE_UNLOAD is not set
-+CONFIG_MODVERSIONS=y
++# CONFIG_MODVERSIONS is not set
 +# CONFIG_MODULE_SRCVERSION_ALL is not set
 +CONFIG_BLOCK=y
 +CONFIG_LBDAF=y
@@ -11611,6 +11617,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_BT is not set
 +# CONFIG_AF_RXRPC is not set
 +CONFIG_WIRELESS=y
++CONFIG_WIRELESS_EXT=y
 +CONFIG_WEXT_CORE=y
 +CONFIG_WEXT_PROC=y
 +CONFIG_CFG80211=m
@@ -11621,7 +11628,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_CFG80211_DEBUGFS is not set
 +# CONFIG_CFG80211_INTERNAL_REGDB is not set
 +CONFIG_CFG80211_WEXT=y
-+CONFIG_WIRELESS_EXT_SYSFS=y
++# CONFIG_WIRELESS_EXT_SYSFS is not set
 +# CONFIG_LIB80211 is not set
 +CONFIG_MAC80211=m
 +CONFIG_MAC80211_HAS_RC=y
@@ -13304,11 +13311,11 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
-@@ -0,0 +1,2423 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Jan  9 16:58:25 2016
++# Tue Mar 15 23:33:56 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -13448,7 +13455,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_MODULE_FORCE_LOAD is not set
 +CONFIG_MODULE_UNLOAD=y
 +# CONFIG_MODULE_FORCE_UNLOAD is not set
-+CONFIG_MODVERSIONS=y
++# CONFIG_MODVERSIONS is not set
 +# CONFIG_MODULE_SRCVERSION_ALL is not set
 +CONFIG_BLOCK=y
 +CONFIG_LBDAF=y
@@ -14038,6 +14045,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_BT is not set
 +# CONFIG_AF_RXRPC is not set
 +CONFIG_WIRELESS=y
++CONFIG_WIRELESS_EXT=y
 +CONFIG_WEXT_CORE=y
 +CONFIG_WEXT_PROC=y
 +CONFIG_CFG80211=m
@@ -14048,7 +14056,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# CONFIG_CFG80211_DEBUGFS is not set
 +# CONFIG_CFG80211_INTERNAL_REGDB is not set
 +CONFIG_CFG80211_WEXT=y
-+CONFIG_WIRELESS_EXT_SYSFS=y
++# CONFIG_WIRELESS_EXT_SYSFS is not set
 +# CONFIG_LIB80211 is not set
 +CONFIG_MAC80211=m
 +CONFIG_MAC80211_HAS_RC=y
@@ -15740,7 +15748,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  
  Summary         : Linux kernel (core of the Linux operating system)
  Name            : kernel
-@@ -12,22 +14,618 @@
+@@ -12,22 +14,620 @@
  Packager        : Rob Herring
  Group           : System Environment/Kernel
  Source          : %{pkg_name}-%{version}.tar.bz2
@@ -15805,6 +15813,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# Generic kernel patches
 +Patch41         : %{name}-%{version}-mxs_reset_block-undefined.patch
 +Patch42         : %{name}-%{version}-unlimited_stack.patch
++Patch43         : %{name}-%{version}-independent_wext_config.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -16362,6 +16371,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +
 +%patch41 -p1
 +%patch42 -p1
++%patch43 -p1
  
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/main.lkc ltib/config/platform/imx/main.lkc
 --- ltib.reference/config/platform/imx/main.lkc
@@ -17684,6 +17694,151 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#!/bin/sh
 +
 +exec /local/root/fcrts
+diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh ltib/config/platform/imx/merge/usr/sbin/wifi.sh
+--- ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh
++++ ltib/config/platform/imx/merge/usr/sbin/wifi.sh
+@@ -0,0 +1,141 @@
++#!/bin/sh
++
++wlan="wlan0"
++ctrl_dir=/local/var/run/wpa_supplicant
++conf_dir=/local/etc/wpa_supplicant
++conf_file="$conf_dir/default.conf"
++
++
++setup()
++{
++    mkdir -p "$conf_dir"
++    mkdir -p "$ctrl_dir"
++
++cat > "$conf_file" <<EOF
++# File automatically created by $0.  Do not edit.
++
++ctrl_interface=$ctrl_dir
++
++update_config=0
++
++ap_scan=1
++
++network={
++    ssid="$1"
++    psk="$2"
++}
++EOF
++
++    # Reconfigure the interface if wpa_supplicant is active.
++    if wpa_cli -p $ctrl_dir status; then
++        wpa_cli -p $ctrl_dir reconfigure
++        iwconfig "$wlan" essid ""
++
++        killall dhclient 2>/dev/null
++        sleep 3         # Let the card associate to the AP
++        dhclient -nw $wlan
++    fi
++
++    return 0
++}
++
++start()
++{
++    if wpa_cli -p $ctrl_dir status; then
++        iwconfig "$wlan" essid ""       # Force reassociation.
++
++        # TODO Force network (re)configuration.
++    else
++        wpa_supplicant -B -i "$wlan" -c "$conf_file" || return 1
++    fi
++
++    killall dhclient 2>/dev/null
++    sleep 3             # Let the card associate to the AP
++    dhclient -nw $wlan
++
++    return 0
++}
++
++stop()
++{
++    wpa_cli -p $ctrl_dir terminate
++    ifconfig "$wlan" down
++    killall dhclient 2>/dev/null
++
++    return 0
++}
++
++scan()
++{
++    # Silence any unrelated message on stdout.
++
++    tf=/tmp/`basename $0`-$$.tmp || return 1
++
++    wpa_cli -p $ctrl_dir status > /dev/null
++    status=$?
++    
++    if test "$status" -ne 0; then
++        ifconfig $wlan up > /dev/null || return 1
++    fi
++
++    iwlist "$wlan" scanning > "$tf" || return 1
++    
++    if test "$status" -ne 0; then
++        ifconfig $wlan down > /dev/null
++    fi
++    
++    # stdout: <ESSID>\t<level>\t<quality>
++    sed -n '
++        /^\s*ESSID:/ { s/^\s*//; s/:/=/; s/"//g; p; }
++        /^\s*Quality=/ { s/^\s*//; s/\s\+/\n/; s/Signal\s*//; s/\s\+dBm.*//; p; }
++    ' "$tf" \
++    | awk -F= '
++        /^ESSID/ {
++            essid = $2;
++
++            print essid "\t" level "\t" quality;
++
++            essid = "";
++            level = "";
++            quality = "";
++        }
++
++        /^Quality/ {
++            quality = $2;
++        }
++
++        /^level/ {
++            level = $2;
++        }
++    '
++
++    rm -f "$tf"
++
++    return 0
++}
++
++
++action="$1"
++shift
++
++case "$action" in
++    "setup")
++        setup "$@"
++    ;;
++
++    "start")
++        start
++    ;;
++
++    "stop")
++        stop
++    ;;
++
++    "scan")
++        scan
++    ;;
++
++    *)
++        echo "Unknown option \`$action'." >&2
++    ;;
++esac
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/min.profile ltib/config/platform/imx/min.profile
 --- ltib.reference/config/platform/imx/min.profile
 +++ ltib/config/platform/imx/min.profile

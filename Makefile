@@ -742,7 +742,7 @@ clean: clean_projects
 
 .PHONY: distclean
 distclean: clean
-	sudo rm -rf $(MECT_IMGDIR)
+	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIBDIR_REF)
 
 
 # Downloads

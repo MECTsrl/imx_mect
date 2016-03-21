@@ -1,0 +1,12 @@
+diff -ruN compat-drivers-3.9-rc4-2-su/Makefile compat-drivers-3.9-rc4-2-su.modified/Makefile
+--- compat-drivers-3.9-rc4-2-su/Makefile	2016-03-21 19:43:51.343113694 +0100
++++ compat-drivers-3.9-rc4-2-su.modified/Makefile	2016-03-21 19:43:38.534861241 +0100
+@@ -149,7 +149,7 @@
+ 	$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(PWD) BT=TRUE clean
+ 	@rm -f $(CREL_PRE)*
+ 
+-install: uninstall install-modules install-scripts
++install: install-scripts
+ 
+ install-modules: modules
+ 	$(MAKE) -C $(KLIB_BUILD) M=$(PWD) $(KMODDIR_ARG) $(KMODPATH_ARG) \

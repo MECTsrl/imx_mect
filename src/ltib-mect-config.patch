@@ -17791,6 +17791,184 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +			exit 1
 +	;;
 +esac
+diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/network ltib/config/platform/imx/merge/etc/rc.d/init.d/network
+--- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/network
++++ ltib/config/platform/imx/merge/etc/rc.d/init.d/network
+@@ -0,0 +1,174 @@
++#!/bin/sh
++
++# the net info shouldn't be moved with sdcard data 
++LOCAL_CONFIGFILE=/local/etc/sysconfig/net.conf
++CONFIGFILE=/local/flash/etc/sysconfig/net.conf
++
++if [ ! -x /sbin/ifconfig ]
++then
++    echo "/sbin/ifconfig missing, unable to configure the network"
++    exit 0
++fi
++
++if [ "$1" = "start" -o "$1" = "restart" ]
++then
++    if [ -f /etc/sysctl.conf -a -x /sbin/sysctl ]
++    then
++        echo "Running sysctl"
++        sysctl -p /etc/sysctl.conf >/dev/null 2>&1
++    fi
++
++    echo "Setting up networking on loopback device: "
++    /sbin/ifconfig lo 127.0.0.1
++    /sbin/route add -net 127.0.0.0 netmask 255.0.0.0 lo
++
++    if [ -e $LOCAL_CONFIGFILE  ]
++    then
++        source $LOCAL_CONFIGFILE
++    fi
++
++    if [ -e $CONFIGFILE  ]
++    then
++		eval `grep MAC $CONFIGFILE`
++    fi
++
++    # in case the config file contain only one network config, use it as config 0
++	if [ -z $IPADDR0 ] && [ -n $IPADDR ]
++	then
++		IPADDR0=$IPADDR
++	fi
++	if [ -z $SYSCFG_IFACE0 ] && [ -n $SYSCFG_IFACE ]
++	then
++		SYSCFG_IFACE0=$SYSCFG_IFACE
++	fi
++	if [ -z $INTERFACE0 ] && [ -n $INTERFACE ]
++	then
++		INTERFACE0=$INTERFACE
++	fi
++	if [ -z $NETMASK0 ] && [ -n $NETMASK ]
++	then
++		NETMASK0=$NETMASK
++	fi
++	if [ -z $GATEWAY0 ] && [ -n $GATEWAY ]
++	then
++		GATEWAY0=$GATEWAY
++	fi
++	if [ -z $NAMESERVER01 ] && [ -n $NAMESERVER ]
++	then
++		NAMESERVER01=$NAMESERVER
++	fi
++	if [ -n $BOOTPROTO ] && [ "$BOOTPROTO" = "[DHCP]" ]
++	then
++		IPADDR0="dhcp"
++	fi
++
++    if [ -n "$NAMESERVER01" ]
++    then
++	/bin/mount -oremount,rw /
++    fi
++    if [ -n "$NAMESERVER11" ]
++    then
++	/bin/mount -oremount,rw /
++    fi
++
++    #
++    # set up the network interfaces
++    #
++    if [ "$IPADDR0" = "" ]
++    then
++        echo ""
++        echo "Warning: no IPADDR is set"
++        echo "config screen, or directly in $CONFIGFILE."
++        echo "IP address setup bypassed"
++        echo ""
++        #sleep 2
++    fi
++
++    if [ "$SYSCFG_IFACE0" = "y" ]
++    then
++        echo "Setting up networking on $INTERFACE0: "
++        if [ -n "$MAC0" ]
++        then
++			/sbin/ifconfig $INTERFACE0 hw ether $MAC0
++		fi
++        if [ "$IPADDR0" = "dhcp" ]
++        then
++            if [ "$DEPLOYMENT_STYLE" = "NFS" ]
++            then
++                echo "You need to manually set your nameserver in /etc/resolv.conf"
++            else
++                $SYSCFG_DHCPC_CMD $INTERFACE0
++            fi
++        else  
++            # non-dhcp network startup
++            /sbin/ifconfig $INTERFACE0 $IPADDR0 netmask $NETMASK0
++
++            if [ -n "$GATEWAY0" ]
++            then 
++                echo "Adding static route for default gateway to $GATEWAY0: "
++                /sbin/route add default gateway $GATEWAY0 $INTERFACE0
++            fi
++            if [ -n "$NAMESERVER01" ]
++            then
++                echo "Setting nameserver to $NAMESERVER01 in /etc/resolv.conf: "
++                if [ `awk '{print $2}' /etc/resolv.conf  | grep -c $NAMESERVER01` -eq 0 ]
++                then
++                
++                fi 
++            fi
++            if [ -n "$NAMESERVER02" ]
++            then
++                echo "Setting nameserver to $NAMESERVER02 in /etc/resolv.conf: "
++                if [ `awk '{print $2}' /etc/resolv.conf  | grep -c $NAMESERVER02` -eq 0 ]
++                then
++                
++                fi
++            fi
++        fi
++    fi
++    if [ "$SYSCFG_IFACE1" = "y" ]
++    then
++        echo "Setting up networking on $INTERFACE1: "
++        if [ -n "$MAC1" ]
++        then
++			/sbin/ifconfig $INTERFACE1 hw ether $MAC1
++	fi
++        if [ "$IPADDR1" = "dhcp" ]
++        then
++            $SYSCFG_DHCPC_CMD $INTERFACE1
++        else  
++            # non-dhcp network startup
++            /sbin/ifconfig $INTERFACE1 $IPADDR1 netmask $NETMASK1
++
++            if [ -n "$GATEWAY1" ]
++            then 
++                echo "Adding static route for default gateway to $GATEWAY1: "
++                /sbin/route add default gateway $GATEWAY1 $INTERFACE1
++            fi
++            if [ -n "$NAMESERVER11" ]
++            then
++                echo "Setting nameserver to $NAMESERVER11 in /etc/resolv.conf: "
++                if [ `awk '{print $2}' /etc/resolv.conf  | grep -c $NAMESERVER11` -eq 0 ]
++                then
++                
++                fi
++            fi
++            if [ -n "$NAMESERVER12" ]
++            then
++                echo "Setting nameserver to $NAMESERVER12 in /etc/resolv.conf: "
++                if [ `awk '{print $2}' /etc/resolv.conf  | grep -c $NAMESERVER12` -eq 0 ]
++                then
++                
++                fi
++            fi
++        fi
++    fi
++    if [ -n "$NAMESERVER01" ]
++    then
++	/bin/mount -oremount,ro /
++    fi
++    if [ -n "$NAMESERVER11" ]
++    then
++	/bin/mount -oremount,ro /
++    fi
++fi
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/rc.local ltib/config/platform/imx/merge/etc/rc.d/rc.local
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/rc.local
 +++ ltib/config/platform/imx/merge/etc/rc.d/rc.local

@@ -2975,7 +2975,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,107 @@
+@@ -10,40 +10,108 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -3057,6 +3057,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 +# Set execution permissions (discarded by VCS).
 +for f in \
++	/etc/rc.d/inid.d/network \
 +	/etc/rc.d/inid.d/sdcheck \
 +	/etc/rc.d/init.d/autoexec \
 +	/etc/rc.d/init.d/S10setup \
@@ -4394,7 +4395,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec
 +++ ltib/dist/lfs-5.1/skell/skell.spec
-@@ -9,20 +9,89 @@
+@@ -9,20 +9,90 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -4435,6 +4436,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Patch34         : skell-1.18-1453482173.patch
 +Patch35         : skell-1.18-1453824311.patch
 +Patch36         : skell-1.18-remove_resolv_conf.patch
++Patch37         : skell-1.18-remove_network.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -4486,7 +4488,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +100,107 @@
+@@ -31,24 +101,108 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -4517,6 +4519,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%patch34 -p1
 +%patch35 -p1
 +%patch36 -p1
++%patch37 -p1
  
  %Build
 +export LC_ALL

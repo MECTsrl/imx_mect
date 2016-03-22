@@ -93,6 +93,7 @@ rm -rf $RPM_BUILD_ROOT
 %{MECT_RFSDIR}/usr/include/main.h
 %{MECT_RFSDIR}/usr/include/menu.h
 %{MECT_RFSDIR}/usr/include/numpad.h
+%{MECT_RFSDIR}/usr/include/net_conf.h
 %{MECT_RFSDIR}/usr/include/options.h
 %{MECT_RFSDIR}/usr/include/page0.h
 %{MECT_RFSDIR}/usr/include/pagebrowser.h

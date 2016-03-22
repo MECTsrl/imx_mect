@@ -1,7 +1,7 @@
 export LC_ALL := C
 
 # MECT Suite version
-export MECT_BUILD_RELEASE := 2.0b1.1
+export MECT_BUILD_RELEASE := 2.0beta2
 
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := master
@@ -140,8 +140,8 @@ MECT_RFSPKG_USBSERIAL_ZIO := kernel-rfs-dev-usbserial-zio-2.6.35.3-imx_1.1.0.$(M
 # Packages for USB 3G modems
 #
 
-MECT_RFSPKG_USB3G_MODESWITCH := usb-modeswitch-rfs-2.2.5-1.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USB3G_MODESWITCH_DATA := usb-modeswitch-data-rfs-20150627-1.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USB3G_MODESWITCH := usb-modeswitch-rfs-2.3.0-1.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USB3G_MODESWITCH_DATA := usb-modeswitch-data-rfs-20160112-1.$(MECT_TARGET_ARCH).rpm
 MECT_RFSPKG_USB3G_LIBUSB1 := libusb1-rfs-1.0.20-1.$(MECT_TARGET_ARCH).rpm
 
 # Package list for creating the root file system for various targets.

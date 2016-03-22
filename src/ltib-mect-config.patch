@@ -17128,6 +17128,23 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# Secure shell
 +ssh          stream  tcp      nowait  root    /usr/sbin/dropbear   dropbear      -i
 +# End.
+diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/mdev.conf ltib/config/platform/imx/merge/etc/mdev.conf
+--- ltib.reference/config/platform/imx/merge/etc/mdev.conf
++++ ltib/config/platform/imx/merge/etc/mdev.conf
+@@ -0,0 +1,13 @@
++# Note: the first field is a regex matcher
++# Syntax: %s %d:%d %s
++# devices user:group mode
++
++-$MODALIAS=.*  0:0   660  @modprobe  -s      "$MODALIAS"
++$MODALIAS=.*   0:0   660  $modprobe  -s  -r  "$MODALIAS"
++
++sda[0-9]       0:6   660
++sdb[0-9]       0:6   660
++
++ttyS[0-9]      0:14  640
++tty[0-9]       0:0   660
++tty.+          0:5   660
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/inid.d/sdcheck ltib/config/platform/imx/merge/etc/rc.d/inid.d/sdcheck
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/inid.d/sdcheck
 +++ ltib/config/platform/imx/merge/etc/rc.d/inid.d/sdcheck

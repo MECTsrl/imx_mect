@@ -1,0 +1,14 @@
+diff -urN a/net/wireless/Kconfig b/net/wireless/Kconfig
+--- a/net/wireless/Kconfig	2016-03-15 23:17:36.078109421 +0100
++++ b/net/wireless/Kconfig	2010-08-20 20:55:55.000000000 +0200
+@@ -1,5 +1,9 @@
+ config WIRELESS_EXT
+-	bool
++	bool "Enable wireless extensions"
++	depends on CFG80211_WEXT
++	help
++	  Tools using wext interface, like iwconfig,
++	  will need these extensions to work.
+ 
+ config WEXT_CORE
+ 	def_bool y

@@ -103,6 +103,7 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/www/display_setup.cgi.new
 %{pfx}/local/www/extract
 %{pfx}/local/www/factory_reset.cgi
+%{pfx}/local/www/factory_reset_confirm.cgi
 %{pfx}/local/www/filebrowser.cgi
 %{pfx}/local/www/filesmanager.cgi
 %{pfx}/local/www/formatsdcard.cgi

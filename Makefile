@@ -1,12 +1,12 @@
 export LC_ALL := C
 
 # MECT Suite version
-export MECT_BUILD_RELEASE := 2.0alpha5
+export MECT_BUILD_RELEASE := 2.0b1.1
 
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := master
 # Set to 0.0 to skip tag checkout
-export MECT_BUILD_ATCMCRT_TAG := v0.7
+export MECT_BUILD_ATCMCRT_TAG := 0.0
 
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
@@ -22,7 +22,7 @@ export MECT_BUILD_APPSCRT_TAG := 0.0
 MECT_TARGET_PREFIX := MECT_
 
 # Name of the default target device image that is part of the default build.
-MECT_DEFAULT_IMAGE := TPAC1007_3
+MECT_DEFAULT_IMAGE := TPAC1007_4AA
 
 # Qt and related versions
 MECT_QT_VERSION := 4.8.5
@@ -152,6 +152,7 @@ MECT_COMMON_RFSPKGS := \
 	boa-rfs-0.94.14rc21-1.$(MECT_TARGET_ARCH).rpm \
 	busybox-rfs-1.15.0-1.$(MECT_TARGET_ARCH).rpm \
 	cantest-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
+	compat-drivers-rfs-3.9-2.$(MECT_TARGET_ARCH).rpm \
 	dhcp-rfs-3.0.3b1-1.$(MECT_TARGET_ARCH).rpm \
 	dropbear-rfs-0.52-1.$(MECT_TARGET_ARCH).rpm \
 	e2fsprogs-rfs-1.41.4-1.$(MECT_TARGET_ARCH).rpm \
@@ -175,6 +176,7 @@ MECT_COMMON_RFSPKGS := \
 	qt-embedded-rfs-4.8.5-1.$(MECT_TARGET_ARCH).rpm \
 	qwt-rfs-6.1-1_multiaxes.$(MECT_TARGET_ARCH).rpm \
 	rsync-rfs-2.6.5-1.$(MECT_TARGET_ARCH).rpm \
+	SDcard-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	sftp-server-rfs-4.3p2-1.$(MECT_TARGET_ARCH).rpm \
 	skell-rfs-1.18-2.$(MECT_TARGET_ARCH).rpm \
 	sqlite-rfs-3.6.12-1.$(MECT_TARGET_ARCH).rpm \
@@ -182,6 +184,7 @@ MECT_COMMON_RFSPKGS := \
 	tslib-rfs-1.0-3.$(MECT_TARGET_ARCH).rpm \
 	usb-modeswitch-data-rfs-20150627-1.$(MECT_TARGET_ARCH).rpm \
 	usb-modeswitch-rfs-2.2.5-1.$(MECT_TARGET_ARCH).rpm \
+	wireless_tools-rfs-29-1.$(MECT_TARGET_ARCH).rpm \
 	wpa_supplicant-rfs-0.5.9-1.$(MECT_TARGET_ARCH).rpm \
 	xenomai-rfs-2.6.0-1.$(MECT_TARGET_ARCH).rpm \
 	zip-rfs-3.0.0-0.$(MECT_TARGET_ARCH).rpm \
@@ -190,6 +193,7 @@ MECT_COMMON_RFSPKGS := \
 MECT_COMMON_RFSPKGS := $(MECT_COMMON_RFSPKGS:%=$(MECT_RPMDIR)/%)
 
 MECT_COMMON_LFSPKGS := \
+	merge-lfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 	local-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	local-cgic_work-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	local-factory_data-1.0-1.$(MECT_TARGET_ARCH).rpm \
@@ -331,7 +335,7 @@ MECT_PACKAGES = \
 
 
 .PHONY: all
-all: env downloads ltib projects image target_dev
+all: env downloads setup build image target_dev
 
 # Set up the build environment.
 .PHONY: env
@@ -344,7 +348,6 @@ env:
 		echo "Aborting."; \
 		exit 1; \
 	fi
-	#-sudo apt-get update
 	sudo apt-get install $(MECT_PACKAGES)
 
 # Initial downloads (toolchain, LTIB, LTIB patches, spec files patches, ...)
@@ -362,25 +365,30 @@ downloads_fc:
 	    rm -f $$f.$(MECT_MD5EXT); \
 	done; exit 0		# Don't break the build if the download list is empty.
 
-# Install and build LTIB.
-.PHONY: ltib
-ltib: ltibinst ltibpatch ltibbuild
+# Set up LTIB and projects
+.PHONY: setup
+setup: ltib_setup projects_setup
 
-.PHONY: ltibinst
-ltibinst: $(MECT_TMPDIR) downloads
+# Install and build LTIB.
+.PHONY: ltib_setup
+ltib_setup: ltib_inst ltib_patch
+
+.PHONY: ltib_inst
+ltib_inst: $(MECT_TMPDIR) downloads
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 	tar xzvf $(MECT_FTPDIR)/$(MECT_LTIB_EVKARCH) -C $(MECT_TMPDIR)
 	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); patch -p1 < $(MECT_FTPDIR)/$(MECT_LTIBINST_TARGETDIR_PATHCH)
 	if test -n "$(MECT_FSPKG)"; then cp -pv $(MECT_FSPKG) $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)/pkgs; fi
 	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); (echo -e "qy\nyes" ) | ./install
+	chmod 0775 $(MECT_LTIBDIR)
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 
 $(MECT_TMPDIR):
 	rm -rf $(MECT_TMPDIR)
 	mkdir -p $(MECT_TMPDIR)
 
-.PHONY: ltibpatch
-ltibpatch: downloads
+.PHONY: ltib_patch
+ltib_patch: downloads
 	test -d $(MECT_LTIBDIR)
 	cd $(MECT_LTIBDIR); cp $(MECT_FTPDIR)/$(MECT_LTIB_UBUNTU_12_04_PATCH) .
 	cd $(MECT_LTIBDIR); cp $(MECT_FTPDIR)/$(MECT_LTIB_UBUNTU_12_04_PATCH_INCLUDE_SYS_PATCH) .
@@ -400,8 +408,12 @@ ltibpatch: downloads
 		patch -p1 < $(MECT_FTPDIR)/$$p; \
 	done
 
-.PHONY: ltibbuild
-ltibbuild: hosttools
+# Build LTIB and projects
+.PHONY: build
+build: ltib_build projects_build
+
+.PHONY: ltib_build
+ltib_build: hosttools
 	sudo rm -rf $(MECT_FSDIR)/rootfs
 	sudo mkdir -p $(MECT_FSDIR)/rootfs
 	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') $(MECT_FSDIR)
@@ -439,10 +451,10 @@ qt:
 projects_setup_ATCMcontrol_RunTimeSystem:
 	test -d $(MECT_PRJDIR)
 	test -n '$(MECT_BUILD_ATCMCRT_BRANCH)'
-	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; fi
-	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_BRANCH)'; then cd ATCMcontrol_RunTimeSystem; git checkout $(MECT_BUILD_ATCMCRT_BRANCH); git pull; fi
-	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)' -a '$(MECT_BUILD_ATCMCRT_TAG)' != '0.0'; then cd ATCMcontrol_RunTimeSystem; git checkout tags/$(MECT_BUILD_ATCMCRT_TAG); fi
-	ping -c1 192.168.0.254 || exit 0; \
+	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git reset --hard origin/master; git fetch; else git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; fi
+	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_BRANCH)'; then cd ATCMcontrol_RunTimeSystem; git checkout -f origin/$(MECT_BUILD_ATCMCRT_BRANCH); fi
+	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)' -a '$(MECT_BUILD_ATCMCRT_TAG)' != '0.0'; then cd ATCMcontrol_RunTimeSystem; git checkout -f tags/$(MECT_BUILD_ATCMCRT_TAG); fi
+	ping -W2 -c1 192.168.0.254 || exit 0; \
 	svn info svn://192.168.0.254/4c_runtime/branches/base_2 || exit 0; \
 		cd $(MECT_PRJDIR); rm -rf 4c_runtime; svn checkout svn://192.168.0.254/4c_runtime/branches/base_2 4c_runtime
 
@@ -451,18 +463,18 @@ projects_setup_ATCMcontrol_RunTimeSystem:
 projects_setup_mect_plugins:
 	test -d $(MECT_PRJDIR)
 	test -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'
-	cd $(MECT_PRJDIR); if test -d mect_plugins; then cd mect_plugins; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins; fi
-	cd $(MECT_PRJDIR); if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'; then cd mect_plugins; git checkout $(MECT_BUILD_PLUGINSCRT_BRANCH); git pull; fi
-	cd $(MECT_PRJDIR); if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)' -a '$(MECT_BUILD_PLUGINSCRT_TAG)' != '0.0'; then cd mect_plugins; git checkout tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
+	cd $(MECT_PRJDIR); if test -d mect_plugins; then cd mect_plugins; git reset --hard origin/master; git fetch; else git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins; fi
+	cd $(MECT_PRJDIR); if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'; then cd mect_plugins; git checkout -f origin/$(MECT_BUILD_PLUGINSCRT_BRANCH); fi
+	cd $(MECT_PRJDIR); if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)' -a '$(MECT_BUILD_PLUGINSCRT_TAG)' != '0.0'; then cd mect_plugins; git checkout -f tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
 
 # Setup the local projects: mect_apps.
 .PHONY: projects_setup_mect_apps
 projects_setup_mect_apps:
 	test -d projects
 	test -n '$(MECT_BUILD_APPSCRT_BRANCH)'
-	cd projects; if test -d mect_apps; then cd mect_apps; git fetch origin; git reset --hard origin/master; else git clone https://github.com/MECTsrl/mect_apps.git mect_apps; fi
-	cd projects; if test -d mect_apps -a -n '$(MECT_BUILD_APPSCRT_BRANCH)'; then cd mect_apps; git checkout $(MECT_BUILD_APPSCRT_BRANCH); git pull; fi
-	cd projects; if test -d mect_apps -a -n '$(MECT_BUILD_APPSCRT_TAG)' -a '$(MECT_BUILD_APPSCRT_TAG)' != '0.0'; then cd mect_apps; git checkout tags/$(MECT_BUILD_APPSCRT_TAG); fi
+	cd projects; if test -d mect_apps; then cd mect_apps; git reset --hard origin/master; git fetch; else git clone https://github.com/MECTsrl/mect_apps.git mect_apps; fi
+	cd projects; if test -d mect_apps -a -n '$(MECT_BUILD_APPSCRT_BRANCH)'; then cd mect_apps; git checkout -f origin/$(MECT_BUILD_APPSCRT_BRANCH); fi
+	cd projects; if test -d mect_apps -a -n '$(MECT_BUILD_APPSCRT_TAG)' -a '$(MECT_BUILD_APPSCRT_TAG)' != '0.0'; then cd mect_apps; git checkout -f tags/$(MECT_BUILD_APPSCRT_TAG); fi
 
 # Setup the local projects.
 .PHONY: projects_setup
@@ -477,6 +489,13 @@ projects_build:
 # Setup and build the local projects.
 .PHONY: projects
 projects: projects_setup projects_build
+
+### .PHONY: SDcard
+### SDcard:
+### 	$(MAKE) -C projects SDcard
+### .PHONY: localfs_rpm
+### localfs_rpm:
+### 	$(MAKE) -C projects localfs_rpm
 
 
 # Build the default target image.
@@ -667,17 +686,17 @@ ltib_genpatch: ltib_genpatch_config ltib_genpatch_specs ltib_genpatch_bin
 
 .PHONY: ltib_genpatch_config
 ltib_genpatch_config: $(MECT_LTIBDIR_REF)/config
-	cd $(MECT_LTIBDIR)/.. && { diff -urN --exclude=.config.old --exclude=*.config.dev --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/config $(shell basename $(MECT_LTIBDIR))/config; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.config $(shell basename $(MECT_LTIBDIR))/.config; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.config.cmd $(shell basename $(MECT_LTIBDIR))/.config.cmd; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.tmpconfig.h $(shell basename $(MECT_LTIBDIR))/.tmpconfig.h; } > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_CONFIG_PATCH); true
+	cd $(MECT_LTIBDIR)/.. && { diff -urN --exclude=.config.old --exclude=*.config.dev --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/config $(shell basename $(MECT_LTIBDIR))/config; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.config $(shell basename $(MECT_LTIBDIR))/.config; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.config.cmd $(shell basename $(MECT_LTIBDIR))/.config.cmd; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.tmpconfig.h $(shell basename $(MECT_LTIBDIR))/.tmpconfig.h; } | sed '/^\(---\|\+\+\+\) / s/\t.*//' > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_CONFIG_PATCH); true
 	cd $(MECT_FTPDIR); md5sum $(MECT_LTIB_MECT_CONFIG_PATCH) > $(MECT_LTIB_MECT_CONFIG_PATCH).$(MECT_MD5EXT)
 
 .PHONY: ltib_genpatch_specs
 ltib_genpatch_specs: $(MECT_LTIBDIR_REF)/dist
-	cd $(MECT_LTIBDIR)/.. && diff -urN --exclude=*-orig.spec --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/dist $(shell basename $(MECT_LTIBDIR))/dist > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_SPECS_PATCH); true
+	cd $(MECT_LTIBDIR)/.. && diff -urN --exclude=*-orig.spec --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/dist $(shell basename $(MECT_LTIBDIR))/dist | sed '/^\(---\|\+\+\+\) / s/\t.*//' > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_SPECS_PATCH); true
 	cd $(MECT_FTPDIR); md5sum $(MECT_LTIB_MECT_SPECS_PATCH) > $(MECT_LTIB_MECT_SPECS_PATCH).$(MECT_MD5EXT)
 
 .PHONY: ltib_genpatch_bin
 ltib_genpatch_bin: $(MECT_LTIBDIR_REF)/bin
-	cd $(MECT_LTIBDIR)/.. && { diff -urN --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/bin $(shell basename $(MECT_LTIBDIR))/bin; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/ltib $(shell basename $(MECT_LTIBDIR))/ltib; } > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_BIN_PATCH); true
+	cd $(MECT_LTIBDIR)/.. && { diff -urN --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/bin $(shell basename $(MECT_LTIBDIR))/bin; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/ltib $(shell basename $(MECT_LTIBDIR))/ltib; } | sed '/^\(---\|\+\+\+\) / s/\t.*//' > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_BIN_PATCH); true
 	cd $(MECT_FTPDIR); md5sum $(MECT_LTIB_MECT_BIN_PATCH) > $(MECT_LTIB_MECT_BIN_PATCH).$(MECT_MD5EXT)
 
 # Update an existing LTIB installation from repository.
@@ -690,7 +709,7 @@ ltib_update:
 	if test -n '$(MECT_BUILD_IMXMECT_TAG)' -a '$(MECT_BUILD_IMXMECT_TAG)' != '0.0'; then git checkout tags/$(MECT_BUILD_IMXMECT_TAG); fi
 	if ! test -d $(MECT_LTIBDIR_REF); then \
 		mv $(MECT_LTIBDIR) $(MECT_LTIBDIR).precious; \
-		$(MAKE) ltibinst ltibpatch; \
+		$(MAKE) ltib_inst ltib_patch; \
 		rm -rf $(MECT_LTIBDIR); \
 		mv $(MECT_LTIBDIR).precious $(MECT_LTIBDIR); \
 	fi
@@ -708,12 +727,6 @@ ltib_update:
 	cp -a $(MECT_LTIBDIR_PATCH)/ltib $(MECT_LTIBDIR)/ltib
 	rm -rf $(MECT_LTIBDIR_PATCH)
 
-.PHONY: ltib_rebuild
-ltib_rebuild:
-	rm -rf $(MECT_RPMBUILDDIR)/* $(MECT_RPMDIR)/*.rpm
-	cd $(MECT_LTIBDIR); ./ltib -f
-	$(MAKE) projects image target_dev
-
 
 # Utilities
 #
@@ -729,7 +742,7 @@ clean: clean_projects
 
 .PHONY: distclean
 distclean: clean
-	sudo rm -rf $(MECT_IMGDIR)
+	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIBDIR_REF)
 
 
 # Downloads

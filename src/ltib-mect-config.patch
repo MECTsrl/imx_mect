@@ -17131,7 +17131,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/mdev.conf ltib/config/platform/imx/merge/etc/mdev.conf
 --- ltib.reference/config/platform/imx/merge/etc/mdev.conf
 +++ ltib/config/platform/imx/merge/etc/mdev.conf
-@@ -0,0 +1,25 @@
+@@ -0,0 +1,58 @@
 +# Provide user, group, and mode information for devices.  If a regex matches
 +# the device name provided by sysfs, use the appropriate user:group and mode
 +# instead of the default 0:0 660.
@@ -17146,7 +17146,40 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# !: do not create device node
 +# @|$|*: run cmd if $ACTION=remove, @cmd if $ACTION=add, *cmd in all cases
 +#
-+# Note: the first field is a regex matcher
++# Environment example:
++# ACTION=add
++# ACTION=remove
++# BUSNUM=001
++# DEVICE=/proc/bus/usb/001/005
++# DEVICE=/proc/bus/usb/001/006
++# DEVNAME=bus/usb/001/006
++# DEVNUM=006
++# DEVPATH=/devices/platform/fsl-ehci/usb1/1-1
++# DEVPATH=/devices/platform/fsl-ehci/usb1/1-1/1-1:1.0
++# DEVTYPE=usb_device
++# DEVTYPE=usb_interface
++# E=/proc/bus/usb/001/006
++# HOME=/
++# INTERFACE=255/0/0
++# INTERFACE=255/255/255
++# MAJOR=189
++# MDEV=1-1
++# MDEV=1-1:1.0
++# MINOR=5
++# MODALIAS=usb:v0BDAp8178d0200dc00dsc00dp00icFFiscFFipFF
++# MODALIAS=usb:v0CF3p9271d0108dcFFdscFFdpFFicFFisc00ip00
++# PATH=/sbin:/bin:/usr/sbin:/usr/bin
++# PRODUCT=bda/8178/200
++# PRODUCT=cf3/9271/108
++# PWD=/dev
++# SEQNUM=1172
++# SEQNUM=1173
++# SEQNUM=1176
++# SEQNUM=1178
++# SUBSYSTEM=usb
++# TYPE=0/0/0
++# TYPE=255/255/255
++
 +
 +-$MODALIAS=.*  0:0   660  @modprobe  -s      "$MODALIAS"
 +$MODALIAS=.*   0:0   660  $modprobe  -s  -r  "$MODALIAS"

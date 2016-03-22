@@ -17794,23 +17794,21 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/network ltib/config/platform/imx/merge/etc/rc.d/init.d/network
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/network
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/network
-@@ -0,0 +1,174 @@
+@@ -0,0 +1,208 @@
 +#!/bin/sh
 +
-+# the net info shouldn't be moved with sdcard data 
-+LOCAL_CONFIGFILE=/local/etc/sysconfig/net.conf
-+CONFIGFILE=/local/flash/etc/sysconfig/net.conf
++# Net info should not be moved with SD card data.
++NETCONFIG=/local/etc/sysconfig/net.conf
++MACCONFIG=/etc/mac.conf
 +
-+if [ ! -x /sbin/ifconfig ]
-+then
++if [ ! -x /sbin/ifconfig ]; then
 +    echo "/sbin/ifconfig missing, unable to configure the network"
++
 +    exit 0
 +fi
 +
-+if [ "$1" = "start" -o "$1" = "restart" ]
-+then
-+    if [ -f /etc/sysctl.conf -a -x /sbin/sysctl ]
-+    then
++if [ "$1" = "start" -o "$1" = "restart" ]; then
++    if [ -f /etc/sysctl.conf -a -x /sbin/sysctl ]; then
 +        echo "Running sysctl"
 +        sysctl -p /etc/sysctl.conf >/dev/null 2>&1
 +    fi
@@ -17819,154 +17817,190 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +    /sbin/ifconfig lo 127.0.0.1
 +    /sbin/route add -net 127.0.0.0 netmask 255.0.0.0 lo
 +
-+    if [ -e $LOCAL_CONFIGFILE  ]
-+    then
-+        source $LOCAL_CONFIGFILE
-+    fi
++    test -f $NETCONFIG && source $NETCONFIG
 +
-+    if [ -e $CONFIGFILE  ]
-+    then
-+		eval `grep MAC $CONFIGFILE`
-+    fi
++    test -f $MACCONFIG && eval `/bin/grep ^MAC $MACCONFIG`
 +
-+    # in case the config file contain only one network config, use it as config 0
-+	if [ -z $IPADDR0 ] && [ -n $IPADDR ]
-+	then
-+		IPADDR0=$IPADDR
-+	fi
-+	if [ -z $SYSCFG_IFACE0 ] && [ -n $SYSCFG_IFACE ]
-+	then
-+		SYSCFG_IFACE0=$SYSCFG_IFACE
-+	fi
-+	if [ -z $INTERFACE0 ] && [ -n $INTERFACE ]
-+	then
-+		INTERFACE0=$INTERFACE
-+	fi
-+	if [ -z $NETMASK0 ] && [ -n $NETMASK ]
-+	then
-+		NETMASK0=$NETMASK
-+	fi
-+	if [ -z $GATEWAY0 ] && [ -n $GATEWAY ]
-+	then
-+		GATEWAY0=$GATEWAY
-+	fi
-+	if [ -z $NAMESERVER01 ] && [ -n $NAMESERVER ]
-+	then
-+		NAMESERVER01=$NAMESERVER
-+	fi
-+	if [ -n $BOOTPROTO ] && [ "$BOOTPROTO" = "[DHCP]" ]
-+	then
-+		IPADDR0="dhcp"
-+	fi
++    test "$BOOTPROTO0" = "[DHCP]" && IPADDR0="dhcp"
++    test "$BOOTPROTO1" = "[DHCP]" && IPADDR1="dhcp"
 +
-+    if [ -n "$NAMESERVER01" ]
-+    then
-+	/bin/mount -oremount,rw /
-+    fi
-+    if [ -n "$NAMESERVER11" ]
-+    then
-+	/bin/mount -oremount,rw /
-+    fi
-+
++    # Set up network interfaces.
 +    #
-+    # set up the network interfaces
-+    #
-+    if [ "$IPADDR0" = "" ]
-+    then
++    if [ "$IPADDR0" = "" ]; then
 +        echo ""
-+        echo "Warning: no IPADDR is set"
-+        echo "config screen, or directly in $CONFIGFILE."
-+        echo "IP address setup bypassed"
++        echo "Warning: no IP set for eth0 (IPADDR0)."
++        echo "Skipping IP address setup."
 +        echo ""
-+        #sleep 2
 +    fi
 +
-+    if [ "$SYSCFG_IFACE0" = "y" ]
-+    then
-+        echo "Setting up networking on $INTERFACE0: "
-+        if [ -n "$MAC0" ]
-+        then
-+			/sbin/ifconfig $INTERFACE0 hw ether $MAC0
-+		fi
-+        if [ "$IPADDR0" = "dhcp" ]
-+        then
-+            if [ "$DEPLOYMENT_STYLE" = "NFS" ]
-+            then
-+                echo "You need to manually set your nameserver in /etc/resolv.conf"
-+            else
-+                $SYSCFG_DHCPC_CMD $INTERFACE0
-+            fi
-+        else  
-+            # non-dhcp network startup
-+            /sbin/ifconfig $INTERFACE0 $IPADDR0 netmask $NETMASK0
++    echo -n "" > /etc/resolv.conf
 +
-+            if [ -n "$GATEWAY0" ]
-+            then 
-+                echo "Adding static route for default gateway to $GATEWAY0: "
-+                /sbin/route add default gateway $GATEWAY0 $INTERFACE0
-+            fi
-+            if [ -n "$NAMESERVER01" ]
-+            then
-+                echo "Setting nameserver to $NAMESERVER01 in /etc/resolv.conf: "
-+                if [ `awk '{print $2}' /etc/resolv.conf  | grep -c $NAMESERVER01` -eq 0 ]
-+                then
-+                
-+                fi 
-+            fi
-+            if [ -n "$NAMESERVER02" ]
-+            then
-+                echo "Setting nameserver to $NAMESERVER02 in /etc/resolv.conf: "
-+                if [ `awk '{print $2}' /etc/resolv.conf  | grep -c $NAMESERVER02` -eq 0 ]
-+                then
-+                
-+                fi
-+            fi
-+        fi
-+    fi
-+    if [ "$SYSCFG_IFACE1" = "y" ]
-+    then
-+        echo "Setting up networking on $INTERFACE1: "
-+        if [ -n "$MAC1" ]
-+        then
-+			/sbin/ifconfig $INTERFACE1 hw ether $MAC1
++    test "$SYSCFG_IFACE0" != "y" && continue
++
++    echo "Setting up networking on $INTERFACE0: "
++
++    test -n "$MAC0" && /sbin/ifconfig $INTERFACE0 hw ether $MAC0
++
++    if [ -n "$IPADDR0" ]; then
++	if [ "$IPADDR0" = "dhcp" ]; then
++	    $SYSCFG_DHCPC_CMD $INTERFACE0
++	else  
++	    if [ -n "$NETMASK0" ]; then
++		/sbin/ifconfig $INTERFACE0 $IPADDR0 netmask $NETMASK0
++	    else
++		/sbin/ifconfig $INTERFACE0 $IPADDR0
++	    fi
++
++	    if [ -n "$GATEWAY0" ]; then
++		echo "Adding static route for default gateway to $GATEWAY0: "
++		/sbin/route add default gateway $GATEWAY0 $INTERFACE0
++	    fi
++
++	    if [ -n "$NAMESERVER01" ]; then
++		echo "Adding name server $NAMESERVER01 to /etc/resolv.conf. "
++		grep "nameserver\s\+$NAMESERVER01" /etc/resolv.conf || echo "nameserver $NAMESERVER01" >> /etc/resolv.conf
++	    fi
++
++	    if [ -n "$NAMESERVER02" ]; then
++		echo "Adding name server $NAMESERVER02 to /etc/resolv.conf. "
++		grep "nameserver\s\+$NAMESERVER02" /etc/resolv.conf || echo "nameserver $NAMESERVER02" >> /etc/resolv.conf
++	    fi
 +	fi
-+        if [ "$IPADDR1" = "dhcp" ]
-+        then
-+            $SYSCFG_DHCPC_CMD $INTERFACE1
-+        else  
-+            # non-dhcp network startup
-+            /sbin/ifconfig $INTERFACE1 $IPADDR1 netmask $NETMASK1
++    fi
 +
-+            if [ -n "$GATEWAY1" ]
-+            then 
-+                echo "Adding static route for default gateway to $GATEWAY1: "
-+                /sbin/route add default gateway $GATEWAY1 $INTERFACE1
-+            fi
-+            if [ -n "$NAMESERVER11" ]
-+            then
-+                echo "Setting nameserver to $NAMESERVER11 in /etc/resolv.conf: "
-+                if [ `awk '{print $2}' /etc/resolv.conf  | grep -c $NAMESERVER11` -eq 0 ]
-+                then
-+                
-+                fi
-+            fi
-+            if [ -n "$NAMESERVER12" ]
-+            then
-+                echo "Setting nameserver to $NAMESERVER12 in /etc/resolv.conf: "
-+                if [ `awk '{print $2}' /etc/resolv.conf  | grep -c $NAMESERVER12` -eq 0 ]
-+                then
-+                
-+                fi
-+            fi
-+        fi
++    if [ -n "$IPADDR1" ]; then
++	if [ "$IPADDR1" = "dhcp" ]; then
++	    $SYSCFG_DHCPC_CMD $INTERFACE1
++	else  
++	    if [ -n "$NETMASK1" ]; then
++		/sbin/ifconfig $INTERFACE1 $IPADDR1 netmask $NETMASK1
++	    else
++		/sbin/ifconfig $INTERFACE1 $IPADDR1
++	    fi
++
++	    if [ -n "$GATEWAY1" ]; then
++		echo "Adding static route for default gateway to $GATEWAY1: "
++		/sbin/route add default gateway $GATEWAY1 $INTERFACE1
++	    fi
++
++	    if [ -n "$NAMESERVER11" ]; then
++		echo "Adding name server $NAMESERVER11 to /etc/resolv.conf. "
++		grep "nameserver\s\+$NAMESERVER11" /etc/resolv.conf || echo "nameserver $NAMESERVER11" >> /etc/resolv.conf
++	    fi
++
++	    if [ -n "$NAMESERVER12" ]; then
++		echo "Adding name server $NAMESERVER12 to /etc/resolv.conf. "
++		grep "nameserver\s\+$NAMESERVER12" /etc/resolv.conf || echo "nameserver $NAMESERVER12" >> /etc/resolv.conf
++	    fi
++	fi
 +    fi
-+    if [ -n "$NAMESERVER01" ]
-+    then
-+	/bin/mount -oremount,ro /
++
++    if [ -n "$IPADDR2" ]; then
++	if [ "$IPADDR2" = "dhcp" ]; then
++	    $SYSCFG_DHCPC_CMD $INTERFACE2
++	else  
++	    if [ -n "$NETMASK2" ]; then
++		/sbin/ifconfig $INTERFACE2 $IPADDR2 netmask $NETMASK2
++	    else
++		/sbin/ifconfig $INTERFACE2 $IPADDR2
++	    fi
++
++	    if [ -n "$GATEWAY2" ]; then
++		echo "Adding static route for default gateway to $GATEWAY2: "
++		/sbin/route add default gateway $GATEWAY2 $INTERFACE2
++	    fi
++
++	    if [ -n "$NAMESERVER21" ]; then
++		echo "Adding name server $NAMESERVER21 to /etc/resolv.conf. "
++		grep "nameserver\s\+$NAMESERVER21" /etc/resolv.conf || echo "nameserver $NAMESERVER21" >> /etc/resolv.conf
++	    fi
++
++	    if [ -n "$NAMESERVER22" ]; then
++		echo "Adding name server $NAMESERVER22 to /etc/resolv.conf. "
++		grep "nameserver\s\+$NAMESERVER22" /etc/resolv.conf || echo "nameserver $NAMESERVER22" >> /etc/resolv.conf
++	    fi
++	fi
 +    fi
-+    if [ -n "$NAMESERVER11" ]
-+    then
-+	/bin/mount -oremount,ro /
++
++    if [ -n "$IPADDR3" ]; then
++	if [ "$IPADDR3" = "dhcp" ]; then
++	    $SYSCFG_DHCPC_CMD $INTERFACE3
++	else  
++	    if [ -n "$NETMASK3" ]; then
++		/sbin/ifconfig $INTERFACE3 $IPADDR3 netmask $NETMASK3
++	    else
++		/sbin/ifconfig $INTERFACE3 $IPADDR3
++	    fi
++
++	    if [ -n "$GATEWAY3" ]; then
++		echo "Adding static route for default gateway to $GATEWAY3: "
++		/sbin/route add default gateway $GATEWAY3 $INTERFACE3
++	    fi
++
++	    if [ -n "$NAMESERVER31" ]; then
++		echo "Adding name server $NAMESERVER31 to /etc/resolv.conf. "
++		grep "nameserver\s\+$NAMESERVER31" /etc/resolv.conf || echo "nameserver $NAMESERVER31" >> /etc/resolv.conf
++	    fi
++
++	    if [ -n "$NAMESERVER32" ]; then
++		echo "Adding name server $NAMESERVER32 to /etc/resolv.conf. "
++		grep "nameserver\s\+$NAMESERVER32" /etc/resolv.conf || echo "nameserver $NAMESERVER32" >> /etc/resolv.conf
++	    fi
++	fi
++    fi
++
++    if [ -n "$IPADDR4" ]; then
++	if [ "$IPADDR4" = "dhcp" ]; then
++	    $SYSCFG_DHCPC_CMD $INTERFACE4
++	else  
++	    if [ -n "$NETMASK4" ]; then
++		/sbin/ifconfig $INTERFACE4 $IPADDR4 netmask $NETMASK4
++	    else
++		/sbin/ifconfig $INTERFACE4 $IPADDR4
++	    fi
++
++	    if [ -n "$GATEWAY4" ]; then
++		echo "Adding static route for default gateway to $GATEWAY4: "
++		/sbin/route add default gateway $GATEWAY4 $INTERFACE4
++	    fi
++
++	    if [ -n "$NAMESERVER41" ]; then
++		echo "Adding name server $NAMESERVER41 to /etc/resolv.conf. "
++		grep "nameserver\s\+$NAMESERVER41" /etc/resolv.conf || echo "nameserver $NAMESERVER41" >> /etc/resolv.conf
++	    fi
++
++	    if [ -n "$NAMESERVER42" ]; then
++		echo "Adding name server $NAMESERVER42 to /etc/resolv.conf. "
++		grep "nameserver\s\+$NAMESERVER42" /etc/resolv.conf || echo "nameserver $NAMESERVER42" >> /etc/resolv.conf
++	    fi
++	fi
++    fi
++
++    if [ -n "$IPADDR5" ]; then
++	if [ "$IPADDR5" = "dhcp" ]; then
++	    $SYSCFG_DHCPC_CMD $INTERFACE5
++	else  
++	    if [ -n "$NETMASK5" ]; then
++		/sbin/ifconfig $INTERFACE5 $IPADDR5 netmask $NETMASK5
++	    else
++		/sbin/ifconfig $INTERFACE5 $IPADDR5
++	    fi
++
++	    if [ -n "$GATEWAY5" ]; then
++		echo "Adding static route for default gateway to $GATEWAY5: "
++		/sbin/route add default gateway $GATEWAY5 $INTERFACE5
++	    fi
++
++	    if [ -n "$NAMESERVER51" ]; then
++		echo "Adding name server $NAMESERVER51 to /etc/resolv.conf. "
++		grep "nameserver\s\+$NAMESERVER51" /etc/resolv.conf || echo "nameserver $NAMESERVER51" >> /etc/resolv.conf
++	    fi
++
++	    if [ -n "$NAMESERVER52" ]; then
++		echo "Adding name server $NAMESERVER52 to /etc/resolv.conf. "
++		grep "nameserver\s\+$NAMESERVER52" /etc/resolv.conf || echo "nameserver $NAMESERVER52" >> /etc/resolv.conf
++	    fi
++	fi
 +    fi
 +fi
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/rc.local ltib/config/platform/imx/merge/etc/rc.d/rc.local

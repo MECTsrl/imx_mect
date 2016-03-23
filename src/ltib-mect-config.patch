@@ -17190,215 +17190,6 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +ttyS[0-9]      0:14  640
 +tty[0-9]       0:0   660
 +tty.+          0:5   660
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/inid.d/sdcheck ltib/config/platform/imx/merge/etc/rc.d/inid.d/sdcheck
---- ltib.reference/config/platform/imx/merge/etc/rc.d/inid.d/sdcheck
-+++ ltib/config/platform/imx/merge/etc/rc.d/inid.d/sdcheck
-@@ -0,0 +1,205 @@
-+#!/bin/sh
-+
-+mntdir=/local/sd_card
-+
-+APPLICATION="$mntdir/.application"
-+STORAGE="$mntdir/.extrastorage"
-+
-+SD_MODE=0
-+
-+start() {
-+    # Check if there is an SD card.
-+    sd_string=`dmesg | awk '/mmcblk[0-9]: p[0-9]/'`
-+    if [ -n "$sd_string" ]; then
-+        echo "Found an SD card device: $sd_string"
-+
-+        mntpoint=${sd_string//[: ]/}
-+        if [ -n "$mntpoint" ]; then
-+            echo "Mount point: $mntpoint"
-+
-+            test -d $mntdir || { mntdir=/local/sd_card; mkdir -p $mntdir; }
-+
-+            if mount -orw /dev/$mntpoint $mntdir 2>/dev/null; then
-+                echo "Mounted SD card device to $mntpoint"
-+
-+                # Set up the SD card if already recognised.
-+                if [ -e $APPLICATION ]; then
-+                    SD_MODE=1   # application
-+                elif [ -e $STORAGE ]; then
-+                    SD_MODE=2   # storage
-+                else
-+                    # Touchscreen variables
-+                    export TSLIB_CONFFILE=/usr/etc/ts.conf
-+                    export TSLIB_PLUGINDIR=/usr/lib/ts
-+                    export TSLIB_TSDEVICE=/dev/input/ts0
-+                    export TSLIB_CONSOLEDEVICE=none
-+                    export TSLIB_CALIBFILE=/local/etc/sysconfig/pointercal
-+
-+                    # Qt variables
-+                    export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
-+                    export QT_QWS_FONTDIR=/usr/lib/fonts
-+                    export POINTERCAL_FILE=$TSLIB_CALIBFILE
-+
-+                    # Ask for instructions if the SD card is not recognised.
-+                    /usr/bin/SDcard -qws
-+                    SD_MODE=$?
-+                fi
-+            else
-+                echo "Cannot mount $mntpoint to $mntdir."
-+            fi
-+        else
-+            echo "No suitable SD card mountpoint found."
-+        fi
-+    else
-+        echo "No SD card found."
-+    fi
-+
-+    if [ "$SD_MODE" == 1 ]; then
-+        echo "Application mode."
-+
-+        cd /local 2>/dev/null
-+
-+        test -d /local/sd_card/data || rsync -arxL /local/flash/data /local/sd_card/
-+        if [ "`readlink data`" != "sd_card/data" ]; then
-+            rm -f data
-+            ln -s sd_card/data 2>/dev/null
-+        fi
-+
-+        test -d /local/sd_card/control || rsync -arxL /local/flash/control /local/sd_card/
-+        if [ "`readlink control`" != "sd_card/control" ]; then
-+            rm -f control
-+            ln -s /local/sd_card/control control 2>/dev/null
-+        fi
-+
-+        test -d /local/sd_card/root || rsync -arxL /local/flash/root /local/sd_card/
-+        if [ "`readlink root`" != "sd_card/root" ]; then
-+            rm -f root
-+            ln -s /local/sd_card/root root 2>/dev/null
-+        fi
-+
-+        test -d /local/sd_card/etc || rsync -arxL /local/flash/etc /local/sd_card/
-+        if [ "`readlink etc`" != "sd_card/etc" ]; then
-+            rm -f etc
-+            ln -s /local/sd_card/etc etc 2>/dev/null
-+        fi
-+
-+        touch $APPLICATION
-+
-+        echo "Updated the links."
-+
-+    elif [ "$SD_MODE" == 2 ]; then
-+        echo "Storage mode."
-+
-+        cd /local 2>/dev/null
-+
-+        if [ "`readlink data`" != "sd_card/data" ]; then
-+            rm -f data
-+            ln -s sd_card/data 2>/dev/null
-+        fi
-+
-+        if [ "`readlink control`" != "flash/control" ]; then
-+            rm -f control
-+            ln -s /local/flash/control control 2>/dev/null
-+        fi
-+
-+        if [ "`readlink root`" != "flash/root" ]; then
-+            rm -f root
-+            ln -s /local/flash/root root 2>/dev/null
-+        fi
-+
-+        if [ "`readlink etc`" != "flash/etc" ]; then
-+            rm -f etc
-+            ln -s /local/flash/etc etc 2>/dev/null
-+        fi
-+
-+        mkdir -p /local/sd_card/data
-+
-+        touch $STORAGE
-+
-+        echo "Updated the links."
-+    else
-+        echo "All-in-flash mode."
-+
-+        cd /local 2>/dev/null
-+
-+        if [ "`readlink data`" != "flash/data" ]; then
-+            rm -f data
-+            ln -s flash/data 2>/dev/null
-+        fi
-+
-+        if [ "`readlink control`" != "flash/control" ]; then
-+            rm -f control
-+            ln -s /local/flash/control control 2>/dev/null
-+        fi
-+
-+        if [ "`readlink root`" != "flash/root" ]; then
-+            rm -f root
-+            ln -s /local/flash/root root 2>/dev/null
-+        fi
-+
-+        if [ "`readlink etc`" != "flash/etc" ]; then
-+            rm -f etc
-+            ln -s /local/flash/etc etc 2>/dev/null
-+        fi
-+
-+        echo "Updated the links."
-+    fi
-+}
-+
-+stop() {
-+	umount $mntdir
-+
-+	echo "Reset to all-in-flash mode."
-+
-+	cd /local 2>/dev/null
-+
-+	if [ "`readlink data`" != "flash/data" ]; then
-+		rm -f data
-+		ln -s flash/data 2>/dev/null
-+	fi
-+
-+	if [ "`readlink control`" != "flash/control" ]; then
-+		rm -f control
-+		ln -s /local/flash/control control 2>/dev/null
-+	fi
-+
-+	if [ "`readlink root`" != "flash/root" ]; then
-+		rm -f root
-+		ln -s /local/flash/root root 2>/dev/null
-+	fi
-+
-+	if [ "`readlink etc`" != "flash/etc" ]; then
-+		rm -f etc 2>/dev/null
-+		ln -s /local/flash/etc etc 2>/dev/null
-+	fi
-+
-+	echo "Updated the links."
-+
-+	echo "Done."
-+}
-+
-+restart() {
-+    stop
-+    sleep 1
-+    start
-+}
-+
-+case "$1" in
-+    start)
-+        start
-+    ;;
-+
-+    stop)
-+        stop
-+    ;;
-+
-+    restart)
-+        restart
-+    ;;
-+
-+    *)
-+        echo "Usage: $0 {start|stop|restart}"
-+
-+        exit 1
-+    ;;
-+esac
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
@@ -18065,6 +17856,215 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +	fi
 +    fi
 +fi
+diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
+--- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
++++ ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
+@@ -0,0 +1,205 @@
++#!/bin/sh
++
++mntdir=/local/sd_card
++
++APPLICATION="$mntdir/.application"
++STORAGE="$mntdir/.extrastorage"
++
++SD_MODE=0
++
++start() {
++    # Check if there is an SD card.
++    sd_string=`dmesg | awk '/mmcblk[0-9]: p[0-9]/'`
++    if [ -n "$sd_string" ]; then
++        echo "Found an SD card device: $sd_string"
++
++        mntpoint=${sd_string//[: ]/}
++        if [ -n "$mntpoint" ]; then
++            echo "Mount point: $mntpoint"
++
++            test -d $mntdir || { mntdir=/local/sd_card; mkdir -p $mntdir; }
++
++            if mount -orw /dev/$mntpoint $mntdir 2>/dev/null; then
++                echo "Mounted SD card device to $mntpoint"
++
++                # Set up the SD card if already recognised.
++                if [ -e $APPLICATION ]; then
++                    SD_MODE=1   # application
++                elif [ -e $STORAGE ]; then
++                    SD_MODE=2   # storage
++                else
++                    # Touchscreen variables
++                    export TSLIB_CONFFILE=/usr/etc/ts.conf
++                    export TSLIB_PLUGINDIR=/usr/lib/ts
++                    export TSLIB_TSDEVICE=/dev/input/ts0
++                    export TSLIB_CONSOLEDEVICE=none
++                    export TSLIB_CALIBFILE=/local/etc/sysconfig/pointercal
++
++                    # Qt variables
++                    export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
++                    export QT_QWS_FONTDIR=/usr/lib/fonts
++                    export POINTERCAL_FILE=$TSLIB_CALIBFILE
++
++                    # Ask for instructions if the SD card is not recognised.
++                    /usr/bin/SDcard -qws
++                    SD_MODE=$?
++                fi
++            else
++                echo "Cannot mount $mntpoint to $mntdir."
++            fi
++        else
++            echo "No suitable SD card mountpoint found."
++        fi
++    else
++        echo "No SD card found."
++    fi
++
++    if [ "$SD_MODE" == 1 ]; then
++        echo "Application mode."
++
++        cd /local 2>/dev/null
++
++        test -d /local/sd_card/data || rsync -arxL /local/flash/data /local/sd_card/
++        if [ "`readlink data`" != "sd_card/data" ]; then
++            rm -f data
++            ln -s sd_card/data 2>/dev/null
++        fi
++
++        test -d /local/sd_card/control || rsync -arxL /local/flash/control /local/sd_card/
++        if [ "`readlink control`" != "sd_card/control" ]; then
++            rm -f control
++            ln -s /local/sd_card/control control 2>/dev/null
++        fi
++
++        test -d /local/sd_card/root || rsync -arxL /local/flash/root /local/sd_card/
++        if [ "`readlink root`" != "sd_card/root" ]; then
++            rm -f root
++            ln -s /local/sd_card/root root 2>/dev/null
++        fi
++
++        test -d /local/sd_card/etc || rsync -arxL /local/flash/etc /local/sd_card/
++        if [ "`readlink etc`" != "sd_card/etc" ]; then
++            rm -f etc
++            ln -s /local/sd_card/etc etc 2>/dev/null
++        fi
++
++        touch $APPLICATION
++
++        echo "Updated the links."
++
++    elif [ "$SD_MODE" == 2 ]; then
++        echo "Storage mode."
++
++        cd /local 2>/dev/null
++
++        if [ "`readlink data`" != "sd_card/data" ]; then
++            rm -f data
++            ln -s sd_card/data 2>/dev/null
++        fi
++
++        if [ "`readlink control`" != "flash/control" ]; then
++            rm -f control
++            ln -s /local/flash/control control 2>/dev/null
++        fi
++
++        if [ "`readlink root`" != "flash/root" ]; then
++            rm -f root
++            ln -s /local/flash/root root 2>/dev/null
++        fi
++
++        if [ "`readlink etc`" != "flash/etc" ]; then
++            rm -f etc
++            ln -s /local/flash/etc etc 2>/dev/null
++        fi
++
++        mkdir -p /local/sd_card/data
++
++        touch $STORAGE
++
++        echo "Updated the links."
++    else
++        echo "All-in-flash mode."
++
++        cd /local 2>/dev/null
++
++        if [ "`readlink data`" != "flash/data" ]; then
++            rm -f data
++            ln -s flash/data 2>/dev/null
++        fi
++
++        if [ "`readlink control`" != "flash/control" ]; then
++            rm -f control
++            ln -s /local/flash/control control 2>/dev/null
++        fi
++
++        if [ "`readlink root`" != "flash/root" ]; then
++            rm -f root
++            ln -s /local/flash/root root 2>/dev/null
++        fi
++
++        if [ "`readlink etc`" != "flash/etc" ]; then
++            rm -f etc
++            ln -s /local/flash/etc etc 2>/dev/null
++        fi
++
++        echo "Updated the links."
++    fi
++}
++
++stop() {
++	umount $mntdir
++
++	echo "Reset to all-in-flash mode."
++
++	cd /local 2>/dev/null
++
++	if [ "`readlink data`" != "flash/data" ]; then
++		rm -f data
++		ln -s flash/data 2>/dev/null
++	fi
++
++	if [ "`readlink control`" != "flash/control" ]; then
++		rm -f control
++		ln -s /local/flash/control control 2>/dev/null
++	fi
++
++	if [ "`readlink root`" != "flash/root" ]; then
++		rm -f root
++		ln -s /local/flash/root root 2>/dev/null
++	fi
++
++	if [ "`readlink etc`" != "flash/etc" ]; then
++		rm -f etc 2>/dev/null
++		ln -s /local/flash/etc etc 2>/dev/null
++	fi
++
++	echo "Updated the links."
++
++	echo "Done."
++}
++
++restart() {
++    stop
++    sleep 1
++    start
++}
++
++case "$1" in
++    start)
++        start
++    ;;
++
++    stop)
++        stop
++    ;;
++
++    restart)
++        restart
++    ;;
++
++    *)
++        echo "Usage: $0 {start|stop|restart}"
++
++        exit 1
++    ;;
++esac
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/rc.local ltib/config/platform/imx/merge/etc/rc.d/rc.local
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/rc.local
 +++ ltib/config/platform/imx/merge/etc/rc.d/rc.local

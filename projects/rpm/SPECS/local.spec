@@ -76,7 +76,6 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/flash/etc/sysconfig/chatscripts
 %{pfx}/local/flash/etc/sysconfig/img/splash.png
 %{pfx}/local/flash/etc/sysconfig/img/systool.png
-%{pfx}/local/flash/etc/sysconfig/net.conf
 %{pfx}/local/flash/etc/sysconfig/.passwd
 %{pfx}/local/flash/etc/sysconfig/ppp
 %{pfx}/local/flash/root/backing_file

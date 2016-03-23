@@ -324,7 +324,6 @@ MECT_PACKAGES = \
 	tcl \
 	texinfo \
 	texlive \
-	tree \
 	uuid \
 	uuid-dev \
 	wget \

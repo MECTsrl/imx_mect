@@ -4396,7 +4396,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec
 +++ ltib/dist/lfs-5.1/skell/skell.spec
-@@ -9,20 +9,90 @@
+@@ -9,20 +9,92 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -4438,6 +4438,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Patch35         : skell-1.18-1453824311.patch
 +Patch36         : skell-1.18-remove_resolv_conf.patch
 +Patch37         : skell-1.18-remove_network.patch
++Patch38         : skell-1.18-remove_mdev_conf.patch
++Patch39         : skell-1.18-removed_sdcheck.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -4489,7 +4491,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +101,108 @@
+@@ -31,24 +103,110 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -4521,6 +4523,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%patch35 -p1
 +%patch36 -p1
 +%patch37 -p1
++%patch38 -p1
++%patch39 -p1
  
  %Build
 +export LC_ALL

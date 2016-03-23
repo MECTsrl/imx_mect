@@ -4439,7 +4439,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Patch36         : skell-1.18-remove_resolv_conf.patch
 +Patch37         : skell-1.18-remove_network.patch
 +Patch38         : skell-1.18-remove_mdev_conf.patch
-+Patch39         : skell-1.18-removed_sdcheck.patch
++Patch39         : skell-1.18-remove_sdcheck.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no

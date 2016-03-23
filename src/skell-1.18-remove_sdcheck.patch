@@ -1,0 +1,180 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/sdcheck skell-1.18.modified/etc/rc.d/init.d/sdcheck
+--- skell-1.18/etc/rc.d/init.d/sdcheck	2016-03-23 02:48:46.650921650 +0100
++++ skell-1.18.modified/etc/rc.d/init.d/sdcheck	1970-01-01 01:00:00.000000000 +0100
+@@ -1,176 +0,0 @@
+-#!/bin/sh
+-
+-mntdir=/local/sd_card
+-LICENCE_FILE=$mntdir"/.licence"
+-APPLICATION="application"
+-STORAGE="extrastorage"
+-SD_MODE="allinflash"
+-
+-start() {
+-
+-#Mounting SD card under /local/sd_card directory
+-dmesg_log=/tmp/log
+-dmesg > $dmesg_log
+-sd_string=`awk '/mmcblk[0-9]: p[0-9]/'  < $dmesg_log`
+-/bin/rm -f $dmesg_log
+-
+-echo "Found sd card device: $sd_string"
+-if [ -n "$sd_string" ]; then
+-	mntpoint=${sd_string//[: ]/}
+-	echo "mount point:$mntpoint"
+-
+-if [ -n "$mntpoint" ]; then
+-	[ -d $mntdir ] || { mntdir=/local/sd_card; /bin/mkdir $mntdir; }
+-	if /bin/mount -orw /dev/$mntpoint $mntdir 2>/dev/null; then
+-		echo "mounted sd card device in $mntpoint"
+-		# check if a licence file exist and check if it is valid
+-		if [ -e $LICENCE_FILE ]
+-		then
+-			CID=`cat /sys/block/mmcblk0/device/cid`
+-			if [ "`echo $CID$STORAGE | sign | awk '{print $1}'`" == "`cat $LICENCE_FILE`" ]
+-			then
+-				echo "Valid licence as data storage"
+-				SD_MODE="storage"
+-			elif [ "`echo $CID$APPLICATION | sign | awk '{print $1}'`" == "`cat $LICENCE_FILE`" ]
+-			then
+-				echo "Valid licence as application application"
+-				SD_MODE="application"
+-			else
+-				echo "Invalid licence"
+-				#/bin/umount /dev/$mntpoint
+-				#echo "sd card unmounted"
+-			fi
+-		else
+-			echo "No licence"
+-			#/bin/umount /dev/$mntpoint
+-			#echo "sd card unmounted"
+-		fi
+-	else
+-		echo "cannot mount $mntpoint into $mntdir"
+-	fi
+-else
+-	echo "no valid sd card mountpoint found"
+-fi
+-else
+-	echo "no card found"
+-fi
+-
+-if [ "$SD_MODE" == "storage" ]
+-then
+-	echo "storage mode"
+-	cd /local 2>/dev/null
+-
+-	if [ "`readlink data`" != "sd_card/data" ]
+-	then
+-		rm -f data 2>/dev/null
+-		ln -s sd_card/data 2>/dev/null
+-	fi
+-
+-	if [ "`readlink control`" != "flash/control" ]
+-	then
+-		rm -f control 2>/dev/null
+-		ln -s /local/flash/control control 2>/dev/null
+-	fi
+-
+-	if [ "`readlink root`" != "flash/root" ]
+-	then
+-		rm root 2>/dev/null
+-		ln -s /local/flash/root root 2>/dev/null
+-	fi
+-
+-	if [ "`readlink etc`" != "flash/etc" ]
+-	then
+-		rm etc 2>/dev/null
+-		ln -s /local/flash/etc etc 2>/dev/null
+-	fi
+-
+-	echo "update link"
+-elif [ "$SD_MODE" == "application" ]
+-then
+-	echo "application mode"
+-	cd /local 2>/dev/null
+-
+-	if [ "`readlink data`" != "sd_card/data" ]
+-	then
+-		rm -f data 2>/dev/null
+-		ln -s sd_card/data 2>/dev/null
+-	fi
+-
+-	if [ "`readlink control`" != "sd_card/control" ]
+-	then
+-		rm -f control 2>/dev/null
+-		ln -s /local/sd_card/control control 2>/dev/null
+-	fi
+-
+-	if [ "`readlink root`" != "sd_card/root" ]
+-	then
+-		rm root 2>/dev/null
+-		ln -s /local/sd_card/root root 2>/dev/null
+-	fi
+-
+-	if [ "`readlink etc`" != "sd_card/etc" ]
+-	then
+-		rm etc 2>/dev/null
+-		ln -s /local/sd_card/etc etc 2>/dev/null
+-	fi
+-	echo "update link"
+-else
+-	echo "all-in-flash mode"
+-	cd /local 2>/dev/null
+-
+-	if [ "`readlink data`" != "flash/data" ]
+-	then
+-		rm -f data 2>/dev/null
+-		ln -s flash/data 2>/dev/null
+-	fi
+-
+-	if [ "`readlink control`" != "flash/control" ]
+-	then
+-		rm -f control 2>/dev/null
+-		ln -s /local/flash/control control 2>/dev/null
+-	fi
+-
+-	if [ "`readlink root`" != "flash/root" ]
+-	then
+-		rm root 2>/dev/null
+-		ln -s /local/flash/root root 2>/dev/null
+-	fi
+-
+-	if [ "`readlink etc`" != "flash/etc" ]
+-	then
+-		rm etc 2>/dev/null
+-		ln -s /local/flash/etc etc 2>/dev/null
+-	fi
+-	echo "update link"
+-fi
+-
+-}
+-
+-stop() {
+-	/bin/umount $mntdir
+-	echo "Done."
+-}
+-
+-restart() {
+-stop
+-sleep 1
+-start
+-}
+-
+-case "$1" in
+-start)
+-    start
+-;;
+-stop)
+-    stop
+-;;
+-restart)
+-    restart
+-;;
+-*)
+-  echo $"Usage: $0 {start|stop|restart}"
+-        exit 1
+-    ;;
+-    
+-esac
+-

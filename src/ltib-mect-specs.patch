@@ -944,108 +944,6 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/compat-drivers/compat-drivers.spec ltib/dist/lfs-5.1/compat-drivers/compat-drivers.spec
---- ltib.reference/dist/lfs-5.1/compat-drivers/compat-drivers.spec
-+++ ltib/dist/lfs-5.1/compat-drivers/compat-drivers.spec
-@@ -0,0 +1,98 @@
-+%define pfx /opt/freescale/rootfs/%{_target_cpu}
-+%define pkg_rc rc4
-+%define pkg_bld su
-+
-+Summary         : Drivers ported from newer kernels.
-+Name            : compat-drivers
-+Version         : 3.9
-+Release         : 2
-+License         : GPL
-+Vendor          : MECT s.r.l.
-+Packager        : Mihai Lazarescu
-+Group           : System Environment/Kernel
-+URL             : https://www.kernel.org/pub/linux/kernel/projects/backports/stable/v%{version}-%{pkg_rc}/%{name}-%{version}-%{release}-%{pkg_bld}.tar.xz
-+Source          : %{name}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}.tar.xz
-+Source1         : firmware-realtek_20160110-1_all.deb
-+Patch1          : compat-drivers-3.9-rc4-2-su-no_depmod_etc.patch
-+BuildRoot       : %{_tmppath}/%{name}
-+Prefix          : %{pfx}
-+AutoReqProv     : no
-+
-+
-+%Package rfs
-+Summary         : Contents trimmed down to just the run time files.
-+Vendor          : MECT s.r.l.
-+Packager        : Mihai Lazarescu
-+Group           : System Environment/Kernel
-+AutoReqProv     : no
-+
-+%Description rfs
-+%name} package contents is trimmed to just
-+the files that are needed at run time on the target.
-+
-+
-+%Description
-+%{name} provides drivers released on newer kernels
-+backported for usage on older kernels.
-+
-+%Prep
-+export LC_ALL
-+LC_ALL=C
-+
-+%setup -n %{name}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
-+%patch1 -p1
-+
-+%Build
-+export LC_ALL
-+LC_ALL=C
-+
-+./scripts/driver-select rtlwifi
-+
-+make \
-+	prefix=%{_prefix} \
-+	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
-+	ARCH=$LINTARCH \
-+	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
-+	KLIB_BUILD=${TOP}/rpm/BUILD/linux
-+
-+%Install
-+export LC_ALL
-+LC_ALL=C
-+
-+rm -rf $RPM_BUILD_ROOT
-+mkdir -p $RPM_BUILD_ROOT/%{pfx}/usr/sbin
-+
-+cd $RPM_BUILD_ROOT/%{pfx}
-+ar -p %{SOURCE1} data.tar.xz | tar xJvf - $( ar -p %{SOURCE1} data.tar.xz | tar tJf - | grep -i 8192cu )
-+cd -
-+
-+make install \
-+	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
-+	prefix=%{_prefix} \
-+	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
-+	ARCH=$LINTARCH \
-+	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
-+	KLIB_BUILD=${TOP}/rpm/BUILD/linux
-+
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}/%{_lib}/firmware/rtlwifi/rtl8192cufw_TMSC.bin, d;
-+    \,^%{pfx}/%{_lib}/firmware/rtlwifi/rtl8192cufw_A.bin, d;
-+    \,^%{pfx}/%{_lib}/firmware/rtlwifi/rtl8192cufw_B.bin, d;
-+    \,^%{pfx}/%{_lib}/modules/[0-9.]\+/modules, d;
-+    \,^%{pfx}%{_libdir}, d;
-+    \,^%{pfx}%{_sbindir}, d;
-+' all_files.lst > rfs_files.lst
-+
-+
-+%Clean
-+export LC_ALL
-+LC_ALL=C
-+
-+rm -rf $RPM_BUILD_ROOT
-+
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
-+%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec
@@ -5589,6 +5487,212 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 +
 +%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
+diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
+--- ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
++++ ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
+@@ -0,0 +1,202 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++%define pkg_src  compat-drivers
++%define pkg_rc   rc4
++%define pkg_bld  su
++%define dir_rtl  rtlwifi
++%define dir_ath  ath9k_htc
++
++Summary         : Wi-Fi drivers ported from newer kernels.
++Name            : wifi-drivers
++Version         : 3.9
++Release         : 2
++License         : GPL
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System Environment/Kernel
++URL             : https://www.kernel.org/pub/linux/kernel/projects/backports/stable/v%{version}-%{pkg_rc}/%{pkg_src}-%{version}-%{release}-%{pkg_bld}.tar.xz
++Source          : %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}.tar.xz
++Source1         : firmware-realtek_20160110-1_all.deb
++Source2         : firmware-atheros_20160110-1_all.deb
++Patch1          : %{pkg_src}-3.9-rc4-2-su-no_depmod_etc.patch
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package common-rfs
++Summary         : Common run time files for backported drivers.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System Environment/Kernel
++AutoReqProv     : no
++
++%Description common-rfs
++%name} package contents trimmed to just the common files that
++are needed at run time on the target by the backported driver.
++
++%Package ath9k_htc-rfs
++Summary         : Run time files for the ath9k_htc driver.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System Environment/Kernel
++Requires        : %{name}-common-rfs
++AutoReqProv     : no
++
++%Description ath9k_htc-rfs
++%name} package contents trimmed to just the files that are
++needed at run time on the target for the ath9k_htc driver.
++
++%Package rtlwifi-rfs
++Summary         : Run time files for the rtlwifi driver.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System Environment/Kernel
++Requires        : %{name}-common-rfs
++AutoReqProv     : no
++
++%Description rtlwifi-rfs
++%name} package contents trimmed to just the files that are
++needed at run time on the target for the rtlwifi driver.
++
++
++%Description
++%{name} provides drivers released on newer kernels
++backported for usage on older kernels.
++
++
++#################################################################
++%Prep
++export LC_ALL
++LC_ALL=C
++
++# Setup to compile the rtlwifi driver.
++%setup -c -n %{name}-%{version}/%{dir_rtl}
++cd %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
++%patch1 -p1
++
++# Setup to compile the ath9k_htc driver.
++%setup -T -b 0 -c -n %{name}-%{version}/%{dir_ath}
++cd %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
++%patch1 -p1
++
++# Just reset RPM idea of top-level directory.
++%setup -D -T -b 0 -c -n %{name}-%{version}
++
++
++#################################################################
++%Build
++export LC_ALL
++LC_ALL=C
++
++# Build the rtlwifi driver.
++cd %{dir_rtl}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
++
++./scripts/driver-select rtlwifi
++
++make \
++	prefix=%{_prefix} \
++	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
++	ARCH=$LINTARCH \
++	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
++	KLIB_BUILD=${TOP}/rpm/BUILD/linux
++
++cd ../..
++
++# Build the ath9k_htc driver.
++cd %{dir_ath}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
++
++./scripts/driver-select ath9k_htc
++
++make \
++	prefix=%{_prefix} \
++	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
++	ARCH=$LINTARCH \
++	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
++	KLIB_BUILD=${TOP}/rpm/BUILD/linux
++
++cd ../..
++
++
++#################################################################
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++mkdir -p $RPM_BUILD_ROOT/%{pfx}/usr/sbin
++
++# Firmware for rtlwifi driver
++cd $RPM_BUILD_ROOT/%{pfx}
++ar -p %{SOURCE1} data.tar.xz | tar xJvf - $( ar -p %{SOURCE1} data.tar.xz | tar tJf - | grep 8192cu )
++cd -
++
++# Firmware for ath9k_htc driver
++cd $RPM_BUILD_ROOT/%{pfx}
++ar -p %{SOURCE2} data.tar.xz | tar xJvf - $( ar -p %{SOURCE2} data.tar.xz | tar tJf - | grep htc_9271 )
++cd -
++
++# Install the rtlwifi driver.
++cd %{dir_rtl}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
++
++make install \
++	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
++	prefix=%{_prefix} \
++	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
++	ARCH=$LINTARCH \
++	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
++	KLIB_BUILD=${TOP}/rpm/BUILD/linux
++
++cd ../..
++
++# Install the ath9k_htc driver.
++cd %{dir_ath}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
++
++make install \
++	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
++	prefix=%{_prefix} \
++	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
++	ARCH=$LINTARCH \
++	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
++	KLIB_BUILD=${TOP}/rpm/BUILD/linux
++
++cd ../..
++
++
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++
++sed -n '
++    \,^%{pfx}/%{_lib}/modules/[0-9.]\+/updates/compat/, p;
++    \,^%{pfx}/%{_lib}/modules/[0-9.]\+/updates/net/, p;
++' all_files.lst > rfs_common_files.lst
++
++sed -n '
++    \,^%{pfx}/%{_lib}/firmware/rtlwifi/rtl8192cufw\.bin, p;
++    \,^%{pfx}/%{_lib}/modules/[0-9.]\+/updates/drivers/net/wireless/rtlwifi/, p;
++' all_files.lst > rfs_rtlwifi_files.lst
++
++sed -n '
++    \,^%{pfx}/%{_lib}/firmware/ath9k_htc/htc_9271-.*\.fw, p;
++    \,^%{pfx}/%{_lib}/modules/[0-9.]\+/updates/drivers/net/wireless/ath/, p;
++' all_files.lst > rfs_ath9k_htc_files.lst
++
++
++#################################################################
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT/%{name}-%{version}
++
++
++#################################################################
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++%Files common-rfs -f rfs_common_files.lst
++%defattr(-,root,root)
++
++%Files rtlwifi-rfs -f rfs_rtlwifi_files.lst
++%defattr(-,root,root)
++
++%Files ath9k_htc-rfs -f rfs_ath9k_htc_files.lst
 +%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec ltib/dist/lfs-5.1/wireless-tools/wireless-tools.spec
 --- ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec

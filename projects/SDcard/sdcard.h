@@ -22,6 +22,8 @@ private slots:
 
     void on_pushButtonStore_clicked();
 
+    void on_pushButtonRemind_clicked();
+
 private:
     Ui::sdcard *ui;
 };

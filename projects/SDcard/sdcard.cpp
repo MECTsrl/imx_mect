@@ -13,17 +13,22 @@ sdcard::~sdcard()
     delete ui;
 }
 
-void sdcard::on_pushButtonIgnore_clicked()
+void sdcard::on_pushButtonRemind_clicked()
 {
     exit(0);
 }
 
-void sdcard::on_pushButtonApplication_clicked()
+void sdcard::on_pushButtonIgnore_clicked()
 {
     exit(1);
 }
 
-void sdcard::on_pushButtonStore_clicked()
+void sdcard::on_pushButtonApplication_clicked()
 {
     exit(2);
+}
+
+void sdcard::on_pushButtonStore_clicked()
+{
+    exit(3);
 }

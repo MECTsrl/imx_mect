@@ -17054,8 +17054,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +-$DEVTYPE=wlan 0:0  660 @/usr/sbin/wifi.sh start
 +$DEVTYPE=wlan  0:0  660 $/usr/sbin/wifi.sh stop
 +
-+-sda[0-9]      0:0  666 @/bin/mount $PWD/$DEVNAME /mnt/rwfs
-+sda[0-9]       0:0  666 $/bin/umount              /mnt/rwfs
++#-sda[0-9]      0:0  666 @/bin/mount $PWD/$DEVNAME /mnt/rwfs
++#sda[0-9]       0:0  666 $/bin/umount              /mnt/rwfs
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup

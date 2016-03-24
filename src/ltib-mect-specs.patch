@@ -5491,7 +5491,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 --- ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 +++ ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
-@@ -0,0 +1,202 @@
+@@ -0,0 +1,200 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define pkg_src  compat-drivers
 +%define pkg_rc   rc4
@@ -5510,7 +5510,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +URL             : https://www.kernel.org/pub/linux/kernel/projects/backports/stable/v%{version}-%{pkg_rc}/%{pkg_src}-%{version}-%{release}-%{pkg_bld}.tar.xz
 +Source          : %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}.tar.xz
 +Source1         : firmware-realtek_20160110-1_all.deb
-+Source2         : firmware-atheros_20160110-1_all.deb
++Source2         : htc_9271.fw
 +Patch1          : %{pkg_src}-3.9-rc4-2-su-no_depmod_etc.patch
 +BuildRoot       : %{_tmppath}/%{name}
 +Prefix          : %{pfx}
@@ -5617,17 +5617,15 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +LC_ALL=C
 +
 +rm -rf $RPM_BUILD_ROOT
-+mkdir -p $RPM_BUILD_ROOT/%{pfx}/usr/sbin
++mkdir -p $RPM_BUILD_ROOT%{pfx}/usr/sbin
 +
 +# Firmware for rtlwifi driver
-+cd $RPM_BUILD_ROOT/%{pfx}
++cd $RPM_BUILD_ROOT%{pfx}
 +ar -p %{SOURCE1} data.tar.xz | tar xJvf - $( ar -p %{SOURCE1} data.tar.xz | tar tJf - | grep 8192cu )
 +cd -
 +
 +# Firmware for ath9k_htc driver
-+cd $RPM_BUILD_ROOT/%{pfx}
-+ar -p %{SOURCE2} data.tar.xz | tar xJvf - $( ar -p %{SOURCE2} data.tar.xz | tar tJf - | grep htc_9271 )
-+cd -
++install -D -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{pfx}/lib/firmware/%{SOURCE2}
 +
 +# Install the rtlwifi driver.
 +cd %{dir_rtl}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}

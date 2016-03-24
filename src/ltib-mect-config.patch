@@ -17097,7 +17097,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +				export TSLIB_PLUGINDIR=/usr/lib/ts
 +				export TSLIB_TSDEVICE=/dev/input/ts0
 +				export TSLIB_CONSOLEDEVICE=none
-+				export TSLIB_CALIBFILE=$LOCAL_ETC_DIR/pointercal
++				export TSLIB_CALIBFILE=/etc/pointercal
 +
 +				# qt variable
 +				export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
@@ -17755,7 +17755,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +                    export TSLIB_PLUGINDIR=/usr/lib/ts
 +                    export TSLIB_TSDEVICE=/dev/input/ts0
 +                    export TSLIB_CONSOLEDEVICE=none
-+                    export TSLIB_CALIBFILE=/local/etc/sysconfig/pointercal
++                    export TSLIB_CALIBFILE=/etc/pointercal
 +
 +                    # Qt variables
 +                    export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
@@ -17985,7 +17985,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +        export TSLIB_PLUGINDIR=/usr/lib/ts
 +        export TSLIB_TSDEVICE=/dev/input/ts0
 +        export TSLIB_CONSOLEDEVICE=none
-+        export TSLIB_CALIBFILE=/local/etc/sysconfig/pointercal
++        export TSLIB_CALIBFILE=/etc/pointercal
 +        # Qt variables
 +        export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
 +        export QT_QWS_FONTDIR=/usr/lib/fonts

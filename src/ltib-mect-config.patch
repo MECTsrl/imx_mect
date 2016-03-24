@@ -18054,21 +18054,37 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/sysconfig/net.conf ltib/config/platform/imx/merge/local/etc/sysconfig/net.conf
 --- ltib.reference/config/platform/imx/merge/local/etc/sysconfig/net.conf
 +++ ltib/config/platform/imx/merge/local/etc/sysconfig/net.conf
-@@ -0,0 +1,14 @@
+@@ -0,0 +1,30 @@
 +#
 +# set up the network interfaces
 +#
++
++# eth0 setup
++BOOTPROTO0="[none]"
 +IPADDR0=192.168.5.211
 +NETMASK0=255.255.255.0
 +GATEWAY0=192.168.5.10
 +NAMESERVER01=1.0.0.0
 +NAMESERVER02=1.0.0.0
-+MAC1=
++
++# eth1 setup
++BOOTPROTO1="[none]"
 +IPADDR1=
 +NETMASK1=
 +GATEWAY1=
 +NAMESERVER11=
 +NAMESERVER12=
++
++# wlan0 setup
++ESSIDW0=""
++PASSWORDW0=""
++BOOTPROTOW0="[DHCP]"
++ONBOOTW0=1
++IPADDRW0=
++NETMASKW0=
++GATEWAYW0=
++NAMESERVERW01=
++NAMESERVERW02=
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh ltib/config/platform/imx/merge/usr/bin/fcrts.sh
 --- ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh
 +++ ltib/config/platform/imx/merge/usr/bin/fcrts.sh
@@ -18079,7 +18095,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh ltib/config/platform/imx/merge/usr/sbin/wifi.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/wifi.sh
-@@ -0,0 +1,184 @@
+@@ -0,0 +1,211 @@
 +#!/bin/sh
 +
 +wlan="wlan0"
@@ -18089,6 +18105,16 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +conf_file="$conf_dir/default.conf"
 +
 +NETCONFIG=/local/etc/sysconfig/net.conf
++
++clear_defroutes_resolv()
++{
++    for r in "" `route -n | awk '/^0\.0\.0\.0/ { print $2; }'`; do
++        test -z "$r" && continue
++        route delete default gw "$r"
++    done
++
++    echo "" > /etc/resolv.conf
++}
 +
 +stop_dhclient()
 +{
@@ -18104,6 +18130,8 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +    test "$BOOTPROTOW0" = "[DHCP]" && IPADDRW0="dhcp"
 +
 +    test -n "$IPADDRW0" || return 1
++
++    clear_defroutes_resolv
 +
 +    if test "$IPADDRW0" = "dhcp"; then
 +        stop_dhclient
@@ -18133,7 +18161,6 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +setup()
 +{
 +    mkdir -p "$conf_dir"
-+    mkdir -p "$ctrl_dir"
 +
 +cat > "$conf_file" <<EOF
 +# File automatically created by $0.  Do not edit.
@@ -18150,7 +18177,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +}
 +EOF
 +
-+    # Reconfigure the interface if wpa_supplicant is active.
++    mkdir -p "$ctrl_dir"
 +    if wpa_cli -p $ctrl_dir status; then
 +        iwconfig "$wlan" essid ""
 +
@@ -18162,15 +18189,18 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +
 +start()
 +{
++    test -r "$conf_file" || return 1
++
 +    test -r "$NETCONFIG" || return 1
 +    source "$NETCONFIG"
 +
 +    test "$ONBOOTW0" = "1" || return 0
 +
++    mkdir -p "$ctrl_dir"
 +    if wpa_cli -p $ctrl_dir status; then
-+        iwconfig "$wlan" essid ""       # Force reassociation.
++	iwconfig "$wlan" essid ""       # Force reassociation.
 +    else
-+        wpa_supplicant -B -i "$wlan" -c "$conf_file" || return 1
++	wpa_supplicant -B -i "$wlan" -c "$conf_file" || return 1
 +    fi
 +
 +    ip_setup
@@ -18180,12 +18210,25 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +
 +stop()
 +{
++    test -d "$ctrl_dir" || return 1
++
 +    wpa_cli -p $ctrl_dir terminate 2>/dev/null \
 +        || killall wpa_supplicant 2>/dev/null
 +
 +    ifconfig "$wlan" down 2>/dev/null
 +
 +    stop_dhclient
++    sleep 1
++
++    if test -r "$NETCONFIG"; then
++	source "$NETCONFIG"
++
++	if test -n "$GATEWAY0"; then
++	    clear_defroutes_resolv
++
++	    route add default gw "$GATEWAY0"
++	fi
++    fi
 +
 +    return 0
 +}

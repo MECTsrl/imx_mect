@@ -29,7 +29,6 @@ MECT_ALL_TARGETS := \
 	splash \
 	cgic_work \
 	ATCMcontrol_RunTimeSystem \
-	mect_plugins \
 	mect_apps \
 
 ifneq ($(wildcard 4c_runtime/.*),)

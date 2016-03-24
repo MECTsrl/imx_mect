@@ -2693,8 +2693,8 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup -T -c -n mac_sn
-+rsync -a --inplace ../../../../projects/mac_sn/ ./
++%setup -T -c -n %{name}
++rsync -a --inplace ../../../../projects/%{name}/ ./
 +
 +%Build
 +export LC_ALL
@@ -2738,18 +2738,20 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 --- ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 +++ ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
-@@ -0,0 +1,158 @@
+@@ -0,0 +1,82 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version         : %{ver}
-+Release         : 1_%{rel}
++Version         : 0.0
++Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
 +Group           : System Environment/Libraries
 +URL             : http://www.mect.it/
 +BuildRoot       : %{_tmppath}/%{name}
-+Prefix          : %{MECT_RFSDIR}
++Prefix          : %{pfx}
 +AutoReqProv     : no
 +
 +
@@ -2768,26 +2770,44 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Description
 +%{summary}
 +
++
 +%Prep
 +export LC_ALL
 +LC_ALL=C
 +
-+tar cf $(MECT_RPMBASEDIR)/SOURCES/mect_plugins-%{version}.tar -C $(MECT_PRJDIR) --exclude=.git --transform='s/^\./mect_plugins-%{version}/' .
++%setup -T -c -n %{name}
++rsync -a --inplace ../../../../projects/%{name}/ ./
++
 +
 +%Build
 +export LC_ALL
 +LC_ALL=C
 +
-+%{MECT_QMAKE} -spec qws/linux-g++-mx qt_atcm.pro
-+#make -j`grep -c ^processor /proc/cpuinfo`
++export MECT_RFSDIR
++MECT_RFSDIR=`pwd`/../../../rootfs
++
++test -r Makefile && make clean
++/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx qt_atcm.pro
 +make -j1
++
 +
 +%Install
 +export LC_ALL
 +LC_ALL=C
 +
 +rm -rf $RPM_BUILD_ROOT
-+make -j1 INSTALL_ROOT=%{buildroot} install
++make -j1 INSTALL_ROOT=$RPM_BUILD_ROOT%{pfx} install
++
++mkdir $RPM_BUILD_ROOT%{pfx}/tmp
++rsync -a --inplace $RPM_BUILD_ROOT%{pfx}`pwd`/../../../rootfs/ $RPM_BUILD_ROOT%{pfx}/
++rm -rf $RPM_BUILD_ROOT%{pfx}/home
++
++cd %{_builddir}/%{name}
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    \,%{pfx}%{_libdir}/, p;
++' all_files.lst > rfs_files.lst
++
 +
 +%Clean
 +export LC_ALL
@@ -2795,108 +2815,12 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +rm -rf $RPM_BUILD_ROOT
 +
-+%Files
-+%defattr(-,root,root)
-+%{MECT_RFSDIR}/usr/include/alarms.h
-+%{MECT_RFSDIR}/usr/include/alarms_history.h
-+%{MECT_RFSDIR}/usr/include/alphanumpad.h
-+%{MECT_RFSDIR}/usr/include/app_config.h
-+%{MECT_RFSDIR}/usr/include/app_logprint.h
-+%{MECT_RFSDIR}/usr/include/app_usb.h
-+%{MECT_RFSDIR}/usr/include/app_var_list.h
-+%{MECT_RFSDIR}/usr/include/atcmanimation.h
-+%{MECT_RFSDIR}/usr/include/atcmbutton.h
-+%{MECT_RFSDIR}/usr/include/atcmcombobox.h
-+%{MECT_RFSDIR}/usr/include/atcmdate.h
-+%{MECT_RFSDIR}/usr/include/atcmgraph.h
-+%{MECT_RFSDIR}/usr/include/atcmlabel.h
-+%{MECT_RFSDIR}/usr/include/atcmlcdnumber.h
-+%{MECT_RFSDIR}/usr/include/atcmled.h
-+%{MECT_RFSDIR}/usr/include/atcmplugin.h
-+%{MECT_RFSDIR}/usr/include/atcmprogressbar.h
-+%{MECT_RFSDIR}/usr/include/atcmslider.h
-+%{MECT_RFSDIR}/usr/include/atcmspinbox.h
-+%{MECT_RFSDIR}/usr/include/atcmstyle.h
-+%{MECT_RFSDIR}/usr/include/atcmtime.h
-+%{MECT_RFSDIR}/usr/include/comm_status.h
-+%{MECT_RFSDIR}/usr/include/common.h
-+%{MECT_RFSDIR}/usr/include/system_ini.h
-+%{MECT_RFSDIR}/usr/include/cross_table_utility.h
-+%{MECT_RFSDIR}/usr/include/data_manager.h
-+%{MECT_RFSDIR}/usr/include/defines.h
-+%{MECT_RFSDIR}/usr/include/display_settings.h
-+%{MECT_RFSDIR}/usr/include/global_functions.h
-+%{MECT_RFSDIR}/usr/include/global_var.h
-+%{MECT_RFSDIR}/usr/include/hmi_logger.h
-+%{MECT_RFSDIR}/usr/include/info.h
-+%{MECT_RFSDIR}/usr/include/io_layer_comm.h
-+%{MECT_RFSDIR}/usr/include/item_selector.h
-+%{MECT_RFSDIR}/usr/include/main.h
-+%{MECT_RFSDIR}/usr/include/menu.h
-+%{MECT_RFSDIR}/usr/include/numpad.h
-+%{MECT_RFSDIR}/usr/include/options.h
-+%{MECT_RFSDIR}/usr/include/page0.h
-+%{MECT_RFSDIR}/usr/include/pagebrowser.h
-+%{MECT_RFSDIR}/usr/include/recipe.h
-+%{MECT_RFSDIR}/usr/include/recipe_select.h
-+%{MECT_RFSDIR}/usr/include/screensaver.h
-+%{MECT_RFSDIR}/usr/include/setstyle.h
-+%{MECT_RFSDIR}/usr/include/store.h
-+%{MECT_RFSDIR}/usr/include/store_extract.h
-+%{MECT_RFSDIR}/usr/include/store_filter.h
-+%{MECT_RFSDIR}/usr/include/time_set.h
-+%{MECT_RFSDIR}/usr/include/trend.h
-+%{MECT_RFSDIR}/usr/include/trend_option.h
-+%{MECT_RFSDIR}/usr/include/trend_other.h
-+%{MECT_RFSDIR}/usr/include/trend_range.h
-+%{MECT_RFSDIR}/usr/include/utility.h
-+%{MECT_RFSDIR}/usr/lib/libATCMalarms.so
-+%{MECT_RFSDIR}/usr/lib/libATCMalarms.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMcommon.so
-+%{MECT_RFSDIR}/usr/lib/libATCMcommon.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMcommunication.so
-+%{MECT_RFSDIR}/usr/lib/libATCMcommunication.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMinputdialog.so
-+%{MECT_RFSDIR}/usr/lib/libATCMinputdialog.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMlogger.so
-+%{MECT_RFSDIR}/usr/lib/libATCMlogger.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMplugin.so
-+%{MECT_RFSDIR}/usr/lib/libATCMplugin.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMrecipe.so
-+%{MECT_RFSDIR}/usr/lib/libATCMrecipe.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMstore.so
-+%{MECT_RFSDIR}/usr/lib/libATCMstore.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMsystem.so
-+%{MECT_RFSDIR}/usr/lib/libATCMsystem.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMtrend.so
-+%{MECT_RFSDIR}/usr/lib/libATCMtrend.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMutility.so
-+%{MECT_RFSDIR}/usr/lib/libATCMutility.so.*
 +
-+%files rfs
++%Files -f all_files.lst
 +%defattr(-,root,root)
-+%{MECT_RFSDIR}/usr/lib/libATCMalarms.so
-+%{MECT_RFSDIR}/usr/lib/libATCMalarms.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMcommon.so
-+%{MECT_RFSDIR}/usr/lib/libATCMcommon.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMcommunication.so
-+%{MECT_RFSDIR}/usr/lib/libATCMcommunication.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMinputdialog.so
-+%{MECT_RFSDIR}/usr/lib/libATCMinputdialog.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMlogger.so
-+%{MECT_RFSDIR}/usr/lib/libATCMlogger.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMplugin.so
-+%{MECT_RFSDIR}/usr/lib/libATCMplugin.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMrecipe.so
-+%{MECT_RFSDIR}/usr/lib/libATCMrecipe.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMstore.so
-+%{MECT_RFSDIR}/usr/lib/libATCMstore.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMsystem.so
-+%{MECT_RFSDIR}/usr/lib/libATCMsystem.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMtrend.so
-+%{MECT_RFSDIR}/usr/lib/libATCMtrend.so.*
-+%{MECT_RFSDIR}/usr/lib/libATCMutility.so
-+%{MECT_RFSDIR}/usr/lib/libATCMutility.so.*
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec

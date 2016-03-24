@@ -18095,7 +18095,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh ltib/config/platform/imx/merge/usr/sbin/wifi.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/wifi.sh
-@@ -0,0 +1,211 @@
+@@ -0,0 +1,214 @@
 +#!/bin/sh
 +
 +wlan="wlan0"
@@ -18105,6 +18105,9 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +conf_file="$conf_dir/default.conf"
 +
 +NETCONFIG=/local/etc/sysconfig/net.conf
++
++INIT_NETWORK=/etc/rc.d/init.d/network
++
 +
 +clear_defroutes_resolv()
 +{
@@ -18226,7 +18229,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +	if test -n "$GATEWAY0"; then
 +	    clear_defroutes_resolv
 +
-+	    route add default gw "$GATEWAY0"
++	    test -x $INIT_NETWORK && $INIT_NETWORK restart
 +	fi
 +    fi
 +

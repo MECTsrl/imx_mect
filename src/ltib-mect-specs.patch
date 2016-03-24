@@ -45,7 +45,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +test -r Makefile && make clean
 +/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx
-+make -j$(grep -c ^processor /proc/cpuinfo)
++make -j1
 +
 +%Install
 +export LC_ALL

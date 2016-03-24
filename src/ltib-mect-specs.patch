@@ -2655,6 +2655,81 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
+diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mac_sn/mac_sn.spec ltib/dist/lfs-5.1/mac_sn/mac_sn.spec
+--- ltib.reference/dist/lfs-5.1/mac_sn/mac_sn.spec
++++ ltib/dist/lfs-5.1/mac_sn/mac_sn.spec
+@@ -0,0 +1,71 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : GUI to set up MAC address of Ethernet cards
++Name            : mac_sn
++Version         : 1.0
++Release         : 1
++License         : GPL
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/File
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed %{name} to just runtimes
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/File
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents limited to just the files
++needed at run time on the target system.
++
++
++%Description
++%{summary}
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++%setup -T -c -n mac_sn
++rsync -a --inplace ../../../../projects/mac_sn/ ./
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++test -r Makefile && make clean
++/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx
++make -j1
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++install -D -m 0755 mac_sn $RPM_BUILD_ROOT%{pfx}/usr/bin/mac_sn
++
++cd %{_builddir}/%{name}
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p
++' all_files.lst > rfs_files.lst
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 --- ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 +++ ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec

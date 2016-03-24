@@ -18076,7 +18076,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh ltib/config/platform/imx/merge/usr/sbin/wifi.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/wifi.sh
-@@ -0,0 +1,178 @@
+@@ -0,0 +1,184 @@
 +#!/bin/sh
 +
 +wlan="wlan0"
@@ -18086,6 +18086,12 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +conf_file="$conf_dir/default.conf"
 +
 +NETCONFIG=/local/etc/sysconfig/net.conf
++
++stop_dhclient()
++{
++    pid=`ps | awk '/\<dhclient .* '$wlan'\>/ { if (($5 == "dhclient") && ($7 == "'$wlan'")) print $1; }'`
++    test -n "$pid" && kill $pid
++}
 +
 +ip_setup()
 +{
@@ -18097,7 +18103,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +    test -n "$IPADDRW0" || return 1
 +
 +    if test "$IPADDRW0" = "dhcp"; then
-+        killall dhclient 2>/dev/null
++        stop_dhclient
 +        sleep 1
 +        dhclient -nw $wlan
 +    else
@@ -18156,7 +18162,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +    test -r "$NETCONFIG" || return 1
 +    source "$NETCONFIG"
 +
-+    test "$ENABLEDW0" = "yes" || return 0
++    test "$ONBOOTW0" = "1" || return 0
 +
 +    if wpa_cli -p $ctrl_dir status; then
 +        iwconfig "$wlan" essid ""       # Force reassociation.
@@ -18176,7 +18182,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +
 +    ifconfig "$wlan" down 2>/dev/null
 +
-+    killall dhclient 2>/dev/null
++    stop_dhclient
 +
 +    return 0
 +}

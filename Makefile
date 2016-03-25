@@ -166,6 +166,7 @@ MECT_COMMON_RFSPKGS := \
 	libusb1-rfs-1.0.20-1.$(MECT_TARGET_ARCH).rpm \
 	lrzsz-rfs-0.12.21-1.$(MECT_TARGET_ARCH).rpm \
 	lzo-rfs-2.03-0.$(MECT_TARGET_ARCH).rpm \
+	mac_sn-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	mect_plugins-rfs-$(MECT_BUILD_PLUGINSCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm \
 	merge-rfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 	modeps-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \

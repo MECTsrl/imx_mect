@@ -17939,7 +17939,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/setup ltib/config/platform/imx/merge/etc/rc.d/init.d/setup
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/setup
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/setup
-@@ -0,0 +1,95 @@
+@@ -0,0 +1,96 @@
 +#!/bin/sh
 +
 +start() {
@@ -18009,6 +18009,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +}
 +
 +stop() {
++	:
 +}
 +
 +restart() {

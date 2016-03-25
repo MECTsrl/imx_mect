@@ -1,7 +1,5 @@
- # Copyright 2011 Mect s.r.l
-
-# ../../Makefile.cfg
-#
+# Copyright 2011 Mect s.r.l
+# build the cgi from c and install all the cgi/css/html file nto the BIN_DIR
 
 QMAKE             =  qmake -spec qws/linux-g++-mx
 
@@ -26,42 +24,116 @@ MD                =  mkdir
 SED               =  sed
 RM                =  rm
 
+BIN_DIR = ../localfs/www
+
 ARCH_LIB_PATH     =  -L$(MECT_RFSDIR)/usr/lib
 ARCH_INCLUDE      =  -I$(MECT_RFSDIR)/usr/include -I$(MECT_RFSDIR)/usr/src/linux/include
 ARCH_DFLAGS       =  -D__arm
 
-# Makefile
-#
+CFLAGS            =  -Wall
 
-CFLAGS = -Wall
+CGISH_LIST = alarms_manager.cgi \
+changepwd.cgi \
+checkpwd.cgi \
+config_manager.cgi \
+date_time.cgi \
+display.cgi \
+display_csv.cgi \
+display_setup.cgi \
+factory_reset.cgi \
+factory_reset_confirm.cgi \
+filebrowser.cgi \
+filesmanager.cgi \
+formatsdcard.cgi \
+index.cgi \
+info.cgi \
+lan_config.cgi \
+lan_setup.cgi \
+load.cgi \
+login.cgi \
+logout.cgi \
+logs_extractor.cgi \
+logs_filter.cgi \
+logs_manager.cgi \
+managepwd.cgi \
+menu.cgi \
+reboot.cgi \
+recipes_manager.cgi \
+reset_mass_storage.cgi \
+reset_passwords.cgi \
+select \
+select-template.html \
+style.css \
+trend_manager.cgi \
+underconstruction.cgi \
+updatetime.cgi \
+upload.cgi \
 
-BIN_DIR = ../localfs/www
+CGIC_LIST = upgrade.cgi getdatesinterval extract updateall.cgi
 
-all: upgrade.cgi getdatesinterval extract updateall.cgi
+CGI_LIST = $(CGISH_LIST) $(CGIC_LIST)
+
+all: $(CGI_LIST)
 	
+alarms_manager.cgi:
+changepwd.cgi:
+checkpwd.cgi:
+config_manager.cgi:
+date_time.cgi:
+display.cgi:
+display_csv.cgi:
+display_setup.cgi:
+factory_reset.cgi:
+factory_reset_confirm.cgi:
+filebrowser.cgi:
+filesmanager.cgi:
+formatsdcard.cgi:
+index.cgi:
+info.cgi:
+lan_config.cgi:
+lan_setup.cgi:
+load.cgi:
+login.cgi:
+logout.cgi:
+logs_extractor.cgi:
+logs_filter.cgi:
+logs_manager.cgi:
+managepwd.cgi:
+menu.cgi:
+reboot.cgi:
+recipes_manager.cgi:
+reset_mass_storage.cgi:
+reset_passwords.cgi:
+select:
+select-template.html:
+style.css:
+trend_manager.cgi:
+underconstruction.cgi:
+updatetime.cgi:
+upload.cgi:
+
 updateall.cgi: updateall.c common.c common.h cgic.c
-	$(CC) $(ARCH_INCLUDE) $(CFLAGS) updateall.c common.c cgic.c -o updateall.cgi
+	$(CC) $(ARCH_INCLUDE) $(CFLAGS) updateall.c common.c cgic.c -o www/updateall.cgi
 
 upgrade.cgi: upgrade.c common.c common.h cgic.c
-	$(CC) $(ARCH_INCLUDE) $(CFLAGS) upgrade.c common.c cgic.c -o upgrade.cgi
+	$(CC) $(ARCH_INCLUDE) $(CFLAGS) upgrade.c common.c cgic.c -o www/upgrade.cgi
 
 getdatesinterval: getdatesinterval.c
-	$(CC) $(ARCH_INCLUDE) $(CFLAGS) getdatesinterval.c -o getdatesinterval
+	$(CC) $(ARCH_INCLUDE) $(CFLAGS) getdatesinterval.c -o www/getdatesinterval
 
 extract: store_extract.c
-	$(CC) $(ARCH_INCLUDE) $(CFLAGS) -DSTANDALONE store_extract.c -o extract
+	$(CC) $(ARCH_INCLUDE) $(CFLAGS) -DSTANDALONE store_extract.c -o www/extract
 
 install: all
-	install -D -m 0755 updateall.cgi $(BIN_DIR)/updateall.cgi
-	install -D -m 0755 upgrade.cgi $(BIN_DIR)/upgrade.cgi
-	install -D -m 0755 getdatesinterval $(BIN_DIR)/getdatesinterval
-	install -D -m 0755 extract $(BIN_DIR)/extract
+	$(foreach file,$(CGI_LIST),install -D -m 0755 www/$(file) $(BIN_DIR)/$(file);)
 
 clean:
-	rm -f *.o
+	@rm -f *.o
 
 distclean: clean
-	rm -f updateall.cgi upgrade.cgi getdatesinterval extract
+	@$(foreach file,$(CGIC_LIST),rm -f www/$(file);)
 
 clobber: distclean
-	rm -f $(BIN_DIR)/updateall.cgi $(BIN_DIR)/upgrade.cgi $(BIN_DIR)/getdatesinterval $(BIN_DIR)/extract
+	@$(foreach file,$(CGI_LIST),rm -f $(BIN_DIR)/$(file);)
+
+

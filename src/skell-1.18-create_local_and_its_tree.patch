@@ -1,0 +1,14 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/Makefile skell-1.18.modified/Makefile
+--- skell-1.18/Makefile	2016-03-27 15:43:06.304914025 +0200
++++ skell-1.18.modified/Makefile	2016-03-27 15:42:39.965245160 +0200
+@@ -1,8 +1,8 @@
+ install:
+ 	mkdir -p $(DESTDIR)
+ 	find . -type d -name CVS -prune -o ! -name Makefile -print0 | cpio -p0d $(DESTDIR)
+-	for d in bin boot dev lib lib/modules mnt opt proc root sbin sys tmp; do mkdir -p $(DESTDIR)/$$d; done
+-	for d in bin include lib local local/sd_card; do mkdir -p $(DESTDIR)/usr/$$d; done
++	for d in bin boot dev lib lib/modules mnt opt proc root sbin sys tmp local local/sd_card local/root local/control; do mkdir -p $(DESTDIR)/$$d; done
++	for d in bin include lib; do mkdir -p $(DESTDIR)/usr/$$d; done
+ 	for d in tmp lib lock mail run spool www/icons ftp/bin ftp/etc ftp/lib ftp/pub spool/lpd spool/mail; do mkdir -p $(DESTDIR)/var/$$d; done
+ 	for d in cdrom floppy nfs rwfs src; do mkdir -p $(DESTDIR)/mnt/$$d; done
+ 	chmod 0755 $(DESTDIR)/etc/rc.d/init.d/*

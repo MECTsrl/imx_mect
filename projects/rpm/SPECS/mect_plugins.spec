@@ -38,7 +38,6 @@ export LC_ALL
 LC_ALL=C
 
 %{MECT_QMAKE} -spec qws/linux-g++-mx qt_atcm.pro
-#make -j`grep -c ^processor /proc/cpuinfo`
 make -j1
 
 %install

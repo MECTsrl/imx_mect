@@ -1,0 +1,11 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/Makefile skell-1.18.modified/Makefile
+--- skell-1.18/Makefile	2016-03-28 02:23:17.554019228 +0200
++++ skell-1.18.modified/Makefile	2016-03-28 02:22:38.006516408 +0200
+@@ -9,6 +9,7 @@
+ 	chmod 2777 $(DESTDIR)/var/ftp/pub
+ 	chmod 1777 $(DESTDIR)/tmp
+ 	chmod 0777 $(DESTDIR)/var/tmp
++	cd $(DESTDIR) && mkdir -p local/update
+ 	cd $(DESTDIR) && rm -rf root && ln -s local/root
+ 	cd $(DESTDIR) && ln -s local/control
+ 	cd $(DESTDIR) && rm -rf home

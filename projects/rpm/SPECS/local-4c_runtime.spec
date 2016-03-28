@@ -33,12 +33,12 @@ LC_ALL=C
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{pfx}/local
 cd $RPM_BUILD_ROOT/%{pfx}/local
-tar xjvf %{SOURCE0} ./flash/root/fcrts.4c_runtime
-mv flash/root/fcrts.4c_runtime flash/root/fcrts
+tar xjvf %{SOURCE0} ./root/fcrts.4c_runtime
+mv root/fcrts.4c_runtime root/fcrts
 
 %clean
 sudo rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%{pfx}/local/flash/root/fcrts
+%{pfx}/local/root/fcrts

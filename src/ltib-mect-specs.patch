@@ -4247,16 +4247,18 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec
 +++ ltib/dist/lfs-5.1/skell/skell.spec
-@@ -9,20 +9,93 @@
+@@ -9,20 +9,97 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
 +Source2         : rootfs_patch-1.2.tar.bz2
-+Source3         : skell-local-1.5.tar.bz2
++Source3         : skell-local-1.6.tar.bz2
 +Source4         : gdbserver
  Patch1          : skell-1.18-dropbear_args.patch
- Patch2          : skell-1.17-imx.patch
- Patch3          : skell-1.16-imx-fsl-gstplugin.patch
+-Patch2          : skell-1.17-imx.patch
+-Patch3          : skell-1.16-imx-fsl-gstplugin.patch
++Patch2          : skell-1.18-imx.patch
++Patch3          : skell-1.18-imx-fsl-gstplugin.patch
  Patch4          : skell-1.19-imx-fsl-gnome.patch
  Patch5          : skell-1.19-imx-hal-messagebus.patch
 -Patch6          : skell-1.18-imx-add-ttymxc2n3.patch
@@ -4292,6 +4294,10 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +Patch38         : skell-1.18-remove_mdev_conf.patch
 +Patch39         : skell-1.18-remove_sdcheck.patch
 +Patch40         : skell-1.18-remove_net_conf.patch
++Patch41         : skell-1.18-limit_to_skell_creation.patch
++Patch42         : skell-1.18-remove_home_dir.patch
++Patch43         : skell-1.18-create_local_and_its_tree.patch
++Patch44         : skell-1.18-create_local_update.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -4343,7 +4349,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +104,111 @@
+@@ -31,24 +108,88 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -4352,8 +4358,6 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%patch10 -p1
 +%patch11 -p1
 +%patch14 -p1
-+
-+DESTDIR=$RPM_BUILD_ROOT/%{pfx} 
 +%patch16 -p1
 +%patch17 -p1
 +%patch18 -p1
@@ -4378,6 +4382,10 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%patch38 -p1
 +%patch39 -p1
 +%patch40 -p1
++%patch41 -p1
++%patch42 -p1
++%patch43 -p1
++%patch44 -p1
  
  %Build
 +export LC_ALL
@@ -4389,8 +4397,10 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +export LC_ALL
 +LC_ALL=C
 +
- rm -rf $RPM_BUILD_ROOT
 +DESTDIR=$RPM_BUILD_ROOT/%{pfx} 
++
+ rm -rf $RPM_BUILD_ROOT
++
  make DESTDIR=$RPM_BUILD_ROOT/%{pfx} install
 -if [ -z "$PKG_SKELL_WANT_TERMINFO" ]
 -then
@@ -4409,7 +4419,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +    \,^%{pfx}/boot, d;
 +    \,^%{pfx}/dev/, d;
 +    \,^%{pfx}%{_includedir}, d;
-+    \,^%{pfx}/local, d;
++    \,^%{pfx}/local/, d;
 +    \,^%{pfx}/\.keepme, d;
 +' all_files.lst > rfs_files.lst
 +sed -n '
@@ -4426,37 +4436,10 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files -f all_files.lst
 +%defattr(-,root,root)
-+%attr(0555, root, root) %dir %{pfx}/bin
-+%attr(0555, root, root) %dir %{pfx}/boot
-+%attr(0755, root, root) %dir %{pfx}/dev
-+%attr(0755, root, root) %dir %{pfx}/etc
-+%attr(0555, root, root) %dir %{pfx}/lib
-+%attr(0755, root, root) %dir %{pfx}/local
-+%attr(0755, root, root) %dir %{pfx}/mnt
-+%attr(0755, root, root) %dir %{pfx}/opt
-+%attr(0555, root, root) %dir %{pfx}/proc
-+%attr(0555, root, root) %dir %{pfx}/sbin
-+%attr(0555, root, root) %dir %{pfx}/sys
-+%attr(0777, root, root) %dir %{pfx}/tmp
-+%attr(0755, root, root) %dir %{pfx}/usr
-+%attr(0755, root, root) %dir %{pfx}/var
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-+%attr(0555, root, root) %dir %{pfx}/bin
-+%attr(0555, root, root) %dir %{pfx}/boot
-+%attr(0755, root, root) %dir %{pfx}/dev
-+%attr(0755, root, root) %dir %{pfx}/etc
-+%attr(0555, root, root) %dir %{pfx}/lib
 +%attr(0755, root, root) %dir %{pfx}/local
-+%attr(0755, root, root) %dir %{pfx}/mnt
-+%attr(0755, root, root) %dir %{pfx}/opt
-+%attr(0555, root, root) %dir %{pfx}/proc
-+%attr(0555, root, root) %dir %{pfx}/sbin
-+%attr(0555, root, root) %dir %{pfx}/sys
-+%attr(0777, root, root) %dir %{pfx}/tmp
-+%attr(0755, root, root) %dir %{pfx}/usr
-+%attr(0755, root, root) %dir %{pfx}/var
  
 -%Files
 +%Files lfs -f lfs_files.lst

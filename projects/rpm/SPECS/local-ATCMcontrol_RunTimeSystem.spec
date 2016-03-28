@@ -33,12 +33,12 @@ LC_ALL=C
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{pfx}/local
 cd $RPM_BUILD_ROOT/%{pfx}/local
-tar xjvf %{SOURCE0} ./flash/root/fcrts.ATCMcontrol_RunTimeSystem
-mv flash/root/fcrts.ATCMcontrol_RunTimeSystem flash/root/fcrts
+tar xjvf %{SOURCE0} ./root/fcrts.ATCMcontrol_RunTimeSystem
+mv root/fcrts.ATCMcontrol_RunTimeSystem root/fcrts
 
 %clean
 sudo rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%{pfx}/local/flash/root/fcrts
+%{pfx}/local/root/fcrts

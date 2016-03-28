@@ -1,0 +1,84 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/rc.d/init.d/mount-proc-sys skell-1.18.modified/etc/rc.d/init.d/mount-proc-sys
+--- skell-1.18/etc/rc.d/init.d/mount-proc-sys	2016-03-27 00:01:44.077155900 +0100
++++ skell-1.18.modified/etc/rc.d/init.d/mount-proc-sys	2016-03-26 23:56:16.281166769 +0100
+@@ -7,8 +7,7 @@
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ 
+-if [ "$1" = "start" -o "$1" = "restart" ]
+-then
++if [ "$1" = "start" -o "$1" = "restart" ]; then
+     echo "Mounting /proc and /sys "
+     mount -n -t proc proc /proc
+     mount -n -t sysfs sys /sys
+diff --exclude CVS --exclude .git -uNr skell-1.18/Makefile skell-1.18.modified/Makefile
+--- skell-1.18/Makefile	2016-03-27 00:01:44.065155900 +0100
++++ skell-1.18.modified/Makefile	2016-03-27 00:01:23.281156589 +0100
+@@ -1,59 +1,13 @@
+ install:
+ 	mkdir -p $(DESTDIR)
+-	find . -type d -name CVS -prune -o ! -name Makefile -print0 \
+-                                                      | cpio -p0d $(DESTDIR)
+-	for i in bin boot dev lib mnt opt proc root sbin sys tmp ; do \
+-        mkdir -p $(DESTDIR)/$$i                              ; done
+-	for i in bin include lib local                           ; do   \
+-        mkdir -p $(DESTDIR)/usr/$$i                          ; done
+-	for i in tmp lib lock mail run spool www/icons \
+-             ftp/bin ftp/etc ftp/lib ftp/pub   \
+-             spool/lpd spool/mail                    ; do \
+-        mkdir -p $(DESTDIR)/var/$$i                          ; done
+-	for i in cdrom floppy nfs rwfs src                       ; do \
+-        mkdir -p $(DESTDIR)/mnt/$$i                          ; done
+-	mkdir -p $(DESTDIR)/lib/modules
+-	mkdir -p $(DESTDIR)/
+-	ln -s /proc/mounts $(DESTDIR)/dev/mtab
+-	chmod 755 $(DESTDIR)/etc/rc.d/init.d/*
++	find . -type d -name CVS -prune -o ! -name Makefile -print0 | cpio -p0d $(DESTDIR)
++	for d in bin boot dev lib lib/modules mnt opt proc root sbin sys tmp; do mkdir -p $(DESTDIR)/$$d; done
++	for d in bin include lib local local/sd_card; do mkdir -p $(DESTDIR)/usr/$$d; done
++	for d in tmp lib lock mail run spool www/icons ftp/bin ftp/etc ftp/lib ftp/pub spool/lpd spool/mail; do mkdir -p $(DESTDIR)/var/$$d; done
++	for d in cdrom floppy nfs rwfs src; do mkdir -p $(DESTDIR)/mnt/$$d; done
++	chmod 0755 $(DESTDIR)/etc/rc.d/init.d/*
+ 	chmod 2777 $(DESTDIR)/var/ftp/pub
+ 	chmod 1777 $(DESTDIR)/tmp
+-	chmod 777  $(DESTDIR)/var/tmp
+-	#clean the actual local dir
+-	mv $(DESTDIR)/local $(DESTDIR)/local_ori
+-	# prepare the dir tree for the flash
+-	mkdir -p $(DESTDIR)/local/sd_card
+-	#mkdir -p $(DESTDIR)/local/flash
+-	mv $(DESTDIR)/local_ori $(DESTDIR)/local/flash
+-	mkdir -p $(DESTDIR)/local/flash/control
+-	mkdir -p $(DESTDIR)/local/flash/data
+-	mkdir -p $(DESTDIR)/local/flash/etc/sysconfig
+-	mkdir -p $(DESTDIR)/local/flash/root
+-	# prepare the dir tree for to point to the flash
+-	cd $(DESTDIR)/local && ln -s flash/control control
+-	cd $(DESTDIR)/local && ln -s flash/data data
+-	cd $(DESTDIR)/local && ln -s flash/etc etc
+-	cd $(DESTDIR)/local && ln -s flash/root root
+-	#test -L root || test -d root && rm -rf root
+-	rm -rf $(DESTDIR)/root
+-	cd $(DESTDIR) && ln -s local/root
+-	mkdir -p $(DESTDIR)/local/root/sqldrivers
+-	cd $(DESTDIR)/local/root/sqldrivers && ln -sf /usr/lib/libqsqlite.so
+-	cd $(DESTDIR)/local/root/sqldrivers && ln -sf /usr/lib/libqsqlmysql.so
+-	#test -L control || test -d control && rm -rf control
++	chmod 0777 $(DESTDIR)/var/tmp
++	cd $(DESTDIR) && rm -rf root && ln -s local/root
+ 	cd $(DESTDIR) && ln -s local/control
+-	#test -L home || test -d home && rm -rf home
+-	rm -rf $(DESTDIR)/home
+-	mkdir -p $(DESTDIR)/local/home
+-	cd $(DESTDIR) && ln -s local/home
+-	mkdir -p $(DESTDIR)/local/etc/sysconfig/ppp
+-	rm -rf $(DESTDIR)/etc/ppp
+-	cd $(DESTDIR)/etc && ln -s /local/etc/sysconfig/ppp ppp
+-	cd $(DESTDIR)
+-	mkdir -p $(DESTDIR)/local/etc/sysconfig/chatscripts
+-	rm -rf $(DESTDIR)/etc/chatscripts
+-	cd $(DESTDIR)/etc ln -s /local/etc/sysconfig/chatscripts chatscripts
+-
+-	cd $(RPM_BUILD_DIR)/skell-1.18
+-	#cd -
+-

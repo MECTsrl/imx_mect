@@ -57,7 +57,7 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{pfx}/local
 tar xjvf %{SOURCE0} -C $RPM_BUILD_ROOT%{pfx}/local
 
-cd $RPM_BUILD_ROOT%{pfx}/local/flash/root
+cd $RPM_BUILD_ROOT%{pfx}/local/root
 rm -f fcrts fcrts.4c_runtime fcrts.ATCMcontrol_RunTimeSystem
 
 %clean
@@ -65,41 +65,23 @@ sudo rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%{pfx}/local/control
-%{pfx}/local/data
-%{pfx}/local/etc
-%{pfx}/local/factory_data.tar.gz
-%{pfx}/local/flash/control
-%{pfx}/local/flash/data/store
-%{pfx}/local/flash/data/trends
-%{pfx}/local/flash/etc/sysconfig/brightness
-%{pfx}/local/flash/etc/sysconfig/chatscripts
-%{pfx}/local/flash/etc/sysconfig/img/splash.png
-%{pfx}/local/flash/etc/sysconfig/img/systool.png
-%{pfx}/local/flash/etc/sysconfig/.passwd
-%{pfx}/local/flash/etc/sysconfig/ppp
-%{pfx}/local/flash/root/backing_file
-%{pfx}/local/flash/root/make_usb_device
-%{pfx}/local/flash/root/setparam
-%{pfx}/local/flash/root/splash
-%{pfx}/local/flash/root/sqldrivers/libqsqlite.so
-%{pfx}/local/flash/root/sqldrivers/libqsqlmysql.so
-%{pfx}/local/flash/root/writemac
-%{pfx}/local/home
+%attr(0755, root, root) %dir %{pfx}/local/control
+%attr(0755, root, root) %dir %{pfx}/local/data/store
+%attr(0755, root, root) %dir %{pfx}/local/data/trends
+%attr(0755, root, root) %dir %{pfx}/local/sd_card
+%attr(0755, root, root) %dir %{pfx}/local/update
 %{pfx}/local/retentive
-%{pfx}/local/root
-%{pfx}/local/sd_card
-%{pfx}/local/update
+
+%files cgic_work
+%defattr(-,root,root)
 %{pfx}/local/www/alarms_manager.cgi
 %{pfx}/local/www/changepwd.cgi
 %{pfx}/local/www/checkpwd.cgi
 %{pfx}/local/www/config_manager.cgi
 %{pfx}/local/www/date_time.cgi
 %{pfx}/local/www/display.cgi
-%{pfx}/local/www/display.cgi.new
 %{pfx}/local/www/display_csv.cgi
 %{pfx}/local/www/display_setup.cgi
-%{pfx}/local/www/display_setup.cgi.new
 %{pfx}/local/www/extract
 %{pfx}/local/www/factory_reset.cgi
 %{pfx}/local/www/factory_reset_confirm.cgi
@@ -133,16 +115,9 @@ sudo rm -rf $RPM_BUILD_ROOT
 %{pfx}/local/www/upgrade.cgi
 %{pfx}/local/www/upload.cgi
 
-%files cgic_work
-%defattr(-,root,root)
-%{pfx}/local/www/updateall.cgi
-%{pfx}/local/www/upgrade.cgi
-%{pfx}/local/www/getdatesinterval
-%{pfx}/local/www/extract
-
 %files splash
 %defattr(-,root,root)
-%{pfx}/local/flash/root/splash
+%{pfx}/local/root/splash
 
 %files factory_data
 %defattr(-,root,root)

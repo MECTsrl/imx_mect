@@ -1,4 +1,4 @@
-diff -urN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/bin/Ltibutils.pm ltib/bin/Ltibutils.pm
+diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/bin/Ltibutils.pm ltib/bin/Ltibutils.pm
 --- ltib.reference/bin/Ltibutils.pm
 +++ ltib/bin/Ltibutils.pm
 @@ -359,7 +359,7 @@

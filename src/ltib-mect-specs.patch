@@ -1,4 +1,4 @@
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/SDcard/SDcard.spec ltib/dist/lfs-5.1/SDcard/SDcard.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/SDcard/SDcard.spec ltib/dist/lfs-5.1/SDcard/SDcard.spec
 --- ltib.reference/dist/lfs-5.1/SDcard/SDcard.spec
 +++ ltib/dist/lfs-5.1/SDcard/SDcard.spec
 @@ -0,0 +1,71 @@
@@ -73,7 +73,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec ltib/dist/lfs-5.1/base_libs/base_libs.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec ltib/dist/lfs-5.1/base_libs/base_libs.spec
 --- ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec
 +++ ltib/dist/lfs-5.1/base_libs/base_libs.spec
 @@ -11,6 +11,19 @@
@@ -331,7 +331,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bison/bison.spec ltib/dist/lfs-5.1/bison/bison.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bison/bison.spec ltib/dist/lfs-5.1/bison/bison.spec
 --- ltib.reference/dist/lfs-5.1/bison/bison.spec
 +++ ltib/dist/lfs-5.1/bison/bison.spec
 @@ -20,7 +20,7 @@
@@ -343,7 +343,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Install
  rm -rf $RPM_BUILD_ROOT
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boa/boa.spec ltib/dist/lfs-5.1/boa/boa.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boa/boa.spec ltib/dist/lfs-5.1/boa/boa.spec
 --- ltib.reference/dist/lfs-5.1/boa/boa.spec
 +++ ltib/dist/lfs-5.1/boa/boa.spec
 @@ -11,48 +11,82 @@
@@ -449,7 +449,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
 --- ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec
 +++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
 @@ -8,39 +8,92 @@
@@ -551,7 +551,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
 +%{pfx}/boot/imx28_ivt_linux.sb
 +%{pfx}/boot/updater_ivt.sb
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/busybox/busybox.spec ltib/dist/lfs-5.1/busybox/busybox.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/busybox/busybox.spec ltib/dist/lfs-5.1/busybox/busybox.spec
 --- ltib.reference/dist/lfs-5.1/busybox/busybox.spec
 +++ ltib/dist/lfs-5.1/busybox/busybox.spec
 @@ -3,24 +3,46 @@
@@ -638,7 +638,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %defattr(-,root,root)
 -%attr(4755,root,root) %{pfx}/%{base}/bin/busybox
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec ltib/dist/lfs-5.1/bzip2/bzip2.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec ltib/dist/lfs-5.1/bzip2/bzip2.spec
 --- ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec
 +++ ltib/dist/lfs-5.1/bzip2/bzip2.spec
 @@ -15,31 +15,65 @@
@@ -711,7 +711,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cantest/cantest.spec ltib/dist/lfs-5.1/cantest/cantest.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cantest/cantest.spec ltib/dist/lfs-5.1/cantest/cantest.spec
 --- ltib.reference/dist/lfs-5.1/cantest/cantest.spec
 +++ ltib/dist/lfs-5.1/cantest/cantest.spec
 @@ -9,18 +9,35 @@
@@ -790,7 +790,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/compat-drivers/compat-drivers.spec ltib/dist/lfs-5.1/compat-drivers/compat-drivers.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/compat-drivers/compat-drivers.spec ltib/dist/lfs-5.1/compat-drivers/compat-drivers.spec
 --- ltib.reference/dist/lfs-5.1/compat-drivers/compat-drivers.spec
 +++ ltib/dist/lfs-5.1/compat-drivers/compat-drivers.spec
 @@ -0,0 +1,98 @@
@@ -892,7 +892,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec
 @@ -10,36 +10,63 @@
@@ -1020,7 +1020,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec ltib/dist/lfs-5.1/dropbear/dropbear.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec ltib/dist/lfs-5.1/dropbear/dropbear.spec
 --- ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec
 +++ ltib/dist/lfs-5.1/dropbear/dropbear.spec
 @@ -10,16 +10,37 @@
@@ -1097,7 +1097,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 --- ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 +++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 @@ -13,25 +13,65 @@
@@ -1169,7 +1169,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-, root, root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec ltib/dist/lfs-5.1/elftosb/elftosb.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec ltib/dist/lfs-5.1/elftosb/elftosb.spec
 --- ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec
 +++ ltib/dist/lfs-5.1/elftosb/elftosb.spec
 @@ -9,6 +9,7 @@
@@ -1188,7 +1188,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Build
  make
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/expat/expat.spec ltib/dist/lfs-5.1/expat/expat.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/expat/expat.spec ltib/dist/lfs-5.1/expat/expat.spec
 --- ltib.reference/dist/lfs-5.1/expat/expat.spec
 +++ ltib/dist/lfs-5.1/expat/expat.spec
 @@ -14,30 +14,64 @@
@@ -1260,7 +1260,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec ltib/dist/lfs-5.1/fake-provides/fake-provides.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec ltib/dist/lfs-5.1/fake-provides/fake-provides.spec
 --- ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec
 +++ ltib/dist/lfs-5.1/fake-provides/fake-provides.spec
 @@ -5,83 +5,93 @@
@@ -1417,7 +1417,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Files
 -
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec ltib/dist/lfs-5.1/fontconfig/fontconfig.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec ltib/dist/lfs-5.1/fontconfig/fontconfig.spec
 --- ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec
 +++ ltib/dist/lfs-5.1/fontconfig/fontconfig.spec
 @@ -10,27 +10,53 @@
@@ -1507,7 +1507,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/freetype/freetype.spec ltib/dist/lfs-5.1/freetype/freetype.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/freetype/freetype.spec ltib/dist/lfs-5.1/freetype/freetype.spec
 --- ltib.reference/dist/lfs-5.1/freetype/freetype.spec
 +++ ltib/dist/lfs-5.1/freetype/freetype.spec
 @@ -12,29 +12,63 @@
@@ -1577,7 +1577,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/git/git.spec ltib/dist/lfs-5.1/git/git.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/git/git.spec ltib/dist/lfs-5.1/git/git.spec
 --- ltib.reference/dist/lfs-5.1/git/git.spec
 +++ ltib/dist/lfs-5.1/git/git.spec
 @@ -27,7 +27,7 @@
@@ -1589,7 +1589,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  
  %Install
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/glib2/glib2.spec ltib/dist/lfs-5.1/glib2/glib2.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/glib2/glib2.spec ltib/dist/lfs-5.1/glib2/glib2.spec
 --- ltib.reference/dist/lfs-5.1/glib2/glib2.spec
 +++ ltib/dist/lfs-5.1/glib2/glib2.spec
 @@ -1,47 +1,82 @@
@@ -1687,7 +1687,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/hotplug/hotplug.spec ltib/dist/lfs-5.1/hotplug/hotplug.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/hotplug/hotplug.spec ltib/dist/lfs-5.1/hotplug/hotplug.spec
 --- ltib.reference/dist/lfs-5.1/hotplug/hotplug.spec
 +++ ltib/dist/lfs-5.1/hotplug/hotplug.spec
 @@ -13,26 +13,60 @@
@@ -1755,7 +1755,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %defattr(-,root,root)
 -%attr(755,root,root)  %{pfx}/var/run/usb
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/iproute/iproute.spec ltib/dist/lfs-5.1/iproute/iproute.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/iproute/iproute.spec ltib/dist/lfs-5.1/iproute/iproute.spec
 --- ltib.reference/dist/lfs-5.1/iproute/iproute.spec
 +++ ltib/dist/lfs-5.1/iproute/iproute.spec
 @@ -1,18 +1,37 @@
@@ -1846,7 +1846,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl ltib/dist/lfs-5.1/kernel/kernel-common.tmpl
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl ltib/dist/lfs-5.1/kernel/kernel-common.tmpl
 --- ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl
 +++ ltib/dist/lfs-5.1/kernel/kernel-common.tmpl
 @@ -182,10 +182,10 @@
@@ -2080,7 +2080,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs-dev-usbserial-zio
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/zio.ko
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec
 --- ltib.reference/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec
 +++ ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec
 @@ -0,0 +1,39 @@
@@ -2123,7 +2123,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +
 +%Files
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 --- ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 +++ ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 @@ -0,0 +1,77 @@
@@ -2204,7 +2204,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec ltib/dist/lfs-5.1/libtermcap/libtermcap.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec ltib/dist/lfs-5.1/libtermcap/libtermcap.spec
 --- ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec
 +++ ltib/dist/lfs-5.1/libtermcap/libtermcap.spec
 @@ -1,4 +1,5 @@
@@ -2356,7 +2356,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb.spec ltib/dist/lfs-5.1/libusb/libusb.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb.spec ltib/dist/lfs-5.1/libusb/libusb.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb.spec
 +++ ltib/dist/lfs-5.1/libusb/libusb.spec
 @@ -11,15 +11,35 @@
@@ -2427,7 +2427,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb1.spec ltib/dist/lfs-5.1/libusb/libusb1.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb1.spec ltib/dist/lfs-5.1/libusb/libusb1.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb1.spec
 +++ ltib/dist/lfs-5.1/libusb/libusb1.spec
 @@ -0,0 +1,72 @@
@@ -2503,7 +2503,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
 --- ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec
 +++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
 @@ -10,38 +10,72 @@
@@ -2585,7 +2585,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%{pfx}/*
  
  
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lzo/lzo.spec ltib/dist/lfs-5.1/lzo/lzo.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lzo/lzo.spec ltib/dist/lfs-5.1/lzo/lzo.spec
 --- ltib.reference/dist/lfs-5.1/lzo/lzo.spec
 +++ ltib/dist/lfs-5.1/lzo/lzo.spec
 @@ -11,14 +11,34 @@
@@ -2655,7 +2655,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mac_sn/mac_sn.spec ltib/dist/lfs-5.1/mac_sn/mac_sn.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mac_sn/mac_sn.spec ltib/dist/lfs-5.1/mac_sn/mac_sn.spec
 --- ltib.reference/dist/lfs-5.1/mac_sn/mac_sn.spec
 +++ ltib/dist/lfs-5.1/mac_sn/mac_sn.spec
 @@ -0,0 +1,76 @@
@@ -2735,7 +2735,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 --- ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 +++ ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 @@ -0,0 +1,82 @@
@@ -2821,7 +2821,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
 @@ -10,40 +10,111 @@
@@ -2950,7 +2950,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  %defattr(-,root,root)
 -%attr(0777, root, root) %{pfx}/etc/ltib-release
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 --- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 +++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 @@ -2,15 +2,31 @@
@@ -3040,7 +3040,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec ltib/dist/lfs-5.1/mxc-misc/imx-test.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec ltib/dist/lfs-5.1/mxc-misc/imx-test.spec
 --- ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec
 +++ ltib/dist/lfs-5.1/mxc-misc/imx-test.spec
 @@ -2,23 +2,43 @@
@@ -3126,7 +3126,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mysql/mysql.spec ltib/dist/lfs-5.1/mysql/mysql.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mysql/mysql.spec ltib/dist/lfs-5.1/mysql/mysql.spec
 --- ltib.reference/dist/lfs-5.1/mysql/mysql.spec
 +++ ltib/dist/lfs-5.1/mysql/mysql.spec
 @@ -13,16 +13,36 @@
@@ -3212,7 +3212,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec ltib/dist/lfs-5.1/ncurses/ncurses.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec ltib/dist/lfs-5.1/ncurses/ncurses.spec
 --- ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec
 +++ ltib/dist/lfs-5.1/ncurses/ncurses.spec
 @@ -14,17 +14,37 @@
@@ -3291,7 +3291,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec
 --- ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec
 +++ ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec
 @@ -24,7 +24,7 @@
@@ -3303,7 +3303,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Install
  rm -rf $RPM_BUILD_ROOT
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ppp/ppp.spec ltib/dist/lfs-5.1/ppp/ppp.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ppp/ppp.spec ltib/dist/lfs-5.1/ppp/ppp.spec
 --- ltib.reference/dist/lfs-5.1/ppp/ppp.spec
 +++ ltib/dist/lfs-5.1/ppp/ppp.spec
 @@ -13,16 +13,36 @@
@@ -3377,7 +3377,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%attr(4554,root,root)  %{pfx}//lib/pppd/2.4.4/pppoatm.so
 -%attr(4554,root,root)  %{pfx}//lib/pppd/2.4.4/rp-pppoe.so
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/prelink/prelink.spec ltib/dist/lfs-5.1/prelink/prelink.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/prelink/prelink.spec ltib/dist/lfs-5.1/prelink/prelink.spec
 --- ltib.reference/dist/lfs-5.1/prelink/prelink.spec
 +++ ltib/dist/lfs-5.1/prelink/prelink.spec
 @@ -0,0 +1,35 @@
@@ -3416,7 +3416,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files
 +%defattr(-,root,root)
 +%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec ltib/dist/lfs-5.1/qt/qt-embedded.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec ltib/dist/lfs-5.1/qt/qt-embedded.spec
 --- ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec
 +++ ltib/dist/lfs-5.1/qt/qt-embedded.spec
 @@ -1,165 +1,163 @@
@@ -3861,7 +3861,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%defattr(-,root,root)
 +
 +%endif
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 +++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 @@ -0,0 +1,93 @@
@@ -3958,7 +3958,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt.spec ltib/dist/lfs-5.1/qwt/qwt.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt.spec ltib/dist/lfs-5.1/qwt/qwt.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt.spec
 +++ ltib/dist/lfs-5.1/qwt/qwt.spec
 @@ -0,0 +1,80 @@
@@ -4042,7 +4042,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rpm/rpm-fs.spec ltib/dist/lfs-5.1/rpm/rpm-fs.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rpm/rpm-fs.spec ltib/dist/lfs-5.1/rpm/rpm-fs.spec
 --- ltib.reference/dist/lfs-5.1/rpm/rpm-fs.spec
 +++ ltib/dist/lfs-5.1/rpm/rpm-fs.spec
 @@ -83,7 +83,7 @@
@@ -4054,7 +4054,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  
  %Install
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rsync/rsync.spec ltib/dist/lfs-5.1/rsync/rsync.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rsync/rsync.spec ltib/dist/lfs-5.1/rsync/rsync.spec
 --- ltib.reference/dist/lfs-5.1/rsync/rsync.spec
 +++ ltib/dist/lfs-5.1/rsync/rsync.spec
 @@ -12,26 +12,61 @@
@@ -4121,7 +4121,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
 --- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec
 +++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
 @@ -0,0 +1,119 @@
@@ -4244,7 +4244,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec
 +++ ltib/dist/lfs-5.1/skell/skell.spec
 @@ -9,20 +9,97 @@
@@ -4449,7 +4449,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 -%attr(0666, root, root) %dev(c, 1, 3) %{pfx}/dev/null
 -%attr(0755, root, root) %{pfx}/usr/bin/startx
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec ltib/dist/lfs-5.1/sqlite/sqlite.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec ltib/dist/lfs-5.1/sqlite/sqlite.spec
 --- ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec
 +++ ltib/dist/lfs-5.1/sqlite/sqlite.spec
 @@ -12,26 +12,61 @@
@@ -4518,7 +4518,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec ltib/dist/lfs-5.1/sysconfig/modeps.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec ltib/dist/lfs-5.1/sysconfig/modeps.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec
 +++ ltib/dist/lfs-5.1/sysconfig/modeps.spec
 @@ -10,32 +10,70 @@
@@ -4598,7 +4598,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
 +++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
 @@ -8,72 +8,125 @@
@@ -4932,7 +4932,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec ltib/dist/lfs-5.1/texinfo/texinfo.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec ltib/dist/lfs-5.1/texinfo/texinfo.spec
 --- ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec
 +++ ltib/dist/lfs-5.1/texinfo/texinfo.spec
 @@ -31,7 +31,7 @@
@@ -4944,7 +4944,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  
  %Install
  rm -rf $RPM_BUILD_ROOT
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/tslib/tslib.spec ltib/dist/lfs-5.1/tslib/tslib.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/tslib/tslib.spec ltib/dist/lfs-5.1/tslib/tslib.spec
 --- ltib.reference/dist/lfs-5.1/tslib/tslib.spec
 +++ ltib/dist/lfs-5.1/tslib/tslib.spec
 @@ -13,14 +13,32 @@
@@ -5041,7 +5041,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl
 --- ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl
 +++ ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl
 @@ -18,7 +18,8 @@
@@ -5054,7 +5054,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
       CROSS_COMPILE=$TOOLCHAIN_PREFIX $PKG_U_BOOT_BUILD_ARGS \
       O=$BUILD_DIR all
  
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec ltib/dist/lfs-5.1/u-boot/u-boot.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec ltib/dist/lfs-5.1/u-boot/u-boot.spec
 --- ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec
 +++ ltib/dist/lfs-5.1/u-boot/u-boot.spec
 @@ -17,16 +17,25 @@
@@ -5093,7 +5093,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
  rm -rf $RPM_BUILD_ROOT
  
  %Files
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/udev/udev.spec ltib/dist/lfs-5.1/udev/udev.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/udev/udev.spec ltib/dist/lfs-5.1/udev/udev.spec
 --- ltib.reference/dist/lfs-5.1/udev/udev.spec
 +++ ltib/dist/lfs-5.1/udev/udev.spec
 @@ -25,12 +25,9 @@
@@ -5208,7 +5208,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/unzip/unzip.spec ltib/dist/lfs-5.1/unzip/unzip.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/unzip/unzip.spec ltib/dist/lfs-5.1/unzip/unzip.spec
 --- ltib.reference/dist/lfs-5.1/unzip/unzip.spec
 +++ ltib/dist/lfs-5.1/unzip/unzip.spec
 @@ -12,24 +12,59 @@
@@ -5273,7 +5273,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 +++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 @@ -0,0 +1,71 @@
@@ -5348,7 +5348,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 +++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 @@ -0,0 +1,76 @@
@@ -5428,7 +5428,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec ltib/dist/lfs-5.1/wireless-tools/wireless-tools.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec ltib/dist/lfs-5.1/wireless-tools/wireless-tools.spec
 --- ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec
 +++ ltib/dist/lfs-5.1/wireless-tools/wireless-tools.spec
 @@ -8,28 +8,64 @@
@@ -5500,7 +5500,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
 --- ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
 +++ ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
 @@ -7,13 +7,28 @@
@@ -5603,7 +5603,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec ltib/dist/lfs-5.1/xenomai/xenomai.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec ltib/dist/lfs-5.1/xenomai/xenomai.spec
 --- ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec
 +++ ltib/dist/lfs-5.1/xenomai/xenomai.spec
 @@ -0,0 +1,76 @@
@@ -5683,7 +5683,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zip30/zip30.spec ltib/dist/lfs-5.1/zip30/zip30.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zip30/zip30.spec ltib/dist/lfs-5.1/zip30/zip30.spec
 --- ltib.reference/dist/lfs-5.1/zip30/zip30.spec
 +++ ltib/dist/lfs-5.1/zip30/zip30.spec
 @@ -0,0 +1,70 @@
@@ -5757,7 +5757,7 @@ diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refer
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -urN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zlib/zlib.spec ltib/dist/lfs-5.1/zlib/zlib.spec
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zlib/zlib.spec ltib/dist/lfs-5.1/zlib/zlib.spec
 --- ltib.reference/dist/lfs-5.1/zlib/zlib.spec
 +++ ltib/dist/lfs-5.1/zlib/zlib.spec
 @@ -12,15 +12,35 @@

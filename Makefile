@@ -627,7 +627,7 @@ target_rfs: $(MECT_COMMON_RFSPKGS)
 # Build the target-specific local file system.
 .PHONY: target_lfs
 target_lfs: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
-target_lfs: MECT_LFSDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)_ms$(MECT_BUILD_RELEASE)/localfs
+target_lfs_flash target_lfs: MECT_LFSDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)_ms$(MECT_BUILD_RELEASE)/localfs
 target_lfs: $(MECT_COMMON_LFSPKGS)
 	test -n '$(MECT_BUILD_TARGET)'
 	sudo rm -rf $(MECT_LFSDIR)
@@ -639,7 +639,21 @@ target_lfs: $(MECT_COMMON_LFSPKGS)
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_LFSDIR)/var
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_LFSDIR)/tmp/ltib
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_LFSDIR)/tmp
+	$(MAKE) target_lfs_flash
 	sudo du -sh --apparent-size $(MECT_LFSDIR)
+
+# Customize local file system layout for switch between FLASH/SD card.
+.PHONY: target_lfs_flash
+target_lfs_flash:
+	test -n '$(MECT_LFSDIR)'
+	test -d $(MECT_LFSDIR)
+	! test -d $(MECT_LFSDIR)/flash
+	sudo mkdir $(MECT_LFSDIR)/flash
+	sudo mv $(MECT_LFSDIR)/root $(MECT_LFSDIR)/etc $(MECT_LFSDIR)/control $(MECT_LFSDIR)/data $(MECT_LFSDIR)/flash
+	sudo ln -s flash/root $(MECT_LFSDIR)/root
+	sudo ln -s flash/etc $(MECT_LFSDIR)/etc
+	sudo ln -s flash/control $(MECT_LFSDIR)/control
+	sudo ln -s flash/data $(MECT_LFSDIR)/data
 
 # Build the target-specific project for Freescale manufacturing tool.
 .PHONY: target_mfg
@@ -687,17 +701,17 @@ ltib_genpatch: ltib_genpatch_config ltib_genpatch_specs ltib_genpatch_bin
 
 .PHONY: ltib_genpatch_config
 ltib_genpatch_config: $(MECT_LTIBDIR_REF)/config
-	cd $(MECT_LTIBDIR)/.. && { diff -urN --exclude=.config.old --exclude=*.config.dev --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/config $(shell basename $(MECT_LTIBDIR))/config; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.config $(shell basename $(MECT_LTIBDIR))/.config; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.config.cmd $(shell basename $(MECT_LTIBDIR))/.config.cmd; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/.tmpconfig.h $(shell basename $(MECT_LTIBDIR))/.tmpconfig.h; } | sed '/^\(---\|\+\+\+\) / s/\t.*//' > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_CONFIG_PATCH); true
+	cd $(MECT_LTIBDIR)/.. && { diff -aurN --exclude=.config.old --exclude=*.config.dev --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/config $(shell basename $(MECT_LTIBDIR))/config; diff -auN $(shell basename $(MECT_LTIBDIR_REF))/.config $(shell basename $(MECT_LTIBDIR))/.config; diff -auN $(shell basename $(MECT_LTIBDIR_REF))/.config.cmd $(shell basename $(MECT_LTIBDIR))/.config.cmd; diff -auN $(shell basename $(MECT_LTIBDIR_REF))/.tmpconfig.h $(shell basename $(MECT_LTIBDIR))/.tmpconfig.h; } | sed '/^\(---\|\+\+\+\) / s/\t.*//' > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_CONFIG_PATCH); true
 	cd $(MECT_FTPDIR); md5sum $(MECT_LTIB_MECT_CONFIG_PATCH) > $(MECT_LTIB_MECT_CONFIG_PATCH).$(MECT_MD5EXT)
 
 .PHONY: ltib_genpatch_specs
 ltib_genpatch_specs: $(MECT_LTIBDIR_REF)/dist
-	cd $(MECT_LTIBDIR)/.. && diff -urN --exclude=*-orig.spec --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/dist $(shell basename $(MECT_LTIBDIR))/dist | sed '/^\(---\|\+\+\+\) / s/\t.*//' > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_SPECS_PATCH); true
+	cd $(MECT_LTIBDIR)/.. && diff -aurN --exclude=*-orig.spec --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/dist $(shell basename $(MECT_LTIBDIR))/dist | sed '/^\(---\|\+\+\+\) / s/\t.*//' > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_SPECS_PATCH); true
 	cd $(MECT_FTPDIR); md5sum $(MECT_LTIB_MECT_SPECS_PATCH) > $(MECT_LTIB_MECT_SPECS_PATCH).$(MECT_MD5EXT)
 
 .PHONY: ltib_genpatch_bin
 ltib_genpatch_bin: $(MECT_LTIBDIR_REF)/bin
-	cd $(MECT_LTIBDIR)/.. && { diff -urN --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/bin $(shell basename $(MECT_LTIBDIR))/bin; diff -uN $(shell basename $(MECT_LTIBDIR_REF))/ltib $(shell basename $(MECT_LTIBDIR))/ltib; } | sed '/^\(---\|\+\+\+\) / s/\t.*//' > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_BIN_PATCH); true
+	cd $(MECT_LTIBDIR)/.. && { diff -aurN --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/bin $(shell basename $(MECT_LTIBDIR))/bin; diff -auN $(shell basename $(MECT_LTIBDIR_REF))/ltib $(shell basename $(MECT_LTIBDIR))/ltib; } | sed '/^\(---\|\+\+\+\) / s/\t.*//' > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_BIN_PATCH); true
 	cd $(MECT_FTPDIR); md5sum $(MECT_LTIB_MECT_BIN_PATCH) > $(MECT_LTIB_MECT_BIN_PATCH).$(MECT_MD5EXT)
 
 # Update an existing LTIB installation from repository.

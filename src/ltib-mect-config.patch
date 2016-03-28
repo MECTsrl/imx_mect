@@ -1,4 +1,4 @@
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.config ltib/config/.config
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.config ltib/config/.config
 --- ltib.reference/config/.config
 +++ ltib/config/.config
 @@ -0,0 +1,56 @@
@@ -58,7 +58,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_SYSCFG_CUTARG="zImage"
 +CONFIG_CAP_FSL_EXT=y
 +CONFIG_LTIB_RELEASE="8.1.2"
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.config.cmd ltib/config/.config.cmd
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.config.cmd ltib/config/.config.cmd
 --- ltib.reference/config/.config.cmd
 +++ ltib/config/.config.cmd
 @@ -0,0 +1,7 @@
@@ -69,7 +69,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +.config include/linux/autoconf.h: $(deps_config)
 +
 +$(deps_config):
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.tmpconfig.h ltib/config/.tmpconfig.h
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/.tmpconfig.h ltib/config/.tmpconfig.h
 --- ltib.reference/config/.tmpconfig.h
 +++ ltib/config/.tmpconfig.h
 @@ -0,0 +1,59 @@
@@ -132,7 +132,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#define CONFIG_SYSCFG_CUTARG "zImage"
 +#define CONFIG_CAP_FSL_EXT 1
 +#define CONFIG_LTIB_RELEASE "8.1.2"
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/defaults/busybox.config ltib/config/defaults/busybox.config
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/defaults/busybox.config ltib/config/defaults/busybox.config
 --- ltib.reference/config/defaults/busybox.config
 +++ ltib/config/defaults/busybox.config
 @@ -487,11 +487,11 @@
@@ -170,7 +170,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  # CONFIG_FEATURE_LESS_BRACKETS is not set
  # CONFIG_FEATURE_LESS_FLAGS is not set
  # CONFIG_FEATURE_LESS_FLAGCS is not set
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/main.lkc ltib/config/main.lkc
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/main.lkc ltib/config/main.lkc
 --- ltib.reference/config/main.lkc
 +++ ltib/config/main.lkc
 @@ -0,0 +1,18 @@
@@ -192,7 +192,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +config PLATFORM_DIR
 +    string
 +    default "config/platform/imx" if PLATFORM_imx
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/ltib.preconfig ltib/config/platform/host/ltib.preconfig
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/ltib.preconfig ltib/config/platform/host/ltib.preconfig
 --- ltib.reference/config/platform/host/ltib.preconfig
 +++ ltib/config/platform/host/ltib.preconfig
 @@ -56,8 +56,6 @@
@@ -449,7 +449,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  CONFIG_INITTAB_LINE="::respawn:-/sbin/getty -L console 0 screen"
  CONFIG_UCLIBC_DYNAMIC_LINKER="/lib/ld-uClibc.so.0"
  CONFIG_GLIBC_DYNAMIC_LINKER="/lib/ld.so.1"
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/main.lkc ltib/config/platform/host/main.lkc
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/main.lkc ltib/config/platform/host/main.lkc
 --- ltib.reference/config/platform/host/main.lkc
 +++ ltib/config/platform/host/main.lkc
 @@ -127,12 +127,6 @@
@@ -465,14 +465,14 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  source ../../userspace/distro.lkc
  source ../../userspace/packages.lkc
  source ../../userspace/defaults.lkc
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/pkg_map ltib/config/platform/host/pkg_map
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/host/pkg_map ltib/config/platform/host/pkg_map
 --- ltib.reference/config/platform/host/pkg_map
 +++ ltib/config/platform/host/pkg_map
 @@ -1,3 +1,2 @@
  PKG_MTD_UTILS = mtd-utils
  PKG_ELFTOSB = elftosb
 -PKG_UBUNTU_ARM_LIB = ubuntu_arm_lib
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config
 +++ ltib/config/platform/imx/.config
 @@ -0,0 +1,656 @@
@@ -1132,7 +1132,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_SYSCFG_CUTARG="zImage"
 +CONFIG_CAP_FSL_EXT=y
 +CONFIG_LTIB_RELEASE="8.1.2"
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config.cmd ltib/config/platform/imx/.config.cmd
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config.cmd ltib/config/platform/imx/.config.cmd
 --- ltib.reference/config/platform/imx/.config.cmd
 +++ ltib/config/platform/imx/.config.cmd
 @@ -0,0 +1,22 @@
@@ -1158,7 +1158,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +.config include/linux/autoconf.h: $(deps_config)
 +
 +$(deps_config):
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h
 +++ ltib/config/platform/imx/.tmpconfig.h
 @@ -0,0 +1,657 @@
@@ -1819,7 +1819,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#define CONFIG_SYSCFG_CUTARG "zImage"
 +#define CONFIG_CAP_FSL_EXT 1
 +#define CONFIG_LTIB_RELEASE "8.1.2"
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/busybox.config ltib/config/platform/imx/busybox.config
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/busybox.config ltib/config/platform/imx/busybox.config
 --- ltib.reference/config/platform/imx/busybox.config
 +++ ltib/config/platform/imx/busybox.config
 @@ -1,7 +1,6 @@
@@ -2819,7 +2819,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  CONFIG_KLOGD=y
 -CONFIG_FEATURE_KLOGD_KLOGCTL=y
  CONFIG_LOGGER=y
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev
 +++ ltib/config/platform/imx/defconfig.dev
 @@ -0,0 +1,656 @@
@@ -3479,7 +3479,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_SYSCFG_CUTARG="zImage"
 +CONFIG_CAP_FSL_EXT=y
 +CONFIG_LTIB_RELEASE="8.1.2"
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/dev.profile ltib/config/platform/imx/dev.profile
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/dev.profile ltib/config/platform/imx/dev.profile
 --- ltib.reference/config/platform/imx/dev.profile
 +++ ltib/config/platform/imx/dev.profile
 @@ -41,4 +41,3 @@
@@ -3487,7 +3487,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  CONFIG_PKG_UUC=y
  CONFIG_PKG_ZLIB=y
 -CONFIG_PKG_PERF=y
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/fsl_mm.lkc ltib/config/platform/imx/fsl_mm.lkc
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/fsl_mm.lkc ltib/config/platform/imx/fsl_mm.lkc
 --- ltib.reference/config/platform/imx/fsl_mm.lkc
 +++ ltib/config/platform/imx/fsl_mm.lkc
 @@ -1,63 +1,46 @@
@@ -3582,7 +3582,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +          This package provides the Freescale Gstreamer based plugins. 
 +		 
  endmenu
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx28_updater.cf ltib/config/platform/imx/imx28_updater.cf
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx28_updater.cf ltib/config/platform/imx/imx28_updater.cf
 --- ltib.reference/config/platform/imx/imx28_updater.cf
 +++ ltib/config/platform/imx/imx28_updater.cf
 @@ -576,3 +576,4 @@
@@ -3590,7 +3590,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  CONFIG_CAP_FSL_INT=y
  CONFIG_LTIB_RELEASE="8.1.2"
 +CONFIG_SYSCFG_AUTOEXEC=y
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx51.cf ltib/config/platform/imx/imx51.cf
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/imx51.cf ltib/config/platform/imx/imx51.cf
 --- ltib.reference/config/platform/imx/imx51.cf
 +++ ltib/config/platform/imx/imx51.cf
 @@ -221,7 +221,7 @@
@@ -3602,7 +3602,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  # CONFIG_PKG_INETUTILS is not set
  # CONFIG_PKG_IPERF is not set
  # CONFIG_PKG_OPENSWAN is not set
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 @@ -0,0 +1,2424 @@
@@ -6030,7 +6030,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_HAS_DMA=y
 +CONFIG_NLATTR=y
 +CONFIG_GENERIC_ATOMIC64=y
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 @@ -0,0 +1,2424 @@
@@ -8458,7 +8458,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_HAS_DMA=y
 +CONFIG_NLATTR=y
 +CONFIG_GENERIC_ATOMIC64=y
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 @@ -0,0 +1,2424 @@
@@ -10886,7 +10886,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_HAS_DMA=y
 +CONFIG_NLATTR=y
 +CONFIG_GENERIC_ATOMIC64=y
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 @@ -0,0 +1,2424 @@
@@ -13314,7 +13314,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_HAS_DMA=y
 +CONFIG_NLATTR=y
 +CONFIG_GENERIC_ATOMIC64=y
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 @@ -0,0 +1,2424 @@
@@ -15742,7 +15742,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +CONFIG_HAS_DMA=y
 +CONFIG_NLATTR=y
 +CONFIG_GENERIC_ATOMIC64=y
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35.spec.in ltib/config/platform/imx/kernel-2.6.35.spec.in
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35.spec.in ltib/config/platform/imx/kernel-2.6.35.spec.in
 --- ltib.reference/config/platform/imx/kernel-2.6.35.spec.in
 +++ ltib/config/platform/imx/kernel-2.6.35.spec.in
 @@ -2,6 +2,8 @@
@@ -16379,7 +16379,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +%patch42 -p1
 +%patch43 -p1
  
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/main.lkc ltib/config/platform/imx/main.lkc
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/main.lkc ltib/config/platform/imx/main.lkc
 --- ltib.reference/config/platform/imx/main.lkc
 +++ ltib/config/platform/imx/main.lkc
 @@ -15,7 +15,6 @@
@@ -16612,7 +16612,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
      default "linux-kernel-dir-build.config" if KERNEL_DIR_BUILD
  
  source ../../userspace/distro.lkc
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/max.profile ltib/config/platform/imx/max.profile
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/max.profile ltib/config/platform/imx/max.profile
 --- ltib.reference/config/platform/imx/max.profile
 +++ ltib/config/platform/imx/max.profile
 @@ -7,8 +7,8 @@
@@ -16656,7 +16656,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  CONFIG_QTOPIA_NONE=y
 -CONFIG_PKG_PERF=y
 -CONFIG_PKG_PYTHON=y
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/asound.conf ltib/config/platform/imx/merge/etc/asound.conf
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/asound.conf ltib/config/platform/imx/merge/etc/asound.conf
 --- ltib.reference/config/platform/imx/merge/etc/asound.conf
 +++ ltib/config/platform/imx/merge/etc/asound.conf
 @@ -1,257 +0,0 @@
@@ -16917,7 +16917,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 -type hw
 -card 0
 -}
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/dhclient.conf ltib/config/platform/imx/merge/etc/dhclient.conf
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/dhclient.conf ltib/config/platform/imx/merge/etc/dhclient.conf
 --- ltib.reference/config/platform/imx/merge/etc/dhclient.conf
 +++ ltib/config/platform/imx/merge/etc/dhclient.conf
 @@ -0,0 +1,10 @@
@@ -16931,7 +16931,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +
 +require
 +	subnet-mask;
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/inetd.conf ltib/config/platform/imx/merge/etc/inetd.conf
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/inetd.conf ltib/config/platform/imx/merge/etc/inetd.conf
 --- ltib.reference/config/platform/imx/merge/etc/inetd.conf
 +++ ltib/config/platform/imx/merge/etc/inetd.conf
 @@ -0,0 +1,98 @@
@@ -17033,7 +17033,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +# Secure shell
 +ssh          stream  tcp      nowait  root    /usr/sbin/dropbear   dropbear      -i
 +# End.
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/mdev.conf ltib/config/platform/imx/merge/etc/mdev.conf
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/mdev.conf ltib/config/platform/imx/merge/etc/mdev.conf
 --- ltib.reference/config/platform/imx/merge/etc/mdev.conf
 +++ ltib/config/platform/imx/merge/etc/mdev.conf
 @@ -0,0 +1,22 @@
@@ -17059,7 +17059,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +
 +#-sda[0-9]      0:0  666 @/bin/mount $PWD/$DEVNAME /mnt/rwfs
 +#sda[0-9]       0:0  666 $/bin/umount              /mnt/rwfs
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 @@ -0,0 +1,265 @@
@@ -17328,7 +17328,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +		exit 1
 +	;;
 +esac
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 @@ -0,0 +1,148 @@
@@ -17480,7 +17480,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +			exit 1
 +	;;
 +esac
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/mac_sn ltib/config/platform/imx/merge/etc/rc.d/init.d/mac_sn
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/mac_sn ltib/config/platform/imx/merge/etc/rc.d/init.d/mac_sn
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/mac_sn
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/mac_sn
 @@ -0,0 +1,23 @@
@@ -17507,7 +17507,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +		exit 1
 +	;;
 +esac
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/network ltib/config/platform/imx/merge/etc/rc.d/init.d/network
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/network ltib/config/platform/imx/merge/etc/rc.d/init.d/network
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/network
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/network
 @@ -0,0 +1,208 @@
@@ -17719,7 +17719,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +	fi
 +    fi
 +fi
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
 @@ -0,0 +1,213 @@
@@ -17936,7 +17936,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +        exit 1
 +    ;;
 +esac
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/setup ltib/config/platform/imx/merge/etc/rc.d/init.d/setup
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/setup ltib/config/platform/imx/merge/etc/rc.d/init.d/setup
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/setup
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/setup
 @@ -0,0 +1,96 @@
@@ -18036,7 +18036,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +        ;;
 +esac
 +
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/rc.local ltib/config/platform/imx/merge/etc/rc.d/rc.local
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/rc.local ltib/config/platform/imx/merge/etc/rc.d/rc.local
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/rc.local
 +++ ltib/config/platform/imx/merge/etc/rc.d/rc.local
 @@ -0,0 +1,7 @@
@@ -18047,18 +18047,17 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +
 +# Fix root home directory permissions.
 +test -d /local/flash/root && chmod 0755 /local/flash/root
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/resolv.conf ltib/config/platform/imx/merge/local/etc/resolv.conf
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/resolv.conf ltib/config/platform/imx/merge/local/etc/resolv.conf
 --- ltib.reference/config/platform/imx/merge/local/etc/resolv.conf
 +++ ltib/config/platform/imx/merge/local/etc/resolv.conf
 @@ -0,0 +1 @@
 +# nameserver ip address
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/sysconfig/brightness ltib/config/platform/imx/merge/local/etc/sysconfig/brightness
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/sysconfig/brightness ltib/config/platform/imx/merge/local/etc/sysconfig/brightness
 --- ltib.reference/config/platform/imx/merge/local/etc/sysconfig/brightness
 +++ ltib/config/platform/imx/merge/local/etc/sysconfig/brightness
 @@ -0,0 +1 @@
 +echo 70 > /sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness
-Binary files ltib.reference/config/platform/imx/merge/local/etc/sysconfig/img/splash.png and ltib/config/platform/imx/merge/local/etc/sysconfig/img/splash.png differ
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/sysconfig/net.conf ltib/config/platform/imx/merge/local/etc/sysconfig/net.conf
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/sysconfig/net.conf ltib/config/platform/imx/merge/local/etc/sysconfig/net.conf
 --- ltib.reference/config/platform/imx/merge/local/etc/sysconfig/net.conf
 +++ ltib/config/platform/imx/merge/local/etc/sysconfig/net.conf
 @@ -0,0 +1,30 @@
@@ -18092,8 +18091,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +GATEWAYW0=
 +NAMESERVERW01=
 +NAMESERVERW02=
-Binary files ltib.reference/config/platform/imx/merge/local/root/backing_file and ltib/config/platform/imx/merge/local/root/backing_file differ
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/root/make_usb_device ltib/config/platform/imx/merge/local/root/make_usb_device
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/root/make_usb_device ltib/config/platform/imx/merge/local/root/make_usb_device
 --- ltib.reference/config/platform/imx/merge/local/root/make_usb_device
 +++ ltib/config/platform/imx/merge/local/root/make_usb_device
 @@ -0,0 +1,11 @@
@@ -18108,7 +18106,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +	modprobe g_file_storage file=/local/root/backing_file
 +	return $?
 +fi
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/root/setparam ltib/config/platform/imx/merge/local/root/setparam
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/root/setparam ltib/config/platform/imx/merge/local/root/setparam
 --- ltib.reference/config/platform/imx/merge/local/root/setparam
 +++ ltib/config/platform/imx/merge/local/root/setparam
 @@ -0,0 +1,36 @@
@@ -18148,7 +18146,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#rm -f $0
 +
 +exit 0
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/root/writemac ltib/config/platform/imx/merge/local/root/writemac
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/root/writemac ltib/config/platform/imx/merge/local/root/writemac
 --- ltib.reference/config/platform/imx/merge/local/root/writemac
 +++ ltib/config/platform/imx/merge/local/root/writemac
 @@ -0,0 +1,22 @@
@@ -18174,14 +18172,14 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +#rm -f $0
 +
 +exit 0
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh ltib/config/platform/imx/merge/usr/bin/fcrts.sh
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh ltib/config/platform/imx/merge/usr/bin/fcrts.sh
 --- ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh
 +++ ltib/config/platform/imx/merge/usr/bin/fcrts.sh
 @@ -0,0 +1,3 @@
 +#!/bin/sh
 +
 +exec /local/root/fcrts
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh ltib/config/platform/imx/merge/usr/sbin/wifi.sh
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh ltib/config/platform/imx/merge/usr/sbin/wifi.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/wifi.sh
 @@ -0,0 +1,214 @@
@@ -18399,7 +18397,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +        echo "Unknown option \`$action'." >&2
 +    ;;
 +esac
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/min.profile ltib/config/platform/imx/min.profile
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/min.profile ltib/config/platform/imx/min.profile
 --- ltib.reference/config/platform/imx/min.profile
 +++ ltib/config/platform/imx/min.profile
 @@ -12,5 +12,3 @@
@@ -18408,7 +18406,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  CONFIG_PKG_UDEV_WANT_IMX=y
 -CONFIG_PKG_PERF=y
 -CONFIG_PKG_PYTHON=y
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/packages.lkc ltib/config/platform/imx/packages.lkc
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/packages.lkc ltib/config/platform/imx/packages.lkc
 --- ltib.reference/config/platform/imx/packages.lkc
 +++ ltib/config/platform/imx/packages.lkc
 @@ -32,7 +32,7 @@
@@ -18492,7 +18490,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 -    help
 -      This package provides Linux perf tool.
 -
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/pkg_map ltib/config/platform/imx/pkg_map
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/pkg_map ltib/config/platform/imx/pkg_map
 --- ltib.reference/config/platform/imx/pkg_map
 +++ ltib/config/platform/imx/pkg_map
 @@ -9,11 +9,19 @@
@@ -18538,7 +18536,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  PKG_LTP_IMX = ltp-imx
  PKG_ATHEROS_WIFI = atheros-wifi
 -PKG_PERF = perf
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/preconfigs.lkc ltib/config/platform/imx/preconfigs.lkc
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/preconfigs.lkc ltib/config/platform/imx/preconfigs.lkc
 --- ltib.reference/config/platform/imx/preconfigs.lkc
 +++ ltib/config/platform/imx/preconfigs.lkc
 @@ -21,12 +21,10 @@
@@ -18576,7 +18574,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  
  config PCF_PROFILE
      string
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/release.profile ltib/config/platform/imx/release.profile
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/release.profile ltib/config/platform/imx/release.profile
 --- ltib.reference/config/platform/imx/release.profile
 +++ ltib/config/platform/imx/release.profile
 @@ -3,7 +3,6 @@
@@ -18593,7 +18591,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  CONFIG_PKG_ZLIB=y
 -CONFIG_PKG_PERF=y
 -CONFIG_PKG_PYTHON=y
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/release_gnome.profile ltib/config/platform/imx/release_gnome.profile
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/release_gnome.profile ltib/config/platform/imx/release_gnome.profile
 --- ltib.reference/config/platform/imx/release_gnome.profile
 +++ ltib/config/platform/imx/release_gnome.profile
 @@ -7,8 +7,8 @@
@@ -18653,7 +18651,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  CONFIG_QTOPIA_NONE=y
 -CONFIG_PKG_PERF=y
 -CONFIG_PKG_PYTHON=y
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/u-boot.spec.in ltib/config/platform/imx/u-boot.spec.in
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/u-boot.spec.in ltib/config/platform/imx/u-boot.spec.in
 --- ltib.reference/config/platform/imx/u-boot.spec.in
 +++ ltib/config/platform/imx/u-boot.spec.in
 @@ -1,18 +1,20 @@
@@ -18686,7 +18684,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +%patch1 -p1
  
  
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/updater.profile ltib/config/platform/imx/updater.profile
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/updater.profile ltib/config/platform/imx/updater.profile
 --- ltib.reference/config/platform/imx/updater.profile
 +++ ltib/config/platform/imx/updater.profile
 @@ -10,8 +10,4 @@
@@ -18699,7 +18697,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 -CONFIG_PKG_UDEV_WANT_NON_RAID=y
 -CONFIG_PKG_UDEV=y
 +CONFIG_PKG_DOSFSTOOLS=y
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/deployment.lkc ltib/config/userspace/deployment.lkc
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/deployment.lkc ltib/config/userspace/deployment.lkc
 --- ltib.reference/config/userspace/deployment.lkc
 +++ ltib/config/userspace/deployment.lkc
 @@ -177,8 +177,8 @@
@@ -18713,7 +18711,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
      help
         Flash may only be erased a finite number of times (of the order
         of 100000 times for a NOR device).  If you deploy to Flash,
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/packages.lkc ltib/config/userspace/packages.lkc
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/packages.lkc ltib/config/userspace/packages.lkc
 --- ltib.reference/config/userspace/packages.lkc
 +++ ltib/config/userspace/packages.lkc
 @@ -229,6 +229,13 @@
@@ -18928,7 +18926,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  source ../../userspace/extra_packages.lkc
  
  endmenu
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/pkg_map ltib/config/userspace/pkg_map
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/pkg_map ltib/config/userspace/pkg_map
 --- ltib.reference/config/userspace/pkg_map
 +++ ltib/config/userspace/pkg_map
 @@ -53,7 +53,6 @@
@@ -18980,7 +18978,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
  
  # leave these as the last 3 packages in the build order
  PKG_SYSCONFIG                    = sysconfig
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/sysconfig.lkc ltib/config/userspace/sysconfig.lkc
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/sysconfig.lkc ltib/config/userspace/sysconfig.lkc
 --- ltib.reference/config/userspace/sysconfig.lkc
 +++ ltib/config/userspace/sysconfig.lkc
 @@ -126,6 +126,16 @@
@@ -19020,7 +19018,7 @@ diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--
 +    start at boot the S10setup script script in /etc/rc.d/init.d
 +    that performs system update through USB key.
  endmenu
-diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/toolchain.lkc ltib/config/userspace/toolchain.lkc
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/userspace/toolchain.lkc ltib/config/userspace/toolchain.lkc
 --- ltib.reference/config/userspace/toolchain.lkc
 +++ ltib/config/userspace/toolchain.lkc
 @@ -541,21 +541,6 @@

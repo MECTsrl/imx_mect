@@ -1,0 +1,35 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/profile skell-1.18.modified/etc/profile
+--- skell-1.18/etc/profile	2016-03-29 23:38:21.022395971 +0200
++++ skell-1.18.modified/etc/profile	1970-01-01 01:00:00.000000000 +0100
+@@ -1,31 +0,0 @@
+-PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin
+-
+-PS1='[\u@\h \W]\$ '
+-
+-export PATH
+-
+-alias ll='ls -l'
+-alias la='ll -a'
+-
+-export PS1='\u@\h \w$ '
+-export PS2='> '
+-export PS3='? '
+-export PS4='[$LINENO]+'
+-
+-export GST_PLUGIN_PATH=/usr/lib/fsl_mm_linux/lib/gstreamer-0.10
+-
+-# ts variable
+-export QWS_MOUSE_PROTO=tslib:/dev/input/ts0
+-export TSLIB_CONFFILE=/usr/etc/ts.conf
+-export TSLIB_PLUGINDIR=/usr/lib/ts
+-export TSLIB_TSDEVICE=/dev/input/ts0
+-export TSLIB_CONSOLEDEVICE=none
+-export TSLIB_CALIBFILE=/local/etc/sysconfig/pointercal
+-
+-# qt variable
+-export QT_QWS_FONTDIR=/usr/lib/fonts
+-export POINTERCAL_FILE=$TSLIB_CALIBFILE
+-
+-# application variables
+-export LOCAL_ETC_DIR=/local/etc/sysconfig
+-export LOCAL_ROOT_DIR=/local/root

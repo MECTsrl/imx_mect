@@ -1,0 +1,36 @@
+diff -urN a/include/rtdm/rtserial.h b/include/rtdm/rtserial.h
+--- a/include/rtdm/rtserial.h	2011-10-18 20:17:18.000000000 +0200
++++ b/include/rtdm/rtserial.h	2016-03-29 15:50:03.546138689 +0200
+@@ -184,6 +184,7 @@
+ #define RTSER_SET_TIMEOUT_EVENT		0x0400
+ #define RTSER_SET_TIMESTAMP_HISTORY	0x0800
+ #define RTSER_SET_EVENT_MASK		0x1000
++#define RTSER_SET_MECT_RTS_MASK		0x2000
+ /** @} */
+ 
+ 
+@@ -238,6 +239,14 @@
+ #define RTSER_BREAK_SET			0x01
+ 
+ 
++/*!
++ * @anchor RTSER_MECT_RTS_xxx   @name RTSER_MECT_RTS_xxx
++ * RTS line control
++ * @{ */
++#define RTSER_MECT_RTS_CLR		0x00
++#define RTSER_MECT_RTS_SET		0x01
++
++
+ /**
+  * Serial device configuration
+  */
+@@ -282,6 +291,9 @@
+ 	/** event mask to be used with @ref RTSER_RTIOC_WAIT_EVENT, see
+ 	 *  @ref RTSER_EVENT_xxx */
+ 	int		event_mask;
++
++	/** RTS line value, see @ref RTSER_MECT_RTS_xxx */
++	int		mect_rts;
+ } rtser_config_t;
+ 
+ /**

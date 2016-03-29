@@ -15754,7 +15754,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  Summary         : Linux kernel (core of the Linux operating system)
  Name            : kernel
-@@ -12,22 +14,620 @@
+@@ -12,22 +14,624 @@
  Packager        : Rob Herring
  Group           : System Environment/Kernel
  Source          : %{pkg_name}-%{version}.tar.bz2
@@ -15814,12 +15814,14 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# Patch Xenomai
 +Patch38         : %{x_name}-%{x_ver}+flexcan_all_in_one_final.patch
 +Patch39         : %{x_name}-%{x_ver}+rt_imx_uart.patch
-+Patch40         : %{x_name}-%{x_ver}-fix-scriptpath-calculation.patch
++Patch40         : %{x_name}-%{x_ver}-mect_rts_ioctl.patch
++Patch41         : %{x_name}-%{x_ver}-rtser_mect_rts_support.patch
++Patch42         : %{x_name}-%{x_ver}-fix-scriptpath-calculation.patch
 +
 +# Generic kernel patches
-+Patch41         : %{name}-%{version}-mxs_reset_block-undefined.patch
-+Patch42         : %{name}-%{version}-unlimited_stack.patch
-+Patch43         : %{name}-%{version}-independent_wext_config.patch
++Patch43         : %{name}-%{version}-mxs_reset_block-undefined.patch
++Patch44         : %{name}-%{version}-unlimited_stack.patch
++Patch45         : %{name}-%{version}-independent_wext_config.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -16365,6 +16367,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +%patch38 -p1
 +%patch39 -p1
 +%patch40 -p1
++%patch41 -p1
++%patch42 -p1
 +cd %{_builddir}/%{buildsubdir}
 +
 +# Setup the kernel for Xenomai
@@ -16375,9 +16379,9 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# Kernel patches to use GPIOs for monitoring
 +#%patch37 -p1
 +
-+%patch41 -p1
-+%patch42 -p1
 +%patch43 -p1
++%patch44 -p1
++%patch45 -p1
  
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/main.lkc ltib/config/platform/imx/main.lkc
 --- ltib.reference/config/platform/imx/main.lkc

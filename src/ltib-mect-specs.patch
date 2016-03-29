@@ -5606,7 +5606,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec ltib/dist/lfs-5.1/xenomai/xenomai.spec
 --- ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec
 +++ ltib/dist/lfs-5.1/xenomai/xenomai.spec
-@@ -0,0 +1,76 @@
+@@ -0,0 +1,80 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : xenomai - Real Time extension for the Linux kernel
@@ -5618,6 +5618,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Packager        : Mect
 +Group           : System Environment
 +Source          : %{name}-%{version}.tar.bz2
++Patch0          : xenomai-2.6.0-mect_rts_ioctl.patch
 +BuildRoot       : %{_tmppath}/%{name}
 +Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -5646,6 +5647,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +%setup
++
++%patch0 -p1
++
 +./configure CFLAGS="-march=armv5te" LDFLAGS="-march=armv5te" --build=%{_build} --host=$CFGHOST
 +
 +%Build

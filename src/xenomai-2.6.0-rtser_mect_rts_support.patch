@@ -1,0 +1,36 @@
+diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_mxs_auart.c
+--- a/xenomai-2.6.0/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-03-29 16:15:04.288735332 +0200
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-03-29 16:14:34.436103728 +0200
+@@ -672,6 +672,9 @@
+ 	if (testbits(config->config_mask, RTSER_SET_HANDSHAKE))
+ 		ctx->config.handshake = config->handshake;
+ 
++	if (testbits(config->config_mask, RTSER_SET_MECT_RTS_MASK))
++		ctx->config.mect_rts = config->mect_rts;
++
+ 	/*
+ 	 * Configure the hardware.
+ 	 */
+@@ -680,7 +683,8 @@
+ 					   | RTSER_SET_STOP_BITS
+ 					   | RTSER_SET_PARITY
+ 					   | RTSER_SET_BAUD
+-					   | RTSER_SET_EVENT_MASK))) {
++					   | RTSER_SET_EVENT_MASK
++					   | RTSER_SET_MECT_RTS_MASK))) {
+ 		u32 ctrl;
+ 		u32 ctrl2;
+ 		u32 div;
+@@ -739,6 +743,12 @@
+ 		ctrl &= ~BF_UARTAPP_LINECTRL_BAUD_DIVINT(0xffffffff);
+ 		ctrl |= BF_UARTAPP_LINECTRL_BAUD_DIVINT(div >> 6);
+ 
++		/* MECT: RTS line set / clear */
++		if (ctx->config.mect_rts == RTSER_MECT_RTS_SET)
++			ctrl |= BM_UARTAPP_CTRL2_RTS;
++		else if (ctx->config.mect_rts == RTSER_MECT_RTS_CLR)
++			ctrl &= ~BM_UARTAPP_CTRL2_RTS;
++
+ 		/* Set up the HW. */
+ 		__raw_writel(ctrl, ctx->port->port.membase + HW_UARTAPP_LINECTRL);
+ 		__raw_writel(ctrl2, ctx->port->port.membase + HW_UARTAPP_CTRL2);

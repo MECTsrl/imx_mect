@@ -1,4 +1,5 @@
 #include <QtGui/QApplication>
+#include <QWSServer>
 #include <getopt.h>
 #include <stdio.h>
 #include "splash.h"

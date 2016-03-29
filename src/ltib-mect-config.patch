@@ -17722,7 +17722,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
-@@ -0,0 +1,213 @@
+@@ -0,0 +1,214 @@
 +#!/bin/sh
 +
 +mntdir=/local/sd_card
@@ -17873,6 +17873,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +        echo "Updated the links."
 +        if [ "$SD_MODE" == 1 ]; then
 +            echo "Ignore the SDcard."
++            touch $IGNORE
 +            umount $mntdir
 +            echo "Unmounted it."
 +        fi
@@ -17939,7 +17940,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/setup ltib/config/platform/imx/merge/etc/rc.d/init.d/setup
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/setup
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/setup
-@@ -0,0 +1,96 @@
+@@ -0,0 +1,97 @@
 +#!/bin/sh
 +
 +start() {
@@ -17978,9 +17979,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +        if test ! -e $TSLIB_CALIBFILE; then
 +                if test -x /usr/bin/ts_calibrate; then
 +                        echo -n "Starting touch screen calibration. "
-+
++			
++			mount -orw,remount /
 +                        /usr/bin/ts_calibrate
 +                        sync
++			mount -oro,remount /
 +
 +                        echo "Calbration completed."
 +                else
@@ -17988,8 +17991,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +                fi
 +        fi
 +
-+
-+    if [ ! -e /etc/mac.conf -o `grep -c MAC0 /etc/mac.conf` -eq 0 -o ! -e /etc/serial.conf ]
++    if [ ! -e /etc/mac.conf -o ! "`grep -c MAC0 /etc/mac.conf > /dev/null 2>&1`" -eq 0 -o ! -e /etc/serial.conf ]
 +    then
 +        # Touchscreen variables
 +        export TSLIB_CONFFILE=/usr/etc/ts.conf

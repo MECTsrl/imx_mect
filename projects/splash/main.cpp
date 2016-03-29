@@ -130,6 +130,10 @@ int main(int argc, char *argv[])
     fprintf(stderr, "#######################\n");
 
     QApplication a(argc, argv);
+
+    /* set the cursor as invisible */
+    QWSServer::setCursorVisible(false);
+
     splash w;
     w.showFullScreen();
     

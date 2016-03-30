@@ -40,7 +40,7 @@ diff -urN a/ksrc/drivers/serial/Makefile b/ksrc/drivers/serial/Makefile
 diff -urN a/ksrc/drivers/serial/regs-uartapp.h b/ksrc/drivers/serial/regs-uartapp.h
 --- a/ksrc/drivers/serial/regs-uartapp.h	1970-01-01 01:00:00.000000000 +0100
 +++ b/ksrc/drivers/serial/regs-uartapp.h	2016-01-22 01:04:55.000000000 +0100
-@@ -0,0 +1,307 @@
+@@ -0,0 +1,308 @@
 +/*
 + * Freescale UARTAPP Register Definitions
 + *
@@ -483,6 +483,7 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
 +	.event_timeout = RTSER_DEF_TIMEOUT,
 +	.timestamp_history = RTSER_DEF_TIMESTAMP_HISTORY,
 +	.event_mask = RTSER_DEF_EVENT_MASK,
++	.mect_rts = RTSER_MECT_RTS_CLR,
 +};
 +
 +static void rt_imx_mxs_auart_break_ctl(struct rt_imx_mxs_auart_ctx *ctx, int break_state);

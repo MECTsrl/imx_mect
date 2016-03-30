@@ -27,9 +27,9 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
  
 +		/* MECT: RTS line set / clear */
 +		if (ctx->config.mect_rts == RTSER_MECT_RTS_SET)
-+			ctrl |= BM_UARTAPP_CTRL2_RTS;
++			ctrl2 |= BM_UARTAPP_CTRL2_RTS;
 +		else if (ctx->config.mect_rts == RTSER_MECT_RTS_CLR)
-+			ctrl &= ~BM_UARTAPP_CTRL2_RTS;
++			ctrl2 &= ~BM_UARTAPP_CTRL2_RTS;
 +
  		/* Set up the HW. */
  		__raw_writel(ctrl, ctx->port->port.membase + HW_UARTAPP_LINECTRL);

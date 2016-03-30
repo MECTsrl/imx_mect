@@ -957,7 +957,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_PKG_WGET is not set
 +# CONFIG_PKG_WHICH is not set
 +CONFIG_PKG_WIRELESS_TOOLS=y
-+CONFIG_PKG_COMPAT_DRIVERS=y
++CONFIG_PKG_WIFI_DRIVERS=y
 +# CONFIG_PKG_XFSPROGS is not set
 +
 +#
@@ -1132,7 +1132,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_SYSCFG_CUTARG="zImage"
 +CONFIG_CAP_FSL_EXT=y
 +CONFIG_LTIB_RELEASE="8.1.2"
-diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config.cmd ltib/config/platform/imx/.config.cmd
+diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config.cmd ltib/config/platform/imx/.config.cmd
 --- ltib.reference/config/platform/imx/.config.cmd
 +++ ltib/config/platform/imx/.config.cmd
 @@ -0,0 +1,22 @@
@@ -1644,7 +1644,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#undef CONFIG_PKG_WGET
 +#undef CONFIG_PKG_WHICH
 +#define CONFIG_PKG_WIRELESS_TOOLS 1
-+#define CONFIG_PKG_COMPAT_DRIVERS 1
++#define CONFIG_PKG_WIFI_DRIVERS 1
 +#undef CONFIG_PKG_XFSPROGS
 +
 +/*
@@ -1819,7 +1819,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#define CONFIG_SYSCFG_CUTARG "zImage"
 +#define CONFIG_CAP_FSL_EXT 1
 +#define CONFIG_LTIB_RELEASE "8.1.2"
-diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/busybox.config ltib/config/platform/imx/busybox.config
+diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/busybox.config ltib/config/platform/imx/busybox.config
 --- ltib.reference/config/platform/imx/busybox.config
 +++ ltib/config/platform/imx/busybox.config
 @@ -1,7 +1,6 @@
@@ -3304,7 +3304,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_PKG_WGET is not set
 +# CONFIG_PKG_WHICH is not set
 +CONFIG_PKG_WIRELESS_TOOLS=y
-+CONFIG_PKG_COMPAT_DRIVERS=y
++CONFIG_PKG_WIFI_DRIVERS=y
 +# CONFIG_PKG_XFSPROGS is not set
 +
 +#
@@ -3479,7 +3479,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_SYSCFG_CUTARG="zImage"
 +CONFIG_CAP_FSL_EXT=y
 +CONFIG_LTIB_RELEASE="8.1.2"
-diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/dev.profile ltib/config/platform/imx/dev.profile
+diff -urN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/dev.profile ltib/config/platform/imx/dev.profile
 --- ltib.reference/config/platform/imx/dev.profile
 +++ ltib/config/platform/imx/dev.profile
 @@ -41,4 +41,3 @@
@@ -19053,13 +19053,15 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
        you to set Wireless LAN specific parameters and get specific
        statistics for wireless networking equipment.
  
-+config PKG_COMPAT_DRIVERS
-+    bool "compat-drivers"
++config PKG_WIFI_DRIVERS
++    bool "wifi-drivers"
 +    help
 +      This package contains device drivers from later kernel
 +      versions that are backported for use on earlier versions.
-+      Currently it provides the rtl8192cu driver needed to
-+      support USB wireless cards based on Realtek 8192CU chip.
++      It provides the rtl8192cu driver needed to support USB
++      wireless cards based on Realtek 8192CU chipset
++      and the ath9k_htc driver needed to support USB
++      wireless cards based on Atheros AR9002U chipset.
 +
  config PKG_XFSPROGS
      bool "xfsprogs"
@@ -19121,7 +19123,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +PKG_USB_MODESWITCH               = usb_modeswitch
 +PKG_USB_MODESWITCH_DATA          = usb_modeswitch_data
 +PKG_LAST_KERNEL_BUILD            = last-kernel-build
-+PKG_COMPAT_DRIVERS               = compat-drivers
++PKG_WIFI_DRIVERS                 = wifi-drivers
 +PKG_MECT_PLUGINS                 = mect_plugins
 +PKG_SDCARD                       = SDcard
 +PKG_MAC_SN                       = mac_sn

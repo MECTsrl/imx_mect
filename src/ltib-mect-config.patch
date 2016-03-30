@@ -19043,7 +19043,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3487,11 +3576,19 @@
+@@ -3487,11 +3576,22 @@
      depends CAP_HAS_MMU
      bool "wireless-tools"
      help

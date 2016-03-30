@@ -16394,6 +16394,15 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      default "Freescale iMX reference boards"
  
  config VENDOR
+@@ -43,7 +42,7 @@
+ 
+ config CFGHOST
+     string
+-    default arm-linux
++    default arm-none-linux-gnueabi
+ 
+ config ARMEABI_ARCH
+     bool
 @@ -97,8 +96,6 @@
          bool "mx53_evk"
      config BOARD_MX53_ARD

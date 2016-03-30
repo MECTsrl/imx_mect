@@ -49,7 +49,7 @@ QLabel
       </font>
      </property>
      <property name="text">
-      <string>No mac address or serial number found
+      <string>No MAC or S/N found
 Please set it</string>
      </property>
      <property name="alignment">
@@ -63,14 +63,14 @@ Please set it</string>
       <widget class="QLabel" name="labelMACeth0">
        <property name="text">
         <string>MAC
-eht0</string>
+eth0</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pushButtonMACeth0_1">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -83,7 +83,7 @@ eht0</string>
      <item>
       <widget class="QPushButton" name="pushButtonMACeth0_2">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -96,7 +96,7 @@ eht0</string>
      <item>
       <widget class="QPushButton" name="pushButtonMACeth0_3">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -109,7 +109,7 @@ eht0</string>
      <item>
       <widget class="QPushButton" name="pushButtonMACeth0_4">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -122,7 +122,7 @@ eht0</string>
      <item>
       <widget class="QPushButton" name="pushButtonMACeth0_5">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -135,7 +135,7 @@ eht0</string>
      <item>
       <widget class="QPushButton" name="pushButtonMACeth0_6">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -160,7 +160,7 @@ eth1</string>
      <item>
       <widget class="QPushButton" name="pushButtonMACeth1_1">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -173,7 +173,7 @@ eth1</string>
      <item>
       <widget class="QPushButton" name="pushButtonMACeth1_2">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -186,7 +186,7 @@ eth1</string>
      <item>
       <widget class="QPushButton" name="pushButtonMACeth1_3">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -199,7 +199,7 @@ eth1</string>
      <item>
       <widget class="QPushButton" name="pushButtonMACeth1_4">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -212,7 +212,7 @@ eth1</string>
      <item>
       <widget class="QPushButton" name="pushButtonMACeth1_5">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -225,7 +225,7 @@ eth1</string>
      <item>
       <widget class="QPushButton" name="pushButtonMACeth1_6">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>

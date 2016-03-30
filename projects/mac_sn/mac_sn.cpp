@@ -496,7 +496,7 @@ void mac_sn::on_pushButtonOk_clicked()
             ||
             ui->pushButtonSN_2->text().length() != 2
             ||
-            ui->pushButtonSN_3->text().length() != 2
+            ui->pushButtonSN_3->text().length() <= 0
             )
     {
         QMessageBox::critical(this,tr("Invalid value"), tr("Invalid value for serial number"));
@@ -591,7 +591,6 @@ void mac_sn::on_pushButtonOk_clicked()
     system("mount -oro,remount /");
 	system("sync");
 	system("reboot");
-    exit (0);
 }
 
 void mac_sn::on_pushButtonCancel_clicked()

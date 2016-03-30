@@ -1,7 +1,17 @@
 diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_mxs_auart.c
---- a/xenomai-2.6.0/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-03-29 16:15:04.288735332 +0200
-+++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-03-29 16:14:34.436103728 +0200
-@@ -672,6 +672,9 @@
+--- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-03-30 12:00:52.887964375 +0200
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-03-30 12:09:19.715950474 +0200
+@@ -128,7 +128,8 @@
+ 	.tx_timeout = RTSER_DEF_TIMEOUT,
+ 	.event_timeout = RTSER_DEF_TIMEOUT,
+ 	.timestamp_history = RTSER_DEF_TIMESTAMP_HISTORY,
+-	.event_mask = RTSER_DEF_EVENT_MASK
++	.event_mask = RTSER_DEF_EVENT_MASK,
++	.mect_rts = RTSER_MECT_RTS_CLR
+ };
+ 
+ static void rt_imx_mxs_auart_break_ctl(struct rt_imx_mxs_auart_ctx *ctx, int break_state);
+@@ -672,6 +673,9 @@
  	if (testbits(config->config_mask, RTSER_SET_HANDSHAKE))
  		ctx->config.handshake = config->handshake;
  
@@ -11,7 +21,7 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
  	/*
  	 * Configure the hardware.
  	 */
-@@ -680,7 +683,8 @@
+@@ -680,7 +684,8 @@
  					   | RTSER_SET_STOP_BITS
  					   | RTSER_SET_PARITY
  					   | RTSER_SET_BAUD
@@ -21,7 +31,7 @@ diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_
  		u32 ctrl;
  		u32 ctrl2;
  		u32 div;
-@@ -739,6 +743,12 @@
+@@ -739,6 +744,12 @@
  		ctrl &= ~BF_UARTAPP_LINECTRL_BAUD_DIVINT(0xffffffff);
  		ctrl |= BF_UARTAPP_LINECTRL_BAUD_DIVINT(div >> 6);
  

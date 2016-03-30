@@ -43,7 +43,7 @@ for x in `echo $DATA | tr "&" "\n"`; do
 					mkdir -p $BASE_DIR/tmp
 				fi
 				cd $BASE_DIR/tmp
-				/local/www/extract "$BASE_DIR/$STORE_DIR" "." $FULLPATHFILE $datein $timein $datefin $timefin 2> /tmp/www.log 1> /tmp/filetozip.log
+				$WWW_DIR/extract "$BASE_DIR/$STORE_DIR" "." $FULLPATHFILE $datein $timein $datefin $timefin 2> /tmp/www.log 1> /tmp/filetozip.log
 				
 				if [ $? -ne 0 ]
 				then
@@ -67,7 +67,7 @@ for x in `echo $DATA | tr "&" "\n"`; do
 						FILE=""
 						if [ "$datefin" != "" ]
 						then
-							for x in `/local/www/getdatesinterval $datein $datefin`; do
+							for x in `$WWW_DIR/getdatesinterval $datein $datefin`; do
 								if [ -e $BASE_DIR/$STORE_DIR/$x.log ]
 								then
 									FILESTOACTION="$FILESTOACTION $BASE_DIR/$STORE_DIR/$x.log"

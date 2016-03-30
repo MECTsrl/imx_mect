@@ -3,6 +3,7 @@
 # Questo è il file load.cgi, lo script che raccoglie le
 # impostazioni
 
+WWW_DIR="/usr/share/www"
 TARGET_NAME=""
 COMPANY_NAME="MECT"
 HOME_PAGE="menu.cgi"
@@ -17,13 +18,14 @@ TREND_DIR="customtrend"
 SCREENSHOT_DIR="screenshot"
 CONFIG_DIR="AC3_STRATEGIES"
 
-PWDFILE="$LOCAL_ETC_DIR/.passwd"
+PWDFILE="$WWW_DIR/.passwd"
 SESSIONFILE="/tmp/.session"
 
 FACTORY_DATA="/local/factory_data.tar.gz"
 #FACTORY_PWD="/local/factory_pwd.tar.gz"
 NETCONF="/local/etc/sysconfig/net.conf"
-SERIALCONF="/local/etc/sysconfig/serial.conf"
+MACCONF="/etc/mac.conf"
+SERIALCONF="/etc/serial.conf"
 
 SIGN=/usr/bin/sign
 

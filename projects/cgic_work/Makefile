@@ -24,7 +24,7 @@ MD                =  mkdir
 SED               =  sed
 RM                =  rm
 
-BIN_DIR = ../localfs/www
+BIN_DIR = $(INSTALL_ROOT)/usr/share/www
 
 ARCH_LIB_PATH     =  -L$(MECT_RFSDIR)/usr/lib
 ARCH_INCLUDE      =  -I$(MECT_RFSDIR)/usr/include -I$(MECT_RFSDIR)/usr/src/linux/include
@@ -125,6 +125,7 @@ extract: store_extract.c
 	$(CC) $(ARCH_INCLUDE) $(CFLAGS) -DSTANDALONE store_extract.c -o www/extract
 
 install: all
+	@mkdir -p $(BIN_DIR)
 	$(foreach file,$(CGI_LIST),install -D -m 0755 www/$(file) $(BIN_DIR)/$(file);)
 
 clean:

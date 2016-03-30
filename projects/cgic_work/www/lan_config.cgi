@@ -63,7 +63,7 @@ cat <<EOF
                         </tr>
                         <tr>
 EOF
-/local/www/select $IP1 $IP2 $IP3 $IP4 $NM1 $NM2 $NM3 $NM4 $GW1 $GW2 $GW3 $GW4 $DN11 $DN12 $DN13 $DN14 $DN21 $DN22 $DN23 $DN24 < /local/www/select-template.html > /tmp/select.html
+$WWW_DIR/select $IP1 $IP2 $IP3 $IP4 $NM1 $NM2 $NM3 $NM4 $GW1 $GW2 $GW3 $GW4 $DN11 $DN12 $DN13 $DN14 $DN21 $DN22 $DN23 $DN24 < $WWW_DIR/select-template.html > /tmp/select.html
 cat /tmp/select.html
 rm -f /tmp/select.html
 cat <<EOF

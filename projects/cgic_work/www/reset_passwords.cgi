@@ -5,9 +5,11 @@
 if [ -e $PWDFILE ]
 then
 	old_dir=`pwd`
+	mount -orw,remount /
 	echo "PWDUSER=$PWDUSERDEFAULT" > $PWDFILE
 	echo "PWDSUPERUSER=$PWDSUPERUSERDEFAULT" >> $PWDFILE
 	echo "PWDADMIN=$PWDADMINDEFAULT" >> $PWDFILE
+	mount -oro,remount /
 	if [ $? == 0 ]
 	then
 		MSG="All passwords are resetted"

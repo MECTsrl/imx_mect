@@ -2,8 +2,6 @@
 
 `cat | dos2unix | awk '{if ($0 ~ /Content-Disposition: form-data/) {split($0,a,"="); split(a[2],b,"\""); getline; getline; printf "export %s=%s\n", b[2],$0}}'`
 
-PWDFILE="/local/www/.passwd"
-
 . ./load.cgi
 
 cat <<EOF
@@ -173,6 +171,8 @@ cat <<EOF
 EOF
 
 fi
+mount -orw,remount /
 echo PWDUSER=$PWDUSER > $PWDFILE
 echo PWDSUPERUSER=$PWDSUPERUSER >> $PWDFILE
 echo PWDADMIN=$PWDADMIN >> $PWDFILE
+mount -oro,remount /

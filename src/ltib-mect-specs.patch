@@ -1744,6 +1744,108 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/iptables/iptables.spec ltib/dist/lfs-5.1/iptables/iptables.spec
+--- ltib.reference/dist/lfs-5.1/iptables/iptables.spec
++++ ltib/dist/lfs-5.1/iptables/iptables.spec
+@@ -14,45 +14,84 @@
+ Patch1		: iptables-1.4.2-libxt_TOS.patch
+ BuildRoot	: %{_tmppath}/%{name}
+ Prefix		: %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed %{name} for root file system requirements.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group		: System Environment/Base
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents limited to just the files
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+ 
+-iptables is the userspace command line program used to configure the Linux
+-2.4.x and 2.6.x IPv4 packet filtering ruleset. It is targeted towards system
+-administrators
++iptables is the userspace command line program used to configure
++the Linux 2.4.x and 2.6.x IPv4 packet filtering ruleset. It
++is targeted towards system administrators
+ 
+-Since Network Address Translation is also configured from the packet filter
+-ruleset, iptables is used for this, too
++Since Network Address Translation is also configured from the
++packet filter ruleset, iptables is used for this, too
+ 
+-The iptables package also includes ip6tables. ip6tables is used for configuring
+-the IPv6 packet filter
++The iptables package also includes ip6tables. ip6tables is
++used for configuring the IPv6 packet filter
+ 
+-iptables requires a kernel that features the ip_tables packet filter. This
+-includes all 2.4.x and 2.6.x kernel releases
++iptables requires a kernel that features the ip_tables packet
++filter. This includes all 2.4.x and 2.6.x kernel releases
+ 
+ Main Features
+-		* listing the contents of the packet filter ruleset
+-		* adding/removing/modifying rules in the packet filter ruleset
+-		* listing/zeroing per-rule counters of the packet filter ruleset
++* listing the contents of the packet filter ruleset
++* adding/removing/modifying rules in the packet filter ruleset
++* listing/zeroing per-rule counters of the packet filter ruleset
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
++
+ %patch0 -p1
+ %patch1 -p1
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
+ make
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+ find $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/ -name "*.la" | xargs rm -f
+ 
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed '
++    \,%{_bindir}/iptables-xml, d;
++    \,%{_libdir}, d;
++    \,%{_libexecdir}, d;
++    \,%{_mandir}, d;
++    \,%{_includedir}, d;
++' all_files.lst > rfs_files.lst
++
+ %Clean
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ 
+-%Files
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++%Files rfs -f rfs_files.lst
+ %defattr(-,root,root)
+-%{pfx}/*
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl ltib/dist/lfs-5.1/kernel/kernel-common.tmpl
 --- ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl
 +++ ltib/dist/lfs-5.1/kernel/kernel-common.tmpl

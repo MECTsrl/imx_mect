@@ -754,7 +754,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_PKG_IPSEC_SUITE_NONE=y
 +# CONFIG_PKG_IPSEC_TOOLS is not set
 +# CONFIG_PKG_IPSECADM is not set
-+# CONFIG_PKG_IPTABLES is not set
++CONFIG_PKG_IPTABLES=y
 +# CONFIG_PKG_IPUTILS is not set
 +# CONFIG_PKG_IRATTACH is not set
 +# CONFIG_PKG_IRDADUMP is not set
@@ -1441,7 +1441,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#define CONFIG_PKG_IPSEC_SUITE_NONE 1
 +#undef CONFIG_PKG_IPSEC_TOOLS
 +#undef CONFIG_PKG_IPSECADM
-+#undef CONFIG_PKG_IPTABLES
++#define CONFIG_PKG_IPTABLES 1
 +#undef CONFIG_PKG_IPUTILS
 +#undef CONFIG_PKG_IRATTACH
 +#undef CONFIG_PKG_IRDADUMP
@@ -3101,7 +3101,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_PKG_IPSEC_SUITE_NONE=y
 +# CONFIG_PKG_IPSEC_TOOLS is not set
 +# CONFIG_PKG_IPSECADM is not set
-+# CONFIG_PKG_IPTABLES is not set
++CONFIG_PKG_IPTABLES=y
 +# CONFIG_PKG_IPUTILS is not set
 +# CONFIG_PKG_IRATTACH is not set
 +# CONFIG_PKG_IRDADUMP is not set

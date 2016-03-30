@@ -160,6 +160,7 @@ MECT_COMMON_RFSPKGS := \
 	freetype-rfs-2.3.9-1.$(MECT_TARGET_ARCH).rpm \
 	glib2-rfs-2.18.1-1.$(MECT_TARGET_ARCH).rpm \
 	iproute-rfs-2.6.37-1.$(MECT_TARGET_ARCH).rpm \
+	iptables-rfs-1.4.2-1.$(MECT_TARGET_ARCH).rpm \
 	libsocketcan-rfs-0.0.8-0.$(MECT_TARGET_ARCH).rpm \
 	libtermcap-rfs-2.0.8-31_1.$(MECT_TARGET_ARCH).rpm \
 	libusb1-rfs-1.0.20-1.$(MECT_TARGET_ARCH).rpm \

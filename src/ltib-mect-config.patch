@@ -487,7 +487,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_PLATFORM_SUBDIR="imx"
 +CONFIG_GNUTARCH="arm"
 +CONFIG_LINTARCH="arm"
-+CONFIG_CFGHOST="arm-linux"
++CONFIG_CFGHOST="arm-none-linux-gnueabi"
 +CONFIG_ARMEABI_ARCH=y
 +# CONFIG_VFP_ARCH is not set
 +
@@ -1174,7 +1174,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#define CONFIG_PLATFORM_SUBDIR "imx"
 +#define CONFIG_GNUTARCH "arm"
 +#define CONFIG_LINTARCH "arm"
-+#define CONFIG_CFGHOST "arm-linux"
++#define CONFIG_CFGHOST "arm-none-linux-gnueabi"
 +#define CONFIG_ARMEABI_ARCH 1
 +#undef CONFIG_VFP_ARCH
 +
@@ -2834,7 +2834,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_PLATFORM_SUBDIR="imx"
 +CONFIG_GNUTARCH="arm"
 +CONFIG_LINTARCH="arm"
-+CONFIG_CFGHOST="arm-linux"
++CONFIG_CFGHOST="arm-none-linux-gnueabi"
 +CONFIG_ARMEABI_ARCH=y
 +# CONFIG_VFP_ARCH is not set
 +

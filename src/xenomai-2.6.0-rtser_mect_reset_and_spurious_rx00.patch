@@ -1,0 +1,144 @@
+diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_mxs_auart.c
+--- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-03-31 00:51:25.300602278 +0200
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-03-31 00:39:04.433033009 +0200
+@@ -103,6 +103,9 @@
+ 	int status;			/* cache for LSR + soft-states */
+ 	int saved_errors;		/* error cache for RTIOC_GET_STATUS */
+ 
++	/* Workaround the spurious 0x00 byte read first after the open. */
++	int first_read_after_open;
++
+ 	/*
+ 	 * The port structure holds all the information about the UART
+ 	 * port like base address, and so on.
+@@ -136,8 +139,6 @@
+ static int rt_imx_mxs_auart_set_config(struct rt_imx_mxs_auart_ctx *ctx, const struct rtser_config *config, uint64_t **in_history_ptr);
+ static void rt_imx_mxs_auart_stop_tx(struct rt_imx_mxs_auart_ctx *ctx);
+ 
+-static int rt_imx_mxs_auart_rx_chars(struct rt_imx_mxs_auart_ctx *ctx, uint64_t *timestamp);
+-
+ 
+ static inline struct rt_imx_mxs_auart_port *
+ to_auart_port(struct uart_port *u)
+@@ -211,21 +212,30 @@
+ 
+ 		/* NOTE Here we ignore system requests. */
+ 
+-		/* Save the received character */
+-		ctx->in_buf[ctx->in_tail] = c;
++		/* Workaround the spurious 0x00 byte read first after the open. */
++		if (ctx->first_read_after_open) {
++			ctx->first_read_after_open = 0;
+ 
+-		if (ctx->in_history)
+-			ctx->in_history[ctx->in_tail] = *timestamp;
++			if (c == 0x00)
++				max_count++;
++		}
++		else {
++			/* Save the received character */
++			ctx->in_buf[ctx->in_tail] = c;
+ 
+-		ctx->in_tail = (ctx->in_tail + 1) & (IN_BUFFER_SIZE - 1);
++			if (ctx->in_history)
++				ctx->in_history[ctx->in_tail] = *timestamp;
+ 
+-		if (++ctx->in_npend > IN_BUFFER_SIZE) {
+-			ctx->in_npend--;
++			ctx->in_tail = (ctx->in_tail + 1) & (IN_BUFFER_SIZE - 1);
+ 
+-			lsr |= RTSER_SOFT_OVERRUN_ERR;
+-		}
++			if (++ctx->in_npend > IN_BUFFER_SIZE) {
++				ctx->in_npend--;
+ 
+-		rbytes++;
++				lsr |= RTSER_SOFT_OVERRUN_ERR;
++			}
++
++			rbytes++;
++		}
+ 
+ 		__raw_writel(stat, port->port.membase + HW_UARTAPP_STAT);
+ 	}
+@@ -571,19 +581,53 @@
+ rt_imx_mxs_auart_reset(struct uart_port *u)
+ {
+ 	int i;
+-	unsigned int reg;
+ 
++	/* Deassert soft reset request. */
+ 	__raw_writel(BM_UARTAPP_CTRL0_SFTRST, u->membase + HW_UARTAPP_CTRL0_CLR);
+ 
+-	for (i = 0; i < 10000; i++) {
+-		reg = __raw_readl(u->membase + HW_UARTAPP_CTRL0);
+-		if (!(reg & BM_UARTAPP_CTRL0_SFTRST))
+-			break;
++	/* Wait at least a microsecond for SFTRST to deassert. */
++	for (i = 0; (__raw_readl(u->membase + HW_UARTAPP_CTRL0) & BM_UARTAPP_CTRL0_SFTRST) && (i < 10000); i++)
++		udelay(1);
++
++	/* Soft reset still asserted. */
++	if (__raw_readl(u->membase + HW_UARTAPP_CTRL0) & BM_UARTAPP_CTRL0_SFTRST)
++		return;
+ 
+-		udelay(3);
+-	}
++	/* Clear clock gating so we can wait for its assertion below. */
++	__raw_writel(BM_UARTAPP_CTRL0_CLKGATE, u->membase + HW_UARTAPP_CTRL0_CLR);
++
++	/* Request a soft reset of the hardware. */
++	__raw_writel(BM_UARTAPP_CTRL0_SFTRST, u->membase + HW_UARTAPP_CTRL0_SET);
++
++	/* Wait for clock gating before clearing the soft reset and clock gate. */
++	for (i = 0; !(__raw_readl(u->membase + HW_UARTAPP_CTRL0) & BM_UARTAPP_CTRL0_CLKGATE) && (i < 10000); i++)
++		udelay(1);
++
++	/* The clock was not gated. */
++	if (!(__raw_readl(u->membase + HW_UARTAPP_CTRL0) & BM_UARTAPP_CTRL0_CLKGATE))
++		return;
++
++	/* Remove the soft reset request. */
++	__raw_writel(BM_UARTAPP_CTRL0_SFTRST, u->membase + HW_UARTAPP_CTRL0_CLR);
+ 
++	/* Wait at least a microsecond for soft reset request to deassert. */
++	for (i = 0; (__raw_readl(u->membase + HW_UARTAPP_CTRL0) & BM_UARTAPP_CTRL0_SFTRST) && (i < 10000); i++)
++		udelay(1);
++
++	/* Soft reset request did not deassert. */
++	if (__raw_readl(u->membase + HW_UARTAPP_CTRL0) & BM_UARTAPP_CTRL0_SFTRST)
++		return;
++
++	/* Clear clock gating. */
+ 	__raw_writel(BM_UARTAPP_CTRL0_CLKGATE, u->membase + HW_UARTAPP_CTRL0_CLR);
++
++	/* Wait for clock gating deassertion. */
++	for (i = 0; (__raw_readl(u->membase + HW_UARTAPP_CTRL0) & BM_UARTAPP_CTRL0_CLKGATE) && (i < 10000); i++)
++		udelay(1);
++
++	/* The clock is still gated. */
++	if (__raw_readl(u->membase + HW_UARTAPP_CTRL0) & BM_UARTAPP_CTRL0_CLKGATE)
++		return;
+ }
+ 
+ static void
+@@ -1093,6 +1137,8 @@
+ 	ctx->status = 0;
+ 	ctx->saved_errors = 0;
+ 
++	ctx->first_read_after_open = 1;
++
+ 	rt_imx_mxs_auart_reset(&port->port);
+ 
+ 	__raw_writel(BM_UARTAPP_CTRL2_UARTEN, port->port.membase + HW_UARTAPP_CTRL2_SET);
+@@ -1101,10 +1147,6 @@
+ 
+ 	__raw_writel(BM_UARTAPP_INTR_CTSMIEN, port->port.membase + HW_UARTAPP_INTR_SET);
+ 
+-	/*
+-	 * Enable the FIFO so all four bytes of a DMA word are written to
+-	 * output (otherwise, only the LSB is written, i.e. 1 in 4 bytes)
+-	 */
+ 	__raw_writel(BM_UARTAPP_LINECTRL_FEN, port->port.membase + HW_UARTAPP_LINECTRL_SET);
+ 
+ 	rt_imx_mxs_auart_set_config(ctx, &default_config, &dummy);

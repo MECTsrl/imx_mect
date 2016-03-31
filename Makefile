@@ -152,6 +152,7 @@ MECT_COMMON_RFSPKGS := \
 	boa-rfs-0.94.14rc21-1.$(MECT_TARGET_ARCH).rpm \
 	busybox-rfs-1.15.0-1.$(MECT_TARGET_ARCH).rpm \
 	cantest-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
+	cgic_work-rfs-0.0-1.$(MECT_TARGET_ARCH).rpm \
 	dhcp-rfs-3.0.3b1-1.$(MECT_TARGET_ARCH).rpm \
 	dropbear-rfs-0.52-1.$(MECT_TARGET_ARCH).rpm \
 	e2fsprogs-rfs-1.41.4-1.$(MECT_TARGET_ARCH).rpm \

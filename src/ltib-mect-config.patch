@@ -475,7 +475,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config
 +++ ltib/config/platform/imx/.config
-@@ -0,0 +1,656 @@
+@@ -0,0 +1,657 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -895,6 +895,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# MECT projects
 +#
 +CONFIG_PKG_MECT_PLUGINS=y
++CONFIG_PKG_CGIC_WORK=y
 +CONFIG_PKG_SDCARD=y
 +CONFIG_PKG_MAC_SN=y
 +
@@ -1161,7 +1162,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h
 +++ ltib/config/platform/imx/.tmpconfig.h
-@@ -0,0 +1,657 @@
+@@ -0,0 +1,658 @@
 +/*
 + * Automatically generated C config: don't edit
 + * LTIB version: 8.1.2
@@ -1582,6 +1583,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 + * MECT projects
 + */
 +#define CONFIG_PKG_MECT_PLUGINS 1
++#define CONFIG_PKG_CGIC_WORK 1
 +#define CONFIG_PKG_SDCARD 1
 +#define CONFIG_PKG_MAC_SN 1
 +
@@ -2822,7 +2824,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev
 +++ ltib/config/platform/imx/defconfig.dev
-@@ -0,0 +1,656 @@
+@@ -0,0 +1,657 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -3242,6 +3244,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# MECT projects
 +#
 +CONFIG_PKG_MECT_PLUGINS=y
++CONFIG_PKG_CGIC_WORK=y
 +CONFIG_PKG_SDCARD=y
 +CONFIG_PKG_MAC_SN=y
 +
@@ -19335,7 +19338,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  endmenu
  
  menu "Qtopia"
-@@ -2767,6 +2817,45 @@
+@@ -2767,6 +2817,52 @@
         Some host tools are not used when building Qtopia within ltib.
         Not building these tools saves time when building.  Select y here
         to enable designer, linguist, and assistant GUI tools.
@@ -19364,6 +19367,13 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +    help
 +        Custom Qt plugins for HMI development.
 +
++config PKG_CGIC_WORK
++    bool "Web-based reporting and config"
++    default y
++    help
++        Support web pages and programs for run-time
++        system web-based reporting and configuration.
++
 +config PKG_SDCARD
 +    depends PKG_MECT_PLUGINS
 +    bool "GUI for SD card configuration"
@@ -19381,7 +19391,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  menu "Applications"
  config PKG_QTOPIA_WANT_APP_CALCULATOR
-@@ -3346,7 +3435,7 @@
+@@ -3346,7 +3442,7 @@
      bool "totem-pl-parser"
      select PKG_EVOLUTION_DATA_SERVER
      select PKG_GTK2
@@ -19390,7 +19400,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3487,11 +3576,21 @@
+@@ -3487,11 +3583,21 @@
      depends CAP_HAS_MMU
      bool "wireless-tools"
      help
@@ -19413,7 +19423,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_XFSPROGS
      bool "xfsprogs"
      help
-@@ -3862,6 +3961,11 @@
+@@ -3862,6 +3968,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  
@@ -19460,7 +19470,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_I2C_TOOLS                    = i2c-tools
  PKG_WATCHDOG                     = watchdog
  PKG_DSPI                         = dspi
-@@ -407,6 +410,16 @@
+@@ -407,6 +410,17 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
@@ -19472,6 +19482,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +PKG_LAST_KERNEL_BUILD            = last-kernel-build
 +PKG_WIFI_DRIVERS                 = wifi-drivers
 +PKG_MECT_PLUGINS                 = mect_plugins
++PKG_CGIC_WORK                    = cgic_work
 +PKG_SDCARD                       = SDcard
 +PKG_MAC_SN                       = mac_sn
  

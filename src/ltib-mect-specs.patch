@@ -396,7 +396,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ac_cv_func_setvbuf_reversed=no \
  CFLAGS="-DSERVER_ROOT='\"/etc\"' -g -Os" \
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
- make
+-make
++make -j1
  
  %Install
 +export LC_ALL
@@ -790,6 +791,87 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cgic_work/cgic_work.spec ltib/dist/lfs-5.1/cgic_work/cgic_work.spec
+--- ltib.reference/dist/lfs-5.1/cgic_work/cgic_work.spec
++++ ltib/dist/lfs-5.1/cgic_work/cgic_work.spec
+@@ -0,0 +1,77 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : Support for web-based reporting and configuration
++Name            : cgic_work
++Version         : 0.0
++Release         : 1
++License         : GPL
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System/Servers
++URL             : http://www.mect.it/
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed %{name} to just the run-times needed in the root file system.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System/Servers
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents limited to just the run-times needed
++on the target.
++
++
++%Description
++%{summary}
++
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++%setup -T -c -n %{name}
++rsync -a --inplace ../../../../projects/%{name}/ ./
++
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++export MECT_RFSDIR
++MECT_RFSDIR=`pwd`/../../../rootfs
++
++test -r Makefile && make clean
++make -j1
++
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++make -j1 INSTALL_ROOT=$RPM_BUILD_ROOT%{pfx} install
++
++cd %{_builddir}/%{name}
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p;
++' all_files.lst > rfs_files.lst
++
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec
@@ -2738,7 +2820,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 --- ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 +++ ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
-@@ -0,0 +1,82 @@
+@@ -0,0 +1,78 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Custom Qt plugins for HMI development.
@@ -2796,11 +2878,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +rm -rf $RPM_BUILD_ROOT
-+make -j1 INSTALL_ROOT=$RPM_BUILD_ROOT%{pfx}/../dummy install
-+
-+mkdir $RPM_BUILD_ROOT%{pfx}/tmp
-+rsync -a --inplace $RPM_BUILD_ROOT%{pfx}/../dummy`pwd`/../../../rootfs/ $RPM_BUILD_ROOT%{pfx}/
-+rm -rf $RPM_BUILD_ROOT%{pfx}/../dummy
++make -j1 INSTALL_ROOT=$RPM_BUILD_ROOT%{pfx} install
 +
 +cd %{_builddir}/%{name}
 +( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst

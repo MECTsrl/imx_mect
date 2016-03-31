@@ -27,7 +27,6 @@ export PATH := /usr/lib/ccache:$(PATH)
 MECT_ALL_TARGETS := \
 	local_prepare \
 	splash \
-	cgic_work \
 	ATCMcontrol_RunTimeSystem \
 	mect_apps \
 
@@ -51,7 +50,6 @@ MECT_ALL_TARGETS += \
 MECT_CLEAN_TARGETS := \
 	local_prepare_clean \
 	splash_clean \
-	cgic_work_clean \
 	ATCMcontrol_RunTimeSystem_clean \
 
 ifneq ($(wildcard factory_test/trunk/.*),)

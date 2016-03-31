@@ -754,7 +754,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_PKG_IPSEC_SUITE_NONE=y
 +# CONFIG_PKG_IPSEC_TOOLS is not set
 +# CONFIG_PKG_IPSECADM is not set
-+CONFIG_PKG_IPTABLES=y
++# CONFIG_PKG_IPTABLES is not set
 +# CONFIG_PKG_IPUTILS is not set
 +# CONFIG_PKG_IRATTACH is not set
 +# CONFIG_PKG_IRDADUMP is not set
@@ -1442,7 +1442,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#define CONFIG_PKG_IPSEC_SUITE_NONE 1
 +#undef CONFIG_PKG_IPSEC_TOOLS
 +#undef CONFIG_PKG_IPSECADM
-+#define CONFIG_PKG_IPTABLES 1
++#undef CONFIG_PKG_IPTABLES
 +#undef CONFIG_PKG_IPUTILS
 +#undef CONFIG_PKG_IRATTACH
 +#undef CONFIG_PKG_IRDADUMP
@@ -3103,7 +3103,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_PKG_IPSEC_SUITE_NONE=y
 +# CONFIG_PKG_IPSEC_TOOLS is not set
 +# CONFIG_PKG_IPSECADM is not set
-+CONFIG_PKG_IPTABLES=y
++# CONFIG_PKG_IPTABLES is not set
 +# CONFIG_PKG_IPUTILS is not set
 +# CONFIG_PKG_IRATTACH is not set
 +# CONFIG_PKG_IRDADUMP is not set
@@ -3608,7 +3608,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
-@@ -0,0 +1,2493 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
@@ -4240,63 +4240,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NF_CONNTRACK_SIP is not set
 +# CONFIG_NF_CONNTRACK_TFTP is not set
 +CONFIG_NF_CT_NETLINK=y
-+CONFIG_NETFILTER_XTABLES=m
-+
-+#
-+# Xtables combined modules
-+#
-+# CONFIG_NETFILTER_XT_MARK is not set
-+# CONFIG_NETFILTER_XT_CONNMARK is not set
-+
-+#
-+# Xtables targets
-+#
-+# CONFIG_NETFILTER_XT_TARGET_CLASSIFY is not set
-+# CONFIG_NETFILTER_XT_TARGET_CONNMARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_MARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_NFLOG is not set
-+# CONFIG_NETFILTER_XT_TARGET_NFQUEUE is not set
-+# CONFIG_NETFILTER_XT_TARGET_RATEEST is not set
-+# CONFIG_NETFILTER_XT_TARGET_TEE is not set
-+# CONFIG_NETFILTER_XT_TARGET_SECMARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_TCPMSS is not set
-+
-+#
-+# Xtables matches
-+#
-+# CONFIG_NETFILTER_XT_MATCH_CLUSTER is not set
-+# CONFIG_NETFILTER_XT_MATCH_COMMENT is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNBYTES is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNLIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNMARK is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNTRACK is not set
-+# CONFIG_NETFILTER_XT_MATCH_DCCP is not set
-+# CONFIG_NETFILTER_XT_MATCH_DSCP is not set
-+# CONFIG_NETFILTER_XT_MATCH_ESP is not set
-+# CONFIG_NETFILTER_XT_MATCH_HASHLIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_HELPER is not set
-+# CONFIG_NETFILTER_XT_MATCH_HL is not set
-+# CONFIG_NETFILTER_XT_MATCH_IPRANGE is not set
-+# CONFIG_NETFILTER_XT_MATCH_LENGTH is not set
-+# CONFIG_NETFILTER_XT_MATCH_LIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_MAC is not set
-+# CONFIG_NETFILTER_XT_MATCH_MARK is not set
-+# CONFIG_NETFILTER_XT_MATCH_MULTIPORT is not set
-+# CONFIG_NETFILTER_XT_MATCH_OSF is not set
-+# CONFIG_NETFILTER_XT_MATCH_OWNER is not set
-+# CONFIG_NETFILTER_XT_MATCH_POLICY is not set
-+# CONFIG_NETFILTER_XT_MATCH_PKTTYPE is not set
-+# CONFIG_NETFILTER_XT_MATCH_QUOTA is not set
-+# CONFIG_NETFILTER_XT_MATCH_RATEEST is not set
-+# CONFIG_NETFILTER_XT_MATCH_REALM is not set
-+# CONFIG_NETFILTER_XT_MATCH_RECENT is not set
-+# CONFIG_NETFILTER_XT_MATCH_SCTP is not set
-+# CONFIG_NETFILTER_XT_MATCH_STATE is not set
-+# CONFIG_NETFILTER_XT_MATCH_STATISTIC is not set
-+# CONFIG_NETFILTER_XT_MATCH_STRING is not set
-+# CONFIG_NETFILTER_XT_MATCH_TCPMSS is not set
-+# CONFIG_NETFILTER_XT_MATCH_TIME is not set
-+# CONFIG_NETFILTER_XT_MATCH_U32 is not set
++# CONFIG_NETFILTER_XTABLES is not set
 +# CONFIG_IP_VS is not set
 +
 +#
@@ -4305,19 +4249,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NF_DEFRAG_IPV4 is not set
 +# CONFIG_NF_CONNTRACK_IPV4 is not set
 +# CONFIG_IP_NF_QUEUE is not set
-+CONFIG_IP_NF_IPTABLES=m
-+# CONFIG_IP_NF_MATCH_ADDRTYPE is not set
-+# CONFIG_IP_NF_MATCH_AH is not set
-+# CONFIG_IP_NF_MATCH_ECN is not set
-+# CONFIG_IP_NF_MATCH_TTL is not set
-+CONFIG_IP_NF_FILTER=m
-+CONFIG_IP_NF_TARGET_REJECT=m
-+# CONFIG_IP_NF_TARGET_LOG is not set
-+# CONFIG_IP_NF_TARGET_ULOG is not set
-+# CONFIG_IP_NF_MANGLE is not set
-+# CONFIG_IP_NF_TARGET_TTL is not set
-+# CONFIG_IP_NF_RAW is not set
-+# CONFIG_IP_NF_SECURITY is not set
++# CONFIG_IP_NF_IPTABLES is not set
 +# CONFIG_IP_NF_ARPTABLES is not set
 +# CONFIG_IP_DCCP is not set
 +# CONFIG_IP_SCTP is not set
@@ -4374,7 +4306,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NET_ACT_POLICE is not set
 +# CONFIG_NET_ACT_GACT is not set
 +# CONFIG_NET_ACT_MIRRED is not set
-+# CONFIG_NET_ACT_IPT is not set
 +# CONFIG_NET_ACT_NAT is not set
 +# CONFIG_NET_ACT_PEDIT is not set
 +# CONFIG_NET_ACT_SIMP is not set
@@ -6105,7 +6036,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
-@@ -0,0 +1,2493 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
@@ -6737,63 +6668,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NF_CONNTRACK_SIP is not set
 +# CONFIG_NF_CONNTRACK_TFTP is not set
 +CONFIG_NF_CT_NETLINK=y
-+CONFIG_NETFILTER_XTABLES=m
-+
-+#
-+# Xtables combined modules
-+#
-+# CONFIG_NETFILTER_XT_MARK is not set
-+# CONFIG_NETFILTER_XT_CONNMARK is not set
-+
-+#
-+# Xtables targets
-+#
-+# CONFIG_NETFILTER_XT_TARGET_CLASSIFY is not set
-+# CONFIG_NETFILTER_XT_TARGET_CONNMARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_MARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_NFLOG is not set
-+# CONFIG_NETFILTER_XT_TARGET_NFQUEUE is not set
-+# CONFIG_NETFILTER_XT_TARGET_RATEEST is not set
-+# CONFIG_NETFILTER_XT_TARGET_TEE is not set
-+# CONFIG_NETFILTER_XT_TARGET_SECMARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_TCPMSS is not set
-+
-+#
-+# Xtables matches
-+#
-+# CONFIG_NETFILTER_XT_MATCH_CLUSTER is not set
-+# CONFIG_NETFILTER_XT_MATCH_COMMENT is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNBYTES is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNLIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNMARK is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNTRACK is not set
-+# CONFIG_NETFILTER_XT_MATCH_DCCP is not set
-+# CONFIG_NETFILTER_XT_MATCH_DSCP is not set
-+# CONFIG_NETFILTER_XT_MATCH_ESP is not set
-+# CONFIG_NETFILTER_XT_MATCH_HASHLIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_HELPER is not set
-+# CONFIG_NETFILTER_XT_MATCH_HL is not set
-+# CONFIG_NETFILTER_XT_MATCH_IPRANGE is not set
-+# CONFIG_NETFILTER_XT_MATCH_LENGTH is not set
-+# CONFIG_NETFILTER_XT_MATCH_LIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_MAC is not set
-+# CONFIG_NETFILTER_XT_MATCH_MARK is not set
-+# CONFIG_NETFILTER_XT_MATCH_MULTIPORT is not set
-+# CONFIG_NETFILTER_XT_MATCH_OSF is not set
-+# CONFIG_NETFILTER_XT_MATCH_OWNER is not set
-+# CONFIG_NETFILTER_XT_MATCH_POLICY is not set
-+# CONFIG_NETFILTER_XT_MATCH_PKTTYPE is not set
-+# CONFIG_NETFILTER_XT_MATCH_QUOTA is not set
-+# CONFIG_NETFILTER_XT_MATCH_RATEEST is not set
-+# CONFIG_NETFILTER_XT_MATCH_REALM is not set
-+# CONFIG_NETFILTER_XT_MATCH_RECENT is not set
-+# CONFIG_NETFILTER_XT_MATCH_SCTP is not set
-+# CONFIG_NETFILTER_XT_MATCH_STATE is not set
-+# CONFIG_NETFILTER_XT_MATCH_STATISTIC is not set
-+# CONFIG_NETFILTER_XT_MATCH_STRING is not set
-+# CONFIG_NETFILTER_XT_MATCH_TCPMSS is not set
-+# CONFIG_NETFILTER_XT_MATCH_TIME is not set
-+# CONFIG_NETFILTER_XT_MATCH_U32 is not set
++# CONFIG_NETFILTER_XTABLES is not set
 +# CONFIG_IP_VS is not set
 +
 +#
@@ -6802,19 +6677,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NF_DEFRAG_IPV4 is not set
 +# CONFIG_NF_CONNTRACK_IPV4 is not set
 +# CONFIG_IP_NF_QUEUE is not set
-+CONFIG_IP_NF_IPTABLES=m
-+# CONFIG_IP_NF_MATCH_ADDRTYPE is not set
-+# CONFIG_IP_NF_MATCH_AH is not set
-+# CONFIG_IP_NF_MATCH_ECN is not set
-+# CONFIG_IP_NF_MATCH_TTL is not set
-+CONFIG_IP_NF_FILTER=m
-+CONFIG_IP_NF_TARGET_REJECT=m
-+# CONFIG_IP_NF_TARGET_LOG is not set
-+# CONFIG_IP_NF_TARGET_ULOG is not set
-+# CONFIG_IP_NF_MANGLE is not set
-+# CONFIG_IP_NF_TARGET_TTL is not set
-+# CONFIG_IP_NF_RAW is not set
-+# CONFIG_IP_NF_SECURITY is not set
++# CONFIG_IP_NF_IPTABLES is not set
 +# CONFIG_IP_NF_ARPTABLES is not set
 +# CONFIG_IP_DCCP is not set
 +# CONFIG_IP_SCTP is not set
@@ -6871,7 +6734,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NET_ACT_POLICE is not set
 +# CONFIG_NET_ACT_GACT is not set
 +# CONFIG_NET_ACT_MIRRED is not set
-+# CONFIG_NET_ACT_IPT is not set
 +# CONFIG_NET_ACT_NAT is not set
 +# CONFIG_NET_ACT_PEDIT is not set
 +# CONFIG_NET_ACT_SIMP is not set
@@ -8602,7 +8464,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
-@@ -0,0 +1,2493 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
@@ -9234,63 +9096,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NF_CONNTRACK_SIP is not set
 +# CONFIG_NF_CONNTRACK_TFTP is not set
 +CONFIG_NF_CT_NETLINK=y
-+CONFIG_NETFILTER_XTABLES=m
-+
-+#
-+# Xtables combined modules
-+#
-+# CONFIG_NETFILTER_XT_MARK is not set
-+# CONFIG_NETFILTER_XT_CONNMARK is not set
-+
-+#
-+# Xtables targets
-+#
-+# CONFIG_NETFILTER_XT_TARGET_CLASSIFY is not set
-+# CONFIG_NETFILTER_XT_TARGET_CONNMARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_MARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_NFLOG is not set
-+# CONFIG_NETFILTER_XT_TARGET_NFQUEUE is not set
-+# CONFIG_NETFILTER_XT_TARGET_RATEEST is not set
-+# CONFIG_NETFILTER_XT_TARGET_TEE is not set
-+# CONFIG_NETFILTER_XT_TARGET_SECMARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_TCPMSS is not set
-+
-+#
-+# Xtables matches
-+#
-+# CONFIG_NETFILTER_XT_MATCH_CLUSTER is not set
-+# CONFIG_NETFILTER_XT_MATCH_COMMENT is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNBYTES is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNLIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNMARK is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNTRACK is not set
-+# CONFIG_NETFILTER_XT_MATCH_DCCP is not set
-+# CONFIG_NETFILTER_XT_MATCH_DSCP is not set
-+# CONFIG_NETFILTER_XT_MATCH_ESP is not set
-+# CONFIG_NETFILTER_XT_MATCH_HASHLIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_HELPER is not set
-+# CONFIG_NETFILTER_XT_MATCH_HL is not set
-+# CONFIG_NETFILTER_XT_MATCH_IPRANGE is not set
-+# CONFIG_NETFILTER_XT_MATCH_LENGTH is not set
-+# CONFIG_NETFILTER_XT_MATCH_LIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_MAC is not set
-+# CONFIG_NETFILTER_XT_MATCH_MARK is not set
-+# CONFIG_NETFILTER_XT_MATCH_MULTIPORT is not set
-+# CONFIG_NETFILTER_XT_MATCH_OSF is not set
-+# CONFIG_NETFILTER_XT_MATCH_OWNER is not set
-+# CONFIG_NETFILTER_XT_MATCH_POLICY is not set
-+# CONFIG_NETFILTER_XT_MATCH_PKTTYPE is not set
-+# CONFIG_NETFILTER_XT_MATCH_QUOTA is not set
-+# CONFIG_NETFILTER_XT_MATCH_RATEEST is not set
-+# CONFIG_NETFILTER_XT_MATCH_REALM is not set
-+# CONFIG_NETFILTER_XT_MATCH_RECENT is not set
-+# CONFIG_NETFILTER_XT_MATCH_SCTP is not set
-+# CONFIG_NETFILTER_XT_MATCH_STATE is not set
-+# CONFIG_NETFILTER_XT_MATCH_STATISTIC is not set
-+# CONFIG_NETFILTER_XT_MATCH_STRING is not set
-+# CONFIG_NETFILTER_XT_MATCH_TCPMSS is not set
-+# CONFIG_NETFILTER_XT_MATCH_TIME is not set
-+# CONFIG_NETFILTER_XT_MATCH_U32 is not set
++# CONFIG_NETFILTER_XTABLES is not set
 +# CONFIG_IP_VS is not set
 +
 +#
@@ -9299,19 +9105,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NF_DEFRAG_IPV4 is not set
 +# CONFIG_NF_CONNTRACK_IPV4 is not set
 +# CONFIG_IP_NF_QUEUE is not set
-+CONFIG_IP_NF_IPTABLES=m
-+# CONFIG_IP_NF_MATCH_ADDRTYPE is not set
-+# CONFIG_IP_NF_MATCH_AH is not set
-+# CONFIG_IP_NF_MATCH_ECN is not set
-+# CONFIG_IP_NF_MATCH_TTL is not set
-+CONFIG_IP_NF_FILTER=m
-+CONFIG_IP_NF_TARGET_REJECT=m
-+# CONFIG_IP_NF_TARGET_LOG is not set
-+# CONFIG_IP_NF_TARGET_ULOG is not set
-+# CONFIG_IP_NF_MANGLE is not set
-+# CONFIG_IP_NF_TARGET_TTL is not set
-+# CONFIG_IP_NF_RAW is not set
-+# CONFIG_IP_NF_SECURITY is not set
++# CONFIG_IP_NF_IPTABLES is not set
 +# CONFIG_IP_NF_ARPTABLES is not set
 +# CONFIG_IP_DCCP is not set
 +# CONFIG_IP_SCTP is not set
@@ -9368,7 +9162,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NET_ACT_POLICE is not set
 +# CONFIG_NET_ACT_GACT is not set
 +# CONFIG_NET_ACT_MIRRED is not set
-+# CONFIG_NET_ACT_IPT is not set
 +# CONFIG_NET_ACT_NAT is not set
 +# CONFIG_NET_ACT_PEDIT is not set
 +# CONFIG_NET_ACT_SIMP is not set
@@ -11099,7 +10892,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
-@@ -0,0 +1,2493 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
@@ -11731,63 +11524,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NF_CONNTRACK_SIP is not set
 +# CONFIG_NF_CONNTRACK_TFTP is not set
 +CONFIG_NF_CT_NETLINK=y
-+CONFIG_NETFILTER_XTABLES=m
-+
-+#
-+# Xtables combined modules
-+#
-+# CONFIG_NETFILTER_XT_MARK is not set
-+# CONFIG_NETFILTER_XT_CONNMARK is not set
-+
-+#
-+# Xtables targets
-+#
-+# CONFIG_NETFILTER_XT_TARGET_CLASSIFY is not set
-+# CONFIG_NETFILTER_XT_TARGET_CONNMARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_MARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_NFLOG is not set
-+# CONFIG_NETFILTER_XT_TARGET_NFQUEUE is not set
-+# CONFIG_NETFILTER_XT_TARGET_RATEEST is not set
-+# CONFIG_NETFILTER_XT_TARGET_TEE is not set
-+# CONFIG_NETFILTER_XT_TARGET_SECMARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_TCPMSS is not set
-+
-+#
-+# Xtables matches
-+#
-+# CONFIG_NETFILTER_XT_MATCH_CLUSTER is not set
-+# CONFIG_NETFILTER_XT_MATCH_COMMENT is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNBYTES is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNLIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNMARK is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNTRACK is not set
-+# CONFIG_NETFILTER_XT_MATCH_DCCP is not set
-+# CONFIG_NETFILTER_XT_MATCH_DSCP is not set
-+# CONFIG_NETFILTER_XT_MATCH_ESP is not set
-+# CONFIG_NETFILTER_XT_MATCH_HASHLIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_HELPER is not set
-+# CONFIG_NETFILTER_XT_MATCH_HL is not set
-+# CONFIG_NETFILTER_XT_MATCH_IPRANGE is not set
-+# CONFIG_NETFILTER_XT_MATCH_LENGTH is not set
-+# CONFIG_NETFILTER_XT_MATCH_LIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_MAC is not set
-+# CONFIG_NETFILTER_XT_MATCH_MARK is not set
-+# CONFIG_NETFILTER_XT_MATCH_MULTIPORT is not set
-+# CONFIG_NETFILTER_XT_MATCH_OSF is not set
-+# CONFIG_NETFILTER_XT_MATCH_OWNER is not set
-+# CONFIG_NETFILTER_XT_MATCH_POLICY is not set
-+# CONFIG_NETFILTER_XT_MATCH_PKTTYPE is not set
-+# CONFIG_NETFILTER_XT_MATCH_QUOTA is not set
-+# CONFIG_NETFILTER_XT_MATCH_RATEEST is not set
-+# CONFIG_NETFILTER_XT_MATCH_REALM is not set
-+# CONFIG_NETFILTER_XT_MATCH_RECENT is not set
-+# CONFIG_NETFILTER_XT_MATCH_SCTP is not set
-+# CONFIG_NETFILTER_XT_MATCH_STATE is not set
-+# CONFIG_NETFILTER_XT_MATCH_STATISTIC is not set
-+# CONFIG_NETFILTER_XT_MATCH_STRING is not set
-+# CONFIG_NETFILTER_XT_MATCH_TCPMSS is not set
-+# CONFIG_NETFILTER_XT_MATCH_TIME is not set
-+# CONFIG_NETFILTER_XT_MATCH_U32 is not set
++# CONFIG_NETFILTER_XTABLES is not set
 +# CONFIG_IP_VS is not set
 +
 +#
@@ -11796,19 +11533,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NF_DEFRAG_IPV4 is not set
 +# CONFIG_NF_CONNTRACK_IPV4 is not set
 +# CONFIG_IP_NF_QUEUE is not set
-+CONFIG_IP_NF_IPTABLES=m
-+# CONFIG_IP_NF_MATCH_ADDRTYPE is not set
-+# CONFIG_IP_NF_MATCH_AH is not set
-+# CONFIG_IP_NF_MATCH_ECN is not set
-+# CONFIG_IP_NF_MATCH_TTL is not set
-+CONFIG_IP_NF_FILTER=m
-+CONFIG_IP_NF_TARGET_REJECT=m
-+# CONFIG_IP_NF_TARGET_LOG is not set
-+# CONFIG_IP_NF_TARGET_ULOG is not set
-+# CONFIG_IP_NF_MANGLE is not set
-+# CONFIG_IP_NF_TARGET_TTL is not set
-+# CONFIG_IP_NF_RAW is not set
-+# CONFIG_IP_NF_SECURITY is not set
++# CONFIG_IP_NF_IPTABLES is not set
 +# CONFIG_IP_NF_ARPTABLES is not set
 +# CONFIG_IP_DCCP is not set
 +# CONFIG_IP_SCTP is not set
@@ -11865,7 +11590,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NET_ACT_POLICE is not set
 +# CONFIG_NET_ACT_GACT is not set
 +# CONFIG_NET_ACT_MIRRED is not set
-+# CONFIG_NET_ACT_IPT is not set
 +# CONFIG_NET_ACT_NAT is not set
 +# CONFIG_NET_ACT_PEDIT is not set
 +# CONFIG_NET_ACT_SIMP is not set
@@ -13596,7 +13320,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
-@@ -0,0 +1,2493 @@
+@@ -0,0 +1,2424 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
@@ -14228,63 +13952,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NF_CONNTRACK_SIP is not set
 +# CONFIG_NF_CONNTRACK_TFTP is not set
 +CONFIG_NF_CT_NETLINK=y
-+CONFIG_NETFILTER_XTABLES=m
-+
-+#
-+# Xtables combined modules
-+#
-+# CONFIG_NETFILTER_XT_MARK is not set
-+# CONFIG_NETFILTER_XT_CONNMARK is not set
-+
-+#
-+# Xtables targets
-+#
-+# CONFIG_NETFILTER_XT_TARGET_CLASSIFY is not set
-+# CONFIG_NETFILTER_XT_TARGET_CONNMARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_MARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_NFLOG is not set
-+# CONFIG_NETFILTER_XT_TARGET_NFQUEUE is not set
-+# CONFIG_NETFILTER_XT_TARGET_RATEEST is not set
-+# CONFIG_NETFILTER_XT_TARGET_TEE is not set
-+# CONFIG_NETFILTER_XT_TARGET_SECMARK is not set
-+# CONFIG_NETFILTER_XT_TARGET_TCPMSS is not set
-+
-+#
-+# Xtables matches
-+#
-+# CONFIG_NETFILTER_XT_MATCH_CLUSTER is not set
-+# CONFIG_NETFILTER_XT_MATCH_COMMENT is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNBYTES is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNLIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNMARK is not set
-+# CONFIG_NETFILTER_XT_MATCH_CONNTRACK is not set
-+# CONFIG_NETFILTER_XT_MATCH_DCCP is not set
-+# CONFIG_NETFILTER_XT_MATCH_DSCP is not set
-+# CONFIG_NETFILTER_XT_MATCH_ESP is not set
-+# CONFIG_NETFILTER_XT_MATCH_HASHLIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_HELPER is not set
-+# CONFIG_NETFILTER_XT_MATCH_HL is not set
-+# CONFIG_NETFILTER_XT_MATCH_IPRANGE is not set
-+# CONFIG_NETFILTER_XT_MATCH_LENGTH is not set
-+# CONFIG_NETFILTER_XT_MATCH_LIMIT is not set
-+# CONFIG_NETFILTER_XT_MATCH_MAC is not set
-+# CONFIG_NETFILTER_XT_MATCH_MARK is not set
-+# CONFIG_NETFILTER_XT_MATCH_MULTIPORT is not set
-+# CONFIG_NETFILTER_XT_MATCH_OSF is not set
-+# CONFIG_NETFILTER_XT_MATCH_OWNER is not set
-+# CONFIG_NETFILTER_XT_MATCH_POLICY is not set
-+# CONFIG_NETFILTER_XT_MATCH_PKTTYPE is not set
-+# CONFIG_NETFILTER_XT_MATCH_QUOTA is not set
-+# CONFIG_NETFILTER_XT_MATCH_RATEEST is not set
-+# CONFIG_NETFILTER_XT_MATCH_REALM is not set
-+# CONFIG_NETFILTER_XT_MATCH_RECENT is not set
-+# CONFIG_NETFILTER_XT_MATCH_SCTP is not set
-+# CONFIG_NETFILTER_XT_MATCH_STATE is not set
-+# CONFIG_NETFILTER_XT_MATCH_STATISTIC is not set
-+# CONFIG_NETFILTER_XT_MATCH_STRING is not set
-+# CONFIG_NETFILTER_XT_MATCH_TCPMSS is not set
-+# CONFIG_NETFILTER_XT_MATCH_TIME is not set
-+# CONFIG_NETFILTER_XT_MATCH_U32 is not set
++# CONFIG_NETFILTER_XTABLES is not set
 +# CONFIG_IP_VS is not set
 +
 +#
@@ -14293,19 +13961,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NF_DEFRAG_IPV4 is not set
 +# CONFIG_NF_CONNTRACK_IPV4 is not set
 +# CONFIG_IP_NF_QUEUE is not set
-+CONFIG_IP_NF_IPTABLES=m
-+# CONFIG_IP_NF_MATCH_ADDRTYPE is not set
-+# CONFIG_IP_NF_MATCH_AH is not set
-+# CONFIG_IP_NF_MATCH_ECN is not set
-+# CONFIG_IP_NF_MATCH_TTL is not set
-+CONFIG_IP_NF_FILTER=m
-+CONFIG_IP_NF_TARGET_REJECT=m
-+# CONFIG_IP_NF_TARGET_LOG is not set
-+# CONFIG_IP_NF_TARGET_ULOG is not set
-+# CONFIG_IP_NF_MANGLE is not set
-+# CONFIG_IP_NF_TARGET_TTL is not set
-+# CONFIG_IP_NF_RAW is not set
-+# CONFIG_IP_NF_SECURITY is not set
++# CONFIG_IP_NF_IPTABLES is not set
 +# CONFIG_IP_NF_ARPTABLES is not set
 +# CONFIG_IP_DCCP is not set
 +# CONFIG_IP_SCTP is not set
@@ -14362,7 +14018,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_NET_ACT_POLICE is not set
 +# CONFIG_NET_ACT_GACT is not set
 +# CONFIG_NET_ACT_MIRRED is not set
-+# CONFIG_NET_ACT_IPT is not set
 +# CONFIG_NET_ACT_NAT is not set
 +# CONFIG_NET_ACT_PEDIT is not set
 +# CONFIG_NET_ACT_SIMP is not set
@@ -16102,7 +15757,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  Summary         : Linux kernel (core of the Linux operating system)
  Name            : kernel
-@@ -12,22 +14,626 @@
+@@ -12,22 +14,624 @@
  Packager        : Rob Herring
  Group           : System Environment/Kernel
  Source          : %{pkg_name}-%{version}.tar.bz2
@@ -16115,62 +15770,61 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +Patch0          : linux-2.6-imx_rel_imx_2.6.35_11.01.00.patch
 +
 +# MECT patches (2012)
-+Patch1          : kernel-2.6.35.3-1310041712.patch
-+Patch2          : kernel-2.6.35.3-1310035700.patch
-+Patch3          : kernel-2.6.35.3-1310028574.patch
-+Patch4          : kernel-2.6.35.3-1316603523.patch
-+Patch5          : kernel-2.6.35.3-1316009304.patch
-+Patch6          : kernel-2.6.35.3-1317998791.patch
-+Patch7          : kernel-2.6.35.3-1318337806.patch
-+Patch8          : kernel-2.6.35.3-1318495408.patch
-+Patch9          : kernel-2.6.35.3-1319702741.patch
-+Patch10         : kernel-2.6.35.3-1329224069.patch
-+Patch11         : kernel-2.6.35.3-1332171148.patch
-+Patch12         : kernel-2.6.35.3-1333040073.patch
-+Patch13         : kernel-2.6.35.3-1337754222.patch
-+Patch14         : kernel-2.6.35.3-1348834818.patch
-+Patch15         : kernel-2.6.35.3-1352446729.patch
-+Patch16         : kernel-2.6.35.3-1353925535.patch
-+Patch17         : kernel-2.6.35.3-1355490258.patch
-+Patch18         : kernel-2.6.35.3-1359385592.patch
-+Patch19         : kernel-2.6.35.3-1364380255.patch
-+Patch20         : kernel-2.6.35.3-1366295778.patch
++Patch1          : %{name}-%{version}-1310041712.patch
++Patch2          : %{name}-%{version}-1310035700.patch
++Patch3          : %{name}-%{version}-1310028574.patch
++Patch4          : %{name}-%{version}-1316603523.patch
++Patch5          : %{name}-%{version}-1316009304.patch
++Patch6          : %{name}-%{version}-1317998791.patch
++Patch7          : %{name}-%{version}-1318337806.patch
++Patch8          : %{name}-%{version}-1318495408.patch
++Patch9          : %{name}-%{version}-1319702741.patch
++Patch10         : %{name}-%{version}-1329224069.patch
++Patch11         : %{name}-%{version}-1332171148.patch
++Patch12         : %{name}-%{version}-1333040073.patch
++Patch13         : %{name}-%{version}-1337754222.patch
++Patch14         : %{name}-%{version}-1348834818.patch
++Patch15         : %{name}-%{version}-1352446729.patch
++Patch16         : %{name}-%{version}-1353925535.patch
++Patch17         : %{name}-%{version}-1355490258.patch
++Patch18         : %{name}-%{version}-1359385592.patch
++Patch19         : %{name}-%{version}-1364380255.patch
++Patch20         : %{name}-%{version}-1366295778.patch
 +
 +# MECT patches
-+Patch21         : kernel-2.6.35.3-1367838157.patch
-+Patch22         : kernel-2.6.35.3-1367915669.patch
-+Patch23         : kernel-2.6.35.3-1368026104.patch
-+Patch24         : kernel-2.6.35.3-1374825662.patch
-+Patch25         : kernel-2.6.35.3-1382692579.patch
-+Patch26         : kernel-2.6.35.3-1389885832.patch
-+Patch27         : kernel-2.6.35.3-1391688299.patch
-+Patch28         : kernel-2.6.35.3-1406105822.patch
-+Patch29         : kernel-2.6.35.3-1410159845.patch
-+Patch30         : kernel-2.6.35.3-1412763299.patch
-+Patch31         : kernel-2.6.35.3-1417086426.patch
-+Patch32         : kernel-2.6.35.3-1417857461.patch
-+Patch33         : kernel-2.6.35.3-1428042966.patch
++Patch21         : %{name}-%{version}-1367838157.patch
++Patch22         : %{name}-%{version}-1367915669.patch
++Patch23         : %{name}-%{version}-1368026104.patch
++Patch24         : %{name}-%{version}-1374825662.patch
++Patch25         : %{name}-%{version}-1382692579.patch
++Patch26         : %{name}-%{version}-1389885832.patch
++Patch27         : %{name}-%{version}-1391688299.patch
++Patch28         : %{name}-%{version}-1406105822.patch
++Patch29         : %{name}-%{version}-1410159845.patch
++Patch30         : %{name}-%{version}-1412763299.patch
++Patch31         : %{name}-%{version}-1417086426.patch
++Patch32         : %{name}-%{version}-1417857461.patch
++Patch33         : %{name}-%{version}-1428042966.patch
 +
 +# Xenomai 2.6.0 patches
 +# Patch kernel for Adeos I-pipe
 +Patch34         : linux-2.6-imx_rel_imx_2.6.35_11.01.00_mect2.patch
 +Patch35         : linux-2.6-imx_rel_imx_2.6.35_11.01.00_mect3-mtl.patch
 +# Patch Xenomai
-+Patch36         : xenomai-2.6.0_mect3.patch
++Patch36         : %{x_name}-%{x_ver}_mect3.patch
 +# Kernel patches for monitoring using GPIO
 +#Patch37         : linux-2.6.35.3_ipipe_2012_07_11_timer_match.patch
 +# Patch Xenomai
-+Patch38         : xenomai-2.6.0+flexcan_all_in_one_final.patch
-+Patch39         : xenomai-2.6.0+rt_imx_uart.patch
-+Patch40         : xenomai-2.6.0-mect_rts_ioctl.patch
-+Patch41         : xenomai-2.6.0-rtser_mect_rts_support.patch
-+Patch42         : xenomai-2.6.0-rtser_mect_reset_and_spurious_rx00.patch
-+Patch43         : xenomai-2.6.0-fix-scriptpath-calculation.patch
++Patch38         : %{x_name}-%{x_ver}+flexcan_all_in_one_final.patch
++Patch39         : %{x_name}-%{x_ver}+rt_imx_uart.patch
++Patch40         : %{x_name}-%{x_ver}-mect_rts_ioctl.patch
++Patch41         : %{x_name}-%{x_ver}-rtser_mect_rts_support.patch
++Patch42         : %{x_name}-%{x_ver}-fix-scriptpath-calculation.patch
 +
 +# Generic kernel patches
-+Patch44         : kernel-2.6.35.3-mxs_reset_block-undefined.patch
-+Patch45         : kernel-2.6.35.3-unlimited_stack.patch
-+Patch46         : kernel-2.6.35.3-independent_wext_config.patch
++Patch43         : %{name}-%{version}-mxs_reset_block-undefined.patch
++Patch44         : %{name}-%{version}-unlimited_stack.patch
++Patch45         : %{name}-%{version}-independent_wext_config.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -16718,7 +16372,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +%patch40 -p1
 +%patch41 -p1
 +%patch42 -p1
-+%patch43 -p1
 +cd %{_builddir}/%{buildsubdir}
 +
 +# Setup the kernel for Xenomai
@@ -16729,9 +16382,9 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# Kernel patches to use GPIOs for monitoring
 +#%patch37 -p1
 +
++%patch43 -p1
 +%patch44 -p1
 +%patch45 -p1
-+%patch46 -p1
  
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/main.lkc ltib/config/platform/imx/main.lkc
 --- ltib.reference/config/platform/imx/main.lkc
@@ -17460,7 +17113,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
-@@ -0,0 +1,265 @@
+@@ -0,0 +1,345 @@
 +#!/bin/sh
 +#
 +# Load a new setup from USB or reset the PLC/CAN configurations.
@@ -17477,6 +17130,19 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +start() {
 +	sleep 1
++
++	# ts variable
++	export TSLIB_CONFFILE=/usr/etc/ts.conf
++	export TSLIB_PLUGINDIR=/usr/lib/ts
++	export TSLIB_TSDEVICE=/dev/input/ts0
++	export TSLIB_CONSOLEDEVICE=none
++	export TSLIB_CALIBFILE=/etc/pointercal
++	
++	# qt variable
++	export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
++	export QT_QWS_FONTDIR=/usr/lib/fonts
++	export POINTERCAL_FILE=$TSLIB_CALIBFILE
++
 +	rm -f $UPDATE_DESCR_FILE
 +	echo -n "Checking for configuration USB key...  "
 +        if [ -e /sys/block/sda/sda1 ] || [ -e /sys/block/sda ]
@@ -17485,45 +17151,51 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	        [ -e /sys/block/sda/sda1 ] && usbdev=/dev/sda1
 +		[ -d $mntdir ] || { mntdir=/tmp/mnt; /bin/mkdir $mntdir; }
 +		[ -d $mntdir ] || exit 1
-+		echo "Found scsi device: $usb_string" | tee -a $logfile
++		echo "Found scsi device: $usbdev" | tee -a $logfile
 +		if /bin/mount -orw $usbdev $mntdir 2>$logfile
 +		then
 +			rm -f $logfile
 +			echo "current mount point is $usbdev" | tee -a $logfile
-+			/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
-+			if [ -x /local/flash/root/splash ]
-+			then
-+				# ts variable
-+				export TSLIB_CONFFILE=/usr/etc/ts.conf
-+				export TSLIB_PLUGINDIR=/usr/lib/ts
-+				export TSLIB_TSDEVICE=/dev/input/ts0
-+				export TSLIB_CONSOLEDEVICE=none
-+				export TSLIB_CALIBFILE=/etc/pointercal
-+
-+				# qt variable
-+				export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
-+				export QT_QWS_FONTDIR=/usr/lib/fonts
-+				export POINTERCAL_FILE=$TSLIB_CALIBFILE
-+
-+				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Found an update...</h1>" --dimension 12 >/dev/null 2>&1 &
-+			fi
 +		else
 +			if [ -x /local/flash/root/splash ]
 +			then
-+				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Sysupdate status:</h1><BR>`cat $logfile`" --dimension 12 >/dev/null 2>&1
++				killall splash
++				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot mount the usb pen drive.</h1></font>" --dimension 12 >/dev/null 2>&1
++				/bin/mount -oro,remount / 2>&1 | tee -a $logfile
++				/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
++				exit 1
 +			fi
 +		fi
 +	else
 +		echo "no usb key found in dmesg"
 +		echo "exit from configuration script"
-+		return
++		exit 0
 +	fi
 +
 +	echo -n "Starting the configuration process...  "
++	/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
 +	if [ -f $mntdir/reset.conf ]
 +	then
 +		echo " Resetting all!" | tee -a $logfile
-+		/bin/mount -orw,remount $mntdir 2>/dev/null || { echo ""; echo "Cannot mount the USB device RW.  Aborting device reset." | tee -a $logfile; return; }
++		if [ -x /local/flash/root/splash ]
++		then
++			killall splash
++			/local/flash/root/splash -qws --text "<font color=\"blue\"><h1>Found a reset command.<BR>Resetting...</h1></font>" --dimension 12 >/dev/null 2>&1 &
++		fi
++
++		if ! /bin/mount -orw,remount / 2>/dev/null
++		then
++			echo "Cannot mount the file system in read/write." | tee -a $logfile
++			if [ -x /local/flash/root/splash ]
++			then
++				killall splash
++				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
++			fi
++			/bin/umount $mntdir
++			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
++			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
++			exit 1
++		fi
 +		/bin/rm -f $mntdir/reset.conf
 +
 +		# Just apply factory defaults
@@ -17554,6 +17226,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +			fi
 +		else
 +			echo "Error missing factory data" | tee -a $logfile
++			if [ -x /local/flash/root/splash ]
++			then
++				killall splash
++				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Error: missing factory data.</h1></font>" --dimension 12 >/dev/null 2>&1 &
++			fi
 +		fi
 +
 +		#Eventually add other configuration files to be removed for reset operations
@@ -17563,6 +17240,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	then
 +
 +		echo "Error multiple sysupdate file." | tee -a $logfile
++		if [ -x /local/flash/root/splash ]
++		then
++			killall splash
++			/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Error: find multiple sysupdate file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
++		fi
 +
 +	elif [ `ls /local | grep sysupdate | wc -l` -eq  1 ]
 +	then
@@ -17570,7 +17252,19 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		echo " Found one sysupdate!" | tee -a $logfile
 +		countsys=1
 +		sysupdatename=`ls /local | grep sysupdate`
-+		/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process." | tee -a $logfile; return; }
++		if ! /bin/mount -orw,remount / 2>/dev/null
++		then
++			echo "Cannot mount the file system in read/write." | tee -a $logfile
++			if [ -x /local/flash/root/splash ]
++			then
++				killall splash
++				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
++			fi
++			/bin/umount $mntdir
++			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
++			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
++			exit 1
++		fi
 +		/usr/bin/dos2unix /local/$sysupdatename 2>&1 | tee -a $logfile
 +		/bin/sh /local/$sysupdatename 2>&1 | tee -a $logfile
 +
@@ -17592,80 +17286,105 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	then
 +
 +		echo " Found one sysupdate!" | tee -a $logfile
++		if [ -x /local/flash/root/splash ]
++		then
++			killall splash
++			/local/flash/root/splash -qws --text "<font color=\"blue\"><h1>Found an update...</h1></font>" --dimension 12 >/dev/null 2>&1 &
++		fi
 +		countsys=1
 +		sysupdatename=`ls $mntdir | grep sysupdate_`
-+		/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process." | tee -a $logfile; return; }
++		if ! /bin/mount -orw,remount / 2>/dev/null
++		then
++			echo "Cannot mount the file system in read/write." | tee -a $logfile
++			if [ -x /local/flash/root/splash ]
++			then
++				killall splash
++				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
++			fi
++			/bin/umount $mntdir
++			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
++			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
++			exit 1
++		fi
 +		/usr/bin/dos2unix $mntdir/$sysupdatename 2>&1 | tee -a $logfile
 +		/bin/sh $mntdir/$sysupdatename 2>&1 | tee -a $logfile
 +		if [ $? == 0 ]
 +		then
 +			echo " Update '$mntdir/$sysupdatename' applied!!!" | tee -a $logfile
 +			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
++			if [ -x /local/flash/root/splash ]
++			then
++				killall splash
++				/local/flash/root/splash -qws --text "<font color=\"green\"><h1>Update applied</h1></font>" --dimension 12 >/dev/null 2>&1 &
++			fi
 +		else
 +			echo " Cannot update '/local/$sysupdatename'." | tee -a $logfile
++			if [ -x /local/flash/root/splash ]
++			then
++				killall splash
++				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot apply the update.<BR>For more detail, see the file '$logfile' on the USB.</h1></font>" --dimension 12 >/dev/null 2>&1 &
++			fi
 +		fi
 +
 +	elif [ -f $mntdir/sysupdate.sh ] && [ $countsys -eq 0 ]
 +	then
 +
 +		echo " Performing standard sysupdate!" | tee -a $logfile
-+		/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting update process."; return; }
++		if ! /bin/mount -orw,remount / 2>/dev/null
++		then
++			echo "Cannot mount the file system in read/write." | tee -a $logfile
++			if [ -x /local/flash/root/splash ]
++			then
++				killall splash
++				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
++			fi
++			/bin/umount $mntdir
++			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
++			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
++			exit 1
++		fi
 +		/usr/bin/dos2unix $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
 +		/bin/sh $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
 +		if [ $? == 0 ]
 +		then
 +			echo " Update '$mntdir/sysupdate.sh' applied!!!" | tee -a $logfile
 +			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
++			if [ -x /local/flash/root/splash ]
++			then
++				killall splash
++				/local/flash/root/splash -qws --text "<font color=\"green\"><h1>Update applied</h1></font>" --dimension 12 >/dev/null 2>&1 &
++			fi
 +		else
 +			echo " Cannot update '$mntdir/sysupdate.sh'." | tee -a $logfile
++			if [ -x /local/flash/root/splash ]
++			then
++				killall splash
++				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot apply the update.<BR>For more detail, see the file '$logfile' on the USB.</h1></font>" --dimension 12 >/dev/null 2>&1 &
++			fi
 +		fi
 +
 +	else
 +		# Perform any other configurations
-+		/bin/mount -orw,remount $mntdir 2>/dev/null || { echo ""; echo "Cannot mount the USB device RW. Configuration files will be not deleted."; }
-+
-+		if [ -f $mntdir/application.conf ]
++		if [ -f $mntdir/system.ini ]
 +		then
-+			echo " Found a new configuration file '$mntdir/application.conf'" | tee -a $logfile
-+			/usr/bin/dos2unix $mntdir/application.conf 2>&1 | tee -a $logfile
-+			/bin/cp $mntdir/application.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
-+			echo " Configuration file '$mntdir/application.conf' updated!" | tee -a $logfile
-+			echo "APPLICATION CONF" >> $UPDATE_DESCR_FILE
-+		fi
-+		if [ -f $mntdir/atn01.conf ]
-+		then
-+			echo " Found a new configuration file '$mntdir/atn01.conf'" | tee -a $logfile
-+			/usr/bin/dos2unix $mntdir/atn01.conf 2>&1 | tee -a $logfile
-+			/bin/cp $mntdir/atn01.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
-+			echo " Configuration file '$mntdir/atn01.conf' updated!" | tee -a $logfile
-+			echo "ATN01 CONF" >> $UPDATE_DESCR_FILE
-+		fi
-+		if [ -f $mntdir/Crosstable.csv ]
-+		then
-+			echo " Found a new configuration file '$mntdir/Crosstable.csv'" | tee -a $logfile
-+			/usr/bin/dos2unix $mntdir/Crosstable.csv 2>&1 | tee -a $logfile
-+			/bin/cp $mntdir/Crosstable.csv $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
-+			echo " Configuration file '$mntdir/Crosstable.csv' updated!" | tee -a $logfile
-+			echo "CROSSTABLE" >> $UPDATE_DESCR_FILE
-+		fi
-+		if [ -f $mntdir/Commpar.csv ]
-+		then
-+			echo " Found a new configuration file '$mntdir/Commpar.csv'" | tee -a $logfile
-+			/usr/bin/dos2unix $mntdir/Commpar.csv 2>&1 | tee -a $logfile
-+			/bin/cp $mntdir/Commpar.csv $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
-+			echo " Configuration file '$mntdir/Commpar.csv' updated!" | tee -a $logfile
-+			echo "COMMPAR" >> $UPDATE_DESCR_FILE
-+		fi
-+		if [ -f $mntdir/Alarms.csv ]
-+		then
-+			echo " Found a new configuration file '$mntdir/Alarms.csv'" | tee -a $logfile
-+			/usr/bin/dos2unix $mntdir/Alarms.csv 2>&1 | tee -a $logfile
-+			/bin/cp $mntdir/Alarms.csv $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
-+			echo " Configuration file '$mntdir/Alarms.csv' updated!" | tee -a $logfile
-+			echo "ALARMS" >> $UPDATE_DESCR_FILE
++			if [ -x /local/flash/root/splash ]
++			then
++				killall splash
++				/local/flash/root/splash -qws --text "<font color=\"green\"><h1>Found and applied the new 'system.ini' file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
++			fi
++			echo " Found a new configuration file '$mntdir/system.ini'" | tee -a $logfile
++			/usr/bin/dos2unix $mntdir/system.ini 2>&1 | tee -a $logfile
++			/bin/cp $mntdir/system.ini $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
++			echo " Configuration file '$mntdir/system.ini' updated!" | tee -a $logfile
++			echo "SYSTEM INI" >> $UPDATE_DESCR_FILE
 +		fi
 +		if [ -f $mntdir/net.conf ]
 +		then
++			if [ -x /local/flash/root/splash ]
++			then
++				killall splash
++				/local/flash/root/splash -qws --text "<font color=\"green\"><h1>Found and applied the new 'net.conf' file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
++			fi
 +			echo " Found a new network configuration file '$mntdir/net.conf'" | tee -a $logfile
 +			/usr/bin/dos2unix $mntdir/net.conf 2>&1 | tee -a $logfile
 +			/bin/cp $mntdir/net.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
@@ -17674,8 +17393,25 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		fi
 +		if [ -f $mntdir/autoexec ]
 +		then
++			if [ -x /local/flash/root/splash ]
++			then
++				killall splash
++				/local/flash/root/splash -qws --text "<font color=\"blue\"><h1>Found a new 'autoexec' file.<BR>Updating...</h1></font>" --dimension 12 >/dev/null 2>&1 &
++			fi
 +			echo " Found a new autoexec file file '$mntdir/autoexec'" | tee -a $logfile
-+			/bin/mount -orw,remount / 2>/dev/null || { echo ""; echo "Cannot mount the root RW.  Aborting autoexec update process."; return; }
++			if ! /bin/mount -orw,remount / 2>/dev/null
++			then
++				echo "Cannot mount the file system in read/write." | tee -a $logfile
++				if [ -x /local/flash/root/splash ]
++				then
++					killall splash
++					/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
++				fi
++				/bin/umount $mntdir
++				/bin/mount -oro,remount / 2>&1 | tee -a $logfile
++				/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
++				exit 1
++			fi
 +			/usr/bin/dos2unix $mntdir/autoexec 2>&1 | tee -a $logfile
 +			/bin/cp $mntdir/autoexec /usr/bin/autoexec 2>&1 | tee -a $logfile
 +			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
@@ -17685,16 +17421,13 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	fi
 +	#Sync for ubifs
 +	/bin/sync
-+	if [ -n "$usb_string" ]
++	if [ -n "$usbdev" ]
 +	then
 +		/bin/umount $mntdir
 +	fi
 +
-+	if [ -x /local/flash/root/splash ]
-+	then
-+		/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Sysupdate status:</h1><BR>`cat $logfile`" --dimension 12 >/dev/null 2>&1
-+	fi
-+
++	killall splash
++	/bin/mount -oro,remount / 2>/dev/null
 +	/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
 +	echo "  Done."
 +}
@@ -18338,20 +18071,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/setup ltib/config/platform/imx/merge/etc/rc.d/init.d/setup
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/setup
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/setup
-@@ -0,0 +1,97 @@
+@@ -0,0 +1,75 @@
 +#!/bin/sh
 +
 +start() {
-+        # Check if we are updating the system, if yes wait
-+        usb_string=`df | cut -d ' ' -f1 | grep /dev/sd`
-+        while test "${usb_string:0:7}" == "/dev/sd"; do
-+                sleep 2
-+                echo "waiting for USB disk removal..."
-+
-+                usb_string=`df | cut -d ' ' -f1 | grep /dev/sd`
-+        done
-+        echo "No ongoing update, continuing."
-+
 +        # Touchscreen variables
 +        export TSLIB_CONFFILE=/usr/etc/ts.conf
 +        export TSLIB_PLUGINDIR=/usr/lib/ts
@@ -18389,23 +18112,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +                fi
 +        fi
 +
-+    if [ ! -e /etc/mac.conf -o ! "`grep -c MAC0 /etc/mac.conf > /dev/null 2>&1`" -eq 0 -o ! -e /etc/serial.conf ]
-+    then
-+        # Touchscreen variables
-+        export TSLIB_CONFFILE=/usr/etc/ts.conf
-+        export TSLIB_PLUGINDIR=/usr/lib/ts
-+        export TSLIB_TSDEVICE=/dev/input/ts0
-+        export TSLIB_CONSOLEDEVICE=none
-+        export TSLIB_CALIBFILE=/etc/pointercal
-+        # Qt variables
-+        export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
-+        export QT_QWS_FONTDIR=/usr/lib/fonts
-+        export POINTERCAL_FILE=$TSLIB_CALIBFILE
-+
-+        # Ask for MAC address and for serial number
-+        /usr/bin/mac_sn -qws
-+    fi
-+
++        if [ ! -e /etc/mac.conf -o ! "`grep -c MAC0 /etc/mac.conf > /dev/null 2>&1`" -eq 0 -o ! -e /etc/serial.conf ]
++        then
++            # Ask for MAC address and for serial number
++            /usr/bin/mac_sn -qws
++        fi
 +}
 +
 +stop() {

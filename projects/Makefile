@@ -217,7 +217,7 @@ cgic_work_build:
 cgic_work_install: MECT_PRJDIR := $(CURDIR)/cgic_work
 cgic_work_install:
 	test -n $(MECT_PRJDIR)
-	$(MAKE) -C $(MECT_PRJDIR) $(MECT_TOOLCHAIN_FLAG) install
+	$(MAKE) -C $(MECT_PRJDIR) $(MECT_TOOLCHAIN_FLAG) INSTALL_ROOT=$(MECT_LDIR) install
 
 .PHONY: cgic_work_clean
 cgic_work_clean: MECT_PRJDIR := $(CURDIR)/cgic_work

@@ -24,7 +24,8 @@ MD                =  mkdir
 SED               =  sed
 RM                =  rm
 
-BIN_DIR = $(INSTALL_ROOT)/usr/share/www
+#BIN_DIR = $(INSTALL_ROOT)/usr/share/www
+BIN_DIR = $(INSTALL_ROOT)/local/www
 
 ARCH_LIB_PATH     =  -L$(MECT_RFSDIR)/usr/lib
 ARCH_INCLUDE      =  -I$(MECT_RFSDIR)/usr/include -I$(MECT_RFSDIR)/usr/src/linux/include

@@ -16112,7 +16112,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +Source2         : %{x_name}-%{x_ver}.tar.bz2
  URL             : http://www.kernel.org/
 +# Freescale patch from Francesco, equivalent to %{pkg_name}-%{version}-%{release}.bz2
-+Patch0          : %{pkg_name}-2.6-imx_rel_imx_2.6.35_11.01.00.patch
++Patch0          : linux-2.6-imx_rel_imx_2.6.35_11.01.00.patch
 +
 +# MECT patches (2012)
 +Patch1          : kernel-2.6.35.3-1310041712.patch
@@ -16153,12 +16153,12 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +# Xenomai 2.6.0 patches
 +# Patch kernel for Adeos I-pipe
-+Patch34         : %{pkg_name}-2.6-imx_rel_imx_2.6.35_11.01.00_mect2.patch
-+Patch35         : %{pkg_name}-2.6-imx_rel_imx_2.6.35_11.01.00_mect3-mtl.patch
++Patch34         : linux-2.6-imx_rel_imx_2.6.35_11.01.00_mect2.patch
++Patch35         : linux-2.6-imx_rel_imx_2.6.35_11.01.00_mect3-mtl.patch
 +# Patch Xenomai
 +Patch36         : xenomai-2.6.0_mect3.patch
 +# Kernel patches for monitoring using GPIO
-+#Patch37         : %{pkg_name}-2.6.35.3_ipipe_2012_07_11_timer_match.patch
++#Patch37         : linux-2.6.35.3_ipipe_2012_07_11_timer_match.patch
 +# Patch Xenomai
 +Patch38         : xenomai-2.6.0+flexcan_all_in_one_final.patch
 +Patch39         : xenomai-2.6.0+rt_imx_uart.patch
@@ -16618,36 +16618,36 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +%{summary}
 +
 +
-+# %{name}-2.6.35.3-1310041712.patch : Fix the ethernet plug/unplug problem
-+# %{name}-2.6.35.3-1310035700.patch : added the Mect logo in the logo lists
-+# %{name}-2.6.35.3-1310028574.patch : enable keyboard GPIO using the module gpio-keys for the Mect project
-+# %{name}-2.6.35.3-1316603523.patch : Add the RTS control
-+# %{name}-2.6.35.3-1316009304.patch : Added support for TIANMA 4.3 LCD Display
-+# %{name}-2.6.35.3-1317998791.patch : Added support for buzzer as char device /dev/buzzer and patched gpio_keyboard driver
-+# %{name}-2.6.35.3-1318337806.patch : export the buzzer header to be visible for the user space
-+# %{name}-2.6.35.3-1318495408.patch : Added in the power fail detect module, the code to get the PLC application pid and the code to send to it the signal 
-+# %{name}-2.6.35.3-1319702741.patch : Disabled the standby display, modify the logo to 480x272 and solved the recovery ubifs bug
-+# %{name}-2.6.35.3-1329224069.patch : Fix liminance range of tm043, introduce the config key MECT_CUSTOMIZATION, fix the keyboard press&release problem, fix the LAN problem, fix the CAN power on/off problem
-+# %{name}-2.6.35.3-1332171148.patch : Add support for PENMOUNT driver. Modified power support to gracefully shutdown, added ele01 and val01 customization keyword for lan, wifi.
-+# %{name}-2.6.35.3-1333040073.patch : Fixed a bug in lan enable management
-+# %{name}-2.6.35.3-1337754222.patch : Add support for HITACHI 5.7 LCD Display
-+# %{name}-2.6.35.3-1348834818.patch : Introduced Kconfig keys for TPAC1006, U295, added boot logo for all currently managed projects, modified buzzer driver to choose beside duration also duty cycle for VAL01 project. Patched the lcdif clock source to be compliant with display requirements and managed LCD_ENABLE signal as required by the different supported displays.
-+# %{name}-2.6.35.3-1352446729.patch : freescale patch to solve trouble with some eth0 that won't start
-+# %{name}-2.6.35.3-1353925535.patch : configure lan enable according to the new hardware requirement
-+# %{name}-2.6.35.3-1355490258.patch : changed frequency for VAL01 buzzer and added patch to avoid kernel bug in gspca driver
-+# %{name}-2.6.35.3-1359385592.patch : added support for Hitachi LCD 5.7" 640x480 pixel
-+# %{name}-2.6.35.3-1364380255.patch: fixed polarity of dotclock for TIANMA4.3' monitor 
-+# %{name}-2.6.35.3-1366295778.patch: added support for ROCKTECH 4.3" display
-+# %{name}-2.6.35.3-1367838157.patch: retentive support for ATN01 project
-+# %{name}-2.6.35.3-1367915669.patch: added CONFIG_MECT_ATN01 keyword and logo for ATN01 project
-+# %{name}-2.6.35.3-1368026104.patch: added support for I2C RS5C372 chip through GPIO for VAL01 project
-+# %{name}-2.6.35.3-1374825662.patch: added support for DS1390 RTC chip device
-+# %{name}-2.6.35.3-1382692579.patch: fixed RS485 behaviour in order to stop rx while transmitting, working half duplex
-+# %{name}-2.6.35.3-1389885832.patch: fixed LAN phy driver to work also when a direct connection (i.e. without a switch device) exists
-+# %{name}-2.6.35.3-1391688299.patch: Added support for Formike LCD 7" display driven by ref_xtal
-+# %{name}-2.6.35.3-1406105822.patch: Added support for TPAC1006 at power fail, uploaded various mect logo and changed logo for atn01
-+# %{name}-2.6.35.3-1410159845.patch: Patched gpmi-nand driver to deal with bitflips in erased regions (corrupt empty space LEB error)
-+# %{name}-2.6.35.3-1412763299.patch: Added check to get ref_gpmi as FLASH clock if configured so by bootlets.
++# kernel-2.6.35.3-1310041712.patch : Fix the ethernet plug/unplug problem
++# kernel-2.6.35.3-1310035700.patch : added the Mect logo in the logo lists
++# kernel-2.6.35.3-1310028574.patch : enable keyboard GPIO using the module gpio-keys for the Mect project
++# kernel-2.6.35.3-1316603523.patch : Add the RTS control
++# kernel-2.6.35.3-1316009304.patch : Added support for TIANMA 4.3 LCD Display
++# kernel-2.6.35.3-1317998791.patch : Added support for buzzer as char device /dev/buzzer and patched gpio_keyboard driver
++# kernel-2.6.35.3-1318337806.patch : export the buzzer header to be visible for the user space
++# kernel-2.6.35.3-1318495408.patch : Added in the power fail detect module, the code to get the PLC application pid and the code to send to it the signal 
++# kernel-2.6.35.3-1319702741.patch : Disabled the standby display, modify the logo to 480x272 and solved the recovery ubifs bug
++# kernel-2.6.35.3-1329224069.patch : Fix liminance range of tm043, introduce the config key MECT_CUSTOMIZATION, fix the keyboard press&release problem, fix the LAN problem, fix the CAN power on/off problem
++# kernel-2.6.35.3-1332171148.patch : Add support for PENMOUNT driver. Modified power support to gracefully shutdown, added ele01 and val01 customization keyword for lan, wifi.
++# kernel-2.6.35.3-1333040073.patch : Fixed a bug in lan enable management
++# kernel-2.6.35.3-1337754222.patch : Add support for HITACHI 5.7 LCD Display
++# kernel-2.6.35.3-1348834818.patch : Introduced Kconfig keys for TPAC1006, U295, added boot logo for all currently managed projects, modified buzzer driver to choose beside duration also duty cycle for VAL01 project. Patched the lcdif clock source to be compliant with display requirements and managed LCD_ENABLE signal as required by the different supported displays.
++# kernel-2.6.35.3-1352446729.patch : freescale patch to solve trouble with some eth0 that won't start
++# kernel-2.6.35.3-1353925535.patch : configure lan enable according to the new hardware requirement
++# kernel-2.6.35.3-1355490258.patch : changed frequency for VAL01 buzzer and added patch to avoid kernel bug in gspca driver
++# kernel-2.6.35.3-1359385592.patch : added support for Hitachi LCD 5.7" 640x480 pixel
++# kernel-2.6.35.3-1364380255.patch: fixed polarity of dotclock for TIANMA4.3' monitor 
++# kernel-2.6.35.3-1366295778.patch: added support for ROCKTECH 4.3" display
++# kernel-2.6.35.3-1367838157.patch: retentive support for ATN01 project
++# kernel-2.6.35.3-1367915669.patch: added CONFIG_MECT_ATN01 keyword and logo for ATN01 project
++# kernel-2.6.35.3-1368026104.patch: added support for I2C RS5C372 chip through GPIO for VAL01 project
++# kernel-2.6.35.3-1374825662.patch: added support for DS1390 RTC chip device
++# kernel-2.6.35.3-1382692579.patch: fixed RS485 behaviour in order to stop rx while transmitting, working half duplex
++# kernel-2.6.35.3-1389885832.patch: fixed LAN phy driver to work also when a direct connection (i.e. without a switch device) exists
++# kernel-2.6.35.3-1391688299.patch: Added support for Formike LCD 7" display driven by ref_xtal
++# kernel-2.6.35.3-1406105822.patch: Added support for TPAC1006 at power fail, uploaded various mect logo and changed logo for atn01
++# kernel-2.6.35.3-1410159845.patch: Patched gpmi-nand driver to deal with bitflips in erased regions (corrupt empty space LEB error)
++# kernel-2.6.35.3-1412763299.patch: Added check to get ref_gpmi as FLASH clock if configured so by bootlets.
  %Description
  %{summary}
  

@@ -1,0 +1,123 @@
+diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_mxs_auart.c
+--- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-03-31 19:56:00.611591409 +0200
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-03-31 19:49:19.727587618 +0200
+@@ -137,7 +137,6 @@
+ 
+ static void rt_imx_mxs_auart_break_ctl(struct rt_imx_mxs_auart_ctx *ctx, int break_state);
+ static int rt_imx_mxs_auart_set_config(struct rt_imx_mxs_auart_ctx *ctx, const struct rtser_config *config, uint64_t **in_history_ptr);
+-static void rt_imx_mxs_auart_stop_tx(struct rt_imx_mxs_auart_ctx *ctx);
+ 
+ 
+ static inline struct rt_imx_mxs_auart_port *
+@@ -167,7 +166,7 @@
+ }
+ 
+ static int
+-rt_imx_mxs_auart_rx_chars(struct rt_imx_mxs_auart_ctx *ctx, uint64_t *timestamp)
++rt_imx_mxs_auart_rx_chars(struct rt_imx_mxs_auart_ctx *ctx, uint64_t *timestamp, u32 *istat)
+ {
+ 	struct rt_imx_mxs_auart_port *port = ctx->port;
+ 	u8 c = 0;
+@@ -212,12 +211,23 @@
+ 
+ 		/* NOTE Here we ignore system requests. */
+ 
+-		/* Workaround the spurious 0x00 byte read first after the open. */
+ 		if (ctx->first_read_after_open) {
+ 			ctx->first_read_after_open = 0;
+ 
+-			if (c == 0x00)
++			/* Discard 0x00 byte and error right after open. */
++			if ((c == 0x00) && (*istat & (BM_UARTAPP_INTR_ABDIS
++					| BM_UARTAPP_INTR_OEIS
++					| BM_UARTAPP_INTR_BEIS
++					| BM_UARTAPP_INTR_PEIS
++					| BM_UARTAPP_INTR_FEIS))) {
+ 				max_count++;
++
++				*istat &= ~(BM_UARTAPP_INTR_ABDIS
++					| BM_UARTAPP_INTR_OEIS
++					| BM_UARTAPP_INTR_BEIS
++					| BM_UARTAPP_INTR_PEIS
++					| BM_UARTAPP_INTR_FEIS);
++			}
+ 		}
+ 		else {
+ 			/* Save the received character */
+@@ -462,6 +472,21 @@
+ 	return err;
+ }
+ 
++static void
++rt_imx_mxs_auart_stop_tx(struct rt_imx_mxs_auart_ctx *ctx)
++{
++	__raw_writel(BM_UARTAPP_CTRL2_TXE, ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
++}
++
++static void
++rt_imx_mxs_auart_start_tx(struct rt_imx_mxs_auart_ctx *ctx)
++{
++	/* Enable TX */
++	__raw_writel(BM_UARTAPP_CTRL2_TXE, ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
++
++	rt_imx_mxs_auart_tx_chars(ctx);
++}
++
+ static int
+ rt_imx_mxs_auart_irq_handle(rtdm_irq_t *irq_context)
+ {
+@@ -485,7 +510,7 @@
+ 
+ 	/* RX data ready or RX timeout */
+ 	if (istat & (BM_UARTAPP_INTR_RXIS | BM_UARTAPP_INTR_RTIS)) {
+-		rbytes += rt_imx_mxs_auart_rx_chars(ctx, &timestamp);
++		rbytes += rt_imx_mxs_auart_rx_chars(ctx, &timestamp, &istat);
+ 
+ 		istat &= ~(BM_UARTAPP_INTR_RTIS | BM_UARTAPP_INTR_RXIS);
+ 
+@@ -544,8 +569,9 @@
+ 
+ 			rtdm_event_signal(&ctx->in_event);
+ 		}
+-		else
++		else {
+ 			ctx->in_nwait -= rbytes;
++		}
+ 	}
+ 
+ 	if (ctx->status)
+@@ -631,21 +657,6 @@
+ }
+ 
+ static void
+-rt_imx_mxs_auart_stop_tx(struct rt_imx_mxs_auart_ctx *ctx)
+-{
+-	__raw_writel(BM_UARTAPP_CTRL2_TXE, ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
+-}
+-
+-static void
+-rt_imx_mxs_auart_start_tx(struct rt_imx_mxs_auart_ctx *ctx)
+-{
+-	/* Enable TX */
+-	__raw_writel(BM_UARTAPP_CTRL2_TXE, ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
+-
+-	rt_imx_mxs_auart_tx_chars(ctx);
+-}
+-
+-static void
+ rt_imx_mxs_auart_break_ctl(struct rt_imx_mxs_auart_ctx *ctx, int break_state)
+ {
+ 	struct rt_imx_mxs_auart_port *port = ctx->port;
+@@ -829,10 +840,10 @@
+ 
+ 	ctx = (struct rt_imx_mxs_auart_ctx *)context->dev_private;
+ 
+-	rtdm_toseq_init(&timeout_seq, ctx->config.rx_timeout);
++	rtdm_toseq_init(&timeout_seq, ctx->config.tx_timeout);
+ 
+ 	/* Make write operation atomic. */
+-	ret = rtdm_mutex_timedlock(&ctx->out_lock, ctx->config.rx_timeout, &timeout_seq);
++	ret = rtdm_mutex_timedlock(&ctx->out_lock, ctx->config.tx_timeout, &timeout_seq);
+ 	if (ret)
+ 		return ret;
+ 

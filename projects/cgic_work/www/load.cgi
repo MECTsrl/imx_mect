@@ -3,8 +3,7 @@
 # Questo è il file load.cgi, lo script che raccoglie le
 # impostazioni
 
-WWW_DIR="/local/www"
-#WWW_DIR="/usr/share/www"
+WWW_DIR="/usr/share/www"
 TARGET_NAME=""
 COMPANY_NAME="MECT"
 HOME_PAGE="menu.cgi"

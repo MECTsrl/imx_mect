@@ -16,14 +16,6 @@ AutoReqProv     : no
 %description
 %{summary}
 
-%Package cgic_work
-Summary         : CGI C workers for MECT operator panels
-Group           : Applications/File
-AutoReqProv     : no
-%Description cgic_work
-CGI C workers provide various configuration pages and data
-colletion and set utilities.
-
 %Package splash
 Summary         : Notifies that panel update is in progress
 Group           : Applications/File
@@ -71,49 +63,6 @@ sudo rm -rf $RPM_BUILD_ROOT
 %attr(0755, root, root) %dir %{pfx}/local/sd_card
 %attr(0755, root, root) %dir %{pfx}/local/update
 %{pfx}/local/retentive
-
-%files cgic_work
-%defattr(-,root,root)
-%{pfx}/local/www/alarms_manager.cgi
-%{pfx}/local/www/changepwd.cgi
-%{pfx}/local/www/checkpwd.cgi
-%{pfx}/local/www/config_manager.cgi
-%{pfx}/local/www/date_time.cgi
-%{pfx}/local/www/display.cgi
-%{pfx}/local/www/display_csv.cgi
-%{pfx}/local/www/display_setup.cgi
-%{pfx}/local/www/extract
-%{pfx}/local/www/factory_reset.cgi
-%{pfx}/local/www/factory_reset_confirm.cgi
-%{pfx}/local/www/filebrowser.cgi
-%{pfx}/local/www/filesmanager.cgi
-%{pfx}/local/www/formatsdcard.cgi
-%{pfx}/local/www/getdatesinterval
-%{pfx}/local/www/index.cgi
-%{pfx}/local/www/info.cgi
-%{pfx}/local/www/lan_config.cgi
-%{pfx}/local/www/lan_setup.cgi
-%{pfx}/local/www/load.cgi
-%{pfx}/local/www/login.cgi
-%{pfx}/local/www/logout.cgi
-%{pfx}/local/www/logs_extractor.cgi
-%{pfx}/local/www/logs_filter.cgi
-%{pfx}/local/www/logs_manager.cgi
-%{pfx}/local/www/managepwd.cgi
-%{pfx}/local/www/menu.cgi
-%{pfx}/local/www/reboot.cgi
-%{pfx}/local/www/recipes_manager.cgi
-%{pfx}/local/www/reset_mass_storage.cgi
-%{pfx}/local/www/reset_passwords.cgi
-%{pfx}/local/www/select
-%{pfx}/local/www/select-template.html
-%{pfx}/local/www/style.css
-%{pfx}/local/www/trend_manager.cgi
-%{pfx}/local/www/underconstruction.cgi
-%{pfx}/local/www/updateall.cgi
-%{pfx}/local/www/updatetime.cgi
-%{pfx}/local/www/upgrade.cgi
-%{pfx}/local/www/upload.cgi
 
 %files splash
 %defattr(-,root,root)

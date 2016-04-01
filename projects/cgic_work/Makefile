@@ -24,8 +24,7 @@ MD                =  mkdir
 SED               =  sed
 RM                =  rm
 
-#BIN_DIR = $(INSTALL_ROOT)/usr/share/www
-BIN_DIR = $(INSTALL_ROOT)/local/www
+BIN_DIR = $(INSTALL_ROOT)/usr/share/www
 
 ARCH_LIB_PATH     =  -L$(MECT_RFSDIR)/usr/lib
 ARCH_INCLUDE      =  -I$(MECT_RFSDIR)/usr/include -I$(MECT_RFSDIR)/usr/src/linux/include
@@ -69,6 +68,7 @@ trend_manager.cgi \
 underconstruction.cgi \
 updatetime.cgi \
 upload.cgi \
+.passwd
 
 CGIC_LIST = upgrade.cgi getdatesinterval extract updateall.cgi
 
@@ -112,6 +112,7 @@ trend_manager.cgi:
 underconstruction.cgi:
 updatetime.cgi:
 upload.cgi:
+.passwd:
 
 updateall.cgi: updateall.c common.c common.h cgic.c
 	$(CC) $(ARCH_INCLUDE) $(CFLAGS) updateall.c common.c cgic.c -o www/updateall.cgi

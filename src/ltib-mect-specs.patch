@@ -1829,7 +1829,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/iptables/iptables.spec ltib/dist/lfs-5.1/iptables/iptables.spec
 --- ltib.reference/dist/lfs-5.1/iptables/iptables.spec
 +++ ltib/dist/lfs-5.1/iptables/iptables.spec
-@@ -14,45 +14,84 @@
+@@ -14,45 +14,85 @@
  Patch1		: iptables-1.4.2-libxt_TOS.patch
  BuildRoot	: %{_tmppath}/%{name}
  Prefix		: %{pfx}
@@ -1908,11 +1908,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +cd %{_builddir}/%{name}-%{version}
 +( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
-+    \,%{_bindir}/iptables-xml, d;
-+    \,%{_libdir}, d;
-+    \,%{_libexecdir}, d;
-+    \,%{_mandir}, d;
-+    \,%{_includedir}, d;
++    \,%{pfx}%{_bindir}/iptables-xml, d;
++    \,%{pfx}%{_libdir}, d;
++    \,%{pfx}%{_libexecdir}, d;
++    \,%{pfx}%{_mandir}, d;
++    \,%{pfx}%{_includedir}, d;
++    \,%{pfx}%{_sbindir}/ip6tables.*, d;
 +' all_files.lst > rfs_files.lst
 +
  %Clean

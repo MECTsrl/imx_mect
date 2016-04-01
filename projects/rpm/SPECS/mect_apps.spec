@@ -108,12 +108,9 @@ if test -d $d; then
 	cd $d
 
 	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/root/hmi
-	install -m644 -D config/Alarms.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/etc/sysconfig/Alarms.csv
 	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/etc/sysconfig/Crosstable.csv
-	install -m644 -D config/lang_table.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/etc/sysconfig/lang_table.csv
 	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/etc/sysconfig/img/splash.png
 	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/etc/sysconfig/system.ini
-	install -m644 -D config/store1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/data/customstore/store1.csv
 	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/data/customtrend/trend1.csv
 
 	cd -
@@ -126,12 +123,9 @@ if test -d $d; then
 	cd $d
 
 	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/root/hmi
-	install -m644 -D config/Alarms.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/etc/sysconfig/Alarms.csv
 	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/etc/sysconfig/Crosstable.csv
-	install -m644 -D config/lang_table.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/etc/sysconfig/lang_table.csv
 	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/etc/sysconfig/img/splash.png
 	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/etc/sysconfig/system.ini
-	install -m644 -D config/store1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/data/customstore/store1.csv
 	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/data/customtrend/trend1.csv
 
 	cd -
@@ -149,21 +143,15 @@ rm -rf $RPM_BUILD_ROOT
 %files lfs-TPAC1007_3
 %defattr(-,root,root)
 %{pfx}/TPAC1007_3/local/root/hmi
-%{pfx}/TPAC1007_3/local/etc/sysconfig/Alarms.csv
 %{pfx}/TPAC1007_3/local/etc/sysconfig/Crosstable.csv
 %{pfx}/TPAC1007_3/local/etc/sysconfig/img/splash.png
-%{pfx}/TPAC1007_3/local/etc/sysconfig/lang_table.csv
 %{pfx}/TPAC1007_3/local/etc/sysconfig/system.ini
-%{pfx}/TPAC1007_3/local/data/customstore/store1.csv
 %{pfx}/TPAC1007_3/local/data/customtrend/trend1.csv
 
 %files lfs-TPAC1007_4AA
 %defattr(-,root,root)
 %{pfx}/TPAC1007_4AA/local/root/hmi
-%{pfx}/TPAC1007_4AA/local/etc/sysconfig/Alarms.csv
 %{pfx}/TPAC1007_4AA/local/etc/sysconfig/Crosstable.csv
 %{pfx}/TPAC1007_4AA/local/etc/sysconfig/img/splash.png
-%{pfx}/TPAC1007_4AA/local/etc/sysconfig/lang_table.csv
 %{pfx}/TPAC1007_4AA/local/etc/sysconfig/system.ini
-%{pfx}/TPAC1007_4AA/local/data/customstore/store1.csv
 %{pfx}/TPAC1007_4AA/local/data/customtrend/trend1.csv

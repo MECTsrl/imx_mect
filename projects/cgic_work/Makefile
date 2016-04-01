@@ -62,19 +62,21 @@ recipes_manager.cgi \
 reset_mass_storage.cgi \
 reset_passwords.cgi \
 select \
-select-template.html \
 style.css \
 trend_manager.cgi \
 underconstruction.cgi \
 updatetime.cgi \
-upload.cgi \
+upload.cgi
+
+DATA_LIST = index.html \
+select-template.html \
 .passwd
 
 CGIC_LIST = upgrade.cgi getdatesinterval extract updateall.cgi
 
 CGI_LIST = $(CGISH_LIST) $(CGIC_LIST)
 
-all: $(CGI_LIST)
+all: $(CGI_LIST) $(DATA_LIST)
 	
 alarms_manager.cgi:
 changepwd.cgi:
@@ -90,6 +92,7 @@ filebrowser.cgi:
 filesmanager.cgi:
 formatsdcard.cgi:
 index.cgi:
+index.html:
 info.cgi:
 lan_config.cgi:
 lan_setup.cgi:
@@ -129,6 +132,7 @@ extract: store_extract.c
 install:
 	@mkdir -p $(BIN_DIR)
 	$(foreach file,$(CGI_LIST),install -D -m 0755 www/$(file) $(BIN_DIR)/$(file);)
+	$(foreach file,$(DATA_LIST),install -D -m 0644 www/$(file) $(BIN_DIR)/$(file);)
 
 clean:
 	@rm -f *.o
@@ -138,5 +142,6 @@ distclean: clean
 
 clobber: distclean
 	@$(foreach file,$(CGI_LIST),rm -f $(BIN_DIR)/$(file);)
+	@$(foreach file,$(DATA_LIST),rm -f $(BIN_DIR)/$(file);)
 
 

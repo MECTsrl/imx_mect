@@ -200,7 +200,6 @@ MECT_COMMON_RFSPKGS := $(MECT_COMMON_RFSPKGS:%=$(MECT_RPMDIR)/%)
 MECT_COMMON_LFSPKGS := \
 	merge-lfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 	local-1.0-1.$(MECT_TARGET_ARCH).rpm \
-	local-cgic_work-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	local-factory_data-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	local-splash-1.0-1.$(MECT_TARGET_ARCH).rpm \
 

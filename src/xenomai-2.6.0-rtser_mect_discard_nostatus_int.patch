@@ -1,0 +1,27 @@
+diff -ruN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_mxs_auart.c
+--- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-02 16:25:56.863949059 +0200
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-02 16:15:31.430548975 +0200
+@@ -596,8 +596,21 @@
+ 
+ 	rtdm_lock_put(&ctx->lock);
+ 
+-	if (ret != RTDM_IRQ_HANDLED)
+-		printk(KERN_WARNING "%s: unhandled interrupt 0x%X\n", __func__, istat);
++	if ((ret != RTDM_IRQ_HANDLED)
++		/* Guard for interrupts that do not trigger a status bit. */
++		&& (istat & (BM_UARTAPP_INTR_ABDIS |
++				BM_UARTAPP_INTR_OEIS |
++				BM_UARTAPP_INTR_BEIS |
++				BM_UARTAPP_INTR_PEIS |
++				BM_UARTAPP_INTR_FEIS |
++				BM_UARTAPP_INTR_RTIS |
++				BM_UARTAPP_INTR_TXIS |
++				BM_UARTAPP_INTR_RXIS |
++				BM_UARTAPP_INTR_DSRMIS |
++				BM_UARTAPP_INTR_DCDMIS |
++				BM_UARTAPP_INTR_CTSMIS |
++				BM_UARTAPP_INTR_RIMIS)))
++			printk(KERN_WARNING "%s: unhandled interrupt 0x%08X stat 0x%08X\n", __func__, istat, stat);
+ 
+ 	return ret;
+ }

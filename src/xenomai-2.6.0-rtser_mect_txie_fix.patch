@@ -1,6 +1,6 @@
-diff -urN rpm/BUILD/linux-2.6.35.3-xenomai-2.6.0/xenomai-2.6.0/ksrc/drivers/serial/rt_imx_mxs_auart.c /tmp/linux-2.6.35.3-xenomai-2.6.0/xenomai-2.6.0/ksrc/drivers/serial/rt_imx_mxs_auart.c
---- rpm/BUILD/linux-2.6.35.3-xenomai-2.6.0/xenomai-2.6.0/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-02 01:55:26.060787964 +0200
-+++ /tmp/linux-2.6.35.3-xenomai-2.6.0/xenomai-2.6.0/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-02 01:41:55.843461474 +0200
+diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_mxs_auart.c
+--- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-02 01:55:26.060787964 +0200
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-02 01:41:55.843461474 +0200
 @@ -190,7 +190,8 @@
  
  			lsr |= RTSER_LSR_BREAK_IND;

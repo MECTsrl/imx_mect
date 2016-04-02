@@ -1,0 +1,60 @@
+diff -urN rpm/BUILD/linux-2.6.35.3-xenomai-2.6.0/xenomai-2.6.0/ksrc/drivers/serial/rt_imx_mxs_auart.c /tmp/linux-2.6.35.3-xenomai-2.6.0/xenomai-2.6.0/ksrc/drivers/serial/rt_imx_mxs_auart.c
+--- rpm/BUILD/linux-2.6.35.3-xenomai-2.6.0/xenomai-2.6.0/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-02 01:55:26.060787964 +0200
++++ /tmp/linux-2.6.35.3-xenomai-2.6.0/xenomai-2.6.0/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-02 01:41:55.843461474 +0200
+@@ -190,7 +190,8 @@
+ 
+ 			lsr |= RTSER_LSR_BREAK_IND;
+ 		}
+-		else if (stat & BM_UARTAPP_STAT_PERR) {
++
++		if (stat & BM_UARTAPP_STAT_PERR) {
+ 			stat &= ~BM_UARTAPP_STAT_PERR;
+ 			port->port.icount.parity++;
+ 
+@@ -250,8 +251,6 @@
+ 		__raw_writel(stat, port->port.membase + HW_UARTAPP_STAT);
+ 	}
+ 
+-	__raw_writel(stat, port->port.membase + HW_UARTAPP_STAT);
+-
+ 	/* Save new errors */
+ 	ctx->status |= lsr;
+ 
+@@ -475,14 +474,14 @@
+ static void
+ rt_imx_mxs_auart_stop_tx(struct rt_imx_mxs_auart_ctx *ctx)
+ {
+-	__raw_writel(BM_UARTAPP_CTRL2_TXE, ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
++	__raw_writel(BM_UARTAPP_INTR_TXIEN, ctx->port->port.membase + HW_UARTAPP_INTR_CLR);
+ }
+ 
+ static void
+ rt_imx_mxs_auart_start_tx(struct rt_imx_mxs_auart_ctx *ctx)
+ {
+ 	/* Enable TX */
+-	__raw_writel(BM_UARTAPP_CTRL2_TXE, ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
++	__raw_writel(BM_UARTAPP_INTR_TXIEN, ctx->port->port.membase + HW_UARTAPP_INTR_SET);
+ 
+ 	rt_imx_mxs_auart_tx_chars(ctx);
+ }
+@@ -1163,10 +1162,8 @@
+ 	rt_imx_mxs_auart_set_config(ctx, &default_config, &dummy);
+ 
+ 	ret = rtdm_irq_request(&ctx->irq_handle, port->port.irq, rt_imx_mxs_auart_irq_handle, 0, context->device->proc_name, ctx);
+-	if (ret)
+-		return ret;
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static const struct rtdm_device __initdata device_tmpl = {
+@@ -1275,7 +1272,7 @@
+ 	if (err)
+ 		goto clk_disable_out;
+ 
+-	port->use_hwflow = 1;
++	port->use_hwflow = 0;
+ 
+ 	platform_set_drvdata(pdev, port);
+ 

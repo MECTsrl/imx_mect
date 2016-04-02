@@ -5357,7 +5357,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 +++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
-@@ -0,0 +1,79 @@
+@@ -0,0 +1,80 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : USB Modeswitch gets mobile broadband cards in operational mode
@@ -5370,6 +5370,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Group           : Applications/System
 +Source          : %{name}-%{version}.tar.bz2
 +Source1         : usb_modeswitch_helper
++Requires        : usb-modeswitch-data
 +BuildRoot       : %{_tmppath}/%{name}
 +Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -5896,6 +5897,85 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wvdial/wvdial.spec ltib/dist/lfs-5.1/wvdial/wvdial.spec
+--- ltib.reference/dist/lfs-5.1/wvdial/wvdial.spec
++++ ltib/dist/lfs-5.1/wvdial/wvdial.spec
+@@ -0,0 +1,75 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : A heuristic autodialer for PPP connections
++Name            : wvdial
++Version         : 1.61
++Release         : 1
++License         : LGPLv2+
++Vendor          : MECT
++Packager        : Mihai Lazarescu
++Group           : System Environment/Daemons
++Source          : %{name}-%{version}.tar.gz
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed down to just the run time files
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System Environment/Daemons
++AutoReqProv     : no
++
++%Description rfs
++%name} package contents trimmed to just the files
++that are needed at run time on the target.
++
++
++%Description
++WvDial automatically locates and configures modems and can log
++into almost any ISP's server without special configuration.
++You need to input the username, password, and phone number,
++and then WvDial will negotiate the PPP connection using any
++mechanism needed.
++
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++%setup
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
++make
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++make install
++
++cd %{_builddir}/%{name}-%{version}
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++	p;
++' all_files.lst > rfs_files.lst
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec ltib/dist/lfs-5.1/xenomai/xenomai.spec
 --- ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec
 +++ ltib/dist/lfs-5.1/xenomai/xenomai.spec

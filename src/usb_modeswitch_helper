@@ -1,13 +1,24 @@
 #!/bin/sh
 
-test -z "$ACTION" -o "$ACTION" != "add" && exit 0
+optconf=/sys/bus/usb-serial/drivers/option1/new_id
+
+test -z "$ACTION" && exit 0
 test -z "$DEVTYPE" -o "$DEVTYPE" != "usb_device" && exit 0
 test -z "$PRODUCT" && exit 0
 
 eval $(echo $PRODUCT | awk -F/ '{ print "ms_vendor=" $1; print "ms_product=" $2; }')
 test -z "$ms_vendor" -o -z "$ms_product" && exit 1
 
-ms_data="$(tar Oxjf /usr/share/usb_modeswitch/configPack.tar.bz2 ${ms_vendor}:${ms_product} 2>/dev/null)"
-test -z "$ms_data" && exit 1
-
-exec usb_modeswitch -v $ms_vendor -p $ms_product -f "$ms_data"
+if test "$ACTION" = "add"; then
+	ms_data="$(tar Oxjf /usr/share/usb_modeswitch/configPack.tar.bz2 ${ms_vendor}:${ms_product} 2>/dev/null)"
+	if test -n "$ms_data"; then
+		usb_modeswitch -v $ms_vendor -p $ms_product -f "$ms_data"
+	else
+		modprobe option
+		test -f $optconf && echo "$ms_vendor $ms_product" > $optconf
+	fi
+elif test "$ACTION" = "remove"; then
+	modprobe -r option
+else
+	exit 0
+fi

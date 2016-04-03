@@ -475,7 +475,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config
 +++ ltib/config/platform/imx/.config
-@@ -0,0 +1,657 @@
+@@ -0,0 +1,658 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -862,6 +862,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_PKG_POPT is not set
 +# CONFIG_PKG_PORTMAP is not set
 +CONFIG_PKG_PPP=y
++# CONFIG_PKG_WVDIAL is not set
 +# CONFIG_PKG_PPP_WANT_FILTER is not set
 +# CONFIG_PKG_PROCINFO is not set
 +# CONFIG_PKG_PROCPS is not set
@@ -1162,7 +1163,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h
 +++ ltib/config/platform/imx/.tmpconfig.h
-@@ -0,0 +1,658 @@
+@@ -0,0 +1,659 @@
 +/*
 + * Automatically generated C config: don't edit
 + * LTIB version: 8.1.2
@@ -1550,6 +1551,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#undef CONFIG_PKG_POPT
 +#undef CONFIG_PKG_PORTMAP
 +#define CONFIG_PKG_PPP 1
++#undef CONFIG_PKG_WVDIAL
 +#undef CONFIG_PKG_PPP_WANT_FILTER
 +#undef CONFIG_PKG_PROCINFO
 +#undef CONFIG_PKG_PROCPS
@@ -2824,7 +2826,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev
 +++ ltib/config/platform/imx/defconfig.dev
-@@ -0,0 +1,657 @@
+@@ -0,0 +1,658 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -3211,6 +3213,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_PKG_POPT is not set
 +# CONFIG_PKG_PORTMAP is not set
 +CONFIG_PKG_PPP=y
++# CONFIG_PKG_WVDIAL is not set
 +# CONFIG_PKG_PPP_WANT_FILTER is not set
 +# CONFIG_PKG_PROCINFO is not set
 +# CONFIG_PKG_PROCPS is not set
@@ -19471,7 +19474,23 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  choice
      prompt "module loading"
      default MODUTILS_NONE
-@@ -2673,6 +2702,27 @@
+@@ -2521,6 +2550,15 @@
+       usually used to dial in to an ISP (Internet Service Provider) or other
+       organization over a modem and phone line.
+ 
++config PKG_WVDIAL
++    bool "wvdial"
++    help
++      WvDial automatically locates and configures modems and can log
++      into almost any ISP's server without special configuration.
++      You need to input the username, password, and phone number,
++      and then WvDial will negotiate the PPP connection using any
++      mechanism needed.
++
+ config PKG_PPP_WANT_FILTER
+     depends CAP_HAS_MMU
+     select PKG_LIBPCAP
+@@ -2673,6 +2711,27 @@
      default n
      help
         Enable Phonon library.
@@ -19499,7 +19518,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  endmenu
  
  menu "Qtopia"
-@@ -2767,6 +2817,52 @@
+@@ -2767,6 +2826,52 @@
         Some host tools are not used when building Qtopia within ltib.
         Not building these tools saves time when building.  Select y here
         to enable designer, linguist, and assistant GUI tools.
@@ -19552,7 +19571,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  menu "Applications"
  config PKG_QTOPIA_WANT_APP_CALCULATOR
-@@ -3346,7 +3442,7 @@
+@@ -3346,7 +3451,7 @@
      bool "totem-pl-parser"
      select PKG_EVOLUTION_DATA_SERVER
      select PKG_GTK2
@@ -19561,7 +19580,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3487,11 +3583,21 @@
+@@ -3487,11 +3592,21 @@
      depends CAP_HAS_MMU
      bool "wireless-tools"
      help
@@ -19584,7 +19603,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_XFSPROGS
      bool "xfsprogs"
      help
-@@ -3862,6 +3968,11 @@
+@@ -3862,6 +3977,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  
@@ -19631,15 +19650,23 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_I2C_TOOLS                    = i2c-tools
  PKG_WATCHDOG                     = watchdog
  PKG_DSPI                         = dspi
-@@ -407,6 +410,17 @@
+@@ -134,6 +137,7 @@
+ PKG_LMBENCH                      = lmbench
+ PKG_APPTRK                       = apptrk-ppcbin
+ PKG_PPP                          = ppp
++PKG_WVDIAL                       = wvdial
+ PKG_DAEMONIZER                   = daemonizer
+ PKG_UNZIP                        = unzip
+ PKG_PIDENTD                      = pidentd
+@@ -407,6 +411,17 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
 +PKG_QWT                          = qwt
 +PKG_QWT_MULTIAXES                = qwt-multiaxes
 +PKG_LIBUSB1                      = libusb1
-+PKG_USB_MODESWITCH               = usb_modeswitch
 +PKG_USB_MODESWITCH_DATA          = usb_modeswitch_data
++PKG_USB_MODESWITCH               = usb_modeswitch
 +PKG_LAST_KERNEL_BUILD            = last-kernel-build
 +PKG_WIFI_DRIVERS                 = wifi-drivers
 +PKG_MECT_PLUGINS                 = mect_plugins

@@ -760,6 +760,7 @@ clean: clean_projects
 
 .PHONY: distclean
 distclean: clean
+	ccache -C
 	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIBDIR_REF)
 
 

@@ -19570,8 +19570,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +PKG_QWT                          = qwt
 +PKG_QWT_MULTIAXES                = qwt-multiaxes
 +PKG_LIBUSB1                      = libusb1
-+PKG_USB_MODESWITCH               = usb_modeswitch
 +PKG_USB_MODESWITCH_DATA          = usb_modeswitch_data
++PKG_USB_MODESWITCH               = usb_modeswitch
 +PKG_LAST_KERNEL_BUILD            = last-kernel-build
 +PKG_WIFI_DRIVERS                 = wifi-drivers
 +PKG_MECT_PLUGINS                 = mect_plugins

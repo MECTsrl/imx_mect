@@ -5357,7 +5357,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 +++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
-@@ -0,0 +1,80 @@
+@@ -0,0 +1,79 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : USB Modeswitch gets mobile broadband cards in operational mode
@@ -5415,11 +5415,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +install -m755 -D %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/usr/sbin/$(basename %{SOURCE1})
 +
-+rm -f $RPM_BUILD_ROOT/%{pfx}/usr/sbin/usb_modeswitch_dispatcher
-+
 +cd %{_builddir}/%{name}-%{version}
 +( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed '
++    \,^%{pfx}%{_sbindir}/usb_modeswitch_dispatcher, d;
 +    \,^%{pfx}%{_sysconfdir}, d;
 +    \,^%{pfx}/%{_lib}, d;
 +    \,^%{pfx}%{_localstatedir}/%{_lib}, d;

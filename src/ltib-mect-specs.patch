@@ -2904,7 +2904,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,112 @@
+@@ -10,40 +10,118 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -2987,6 +2987,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +# Set execution permissions (discarded by VCS).
 +for f in \
++	/etc/ppp/ip-down \
++	/etc/ppp/ip-up \
 +	/etc/rc.d/init.d/autoexec \
 +	/etc/rc.d/init.d/iptables \
 +	/etc/rc.d/init.d/mac_sn \
@@ -2996,13 +2998,17 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	/etc/rc.d/init.d/setup \
 +	/etc/rc.d/rc.local \
 +	/usr/bin/fcrts.sh \
++	/usr/sbin/usb3g.sh \
 +	/usr/sbin/wifi.sh \
 +; do
 +	chmod 755 $RPM_BUILD_ROOT%{pfx}$f
 +done
 +
-+# Symlink /etc/resolv.conf into the RW local file system.
++# Symlink /etc/resolv.conf in the RW /local file system.
 +( cd $RPM_BUILD_ROOT%{pfx}/etc; ln -sf /local/etc/resolv.conf )
++
++# Symlink /etc/ppp in the RW /local file system.
++( cd $RPM_BUILD_ROOT%{pfx}/etc; ln -sf /local/etc/ppp )
 +
 +cd %{_builddir}
 +( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst

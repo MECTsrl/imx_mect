@@ -17421,7 +17421,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/mdev.conf ltib/config/platform/imx/merge/etc/mdev.conf
 --- ltib.reference/config/platform/imx/merge/etc/mdev.conf
 +++ ltib/config/platform/imx/merge/etc/mdev.conf
-@@ -0,0 +1,24 @@
+@@ -0,0 +1,25 @@
 +# Provide user, group, and mode information for devices.  If a regex matches
 +# the device name provided by sysfs, use the appropriate user:group and mode
 +# instead of the default 0:0 660.
@@ -17434,15 +17434,16 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# [-]: do not stop on this match, continue reading mdev.conf
 +# =: move, >: move and create a symlink
 +# !: do not create device node
-+# @|$|*: run cmd if $ACTION=remove, @cmd if $ACTION=add, *cmd in all cases
++# @|$|*: run $cmd if $ACTION=remove, @cmd if $ACTION=add, *cmd in all cases
 +
-+-$MODALIAS=.*        0:0  660 @/sbin/modprobe -s    "$MODALIAS"
-+$MODALIAS=.*         0:0  660 $/sbin/modprobe -s -r "$MODALIAS"
++-$MODALIAS=.*         0:0 660 @/sbin/modprobe -s    "$MODALIAS"
++$MODALIAS=.*          0:0 660 $/sbin/modprobe -s -r "$MODALIAS"
 +
-+-$DEVTYPE=wlan       0:0  660 @/usr/sbin/wifi.sh start
-+$DEVTYPE=wlan        0:0  660 $/usr/sbin/wifi.sh stop
++-$DEVTYPE=wlan        0:0 660 @/usr/sbin/wifi.sh start
++$DEVTYPE=wlan         0:0 660 $/usr/sbin/wifi.sh stop
 +
-+-$DEVTYPE=usb_device 0:0  660 @/usr/sbin/usb_modeswitch_helper
++$DEVTYPE=usb_device   0:0 660 */sbin/usb_modeswitch_helper
++$SUBSYSTEM=usb-serial 0:0 660 */sbin/usb_modeswitch_helper
 +
 +#-sda[0-9]           0:0  666 @/bin/mount $PWD/$DEVNAME /mnt/rwfs
 +#sda[0-9]            0:0  666 $/bin/umount              /mnt/rwfs
@@ -18608,6 +18609,61 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +# Fix root home directory permissions.
 +test -d /local/flash/root && chmod 0755 /local/flash/root
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/ppp/chat-usb3g ltib/config/platform/imx/merge/local/etc/ppp/chat-usb3g
+--- ltib.reference/config/platform/imx/merge/local/etc/ppp/chat-usb3g
++++ ltib/config/platform/imx/merge/local/etc/ppp/chat-usb3g
+@@ -0,0 +1,10 @@
++ABORT BUSY
++ABORT 'NO CARRIER'
++ABORT ERROR
++TIMEOUT 10
++'' 'ATZ'
++OK 'AT&F'
++OK 'AT+CGDCONT=1,"IP","internet.wind"'
++TIMEOUT 120
++OK 'ATD*99#'
++CONNECT \c
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/ppp/ip-down ltib/config/platform/imx/merge/local/etc/ppp/ip-down
+--- ltib.reference/config/platform/imx/merge/local/etc/ppp/ip-down
++++ ltib/config/platform/imx/merge/local/etc/ppp/ip-down
+@@ -0,0 +1,6 @@
++#!/bin/sh
++
++statd=/var/pppd
++test -d $statd || mkdir -p $statd
++
++env > $statd/down.stat
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/ppp/ip-up ltib/config/platform/imx/merge/local/etc/ppp/ip-up
+--- ltib.reference/config/platform/imx/merge/local/etc/ppp/ip-up
++++ ltib/config/platform/imx/merge/local/etc/ppp/ip-up
+@@ -0,0 +1,14 @@
++#!/bin/sh
++
++statd=/var/pppd
++test -d $statd || mkdir -p $statd
++env > $statd/up.stat
++
++rc=/etc/resolv.conf
++if test "$USEPEERDNS" -eq 1; then
++    if test -n "$DNS1" -o -n "$DNS2"; then
++        echo "# Automatically written by pppd using $0" > $rc
++        test -n "$DNS1" && echo "nameserver $DNS1" >> $rc
++        test -n "$DNS2" && echo "nameserver $DNS2" >> $rc
++    fi
++fi
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/ppp/peers/usb3g ltib/config/platform/imx/merge/local/etc/ppp/peers/usb3g
+--- ltib.reference/config/platform/imx/merge/local/etc/ppp/peers/usb3g
++++ ltib/config/platform/imx/merge/local/etc/ppp/peers/usb3g
+@@ -0,0 +1,9 @@
++/dev/ttyUSB0
++460800
++lock
++crtscts
++modem
++noauth
++noipdefault
++updetach
++connect "/sbin/chat -f /etc/ppp/chat-usb3g"
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/resolv.conf ltib/config/platform/imx/merge/local/etc/resolv.conf
 --- ltib.reference/config/platform/imx/merge/local/etc/resolv.conf
 +++ ltib/config/platform/imx/merge/local/etc/resolv.conf
@@ -18840,10 +18896,141 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#!/bin/sh
 +
 +exec /local/root/fcrts
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/usb3g.sh ltib/config/platform/imx/merge/usr/sbin/usb3g.sh
+--- ltib.reference/config/platform/imx/merge/usr/sbin/usb3g.sh
++++ ltib/config/platform/imx/merge/usr/sbin/usb3g.sh
+@@ -0,0 +1,127 @@
++#!/bin/sh
++
++ppp=ppp0
++pidfile=/var/run/$ppp.pid
++peersdir=/etc/ppp/peers
++peerfile=usb3g
++chatdir=/etc/ppp
++chatfile=chat-usb3g
++resolv_file=/etc/resolv.conf
++
++NETCONFIG=/local/etc/sysconfig/net.conf
++
++INIT_NETWORK=/etc/rc.d/init.d/network
++
++
++# Expects: <dial#> <APN>
++setup()
++{
++    test $# -ne 2 && return 1
++
++    dn="$1"
++    apn="$2"
++
++    sed -i "s/^OK 'AT+CGDCONT=1,\"IP\",\".*/OK 'AT+CGDCONT=1,\"IP\",\"$apn\"'/" $chatdir/$chatfile
++    sed -i "s/^OK 'ATD.*/OK 'ATD$dn'/" $chatdir/$chatfile
++}
++
++start()
++{
++    if test -f $pidfile; then
++        if test -d /proc/$(cat $pidfile); then
++            return 0
++        fi
++    fi
++
++    test -f $peersdir/$peerfile || return 1
++
++    test -r "$NETCONFIG" || return 1
++    source "$NETCONFIG"
++
++    test "$ONBOOTP0" = "1" || return 0
++
++    # DNS setup: automatic or static.
++    #
++
++    if test -z "$NAMESERVERP01" -a -z "$NAMESERVERP02"; then
++        options="$options usepeerdns"
++    else
++        echo "# Created by $0. Do not edit." > $resolv_file
++
++        if test -n "$NAMESERVERP01"; then
++            grep "nameserver\s\+$NAMESERVERP01" $resolv_file || echo "nameserver $NAMESERVERP01" >> $resolv_file
++        fi
++
++        if test -n "$NAMESERVERP02"; then
++            grep "nameserver\s\+$NAMESERVERP02" $resolv_file || echo "nameserver $NAMESERVERW02" >> $resolv_file
++        fi
++    fi
++
++    # Default gateway setup: automatic or unchanged.
++    #
++
++    if test -z "$GATEWAYP0"; then
++        for r in "" $(/sbin/route -n | awk '/^0\.0\.0\.0/ { print $2; }'); do
++            test -z "$r" && continue
++
++            /sbin/route delete default gw "$r"
++        done
++
++        options="$options defaultroute"
++    fi
++
++    options="$options user \"$USERP0\" password \"$PASSWORDP0\""
++
++    eval /sbin/pppd call $peerfile $options
++}
++
++stop()
++{
++    if test -f $pidfile; then
++        pid=$(cat $pidfile)
++        test -n "$pid" || return 1
++
++        if test -d /proc/$pid; then
++            kill $pid
++
++            sleep 1
++
++            test -d /proc/$pid && return 1
++
++            if test -r "$NETCONFIG"; then
++                source "$NETCONFIG"
++
++                if test -n "$GATEWAY0"; then
++                    clear_defroutes_resolv
++
++                    test -x $INIT_NETWORK && $INIT_NETWORK restart
++                fi
++            fi
++        fi
++    fi
++
++    return 0
++}
++
++action="$1"
++shift
++
++case "$action" in
++    "setup")
++        setup "$@"
++    ;;
++
++    "start")
++        start
++    ;;
++
++    "stop")
++        stop
++    ;;
++
++    *)
++        echo "Usage: $(basename $0) <setup|start|stop>" >&2
++
++        exit 1
++    ;;
++esac
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh ltib/config/platform/imx/merge/usr/sbin/wifi.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/wifi.sh
-@@ -0,0 +1,214 @@
+@@ -0,0 +1,218 @@
 +#!/bin/sh
 +
 +wlan="wlan0"
@@ -18851,6 +19038,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +ctrl_dir=/local/var/run/wpa_supplicant
 +conf_dir=/local/etc/wpa_supplicant
 +conf_file="$conf_dir/default.conf"
++resolv_file=/etc/resolv.conf
 +
 +NETCONFIG=/local/etc/sysconfig/net.conf
 +
@@ -18859,12 +19047,13 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +clear_defroutes_resolv()
 +{
-+    for r in "" `route -n | awk '/^0\.0\.0\.0/ { print $2; }'`; do
++    for r in "" `/sbin/route -n | awk '/^0\.0\.0\.0/ { print $2; }'`; do
 +        test -z "$r" && continue
-+        route delete default gw "$r"
++
++        /sbin/route delete default gw "$r"
 +    done
 +
-+    echo "" > /etc/resolv.conf
++    echo "" > $resolv_file
 +}
 +
 +stop_dhclient()
@@ -18900,11 +19089,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +        fi
 +
 +        if test -n "$NAMESERVERW01"; then
-+            grep "nameserver\s\+$NAMESERVERW01" /etc/resolv.conf || echo "nameserver $NAMESERVERW01" >> /etc/resolv.conf
++            grep "nameserver\s\+$NAMESERVERW01" $resolv_file || echo "nameserver $NAMESERVERW01" >> $resolv_file
 +        fi
 +
 +        if test -n "$NAMESERVERW02"; then
-+            grep "nameserver\s\+$NAMESERVERW02" /etc/resolv.conf || echo "nameserver $NAMESERVERW02" >> /etc/resolv.conf
++            grep "nameserver\s\+$NAMESERVERW02" $resolv_file || echo "nameserver $NAMESERVERW02" >> $resolv_file
 +        fi
 +    fi
 +}
@@ -19055,7 +19244,9 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +    ;;
 +
 +    *)
-+        echo "Unknown option \`$action'." >&2
++        echo "Usage: $(basename $0) <setup|start|stop|scan>" >&2
++
++        exit 1
 +    ;;
 +esac
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/min.profile ltib/config/platform/imx/min.profile

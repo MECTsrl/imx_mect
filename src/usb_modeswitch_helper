@@ -1,24 +1,40 @@
 #!/bin/sh
 
-optconf=/sys/bus/usb-serial/drivers/option1/new_id
-
 test -z "$ACTION" && exit 0
-test -z "$DEVTYPE" -o "$DEVTYPE" != "usb_device" && exit 0
-test -z "$PRODUCT" && exit 0
 
-eval $(echo $PRODUCT | awk -F/ '{ print "ms_vendor=" $1; print "ms_product=" $2; }')
-test -z "$ms_vendor" -o -z "$ms_product" && exit 1
+if test "$DEVTYPE" = "usb_device"; then
+    test -z "$PRODUCT" && exit 0
 
-if test "$ACTION" = "add"; then
-	ms_data="$(tar Oxjf /usr/share/usb_modeswitch/configPack.tar.bz2 ${ms_vendor}:${ms_product} 2>/dev/null)"
-	if test -n "$ms_data"; then
-		usb_modeswitch -v $ms_vendor -p $ms_product -f "$ms_data"
-	else
-		modprobe option
-		test -f $optconf && echo "$ms_vendor $ms_product" > $optconf
-	fi
-elif test "$ACTION" = "remove"; then
-	modprobe -r option
+    eval $(echo $PRODUCT | awk -F/ '{ print "ms_vendor=" $1; print "ms_product=" $2; }')
+    test -z "$ms_vendor" -o -z "$ms_product" && exit 1
+
+    if test "$ACTION" = "add"; then
+        ms_data="$(tar Oxjf /usr/share/usb_modeswitch/configPack.tar.bz2 ${ms_vendor}:${ms_product} 2>/dev/null)"
+        if test -n "$ms_data"; then
+            usb_modeswitch -v $ms_vendor -p $ms_product -f "$ms_data"
+        else
+            optconf=/sys/bus/usb-serial/drivers/option1/new_id
+
+            modprobe option
+            test -f $optconf && echo "$ms_vendor $ms_product" > $optconf
+        fi
+    elif test "$ACTION" = "remove"; then
+        modprobe -r option
+    else
+        exit 0
+    fi
+elif test "$SUBSYSTEM" = "usb-serial"; then
+    test -n "$MDEV" -a "$MDEV" = "ttyUSB0" || exit 0
+
+    if test "$ACTION" = "add"; then
+        /bin/mknod ppp c 108 0
+
+        /usr/sbin/pppd.sh start
+    elif test "$ACTION" = "remove"; then
+        /bin/rm ppp
+    else
+        exit 0
+    fi
 else
-	exit 0
+    exit 0
 fi

@@ -5528,7 +5528,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 --- ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 +++ ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
-@@ -0,0 +1,200 @@
+@@ -0,0 +1,201 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define pkg_src  compat-drivers
 +%define pkg_rc   rc4
@@ -5624,7 +5624,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +./scripts/driver-select rtlwifi
 +
-+make \
++make -j`grep -c ^processor /proc/cpuinfo` \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
 +	ARCH=$LINTARCH \
@@ -5638,7 +5638,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +./scripts/driver-select ath9k_htc
 +
-+make \
++make -j`grep -c ^processor /proc/cpuinfo` \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
 +	ARCH=$LINTARCH \
@@ -5654,6 +5654,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +rm -rf $RPM_BUILD_ROOT
++
 +mkdir -p $RPM_BUILD_ROOT%{pfx}/usr/sbin
 +
 +# Firmware for rtlwifi driver
@@ -5667,7 +5668,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +# Install the rtlwifi driver.
 +cd %{dir_rtl}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
 +
-+make install \
++make -j`grep -c ^processor /proc/cpuinfo` install \
 +	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
@@ -5680,7 +5681,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +# Install the ath9k_htc driver.
 +cd %{dir_ath}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
 +
-+make install \
++make -j`grep -c ^processor /proc/cpuinfo` install \
 +	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \

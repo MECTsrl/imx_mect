@@ -371,7 +371,7 @@ downloads_fc:
 
 # Set up LTIB and projects
 .PHONY: setup
-setup: ltib_setup projects_setup
+setup: ltib_setup projects_setup spec_setup
 
 # Install and build LTIB.
 .PHONY: ltib_setup
@@ -494,12 +494,14 @@ projects_build:
 .PHONY: projects
 projects: projects_setup projects_build
 
-### .PHONY: SDcard
-### SDcard:
-### 	$(MAKE) -C projects SDcard
-### .PHONY: localfs_rpm
-### localfs_rpm:
-### 	$(MAKE) -C projects localfs_rpm
+
+.PHONY: spec_setup
+spec_setup: MECT_LTIBSPECDIR := $(MECT_LTIBDIR)/dist/lfs-5.1
+spec_setup:
+	for s in mect_plugins/mect_plugins.spec; do \
+		test -w $(MECT_LTIBSPECDIR)/$$s; \
+		sed -i 's/^\s*Version\s*:.*/Version: $(MECT_BUILD_PLUGINSCRT_TAG)/I' $(MECT_LTIBSPECDIR)/$$s; \
+	done
 
 
 # Build the default target image.

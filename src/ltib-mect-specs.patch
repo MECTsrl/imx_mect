@@ -2987,8 +2987,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +# Set execution permissions (discarded by VCS).
 +for f in \
-+	/etc/ppp/ip-down \
-+	/etc/ppp/ip-up \
 +	/etc/rc.d/init.d/autoexec \
 +	/etc/rc.d/init.d/iptables \
 +	/etc/rc.d/init.d/mac_sn \
@@ -2997,6 +2995,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	/etc/rc.d/init.d/sdcheck \
 +	/etc/rc.d/init.d/setup \
 +	/etc/rc.d/rc.local \
++	/local/etc/ppp/ip-down \
++	/local/etc/ppp/ip-up \
 +	/usr/bin/fcrts.sh \
 +	/usr/sbin/usb3g.sh \
 +	/usr/sbin/wifi.sh \

@@ -18899,7 +18899,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/usb3g.sh ltib/config/platform/imx/merge/usr/sbin/usb3g.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/usb3g.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/usb3g.sh
-@@ -0,0 +1,139 @@
+@@ -0,0 +1,141 @@
 +#!/bin/sh
 +
 +ppp=ppp0
@@ -18913,6 +18913,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +NETCONFIG=/local/etc/sysconfig/net.conf
 +
 +INIT_NETWORK=/etc/rc.d/init.d/network
++
 +
 +clear_defroutes_resolv()
 +{
@@ -18997,10 +18998,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +            kill $pid
 +
 +            for t in $(seq 1 1 10); do
-+		sleep 1
-+	        test -d /proc/$pid || break
-+	    done
-+	    test -d /proc/$pid && return 1
++                sleep 1
++
++                test -d /proc/$pid || break
++            done
++            test -d /proc/$pid && return 1
 +
 +            if test -r "$NETCONFIG"; then
 +                source "$NETCONFIG"

@@ -5528,7 +5528,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 --- ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 +++ ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
-@@ -0,0 +1,201 @@
+@@ -0,0 +1,200 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define pkg_src  compat-drivers
 +%define pkg_rc   rc4
@@ -5663,7 +5663,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +cd -
 +
 +# Firmware for ath9k_htc driver
-+install -D -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{pfx}/lib/firmware/%{SOURCE2}
++install -D -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{pfx}/lib/firmware/$(basename %{SOURCE2})
 +
 +# Install the rtlwifi driver.
 +cd %{dir_rtl}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
@@ -5691,7 +5691,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +cd ../..
 +
-+
 +( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +
 +sed -n '
@@ -5705,7 +5704,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +' all_files.lst > rfs_rtlwifi_files.lst
 +
 +sed -n '
-+    \,^%{pfx}/%{_lib}/firmware/ath9k_htc/htc_9271-.*\.fw, p;
++    \,^%{pfx}/%{_lib}/firmware/htc_9271\.fw, p;
 +    \,^%{pfx}/%{_lib}/modules/[0-9.]\+/updates/drivers/net/wireless/ath/, p;
 +' all_files.lst > rfs_ath9k_htc_files.lst
 +

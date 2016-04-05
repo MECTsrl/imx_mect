@@ -17442,8 +17442,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +-$DEVTYPE=wlan        0:0 660 @/usr/sbin/wifi.sh start
 +$DEVTYPE=wlan         0:0 660 $/usr/sbin/wifi.sh stop
 +
-+$DEVTYPE=usb_device   0:0 660 */sbin/usb_modeswitch_helper
-+$SUBSYSTEM=usb-serial 0:0 660 */sbin/usb_modeswitch_helper
++$DEVTYPE=usb_device   0:0 660 */usr/sbin/usb_modeswitch_helper
++$SUBSYSTEM=usb-serial 0:0 660 */usr/sbin/usb_modeswitch_helper
 +
 +#-sda[0-9]           0:0  666 @/bin/mount $PWD/$DEVNAME /mnt/rwfs
 +#sda[0-9]            0:0  666 $/bin/umount              /mnt/rwfs
@@ -18899,7 +18899,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/usb3g.sh ltib/config/platform/imx/merge/usr/sbin/usb3g.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/usb3g.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/usb3g.sh
-@@ -0,0 +1,127 @@
+@@ -0,0 +1,139 @@
 +#!/bin/sh
 +
 +ppp=ppp0
@@ -18914,6 +18914,16 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +INIT_NETWORK=/etc/rc.d/init.d/network
 +
++clear_defroutes_resolv()
++{
++    for r in "" `/sbin/route -n | awk '/^0\.0\.0\.0/ { print $2; }'`; do
++        test -z "$r" && continue
++
++        /sbin/route delete default gw "$r"
++    done
++
++    echo "" > $resolv_file
++}
 +
 +# Expects: <dial#> <APN>
 +setup()
@@ -18986,9 +18996,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +        if test -d /proc/$pid; then
 +            kill $pid
 +
-+            sleep 1
-+
-+            test -d /proc/$pid && return 1
++            for t in $(seq 1 1 10); do
++		sleep 1
++	        test -d /proc/$pid || break
++	    done
++	    test -d /proc/$pid && return 1
 +
 +            if test -r "$NETCONFIG"; then
 +                source "$NETCONFIG"

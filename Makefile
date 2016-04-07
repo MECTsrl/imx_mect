@@ -411,6 +411,7 @@ ltib_patch: downloads
 	; do \
 		patch -p1 < $(MECT_FTPDIR)/$$p; \
 	done
+	sed -i "s,^%ldirs$$,\0\n$(MECT_FTPDIR)\n$(MECT_CSXCDIR)/arm-none-linux-gnueabi/libc/usr/bin," $(MECT_LTIBDIR)/.ltibrc
 
 # Build LTIB and projects
 .PHONY: build
@@ -421,7 +422,6 @@ ltib_build: hosttools
 	sudo rm -rf $(MECT_FSDIR)/rootfs
 	sudo mkdir -p $(MECT_FSDIR)/rootfs
 	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') $(MECT_FSDIR)
-	sed -i "s,^%ldirs$$,\0\n$(MECT_FTPDIR)\n$(MECT_CSXCDIR)/arm-none-linux-gnueabi/libc/usr/bin," $(MECT_LTIBDIR)/.ltibrc
 	cd $(MECT_LTIBDIR); PATH=/usr/lib/ccache:$$PATH GIT_AUTHOR_NAME=$(MECT_USER_NAME) GIT_AUTHOR_EMAIL=$(MECT_TARGET_UNIX_NAME)@$(MECT_HOST_NAME) GIT_COMMITTER_NAME=$(MECT_USER_NAME) GIT_COMMITTER_EMAIL=$(MECT_TARGET_UNIX_NAME)@$(MECT_HOST_NAME) ./ltib
 
 # Set up the host tools.

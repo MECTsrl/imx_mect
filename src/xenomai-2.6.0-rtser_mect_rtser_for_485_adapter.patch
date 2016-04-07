@@ -1,0 +1,563 @@
+diff -ruN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_mxs_auart.c
+--- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-07 18:19:39.985255116 +0200
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-07 18:18:32.533254478 +0200
+@@ -48,6 +48,7 @@
+ 
+ #define DRIVER_NAME		"xeno_imx_mxs_auart"
+ 
++#define AUART_FIFO_SIZE 16
+ #define IN_BUFFER_SIZE		4096
+ #define OUT_BUFFER_SIZE		4096
+ 
+@@ -103,9 +104,6 @@
+ 	int status;			/* cache for LSR + soft-states */
+ 	int saved_errors;		/* error cache for RTIOC_GET_STATUS */
+ 
+-	/* Workaround the spurious 0x00 byte read first after the open. */
+-	int first_read_after_open;
+-
+ 	/*
+ 	 * The port structure holds all the information about the UART
+ 	 * port like base address, and so on.
+@@ -166,90 +164,71 @@
+ }
+ 
+ static int
+-rt_imx_mxs_auart_rx_chars(struct rt_imx_mxs_auart_ctx *ctx, uint64_t *timestamp, u32 *istat)
++rt_imx_mxs_auart_rx_chars(struct rt_imx_mxs_auart_ctx *ctx, uint64_t *timestamp)
+ {
+ 	struct rt_imx_mxs_auart_port *port = ctx->port;
+-	u8 c = 0;
+ 	u32 stat = 0;
+-	unsigned int max_count = 0;
+ 	int rbytes = 0;
+ 	int lsr = 0;
+ 
+-	for (max_count = 256; max_count > 0; max_count--) {
+-		stat = __raw_readl(port->port.membase + HW_UARTAPP_STAT);
+-		if (stat & BM_UARTAPP_STAT_RXFE)
+-			break;
+-
+-		c = __raw_readl(port->port.membase + HW_UARTAPP_DATA);
+-
+-		if (stat & BM_UARTAPP_STAT_BERR) {
+-			stat &= ~BM_UARTAPP_STAT_BERR;
++    /* we are here if RX data ready or RX timeout or RX errors
++     * i.e. (BM_UARTAPP_INTR_OEIS | BM_UARTAPP_INTR_BEIS | BM_UARTAPP_INTR_PEIS  | BM_UARTAPP_INTR_FEIS
++     *     | BM_UARTAPP_INTR_RXISk | BM_UARTAPP_INTR_RTIS)
++     */
++    do {
++        register u32 data;
++        register int n;
++        register int invalid_chars;
++
++        data = __raw_readl(port->port.membase + HW_UARTAPP_DATA);
++        stat = __raw_readl(port->port.membase + HW_UARTAPP_STAT);
++
++        /* flags management, relative to the previous read HW_UARTAPP_DATA */
++        if (stat & BM_UARTAPP_STAT_BERR) {
++            /* NOTE Here we ignore break requests. */
++            stat &= ~BM_UARTAPP_STAT_BERR;
+ 			ctx->port->port.icount.brk++;
+-
+-			/* NOTE Here we ignore break requests. */
+-
+ 			lsr |= RTSER_LSR_BREAK_IND;
+ 		}
+-
+ 		if (stat & BM_UARTAPP_STAT_PERR) {
+-			stat &= ~BM_UARTAPP_STAT_PERR;
++            stat &= ~BM_UARTAPP_STAT_PERR;
+ 			port->port.icount.parity++;
+-
+ 			lsr |= RTSER_LSR_PARITY_ERR;
+-		}
+-		else if (stat & BM_UARTAPP_STAT_FERR) {
++        }
++        if (stat & BM_UARTAPP_STAT_FERR) {
+ 			stat &= ~BM_UARTAPP_STAT_FERR;
+ 			port->port.icount.frame++;
+-
+ 			lsr |= RTSER_LSR_FRAMING_ERR;
+-		}
+-
++        }
+ 		if (stat & BM_UARTAPP_STAT_OERR) {
+-			port->port.icount.overrun++;
+-
++            /* any write to the status register will clear this */
++            port->port.icount.overrun++;
+ 			lsr |= RTSER_LSR_OVERRUN_ERR;
+-		}
+-
+-		/* NOTE Here we ignore system requests. */
+-
+-		if (ctx->first_read_after_open) {
+-			ctx->first_read_after_open = 0;
+-
+-			/* Discard 0x00 byte and error right after open. */
+-			if ((c == 0x00) && (*istat & (BM_UARTAPP_INTR_ABDIS
+-					| BM_UARTAPP_INTR_OEIS
+-					| BM_UARTAPP_INTR_BEIS
+-					| BM_UARTAPP_INTR_PEIS
+-					| BM_UARTAPP_INTR_FEIS))) {
+-				max_count++;
+-
+-				*istat &= ~(BM_UARTAPP_INTR_ABDIS
+-					| BM_UARTAPP_INTR_OEIS
+-					| BM_UARTAPP_INTR_BEIS
+-					| BM_UARTAPP_INTR_PEIS
+-					| BM_UARTAPP_INTR_FEIS);
+-			}
+-		}
+-		else {
+-			/* Save the received character */
+-			ctx->in_buf[ctx->in_tail] = c;
++        }
++        __raw_writel(stat, port->port.membase + HW_UARTAPP_STAT);
+ 
+-			if (ctx->in_history)
+-				ctx->in_history[ctx->in_tail] = *timestamp;
+-
+-			ctx->in_tail = (ctx->in_tail + 1) & (IN_BUFFER_SIZE - 1);
+-
+-			if (++ctx->in_npend > IN_BUFFER_SIZE) {
+-				ctx->in_npend--;
+-
+-				lsr |= RTSER_SOFT_OVERRUN_ERR;
+-			}
+-
+-			rbytes++;
+-		}
+-
+-		__raw_writel(stat, port->port.membase + HW_UARTAPP_STAT);
+-	}
++        /* save the valid received characters */
++        invalid_chars = (stat & BM_UARTAPP_STAT_RXBYTE_INVALID) >> BP_UARTAPP_STAT_RXBYTE_INVALID;
++        for (n = 0; n < 1; ++n) { // NB: the other three characters can only be used when DMA is on
++            if (!(invalid_chars & (1 << n))) {
++                register u8 c = (data >> (n * 8)) & 0x000000FF;
++
++                ctx->in_buf[ctx->in_tail] = c;
++
++                if (ctx->in_history)
++                    ctx->in_history[ctx->in_tail] = *timestamp;
++
++                ctx->in_tail = (ctx->in_tail + 1) & (IN_BUFFER_SIZE - 1);
++
++                if (++ctx->in_npend > IN_BUFFER_SIZE) {
++                    ctx->in_npend--;
++
++                    lsr |= RTSER_SOFT_OVERRUN_ERR;
++                }
++                ++rbytes;
++            }
++        }
++    } while (!((stat & BM_UARTAPP_STAT_RXFE) || (rbytes > AUART_FIFO_SIZE)));
+ 
+ 	/* Save new errors */
+ 	ctx->status |= lsr;
+@@ -489,130 +468,103 @@
+ static int
+ rt_imx_mxs_auart_irq_handle(rtdm_irq_t *irq_context)
+ {
+-	uint64_t timestamp = rtdm_clock_read();
+-	struct rt_imx_mxs_auart_ctx *ctx;
+-	int rbytes = 0;
+-	int events = 0;
+-	int ret = RTDM_IRQ_NONE;
+-	u32 istatus;
+-	u32 istat;
+-	struct rt_imx_mxs_auart_port *port;
+-	u32 stat;
+-
+-	ctx = rtdm_irq_get_arg(irq_context, struct rt_imx_mxs_auart_ctx);
+-	port = ctx->port;
+-
+-	rtdm_lock_get(&ctx->lock);
+-
+-	stat = __raw_readl(port->port.membase + HW_UARTAPP_STAT);
+-	istatus = istat = __raw_readl(port->port.membase + HW_UARTAPP_INTR);
+-
+-	/* RX data ready or RX timeout */
+-	if (istat & (BM_UARTAPP_INTR_RXIS | BM_UARTAPP_INTR_RTIS)) {
+-		rbytes += rt_imx_mxs_auart_rx_chars(ctx, &timestamp, &istat);
+-
+-		istat &= ~(BM_UARTAPP_INTR_RTIS | BM_UARTAPP_INTR_RXIS);
+-
+-		events |= RTSER_EVENT_RXPEND;
+-		ret = RTDM_IRQ_HANDLED;
+-	}
++    int retval = RTDM_IRQ_NONE;
++    uint64_t timestamp = rtdm_clock_read();
++    struct rt_imx_mxs_auart_ctx *ctx;
++    int rbytes = 0;
++    int events = 0;
++    u32 istat;
++    struct rt_imx_mxs_auart_port *port;
++
++    ctx = rtdm_irq_get_arg(irq_context, struct rt_imx_mxs_auart_ctx);
++    port = ctx->port;
++
++    rtdm_lock_get(&ctx->lock);
++
++    istat = __raw_readl(port->port.membase + HW_UARTAPP_INTR);
++
++    /* RX data ready or RX timeout or other RX errors
++     * NB: RTIS helps in getting here as soon as the data ended and the FIFO was not yet full
++     */
++    if (istat & (BM_UARTAPP_INTR_OEIS | BM_UARTAPP_INTR_BEIS | BM_UARTAPP_INTR_PEIS | BM_UARTAPP_INTR_FEIS
++                 | BM_UARTAPP_INTR_RXIS | BM_UARTAPP_INTR_RTIS)) {
++        __raw_writel((BM_UARTAPP_INTR_OEIS | BM_UARTAPP_INTR_BEIS | BM_UARTAPP_INTR_PEIS | BM_UARTAPP_INTR_FEIS
++                      | BM_UARTAPP_INTR_RTIS | BM_UARTAPP_INTR_RXIS), port->port.membase + HW_UARTAPP_INTR_CLR);
++        rbytes += rt_imx_mxs_auart_rx_chars(ctx, &timestamp);
++        events |= RTSER_EVENT_RXPEND;
++        retval = RTDM_IRQ_HANDLED;
++    }
++
++    /* TX ready */
++    if (istat & BM_UARTAPP_INTR_TXIS) {
++        __raw_writel(BM_UARTAPP_INTR_TXIS, port->port.membase + HW_UARTAPP_INTR_CLR);
++        rt_imx_mxs_auart_tx_chars(ctx);
++        retval = RTDM_IRQ_HANDLED;
++    }
++
++    /* Modem CTS */
++    if (istat & BM_UARTAPP_INTR_CTSMIS) {
++        __raw_writel(BM_UARTAPP_INTR_CTSMIS, port->port.membase + HW_UARTAPP_INTR_CLR);
++        retval = RTDM_IRQ_HANDLED;
++    }
++
++    if (ctx->in_nwait > 0) {
++        if ((ctx->in_nwait <= rbytes) || ctx->status) {
++            ctx->in_nwait = 0;
++
++            rtdm_event_signal(&ctx->in_event);
++        }
++        else {
++            ctx->in_nwait -= rbytes;
++        }
++    }
++
++    if (ctx->status)
++        events |= RTSER_EVENT_ERRPEND;
++
++    if (testbits(events, ctx->config.event_mask)) {
++        int old_events = ctx->ioc_events;
++
++        ctx->last_timestamp = timestamp;
++        ctx->ioc_events = events;
++
++        if (!old_events)
++            rtdm_event_signal(&ctx->ioc_event);
++    }
++
++    if (testbits(ctx->ier_status, IER_TX) && (ctx->out_npend == 0)) {
++        rt_imx_mxs_auart_stop_tx(ctx);
++
++        ctx->ier_status &= ~IER_TX;
++
++        rtdm_event_signal(&ctx->out_event);
++    }
++
++    rtdm_lock_put(&ctx->lock);
++
++    /* Modem status interrupt bits are undefined after reset and DSRMIS, DCDMIS and RIMIS are not supported.
++     * So, we ignore them.
++     */
++    if (istat & (BM_UARTAPP_INTR_DSRMIS | BM_UARTAPP_INTR_DCDMIS | BM_UARTAPP_INTR_RIMIS)) {
++        __raw_writel((BM_UARTAPP_INTR_DSRMIS | BM_UARTAPP_INTR_DCDMIS | BM_UARTAPP_INTR_RIMIS),
++                     port->port.membase + HW_UARTAPP_INTR_CLR);
++        /* i.MX28 always sets these bits up the first time, so print nothing */
++    }
++    if (istat & (BM_UARTAPP_INTR_ABDIS)) {
++        __raw_writel(BM_UARTAPP_INTR_ABDIS, port->port.membase + HW_UARTAPP_INTR_CLR);
++        dev_info(port->dev, "unhandled status 0x%08x\n", istat);
++    }
++
++    /* Diagnostic output (out of rtdm_lock) */
++    if (istat & (BM_UARTAPP_INTR_OEIS | BM_UARTAPP_INTR_BEIS | BM_UARTAPP_INTR_PEIS | BM_UARTAPP_INTR_FEIS)) {
++        dev_info(port->dev, "error(s): %s%s%s%s\n",
++               (istat & BM_UARTAPP_INTR_OEIS) ? "OEIS" : "",
++               (istat & BM_UARTAPP_INTR_BEIS) ? "BEIS" : "",
++               (istat & BM_UARTAPP_INTR_PEIS) ? "PEIS" : "",
++               (istat & BM_UARTAPP_INTR_FEIS) ? "FEIS" : "");
++    }
+ 
+-	/* TX ready */
+-	if (istat & BM_UARTAPP_INTR_TXIS) {
+-		rt_imx_mxs_auart_tx_chars(ctx);
+-
+-		istat &= ~BM_UARTAPP_INTR_TXIS;
+-
+-		ret = RTDM_IRQ_HANDLED;
+-	}
+-
+-	/* Modem CTS */
+-	if (istat & BM_UARTAPP_INTR_CTSMIS) {
+-		__raw_writel(BM_UARTAPP_INTR_CTSMIS, port->port.membase + HW_UARTAPP_INTR_CLR);
+-
+-		istat &= ~BM_UARTAPP_INTR_CTSMIS;
+-
+-		ret = RTDM_IRQ_HANDLED;
+-	}
+-
+-	/* Modem status interrupt bits are undefined after reset and
+-	DSRMIS, DCDMIS and RIMIS are not supported. So, we ingore them. */
+-	if (istat & (BM_UARTAPP_INTR_ABDIS
+-		     | BM_UARTAPP_INTR_OEIS
+-		     | BM_UARTAPP_INTR_BEIS
+-		     | BM_UARTAPP_INTR_PEIS
+-		     | BM_UARTAPP_INTR_FEIS
+-		     | BM_UARTAPP_INTR_RTIS
+-		     | BM_UARTAPP_INTR_TXIS
+-		     | BM_UARTAPP_INTR_RXIS
+-		     | BM_UARTAPP_INTR_CTSMIS))
+-		dev_info(port->dev, "Unhandled status %x\n", istat);
+-
+-	__raw_writel(istatus & (BM_UARTAPP_INTR_ABDIS
+-				| BM_UARTAPP_INTR_OEIS
+-				| BM_UARTAPP_INTR_BEIS
+-				| BM_UARTAPP_INTR_PEIS
+-				| BM_UARTAPP_INTR_FEIS
+-				| BM_UARTAPP_INTR_RTIS
+-				| BM_UARTAPP_INTR_TXIS
+-				| BM_UARTAPP_INTR_RXIS
+-				| BM_UARTAPP_INTR_DSRMIS
+-				| BM_UARTAPP_INTR_DCDMIS
+-				| BM_UARTAPP_INTR_CTSMIS
+-				| BM_UARTAPP_INTR_RIMIS),
+-		port->port.membase + HW_UARTAPP_INTR_CLR);
+-
+-	if (ctx->in_nwait > 0) {
+-		if ((ctx->in_nwait <= rbytes) || ctx->status) {
+-			ctx->in_nwait = 0;
+-
+-			rtdm_event_signal(&ctx->in_event);
+-		}
+-		else {
+-			ctx->in_nwait -= rbytes;
+-		}
+-	}
+-
+-	if (ctx->status)
+-		events |= RTSER_EVENT_ERRPEND;
+-
+-	if (testbits(events, ctx->config.event_mask)) {
+-		int old_events = ctx->ioc_events;
+-
+-		ctx->last_timestamp = timestamp;
+-		ctx->ioc_events = events;
+-
+-		if (!old_events)
+-			rtdm_event_signal(&ctx->ioc_event);
+-	}
+-
+-	if (testbits(ctx->ier_status, IER_TX) && (ctx->out_npend == 0)) {
+-		rt_imx_mxs_auart_stop_tx(ctx);
+-
+-		ctx->ier_status &= ~IER_TX;
+-
+-		rtdm_event_signal(&ctx->out_event);
+-	}
+-
+-	rtdm_lock_put(&ctx->lock);
+-
+-	if ((ret != RTDM_IRQ_HANDLED)
+-		/* Guard for interrupts that do not trigger a status bit. */
+-		&& (istat & (BM_UARTAPP_INTR_ABDIS |
+-				BM_UARTAPP_INTR_OEIS |
+-				BM_UARTAPP_INTR_BEIS |
+-				BM_UARTAPP_INTR_PEIS |
+-				BM_UARTAPP_INTR_FEIS |
+-				BM_UARTAPP_INTR_RTIS |
+-				BM_UARTAPP_INTR_TXIS |
+-				BM_UARTAPP_INTR_RXIS |
+-				BM_UARTAPP_INTR_DSRMIS |
+-				BM_UARTAPP_INTR_DCDMIS |
+-				BM_UARTAPP_INTR_CTSMIS |
+-				BM_UARTAPP_INTR_RIMIS)))
+-			printk(KERN_WARNING "%s: unhandled interrupt 0x%08X stat 0x%08X\n", __func__, istat, stat);
+-
+-	return ret;
++    return retval;
+ }
+ 
+ static inline void
+@@ -740,8 +692,19 @@
+ 	if (testbits(config->config_mask, RTSER_SET_HANDSHAKE))
+ 		ctx->config.handshake = config->handshake;
+ 
+-	if (testbits(config->config_mask, RTSER_SET_MECT_RTS_MASK))
++    if (testbits(config->config_mask, RTSER_SET_MECT_RTS_MASK)) {
++        /* MECT RS485 half-duplex: RTS set / clear with automatic stop / start of the receiver channel */
+ 		ctx->config.mect_rts = config->mect_rts;
++        if (ctx->config.mect_rts == RTSER_MECT_RTS_SET) {
++            // enable RTS and then the receive channel since we are going to receive
++            __raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
++            __raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
++        } else if (ctx->config.mect_rts == RTSER_MECT_RTS_CLR) {
++            // disable the receive channel and then RTS since we are going to transmit
++            __raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
++            __raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
++        }
++    }
+ 
+ 	/*
+ 	 * Configure the hardware.
+@@ -751,15 +714,17 @@
+ 					   | RTSER_SET_STOP_BITS
+ 					   | RTSER_SET_PARITY
+ 					   | RTSER_SET_BAUD
+-					   | RTSER_SET_EVENT_MASK
+-					   | RTSER_SET_MECT_RTS_MASK))) {
+-		u32 ctrl;
++                       | RTSER_SET_EVENT_MASK))) {
++        u32 ctrl;
+ 		u32 ctrl2;
+-		u32 div;
++        u32 div;
++        u32 ctrl0;
++        u32 to_bits;
+ 
+ 		/* Get HW configuration. */
+-		ctrl = __raw_readl(ctx->port->port.membase + HW_UARTAPP_LINECTRL);
+-		ctrl2 = __raw_readl(ctx->port->port.membase + HW_UARTAPP_CTRL2);
++        ctrl = __raw_readl(ctx->port->port.membase + HW_UARTAPP_LINECTRL);
++        ctrl2 = __raw_readl(ctx->port->port.membase + HW_UARTAPP_CTRL2);
++        ctrl0 = __raw_readl(ctx->port->port.membase + HW_UARTAPP_CTRL0);
+ 
+ 		/* Enable FIFO. */
+ 		ctrl |= BM_UARTAPP_LINECTRL_FEN;
+@@ -805,28 +770,49 @@
+ 				div++;
+ 		}
+ 
+-		ctrl &= ~BF_UARTAPP_LINECTRL_BAUD_DIVFRAC(0xffffffff);
+-		ctrl |= BF_UARTAPP_LINECTRL_BAUD_DIVFRAC(div);
++        ctrl &= ~BF_UARTAPP_LINECTRL_BAUD_DIVFRAC(0xffffffff);
++        ctrl |= BF_UARTAPP_LINECTRL_BAUD_DIVFRAC(div);
+ 
+-		ctrl &= ~BF_UARTAPP_LINECTRL_BAUD_DIVINT(0xffffffff);
+-		ctrl |= BF_UARTAPP_LINECTRL_BAUD_DIVINT(div >> 6);
++        ctrl &= ~BF_UARTAPP_LINECTRL_BAUD_DIVINT(0xffffffff);
++        ctrl |= BF_UARTAPP_LINECTRL_BAUD_DIVINT(div >> 6);
+ 
+-		/* MECT: RTS line set / clear */
+-		if (ctx->config.mect_rts == RTSER_MECT_RTS_SET)
+-			ctrl2 |= BM_UARTAPP_CTRL2_RTS;
+-		else if (ctx->config.mect_rts == RTSER_MECT_RTS_CLR)
+-			ctrl2 &= ~BM_UARTAPP_CTRL2_RTS;
++        /* the Modbus RTU reception requires an inter-character timeout:
++         * -- for baudrates <= 19200 the timeout is 1.5 chars = 1.5 * (1 + data_bits + parity + stop_bits)
++         * -- for higher baudrates the timeout is fixed to 0.750 s
++         */
++        if (ctx->config.baud_rate <= 19200) {
++            to_bits = 15 * (1
++            + (ctx->config.data_bits == RTSER_8_BITS) ? 8 : 7
++            + ((ctx->config.parity == RTSER_ODD_PARITY) || (ctx->config.parity == RTSER_EVEN_PARITY)) ? 1 : 0
++            + (ctx->config.stop_bits == RTSER_2_STOPB) ? 2 : 1) / 10;
++        } else {
++            u32 bit_time_ns = 1000000000 / ctx->config.baud_rate + 1; // just in case :)
++            u32 timeout_ns = 750000; // 0.750 ms
++            to_bits = timeout_ns / bit_time_ns;
++        }
++        /* the i.MX28 rx timeout is in "8 bit-times"
++         * and there is a "7 bit" base ("1" --> 15 bit times)
++         */
++        if (to_bits >= 7) {
++            to_bits = to_bits - 7;
++        } else {
++            to_bits = 0;
++        }
++        to_bits = to_bits / 8;
+ 
+-		/* Set up the HW. */
++        ctrl0 &= ~BF_UARTAPP_CTRL0_RXTIMEOUT(0x7ff);
++        ctrl0 |= BF_UARTAPP_CTRL0_RXTIMEOUT(to_bits);
++
++        /* Set up the HW. */
+ 		__raw_writel(ctrl, ctx->port->port.membase + HW_UARTAPP_LINECTRL);
+-		__raw_writel(ctrl2, ctx->port->port.membase + HW_UARTAPP_CTRL2);
++        __raw_writel(ctrl2, ctx->port->port.membase + HW_UARTAPP_CTRL2);
++        __raw_writel(ctrl0, ctx->port->port.membase + HW_UARTAPP_CTRL0);
+ 
+ 		ctx->status = 0;
+ 		ctx->ioc_events &= ~RTSER_EVENT_ERRPEND;
+ 	}
+ 
+ 	rtdm_lock_put_irqrestore(&ctx->lock, lock_ctx);
+-
+ 	return err;
+ }
+ 
+@@ -1059,13 +1045,13 @@
+ 
+ 		ret = rtdm_event_timedwait(&ctx->in_event, ctx->config.rx_timeout, &timeout_seq);
+ 		if (ret < 0) {
+-			if (ret == -EIDRM)
+-				/* Device has been closed - return immediately. */
+-				return -EBADF;
++		    if (ret == -EIDRM)
++			/* Device has been closed - return immediately. */
++			return -EBADF;
+ 
+-			rtdm_lock_get_irqsave(&ctx->lock, lock_ctx);
++		    rtdm_lock_get_irqsave(&ctx->lock, lock_ctx);
+ 
+-			nonblocking = 1;
++            nonblocking = 1;
+ 			if (ctx->in_npend > 0)
+ 				/* Final turn: collect pending bytes before exit. */
+ 				continue;
+@@ -1105,7 +1091,8 @@
+ 
+ 	__raw_writel(BM_UARTAPP_CTRL0_SFTRST, port->port.membase + HW_UARTAPP_CTRL0_SET);
+ 
+-	__raw_writel(BM_UARTAPP_INTR_RXIEN | BM_UARTAPP_INTR_RTIEN | BM_UARTAPP_INTR_CTSMIEN, port->port.membase + HW_UARTAPP_INTR_CLR);
++    __raw_writel( BM_UARTAPP_INTR_OEIEN | BM_UARTAPP_INTR_BEIEN | BM_UARTAPP_INTR_PEIEN  | BM_UARTAPP_INTR_FEIEN
++        | BM_UARTAPP_INTR_RXIEN | BM_UARTAPP_INTR_RTIEN | BM_UARTAPP_INTR_CTSMIEN, port->port.membase + HW_UARTAPP_INTR_CLR);
+ 
+ 	in_history = ctx->in_history;
+ 	ctx->in_history = NULL;
+@@ -1160,13 +1147,10 @@
+ 	ctx->status = 0;
+ 	ctx->saved_errors = 0;
+ 
+-	ctx->first_read_after_open = 1;
+-
+ 	rt_imx_mxs_auart_reset(&port->port);
+ 
+-	__raw_writel(BM_UARTAPP_CTRL2_UARTEN, port->port.membase + HW_UARTAPP_CTRL2_SET);
+-
+-	__raw_writel(BM_UARTAPP_INTR_RXIEN | BM_UARTAPP_INTR_RTIEN, port->port.membase + HW_UARTAPP_INTR);
++    __raw_writel( BM_UARTAPP_INTR_OEIEN | BM_UARTAPP_INTR_BEIEN | BM_UARTAPP_INTR_PEIEN  | BM_UARTAPP_INTR_FEIEN
++        | BM_UARTAPP_INTR_RXIEN | BM_UARTAPP_INTR_RTIEN, port->port.membase + HW_UARTAPP_INTR);
+ 
+ 	__raw_writel(BM_UARTAPP_INTR_CTSMIEN, port->port.membase + HW_UARTAPP_INTR_SET);
+ 
+@@ -1174,9 +1158,13 @@
+ 
+ 	rt_imx_mxs_auart_set_config(ctx, &default_config, &dummy);
+ 
+-	ret = rtdm_irq_request(&ctx->irq_handle, port->port.irq, rt_imx_mxs_auart_irq_handle, 0, context->device->proc_name, ctx);
++    ret = rtdm_irq_request(&ctx->irq_handle, port->port.irq, rt_imx_mxs_auart_irq_handle, 0, context->device->proc_name, ctx);
+ 
+-	return ret;
++    __raw_writel(BM_UARTAPP_CTRL2_UARTEN, port->port.membase + HW_UARTAPP_CTRL2_SET);
++
++    dev_info(port->dev, "open %s\n", ret ? "failure" : "success");
++
++    return ret;
+ }
+ 
+ static const struct rtdm_device __initdata device_tmpl = {
+@@ -1294,7 +1282,7 @@
+ 	version = __raw_readl(port->port.membase + HW_UARTAPP_VERSION);
+ 	printk(
+ 		KERN_INFO
+-		"%s on Xenomai RTDM MXS APPUART%d (v%d.%d.%d): membase=0x%p mapbase=%#x irq=%d uartclk=%d\n",
++        "%s on Xenomai RTDM MXS APPUART%d (v%d.%d.%d ftm): membase=0x%p mapbase=%#x irq=%d uartclk=%d\n",
+ 		dev->device_name,
+ 		pdev->id,
+ 		(version >> 24) & 0xFF,

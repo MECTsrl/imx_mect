@@ -159,7 +159,7 @@ void mac_sn::on_pushButtonSN_2_clicked()
 
 void mac_sn::on_pushButtonSN_3_clicked()
 {
-    int value  = 0, min = 0, max = 10000;
+    int value  = 0, min = 0, max = 9999;
     numpad * dk = new numpad(&value, ui->pushButtonSN_3->text().toInt(), min, max);
     dk->showFullScreen();
 
@@ -172,7 +172,7 @@ void mac_sn::on_pushButtonSN_3_clicked()
             return;
         }
         char valuestr[10];
-        sprintf (valuestr, "%.2d", value);
+        sprintf (valuestr, "%.4d", value);
         ui->pushButtonSN_3->setText(valuestr);
     }
     else
@@ -181,7 +181,6 @@ void mac_sn::on_pushButtonSN_3_clicked()
         return;
     }
 }
-
 
 void mac_sn::on_pushButtonMACeth0_1_clicked()
 {

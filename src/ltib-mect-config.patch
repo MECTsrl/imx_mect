@@ -19838,7 +19838,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_ED                           = ed
  PKG_KBD                          = kbd
  PKG_E2FSPROGS                    = e2fsprogs
-@@ -92,19 +91,24 @@
+@@ -92,19 +91,23 @@
  PKG_NETPERF                      = netperf
  PKG_IPROUTE                      = iproute
  PKG_BOA                          = boa
@@ -19849,7 +19849,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_DROPBEAR                     = dropbear
  PKG_OPENSSL                      = openssl
  PKG_OPENSSH                      = openssh
-+PKG_OPENVPN                      = openvpn
 +PKG_SFTP_SERVER                  = sftp-server
  PKG_IPSEC_TOOLS                  = ipsec-tools
  PKG_IPSECADM                     = ipsecadm
@@ -19863,6 +19862,14 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_I2C_TOOLS                    = i2c-tools
  PKG_WATCHDOG                     = watchdog
  PKG_DSPI                         = dspi
+@@ -127,6 +130,7 @@
+ PKG_GEN_INIT_CPIO                = gen_init_cpio
+ PKG_U_BOOT_TOOLS                 = u-boot-tools
+ PKG_LZO                          = lzo
++PKG_OPENVPN                      = openvpn
+ PKG_MTD_UTILS                    = mtd-utils
+ PKG_RPM                          = rpm
+ PKG_RSYNC                        = rsync
 @@ -407,6 +411,17 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11

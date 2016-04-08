@@ -14,31 +14,31 @@ Prefix          : %{pfx}/local
 AutoReqProv     : no
 
 
-# TPAC1007_3
+# TPAC1007_03
 #
-%Package lfs-TPAC1007_3
+%Package lfs-TPAC1007_03
 Summary         : Trimmed %{name} to just the run-times needed for local file system.
 Vendor          : MECT s.r.l.
 Packager        : Mihai Lazarescu
 Group           : Applications/System
 AutoReqProv     : no
-Prefix          : %{pfx}/TPAC1007_3/local
+Prefix          : %{pfx}/TPAC1007_03/local
 
-%Description lfs-TPAC1007_3
+%Description lfs-TPAC1007_03
 %{name} package contents limited to just the run-times needed
 on the target.
 
-# TPAC1007_4AA
+# TPAC1007_04_AA
 #
-%Package lfs-TPAC1007_4AA
+%Package lfs-TPAC1007_04_AA
 Summary         : Trimmed %{name} to just the run-times needed for local file system.
 Vendor          : MECT s.r.l.
 Packager        : Mihai Lazarescu
 Group           : Applications/System
 AutoReqProv     : no
-Prefix          : %{pfx}/TPAC1007_4AA/local
+Prefix          : %{pfx}/TPAC1007_04_AA/local
 
-%Description lfs-TPAC1007_4AA
+%Description lfs-TPAC1007_04_AA
 %{name} package contents limited to just the run-times needed
 on the target.
 
@@ -83,9 +83,9 @@ LC_ALL=C
 export LC_ALL
 LC_ALL=C
 
-# TPAC1007_3
+# TPAC1007_03
 #
-d=TPAC1007/Local_IO_HMI
+d=TPAC1007_03/Local_IO_HMI
 if test -d $d; then
 	cd $d
 
@@ -100,7 +100,7 @@ if test -d $d; then
 	cd -
 fi
 
-# TPAC1007_4AA
+# TPAC1007_04_AA
 #
 d=TPAC1007_04_AA/Local_IO_HMI
 if test -d $d; then
@@ -157,32 +157,32 @@ LC_ALL=C
 
 rm -rf $RPM_BUILD_ROOT
 
-# TPAC1007_3
+# TPAC1007_03
 #
-d=TPAC1007/Local_IO_HMI
+d=TPAC1007_03/Local_IO_HMI
 if test -d $d; then
 	cd $d
 
-	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/root/hmi
-	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/etc/sysconfig/Crosstable.csv
-	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/etc/sysconfig/img/splash.png
-	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/etc/sysconfig/system.ini
-	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_3/local/data/customtrend/trend1.csv
+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/root/hmi
+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/etc/sysconfig/Crosstable.csv
+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/etc/sysconfig/img/splash.png
+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/etc/sysconfig/system.ini
+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/data/customtrend/trend1.csv
 
 	cd -
 fi
 
-# TPAC1007_4AA
+# TPAC1007_04_AA
 #
 d=TPAC1007_04_AA/Local_IO_HMI
 if test -d $d; then
 	cd $d
 
-	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/root/hmi
-	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/etc/sysconfig/Crosstable.csv
-	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/etc/sysconfig/img/splash.png
-	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/etc/sysconfig/system.ini
-	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_4AA/local/data/customtrend/trend1.csv
+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AA/local/root/hmi
+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AA/local/etc/sysconfig/Crosstable.csv
+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AA/local/etc/sysconfig/img/splash.png
+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AA/local/etc/sysconfig/system.ini
+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AA/local/data/customtrend/trend1.csv
 
 	cd -
 fi
@@ -226,21 +226,21 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 
-%files lfs-TPAC1007_3
+%files lfs-TPAC1007_03
 %defattr(-,root,root)
-%{pfx}/TPAC1007_3/local/root/hmi
-%{pfx}/TPAC1007_3/local/etc/sysconfig/Crosstable.csv
-%{pfx}/TPAC1007_3/local/etc/sysconfig/img/splash.png
-%{pfx}/TPAC1007_3/local/etc/sysconfig/system.ini
-%{pfx}/TPAC1007_3/local/data/customtrend/trend1.csv
+%{pfx}/TPAC1007_03/local/root/hmi
+%{pfx}/TPAC1007_03/local/etc/sysconfig/Crosstable.csv
+%{pfx}/TPAC1007_03/local/etc/sysconfig/img/splash.png
+%{pfx}/TPAC1007_03/local/etc/sysconfig/system.ini
+%{pfx}/TPAC1007_03/local/data/customtrend/trend1.csv
 
-%files lfs-TPAC1007_4AA
+%files lfs-TPAC1007_04_AA
 %defattr(-,root,root)
-%{pfx}/TPAC1007_4AA/local/root/hmi
-%{pfx}/TPAC1007_4AA/local/etc/sysconfig/Crosstable.csv
-%{pfx}/TPAC1007_4AA/local/etc/sysconfig/img/splash.png
-%{pfx}/TPAC1007_4AA/local/etc/sysconfig/system.ini
-%{pfx}/TPAC1007_4AA/local/data/customtrend/trend1.csv
+%{pfx}/TPAC1007_04_AA/local/root/hmi
+%{pfx}/TPAC1007_04_AA/local/etc/sysconfig/Crosstable.csv
+%{pfx}/TPAC1007_04_AA/local/etc/sysconfig/img/splash.png
+%{pfx}/TPAC1007_04_AA/local/etc/sysconfig/system.ini
+%{pfx}/TPAC1007_04_AA/local/data/customtrend/trend1.csv
 
 %files lfs-TPAC1006
 %defattr(-,root,root)

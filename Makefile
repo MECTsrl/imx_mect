@@ -16,13 +16,13 @@ export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc21
 # git branch and tag for the mect_apps project
 MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to skip tag checkout
-export MECT_BUILD_APPSCRT_TAG := v2.0beta3
+export MECT_BUILD_APPSCRT_TAG := 0.0
 
 # Mandatory prefix for all target device names.
 MECT_TARGET_PREFIX := MECT_
 
 # Name of the default target device image that is part of the default build.
-MECT_DEFAULT_IMAGE := TPAC1007_4AA
+MECT_DEFAULT_IMAGE := TPAC1007_04_AA
 
 # Qt and related versions
 MECT_QT_VERSION := 4.8.5
@@ -130,7 +130,7 @@ MECT_RFSPKG_USBSERIAL_SIEMENS_MPI := kernel-rfs-dev-usbserial-siemens_mpi-2.6.35
 MECT_RFSPKG_USBSERIAL_SIERRA := kernel-rfs-dev-usbserial-sierra-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
 MECT_RFSPKG_USBSERIAL_SPCP8X5 := kernel-rfs-dev-usbserial-spcp8x5-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
 MECT_RFSPKG_USBSERIAL_SYMBOLSERIAL := kernel-rfs-dev-usbserial-symbolserial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_TI_3410_5052 := kernel-rfs-dev-usbserial-ti_3410_5052-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_TI_03410_5052 := kernel-rfs-dev-usbserial-ti_03410_5052-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
 MECT_RFSPKG_USBSERIAL_VISOR := kernel-rfs-dev-usbserial-visor-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
 MECT_RFSPKG_USBSERIAL_VIVOPAY := kernel-rfs-dev-usbserial-vivopay-serial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
 MECT_RFSPKG_USBSERIAL_WHITEHEAT := kernel-rfs-dev-usbserial-whiteheat-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
@@ -517,9 +517,9 @@ MECT_DEFAULT_IMAGES := \
 	TP1043_485 \
 	TP1057 \
 	TP1070 \
-	TPAC1007_3 \
-	TPAC1007_4AA \
-	TPAC1007_4AB \
+	TPAC1007_03 \
+	TPAC1007_04_AA \
+	TPAC1007_04_AB \
 
 ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 MECT_DEFAULT_IMAGES += \
@@ -555,9 +555,9 @@ include targets/Makefile-TP1070_CAN.in
 include targets/Makefile-TPAC1006.in
 include targets/Makefile-TPAC1006_GSM.in
 include targets/Makefile-TPAC1006_HR.in
-include targets/Makefile-TPAC1007_3.in
-include targets/Makefile-TPAC1007_4AA.in
-include targets/Makefile-TPAC1007_4AB.in
+include targets/Makefile-TPAC1007_03.in
+include targets/Makefile-TPAC1007_04_AA.in
+include targets/Makefile-TPAC1007_04_AB.in
 include targets/Makefile-TPAC1008.in
 include targets/Makefile-TPLC100.in
 include targets/Makefile-TPLC150.in

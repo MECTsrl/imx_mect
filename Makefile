@@ -529,7 +529,7 @@ MECT_DEFAULT_IMAGES += \
 	TPAC1006 \
 	TPAC1006_GSM \
 	TPAC1006_HR \
-	TPAC1008 \
+	TPAC1008_01 \
 	TPLC100 \
 	TPLC150 \
 
@@ -558,7 +558,7 @@ include targets/Makefile-TPAC1006_HR.in
 include targets/Makefile-TPAC1007_03.in
 include targets/Makefile-TPAC1007_04_AA.in
 include targets/Makefile-TPAC1007_04_AB.in
-include targets/Makefile-TPAC1008.in
+include targets/Makefile-TPAC1008_01.in
 include targets/Makefile-TPLC100.in
 include targets/Makefile-TPLC150.in
 

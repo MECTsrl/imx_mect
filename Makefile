@@ -520,6 +520,7 @@ MECT_DEFAULT_IMAGES := \
 	TPAC1007_03 \
 	TPAC1007_04_AA \
 	TPAC1007_04_AB \
+	TPAC1007_04_AC \
 
 ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 MECT_DEFAULT_IMAGES += \
@@ -558,6 +559,7 @@ include targets/Makefile-TPAC1006_HR.in
 include targets/Makefile-TPAC1007_03.in
 include targets/Makefile-TPAC1007_04_AA.in
 include targets/Makefile-TPAC1007_04_AB.in
+include targets/Makefile-TPAC1007_04_AC.in
 include targets/Makefile-TPAC1008_01.in
 include targets/Makefile-TPLC100.in
 include targets/Makefile-TPLC150.in

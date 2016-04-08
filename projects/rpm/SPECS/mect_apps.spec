@@ -42,6 +42,34 @@ Prefix          : %{pfx}/TPAC1007_04_AA/local
 %{name} package contents limited to just the run-times needed
 on the target.
 
+# TPAC1007_04_AB
+#
+%Package lfs-TPAC1007_04_AB
+Summary         : Trimmed %{name} to just the run-times needed for local file system.
+Vendor          : MECT s.r.l.
+Packager        : Mihai Lazarescu
+Group           : Applications/System
+AutoReqProv     : no
+Prefix          : %{pfx}/TPAC1007_04_AB/local
+
+%Description lfs-TPAC1007_04_AB
+%{name} package contents limited to just the run-times needed
+on the target.
+
+# TPAC1007_04_AC
+#
+%Package lfs-TPAC1007_04_AC
+Summary         : Trimmed %{name} to just the run-times needed for local file system.
+Vendor          : MECT s.r.l.
+Packager        : Mihai Lazarescu
+Group           : Applications/System
+AutoReqProv     : no
+Prefix          : %{pfx}/TPAC1007_04_AC/local
+
+%Description lfs-TPAC1007_04_AC
+%{name} package contents limited to just the run-times needed
+on the target.
+
 # TPAC1006
 #
 %Package lfs-TPAC1006
@@ -103,6 +131,40 @@ fi
 # TPAC1007_04_AA
 #
 d=TPAC1007_04_AA/Local_IO_HMI
+if test -d $d; then
+	cd $d
+
+	%{MECT_QMAKE} \
+		-spec qws/linux-g++-mx \
+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
+		"DEFINES+=TARGET_ARM" \
+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
+		Local_IO_HMI.pro
+	make -j`grep -c ^processor /proc/cpuinfo`
+
+	cd -
+fi
+
+# TPAC1007_04_AB
+#
+d=TPAC1007_04_AB/Local_IO_HMI
+if test -d $d; then
+	cd $d
+
+	%{MECT_QMAKE} \
+		-spec qws/linux-g++-mx \
+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
+		"DEFINES+=TARGET_ARM" \
+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
+		Local_IO_HMI.pro
+	make -j`grep -c ^processor /proc/cpuinfo`
+
+	cd -
+fi
+
+# TPAC1007_04_AC
+#
+d=TPAC1007_04_AC/Local_IO_HMI
 if test -d $d; then
 	cd $d
 
@@ -187,6 +249,36 @@ if test -d $d; then
 	cd -
 fi
 
+# TPAC1007_04_AB
+#
+d=TPAC1007_04_AB/Local_IO_HMI
+if test -d $d; then
+	cd $d
+
+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AB/local/root/hmi
+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AB/local/etc/sysconfig/Crosstable.csv
+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AB/local/etc/sysconfig/img/splash.png
+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AB/local/etc/sysconfig/system.ini
+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AB/local/data/customtrend/trend1.csv
+
+	cd -
+fi
+
+# TPAC1007_04_AC
+#
+d=TPAC1007_04_AC/Local_IO_HMI
+if test -d $d; then
+	cd $d
+
+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/root/hmi
+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/etc/sysconfig/Crosstable.csv
+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/etc/sysconfig/img/splash.png
+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/etc/sysconfig/system.ini
+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/data/customtrend/trend1.csv
+
+	cd -
+fi
+
 # TPAC1006
 #
 d=TPAC1006/Local_IO_HMI
@@ -241,6 +333,22 @@ rm -rf $RPM_BUILD_ROOT
 %{pfx}/TPAC1007_04_AA/local/etc/sysconfig/img/splash.png
 %{pfx}/TPAC1007_04_AA/local/etc/sysconfig/system.ini
 %{pfx}/TPAC1007_04_AA/local/data/customtrend/trend1.csv
+
+%files lfs-TPAC1007_04_AB
+%defattr(-,root,root)
+%{pfx}/TPAC1007_04_AB/local/root/hmi
+%{pfx}/TPAC1007_04_AB/local/etc/sysconfig/Crosstable.csv
+%{pfx}/TPAC1007_04_AB/local/etc/sysconfig/img/splash.png
+%{pfx}/TPAC1007_04_AB/local/etc/sysconfig/system.ini
+%{pfx}/TPAC1007_04_AB/local/data/customtrend/trend1.csv
+
+%files lfs-TPAC1007_04_AC
+%defattr(-,root,root)
+%{pfx}/TPAC1007_04_AC/local/root/hmi
+%{pfx}/TPAC1007_04_AC/local/etc/sysconfig/Crosstable.csv
+%{pfx}/TPAC1007_04_AC/local/etc/sysconfig/img/splash.png
+%{pfx}/TPAC1007_04_AC/local/etc/sysconfig/system.ini
+%{pfx}/TPAC1007_04_AC/local/data/customtrend/trend1.csv
 
 %files lfs-TPAC1006
 %defattr(-,root,root)

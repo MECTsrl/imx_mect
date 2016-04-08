@@ -346,7 +346,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boa/boa.spec ltib/dist/lfs-5.1/boa/boa.spec
 --- ltib.reference/dist/lfs-5.1/boa/boa.spec
 +++ ltib/dist/lfs-5.1/boa/boa.spec
-@@ -11,48 +11,82 @@
+@@ -11,48 +11,83 @@
  Packager        : Stuart Hughes
  Group           : System/Servers
  Source          : %{name}-%{version}.tar.gz
@@ -420,6 +420,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -    m,^ScriptAlias, &&  do { $_ = "ScriptAlias /cgi-bin/ /var/www/cgi-bin/\n"};
 -    print;
 -    ' $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/conf/boa.conf
++
 +mkdir -p $RPM_BUILD_ROOT%{pfx}/%{base}/etc/conf
 +mkdir -p $RPM_BUILD_ROOT%{pfx}/%{base}/var/log/boa
 +mkdir -p $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin
@@ -840,7 +841,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +export MECT_RFSDIR
-+MECT_RFSDIR=`pwd`/../../../rootfs
++MECT_RFSDIR=$DEV_IMAGE
 +
 +test -r Makefile && make clean
 +make -j1
@@ -2868,7 +2869,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +export MECT_RFSDIR
-+MECT_RFSDIR=`pwd`/../../../rootfs
++MECT_RFSDIR=$DEV_IMAGE
 +
 +test -r Makefile && make clean
 +/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx qt_atcm.pro
@@ -3378,6 +3379,193 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/openssl/openssl.spec ltib/dist/lfs-5.1/openssl/openssl.spec
+--- ltib.reference/dist/lfs-5.1/openssl/openssl.spec
++++ ltib/dist/lfs-5.1/openssl/openssl.spec
+@@ -3,7 +3,7 @@
+ 
+ Summary         : Secure Sockets Layer toolkit
+ Name            : openssl
+-Version         : 1.0.1c
++Version         : 1.0.1s
+ Release         : 1
+ License         : BSD style
+ Vendor          : Freescale
+@@ -12,14 +12,34 @@
+ Source          : %{name}-%{version}.tar.gz
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed %{name} for root file system requirements.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System Environment/Libraries
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents limited to just the files
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup 
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ case $ENDIAN in
+     big)
+         XTRA_OPTS="-DB_ENDIAN"
+@@ -43,10 +63,14 @@
+        ;;
+ esac
+ ./Configure $OSSL_ARCH --prefix=%{_prefix} --install_prefix=$RPM_BUILD_ROOT/%{pfx} shared no-asm $XTRA_OPTS
+-make -j1
++make -j`grep -c ^processor /proc/cpuinfo`
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
++
+ #SHLIB_VERSION_NUMBER=1.0.0
+ #for i in lib %{_prefix}/lib %{_prefix}/sbin %{_prefix}/include
+ #do
+@@ -64,11 +88,46 @@
+ #mkdir $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/pkgconfig
+ #cp openssl.pc $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/pkgconfig/
+ 
+-make install -j1
++make -j1 install_sw
+ 
+ %Clean
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ 
+ %Files
+ %defattr(-,root,root)
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/lib/engines/lib4758cca.so
++%{pfx}/usr/lib/engines/libaep.so
++%{pfx}/usr/lib/engines/libatalla.so
++%{pfx}/usr/lib/engines/libcapi.so
++%{pfx}/usr/lib/engines/libchil.so
++%{pfx}/usr/lib/engines/libcswift.so
++%{pfx}/usr/lib/engines/libgmp.so
++%{pfx}/usr/lib/engines/libgost.so
++%{pfx}/usr/lib/engines/libnuron.so
++%{pfx}/usr/lib/engines/libpadlock.so
++%{pfx}/usr/lib/engines/libsureware.so
++%{pfx}/usr/lib/engines/libubsec.so
++%{pfx}/usr/lib/libcrypto.so
++%{pfx}/usr/lib/libcrypto.so.1.0.0
++%{pfx}/usr/lib/libssl.so
++%{pfx}/usr/lib/libssl.so.1.0.0
++%{pfx}/usr/lib/pkgconfig/libcrypto.pc
++%{pfx}/usr/lib/pkgconfig/libssl.pc
++%{pfx}/usr/lib/pkgconfig/openssl.pc
++%{pfx}/usr/ssl/certs
++%{pfx}/usr/ssl/misc/CA.pl
++%{pfx}/usr/ssl/misc/CA.sh
++%{pfx}/usr/ssl/misc/c_hash
++%{pfx}/usr/ssl/misc/c_info
++%{pfx}/usr/ssl/misc/c_issuer
++%{pfx}/usr/ssl/misc/c_name
++%{pfx}/usr/ssl/misc/tsget
++%{pfx}/usr/ssl/openssl.cnf
++%{pfx}/usr/ssl/private
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/openvpn/openvpn.spec ltib/dist/lfs-5.1/openvpn/openvpn.spec
+--- ltib.reference/dist/lfs-5.1/openvpn/openvpn.spec
++++ ltib/dist/lfs-5.1/openvpn/openvpn.spec
+@@ -0,0 +1,72 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : A full-featured SSL VPN solution
++Name            : openvpn
++Version         : 2.3.10
++Release         : 1
++License         : GPLv2
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/Internet
++Source          : %{name}-%{version}.tar.xz
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed %{name} for root file system requirements.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/Internet
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents limited to just the files
++needed at run time on the target.
++
++
++%Description
++OpenVPN is a robust and highly flexible tunneling application
++that uses all of the encryption, authentication, and
++certification features of the OpenSSL library to securely
++tunnel IP networks over a single UDP or TCP port.  It can
++use the Marcus Franz Xaver Johannes Oberhumer's LZO library
++for compression.
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++%setup 
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --disable-plugin-auth-pam
++
++make -j1
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++%Files
++%defattr(-,root,root)
++%{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/sbin/openvpn
++%{pfx}/usr/lib/openvpn/plugins/openvpn-plugin-down-root.so
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec
 --- ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec
 +++ ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec
@@ -4211,27 +4399,20 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
 --- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec
 +++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
-@@ -0,0 +1,119 @@
+@@ -0,0 +1,67 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
++%define aname openssh
++%define avers 4.3p2
 +
-+Summary         : Just the sftp-server executable from OpenSSH
++Summary         : sftp-server using SSH protocol versions 1 and 2
 +Name            : sftp-server
-+Version         : 4.3p2
++Version         : %{avers}
 +Release         : 1
 +License         : BSD
 +Vendor          : Avid Technology
 +Packager        : Fritz Mueller
 +Group           : Applications/Internet
-+Source          : openssh-4.3p2.tar.gz
-+Source1         : openssl-0.9.8g.tar.gz
-+Patch0          : openssl-md4_size_t.patch
-+Patch1          : openssl-md5_size_t.patch
-+Patch2          : openssl-sha_size_t.patch
-+Patch3          : openssl-0.9.8g-lib64.patch
-+Patch4          : openssl-0.9.8g-ripemd_size_t.patch
-+Patch5          : openssl-0.9.8g-sec.patch
-+Patch6          : openssl-0.9.8g-cryptodev.patch
-+Patch7          : openssh-4.3p2-static-sftp-server.patch
++Source          : %{aname}-%{avers}.tar.gz
 +BuildRoot       : %{_tmppath}/%{name}
 +Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -4256,52 +4437,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup -T -c
-+%setup -T -D -a 0
-+%setup -T -D -a 1
-+%patch7 -p1
-+cd openssl-0.9.8g
-+%patch0 -p1
-+%patch1 -p1
-+%patch2 -p1
-+%patch3 -p1
-+%patch4 -p1
-+%patch5 -p1
-+%patch6 -p1
-+
++%setup -n %{aname}-%{avers}
 +
 +%Build
 +export LC_ALL
 +LC_ALL=C
 +
-+cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g
-+case $ENDIAN in
-+    big)
-+        XTRA_OPTS="-DB_ENDIAN"
-+        ;;
-+    little)
-+        XTRA_OPTS="-DL_ENDIAN"
-+        ;;
-+    *)
-+        echo "Please set the ENDIAN environment variable to big|little"
-+        ;;
-+esac
-+case "$LINTARCH" in
-+    arm|m68k*)
-+       OSSL_ARCH="linux-generic32"
-+       ;;
-+    powerpc*)
-+       OSSL_ARCH="linux-ppc"
-+       ;;
-+    *)
-+       OSSL_ARCH="linux-$LINTARCH"
-+       ;;
-+esac
-+./Configure $OSSL_ARCH --prefix=%{_prefix} shared no-asm $XTRA_OPTS --with-cryptodev 
-+make -j`grep -c ^processor /proc/cpuinfo` build_crypto
-+
-+cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssh-4.3p2
-+LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-zlib=$DEV_IMAGE/usr --with-ssl-dir=$RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g --with-ldflags="-L$RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g" --config-cache
++./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-ldflags=-L$DEV_IMAGE/usr/lib
 +make -j`grep -c ^processor /proc/cpuinfo` sysconfdir=%{_sysconfdir}/ssh sftp-server
 +
 +%Install
@@ -4309,15 +4451,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +rm -rf $RPM_BUILD_ROOT
-+cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssh-4.3p2
-+make -j1 install-sftp-server sysconfdir=%{_sysconfdir}/ssh DESTDIR=$RPM_BUILD_ROOT/%{pfx}
-+cd -
 +
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed -n '
-+    p;
-+' all_files.lst > rfs_files.lst
++make -j1 DESTDIR=$RPM_BUILD_ROOT/%{pfx} sysconfdir=%{_sysconfdir}/ssh install
 +
 +%Clean
 +export LC_ALL
@@ -4325,12 +4460,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +rm -rf $RPM_BUILD_ROOT
 +
-+
-+%Files -f all_files.lst
++%Files
 +%defattr(-,root,root)
++%{pfx}/*
 +
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/libexec/sftp-server
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec
 +++ ltib/dist/lfs-5.1/skell/skell.spec

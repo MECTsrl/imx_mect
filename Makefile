@@ -174,6 +174,7 @@ MECT_COMMON_RFSPKGS := \
 	mtd-utils-rfs-201006-1.$(MECT_TARGET_ARCH).rpm \
 	mysql-rfs-4.1.12-0.$(MECT_TARGET_ARCH).rpm \
 	ncurses-rfs-5.3-1.$(MECT_TARGET_ARCH).rpm \
+	openvpn-rfs-2.3.10-1.$(MECT_TARGET_ARCH).rpm \
 	ppp-rfs-2.4.4-1.$(MECT_TARGET_ARCH).rpm \
 	qt-embedded-rfs-4.8.5-1.$(MECT_TARGET_ARCH).rpm \
 	qwt-rfs-6.1-1_multiaxes.$(MECT_TARGET_ARCH).rpm \
@@ -420,7 +421,9 @@ build: ltib_build projects_build
 .PHONY: ltib_build
 ltib_build: hosttools
 	sudo rm -rf $(MECT_FSDIR)/rootfs
-	sudo mkdir -p $(MECT_FSDIR)/rootfs
+	mkdir -p $(MECT_FSDIR)/rootfs
+	sudo rm -rf $(MECT_FSDIR)/rpm/BUILD
+	mkdir -p $(MECT_FSDIR)/rpm/BUILD
 	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') $(MECT_FSDIR)
 	cd $(MECT_LTIBDIR); PATH=/usr/lib/ccache:$$PATH GIT_AUTHOR_NAME=$(MECT_USER_NAME) GIT_AUTHOR_EMAIL=$(MECT_TARGET_UNIX_NAME)@$(MECT_HOST_NAME) GIT_COMMITTER_NAME=$(MECT_USER_NAME) GIT_COMMITTER_EMAIL=$(MECT_TARGET_UNIX_NAME)@$(MECT_HOST_NAME) ./ltib
 
@@ -500,7 +503,7 @@ spec_setup: MECT_LTIBSPECDIR := $(MECT_LTIBDIR)/dist/lfs-5.1
 spec_setup:
 	for s in mect_plugins/mect_plugins.spec; do \
 		test -w $(MECT_LTIBSPECDIR)/$$s; \
-		sed -i 's/^\s*Version\s*:.*/Version: $(MECT_BUILD_PLUGINSCRT_TAG)/I' $(MECT_LTIBSPECDIR)/$$s; \
+		sed -i 's/^\s*\(Version\s*:\).*/\1 $(MECT_BUILD_PLUGINSCRT_TAG)/I' $(MECT_LTIBSPECDIR)/$$s; \
 	done
 
 

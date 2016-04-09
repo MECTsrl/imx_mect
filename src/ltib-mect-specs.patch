@@ -3382,7 +3382,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/openssl/openssl.spec ltib/dist/lfs-5.1/openssl/openssl.spec
 --- ltib.reference/dist/lfs-5.1/openssl/openssl.spec
 +++ ltib/dist/lfs-5.1/openssl/openssl.spec
-@@ -3,7 +3,7 @@
+@@ -3,23 +3,46 @@
  
  Summary         : Secure Sockets Layer toolkit
  Name            : openssl
@@ -3391,8 +3391,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  Release         : 1
  License         : BSD style
  Vendor          : Freescale
-@@ -12,14 +12,34 @@
+ Packager        : Stuart Hughes
+ Group           : System Environment/Libraries
  Source          : %{name}-%{version}.tar.gz
++Patch1          : openssl-1.0.1s-fix_parallel_build.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -3419,6 +3421,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  %setup 
  
++%patch1 -p1
++
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -3426,9 +3430,16 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  case $ENDIAN in
      big)
          XTRA_OPTS="-DB_ENDIAN"
-@@ -43,10 +63,14 @@
+@@ -42,33 +65,51 @@
+        OSSL_ARCH="linux-$LINTARCH"
         ;;
  esac
++
++export TARGETMACH
++export TARGETMACH=$CFGHOST
++export BUILDMACH
++export BUILDMACH=%{_build}
++
  ./Configure $OSSL_ARCH --prefix=%{_prefix} --install_prefix=$RPM_BUILD_ROOT/%{pfx} shared no-asm $XTRA_OPTS
 -make -j1
 +make -j`grep -c ^processor /proc/cpuinfo`
@@ -3438,16 +3449,25 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
  rm -rf $RPM_BUILD_ROOT
-+
- #SHLIB_VERSION_NUMBER=1.0.0
- #for i in lib %{_prefix}/lib %{_prefix}/sbin %{_prefix}/include
- #do
-@@ -64,11 +88,46 @@
- #mkdir $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/pkgconfig
- #cp openssl.pc $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/pkgconfig/
+-#SHLIB_VERSION_NUMBER=1.0.0
+-#for i in lib %{_prefix}/lib %{_prefix}/sbin %{_prefix}/include
+-#do
+-#    mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{base}/$i
+-#done
+-#VER="`perl -e '$_  = shift; chop; print' %{version}`"
+-#for i in libcrypto.so libssl.so
+-#do 
+-#    cp -a $i.$SHLIB_VERSION_NUMBER $RPM_BUILD_ROOT/%{pfx}/%{base}/lib/
+-#    install -d $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib
+-#    ln -s ../../lib/$i.$SHLIB_VERSION_NUMBER $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/$i
+-#done
+-#cp -a apps/openssl $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin
+-#cp -Lr include/openssl $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/include
+-#mkdir $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/pkgconfig
+-#cp openssl.pc $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/pkgconfig/
  
 -make install -j1
-+make -j1 install_sw
++make install_sw
  
  %Clean
 +export LC_ALL
@@ -3477,17 +3497,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/usr/lib/libcrypto.so.1.0.0
 +%{pfx}/usr/lib/libssl.so
 +%{pfx}/usr/lib/libssl.so.1.0.0
-+%{pfx}/usr/lib/pkgconfig/libcrypto.pc
-+%{pfx}/usr/lib/pkgconfig/libssl.pc
-+%{pfx}/usr/lib/pkgconfig/openssl.pc
 +%{pfx}/usr/ssl/certs
-+%{pfx}/usr/ssl/misc/CA.pl
-+%{pfx}/usr/ssl/misc/CA.sh
-+%{pfx}/usr/ssl/misc/c_hash
-+%{pfx}/usr/ssl/misc/c_info
-+%{pfx}/usr/ssl/misc/c_issuer
-+%{pfx}/usr/ssl/misc/c_name
-+%{pfx}/usr/ssl/misc/tsget
 +%{pfx}/usr/ssl/openssl.cnf
 +%{pfx}/usr/ssl/private
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/openvpn/openvpn.spec ltib/dist/lfs-5.1/openvpn/openvpn.spec

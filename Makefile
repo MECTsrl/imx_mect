@@ -154,7 +154,7 @@ MECT_COMMON_RFSPKGS := \
 	cantest-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	cgic_work-rfs-0.0-1.$(MECT_TARGET_ARCH).rpm \
 	dhcp-rfs-3.0.3b1-1.$(MECT_TARGET_ARCH).rpm \
-	dropbear-rfs-0.52-1.$(MECT_TARGET_ARCH).rpm \
+	dropbear-rfs-2016.73-1.$(MECT_TARGET_ARCH).rpm \
 	e2fsprogs-rfs-1.41.4-1.$(MECT_TARGET_ARCH).rpm \
 	expat-rfs-1.95.8-1.$(MECT_TARGET_ARCH).rpm \
 	fontconfig-rfs-2.4.2-1.$(MECT_TARGET_ARCH).rpm \

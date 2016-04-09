@@ -1004,9 +1004,19 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec ltib/dist/lfs-5.1/dropbear/dropbear.spec
 --- ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec
 +++ ltib/dist/lfs-5.1/dropbear/dropbear.spec
-@@ -10,16 +10,37 @@
+@@ -2,24 +2,45 @@
+ 
+ Summary         : Dropbear SSH server and client (embedded)
+ Name            : dropbear
+-Version         : 0.52
++Version         : 2016.73
+ Release         : 1
+ License         : MIT
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
  Group           : Applications/Internet
- Source          : %{name}-%{version}.tar.gz
+-Source          : %{name}-%{version}.tar.gz
++Source          : %{name}-%{version}.tar.bz2
  Source1         : dropbear_hackable_rsa_host_key
 +Source2         : dropbear_rsa_host_key
  BuildRoot       : %{_tmppath}/%{name}
@@ -1052,17 +1062,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  for i in bin sbin
  do
-@@ -54,9 +78,23 @@
+@@ -54,9 +78,26 @@
      cp %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/etc/dropbear/dropbear_rsa_host_key
  fi
  
 +cp %{SOURCE2} $RPM_BUILD_ROOT%{pfx}/etc/dropbear/dropbear_rsa_host_key
-+
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed -n '
-+    p
-+' all_files.lst > rfs_files.lst
 +
  %Clean
 +export LC_ALL
@@ -1070,14 +1074,21 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
 +
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%dir %{pfx}/etc/dropbear
++%{pfx}/etc/dropbear/dropbear_rsa_host_key
++%{pfx}/usr/bin/dbclient
++%{pfx}/usr/bin/dropbearconvert
++%{pfx}/usr/bin/dropbearkey
++%{pfx}/usr/bin/scp
++%{pfx}/usr/sbin/dropbear
++%{pfx}/usr/sbin/dropbearmulti
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 --- ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 +++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec

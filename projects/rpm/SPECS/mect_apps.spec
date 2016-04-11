@@ -290,6 +290,10 @@ if test -d $d; then
 	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/img/splash.png
 	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/system.ini
 	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/data/customtrend/trend1.csv
+	install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/network0.cmg
+	install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/iomap0.cmg
+	install -m644 -D config/network1.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/network1.cmg
+	install -m644 -D config/iomap1.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/iomap1.cmg
 
 	cd -
 fi
@@ -305,6 +309,10 @@ if test -d $d; then
 	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/img/splash.png
 	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/system.ini
 	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/data/customtrend/trend1.csv
+	install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/network0.cmg
+	install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/iomap0.cmg
+	install -m644 -D config/network1.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/network1.cmg
+	install -m644 -D config/iomap1.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/iomap1.cmg
 
 	cd -
 fi
@@ -357,6 +365,10 @@ rm -rf $RPM_BUILD_ROOT
 %{pfx}/TPAC1006/local/etc/sysconfig/img/splash.png
 %{pfx}/TPAC1006/local/etc/sysconfig/system.ini
 %{pfx}/TPAC1006/local/data/customtrend/trend1.csv
+%{pfx}/TPAC1006/local/etc/sysconfig/iomap0.cmg
+%{pfx}/TPAC1006/local/etc/sysconfig/network0.cmg
+%{pfx}/TPAC1006/local/etc/sysconfig/iomap1.cmg
+%{pfx}/TPAC1006/local/etc/sysconfig/network1.cmg
 
 %files lfs-TPAC1008_01
 %defattr(-,root,root)
@@ -365,3 +377,7 @@ rm -rf $RPM_BUILD_ROOT
 %{pfx}/TPAC1008_01/local/etc/sysconfig/img/splash.png
 %{pfx}/TPAC1008_01/local/etc/sysconfig/system.ini
 %{pfx}/TPAC1008_01/local/data/customtrend/trend1.csv
+%{pfx}/TPAC1008_01/local/etc/sysconfig/iomap0.cmg
+%{pfx}/TPAC1008_01/local/etc/sysconfig/network0.cmg
+%{pfx}/TPAC1008_01/local/etc/sysconfig/iomap1.cmg
+%{pfx}/TPAC1008_01/local/etc/sysconfig/network1.cmg

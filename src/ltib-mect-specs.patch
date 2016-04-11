@@ -1001,110 +1001,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
-diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dropbear/dropbear-sha1.spec ltib/dist/lfs-5.1/dropbear/dropbear-sha1.spec
---- ltib.reference/dist/lfs-5.1/dropbear/dropbear-sha1.spec
-+++ ltib/dist/lfs-5.1/dropbear/dropbear-sha1.spec
-@@ -0,0 +1,100 @@
-+%define pfx /opt/freescale/rootfs/%{_target_cpu}
-+
-+Summary         : Dropbear SSH server and client (embedded)
-+Name            : dropbear
-+Version         : 0.52
-+Release         : 1
-+License         : MIT
-+Vendor          : Freescale
-+Packager        : Stuart Hughes
-+Group           : Applications/Internet
-+Source          : %{name}-%{version}.tar.gz
-+Source1         : dropbear_hackable_rsa_host_key
-+Source2         : dropbear_rsa_host_key
-+BuildRoot       : %{_tmppath}/%{name}
-+Prefix          : %{pfx}
-+AutoReqProv     : no
-+
-+
-+%Package rfs
-+Summary         : Trimmed dropbear for root file system requirements.
-+Vendor          : MECT s.r.l.
-+Packager        : Mihai Lazarescu
-+Group           : Applications/Internet
-+AutoReqProv     : no
-+
-+%Description rfs
-+dropbear package contents restricted to just the files that
-+are needed at run time on the target.
-+
-+
-+%Description
-+%{summary}
-+
-+%Prep
-+export LC_ALL
-+LC_ALL=C
-+
-+%setup 
-+
-+%Build
-+export LC_ALL
-+LC_ALL=C
-+
-+if [ "$PKG_DROPBEAR_WANT_URANDOM_DEV" = "y" ]
-+then
-+    perl -pi -e 's,^#define DROPBEAR_RANDOM_DEV.*,#define DROPBEAR_RANDOM_DEV "/dev/urandom",; ' options.h
-+fi
-+if [ "$PKG_DROPBEAR_WANT_NO_REV_DNS" = "y" ]
-+then
-+    perl -pi -e 's,^(#define DO_HOST_LOOKUP),//\1,; ' options.h
-+fi
-+if [ "$PKG_DROPBEAR_WANT_NO_X11FWD" = "y" ]
-+then
-+    perl -pi -e 's,^(#define ENABLE_X11FWD),//\1,; ' options.h
-+fi
-+
-+LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
-+make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp" MULTI=1 SCPPROGRESS=1
-+
-+%Install
-+export LC_ALL
-+LC_ALL=C
-+
-+rm -rf $RPM_BUILD_ROOT
-+for i in bin sbin
-+do
-+    mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/$i
-+done
-+mkdir -p $RPM_BUILD_ROOT/%{pfx}/etc/dropbear
-+cp dropbearmulti $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin/
-+ln -s %{_prefix}/sbin/dropbearmulti $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin/dropbear
-+for i in dbclient dropbearconvert dropbearkey scp
-+do
-+    ln -s %{_prefix}/sbin/dropbearmulti $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/bin/$i
-+done
-+if [ "$PKG_DROPBEAR_WANT_HACKABLE_KEY" = "y" ]; then
-+    mkdir -p $RPM_BUILD_ROOT/%{pfx}/etc/dropbear
-+    cp %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/etc/dropbear/dropbear_rsa_host_key
-+fi
-+
-+cp %{SOURCE2} $RPM_BUILD_ROOT%{pfx}/etc/dropbear/dropbear_rsa_host_key
-+
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed -n '
-+    p
-+' all_files.lst > rfs_files.lst
-+
-+%Clean
-+export LC_ALL
-+LC_ALL=C
-+
-+rm -rf $RPM_BUILD_ROOT
-+
-+
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
-+%defattr(-,root,root)
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec ltib/dist/lfs-5.1/dropbear/dropbear.spec
 --- ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec
 +++ ltib/dist/lfs-5.1/dropbear/dropbear.spec
@@ -4521,6 +4417,128 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server-openssl.spec ltib/dist/lfs-5.1/sftp-server/sftp-server-openssl.spec
+--- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server-openssl.spec
++++ ltib/dist/lfs-5.1/sftp-server/sftp-server-openssl.spec
+@@ -0,0 +1,118 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++%define aname openssh
++%define avers 4.3p2
++
++Summary         : sftp-server using SSH protocol versions 1 and 2
++Name            : sftp-server
++Version         : %{avers}
++Release         : 1
++License         : BSD
++Vendor          : Avid Technology
++Packager        : Fritz Mueller
++Group           : Applications/Internet
++Source          : %{aname}-%{avers}.tar.gz
++Source1         : openssl-0.9.8g.tar.gz
++Patch0          : openssl-md4_size_t.patch
++Patch1          : openssl-md5_size_t.patch
++Patch2          : openssl-sha_size_t.patch
++Patch3          : openssl-0.9.8g-lib64.patch
++Patch4          : openssl-0.9.8g-ripemd_size_t.patch
++Patch5          : openssl-0.9.8g-sec.patch
++Patch6          : openssl-0.9.8g-cryptodev.patch
++Patch7          : openssh-4.3p2-static-sftp-server.patch
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed sftp-server for root file system requirements.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/Internet
++AutoReqProv     : no
++
++%Description rfs
++sftp-server package contents restricted to just the files that
++are needed at run time on the target.
++
++
++%Description
++%{summary}
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++%setup -T -c
++%setup -T -D -a 0
++%setup -T -D -a 1
++%patch7 -p1
++cd openssl-0.9.8g
++%patch0 -p1
++%patch1 -p1
++%patch2 -p1
++%patch3 -p1
++%patch4 -p1
++%patch5 -p1
++%patch6 -p1
++
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g
++case $ENDIAN in
++    big)
++        XTRA_OPTS="-DB_ENDIAN"
++        ;;
++    little)
++        XTRA_OPTS="-DL_ENDIAN"
++        ;;
++    *)
++        echo "Please set the ENDIAN environment variable to big|little"
++        ;;
++esac
++case "$LINTARCH" in
++    arm|m68k*)
++       OSSL_ARCH="linux-generic32"
++       ;;
++    powerpc*)
++       OSSL_ARCH="linux-ppc"
++       ;;
++    *)
++       OSSL_ARCH="linux-$LINTARCH"
++       ;;
++esac
++./Configure $OSSL_ARCH --prefix=%{_prefix} shared no-asm $XTRA_OPTS --with-cryptodev 
++make -j`grep -c ^processor /proc/cpuinfo` build_crypto
++
++cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssh-4.3p2
++LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-zlib=$DEV_IMAGE/usr --with-ssl-dir=$RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g --with-ldflags="-L$RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g" --config-cache
++make -j`grep -c ^processor /proc/cpuinfo` sysconfdir=%{_sysconfdir}/ssh sftp-server
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssh-4.3p2
++make -j1 install-sftp-server sysconfdir=%{_sysconfdir}/ssh DESTDIR=$RPM_BUILD_ROOT/%{pfx}
++cd -
++
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++%Files
++%defattr(-,root,root)
++%{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/libexec/sftp-server
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
 --- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec
 +++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec

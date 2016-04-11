@@ -19846,7 +19846,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_TCP_WRAPPERS                 = tcp_wrappers
  PKG_PORTMAP                      = portmap
  PKG_RNG_TOOLS                    = rng-tools
- PKG_DROPBEAR                     = dropbear
+-PKG_DROPBEAR                     = dropbear
++PKG_DROPBEAR                     = dropbear-sha1
  PKG_OPENSSL                      = openssl
  PKG_OPENSSH                      = openssh
 +PKG_SFTP_SERVER                  = sftp-server

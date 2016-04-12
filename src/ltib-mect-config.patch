@@ -20033,7 +20033,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  endmenu
  
  menu "Qtopia"
-@@ -2767,6 +2828,60 @@
+@@ -2767,6 +2828,67 @@
         Some host tools are not used when building Qtopia within ltib.
         Not building these tools saves time when building.  Select y here
         to enable designer, linguist, and assistant GUI tools.
@@ -20061,6 +20061,13 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +    default y
 +    help
 +        Custom Qt plugins for HMI development.
++
++config PKG_MECT_APPS
++    bool "Default HMI application"
++    depends PKG_QT_EMBEDDED
++    default y
++    help
++        Default HMI application.
 +
 +config PKG_CGIC_WORK
 +    bool "Web-based reporting and config"
@@ -20094,7 +20101,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  menu "Applications"
  config PKG_QTOPIA_WANT_APP_CALCULATOR
-@@ -3346,7 +3461,7 @@
+@@ -3346,7 +3468,7 @@
      bool "totem-pl-parser"
      select PKG_EVOLUTION_DATA_SERVER
      select PKG_GTK2
@@ -20103,7 +20110,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3487,11 +3602,21 @@
+@@ -3487,11 +3609,21 @@
      depends CAP_HAS_MMU
      bool "wireless-tools"
      help
@@ -20126,7 +20133,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_XFSPROGS
      bool "xfsprogs"
      help
-@@ -3862,6 +3987,11 @@
+@@ -3862,6 +3994,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  
@@ -20181,7 +20188,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_MTD_UTILS                    = mtd-utils
  PKG_RPM                          = rpm
  PKG_RSYNC                        = rsync
-@@ -407,6 +411,18 @@
+@@ -407,6 +411,19 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
@@ -20193,6 +20200,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +PKG_LAST_KERNEL_BUILD            = last-kernel-build
 +PKG_WIFI_DRIVERS                 = wifi-drivers
 +PKG_MECT_PLUGINS                 = mect_plugins
++PKG_MECT_APPS                    = mect_apps
 +PKG_CGIC_WORK                    = cgic_work
 +PKG_SDCARD                       = SDcard
 +PKG_SPLASH                       = splash

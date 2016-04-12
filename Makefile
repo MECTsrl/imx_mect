@@ -506,6 +506,10 @@ spec_setup:
 		test -w $(MECT_LTIBSPECDIR)/$$s; \
 		sed -i 's/^\s*\(Version\s*:\).*/\1 $(MECT_BUILD_PLUGINSCRT_TAG)/I' $(MECT_LTIBSPECDIR)/$$s; \
 	done
+	for s in mect_apps/mect_apps.spec; do \
+		test -w $(MECT_LTIBSPECDIR)/$$s; \
+		sed -i 's/^\s*\(Version\s*:\).*/\1 $(MECT_BUILD_APPSCRT_TAG)/I' $(MECT_LTIBSPECDIR)/$$s; \
+	done
 
 
 # Build the default target image.

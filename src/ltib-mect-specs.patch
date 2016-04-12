@@ -346,11 +346,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boa/boa.spec ltib/dist/lfs-5.1/boa/boa.spec
 --- ltib.reference/dist/lfs-5.1/boa/boa.spec
 +++ ltib/dist/lfs-5.1/boa/boa.spec
-@@ -11,48 +11,84 @@
- Packager        : Stuart Hughes
+@@ -12,47 +12,81 @@
  Group           : System/Servers
  Source          : %{name}-%{version}.tar.gz
-+Source1         : boa.conf
  Patch1          : boa-0.94.14rc21-nommu.patch
 +Patch2          : boa-0.94.14rc21-defines.patch
 +Patch3          : boa-0.94.14rc21-1416842658.patch
@@ -430,7 +428,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +install -m 755 src/boa_indexer $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/
 +ln -s conf/boa.conf $RPM_BUILD_ROOT%{pfx}/%{base}/etc/boa.conf
 +ln -s boa $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/boa_d
-+install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{pfx}/%{base}/etc/conf/boa.conf
 +
 +cd %{_builddir}/%{name}-%{version}
 +( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
@@ -865,7 +862,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +%Files
 +%defattr(-,root,root)
-+%[pfx}/*
++%{pfx}/*
 +
 +%Files rfs
 +%defattr(-,root,root)
@@ -4591,8 +4588,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Version         : %{avers}
 +Release         : 1
 +License         : BSD
-+Vendor          : Avid Technology
-+Packager        : Fritz Mueller
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
 +Group           : Applications/Internet
 +Source          : %{aname}-%{avers}.tar.gz
 +BuildRoot       : %{_tmppath}/%{name}
@@ -4652,7 +4649,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec
 +++ ltib/dist/lfs-5.1/skell/skell.spec
-@@ -9,20 +9,98 @@
+@@ -9,20 +9,99 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -4704,6 +4701,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Patch43         : skell-1.18-create_local_and_its_tree.patch
 +Patch44         : skell-1.18-create_local_update.patch
 +Patch45         : skell-1.18-move_etc_profile_to_merge.patch
++Patch46         : skell-1.18-remove_boa_rc_script.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -4755,7 +4753,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +109,89 @@
+@@ -31,24 +110,90 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -4793,6 +4791,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%patch43 -p1
 +%patch44 -p1
 +%patch45 -p1
++%patch46 -p1
  
  %Build
 +export LC_ALL
@@ -4856,6 +4855,81 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -%attr(0666, root, root) %dev(c, 1, 3) %{pfx}/dev/null
 -%attr(0755, root, root) %{pfx}/usr/bin/startx
 -%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/splash/splash.spec ltib/dist/lfs-5.1/splash/splash.spec
+--- ltib.reference/dist/lfs-5.1/splash/splash.spec
++++ ltib/dist/lfs-5.1/splash/splash.spec
+@@ -0,0 +1,71 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : GUI for SD card settings
++Name            : splash
++Version         : 1.0
++Release         : 1
++License         : GPL
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/File
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed %{name} to just runtimes
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/File
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents limited to just the files
++needed at run time on the target system.
++
++
++%Description
++%{summary}
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++%setup -T -c -n SDcard
++rsync -a --inplace ../../../../projects/SDcard/ ./
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++test -r Makefile && make clean
++/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx
++make -j1
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++install -D -m 0755 SDcard $RPM_BUILD_ROOT%{pfx}/usr/bin/SDcard
++
++cd %{_builddir}/%{name}
++( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
++sed -n '
++    p
++' all_files.lst > rfs_files.lst
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++
++%Files -f all_files.lst
++%defattr(-,root,root)
++
++%Files rfs -f rfs_files.lst
++%defattr(-,root,root)
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec ltib/dist/lfs-5.1/sqlite/sqlite.spec
 --- ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec
 +++ ltib/dist/lfs-5.1/sqlite/sqlite.spec

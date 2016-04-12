@@ -17467,7 +17467,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# fly creation of directory indexes can be _slow_.
 +# Comment out to always use DirectoryMaker
 +
-+DirectoryIndex index.html
++DirectoryIndex index.cgi
 +
 +# DirectoryMaker: Name of program used to create a directory listing.
 +# Comment out to disable directory listings.  If both this and
@@ -17537,7 +17537,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# ScriptAlias: Maps a virtual path to a directory for serving scripts
 +# Example: ScriptAlias /htbin/ /www/htbin/
 +
-+ScriptAlias /cgi-bin/ /var/www/cgi-bin/ /usr/share/www/
++#ScriptAlias /cgi-bin/ /var/www/cgi-bin/
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/dhclient.conf ltib/config/platform/imx/merge/etc/dhclient.conf
 --- ltib.reference/config/platform/imx/merge/etc/dhclient.conf
 +++ ltib/config/platform/imx/merge/etc/dhclient.conf

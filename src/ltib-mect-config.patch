@@ -18100,12 +18100,14 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/network ltib/config/platform/imx/merge/etc/rc.d/init.d/network
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/network
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/network
-@@ -0,0 +1,208 @@
+@@ -0,0 +1,210 @@
 +#!/bin/sh
 +
 +# Net info should not be moved with SD card data.
 +NETCONFIG=/local/etc/sysconfig/net.conf
 +MACCONFIG=/etc/mac.conf
++
++source /etc/rc.d/rc.conf
 +
 +if [ ! -x /sbin/ifconfig ]; then
 +    echo "/sbin/ifconfig missing, unable to configure the network"

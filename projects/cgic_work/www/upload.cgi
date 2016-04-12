@@ -36,9 +36,9 @@ if [ "$REQUEST_METHOD" = "POST" ]; then
 
 #    if [ "$RCPTBL" != "1" ] && [ "$RCPZIP" != "1" ] && [ "$LOGSTBL" != "1" ] && [ "$TRENDTBL" != "1" ]; then
 	/etc/rc.d/init.d/autoexec stop > /dev/null 2>&1
-	if [ -x /local/root/splash ]
+	if [ -x /usr/bin/splash ]
 	then
-		/local/root/splash --text "Updating ..." --dimension 42 -qws &
+		/usr/bin/splash --text "Updating ..." --dimension 42 -qws &
 	fi
 #    fi
 
@@ -229,7 +229,7 @@ EOF
 fi
 
 #    if [ "$RCPTBL" != "1" ] && [ "$RCPZIP" != "1" ] && [ "$LOGSTBL" != "1" ] && [ "$TRENDTBL" != "1" ]; then
-	if [ -x /local/root/splash ]
+	if [ -x /usr/bin/splash ]
 	then
 		killall splash
 	fi

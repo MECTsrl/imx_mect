@@ -16,14 +16,6 @@ AutoReqProv     : no
 %description
 %{summary}
 
-%Package splash
-Summary         : Notifies that panel update is in progress
-Group           : Applications/File
-AutoReqProv     : no
-%Description splash
-Simple application that provides a notification screen informing
-the operator that a panel update is in progress.
-
 %Package factory_data
 Summary         : Factory preset values
 Group           : Applications/File
@@ -63,10 +55,6 @@ sudo rm -rf $RPM_BUILD_ROOT
 %attr(0755, root, root) %dir %{pfx}/local/sd_card
 %attr(0755, root, root) %dir %{pfx}/local/update
 %{pfx}/local/retentive
-
-%files splash
-%defattr(-,root,root)
-%{pfx}/local/root/splash
 
 %files factory_data
 %defattr(-,root,root)

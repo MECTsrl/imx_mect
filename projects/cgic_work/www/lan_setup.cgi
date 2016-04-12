@@ -25,9 +25,9 @@ echo NAMESERVER12="$NAMESERVER12"           >> $NETCONF
 sync
 
 /etc/rc.d/init.d/autoexec stop > /dev/null 2>&1
-if [ -x /local/root/splash ]
+if [ -x /usr/bin/splash ]
 then
-	/local/root/splash --text "Modify network ..." --dimension 42 -qws &
+	/usr/bin/splash --text "Modify network ..." --dimension 42 -qws &
 fi
 # not working
 /etc/rc.d/init.d/network restart
@@ -39,7 +39,7 @@ else
 	TABLE="<table style=\"border:solid 2px #FF0000;\" bgcolor=#fffbff cellspacing=10 cellpadding=4 align=center >"
 	MSG="Problem to update network settings"
 fi
-if [ -x /local/root/splash ]
+if [ -x /usr/bin/splash ]
 then
 	killall splash
 fi

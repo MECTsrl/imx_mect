@@ -6,9 +6,9 @@ mntpoint=`df | cut -d" " -f1 | grep mmc`
 
 if [ -n "$mntpoint" ]; then
 	/etc/rc.d/init.d/autoexec stop > /dev/null 2>&1
-	if [ -x /local/root/splash ]
+	if [ -x /usr/bin/splash ]
 	then
-		/local/root/splash --text "Resetting SD card ..." --dimension 42 -qws &
+		/usr/bin/splash --text "Resetting SD card ..." --dimension 42 -qws &
 	fi
 	if /bin/umount $mntdir 2>/dev/null; then
 		/sbin/mkfs.vfat $mntpoint
@@ -21,7 +21,7 @@ if [ -n "$mntpoint" ]; then
 		MSG="Error resetting SD CARD"
 
 	fi
-	if [ -x /local/root/splash ]
+	if [ -x /usr/bin/splash ]
 	then
 		killall splash
 	fi

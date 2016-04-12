@@ -5,9 +5,9 @@
 if [ -e $FACTORY_DATA ]
 then
 	/etc/rc.d/init.d/autoexec stop > /dev/null 2>&1
-	if [ -x /local/root/splash ]
+	if [ -x /usr/bin/splash ]
 	then
-		/local/root/splash --text "Restore factory ..." --dimension 42 -qws &
+		/usr/bin/splash --text "Restore factory ..." --dimension 42 -qws &
 	fi
 	old_dir=`pwd`
 	cd /local
@@ -36,7 +36,7 @@ then
 	fi
 	cd $old_dir
 	sync
-	if [ -x /local/root/splash ]
+	if [ -x /usr/bin/splash ]
 	then
 		killall splash
 	fi

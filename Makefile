@@ -183,6 +183,7 @@ MECT_COMMON_RFSPKGS := \
 	SDcard-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	sftp-server-rfs-4.3p2-1.$(MECT_TARGET_ARCH).rpm \
 	skell-rfs-1.18-2.$(MECT_TARGET_ARCH).rpm \
+	splash-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	sqlite-rfs-3.6.12-1.$(MECT_TARGET_ARCH).rpm \
 	sysconfig-rfs-1.2-5.$(MECT_TARGET_ARCH).rpm \
 	tslib-rfs-1.0-3.$(MECT_TARGET_ARCH).rpm \
@@ -203,7 +204,6 @@ MECT_COMMON_LFSPKGS := \
 	merge-lfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 	local-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	local-factory_data-1.0-1.$(MECT_TARGET_ARCH).rpm \
-	local-splash-1.0-1.$(MECT_TARGET_ARCH).rpm \
 
 MECT_COMMON_LFSPKGS := $(MECT_COMMON_LFSPKGS:%=$(MECT_RPMDIR)/%)
 

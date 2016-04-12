@@ -17781,10 +17781,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +			rm -f $logfile
 +			echo "current mount point is $usbdev" | tee -a $logfile
 +		else
-+			if [ -x /local/flash/root/splash ]
++			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
-+				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot mount the usb pen drive.</h1></font>" --dimension 12 >/dev/null 2>&1
++				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot mount the usb pen drive.</h1></font>" --dimension 12 >/dev/null 2>&1
 +				/bin/mount -oro,remount / 2>&1 | tee -a $logfile
 +				/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
 +				exit 1
@@ -17801,19 +17801,19 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	if [ -f $mntdir/reset.conf ]
 +	then
 +		echo " Resetting all!" | tee -a $logfile
-+		if [ -x /local/flash/root/splash ]
++		if [ -x /usr/bin/splash ]
 +		then
 +			killall splash
-+			/local/flash/root/splash -qws --text "<font color=\"blue\"><h1>Found a reset command.<BR>Resetting...</h1></font>" --dimension 12 >/dev/null 2>&1 &
++			/usr/bin/splash -qws --text "<font color=\"blue\"><h1>Found a reset command.<BR>Resetting...</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +		fi
 +
 +		if ! /bin/mount -orw,remount / 2>/dev/null
 +		then
 +			echo "Cannot mount the file system in read/write." | tee -a $logfile
-+			if [ -x /local/flash/root/splash ]
++			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
-+				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
++				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
 +			fi
 +			/bin/umount $mntdir
 +			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
@@ -17850,10 +17850,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +			fi
 +		else
 +			echo "Error missing factory data" | tee -a $logfile
-+			if [ -x /local/flash/root/splash ]
++			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
-+				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Error: missing factory data.</h1></font>" --dimension 12 >/dev/null 2>&1 &
++				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Error: missing factory data.</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
 +		fi
 +
@@ -17864,10 +17864,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	then
 +
 +		echo "Error multiple sysupdate file." | tee -a $logfile
-+		if [ -x /local/flash/root/splash ]
++		if [ -x /usr/bin/splash ]
 +		then
 +			killall splash
-+			/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Error: find multiple sysupdate file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
++			/usr/bin/splash -qws --text "<font color=\"red\"><h1>Error: find multiple sysupdate file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +		fi
 +
 +	elif [ `ls /local | grep sysupdate | wc -l` -eq  1 ]
@@ -17879,10 +17879,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		if ! /bin/mount -orw,remount / 2>/dev/null
 +		then
 +			echo "Cannot mount the file system in read/write." | tee -a $logfile
-+			if [ -x /local/flash/root/splash ]
++			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
-+				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
++				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
 +			fi
 +			/bin/umount $mntdir
 +			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
@@ -17910,20 +17910,20 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	then
 +
 +		echo " Found one sysupdate!" | tee -a $logfile
-+		if [ -x /local/flash/root/splash ]
++		if [ -x /usr/bin/splash ]
 +		then
 +			killall splash
-+			/local/flash/root/splash -qws --text "<font color=\"blue\"><h1>Found an update...</h1></font>" --dimension 12 >/dev/null 2>&1 &
++			/usr/bin/splash -qws --text "<font color=\"blue\"><h1>Found an update...</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +		fi
 +		countsys=1
 +		sysupdatename=`ls $mntdir | grep sysupdate_`
 +		if ! /bin/mount -orw,remount / 2>/dev/null
 +		then
 +			echo "Cannot mount the file system in read/write." | tee -a $logfile
-+			if [ -x /local/flash/root/splash ]
++			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
-+				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
++				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
 +			fi
 +			/bin/umount $mntdir
 +			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
@@ -17936,17 +17936,17 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		then
 +			echo " Update '$mntdir/$sysupdatename' applied!!!" | tee -a $logfile
 +			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
-+			if [ -x /local/flash/root/splash ]
++			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
-+				/local/flash/root/splash -qws --text "<font color=\"green\"><h1>Update applied</h1></font>" --dimension 12 >/dev/null 2>&1 &
++				/usr/bin/splash -qws --text "<font color=\"green\"><h1>Update applied</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
 +		else
 +			echo " Cannot update '/local/$sysupdatename'." | tee -a $logfile
-+			if [ -x /local/flash/root/splash ]
++			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
-+				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot apply the update.<BR>For more detail, see the file '$logfile' on the USB.</h1></font>" --dimension 12 >/dev/null 2>&1 &
++				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot apply the update.<BR>For more detail, see the file '$logfile' on the USB.</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
 +		fi
 +
@@ -17957,10 +17957,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		if ! /bin/mount -orw,remount / 2>/dev/null
 +		then
 +			echo "Cannot mount the file system in read/write." | tee -a $logfile
-+			if [ -x /local/flash/root/splash ]
++			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
-+				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
++				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
 +			fi
 +			/bin/umount $mntdir
 +			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
@@ -17973,17 +17973,17 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		then
 +			echo " Update '$mntdir/sysupdate.sh' applied!!!" | tee -a $logfile
 +			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
-+			if [ -x /local/flash/root/splash ]
++			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
-+				/local/flash/root/splash -qws --text "<font color=\"green\"><h1>Update applied</h1></font>" --dimension 12 >/dev/null 2>&1 &
++				/usr/bin/splash -qws --text "<font color=\"green\"><h1>Update applied</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
 +		else
 +			echo " Cannot update '$mntdir/sysupdate.sh'." | tee -a $logfile
-+			if [ -x /local/flash/root/splash ]
++			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
-+				/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot apply the update.<BR>For more detail, see the file '$logfile' on the USB.</h1></font>" --dimension 12 >/dev/null 2>&1 &
++				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot apply the update.<BR>For more detail, see the file '$logfile' on the USB.</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
 +		fi
 +
@@ -17991,10 +17991,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		# Perform any other configurations
 +		if [ -f $mntdir/system.ini ]
 +		then
-+			if [ -x /local/flash/root/splash ]
++			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
-+				/local/flash/root/splash -qws --text "<font color=\"green\"><h1>Found and applied the new 'system.ini' file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
++				/usr/bin/splash -qws --text "<font color=\"green\"><h1>Found and applied the new 'system.ini' file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
 +			echo " Found a new configuration file '$mntdir/system.ini'" | tee -a $logfile
 +			/usr/bin/dos2unix $mntdir/system.ini 2>&1 | tee -a $logfile
@@ -18004,10 +18004,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		fi
 +		if [ -f $mntdir/net.conf ]
 +		then
-+			if [ -x /local/flash/root/splash ]
++			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
-+				/local/flash/root/splash -qws --text "<font color=\"green\"><h1>Found and applied the new 'net.conf' file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
++				/usr/bin/splash -qws --text "<font color=\"green\"><h1>Found and applied the new 'net.conf' file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
 +			echo " Found a new network configuration file '$mntdir/net.conf'" | tee -a $logfile
 +			/usr/bin/dos2unix $mntdir/net.conf 2>&1 | tee -a $logfile
@@ -18017,19 +18017,19 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		fi
 +		if [ -f $mntdir/autoexec ]
 +		then
-+			if [ -x /local/flash/root/splash ]
++			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
-+				/local/flash/root/splash -qws --text "<font color=\"blue\"><h1>Found a new 'autoexec' file.<BR>Updating...</h1></font>" --dimension 12 >/dev/null 2>&1 &
++				/usr/bin/splash -qws --text "<font color=\"blue\"><h1>Found a new 'autoexec' file.<BR>Updating...</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
 +			echo " Found a new autoexec file file '$mntdir/autoexec'" | tee -a $logfile
 +			if ! /bin/mount -orw,remount / 2>/dev/null
 +			then
 +				echo "Cannot mount the file system in read/write." | tee -a $logfile
-+				if [ -x /local/flash/root/splash ]
++				if [ -x /usr/bin/splash ]
 +				then
 +					killall splash
-+					/local/flash/root/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
++					/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
 +				fi
 +				/bin/umount $mntdir
 +				/bin/mount -oro,remount / 2>&1 | tee -a $logfile
@@ -18144,10 +18144,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		echo "Starting HMI."
 +
 +		/local/root/hmi > /dev/null 2>&1 &
-+	elif test -x /local/root/splash; then
++	elif test -x /usr/bin/splash; then
 +		echo "Starting splash screen."
 +
-+		/local/root/splash -qws --text "<font color=\"blue\"><h1>No HMI on the target</h1></font><BR>`ifconfig eth0 | head -1`<BR>`ifconfig eth0 | head -2 | tail -1`" --dimension 12 > /dev/null 2>&1 &
++		/usr/bin/splash -qws --text "<font color=\"blue\"><h1>No HMI on the target</h1></font><BR>`ifconfig eth0 | head -1`<BR>`ifconfig eth0 | head -2 | tail -1`" --dimension 12 > /dev/null 2>&1 &
 +	else
 +		echo "No HMI."
 +
@@ -20033,7 +20033,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  endmenu
  
  menu "Qtopia"
-@@ -2767,6 +2828,52 @@
+@@ -2767,6 +2828,60 @@
         Some host tools are not used when building Qtopia within ltib.
         Not building these tools saves time when building.  Select y here
         to enable designer, linguist, and assistant GUI tools.
@@ -20071,10 +20071,18 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +config PKG_SDCARD
 +    depends PKG_MECT_PLUGINS
++    depends PKG_QT_EMBEDDED
 +    bool "GUI for SD card configuration"
 +    default y
 +    help
 +        GUI for the configuration of the SD card.
++
++config PKG_SPLASH
++    depends PKG_QT_EMBEDDED
++    bool "HMI splash screen application"
++    default y
++    help
++        Splash application for HMI.
 +
 +config PKG_MAC_SN
 +    depends PKG_MECT_PLUGINS
@@ -20086,7 +20094,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  menu "Applications"
  config PKG_QTOPIA_WANT_APP_CALCULATOR
-@@ -3346,7 +3453,7 @@
+@@ -3346,7 +3461,7 @@
      bool "totem-pl-parser"
      select PKG_EVOLUTION_DATA_SERVER
      select PKG_GTK2
@@ -20095,7 +20103,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3487,11 +3594,21 @@
+@@ -3487,11 +3602,21 @@
      depends CAP_HAS_MMU
      bool "wireless-tools"
      help
@@ -20118,7 +20126,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_XFSPROGS
      bool "xfsprogs"
      help
-@@ -3862,6 +3979,11 @@
+@@ -3862,6 +3987,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  
@@ -20173,7 +20181,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_MTD_UTILS                    = mtd-utils
  PKG_RPM                          = rpm
  PKG_RSYNC                        = rsync
-@@ -407,6 +411,17 @@
+@@ -407,6 +411,18 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
@@ -20187,6 +20195,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +PKG_MECT_PLUGINS                 = mect_plugins
 +PKG_CGIC_WORK                    = cgic_work
 +PKG_SDCARD                       = SDcard
++PKG_SPLASH                       = splash
 +PKG_MAC_SN                       = mac_sn
  
  # leave these as the last 3 packages in the build order

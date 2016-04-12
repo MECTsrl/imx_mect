@@ -4858,10 +4858,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/splash/splash.spec ltib/dist/lfs-5.1/splash/splash.spec
 --- ltib.reference/dist/lfs-5.1/splash/splash.spec
 +++ ltib/dist/lfs-5.1/splash/splash.spec
-@@ -0,0 +1,71 @@
+@@ -0,0 +1,67 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
-+Summary         : GUI for SD card settings
++Summary         : HMI splash screen
 +Name            : splash
 +Version         : 1.0
 +Release         : 1
@@ -4894,7 +4894,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +%setup -T -c -n SDcard
-+rsync -a --inplace ../../../../projects/SDcard/ ./
++rsync -a --inplace ../../../../projects/splash/ ./
 +
 +%Build
 +export LC_ALL
@@ -4910,13 +4910,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +rm -rf $RPM_BUILD_ROOT
 +
-+install -D -m 0755 SDcard $RPM_BUILD_ROOT%{pfx}/usr/bin/SDcard
-+
-+cd %{_builddir}/%{name}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed -n '
-+    p
-+' all_files.lst > rfs_files.lst
++install -D -m 0755 splash $RPM_BUILD_ROOT%{pfx}/usr/bin/splash
 +
 +%Clean
 +export LC_ALL
@@ -4925,11 +4919,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +
 +
-+%Files -f all_files.lst
++%Files
 +%defattr(-,root,root)
++%{pfx}/*
 +
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/bin/splash
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec ltib/dist/lfs-5.1/sqlite/sqlite.spec
 --- ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec
 +++ ltib/dist/lfs-5.1/sqlite/sqlite.spec

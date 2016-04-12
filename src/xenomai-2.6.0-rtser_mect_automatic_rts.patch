@@ -1,0 +1,74 @@
+--- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-13 00:26:28.775264304 +0200
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-13 00:24:12.156538204 +0200
+@@ -109,6 +109,9 @@
+ 	 * port like base address, and so on.
+ 	 */
+ 	struct rt_imx_mxs_auart_port *port;
++
++	/* TODO: Place holder pending the porting of Xenomai RS485 flag. */
++	int rs485;
+ };
+ 
+ #define PARITY_MASK             0x03
+@@ -150,6 +153,7 @@
+ 	int count;
+ 	int ch;
+ 
++	/* Transfer pending bytes to TX FIFO. */
+ 	for (count = port->port.fifosize; (!(__raw_readl(port->port.membase + HW_UARTAPP_STAT) & BM_UARTAPP_STAT_TXFF)) && (count > 0) && (ctx->out_npend > 0); count--, ctx->out_npend--) {
+ 		ch = ctx->out_buf[ctx->out_head++];
+ 		__raw_writel(ch, port->port.membase + HW_UARTAPP_DATA);
+@@ -157,10 +161,24 @@
+ 		ctx->out_head &= (OUT_BUFFER_SIZE - 1);
+ 	}
+ 
+-	if (ctx->out_npend > 0)
++	if (ctx->out_npend > 0) {
+ 		__raw_writel(BM_UARTAPP_INTR_TXIEN, port->port.membase + HW_UARTAPP_INTR_SET);
+-	else
++	} else {
+ 		__raw_writel(BM_UARTAPP_INTR_TXIEN, port->port.membase + HW_UARTAPP_INTR_CLR);
++
++		/* Half-duplex RS485 mode. */
++		/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
++		if (ctx->rs485) {
++			/* Wait for shift register flush. */
++			/* TODO: enable interrupts while waiting or wait within a tasklet:
++				http://www.makelinux.net/ldd3/chp-7-sect-5 */
++			while (__raw_readl(port->port.membase + HW_UARTAPP_STAT) & BM_UARTAPP_STAT_BUSY) ;
++
++			/* TX completed. Deassert RTS and start RX. */
++			__raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
++			__raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
++		}
++	}
+ }
+ 
+ static int
+@@ -459,7 +477,15 @@
+ static void
+ rt_imx_mxs_auart_start_tx(struct rt_imx_mxs_auart_ctx *ctx)
+ {
+-	/* Enable TX */
++	/* Half-duplex RS485 mode. */
++	/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
++	if (ctx->rs485) {
++		/* Disable RX and assert RTS to start the TX. */
++		__raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
++		__raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
++	}
++
++	/* Enable TX interrupts. */
+ 	__raw_writel(BM_UARTAPP_INTR_TXIEN, ctx->port->port.membase + HW_UARTAPP_INTR_SET);
+ 
+ 	rt_imx_mxs_auart_tx_chars(ctx);
+@@ -1147,6 +1173,9 @@
+ 	ctx->status = 0;
+ 	ctx->saved_errors = 0;
+ 
++	/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
++	ctx->rs485 = 1;
++
+ 	rt_imx_mxs_auart_reset(&port->port);
+ 
+     __raw_writel( BM_UARTAPP_INTR_OEIEN | BM_UARTAPP_INTR_BEIEN | BM_UARTAPP_INTR_PEIEN  | BM_UARTAPP_INTR_FEIEN

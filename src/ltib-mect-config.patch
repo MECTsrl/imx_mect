@@ -475,7 +475,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config
 +++ ltib/config/platform/imx/.config
-@@ -0,0 +1,659 @@
+@@ -0,0 +1,661 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -897,8 +897,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# MECT projects
 +#
 +CONFIG_PKG_MECT_PLUGINS=y
++# CONFIG_PKG_MECT_APPS is not set
 +CONFIG_PKG_CGIC_WORK=y
 +CONFIG_PKG_SDCARD=y
++CONFIG_PKG_SPLASH=y
 +CONFIG_PKG_MAC_SN=y
 +
 +#
@@ -1164,7 +1166,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h
 +++ ltib/config/platform/imx/.tmpconfig.h
-@@ -0,0 +1,660 @@
+@@ -0,0 +1,662 @@
 +/*
 + * Automatically generated C config: don't edit
 + * LTIB version: 8.1.2
@@ -1587,8 +1589,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 + * MECT projects
 + */
 +#define CONFIG_PKG_MECT_PLUGINS 1
++#undef CONFIG_PKG_MECT_APPS
 +#define CONFIG_PKG_CGIC_WORK 1
 +#define CONFIG_PKG_SDCARD 1
++#define CONFIG_PKG_SPLASH 1
 +#define CONFIG_PKG_MAC_SN 1
 +
 +/*
@@ -2828,7 +2832,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev
 +++ ltib/config/platform/imx/defconfig.dev
-@@ -0,0 +1,659 @@
+@@ -0,0 +1,661 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -3250,8 +3254,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# MECT projects
 +#
 +CONFIG_PKG_MECT_PLUGINS=y
++# CONFIG_PKG_MECT_APPS is not set
 +CONFIG_PKG_CGIC_WORK=y
 +CONFIG_PKG_SDCARD=y
++CONFIG_PKG_SPLASH=y
 +CONFIG_PKG_MAC_SN=y
 +
 +#
@@ -16108,7 +16114,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  Summary         : Linux kernel (core of the Linux operating system)
  Name            : kernel
-@@ -12,22 +14,634 @@
+@@ -12,22 +14,636 @@
  Packager        : Rob Herring
  Group           : System Environment/Kernel
  Source          : %{pkg_name}-%{version}.tar.bz2
@@ -16175,6 +16181,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +Patch44         : xenomai-2.6.0-rtser_mect_txie_fix.patch
 +Patch45         : xenomai-2.6.0-rtser_mect_discard_nostatus_int.patch
 +Patch46         : xenomai-2.6.0-rtser_mect_rtser_for_485_adapter.patch
++Patch47         : xenomai-2.6.0-rtser_mect_automatic_rts.patch
 +Patch99         : xenomai-2.6.0-fix-scriptpath-calculation.patch
 +
 +# Generic kernel patches
@@ -16732,6 +16739,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +%patch44 -p1
 +%patch45 -p1
 +%patch46 -p1
++%patch47 -p1
 +%patch99 -p1
 +cd %{_builddir}/%{buildsubdir}
 +

@@ -1,0 +1,26 @@
+diff -ruN a/src/get.c b/src/get.c
+--- a/src/get.c	2005-02-22 15:11:29.000000000 +0100
++++ b/src/get.c	2016-04-12 14:31:58.130629386 +0200
+@@ -539,8 +539,20 @@
+              * this is only the 'index.html' pathname for mime type
+              */
+             memcpy(req->request_uri, directory_index, l2 + 1); /* for mimetype */
+-            fstat(data_fd, statbuf);
+-            return data_fd;
++            if (strcmp(CGI_MIME_TYPE, get_mime_type(directory_index)) == 0) {
++                close(data_fd);
++
++                if (req->pathname)
++                    free(req->pathname);
++                req->pathname = strdup(pathname_with_index);
++
++                req->cgi_type = CGI;
++
++                return init_cgi(req);
++            } else {
++                fstat(data_fd, statbuf);
++                return data_fd; 
++            }
+         }
+         if (errno == EACCES) {
+             send_r_forbidden(req);

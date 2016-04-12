@@ -1,0 +1,63 @@
+diff -ruN a/etc/rc.d/init.d/boa b/etc/rc.d/init.d/boa
+--- a/etc/rc.d/init.d/boa	2016-04-12 13:52:33.918628200 +0200
++++ b/etc/rc.d/init.d/boa	1970-01-01 01:00:00.000000000 +0100
+@@ -1,59 +0,0 @@
+-#! /bin/sh
+-
+-INDEXFILE=`grep DocumentRoot /etc/boa.conf | grep -v "#" | cut -d\  -f2`/index.html
+-CGIFILE=index.cgi
+-if [ -f $INDEXFILE ]; then
+-/bin/rm -f $INDEXFILE
+-fi
+-
+-IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`
+-IPCHECK=` echo $IP | sed "s/[0-9]\{1,3\}//g" `
+-
+-start() {
+-
+-echo "<html>" >> $INDEXFILE
+-echo "<head>" >> $INDEXFILE
+-echo "<meta HTTP-EQUIV=\"REFRESH\" content=\"0; url=http://$IP/$CGIFILE\">" >> $INDEXFILE
+-echo "</head>" >> $INDEXFILE
+-echo "</html>" >> $INDEXFILE
+-
+-if [ -x /usr/sbin/boa  ]; then
+-	if [ ${IPCHECK} = "..."  ] 2>/dev/null; then
+-		echo -n "Starting BOA webserver... "
+-		/usr/sbin/boa
+-		echo "Done."
+-	
+-	else
+-		echo "CANNOT start BOA webserver invalid ip address $IP."
+-	fi	
+-fi
+-}
+-
+-stop() {
+-echo -n "Shutting down BOA webserver... "
+-killall boa 2> /dev/null
+-echo "Done."S
+-}
+-
+-restart() {
+-stop
+-sleep 1
+-start
+-}
+-
+-case "$1" in
+-start)
+-    start
+-;;
+-stop)
+-    stop
+-;;
+-restart)
+-    restart
+-;;
+-*)
+-  echo $"Usage: $0 {start|stop|restart}"
+-        exit 1
+-    ;;
+-    
+-esac

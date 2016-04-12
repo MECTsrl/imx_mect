@@ -346,7 +346,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boa/boa.spec ltib/dist/lfs-5.1/boa/boa.spec
 --- ltib.reference/dist/lfs-5.1/boa/boa.spec
 +++ ltib/dist/lfs-5.1/boa/boa.spec
-@@ -11,48 +11,83 @@
+@@ -11,48 +11,84 @@
  Packager        : Stuart Hughes
  Group           : System/Servers
  Source          : %{name}-%{version}.tar.gz
@@ -354,6 +354,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  Patch1          : boa-0.94.14rc21-nommu.patch
 +Patch2          : boa-0.94.14rc21-defines.patch
 +Patch3          : boa-0.94.14rc21-1416842658.patch
++Patch4          : boa-0.94.14rc21-use_cgi_for_index.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -388,6 +389,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %patch1 -p1 
 +%patch2 -p1
 +%patch3 -p1 
++%patch4 -p1
  
  %Build
 +export LC_ALL
@@ -426,7 +428,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +mkdir -p $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin
 +install -m 755 src/boa $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/
 +install -m 755 src/boa_indexer $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/
-+install -m 644 examples/boa.conf $RPM_BUILD_ROOT%{pfx}/%{base}/etc/conf/
 +ln -s conf/boa.conf $RPM_BUILD_ROOT%{pfx}/%{base}/etc/boa.conf
 +ln -s boa $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/boa_d
 +install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{pfx}/%{base}/etc/conf/boa.conf
@@ -795,7 +796,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cgic_work/cgic_work.spec ltib/dist/lfs-5.1/cgic_work/cgic_work.spec
 --- ltib.reference/dist/lfs-5.1/cgic_work/cgic_work.spec
 +++ ltib/dist/lfs-5.1/cgic_work/cgic_work.spec
-@@ -0,0 +1,77 @@
+@@ -0,0 +1,113 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Support for web-based reporting and configuration
@@ -854,12 +855,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +make -j1 INSTALL_ROOT=$RPM_BUILD_ROOT%{pfx} install
 +
-+cd %{_builddir}/%{name}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed -n '
-+    p;
-+' all_files.lst > rfs_files.lst
-+
 +
 +%Clean
 +export LC_ALL
@@ -868,11 +863,53 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +
 +
-+%Files -f all_files.lst
++%Files
 +%defattr(-,root,root)
++%[pfx}/*
 +
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/share/www/alarms_manager.cgi
++%{pfx}/usr/share/www/changepwd.cgi
++%{pfx}/usr/share/www/checkpwd.cgi
++%{pfx}/usr/share/www/config_manager.cgi
++%{pfx}/usr/share/www/date_time.cgi
++%{pfx}/usr/share/www/display.cgi
++%{pfx}/usr/share/www/display_csv.cgi
++%{pfx}/usr/share/www/display_setup.cgi
++%{pfx}/usr/share/www/extract
++%{pfx}/usr/share/www/factory_reset.cgi
++%{pfx}/usr/share/www/factory_reset_confirm.cgi
++%{pfx}/usr/share/www/filebrowser.cgi
++%{pfx}/usr/share/www/filesmanager.cgi
++%{pfx}/usr/share/www/formatsdcard.cgi
++%{pfx}/usr/share/www/getdatesinterval
++%{pfx}/usr/share/www/index.cgi
++%{pfx}/usr/share/www/info.cgi
++%{pfx}/usr/share/www/lan_config.cgi
++%{pfx}/usr/share/www/lan_setup.cgi
++%{pfx}/usr/share/www/load.cgi
++%{pfx}/usr/share/www/login.cgi
++%{pfx}/usr/share/www/logout.cgi
++%{pfx}/usr/share/www/logs_extractor.cgi
++%{pfx}/usr/share/www/logs_filter.cgi
++%{pfx}/usr/share/www/logs_manager.cgi
++%{pfx}/usr/share/www/managepwd.cgi
++%{pfx}/usr/share/www/menu.cgi
++%{pfx}/usr/share/www/.passwd
++%{pfx}/usr/share/www/reboot.cgi
++%{pfx}/usr/share/www/recipes_manager.cgi
++%{pfx}/usr/share/www/reset_mass_storage.cgi
++%{pfx}/usr/share/www/reset_passwords.cgi
++%{pfx}/usr/share/www/select
++%{pfx}/usr/share/www/select-template.html
++%{pfx}/usr/share/www/style.css
++%{pfx}/usr/share/www/trend_manager.cgi
++%{pfx}/usr/share/www/underconstruction.cgi
++%{pfx}/usr/share/www/updateall.cgi
++%{pfx}/usr/share/www/updatetime.cgi
++%{pfx}/usr/share/www/upgrade.cgi
++%{pfx}/usr/share/www/upload.cgi
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec
@@ -2916,7 +2953,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,118 @@
+@@ -10,40 +10,119 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -3000,6 +3037,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +# Set execution permissions (discarded by VCS).
 +for f in \
 +	/etc/rc.d/init.d/autoexec \
++	/etc/rc.d/init.d/boa \
 +	/etc/rc.d/init.d/iptables \
 +	/etc/rc.d/init.d/mac_sn \
 +	/etc/rc.d/init.d/network \
@@ -3445,14 +3483,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
         OSSL_ARCH="linux-$LINTARCH"
         ;;
  esac
+-./Configure $OSSL_ARCH --prefix=%{_prefix} --install_prefix=$RPM_BUILD_ROOT/%{pfx} shared no-asm $XTRA_OPTS
+-make -j1
 +
 +export TARGETMACH
 +export TARGETMACH=$CFGHOST
 +export BUILDMACH
 +export BUILDMACH=%{_build}
 +
- ./Configure $OSSL_ARCH --prefix=%{_prefix} --install_prefix=$RPM_BUILD_ROOT/%{pfx} shared no-asm $XTRA_OPTS
--make -j1
++./Configure $OSSL_ARCH --prefix=%{_prefix} shared no-asm $XTRA_OPTS
 +make -j`grep -c ^processor /proc/cpuinfo`
  
  %Install
@@ -3478,7 +3517,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -#cp openssl.pc $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/pkgconfig/
  
 -make install -j1
-+make install_sw
++make INSTALL_PREFIX=$RPM_BUILD_ROOT/%{pfx} install_sw
  
  %Clean
 +export LC_ALL
@@ -4586,7 +4625,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-ldflags=-L$DEV_IMAGE/usr/lib
++LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-zlib=$DEV_IMAGE/usr/lib --with-ldflags=-L$DEV_IMAGE/usr/lib
 +make -j`grep -c ^processor /proc/cpuinfo` sysconfdir=%{_sysconfdir}/ssh sftp-server
 +
 +%Install

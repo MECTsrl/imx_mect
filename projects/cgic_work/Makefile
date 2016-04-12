@@ -32,45 +32,46 @@ ARCH_DFLAGS       =  -D__arm
 
 CFLAGS            =  -Wall
 
-CGISH_LIST = alarms_manager.cgi \
-changepwd.cgi \
-checkpwd.cgi \
-config_manager.cgi \
-date_time.cgi \
-display.cgi \
-display_csv.cgi \
-display_setup.cgi \
-factory_reset.cgi \
-factory_reset_confirm.cgi \
-filebrowser.cgi \
-filesmanager.cgi \
-formatsdcard.cgi \
-index.cgi \
-info.cgi \
-lan_config.cgi \
-lan_setup.cgi \
-load.cgi \
-login.cgi \
-logout.cgi \
-logs_extractor.cgi \
-logs_filter.cgi \
-logs_manager.cgi \
-managepwd.cgi \
-menu.cgi \
-reboot.cgi \
-recipes_manager.cgi \
-reset_mass_storage.cgi \
-reset_passwords.cgi \
-select \
-style.css \
-trend_manager.cgi \
-underconstruction.cgi \
-updatetime.cgi \
-upload.cgi
+CGISH_LIST = \
+	alarms_manager.cgi \
+	changepwd.cgi \
+	checkpwd.cgi \
+	config_manager.cgi \
+	date_time.cgi \
+	display.cgi \
+	display_csv.cgi \
+	display_setup.cgi \
+	factory_reset.cgi \
+	factory_reset_confirm.cgi \
+	filebrowser.cgi \
+	filesmanager.cgi \
+	formatsdcard.cgi \
+	index.cgi \
+	info.cgi \
+	lan_config.cgi \
+	lan_setup.cgi \
+	load.cgi \
+	login.cgi \
+	logout.cgi \
+	logs_extractor.cgi \
+	logs_filter.cgi \
+	logs_manager.cgi \
+	managepwd.cgi \
+	menu.cgi \
+	reboot.cgi \
+	recipes_manager.cgi \
+	reset_mass_storage.cgi \
+	reset_passwords.cgi \
+	select \
+	style.css \
+	trend_manager.cgi \
+	underconstruction.cgi \
+	updatetime.cgi \
+	upload.cgi
 
-DATA_LIST = index.html \
-select-template.html \
-.passwd
+DATA_LIST = \
+	select-template.html \
+	.passwd
 
 CGIC_LIST = upgrade.cgi getdatesinterval extract updateall.cgi
 
@@ -92,7 +93,6 @@ filebrowser.cgi:
 filesmanager.cgi:
 formatsdcard.cgi:
 index.cgi:
-index.html:
 info.cgi:
 lan_config.cgi:
 lan_setup.cgi:

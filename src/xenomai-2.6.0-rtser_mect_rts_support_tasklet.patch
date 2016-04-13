@@ -1,0 +1,93 @@
+--- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-13 21:26:23.230388807 +0200
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-13 21:22:17.729409692 +0200
+@@ -112,6 +112,8 @@
+ 
+ 	/* TODO: Place holder pending the porting of Xenomai RS485 flag. */
+ 	int rs485;
++
++	struct tasklet_struct rts_deassert;
+ };
+ 
+ #define PARITY_MASK             0x03
+@@ -140,6 +142,19 @@
+ static int rt_imx_mxs_auart_set_config(struct rt_imx_mxs_auart_ctx *ctx, const struct rtser_config *config, uint64_t **in_history_ptr);
+ 
+ 
++void rts_deassert_func(unsigned long data)
++{
++	struct rt_imx_mxs_auart_ctx *ctx = (struct rt_imx_mxs_auart_ctx *)data;
++
++	if (__raw_readl(ctx->port->port.membase + HW_UARTAPP_STAT) & BM_UARTAPP_STAT_BUSY) {
++		tasklet_hi_schedule(&ctx->rts_deassert);
++	} else {
++		/* TX completed. Deassert RTS and enable RX. */
++		__raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
++		__raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
++	}
++}
++
+ static inline struct rt_imx_mxs_auart_port *
+ to_auart_port(struct uart_port *u)
+ {
+@@ -168,16 +183,9 @@
+ 
+ 		/* Half-duplex RS485 mode. */
+ 		/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
+-		if (ctx->rs485) {
+-			/* Wait for shift register flush. */
+-			/* TODO: enable interrupts while waiting or wait within a tasklet:
+-				http://www.makelinux.net/ldd3/chp-7-sect-5 */
+-			while (__raw_readl(port->port.membase + HW_UARTAPP_STAT) & BM_UARTAPP_STAT_BUSY) ;
+-
+-			/* TX completed. Deassert RTS and start RX. */
+-			__raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
+-			__raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
+-		}
++		if (ctx->rs485)
++			/* Deassert RTS after flushing TX FIFO and shift register. */
++			tasklet_hi_schedule(&ctx->rts_deassert);
+ 	}
+ }
+ 
+@@ -1105,14 +1113,15 @@
+ static int
+ rt_imx_mxs_auart_close(struct rtdm_dev_context *context, rtdm_user_info_t *user_info)
+ {
+-	struct rt_imx_mxs_auart_ctx *ctx;
+ 	struct rt_imx_mxs_auart_port *port;
+ 	uint64_t *in_history;
+ 	rtdm_lockctx_t lock_ctx;
++	struct rt_imx_mxs_auart_ctx *ctx = (struct rt_imx_mxs_auart_ctx *)context->dev_private;;
+ 
+-	ctx = (struct rt_imx_mxs_auart_ctx *)context->dev_private;
+ 	port = ctx->port;
+ 
++	tasklet_kill(&ctx->rts_deassert);
++
+ 	rtdm_lock_get_irqsave(&ctx->lock, lock_ctx);
+ 
+ 	__raw_writel(BM_UARTAPP_CTRL0_SFTRST, port->port.membase + HW_UARTAPP_CTRL0_SET);
+@@ -1141,12 +1150,12 @@
+ static int
+ rt_imx_mxs_auart_open(struct rtdm_dev_context *context, rtdm_user_info_t *user_info, int oflags)
+ {
+-	struct rt_imx_mxs_auart_ctx *ctx;
+ 	struct rt_imx_mxs_auart_port *port;
+ 	int ret;
+ 	uint64_t *dummy;
++	struct rt_imx_mxs_auart_ctx *ctx = (struct rt_imx_mxs_auart_ctx *)context->dev_private;
++	DECLARE_TASKLET(rts_deassert, rts_deassert_func, (unsigned long)ctx);
+ 
+-	ctx = (struct rt_imx_mxs_auart_ctx *)context->dev_private;
+ 	ctx->port = (struct rt_imx_mxs_auart_port *)context->device->device_data;
+ 	port = ctx->port;
+ 
+@@ -1173,6 +1182,8 @@
+ 	ctx->status = 0;
+ 	ctx->saved_errors = 0;
+ 
++	ctx->rts_deassert = rts_deassert;	/* Content copy */
++
+ 	/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
+ 	ctx->rs485 = 1;
+ 

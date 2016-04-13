@@ -27,7 +27,6 @@ export PATH := /usr/lib/ccache:$(PATH)
 MECT_ALL_TARGETS := \
 	local_prepare \
 	ATCMcontrol_RunTimeSystem \
-	mect_apps \
 
 ifneq ($(wildcard 4c_runtime/.*),)
 MECT_ALL_TARGETS += 4c_runtime

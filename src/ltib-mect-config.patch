@@ -897,7 +897,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# MECT projects
 +#
 +CONFIG_PKG_MECT_PLUGINS=y
-+# CONFIG_PKG_MECT_APPS is not set
++CONFIG_PKG_MECT_APPS=y
 +CONFIG_PKG_CGIC_WORK=y
 +CONFIG_PKG_SDCARD=y
 +CONFIG_PKG_SPLASH=y
@@ -1589,7 +1589,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 + * MECT projects
 + */
 +#define CONFIG_PKG_MECT_PLUGINS 1
-+#undef CONFIG_PKG_MECT_APPS
++#define CONFIG_PKG_MECT_APPS 1
 +#define CONFIG_PKG_CGIC_WORK 1
 +#define CONFIG_PKG_SDCARD 1
 +#define CONFIG_PKG_SPLASH 1
@@ -3254,7 +3254,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# MECT projects
 +#
 +CONFIG_PKG_MECT_PLUGINS=y
-+# CONFIG_PKG_MECT_APPS is not set
++CONFIG_PKG_MECT_APPS=y
 +CONFIG_PKG_CGIC_WORK=y
 +CONFIG_PKG_SDCARD=y
 +CONFIG_PKG_SPLASH=y

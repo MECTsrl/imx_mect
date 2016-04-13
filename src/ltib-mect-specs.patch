@@ -2872,7 +2872,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,396 @@
+@@ -0,0 +1,398 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Default HMI application.
@@ -3203,6 +3203,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +	cd -
 +fi
++
++exit 0
 +
 +%clean
 +export LC_ALL

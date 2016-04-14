@@ -5,6 +5,16 @@
 #include <QDate>
 #include <QMessageBox>
 
+/**
+ * @brief transform a string in hex format into int
+ */
+static int atoh(const char * string)
+{
+    int value = 0;
+    sscanf (string, "%x", &value);
+    return value;
+}
+
 mac_sn::mac_sn(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::mac_sn)
@@ -182,18 +192,19 @@ void mac_sn::on_pushButtonSN_3_clicked()
     }
 }
 
+
 void mac_sn::on_pushButtonMACeth0_1_clicked()
 {
     int value  = 0, min = 0, max = 0xFF;
     char valuestr[10];
-    numpad * dk = new numpad(&value, ui->pushButtonMACeth0_1->text().toInt(), min, max, input_hex);
+    numpad * dk = new numpad(&value, atoh(ui->pushButtonMACeth0_1->text().toAscii().data()), min, max, input_hex);
     dk->showFullScreen();
 
     if (dk->exec() == QDialog::Accepted)
     {
         if (min < max && (value < min || value > max))
         {
-            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(value).arg("00").arg("FF"));
+            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(QString::number(value,16)).arg("00").arg("FF"));
             delete dk;
             return;
         }
@@ -211,14 +222,14 @@ void mac_sn::on_pushButtonMACeth0_2_clicked()
 {
     int value  = 0, min = 0, max = 0xFF;
     char valuestr[10];
-    numpad * dk = new numpad(&value, ui->pushButtonMACeth0_2->text().toInt(), min, max, input_hex);
+    numpad * dk = new numpad(&value, atoh(ui->pushButtonMACeth0_2->text().toAscii().data()), min, max, input_hex);
     dk->showFullScreen();
 
     if (dk->exec() == QDialog::Accepted)
     {
         if (min < max && (value < min || value > max))
         {
-            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(value).arg("00").arg("FF"));
+            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(QString::number(value,16)).arg("00").arg("FF"));
             delete dk;
             return;
         }
@@ -236,14 +247,14 @@ void mac_sn::on_pushButtonMACeth0_3_clicked()
 {
     int value  = 0, min = 0, max = 0xFF;
     char valuestr[10];
-    numpad * dk = new numpad(&value, ui->pushButtonMACeth0_3->text().toInt(), min, max, input_hex);
+    numpad * dk = new numpad(&value, atoh(ui->pushButtonMACeth0_3->text().toAscii().data()), min, max, input_hex);
     dk->showFullScreen();
 
     if (dk->exec() == QDialog::Accepted)
     {
         if (min < max && (value < min || value > max))
         {
-            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(value).arg("00").arg("FF"));
+            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(QString::number(value,16)).arg("00").arg("FF"));
             delete dk;
             return;
         }
@@ -261,14 +272,14 @@ void mac_sn::on_pushButtonMACeth0_4_clicked()
 {
     int value  = 0, min = 0, max = 0xFF;
     char valuestr[10];
-    numpad * dk = new numpad(&value, ui->pushButtonMACeth0_4->text().toInt(), min, max, input_hex);
+    numpad * dk = new numpad(&value, atoh(ui->pushButtonMACeth0_4->text().toAscii().data()), min, max, input_hex);
     dk->showFullScreen();
 
     if (dk->exec() == QDialog::Accepted)
     {
         if (min < max && (value < min || value > max))
         {
-            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(value).arg("00").arg("FF"));
+            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(QString::number(value,16)).arg("00").arg("FF"));
             delete dk;
             return;
         }
@@ -286,14 +297,14 @@ void mac_sn::on_pushButtonMACeth0_5_clicked()
 {
     int value  = 0, min = 0, max = 0xFF;
     char valuestr[10];
-    numpad * dk = new numpad(&value, ui->pushButtonMACeth0_5->text().toInt(), min, max, input_hex);
+    numpad * dk = new numpad(&value, atoh(ui->pushButtonMACeth0_5->text().toAscii().data()), min, max, input_hex);
     dk->showFullScreen();
 
     if (dk->exec() == QDialog::Accepted)
     {
         if (min < max && (value < min || value > max))
         {
-            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(value).arg("00").arg("FF"));
+            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(QString::number(value,16)).arg("00").arg("FF"));
             delete dk;
             return;
         }
@@ -311,14 +322,14 @@ void mac_sn::on_pushButtonMACeth0_6_clicked()
 {
     int value  = 0, min = 0, max = 0xFF;
     char valuestr[10];
-    numpad * dk = new numpad(&value, ui->pushButtonMACeth0_6->text().toInt(), min, max, input_hex);
+    numpad * dk = new numpad(&value, atoh(ui->pushButtonMACeth0_6->text().toAscii().data()), min, max, input_hex);
     dk->showFullScreen();
 
     if (dk->exec() == QDialog::Accepted)
     {
         if (min < max && (value < min || value > max))
         {
-            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(value).arg("00").arg("FF"));
+            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(QString::number(value,16)).arg("00").arg("FF"));
             delete dk;
             return;
         }
@@ -336,14 +347,14 @@ void mac_sn::on_pushButtonMACeth1_1_clicked()
 {
     int value  = 0, min = 0, max = 0xFF;
     char valuestr[10];
-    numpad * dk = new numpad(&value, ui->pushButtonMACeth1_1->text().toInt(), min, max, input_hex);
+    numpad * dk = new numpad(&value, atoh(ui->pushButtonMACeth1_1->text().toAscii().data()), min, max, input_hex);
     dk->showFullScreen();
 
     if (dk->exec() == QDialog::Accepted)
     {
         if (min < max && (value < min || value > max))
         {
-            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(value).arg("00").arg("FF"));
+            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(QString::number(value,16)).arg("00").arg("FF"));
             delete dk;
             return;
         }
@@ -361,14 +372,14 @@ void mac_sn::on_pushButtonMACeth1_2_clicked()
 {
     int value  = 0, min = 0, max = 0xFF;
     char valuestr[10];
-    numpad * dk = new numpad(&value, ui->pushButtonMACeth1_2->text().toInt(), min, max, input_hex);
+    numpad * dk = new numpad(&value, atoh(ui->pushButtonMACeth1_2->text().toAscii().data()), min, max, input_hex);
     dk->showFullScreen();
 
     if (dk->exec() == QDialog::Accepted)
     {
         if (min < max && (value < min || value > max))
         {
-            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(value).arg("00").arg("FF"));
+            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(QString::number(value,16)).arg("00").arg("FF"));
             delete dk;
             return;
         }
@@ -386,14 +397,14 @@ void mac_sn::on_pushButtonMACeth1_3_clicked()
 {
     int value  = 0, min = 0, max = 0xFF;
     char valuestr[10];
-    numpad * dk = new numpad(&value, ui->pushButtonMACeth1_3->text().toInt(), min, max, input_hex);
+    numpad * dk = new numpad(&value, atoh(ui->pushButtonMACeth1_3->text().toAscii().data()), min, max, input_hex);
     dk->showFullScreen();
 
     if (dk->exec() == QDialog::Accepted)
     {
         if (min < max && (value < min || value > max))
         {
-            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(value).arg("00").arg("FF"));
+            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(QString::number(value,16)).arg("00").arg("FF"));
             delete dk;
             return;
         }
@@ -411,14 +422,14 @@ void mac_sn::on_pushButtonMACeth1_4_clicked()
 {
     int value  = 0, min = 0, max = 0xFF;
     char valuestr[10];
-    numpad * dk = new numpad(&value, ui->pushButtonMACeth1_4->text().toInt(), min, max, input_hex);
+    numpad * dk = new numpad(&value, atoh(ui->pushButtonMACeth1_4->text().toAscii().data()), min, max, input_hex);
     dk->showFullScreen();
 
     if (dk->exec() == QDialog::Accepted)
     {
         if (min < max && (value < min || value > max))
         {
-            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(value).arg("00").arg("FF"));
+            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(QString::number(value,16)).arg("00").arg("FF"));
             delete dk;
             return;
         }
@@ -436,14 +447,14 @@ void mac_sn::on_pushButtonMACeth1_5_clicked()
 {
     int value  = 0, min = 0, max = 0xFF;
     char valuestr[10];
-    numpad * dk = new numpad(&value, ui->pushButtonMACeth1_5->text().toInt(), min, max, input_hex);
+    numpad * dk = new numpad(&value, atoh(ui->pushButtonMACeth1_5->text().toAscii().data()), min, max, input_hex);
     dk->showFullScreen();
 
     if (dk->exec() == QDialog::Accepted)
     {
         if (min < max && (value < min || value > max))
         {
-            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(value).arg("00").arg("FF"));
+            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(QString::number(value,16)).arg("00").arg("FF"));
             delete dk;
             return;
         }
@@ -461,14 +472,14 @@ void mac_sn::on_pushButtonMACeth1_6_clicked()
 {
     int value  = 0, min = 0, max = 0xFF;
     char valuestr[10];
-    numpad * dk = new numpad(&value, ui->pushButtonMACeth1_6->text().toInt(), min, max, input_hex);
+    numpad * dk = new numpad(&value, atoh(ui->pushButtonMACeth1_6->text().toAscii().data()), min, max, input_hex);
     dk->showFullScreen();
 
     if (dk->exec() == QDialog::Accepted)
     {
         if (min < max && (value < min || value > max))
         {
-            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(value).arg("00").arg("FF"));
+            QMessageBox::critical(this,tr("Dato non valido"), tr("Il valore '%1' inserito non e' valido.\nIl valore deve essere compreso tra '%2' e '%3'").arg(QString::number(value,16)).arg("00").arg("FF"));
             delete dk;
             return;
         }

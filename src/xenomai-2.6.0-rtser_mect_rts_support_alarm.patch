@@ -1,0 +1,105 @@
+--- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-15 01:22:04.631284278 +0200
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-15 01:23:36.529143160 +0200
+@@ -42,6 +42,7 @@
+ 
+ #include <rtdm/rtserial.h>
+ #include <rtdm/rtdm_driver.h>
++#include <native/alarm.h>
+ 
+ #include "regs-uartapp.h"
+ 
+@@ -112,6 +113,9 @@
+ 
+ 	/* TODO: Place holder pending the porting of Xenomai RS485 flag. */
+ 	int rs485;
++
++	RTIME frame_ns;
++	RT_ALARM rts_deassert;
+ };
+ 
+ #define PARITY_MASK             0x03
+@@ -140,6 +144,19 @@
+ static int rt_imx_mxs_auart_set_config(struct rt_imx_mxs_auart_ctx *ctx, const struct rtser_config *config, uint64_t **in_history_ptr);
+ 
+ 
++void rts_deassert_func(struct rt_alarm *rts_deassert, void *data)
++{
++	struct rt_imx_mxs_auart_ctx *ctx = (struct rt_imx_mxs_auart_ctx *)data;
++
++	if (!(__raw_readl(ctx->port->port.membase + HW_UARTAPP_STAT) & BM_UARTAPP_STAT_BUSY)) {
++		rt_alarm_stop(&ctx->rts_deassert);
++
++		/* TX completed. Deassert RTS and enable RX. */
++		__raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
++		__raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
++	}
++}
++
+ static inline struct rt_imx_mxs_auart_port *
+ to_auart_port(struct uart_port *u)
+ {
+@@ -168,16 +185,9 @@
+ 
+ 		/* Half-duplex RS485 mode. */
+ 		/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
+-		if (ctx->rs485) {
+-			/* Wait for shift register flush. */
+-			/* TODO: enable interrupts while waiting or wait within a tasklet:
+-				http://www.makelinux.net/ldd3/chp-7-sect-5 */
+-			while (__raw_readl(port->port.membase + HW_UARTAPP_STAT) & BM_UARTAPP_STAT_BUSY) ;
+-
+-			/* TX completed. Deassert RTS and start RX. */
+-			__raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
+-			__raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
+-		}
++		if (ctx->rs485)
++			/* Deassert RTS at most one frame after the TX FIFO and SR are flushed. */
++			rt_alarm_start(&ctx->rts_deassert, ctx->frame_ns, ctx->frame_ns);
+ 	}
+ }
+ 
+@@ -802,6 +812,20 @@
+         ctrl &= ~BF_UARTAPP_LINECTRL_BAUD_DIVINT(0xffffffff);
+         ctrl |= BF_UARTAPP_LINECTRL_BAUD_DIVINT(div >> 6);
+ 
++		/* Polling interval for RTS deassertion. */
++		/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
++		if (ctx->rs485) {
++			int frame_bits = 0;
++
++			/* Frame size. */
++			frame_bits = 1;		/* Start bit */
++			frame_bits += ((ctx->config.data_bits == RTSER_8_BITS) ? 8 : 7);
++			frame_bits += ((ctx->config.stop_bits == RTSER_2_STOPB) ? 2 : 1);
++
++			/* Frame duration in ns (lower the accuracy or compiler blurps). */
++			ctx->frame_ns = 100000000ul * frame_bits / ctx->config.baud_rate * 10;
++		}
++
+         /* the Modbus RTU reception requires an inter-character timeout:
+          * -- for baudrates <= 19200 the timeout is 1.5 chars = 1.5 * (1 + data_bits + parity + stop_bits)
+          * -- for higher baudrates the timeout is fixed to 0.750 s
+@@ -1113,6 +1137,8 @@
+ 	ctx = (struct rt_imx_mxs_auart_ctx *)context->dev_private;
+ 	port = ctx->port;
+ 
++	rt_alarm_delete(&ctx->rts_deassert);
++
+ 	rtdm_lock_get_irqsave(&ctx->lock, lock_ctx);
+ 
+ 	__raw_writel(BM_UARTAPP_CTRL0_SFTRST, port->port.membase + HW_UARTAPP_CTRL0_SET);
+@@ -1173,6 +1199,8 @@
+ 	ctx->status = 0;
+ 	ctx->saved_errors = 0;
+ 
++	rt_alarm_create(&ctx->rts_deassert, "rts_deassert", rts_deassert_func, (void *)ctx);
++
+ 	/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
+ 	ctx->rs485 = 1;
+ 
+@@ -1396,3 +1424,5 @@
+ MODULE_AUTHOR("Mihai Lazarescu <mlazarescu@mect.it>");
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Freescale MXS application UART Xenomai RTDM driver");
++
++/* vim: set tabstop=4 shiftwidth=4 : */

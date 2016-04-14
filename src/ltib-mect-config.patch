@@ -16183,7 +16183,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +Patch46         : xenomai-2.6.0-rtser_mect_rtser_for_485_adapter.patch
 +Patch47         : xenomai-2.6.0-rtser_mect_automatic_rts.patch
 +Patch48         : xenomai-2.6.0-backport_rs485.patch
-+Patch49         : xenomai-2.6.0-rtser_mect_rts_support_tasklet.patch
++Patch49         : xenomai-2.6.0-rtser_mect_rts_support_alarm.patch
 +Patch99         : xenomai-2.6.0-fix-scriptpath-calculation.patch
 +
 +# Generic kernel patches

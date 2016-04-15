@@ -1,5 +1,5 @@
---- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-15 01:22:04.631284278 +0200
-+++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-15 01:23:36.529143160 +0200
+--- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-15 16:19:01.542939857 +0200
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-04-15 16:14:01.210927583 +0200
 @@ -42,6 +42,7 @@
  
  #include <rtdm/rtserial.h>
@@ -13,12 +13,12 @@
  	/* TODO: Place holder pending the porting of Xenomai RS485 flag. */
  	int rs485;
 +
-+	RTIME frame_ns;
++	RTIME char_time_ns; /* one character time in ns on wire */
 +	RT_ALARM rts_deassert;
  };
  
  #define PARITY_MASK             0x03
-@@ -140,6 +144,19 @@
+@@ -140,6 +144,27 @@
  static int rt_imx_mxs_auart_set_config(struct rt_imx_mxs_auart_ctx *ctx, const struct rtser_config *config, uint64_t **in_history_ptr);
  
  
@@ -26,22 +26,67 @@
 +{
 +	struct rt_imx_mxs_auart_ctx *ctx = (struct rt_imx_mxs_auart_ctx *)data;
 +
-+	if (!(__raw_readl(ctx->port->port.membase + HW_UARTAPP_STAT) & BM_UARTAPP_STAT_BUSY)) {
++    //rtdm_printk("%s(%d): rts_deassert_func\n", DRIVER_NAME, ctx->port->port.line);
++    if (!(__raw_readl(ctx->port->port.membase + HW_UARTAPP_STAT) & BM_UARTAPP_STAT_BUSY)) {
 +		rt_alarm_stop(&ctx->rts_deassert);
 +
 +		/* TX completed. Deassert RTS and enable RX. */
 +		__raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
 +		__raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
-+	}
++
++        rtdm_event_signal(&ctx->out_event);
++#if 0
++    } else {
++        __raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
++        __raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
++#endif
++    }
 +}
 +
  static inline struct rt_imx_mxs_auart_port *
  to_auart_port(struct uart_port *u)
  {
-@@ -168,16 +185,9 @@
+@@ -151,34 +176,47 @@
+ {
+ 	struct rt_imx_mxs_auart_port *port = ctx->port;
+ 	int count;
+-	int ch;
++    int ch;
++
++    if (!testbits(ctx->ier_status, IER_TX))
++        return; // spurious interrupt
  
- 		/* Half-duplex RS485 mode. */
- 		/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
+ 	/* Transfer pending bytes to TX FIFO. */
+-	for (count = port->port.fifosize; (!(__raw_readl(port->port.membase + HW_UARTAPP_STAT) & BM_UARTAPP_STAT_TXFF)) && (count > 0) && (ctx->out_npend > 0); count--, ctx->out_npend--) {
++    count = 0;
++    while (!(__raw_readl(port->port.membase + HW_UARTAPP_STAT) & BM_UARTAPP_STAT_TXFF)) {
++        if (ctx->out_npend == 0)
++            break;
++
+ 		ch = ctx->out_buf[ctx->out_head++];
+ 		__raw_writel(ch, port->port.membase + HW_UARTAPP_DATA);
+ 
+ 		ctx->out_head &= (OUT_BUFFER_SIZE - 1);
++        ++count;
++        --ctx->out_npend;
+ 	}
+ 
+-	if (ctx->out_npend > 0) {
++    if (ctx->out_npend > 0) {
+ 		__raw_writel(BM_UARTAPP_INTR_TXIEN, port->port.membase + HW_UARTAPP_INTR_SET);
+ 	} else {
+ 		__raw_writel(BM_UARTAPP_INTR_TXIEN, port->port.membase + HW_UARTAPP_INTR_CLR);
++        ctx->ier_status &= ~IER_TX;
++        if (ctx->rs485) {
++			/* Deassert RTS at most one frame after the TX FIFO and SR are flushed. */
++            RTIME value = count * ctx->char_time_ns;
++            // RTIME interval = TM_INFINITE; /* the alarm will not be reloaded after it has expired */
++            RTIME interval = ctx->char_time_ns;
++            if (value < 50000)
++                value = 50000; // limit for i.MX28
+ 
+-		/* Half-duplex RS485 mode. */
+-		/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
 -		if (ctx->rs485) {
 -			/* Wait for shift register flush. */
 -			/* TODO: enable interrupts while waiting or wait within a tasklet:
@@ -52,34 +97,180 @@
 -			__raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
 -			__raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
 -		}
-+		if (ctx->rs485)
-+			/* Deassert RTS at most one frame after the TX FIFO and SR are flushed. */
-+			rt_alarm_start(&ctx->rts_deassert, ctx->frame_ns, ctx->frame_ns);
- 	}
+-	}
++            if (interval < 50000)
++                interval = 50000; // limit for i.MX28
++
++            rt_alarm_start(&ctx->rts_deassert, value, interval);
++            //rtdm_printk("%s(%d): start in %llu at %llu\n", DRIVER_NAME, ctx->port->port.line, value, interval);
++        } else {
++            rtdm_event_signal(&ctx->out_event);
++        }
++    }
  }
  
-@@ -802,6 +812,20 @@
+ static int
+@@ -469,16 +507,10 @@
+ }
+ 
+ static void
+-rt_imx_mxs_auart_stop_tx(struct rt_imx_mxs_auart_ctx *ctx)
+-{
+-	__raw_writel(BM_UARTAPP_INTR_TXIEN, ctx->port->port.membase + HW_UARTAPP_INTR_CLR);
+-}
+-
+-static void
+ rt_imx_mxs_auart_start_tx(struct rt_imx_mxs_auart_ctx *ctx)
+ {
+-	/* Half-duplex RS485 mode. */
+-	/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
++    ctx->ier_status |= IER_TX;
++
+ 	if (ctx->rs485) {
+ 		/* Disable RX and assert RTS to start the TX. */
+ 		__raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
+@@ -488,7 +520,7 @@
+ 	/* Enable TX interrupts. */
+ 	__raw_writel(BM_UARTAPP_INTR_TXIEN, ctx->port->port.membase + HW_UARTAPP_INTR_SET);
+ 
+-	rt_imx_mxs_auart_tx_chars(ctx);
++    rt_imx_mxs_auart_tx_chars(ctx); /* this call from the syscall */
+ }
+ 
+ static int
+@@ -524,7 +556,7 @@
+     /* TX ready */
+     if (istat & BM_UARTAPP_INTR_TXIS) {
+         __raw_writel(BM_UARTAPP_INTR_TXIS, port->port.membase + HW_UARTAPP_INTR_CLR);
+-        rt_imx_mxs_auart_tx_chars(ctx);
++        rt_imx_mxs_auart_tx_chars(ctx); /* this call from the irq handler */
+         retval = RTDM_IRQ_HANDLED;
+     }
+ 
+@@ -558,14 +590,6 @@
+             rtdm_event_signal(&ctx->ioc_event);
+     }
+ 
+-    if (testbits(ctx->ier_status, IER_TX) && (ctx->out_npend == 0)) {
+-        rt_imx_mxs_auart_stop_tx(ctx);
+-
+-        ctx->ier_status &= ~IER_TX;
+-
+-        rtdm_event_signal(&ctx->out_event);
+-    }
+-
+     rtdm_lock_put(&ctx->lock);
+ 
+     /* Modem status interrupt bits are undefined after reset and DSRMIS, DCDMIS and RIMIS are not supported.
+@@ -578,16 +602,16 @@
+     }
+     if (istat & (BM_UARTAPP_INTR_ABDIS)) {
+         __raw_writel(BM_UARTAPP_INTR_ABDIS, port->port.membase + HW_UARTAPP_INTR_CLR);
+-        dev_info(port->dev, "unhandled status 0x%08x\n", istat);
++        rtdm_printk("%s(%d): unhandled status 0x%08x\n", DRIVER_NAME, ctx->port->port.line, istat);
+     }
+ 
+     /* Diagnostic output (out of rtdm_lock) */
+     if (istat & (BM_UARTAPP_INTR_OEIS | BM_UARTAPP_INTR_BEIS | BM_UARTAPP_INTR_PEIS | BM_UARTAPP_INTR_FEIS)) {
+-        dev_info(port->dev, "error(s): %s%s%s%s\n",
+-               (istat & BM_UARTAPP_INTR_OEIS) ? "OEIS" : "",
+-               (istat & BM_UARTAPP_INTR_BEIS) ? "BEIS" : "",
+-               (istat & BM_UARTAPP_INTR_PEIS) ? "PEIS" : "",
+-               (istat & BM_UARTAPP_INTR_FEIS) ? "FEIS" : "");
++        rtdm_printk("%s(%d): error(s):%s%s%s%s\n", DRIVER_NAME, ctx->port->port.line,
++               (istat & BM_UARTAPP_INTR_OEIS) ? " OEIS" : "",
++               (istat & BM_UARTAPP_INTR_BEIS) ? " BEIS" : "",
++               (istat & BM_UARTAPP_INTR_PEIS) ? " PEIS" : "",
++               (istat & BM_UARTAPP_INTR_FEIS) ? " FEIS" : "");
+     }
+ 
+     return retval;
+@@ -795,6 +819,13 @@
+ 			if (((div + 1) * ctx->config.baud_rate - uc) < (uc - div * ctx->config.baud_rate))
+ 				div++;
+ 		}
++#define HACK
++#ifdef HACK
++        if (ctx->config.baud_rate == 225000 && ctx->port->port.line == 3) {
++            ctx->rs485 = 0;
++            rtdm_printk("%s(%d): full-duplex enabled\n", DRIVER_NAME, ctx->port->port.line);
++        }
++#endif
+ 
+         ctrl &= ~BF_UARTAPP_LINECTRL_BAUD_DIVFRAC(0xffffffff);
+         ctrl |= BF_UARTAPP_LINECTRL_BAUD_DIVFRAC(div);
+@@ -802,23 +833,35 @@
          ctrl &= ~BF_UARTAPP_LINECTRL_BAUD_DIVINT(0xffffffff);
          ctrl |= BF_UARTAPP_LINECTRL_BAUD_DIVINT(div >> 6);
  
-+		/* Polling interval for RTS deassertion. */
-+		/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
-+		if (ctx->rs485) {
-+			int frame_bits = 0;
+-        /* the Modbus RTU reception requires an inter-character timeout:
+-         * -- for baudrates <= 19200 the timeout is 1.5 chars = 1.5 * (1 + data_bits + parity + stop_bits)
+-         * -- for higher baudrates the timeout is fixed to 0.750 s
+-         */
+-        if (ctx->config.baud_rate <= 19200) {
+-            to_bits = 15 * (1
+-            + (ctx->config.data_bits == RTSER_8_BITS) ? 8 : 7
+-            + ((ctx->config.parity == RTSER_ODD_PARITY) || (ctx->config.parity == RTSER_EVEN_PARITY)) ? 1 : 0
+-            + (ctx->config.stop_bits == RTSER_2_STOPB) ? 2 : 1) / 10;
+-        } else {
+-            u32 bit_time_ns = 1000000000 / ctx->config.baud_rate + 1; // just in case :)
+-            u32 timeout_ns = 750000; // 0.750 ms
+-            to_bits = timeout_ns / bit_time_ns;
++        {
++            /* computing variables at the given serial config */
++            register u32 bit_time_ns = 1000000000 / ctx->config.baud_rate;
++            register u32 char_bits = 1;
++            if (ctx->config.data_bits == RTSER_8_BITS)
++                char_bits += 8;
++            else
++                char_bits += 7;
++            if ((ctx->config.parity == RTSER_ODD_PARITY) || (ctx->config.parity == RTSER_EVEN_PARITY))
++                char_bits += 1;
++            if (ctx->config.stop_bits == RTSER_2_STOPB)
++                char_bits += 2;
++            else
++                char_bits += 1;
++            ctx->char_time_ns = char_bits * bit_time_ns;
++            //rtdm_printk("%s(%d): char_time_ns=%llu\n", DRIVER_NAME, ctx->port->port.line, ctx->char_time_ns);
 +
-+			/* Frame size. */
-+			frame_bits = 1;		/* Start bit */
-+			frame_bits += ((ctx->config.data_bits == RTSER_8_BITS) ? 8 : 7);
-+			frame_bits += ((ctx->config.stop_bits == RTSER_2_STOPB) ? 2 : 1);
++            /* the Modbus RTU reception requires an inter-character timeout:
++             * -- for baudrates <= 19200 the timeout is 1.5 chars = 1.5 * (1 + data_bits + parity + stop_bits)
++             * -- for higher baudrates the timeout is fixed to 0.750 s
++             */
++            if (ctx->config.baud_rate <= 19200) {
++                to_bits = 15 * char_bits / 10;
++            } else {
++                u32 timeout_ns = 750000; // 0.750 ms
++                to_bits = timeout_ns / bit_time_ns;
++            }
+         }
+-        /* the i.MX28 rx timeout is in "8 bit-times"
+-         * and there is a "7 bit" base ("1" --> 15 bit times)
+-         */
++        /* the i.MX28 rx timeout is in "8 bit-times" and there is a "7 bit" base ("1" --> 15 bit times) */
+         if (to_bits >= 7) {
+             to_bits = to_bits - 7;
+         } else {
+@@ -834,6 +877,9 @@
+         __raw_writel(ctrl2, ctx->port->port.membase + HW_UARTAPP_CTRL2);
+         __raw_writel(ctrl0, ctx->port->port.membase + HW_UARTAPP_CTRL0);
+ 
++        if (!ctx->rs485)
++            __raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
 +
-+			/* Frame duration in ns (lower the accuracy or compiler blurps). */
-+			ctx->frame_ns = 100000000ul * frame_bits / ctx->config.baud_rate * 10;
-+		}
-+
-         /* the Modbus RTU reception requires an inter-character timeout:
-          * -- for baudrates <= 19200 the timeout is 1.5 chars = 1.5 * (1 + data_bits + parity + stop_bits)
-          * -- for higher baudrates the timeout is fixed to 0.750 s
-@@ -1113,6 +1137,8 @@
+ 		ctx->status = 0;
+ 		ctx->ioc_events &= ~RTSER_EVENT_ERRPEND;
+ 	}
+@@ -923,8 +969,6 @@
+ 			ctx->out_tail = (ctx->out_tail + block) & (OUT_BUFFER_SIZE - 1);
+ 			ctx->out_npend += block;
+ 
+-			ctx->ier_status |= IER_TX;
+-
+ 			rt_imx_mxs_auart_start_tx(ctx);
+ 
+ 			rtdm_lock_put_irqrestore(&ctx->lock, lock_ctx);
+@@ -1113,6 +1157,8 @@
  	ctx = (struct rt_imx_mxs_auart_ctx *)context->dev_private;
  	port = ctx->port;
  
@@ -88,7 +279,7 @@
  	rtdm_lock_get_irqsave(&ctx->lock, lock_ctx);
  
  	__raw_writel(BM_UARTAPP_CTRL0_SFTRST, port->port.membase + HW_UARTAPP_CTRL0_SET);
-@@ -1173,6 +1199,8 @@
+@@ -1173,8 +1219,11 @@
  	ctx->status = 0;
  	ctx->saved_errors = 0;
  
@@ -96,8 +287,29 @@
 +
  	/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
  	ctx->rs485 = 1;
++    ctx->char_time_ns = 1000000; /* 1 ms placeholder */
  
-@@ -1396,3 +1424,5 @@
+ 	rt_imx_mxs_auart_reset(&port->port);
+ 
+@@ -1191,7 +1240,7 @@
+ 
+     __raw_writel(BM_UARTAPP_CTRL2_UARTEN, port->port.membase + HW_UARTAPP_CTRL2_SET);
+ 
+-    dev_info(port->dev, "open %s\n", ret ? "failure" : "success");
++    //rtdm_printk("%s(%d): open %s\n", DRIVER_NAME, ctx->port->port.line, ret ? "failure" : "success");
+ 
+     return ret;
+ }
+@@ -1311,7 +1360,7 @@
+ 	version = __raw_readl(port->port.membase + HW_UARTAPP_VERSION);
+ 	printk(
+ 		KERN_INFO
+-        "%s on Xenomai RTDM MXS APPUART%d (v%d.%d.%d ftm): membase=0x%p mapbase=%#x irq=%d uartclk=%d\n",
++        "%s on Xenomai RTDM MXS APPUART%d (v%d.%d.%d): membase=0x%p mapbase=%#x irq=%d uartclk=%d\n",
+ 		dev->device_name,
+ 		pdev->id,
+ 		(version >> 24) & 0xFF,
+@@ -1396,3 +1445,5 @@
  MODULE_AUTHOR("Mihai Lazarescu <mlazarescu@mect.it>");
  MODULE_LICENSE("GPL");
  MODULE_DESCRIPTION("Freescale MXS application UART Xenomai RTDM driver");

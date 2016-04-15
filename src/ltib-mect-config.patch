@@ -16743,7 +16743,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +%patch46 -p1
 +%patch47 -p1
 +%patch48 -p1
-+#%patch49 -p1
++%patch49 -p1
 +%patch99 -p1
 +cd %{_builddir}/%{buildsubdir}
 +

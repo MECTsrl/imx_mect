@@ -207,8 +207,8 @@ MECT_COMMON_LFSPKGS := \
 
 MECT_COMMON_LFSPKGS := $(MECT_COMMON_LFSPKGS:%=$(MECT_RPMDIR)/%)
 
-MECT_TARGET_LFSPKG_ATCMCONTROL_RUNTIMESYSTEM := $(MECT_RPMDIR)/local-ATCMcontrol_RunTimeSystem-$(MECT_BUILD_ATCMCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm
-MECT_TARGET_LFSPKG_4C_RUNTIME := $(MECT_RPMDIR)/local-4c_runtime-$(MECT_BUILD_ATCMCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm
+MECT_TARGET_LFSPKG_ATCMCONTROL_RUNTIMESYSTEM := $(MECT_RPMDIR)/ATCMcontrol_RunTimeSystem-lfs-$(MECT_BUILD_ATCMCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm
+MECT_TARGET_LFSPKG_4C_RUNTIME := $(MECT_RPMDIR)/4c_runtime-lfs-$(MECT_BUILD_ATCMCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm
 
 MECT_TARGET_RFSPKGS := \
 	kernel-rfs-2.6.35.3-imx_1.1.0.arm.rpm \
@@ -502,6 +502,10 @@ projects: projects_setup projects_build
 .PHONY: spec_setup
 spec_setup: MECT_LTIBSPECDIR := $(MECT_LTIBDIR)/dist/lfs-5.1
 spec_setup:
+	for s in ATCMcontrol_RunTimeSystem/ATCMcontrol_RunTimeSystem.spec 4c_runtime/4c_runtime.spec; do \
+		test -w $(MECT_LTIBSPECDIR)/$$s; \
+		sed -i 's/^\s*\(Version\s*:\).*/\1 $(MECT_BUILD_ATCMCRT_TAG)/I' $(MECT_LTIBSPECDIR)/$$s; \
+	done
 	for s in mect_plugins/mect_plugins.spec; do \
 		test -w $(MECT_LTIBSPECDIR)/$$s; \
 		sed -i 's/^\s*\(Version\s*:\).*/\1 $(MECT_BUILD_PLUGINSCRT_TAG)/I' $(MECT_LTIBSPECDIR)/$$s; \

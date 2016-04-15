@@ -475,7 +475,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config
 +++ ltib/config/platform/imx/.config
-@@ -0,0 +1,661 @@
+@@ -0,0 +1,663 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -896,6 +896,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#
 +# MECT projects
 +#
++CONFIG_PKG_ATCMCONTROL_RUNTIMESYSTEM=y
++CONFIG_PKG_4C_RUNTIME=y
 +CONFIG_PKG_MECT_PLUGINS=y
 +CONFIG_PKG_MECT_APPS=y
 +CONFIG_PKG_CGIC_WORK=y
@@ -1166,7 +1168,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h
 +++ ltib/config/platform/imx/.tmpconfig.h
-@@ -0,0 +1,662 @@
+@@ -0,0 +1,664 @@
 +/*
 + * Automatically generated C config: don't edit
 + * LTIB version: 8.1.2
@@ -1588,6 +1590,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +/*
 + * MECT projects
 + */
++#define CONFIG_PKG_ATCMCONTROL_RUNTIMESYSTEM 1
++#define CONFIG_PKG_4C_RUNTIME 1
 +#define CONFIG_PKG_MECT_PLUGINS 1
 +#define CONFIG_PKG_MECT_APPS 1
 +#define CONFIG_PKG_CGIC_WORK 1
@@ -2832,7 +2836,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev
 +++ ltib/config/platform/imx/defconfig.dev
-@@ -0,0 +1,661 @@
+@@ -0,0 +1,663 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -3253,6 +3257,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#
 +# MECT projects
 +#
++CONFIG_PKG_ATCMCONTROL_RUNTIMESYSTEM=y
++CONFIG_PKG_4C_RUNTIME=y
 +CONFIG_PKG_MECT_PLUGINS=y
 +CONFIG_PKG_MECT_APPS=y
 +CONFIG_PKG_CGIC_WORK=y
@@ -20043,7 +20049,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  endmenu
  
  menu "Qtopia"
-@@ -2767,6 +2828,67 @@
+@@ -2767,6 +2828,81 @@
         Some host tools are not used when building Qtopia within ltib.
         Not building these tools saves time when building.  Select y here
         to enable designer, linguist, and assistant GUI tools.
@@ -20066,6 +20072,20 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +endmenu
 +
 +menu "MECT projects"
++config PKG_ATCMCONTROL_RUNTIMESYSTEM
++    bool "ATCM control runtime system application (no CAN)"
++    default y
++    help
++        ATCM control runtime system application
++	without CANopen stack.
++
++config PKG_4C_RUNTIME
++    bool "ATCM control runtime system application (w/ CAN)"
++    default y
++    help
++        ATCM control runtime system application
++	with CANOpen stack.
++
 +config PKG_MECT_PLUGINS
 +    bool "Custom Qt plugins for HMI development"
 +    default y
@@ -20111,7 +20131,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  menu "Applications"
  config PKG_QTOPIA_WANT_APP_CALCULATOR
-@@ -3346,7 +3468,7 @@
+@@ -3346,7 +3482,7 @@
      bool "totem-pl-parser"
      select PKG_EVOLUTION_DATA_SERVER
      select PKG_GTK2
@@ -20120,7 +20140,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3487,11 +3609,21 @@
+@@ -3487,11 +3623,21 @@
      depends CAP_HAS_MMU
      bool "wireless-tools"
      help
@@ -20143,7 +20163,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_XFSPROGS
      bool "xfsprogs"
      help
-@@ -3862,6 +3994,11 @@
+@@ -3862,6 +4008,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  
@@ -20198,7 +20218,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_MTD_UTILS                    = mtd-utils
  PKG_RPM                          = rpm
  PKG_RSYNC                        = rsync
-@@ -407,6 +411,19 @@
+@@ -407,6 +411,21 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
@@ -20209,6 +20229,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +PKG_USB_MODESWITCH               = usb_modeswitch
 +PKG_LAST_KERNEL_BUILD            = last-kernel-build
 +PKG_WIFI_DRIVERS                 = wifi-drivers
++PKG_ATCMCONTROL_RUNTIMESYSTEM    = ATCMcontrol_RunTimeSystem
++PKG_4C_RUNTIME                   = 4c_runtime
 +PKG_MECT_PLUGINS                 = mect_plugins
 +PKG_MECT_APPS                    = mect_apps
 +PKG_CGIC_WORK                    = cgic_work

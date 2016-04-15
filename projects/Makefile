@@ -26,10 +26,8 @@ export PATH := /usr/lib/ccache:$(PATH)
 # All build targets
 MECT_ALL_TARGETS := \
 	local_prepare \
-	ATCMcontrol_RunTimeSystem \
 
 ifneq ($(wildcard 4c_runtime/.*),)
-MECT_ALL_TARGETS += 4c_runtime
 endif
 
 ifneq ($(wildcard factory_test/trunk/.*),)
@@ -47,7 +45,6 @@ MECT_ALL_TARGETS += \
 # All clean targets
 MECT_CLEAN_TARGETS := \
 	local_prepare_clean \
-	ATCMcontrol_RunTimeSystem_clean \
 
 ifneq ($(wildcard factory_test/trunk/.*),)
 MECT_CLEAN_TARGETS += factory_test_clean
@@ -63,10 +60,8 @@ MECT_CLEAN_TARGETS += \
 
 MECT_LOCAL_SPECS := \
 	local.spec \
-	local-ATCMcontrol_RunTimeSystem.spec \
 
 ifneq ($(wildcard 4c_runtime/.*),)
-MECT_LOCAL_SPECS += local-4c_runtime.spec
 endif
 
 MECT_LOCAL_SPECS := $(MECT_LOCAL_SPECS:%=$(MECT_SPECDIR)/%)

@@ -18099,7 +18099,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
-@@ -0,0 +1,148 @@
+@@ -0,0 +1,145 @@
 +#!/bin/sh
 +
 +start() {
@@ -18177,43 +18177,40 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +	progs="keyGenerator factory_test fcrts hmi ts_calibrate splash"
 +
-+	# Stop nicely the programs.
-+	killall $progs > /dev/null 2>&1
-+
 +	# Wait a while for the programs to terminate.
-+	active=0
 +	for t in `seq 1 1 5`; do
 +		# Make sure the screen stays blanked.
 +		dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
 +
-+		active=0
-+		for p in $progs; do
-+			pidof $p > /dev/null 2>&1 && active=1
-+		done
-+
-+		test $active -eq 0 && break
++		# Stop nicely the programs.
++		killall $progs > /dev/null 2>&1
 +
 +		sleep 1
++
++		active=0
++		for p in $progs; do
++			test -n $( pidof $p ) && active=1
++		done
++		test $active -eq 0 && break
 +	done
 +
 +	# Programs still hanging on.
 +	if test $active -ne 0; then
-+		# Terminate all programs.
-+		killall -KILL $progs > /dev/null 2>&1
-+
 +		# Wait for a while for programs to really terminate.
 +		for t in `seq 1 1 5`; do
 +			# Make sure the screen stays blanked.
 +			dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
 +
-+			active=0
-+			for p in $progs; do
-+				pidof $p > /dev/null 2>&1 && active=1
-+			done
-+
-+			test $active -eq 0 && break
++			# Terminate all programs.
++			killall -KILL $progs > /dev/null 2>&1
 +
 +			sleep 1
++
++			active=0
++			for p in $progs; do
++				test -n $( pidof $p ) && active=1
++			done
++			test $active -eq 0 && break
 +		done
 +	fi
 +

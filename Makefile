@@ -68,7 +68,7 @@ export MECT_RPMBASEDIR = $(CURDIR)/ltib/rpm
 MECT_RPMBUILDDIR = $(MECT_RPMBASEDIR)/BUILD
 export MECT_RPMDIR = $(MECT_RPMBASEDIR)/RPMS/$(MECT_TARGET_ARCH)
 # Top-level directory of target device images
-MECT_IMGDIR = $(CURDIR)/images-all
+MECT_IMGDIR = $(CURDIR)/images
 # Projects directory
 MECT_PRJDIR = $(CURDIR)/projects
 # Draft directory for rpmbuild
@@ -678,25 +678,24 @@ target_lfs_flash:
 .PHONY: target_mfg
 target_mfg: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
 target_mfg: MECT_TGTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)_ms$(MECT_BUILD_RELEASE)
-target_mfg: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
-target_mfg: MECT_MFGZIP = $(MECT_MFGDIR)/../$(shell basename $(MECT_MFGDIR)).zip
+target_mfg: MECT_MFGZIP = $(MECT_TGTDIR)/../$(shell basename $(MECT_TGTDIR)).zip
 target_mfg: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 target_mfg: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 target_mfg: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
 target_mfg:
 	test -n '$(MECT_BUILD_TARGET)'
-	sudo rm -rf $(MECT_MFGDIR)
-	mkdir -p $(MECT_MFGDIR)/'OS firmware'/img $(MECT_MFGDIR)/'OS firmware'/sys $(MECT_TGTDIR)
-	sed "s/@@PLAYER@@/$(shell basename $(MECT_MFGDIR))/" $(MECT_FTPDIR)/player.ini > $(MECT_MFGDIR)/player.ini
-	install -m 644 $(MECT_FTPDIR)/fdisk-u.input $(MECT_MFGDIR)/'OS firmware'/sys/fdisk-u.input
-	install -m 644 $(MECT_FTPDIR)/ucl.xml $(MECT_MFGDIR)/'OS firmware'/ucl.xml
-	sudo tar cf $(MECT_MFGDIR)/'OS firmware'/img/rootfs.tar -C $(MECT_RFSDIR) .
-	tar cf $(MECT_MFGDIR)/'OS firmware'/img/localfs.tar -C $(MECT_LFSDIR) .
-	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_MFGDIR)/'OS firmware'/img
-	install -m 644 $(MECT_BOOTDIR)/boot/updater_ivt.sb $(MECT_MFGDIR)/'OS firmware'/sys
+	rm -rf $(MECT_TGTDIR)/'OS firmware'/img $(MECT_TGTDIR)/'OS firmware'/sys
+	mkdir -p $(MECT_TGTDIR)/'OS firmware'/img $(MECT_TGTDIR)/'OS firmware'/sys
+	sed "s/@@PLAYER@@/$(shell basename $(MECT_TGTDIR))/" $(MECT_FTPDIR)/player.ini > $(MECT_TGTDIR)/player.ini
+	install -m 644 $(MECT_FTPDIR)/fdisk-u.input $(MECT_TGTDIR)/'OS firmware'/sys/fdisk-u.input
+	install -m 644 $(MECT_FTPDIR)/ucl.xml $(MECT_TGTDIR)/'OS firmware'/ucl.xml
+	sudo tar cf $(MECT_TGTDIR)/'OS firmware'/img/rootfs.tar -C $(MECT_RFSDIR) .
+	tar cf $(MECT_TGTDIR)/'OS firmware'/img/localfs.tar -C $(MECT_LFSDIR) .
+	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_TGTDIR)/'OS firmware'/img
+	install -m 644 $(MECT_BOOTDIR)/boot/updater_ivt.sb $(MECT_TGTDIR)/'OS firmware'/sys
 	rm -f $(MECT_MFGZIP)
-	cd $(MECT_MFGDIR); zip -0r $(MECT_MFGZIP) *
-	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_MFGDIR)
+	cd $(MECT_TGTDIR); zip -0r $(MECT_MFGZIP) 'OS firmware' player.ini
+	sudo rm -rf $(MECT_TGTDIR)
 
 # Build the archive for target-specific development.
 .PHONY: target_dev

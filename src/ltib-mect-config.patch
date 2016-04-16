@@ -20218,7 +20218,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_MTD_UTILS                    = mtd-utils
  PKG_RPM                          = rpm
  PKG_RSYNC                        = rsync
-@@ -407,6 +411,21 @@
+@@ -407,6 +411,22 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
@@ -20229,6 +20229,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +PKG_USB_MODESWITCH               = usb_modeswitch
 +PKG_LAST_KERNEL_BUILD            = last-kernel-build
 +PKG_WIFI_DRIVERS                 = wifi-drivers
++PKG_XENOMAI                      = xenomai
 +PKG_ATCMCONTROL_RUNTIMESYSTEM    = ATCMcontrol_RunTimeSystem
 +PKG_4C_RUNTIME                   = 4c_runtime
 +PKG_MECT_PLUGINS                 = mect_plugins

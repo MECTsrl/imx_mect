@@ -16,7 +16,7 @@ export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc22
 # git branch and tag for the mect_apps project
 MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to skip tag checkout
-export MECT_BUILD_APPSCRT_TAG := 0.0
+export MECT_BUILD_APPSCRT_TAG := v2.0rc2
 
 # Mandatory prefix for all target device names.
 MECT_TARGET_PREFIX := MECT_

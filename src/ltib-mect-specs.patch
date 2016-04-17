@@ -43,7 +43,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# Sources not available
 +if test -d ../../../../projects/%{name}; then
-+	rsync -a --inplace ../../../../projects/%{name}/ ./
++	rsync -av --inplace ../../../../projects/%{name}/ ./
 +fi
 +
 +
@@ -140,7 +140,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +%setup -T -c -n %{name}
-+rsync -a --inplace ../../../../projects/%{name}/ ./
++rsync -av --inplace ../../../../projects/%{name}/ ./
 +
 +
 +%build
@@ -222,7 +222,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +%setup -T -c -n SDcard
-+rsync -a --inplace ../../../../projects/SDcard/ ./
++rsync -av --inplace ../../../../projects/SDcard/ ./
 +
 +%Build
 +export LC_ALL
@@ -1016,7 +1016,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +%setup -T -c -n %{name}
-+rsync -a --inplace ../../../../projects/%{name}/ ./
++rsync -av --inplace ../../../../projects/%{name}/ ./
 +
 +
 +%Build
@@ -3013,7 +3013,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +%setup -T -c -n %{name}
-+rsync -a --inplace ../../../../projects/%{name}/ ./
++rsync -av --inplace ../../../../projects/%{name}/ ./
 +
 +%Build
 +export LC_ALL
@@ -3166,7 +3166,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +%setup -T -c -n %{name}
-+rsync -a --inplace ../../../../projects/%{name}/ ./
++rsync -av --inplace ../../../../projects/%{name}/ ./
 +
 +%build
 +export LC_ALL
@@ -3497,7 +3497,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +%setup -T -c -n %{name}
-+rsync -a --inplace ../../../../projects/%{name}/ ./
++rsync -av --inplace ../../../../projects/%{name}/ ./
 +
 +
 +%Build
@@ -5485,7 +5485,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +%setup -T -c -n SDcard
-+rsync -a --inplace ../../../../projects/splash/ ./
++rsync -av --inplace ../../../../projects/splash/ ./
 +
 +%Build
 +export LC_ALL

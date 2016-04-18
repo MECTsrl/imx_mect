@@ -689,8 +689,8 @@ target_mfg:
 	sed "s/@@PLAYER@@/$(shell basename $(MECT_TGTDIR))/" $(MECT_FTPDIR)/player.ini > $(MECT_TGTDIR)/player.ini
 	install -m 644 $(MECT_FTPDIR)/fdisk-u.input $(MECT_TGTDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(MECT_FTPDIR)/ucl.xml $(MECT_TGTDIR)/'OS firmware'/ucl.xml
-	sudo tar cf $(MECT_TGTDIR)/'OS firmware'/img/rootfs.tar -C $(MECT_RFSDIR) .
-	tar cf $(MECT_TGTDIR)/'OS firmware'/img/localfs.tar -C $(MECT_LFSDIR) .
+	cd $(MECT_RFSDIR); sudo tar cf $(MECT_TGTDIR)/'OS firmware'/img/rootfs.tar *
+	cd $(MECT_LFSDIR); tar cf $(MECT_TGTDIR)/'OS firmware'/img/localfs.tar *
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_TGTDIR)/'OS firmware'/img
 	install -m 644 $(MECT_BOOTDIR)/boot/updater_ivt.sb $(MECT_TGTDIR)/'OS firmware'/sys
 	rm -f $(MECT_MFGZIP)

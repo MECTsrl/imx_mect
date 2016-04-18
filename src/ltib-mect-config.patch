@@ -19387,7 +19387,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh ltib/config/platform/imx/merge/usr/sbin/wifi.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/wifi.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/wifi.sh
-@@ -0,0 +1,218 @@
+@@ -0,0 +1,228 @@
 +#!/bin/sh
 +
 +wlan="wlan0"
@@ -19457,6 +19457,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +setup()
 +{
++    test $# -ne 2 && return 1
++
 +    mkdir -p "$conf_dir"
 +
 +cat > "$conf_file" <<EOF
@@ -19473,6 +19475,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +    psk="$2"
 +}
 +EOF
++
++    ifconfig -a | grep -q "\b${wlan}\b" || return 0
 +
 +    mkdir -p "$ctrl_dir"
 +    if wpa_cli -p $ctrl_dir status > /dev/null 2>&1; then
@@ -19493,6 +19497,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +    test "$ONBOOTW0" = "1" || return 0
 +
++    ifconfig -a | grep -q "\b${wlan}\b" || return 1
++
 +    mkdir -p "$ctrl_dir"
 +    if wpa_cli -p $ctrl_dir status > /dev/null 2>&1; then
 +	iwconfig "$wlan" essid ""       # Force reassociation.
@@ -19507,6 +19513,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +stop()
 +{
++    ifconfig -a | grep -q "\b${wlan}\b" || return 0
++
 +    test -d "$ctrl_dir" || return 1
 +
 +    wpa_cli -p $ctrl_dir terminate 2>/dev/null \
@@ -19533,6 +19541,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +scan()
 +{
 +    # Silence any unrelated message on stdout.
++
++    ifconfig -a | grep -q "\b${wlan}\b" || return 1
 +
 +    tf=/tmp/`basename $0`-$$.tmp || return 1
 +

@@ -22,39 +22,39 @@ int HandleSubmitSYSUPD()
 
 int HandleSubmitHMI(void)
 {
-	return Update("HMI", "/local/root/hmi",
-		"sync"
-		" && chmod 754 /local/root/hmi");
+	return Update("HMI", "/local/root/hmi", "chmod 754 /local/root/hmi");
 }
 
 int HandleSubmitCROSSTBL(void)
 {
 	return Update("CROSSTBL", "/local/etc/sysconfig/Crosstable.csv",
-		"sync"
-		" && /bin/chmod 644 /local/etc/sysconfig/Crosstable.csv" 
-		" && /usr/bin/dos2unix /local/etc/sysconfig/Crosstable.csv");
+		"/bin/chmod 644 /local/etc/sysconfig/Crosstable.csv" 
+		" && "
+		"/usr/bin/dos2unix /local/etc/sysconfig/Crosstable.csv"
+		);
 }
 
 int HandleSubmitSYSINI(void)
 {
 	return Update("SYSINI", "/local/etc/sysconfig/system.ini",
-		"sync"
-		" && /bin/chmod 644 /local/etc/sysconfig/system.ini"
-		" && /usr/bin/dos2unix /local/etc/sysconfig/system.ini");
+		"/bin/chmod 644 /local/etc/sysconfig/system.ini"
+		" && "
+		"/usr/bin/dos2unix /local/etc/sysconfig/system.ini"
+	);
 }
 
 int HandleSubmitSPLASH(void)
 {
 	return Update("SPLASH", "/local/etc/sysconfig/img/splash.png",
-		"sync"
-		" && /bin/chmod 644 /local/etc/sysconfig/img/splash.png");
+		"/bin/chmod 644 /local/etc/sysconfig/img/splash.png"
+		);
 }
 
 int HandleSubmitFCRTS(void)
 {
 	return Update("FCRTS", "/local/root/fcrts",
-		"sync"
-		" && chmod 754 /local/root/fcrts");
+		"chmod 754 /local/root/fcrts"
+		);
 }
 
 int HandleSubmitPLC(void)
@@ -86,6 +86,7 @@ static int Update(char *file_id, char *file_name, char *action)
 	snprintf(cmdline, FILENAME_MAX, "mv %s %s", tmpfile, file_name);
 	rv = system(cmdline);
 	rv = system(action);
+	sync();
 	return rv;
 }
 

@@ -18200,44 +18200,44 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +	# Wait a while for the programs to terminate.
 +	active=0
-+	for t in `seq 1 1 5`; do
++	for t in $(/usr/bin/seq 1 1 5); do
 +		# Make sure the screen stays blanked.
-+		dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
++		/bin/dd if=/dev/zero of=/dev/fb0 > /dev/null 2>&1
 +
 +		# Stop nicely the programs.
-+		killall $progs > /dev/null 2>&1
-+
-+		sleep 1
++		/usr/bin/killall $progs > /dev/null 2>&1
 +
 +		active=0
 +		for p in $progs; do
-+			test -n "$( pidof $p )" && active=1
++			/usr/bin/test -n "$(/sbin/pidof $p)" && active=1
 +		done
-+		test $active -eq 0 && break
++		/usr/bin/test $active -eq 0 && break
++
++		/bin/sleep 1
 +	done
 +
 +	# Programs still hanging on.
-+	if test $active -ne 0; then
++	if /usr/bin/test $active -ne 0; then
 +		# Wait for a while for programs to really terminate.
-+		for t in `seq 1 1 5`; do
++		for t in $(/usr/bin/seq 1 1 5); do
 +			# Make sure the screen stays blanked.
-+			dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
++			/bin/dd if=/dev/zero of=/dev/fb0 > /dev/null 2>&1
 +
 +			# Terminate all programs.
-+			killall -KILL $progs > /dev/null 2>&1
++			/usr/bin/killall -KILL $progs > /dev/null 2>&1
 +
-+			sleep 1
++			/bin/sleep 1
 +
 +			active=0
 +			for p in $progs; do
-+				test -n "$( pidof $p )" && active=1
++				/usr/bin/test -n "$(/sbin/pidof $p)" && active=1
 +			done
-+			test $active -eq 0 && break
++			/usr/bin/test $active -eq 0 && break
 +		done
 +	fi
 +
 +	# Blank screen on exit.
-+	dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
++	/bin/dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
 +
 +	echo "Done."
 +

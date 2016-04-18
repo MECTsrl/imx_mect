@@ -19536,7 +19536,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +    tf=/tmp/`basename $0`-$$.tmp || return 1
 +
-+    wpa_cli -p $ctrl_dir status > /dev/null
++    wpa_cli -p $ctrl_dir status > /dev/null 2>&1
 +    status=$?
 +
 +    if test "$status" -ne 0; then

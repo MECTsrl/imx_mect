@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Network configuration
+# Display configuration
 
 . ./load.cgi
 
@@ -44,8 +44,8 @@ cat <<EOF
 	                        <td>
 EOF
 SCALED_BRIGHTNESS=`cat $LOCAL_ETC_DIR/brightness | cut -d\  -f2`
-BRIGHTNESS=`expr $SCALED_BRIGHTNESS \* 2`
-#echo "    	                    <input type=\"decimal\" name=\"BRIGHTNESS\" value=\"`cat $LOCAL_ETC_DIR/brightness | cut -d\  -f2`\">"
+BRIGHTNESS=`expr $SCALED_BRIGHTNESS - 20`
+BRIGHTNESS=`expr $BRIGHTNESS \* 100 / 50`
 echo "    	                    <input type=\"decimal\" name=\"BRIGHTNESS\" value=\"$BRIGHTNESS\">"
 cat <<EOF							
         	                </td>

@@ -44,7 +44,7 @@ cat <<EOF
 	                        <td>
 EOF
 SCALED_BRIGHTNESS=`cat $LOCAL_ETC_DIR/brightness | cut -d\  -f2`
-BRIGHTNESS=`expr $SCALED_BRIGHTNESS \* 2 - 20`
+BRIGHTNESS=`expr $SCALED_BRIGHTNESS \* 2`
 #echo "    	                    <input type=\"decimal\" name=\"BRIGHTNESS\" value=\"`cat $LOCAL_ETC_DIR/brightness | cut -d\  -f2`\">"
 echo "    	                    <input type=\"decimal\" name=\"BRIGHTNESS\" value=\"$BRIGHTNESS\">"
 cat <<EOF							
@@ -63,8 +63,8 @@ cat <<EOF
         	                </td>
 	                        <td>
 EOF
-eval `grep ScreenSaverSec $LOCAL_ETC_DIR/atn01.conf | sed 's/: /=/'`
-echo "    	                    <input type=\"decimal\" name=\"SCREENSAVER\" value=\"$ScreenSaverSec\">"
+eval `grep screen_saver_s $LOCAL_ETC_DIR/system.ini | awk '{print $1$2$3}'`
+echo "    	                    <input type=\"decimal\" name=\"SCREENSAVER\" value=\"$screen_saver_s\">"
 cat <<EOF							
         	                </td>
 	                        <td>

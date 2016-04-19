@@ -16,20 +16,31 @@ fi
 
 if [ "$SCREENSAVER" != "" ]
 then
-	if [ `grep ScreenSaverSec: $LOCAL_ETC_DIR/atn01.conf` ]
+	if grep screen_saver_s $LOCAL_ETC_DIR/system.ini
 	then
-		awk '{if ($0 ~/ScreenSaverSec:/) {print ScreenSaverSec: '$SCREENSAVER'} else {print $0}}' $LOCAL_ETC_DIR/atn01.conf > /tmp/atn01.conf
-		mv /tmp/atn01.conf $LOCAL_ETC_DIR/atn01.conf
+		awk '{if ($0 ~/screen_saver_s/) {printf "screen_saver_s = '$SCREENSAVER'\n"} else {print $0}}' $LOCAL_ETC_DIR/system.ini > /tmp/system.ini
+		mv /tmp/system.ini $LOCAL_ETC_DIR/system.ini
+		MSG="Screen saver timeout set to $SCREENSAVER"
 	else
-		echo "ScreenSaverSec: $SCREENSAVER" >> $LOCAL_ETC_DIR/atn01.conf
+		MSG="Cannot set the screen saver timeout to $SCREENSAVER"
 	fi
-	MSG="Screen saver timeout set to $SCREENSAVER"
 fi
 
 if [ "$TSCALIB" != "" ]
 then
+	# ts variable
+	export QWS_MOUSE_PROTO=tslib:/dev/input/ts0
+	export TSLIB_CONFFILE=/usr/etc/ts.conf
+	export TSLIB_PLUGINDIR=/usr/lib/ts
+	export TSLIB_TSDEVICE=/dev/input/ts0
+	export TSLIB_CONSOLEDEVICE=none
+	export TSLIB_CALIBFILE=/etc/pointercal
+
 	/etc/rc.d/init.d/autoexec stop > /dev/null 2>&1
-	rm -f $LOCAL_ETC_DIR/pointercal
+	mount -orw,remount /
+        /usr/bin/ts_calibrate
+        sync
+	mount -oro,remount /
 	/etc/rc.d/init.d/autoexec start > /dev/null 2>&1
 	MSG="Reset the touch calibration file."
 fi

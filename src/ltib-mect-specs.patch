@@ -3057,12 +3057,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1356 @@
+@@ -0,0 +1,1470 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : 0.0
++Version         : v2.0rc4
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3266,6 +3266,34 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Prefix          : %{pfx}/TPAC1006/local
 +
 +%Description lfs-TPAC1006
++%{name} package contents limited to just the run-times needed
++on the target.
++
++# TPAC1006_GSM
++#
++%Package lfs-TPAC1006_GSM
++Summary         : Trimmed %{name} to just the run-times needed for local file system.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/System
++AutoReqProv     : no
++Prefix          : %{pfx}/TPAC1006_GSM/local
++
++%Description lfs-TPAC1006_GSM
++%{name} package contents limited to just the run-times needed
++on the target.
++
++# TPAC1006_HR
++#
++%Package lfs-TPAC1006_HR
++Summary         : Trimmed %{name} to just the run-times needed for local file system.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/System
++AutoReqProv     : no
++Prefix          : %{pfx}/TPAC1006_HR/local
++
++%Description lfs-TPAC1006_HR
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
@@ -3680,6 +3708,45 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
++# TPAC1006_GSM
++#
++d=AnyTPAC/Empty_HMI
++if test -d $d; then
++	cd $d
++
++	test -r Makefile && make clean
++	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/qmake \
++		-spec qws/linux-g++-mx \
++		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
++		"DEFINES+=TARGET_ARM" \
++		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
++		Empty_HMI.pro
++	make -j`grep -c ^processor /proc/cpuinfo`
++
++	cd -
++fi
++
++
++# TPAC1006_HR
++#
++d=AnyTPAC/Empty_HMI
++if test -d $d; then
++	cd $d
++
++	test -r Makefile && make clean
++	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/qmake \
++		-spec qws/linux-g++-mx \
++		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
++		"DEFINES+=TARGET_ARM" \
++		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
++		Empty_HMI.pro
++	make -j`grep -c ^processor /proc/cpuinfo`
++
++	cd -
++fi
++
 +# TPAC1008_01
 +#
 +d=TPAC1008_01/Local_IO_HMI
@@ -4072,6 +4139,37 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
++# TPAC1006_GSM
++#
++d=AnyTPAC/Empty_HMI
++if test -d $d; then
++	cd $d
++
++	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1006_GSM/local/root/hmi
++	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1006_GSM/local/etc/sysconfig/Crosstable.csv
++	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1006_GSM/local/etc/sysconfig/img/splash.png
++	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1006_GSM/local/etc/sysconfig/system.ini
++	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1006_GSM/local/data/customtrend/trend1.csv
++
++	cd -
++fi
++
++
++# TPAC1006_HR
++#
++d=AnyTPAC/Empty_HMI
++if test -d $d; then
++	cd $d
++
++	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1006_HR/local/root/hmi
++	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1006_HR/local/etc/sysconfig/Crosstable.csv
++	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1006_HR/local/etc/sysconfig/img/splash.png
++	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1006_HR/local/etc/sysconfig/system.ini
++	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1006_HR/local/data/customtrend/trend1.csv
++
++	cd -
++fi
++
 +# TPAC1008_01
 +#
 +d=TPAC1008_01/Local_IO_HMI
@@ -4339,6 +4437,22 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1006/local/etc/sysconfig/iomap1.cmg
 +%{pfx}/TPAC1006/local/etc/sysconfig/network1.cmg
 +
++%files lfs-TPAC1006_GSM
++%defattr(-,root,root)
++%{pfx}/TPAC1006_GSM/local/root/hmi
++%{pfx}/TPAC1006_GSM/local/etc/sysconfig/Crosstable.csv
++%{pfx}/TPAC1006_GSM/local/etc/sysconfig/img/splash.png
++%{pfx}/TPAC1006_GSM/local/etc/sysconfig/system.ini
++%{pfx}/TPAC1006_GSM/local/data/customtrend/trend1.csv
++
++%files lfs-TPAC1006_HR
++%defattr(-,root,root)
++%{pfx}/TPAC1006_HR/local/root/hmi
++%{pfx}/TPAC1006_HR/local/etc/sysconfig/Crosstable.csv
++%{pfx}/TPAC1006_HR/local/etc/sysconfig/img/splash.png
++%{pfx}/TPAC1006_HR/local/etc/sysconfig/system.ini
++%{pfx}/TPAC1006_HR/local/data/customtrend/trend1.csv
++
 +%files lfs-TPAC1008_01
 +%defattr(-,root,root)
 +%{pfx}/TPAC1008_01/local/root/hmi
@@ -4422,7 +4536,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: 0.0
++Version: v7.0rc24
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

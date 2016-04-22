@@ -2208,195 +2208,195 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
 +
-+%Files rfs-dev-usbserial
++%Files rfs-usbserial
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/usbserial.ko
 +
-+%Files rfs-dev-usbserial-aircable
++%Files rfs-usbserial-aircable
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/aircable.ko
 +
-+%Files rfs-dev-usbserial-ark3116
++%Files rfs-usbserial-ark3116
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ark3116.ko
 +
-+%Files rfs-dev-usbserial-belkin_sa
++%Files rfs-usbserial-belkin_sa
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/belkin_sa.ko
 +
-+%Files rfs-dev-usbserial-ch341
++%Files rfs-usbserial-ch341
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ch341.ko
 +
-+%Files rfs-dev-usbserial-cp210x
++%Files rfs-usbserial-cp210x
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/cp210x.ko
 +
-+%Files rfs-dev-usbserial-cyberjack
++%Files rfs-usbserial-cyberjack
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/cyberjack.ko
 +
-+%Files rfs-dev-usbserial-cypress_m8
++%Files rfs-usbserial-cypress_m8
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/cypress_m8.ko
 +
-+%Files rfs-dev-usbserial-digi_acceleport
++%Files rfs-usbserial-digi_acceleport
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/digi_acceleport.ko
 +
-+%Files rfs-dev-usbserial-empeg
++%Files rfs-usbserial-empeg
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/empeg.ko
 +
-+%Files rfs-dev-usbserial-ftdi_sio
++%Files rfs-usbserial-ftdi_sio
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ftdi_sio.ko
 +
-+%Files rfs-dev-usbserial-funsoft
++%Files rfs-usbserial-funsoft
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/funsoft.ko
 +
-+%Files rfs-dev-usbserial-garmin_gps
++%Files rfs-usbserial-garmin_gps
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/garmin_gps.ko
 +
-+%Files rfs-dev-usbserial-hp4x
++%Files rfs-usbserial-hp4x
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/hp4x.ko
 +
-+%Files rfs-dev-usbserial-io_edgeport
++%Files rfs-usbserial-io_edgeport
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/io_edgeport.ko
 +
-+%Files rfs-dev-usbserial-io_ti
++%Files rfs-usbserial-io_ti
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/io_ti.ko
 +
-+%Files rfs-dev-usbserial-ipaq
++%Files rfs-usbserial-ipaq
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ipaq.ko
 +
-+%Files rfs-dev-usbserial-ipw
++%Files rfs-usbserial-ipw
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ipw.ko
 +
-+%Files rfs-dev-usbserial-ir
++%Files rfs-usbserial-ir
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ir-usb.ko
 +
-+%Files rfs-dev-usbserial-iuu_phoenix
++%Files rfs-usbserial-iuu_phoenix
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/iuu_phoenix.ko
 +
-+%Files rfs-dev-usbserial-keyspan
++%Files rfs-usbserial-keyspan
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/keyspan.ko
 +
-+%Files rfs-dev-usbserial-keyspan_pda
++%Files rfs-usbserial-keyspan_pda
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/keyspan_pda.ko
 +
-+%Files rfs-dev-usbserial-kl5kusb105
++%Files rfs-usbserial-kl5kusb105
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/kl5kusb105.ko
 +
-+%Files rfs-dev-usbserial-kobil_sct
++%Files rfs-usbserial-kobil_sct
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/kobil_sct.ko
 +
-+%Files rfs-dev-usbserial-mct_u232
++%Files rfs-usbserial-mct_u232
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/mct_u232.ko
 +
-+%Files rfs-dev-usbserial-mos7720
++%Files rfs-usbserial-mos7720
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/mos7720.ko
 +
-+%Files rfs-dev-usbserial-mos7840
++%Files rfs-usbserial-mos7840
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/mos7840.ko
 +
-+%Files rfs-dev-usbserial-moto_modem
++%Files rfs-usbserial-moto_modem
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/moto_modem.ko
 +
-+%Files rfs-dev-usbserial-navman
++%Files rfs-usbserial-navman
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/navman.ko
 +
-+%Files rfs-dev-usbserial-omninet
++%Files rfs-usbserial-omninet
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/omninet.ko
 +
-+%Files rfs-dev-usbserial-opticon
++%Files rfs-usbserial-opticon
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/opticon.ko
 +
-+%Files rfs-dev-usbserial-option
++%Files rfs-usbserial-option
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/option.ko
 +
-+%Files rfs-dev-usbserial-oti6858
++%Files rfs-usbserial-oti6858
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/oti6858.ko
 +
-+%Files rfs-dev-usbserial-pl2303
++%Files rfs-usbserial-pl2303
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/pl2303.ko
 +
-+%Files rfs-dev-usbserial-qcaux
++%Files rfs-usbserial-qcaux
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/qcaux.ko
 +
-+%Files rfs-dev-usbserial-qcserial
++%Files rfs-usbserial-qcserial
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/qcserial.ko
 +
-+%Files rfs-dev-usbserial-safe_serial
++%Files rfs-usbserial-safe_serial
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/safe_serial.ko
 +
-+%Files rfs-dev-usbserial-siemens_mpi
++%Files rfs-usbserial-siemens_mpi
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/siemens_mpi.ko
 +
-+%Files rfs-dev-usbserial-sierra
++%Files rfs-usbserial-sierra
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/sierra.ko
 +
-+%Files rfs-dev-usbserial-spcp8x5
++%Files rfs-usbserial-spcp8x5
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/spcp8x5.ko
 +
-+%Files rfs-dev-usbserial-symbolserial
++%Files rfs-usbserial-symbolserial
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/symbolserial.ko
 +
-+%Files rfs-dev-usbserial-ti_3410_5052
++%Files rfs-usbserial-ti_3410_5052
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ti_usb_3410_5052.ko
 +
-+%Files rfs-dev-usbserial-debug
++%Files rfs-usbserial-debug
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/usb_debug.ko
 +
-+%Files rfs-dev-usbserial-wwan
++%Files rfs-usbserial-wwan
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/usb_wwan.ko
 +
-+%Files rfs-dev-usbserial-visor
++%Files rfs-usbserial-visor
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/visor.ko
 +
-+%Files rfs-dev-usbserial-vivopay-serial
++%Files rfs-usbserial-vivopay-serial
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/vivopay-serial.ko
 +
-+%Files rfs-dev-usbserial-whiteheat
++%Files rfs-usbserial-whiteheat
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/whiteheat.ko
 +
-+%Files rfs-dev-usbserial-zio
++%Files rfs-usbserial-zio
 +%defattr(-,root,root)
 +%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/zio.ko
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec ltib/dist/lfs-5.1/last-kernel-build/last-kernel-build.spec

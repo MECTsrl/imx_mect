@@ -1,6 +1,6 @@
 .*.swp
 *.o
-images-all
+images
 ltib.reference
 ltib
 projects/mect_plugins

@@ -556,6 +556,8 @@ images:
 images_do: $(MECT_DEFAULT_IMAGES)
 
 
+# Image-specific settings and targets
+#
 include targets/Makefile-TP1043_232.in
 include targets/Makefile-TP1043_485.in
 include targets/Makefile-TP1043_CAN.in
@@ -809,3 +811,8 @@ $(MECT_FTPDIR)/$(MECT_LTIB_UBUNTU_12_04_PATCH).$(MECT_MD5EXT):
 	wget -O $@ "$(MECT_FTPURL)/$(shell basename $@)"
 	touch -c $@			# Force the re-check of the downloaded file, if any.
 	$(MAKE) $(@:%.$(MECT_MD5EXT)=%)	# Re-check the downloaded file, if any.
+
+
+# Test targets, if any
+#
+-include ../tests.in

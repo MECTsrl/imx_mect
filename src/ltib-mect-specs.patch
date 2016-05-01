@@ -4613,7 +4613,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,119 @@
+@@ -10,40 +10,120 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -4701,6 +4701,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	/etc/rc.d/init.d/iptables \
 +	/etc/rc.d/init.d/mac_sn \
 +	/etc/rc.d/init.d/network \
++	/etc/rc.d/init.d/openvpn \
 +	/etc/rc.d/init.d/S10setup \
 +	/etc/rc.d/init.d/sdcheck \
 +	/etc/rc.d/init.d/setup \
@@ -7072,6 +7073,32 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Files rfs -f rfs_files.lst
  %defattr(-,root,root)
 -%{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/sysconfig.spec ltib/dist/lfs-5.1/sysconfig/sysconfig.spec
+--- ltib.reference/dist/lfs-5.1/sysconfig/sysconfig.spec
++++ ltib/dist/lfs-5.1/sysconfig/sysconfig.spec
+@@ -91,14 +91,18 @@
+ then
+ 	pango=pango
+ fi
++if [ "$SYSCFG_START_OPENVPN" = "y" ]
++then
++	openvpn=openvpn
++fi
+ 
+ cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc.conf
+-all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems syslog network inetd portmap dropbear sshd boa smb dhcpd settime qtopia watchdog gtk2 pango"
+-all_services_r="pango gtk2 watchdog qtopia settime dhcpd smb boa sshd dropbear portmap inetd network syslog filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
++all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems syslog network inetd portmap dropbear sshd boa smb dhcpd settime qtopia watchdog gtk2 pango openvpn"
++all_services_r="openvpn pango gtk2 watchdog qtopia settime dhcpd smb boa sshd dropbear portmap inetd network syslog filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
+ 
+-cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $syslog $network $inetd $portmap $dropbear $sshd $boa $smb $dhcpd $settime $qtopia $watchdog $gtk2 $pango"
++cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $syslog $network $inetd $portmap $dropbear $sshd $boa $smb $dhcpd $settime $qtopia $watchdog $gtk2 $pango $openvpn"
+ 
+-cfg_services_r="$pango $gtk2 $watchdog $qtopia $settime $dhcpd $smb $boa $sshd $dropbear $portmap $inetd $network $syslog filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys"
++cfg_services_r="$openvpn $pango $gtk2 $watchdog $qtopia $settime $dhcpd $smb $boa $sshd $dropbear $portmap $inetd $network $syslog filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys"
+ 
+ export HOSTNAME="${SYSCFG_HOSTNAME:-$PLATFORM}"
+ export NTP_SERVER="$SYSCFG_NTP_SERVER"
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec ltib/dist/lfs-5.1/texinfo/texinfo.spec
 --- ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec
 +++ ltib/dist/lfs-5.1/texinfo/texinfo.spec

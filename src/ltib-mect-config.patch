@@ -475,7 +475,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config
 +++ ltib/config/platform/imx/.config
-@@ -0,0 +1,663 @@
+@@ -0,0 +1,664 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -1091,6 +1091,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_SYSCFG_START_BOA=y
 +CONFIG_SYSCFG_BOA_ARGS="-c /etc"
 +# CONFIG_SYSCFG_START_TELNET is not set
++CONFIG_SYSCFG_START_OPENVPN=y
 +CONFIG_SYSCFG_START_AUTOEXEC=y
 +CONFIG_SYSCFG_START_S10SETUP=y
 +
@@ -1168,7 +1169,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h
 +++ ltib/config/platform/imx/.tmpconfig.h
-@@ -0,0 +1,664 @@
+@@ -0,0 +1,665 @@
 +/*
 + * Automatically generated C config: don't edit
 + * LTIB version: 8.1.2
@@ -1785,6 +1786,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#define CONFIG_SYSCFG_START_BOA 1
 +#define CONFIG_SYSCFG_BOA_ARGS "-c /etc"
 +#undef CONFIG_SYSCFG_START_TELNET
++#define CONFIG_SYSCFG_START_OPENVPN 1
 +#define CONFIG_SYSCFG_START_AUTOEXEC 1
 +#define CONFIG_SYSCFG_START_S10SETUP 1
 +
@@ -2836,7 +2838,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev
 +++ ltib/config/platform/imx/defconfig.dev
-@@ -0,0 +1,663 @@
+@@ -0,0 +1,664 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -3452,6 +3454,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_SYSCFG_START_BOA=y
 +CONFIG_SYSCFG_BOA_ARGS="-c /etc"
 +# CONFIG_SYSCFG_START_TELNET is not set
++CONFIG_SYSCFG_START_OPENVPN=y
 +CONFIG_SYSCFG_START_AUTOEXEC=y
 +CONFIG_SYSCFG_START_S10SETUP=y
 +
@@ -18944,6 +18947,53 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	fi
 +    fi
 +fi
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/openvpn ltib/config/platform/imx/merge/etc/rc.d/init.d/openvpn
+--- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/openvpn
++++ ltib/config/platform/imx/merge/etc/rc.d/init.d/openvpn
+@@ -0,0 +1,43 @@
++#!/bin/sh
++
++EXE=/usr/sbin/openvpn
++CONFD=/etc/openvpn/
++CONFF=mect.conf
++PID=/var/run/openvpn-mect.pid
++
++start() {
++	test -x "$EXE" || exit 1
++	test -r "$CONFD$CONFF" || exit 1
++	test -d /proc/$(cat "$PID") && exit 2
++
++	"$EXE" --daemon --writepid "$PID" --cd "$CONFD" --config "$CONFF"
++}
++
++stop() {
++	test -r "$PID" || exit 0
++	test -d /proc/$(cat "$PID") || exit 1
++
++	kill $(cat "$PID")
++}
++
++case "$1" in
++	start)
++		start
++	;;
++
++	stop)
++		stop
++	;;
++
++	restart)
++		stop
++		sleep 1
++		start
++	;;
++
++	*)
++		echo $"Usage: $0 {start|stop|restart}"
++
++		exit 1
++	;;
++esac
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
@@ -20657,10 +20707,18 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config SYSCFG_START_SAMBA
      depends PKG_SAMBA
      bool "start samba file sharing (smbd and nmbd)"
-@@ -224,4 +234,19 @@
+@@ -224,4 +234,27 @@
        The config file pango.modules must be created on the target.
  endif
  
++if PKG_OPENVPN
++    config SYSCFG_START_OPENVPN
++        bool "start openvpn"
++        default y
++    help
++      The config file(s) must be created on the target in /etc/openvpn.
++endif
++
 +config SYSCFG_START_AUTOEXEC
 +    depends PKG_BUSYBOX
 +    bool "start autoexec daemon"

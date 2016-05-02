@@ -1,0 +1,25 @@
+diff --exclude CVS --exclude .git -uNr skell-1.18/etc/fstab skell-1.18.modified/etc/fstab
+--- skell-1.18/etc/fstab	2016-05-02 17:21:48.971955019 +0200
++++ skell-1.18.modified/etc/fstab	1970-01-01 01:00:00.000000000 +0100
+@@ -1,21 +0,0 @@
+-#
+-# /etc/fstab: static file system information.
+-#
+-# file system   mount       type    options           dump    pass
+-#/dev/root       /           ext2    rw,noauto         0       1
+-/dev/ubi0_0		/ 			ubifs 	ro,noauto 			0 		0
+-/dev/ubi0_1 	/local 		ubifs 	rw 					0 		0
+-
+-proc            /proc       proc    defaults          0       0
+-devpts          /dev/pts    devpts  gid=5,mode=620    0       0
+-sysfs           /sys        sysfs   defaults          0       0
+-usbfs        /proc/bus/usb  usbfs   defaults          0       0
+-debugfs   /sys/kernel/debug debugfs defaults          0       0
+-
+-/dev/fd0        /mnt/floppy auto    noauto,owner      0       0
+-/dev/cdrom      /mnt/cdrom  iso9660 noauto,owner,ro   0       0
+-
+-## other examples, uncomment to activate
+-#/dev/hda2      /opt        ext2    defaults          1       2
+-#/dev/hda3      swap        swap    defaults          0       0
+-

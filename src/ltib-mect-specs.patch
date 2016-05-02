@@ -6313,7 +6313,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec
 +++ ltib/dist/lfs-5.1/skell/skell.spec
-@@ -9,20 +9,99 @@
+@@ -9,20 +9,100 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -6366,6 +6366,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Patch44         : skell-1.18-create_local_update.patch
 +Patch45         : skell-1.18-move_etc_profile_to_merge.patch
 +Patch46         : skell-1.18-remove_boa_rc_script.patch
++Patch47         : skell-1.18-no_fstab.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -6417,7 +6418,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +110,90 @@
+@@ -31,24 +111,91 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -6456,6 +6457,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%patch44 -p1
 +%patch45 -p1
 +%patch46 -p1
++%patch47 -p1
  
  %Build
 +export LC_ALL

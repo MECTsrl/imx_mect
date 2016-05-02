@@ -17575,6 +17575,23 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +require
 +	subnet-mask;
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/fstab ltib/config/platform/imx/merge/etc/fstab
+--- ltib.reference/config/platform/imx/merge/etc/fstab
++++ ltib/config/platform/imx/merge/etc/fstab
+@@ -0,0 +1,13 @@
++# /etc/fstab: static file system information.
++#
++#file system  mount              type     options          dump  pass
++#/dev/root     /                  ext2     rw,noauto        0     1
++/dev/ubi0_0   /                  ubifs    ro,noauto        0     0
++/dev/ubi0_1   /local             ubifs    rw,sync          0     0
++proc          /proc              proc     defaults         0     0
++devpts        /dev/pts           devpts   gid=5,mode=620   0     0
++sysfs         /sys               sysfs    defaults         0     0
++usbfs         /proc/bus/usb      usbfs    defaults         0     0
++debugfs       /sys/kernel/debug  debugfs  defaults         0     0
++/dev/fd0      /mnt/floppy        auto     noauto,owner     0     0
++/dev/cdrom    /mnt/cdrom         iso9660  noauto,owner,ro  0     0
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/inetd.conf ltib/config/platform/imx/merge/etc/inetd.conf
 --- ltib.reference/config/platform/imx/merge/etc/inetd.conf
 +++ ltib/config/platform/imx/merge/etc/inetd.conf

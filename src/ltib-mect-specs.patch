@@ -6540,51 +6540,51 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +%Files rfs
 +%defattr(-,root,root)
-+%attr(0755, root, root) %dir %{pfx}/bin
-+%attr(0755, root, root) %dir %{pfx}/control
-+%attr(0755, root, root) %dir %{pfx}/dev
-+%attr(0755, root, root) %dir %{pfx}/etc
-+%attr(0755, root, root) %dir %{pfx}/etc/rc.d
-+%attr(0755, root, root) %dir %{pfx}/etc/rc.d/init.d
-+%attr(0755, root, root) %dir %{pfx}/lib
-+%attr(0755, root, root) %dir %{pfx}/lib/modules
-+%attr(0755, root, root) %dir %{pfx}/local
-+%attr(0755, root, root) %dir %{pfx}/mnt
-+%attr(0755, root, root) %dir %{pfx}/mnt/cdrom
-+%attr(0755, root, root) %dir %{pfx}/mnt/floppy
-+%attr(0755, root, root) %dir %{pfx}/mnt/nfs
-+%attr(0755, root, root) %dir %{pfx}/mnt/rwfs
-+%attr(0755, root, root) %dir %{pfx}/mnt/src
-+%attr(0755, root, root) %dir %{pfx}/opt
-+%attr(0755, root, root) %dir %{pfx}/proc
-+%attr(0755, root, root) %dir %{pfx}/root
-+%attr(0755, root, root) %dir %{pfx}/sbin
-+%attr(0755, root, root) %dir %{pfx}/sys
-+%attr(0755, root, root) %dir %{pfx}/tmp
-+%attr(0755, root, root) %dir %{pfx}/update
-+%attr(0755, root, root) %dir %{pfx}/usr
-+%attr(0755, root, root) %dir %{pfx}/usr/bin
-+%attr(0755, root, root) %dir %{pfx}/usr/lib
-+%attr(0755, root, root) %dir %{pfx}/usr/share
-+%attr(0755, root, root) %dir %{pfx}/usr/share/udhcpc
-+%attr(0755, root, root) %dir %{pfx}/var
-+%attr(0755, root, root) %dir %{pfx}/var/ftp
-+%attr(0755, root, root) %dir %{pfx}/var/ftp/bin
-+%attr(0755, root, root) %dir %{pfx}/var/ftp/etc
-+%attr(0755, root, root) %dir %{pfx}/var/ftp/lib
-+%attr(0755, root, root) %dir %{pfx}/var/ftp/pub
-+%attr(0755, root, root) %dir %{pfx}/var/lib
-+%attr(0755, root, root) %dir %{pfx}/var/lock
-+%attr(0755, root, root) %dir %{pfx}/var/log/lastlog
-+%attr(0755, root, root) %dir %{pfx}/var/mail
-+%attr(0755, root, root) %dir %{pfx}/var/run
-+%attr(0755, root, root) %dir %{pfx}/var/spool/lpd
-+%attr(0755, root, root) %dir %{pfx}/var/spool/mail
-+%attr(0755, root, root) %dir %{pfx}/var/www
-+%attr(0755, root, root) %dir %{pfx}/var/www/cgi-bin
-+%attr(0755, root, root) %dir %{pfx}/var/www/html
-+%attr(0755, root, root) %dir %{pfx}/var/www/icons
-+%attr(0755, root, root) %dir %{pfx}/var/tmp
++%{pfx}/bin
++%{pfx}/control
++%{pfx}/dev
++%{pfx}/etc
++%{pfx}/etc/rc.d
++%{pfx}/etc/rc.d/init.d
++%{pfx}/lib
++%{pfx}/lib/modules
++%{pfx}/local
++%{pfx}/mnt
++%{pfx}/mnt/cdrom
++%{pfx}/mnt/floppy
++%{pfx}/mnt/nfs
++%{pfx}/mnt/rwfs
++%{pfx}/mnt/src
++%{pfx}/opt
++%{pfx}/proc
++%{pfx}/root
++%{pfx}/sbin
++%{pfx}/sys
++%{pfx}/tmp
++%{pfx}/update
++%{pfx}/usr
++%{pfx}/usr/bin
++%{pfx}/usr/lib
++%{pfx}/usr/share
++%{pfx}/usr/share/udhcpc
++%{pfx}/var
++%{pfx}/var/ftp
++%{pfx}/var/ftp/bin
++%{pfx}/var/ftp/etc
++%{pfx}/var/ftp/lib
++%{pfx}/var/ftp/pub
++%{pfx}/var/lib
++%{pfx}/var/lock
++%{pfx}/var/log/lastlog
++%{pfx}/var/mail
++%{pfx}/var/run
++%{pfx}/var/spool/lpd
++%{pfx}/var/spool/mail
++%{pfx}/var/www
++%{pfx}/var/www/cgi-bin
++%{pfx}/var/www/html
++%{pfx}/var/www/icons
++%{pfx}/var/tmp
 +%{pfx}/etc/devfsd.conf
 +%{pfx}/etc/exports
 +%{pfx}/etc/group
@@ -6637,19 +6637,19 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +%Files lfs
 +%defattr(-,root,root)
-+%attr(0755, root, root) %dir %{pfx}/local/control
-+%attr(0755, root, root) %dir %{pfx}/local/data
-+%attr(0755, root, root) %dir %{pfx}/local/data/alarms
-+%attr(0755, root, root) %dir %{pfx}/local/data/customstore
-+%attr(0755, root, root) %dir %{pfx}/local/data/recipe
-+%attr(0755, root, root) %dir %{pfx}/local/data/store
-+%attr(0755, root, root) %dir %{pfx}/local/data/trends
-+%attr(0755, root, root) %dir %{pfx}/local/etc
-+%attr(0755, root, root) %dir %{pfx}/local/etc/sysconfig
-+%attr(0755, root, root) %dir %{pfx}/local/retentive
-+%attr(0755, root, root) %dir %{pfx}/local/root
-+%attr(0755, root, root) %dir %{pfx}/local/sd_card
-+%attr(0755, root, root) %dir %{pfx}/local/update
++%{pfx}/local/control
++%{pfx}/local/data
++%{pfx}/local/data/alarms
++%{pfx}/local/data/customstore
++%{pfx}/local/data/recipe
++%{pfx}/local/data/store
++%{pfx}/local/data/trends
++%{pfx}/local/etc
++%{pfx}/local/etc/sysconfig
++%{pfx}/local/retentive
++%{pfx}/local/root
++%{pfx}/local/sd_card
++%{pfx}/local/update
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/splash/splash.spec ltib/dist/lfs-5.1/splash/splash.spec
 --- ltib.reference/dist/lfs-5.1/splash/splash.spec
 +++ ltib/dist/lfs-5.1/splash/splash.spec

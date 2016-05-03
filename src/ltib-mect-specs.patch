@@ -6455,7 +6455,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +111,91 @@
+@@ -31,24 +111,185 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -6521,19 +6521,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +tar xjvf %{SOURCE2} -C $RPM_BUILD_ROOT/%{pfx}
 +tar xjvf %{SOURCE3} -C $RPM_BUILD_ROOT/%{pfx}
 +install -m 755 -D %{SOURCE4} $RPM_BUILD_ROOT/%{pfx}%{_bindir}/`basename %{SOURCE4}`
-+
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}/boot, d;
-+    \,^%{pfx}/dev/, d;
-+    \,^%{pfx}%{_includedir}, d;
-+    \,^%{pfx}/local/, d;
-+    \,^%{pfx}/\.keepme, d;
-+' all_files.lst > rfs_files.lst
-+sed -n '
-+    \,^%{pfx}/local/, p;
-+' all_files.lst > lfs_files.lst
  
  %Clean
 -rm -rf $RPM_BUILD_ROOT
@@ -6542,22 +6529,127 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +sudo rm -rf $RPM_BUILD_ROOT
 +
-+
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
-+%defattr(-,root,root)
-+%attr(0755, root, root) %dir %{pfx}/local
  
--%Files
-+%Files lfs -f lfs_files.lst
+ %Files
  %defattr(-,root,root)
 -%attr(0666, root, root) %dev(c, 5, 0) %{pfx}/dev/tty
 -%attr(0600, root, root) %dev(c, 5, 1) %{pfx}/dev/console
 -%attr(0666, root, root) %dev(c, 1, 3) %{pfx}/dev/null
 -%attr(0755, root, root) %{pfx}/usr/bin/startx
--%{pfx}/*
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%attr(0755, root, root) %dir %{pfx}/bin
++%attr(0755, root, root) %dir %{pfx}/control
++%attr(0755, root, root) %dir %{pfx}/dev
++%attr(0755, root, root) %dir %{pfx}/etc
++%attr(0755, root, root) %dir %{pfx}/etc/rc.d
++%attr(0755, root, root) %dir %{pfx}/etc/rc.d/init.d
++%attr(0755, root, root) %dir %{pfx}/lib
++%attr(0755, root, root) %dir %{pfx}/lib/modules
++%attr(0755, root, root) %dir %{pfx}/local
++%attr(0755, root, root) %dir %{pfx}/mnt
++%attr(0755, root, root) %dir %{pfx}/mnt/cdrom
++%attr(0755, root, root) %dir %{pfx}/mnt/floppy
++%attr(0755, root, root) %dir %{pfx}/mnt/nfs
++%attr(0755, root, root) %dir %{pfx}/mnt/rwfs
++%attr(0755, root, root) %dir %{pfx}/mnt/src
++%attr(0755, root, root) %dir %{pfx}/opt
++%attr(0755, root, root) %dir %{pfx}/proc
++%attr(0755, root, root) %dir %{pfx}/root
++%attr(0755, root, root) %dir %{pfx}/sbin
++%attr(0755, root, root) %dir %{pfx}/sys
++%attr(0755, root, root) %dir %{pfx}/tmp
++%attr(0755, root, root) %dir %{pfx}/update
++%attr(0755, root, root) %dir %{pfx}/usr
++%attr(0755, root, root) %dir %{pfx}/usr/bin
++%attr(0755, root, root) %dir %{pfx}/usr/lib
++%attr(0755, root, root) %dir %{pfx}/usr/share
++%attr(0755, root, root) %dir %{pfx}/usr/share/udhcpc
++%attr(0755, root, root) %dir %{pfx}/var
++%attr(0755, root, root) %dir %{pfx}/var/ftp
++%attr(0755, root, root) %dir %{pfx}/var/ftp/bin
++%attr(0755, root, root) %dir %{pfx}/var/ftp/etc
++%attr(0755, root, root) %dir %{pfx}/var/ftp/lib
++%attr(0755, root, root) %dir %{pfx}/var/ftp/pub
++%attr(0755, root, root) %dir %{pfx}/var/lib
++%attr(0755, root, root) %dir %{pfx}/var/lock
++%attr(0755, root, root) %dir %{pfx}/var/log/lastlog
++%attr(0755, root, root) %dir %{pfx}/var/mail
++%attr(0755, root, root) %dir %{pfx}/var/run
++%attr(0755, root, root) %dir %{pfx}/var/spool/lpd
++%attr(0755, root, root) %dir %{pfx}/var/spool/mail
++%attr(0755, root, root) %dir %{pfx}/var/www
++%attr(0755, root, root) %dir %{pfx}/var/www/cgi-bin
++%attr(0755, root, root) %dir %{pfx}/var/www/html
++%attr(0755, root, root) %dir %{pfx}/var/www/icons
++%attr(0755, root, root) %dir %{pfx}/var/tmp
++%{pfx}/etc/devfsd.conf
++%{pfx}/etc/exports
++%{pfx}/etc/group
++%{pfx}/etc/host.conf
++%{pfx}/etc/hosts
++%{pfx}/etc/hosts.allow
++%{pfx}/etc/hosts.deny
++%{pfx}/etc/inputrc
++%{pfx}/etc/issue.net
++%{pfx}/etc/ld.so.conf
++%{pfx}/etc/mime.types
++%{pfx}/etc/modprobe.conf
++%{pfx}/etc/nsswitch.conf
++%{pfx}/etc/passwd
++%{pfx}/etc/printcap
++%{pfx}/etc/protocols
++%{pfx}/etc/rc.d/init.d/depmod
++%{pfx}/etc/rc.d/init.d/devfsd
++%{pfx}/etc/rc.d/init.d/dhcp
++%{pfx}/etc/rc.d/init.d/dhcpd
++%{pfx}/etc/rc.d/init.d/dropbear
++%{pfx}/etc/rc.d/init.d/filesystems
++%{pfx}/etc/rc.d/init.d/hostname
++%{pfx}/etc/rc.d/init.d/inetd
++%{pfx}/etc/rc.d/init.d/mdev
++%{pfx}/etc/rc.d/init.d/modules
++%{pfx}/etc/rc.d/init.d/mount-proc-sys
++%{pfx}/etc/rc.d/init.d/portmap
++%{pfx}/etc/rc.d/init.d/settime
++%{pfx}/etc/rc.d/init.d/smb
++%{pfx}/etc/rc.d/init.d/sshd
++%{pfx}/etc/rc.d/init.d/syslog
++%{pfx}/etc/rc.d/init.d/udev
++%{pfx}/etc/rc.d/init.d/usbmode
++%{pfx}/etc/rc.d/rc.modules
++%{pfx}/etc/rc.d/rc.serial
++%{pfx}/etc/rc.d/rcS
++%{pfx}/etc/securetty
++%{pfx}/etc/services
++%{pfx}/etc/shadow
++%{pfx}/etc/shells
++%{pfx}/etc/sysctl.conf
++%{pfx}/etc/udhcpd.conf
++%{pfx}/usr/bin/gdbserver
++%{pfx}/usr/bin/sign
++%{pfx}/usr/bin/stop
++%{pfx}/usr/share/udhcpc/default.script
++%{pfx}/var/www/cgi-bin/test_cgi
++%{pfx}/var/www/html/index.html
++
++%Files lfs
++%defattr(-,root,root)
++%attr(0755, root, root) %dir %{pfx}/local/control
++%attr(0755, root, root) %dir %{pfx}/local/data
++%attr(0755, root, root) %dir %{pfx}/local/data/alarms
++%attr(0755, root, root) %dir %{pfx}/local/data/customstore
++%attr(0755, root, root) %dir %{pfx}/local/data/recipe
++%attr(0755, root, root) %dir %{pfx}/local/data/store
++%attr(0755, root, root) %dir %{pfx}/local/data/trends
++%attr(0755, root, root) %dir %{pfx}/local/etc
++%attr(0755, root, root) %dir %{pfx}/local/etc/sysconfig
++%attr(0755, root, root) %dir %{pfx}/local/retentive
++%attr(0755, root, root) %dir %{pfx}/local/root
++%attr(0755, root, root) %dir %{pfx}/local/sd_card
++%attr(0755, root, root) %dir %{pfx}/local/update
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/splash/splash.spec ltib/dist/lfs-5.1/splash/splash.spec
 --- ltib.reference/dist/lfs-5.1/splash/splash.spec
 +++ ltib/dist/lfs-5.1/splash/splash.spec

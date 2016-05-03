@@ -1223,7 +1223,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec ltib/dist/lfs-5.1/dropbear/dropbear.spec
 --- ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec
 +++ ltib/dist/lfs-5.1/dropbear/dropbear.spec
-@@ -2,24 +2,48 @@
+@@ -2,61 +2,99 @@
  
  Summary         : Dropbear SSH server and client (embedded)
  Name            : dropbear
@@ -1269,13 +1269,28 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%patch0 -p1
  
  %Build
+-if [ "$PKG_DROPBEAR_WANT_URANDOM_DEV" = "y" ]
+-then
+-    perl -pi -e 's,^#define DROPBEAR_RANDOM_DEV.*,#define DROPBEAR_RANDOM_DEV "/dev/urandom",; ' options.h
+-fi
+-if [ "$PKG_DROPBEAR_WANT_NO_REV_DNS" = "y" ]
+-then
+-    perl -pi -e 's,^(#define DO_HOST_LOOKUP),//\1,; ' options.h
+-fi
+-if [ "$PKG_DROPBEAR_WANT_NO_X11FWD" = "y" ]
+-then
+-    perl -pi -e 's,^(#define ENABLE_X11FWD),//\1,; ' options.h
+-fi
 +export LC_ALL
 +LC_ALL=C
 +
- if [ "$PKG_DROPBEAR_WANT_URANDOM_DEV" = "y" ]
- then
-     perl -pi -e 's,^#define DROPBEAR_RANDOM_DEV.*,#define DROPBEAR_RANDOM_DEV "/dev/urandom",; ' options.h
-@@ -37,6 +61,9 @@
++test "$PKG_DROPBEAR_WANT_URANDOM_DEV" = "y" && perl -pi -e 's,^#define DROPBEAR_RANDOM_DEV.*,#define DROPBEAR_RANDOM_DEV "/dev/urandom",; ' options.h
++
++test "$PKG_DROPBEAR_WANT_NO_REV_DNS" = "y" && perl -pi -e 's,^(#define DO_HOST_LOOKUP),//\1,; ' options.h
++
++test "$PKG_DROPBEAR_WANT_NO_X11FWD" = "y" && perl -pi -e 's,^(#define ENABLE_X11FWD),//\1,; ' options.h
+ 
+ LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
  make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp" MULTI=1 SCPPROGRESS=1
  
  %Install
@@ -1283,14 +1298,35 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
  rm -rf $RPM_BUILD_ROOT
- for i in bin sbin
- do
-@@ -54,9 +81,26 @@
-     cp %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/etc/dropbear/dropbear_rsa_host_key
- fi
- 
-+cp %{SOURCE2} $RPM_BUILD_ROOT%{pfx}/etc/dropbear/dropbear_rsa_host_key
+-for i in bin sbin
+-do
+-    mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/$i
+-done
 +
+ mkdir -p $RPM_BUILD_ROOT/%{pfx}/etc/dropbear
+-cp dropbearmulti $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin/
++for d in bin sbin; do
++    mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/$d
++done
++
++install -m755 dropbearmulti $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin
++
+ ln -s %{_prefix}/sbin/dropbearmulti $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/sbin/dropbear
+-for i in dbclient dropbearconvert dropbearkey scp
+-do
++for i in dbclient dropbearconvert dropbearkey scp ssh; do
+     ln -s %{_prefix}/sbin/dropbearmulti $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/bin/$i
+ done
+-if [ "$PKG_DROPBEAR_WANT_HACKABLE_KEY" = "y" ]; then
+-    mkdir -p $RPM_BUILD_ROOT/%{pfx}/etc/dropbear
+-    cp %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/etc/dropbear/dropbear_rsa_host_key
+-fi
++
++test "$PKG_DROPBEAR_WANT_HACKABLE_KEY" = "y" && install -m644 -D %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/etc/dropbear/dropbear_rsa_host_key
++
++# Set custom host key.
++install -m644 -D %{SOURCE2} $RPM_BUILD_ROOT%{pfx}/etc/dropbear/dropbear_rsa_host_key
+ 
  %Clean
 +export LC_ALL
 +LC_ALL=C
@@ -1310,6 +1346,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/usr/bin/dropbearconvert
 +%{pfx}/usr/bin/dropbearkey
 +%{pfx}/usr/bin/scp
++%{pfx}/usr/bin/ssh
 +%{pfx}/usr/sbin/dropbear
 +%{pfx}/usr/sbin/dropbearmulti
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec

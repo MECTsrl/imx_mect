@@ -19688,7 +19688,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +chatdir=/etc/ppp
 +chatfile=chat-usb3g
 +resolv_file=/etc/resolv.conf
-+options="holdoff 15 persist"
++options="holdoff 15 persist maxfail 0"
 +
 +NETCONFIG=/local/etc/sysconfig/net.conf
 +

@@ -18967,7 +18967,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/openvpn ltib/config/platform/imx/merge/etc/rc.d/init.d/openvpn
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/openvpn
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/openvpn
-@@ -0,0 +1,43 @@
+@@ -0,0 +1,44 @@
 +#!/bin/sh
 +
 +EXE=/usr/sbin/openvpn
@@ -18978,16 +18978,17 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +start() {
 +	test -x "$EXE" || exit 1
 +	test -r "$CONFD$CONFF" || exit 1
-+	test -d /proc/$(cat "$PID") && exit 2
++	test -r "$PID" && test -d /proc/$(/bin/cat "$PID") && exit 2
 +
++	/sbin/modprobe tun
 +	"$EXE" --daemon --writepid "$PID" --cd "$CONFD" --config "$CONFF"
 +}
 +
 +stop() {
 +	test -r "$PID" || exit 0
-+	test -d /proc/$(cat "$PID") || exit 1
++	test -d /proc/$(/bin/cat "$PID") || exit 1
 +
-+	kill $(cat "$PID")
++	kill $(/bin/cat "$PID")
 +}
 +
 +case "$1" in
@@ -19678,7 +19679,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/usb3g.sh ltib/config/platform/imx/merge/usr/sbin/usb3g.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/usb3g.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/usb3g.sh
-@@ -0,0 +1,142 @@
+@@ -0,0 +1,138 @@
 +#!/bin/sh
 +
 +ppp=ppp0
@@ -19697,7 +19698,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +clear_defroutes_resolv()
 +{
-+    for r in "" `/sbin/route -n | awk '/^0\.0\.0\.0/ { print $2; }'`; do
++    for r in "" `/sbin/route -n | /usr/bin/awk '/^0\.0\.0\.0/ { print $2; }'`; do
 +        test -z "$r" && continue
 +
 +        /sbin/route delete default gw "$r"
@@ -19714,17 +19715,13 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +    dn="$1"
 +    apn="$2"
 +
-+    sed -i "s/^OK 'AT+CGDCONT=1,\"IP\",\".*/OK 'AT+CGDCONT=1,\"IP\",\"$apn\"'/" $chatdir/$chatfile
-+    sed -i "s/^OK 'ATD.*/OK 'ATD$dn'/" $chatdir/$chatfile
++    /bin/sed -i "s/^OK 'AT+CGDCONT=1,\"IP\",\".*/OK 'AT+CGDCONT=1,\"IP\",\"$apn\"'/" $chatdir/$chatfile
++    /bin/sed -i "s/^OK 'ATD.*/OK 'ATD$dn'/" $chatdir/$chatfile
 +}
 +
 +start()
 +{
-+    if test -f $pidfile; then
-+        if test -d /proc/$(cat $pidfile); then
-+            return 0
-+        fi
-+    fi
++    test -r $pidfile && test -d /proc/$(/bin/cat $pidfile) && return 0
 +
 +    test -f $peersdir/$peerfile || return 1
 +
@@ -19742,11 +19739,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +        echo "# Created by $0. Do not edit." > $resolv_file
 +
 +        if test -n "$NAMESERVERP01"; then
-+            grep "nameserver\s\+$NAMESERVERP01" $resolv_file || echo "nameserver $NAMESERVERP01" >> $resolv_file
++            /bin/grep "nameserver\s\+$NAMESERVERP01" $resolv_file || echo "nameserver $NAMESERVERP01" >> $resolv_file
 +        fi
 +
 +        if test -n "$NAMESERVERP02"; then
-+            grep "nameserver\s\+$NAMESERVERP02" $resolv_file || echo "nameserver $NAMESERVERW02" >> $resolv_file
++            /bin/grep "nameserver\s\+$NAMESERVERP02" $resolv_file || echo "nameserver $NAMESERVERW02" >> $resolv_file
 +        fi
 +    fi
 +
@@ -19754,7 +19751,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +    #
 +
 +    if test -z "$GATEWAYP0"; then
-+        for r in "" $(/sbin/route -n | awk '/^0\.0\.0\.0/ { print $2; }'); do
++        for r in "" $(/sbin/route -n | /usr/bin/awk '/^0\.0\.0\.0/ { print $2; }'); do
 +            test -z "$r" && continue
 +
 +            /sbin/route delete default gw "$r"
@@ -19770,8 +19767,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +stop()
 +{
-+    if test -f $pidfile; then
-+        pid=$(cat $pidfile)
++    if test -r $pidfile; then
++        pid=$(/bin/cat $pidfile)
 +        test -n "$pid" || return 1
 +
 +        if test -d /proc/$pid; then
@@ -19816,7 +19813,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +    ;;
 +
 +    *)
-+        echo "Usage: $(basename $0) <setup|start|stop>" >&2
++        echo "Usage: $(basename $0) <start|stop|setup>" >&2
 +
 +        exit 1
 +    ;;

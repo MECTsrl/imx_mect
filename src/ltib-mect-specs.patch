@@ -6873,7 +6873,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
 +++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
-@@ -8,72 +8,125 @@
+@@ -8,97 +8,100 @@
  Vendor		: Freescale
  Packager	: Stuart Hughes
  Group		: System Environment/Base
@@ -6914,135 +6914,148 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
  rm -rf $RPM_BUILD_ROOT
++
  mkdir -p $RPM_BUILD_ROOT/%{pfx}/etc/rc.d
  
- if [ "$SYSCFG_START_SYSLOG" = "y" ]
- then
+-if [ "$SYSCFG_START_SYSLOG" = "y" ]
+-then
 -    syslog=syslog
-+	syslog=syslog
- fi
- if [ "$SYSCFG_START_UDEV" = "y" ]
- then
+-fi
+-if [ "$SYSCFG_START_UDEV" = "y" ]
+-then
 -    udev=udev
-+	udev=udev
- fi
- if [ "$SYSCFG_START_MDEV" = "y" ]
- then
+-fi
+-if [ "$SYSCFG_START_MDEV" = "y" ]
+-then
 -    mdev=mdev
-+	mdev=mdev
- fi
- if [ "$SYSCFG_START_DEVFSD" = "y" ]
- then
+-fi
+-if [ "$SYSCFG_START_DEVFSD" = "y" ]
+-then
 -    devfsd=devfsd
-+	devfsd=devfsd
- fi
- if [ "$SYSCFG_START_NETWORK" = "y" ]
- then
+-fi
+-if [ "$SYSCFG_START_NETWORK" = "y" ]
+-then
 -    network=network
-+	network=network
- fi
- if [ "$SYSCFG_START_INETD" = "y" ]
- then
+-fi
+-if [ "$SYSCFG_START_INETD" = "y" ]
+-then
 -    inetd=inetd
-+	inetd=inetd
- fi
- if [ "$SYSCFG_START_PORTMAP" = "y" ]
- then
+-fi
+-if [ "$SYSCFG_START_PORTMAP" = "y" ]
+-then
 -    portmap=portmap
-+	portmap=portmap
- fi
- if [ "$SYSCFG_START_DROPBEAR_SSH" = "y" ]
- then
+-fi
+-if [ "$SYSCFG_START_DROPBEAR_SSH" = "y" ]
+-then
 -    dropbear=dropbear
-+	dropbear=dropbear
- fi
- if [ "$SYSCFG_START_SSHD" = "y" ]
- then
+-fi
+-if [ "$SYSCFG_START_SSHD" = "y" ]
+-then
 -    sshd=sshd
-+	sshd=sshd
- fi
- if [ "$SYSCFG_START_BOA" = "y" ]
- then
--    boa=boa
-+	boa=boa
-+fi
-+if [ "$SYSCFG_START_VSFTPD" = "y" ]
-+then
-+	vsftpd=vsftpd
-+fi
-+if [ "$SYSCFG_START_TELNET" = "y" ]
-+then
-+	telnetd=telnetd
-+	mkdir -p $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/init.d
-+cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/init.d/telnetd
-+#!/bin/sh
-+
-+if [ ! -x /usr/sbin/telnetd ]
-+then
-+	exit 0
-+fi
-+
-+if [ "$1" = "stop" -o "$1" = "restart" ]
-+then
-+	echo "Stopping the telnet daemon: "
-+	killall telnetd
-+fi
-+
-+if [ "$1" = "start" -o "$1" = "restart" ]
-+then
-+	echo "Starting the telnet daemon: "
-+	/usr/sbin/telnetd
-+fi
-+EOF
-+	chmod +x $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/init.d/telnetd
- fi
- if [ "$SYSCFG_SETTIME" = "y" ]
- then
--    settime=settime
-+	settime=settime
- fi
- if [ "$SYSCFG_START_DHCPD" = "y" ]
- then
--    dhcpd=dhcp
-+	dhcpd=dhcp
- fi
- if [ "$SYSCFG_START_SAMBA" = "y" ]
- then
--    smb=smb
-+	smb=smb
- fi
- if [ "$SYSCFG_START_WATCHDOG" = "y" ]
- then
-@@ -91,14 +144,23 @@
- then
-         fslgnome=fslgnome
- fi
-+if [ "$SYSCFG_START_AUTOEXEC" = "y" ]
-+then
++test  "$SYSCFG_START_SYSLOG"        =  "y"  &&  syslog=syslog
++test  "$SYSCFG_START_UDEV"          =  "y"  &&  udev=udev
++test  "$SYSCFG_START_MDEV"          =  "y"  &&  mdev=mdev
++test  "$SYSCFG_START_DEVFSD"        =  "y"  &&  devfsd=devfsd
++test  "$SYSCFG_START_NETWORK"       =  "y"  &&  network=network
++test  "$SYSCFG_START_INETD"         =  "y"  &&  inetd=inetd
++test  "$SYSCFG_START_PORTMAP"       =  "y"  &&  portmap=portmap
++test  "$SYSCFG_START_DROPBEAR_SSH"  =  "y"  &&  dropbear=dropbear
++test  "$SYSCFG_START_SSHD"          =  "y"  &&  sshd=sshd
++test  "$SYSCFG_START_BOA"           =  "y"  &&  boa=boa
++test  "$SYSCFG_START_VSFTPD"        =  "y"  &&  vsftpd=vsftpd
++test  "$SYSCFG_SETTIME"             =  "y"  &&  settime=settime
++test  "$SYSCFG_START_DHCPD"         =  "y"  &&  dhcpd=dhcp
++test  "$SYSCFG_START_SAMBA"         =  "y"  &&  smb=smb
++test  "$SYSCFG_START_WATCHDOG"      =  "y"  &&  watchdog=watchdog
++test  "$SYSCFG_START_GTK2"          =  "y"  &&  gtk2=gtk2
++test  "$SYSCFG_START_PANGO"         =  "y"  &&  pango=pango
++test  "$SYSCFG_START_FSLGNOME"      =  "y"  &&  fslgnome=fslgnome
++test  "$SYSCFG_START_S10SETUP"      =  "y"  &&  S10setup=S10setup
++test  "$SYSCFG_START_OPENVPN"       =  "y"  &&  openvpn=openvpn
++if test "$SYSCFG_START_AUTOEXEC" = "y"; then
 +        autoexec=autoexec
 +	sdcheck=sdcheck
 +	usbmode=usbmode
-+fi
+ fi
+-if [ "$SYSCFG_START_BOA" = "y" ]
+-then
+-    boa=boa
+-fi
+-if [ "$SYSCFG_SETTIME" = "y" ]
+-then
+-    settime=settime
+-fi
+-if [ "$SYSCFG_START_DHCPD" = "y" ]
+-then
+-    dhcpd=dhcp
+-fi
+-if [ "$SYSCFG_START_SAMBA" = "y" ]
+-then
+-    smb=smb
+-fi
+-if [ "$SYSCFG_START_WATCHDOG" = "y" ]
+-then
+-	watchdog=watchdog
+-fi
+-if [ "$SYSCFG_START_GTK2" = "y" ]
+-then
+-	gtk2=gtk2
++
++if test "$SYSCFG_START_TELNET" = "y"; then
++	telnetd=telnetd
++
++	mkdir -p $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/init.d
++
++	cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/init.d/telnetd
++#!/bin/sh
++
++test -x /usr/sbin/telnetd || exit 0
++
++if test "$1" = "stop" -o "$1" = "restart"; then
++	echo "Stopping the telnet daemon: "
++	killall telnetd
+ fi
+-if [ "$SYSCFG_START_PANGO" = "y" ]
+-then
+-	pango=pango
++
++if test "$1" = "start" -o "$1" = "restart"; then
++	echo "Starting the telnet daemon: "
++	/usr/sbin/telnetd
+ fi
+-if [ "$SYSCFG_START_FSLGNOME" = "y" ]
+-then
+-        fslgnome=fslgnome
++EOF
++	chmod +x $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/init.d/telnetd
+ fi
  
-+if [ "$SYSCFG_START_S10SETUP" = "y" ]
-+then
-+        S10setup=S10setup
-+fi
  cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc.conf
 -all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems syslog network inetd portmap dropbear sshd boa smb dhcpd settime fslgnome watchdog bluetooth gtk2 pango"
 -all_services_r="pango gtk2 bluetooth watchdog fslgnome settime dhcpd smb boa sshd dropbear portmap inetd network syslog filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
 -
 -cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $syslog $network $inetd $portmap $dropbear $sshd $boa $smb $dhcpd $settime $fslgnome $watchdog $bluetooth $gtk2 $pango"
-+all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems sdcheck syslog network iptables inetd portmap setup dropbear sshd boa vsftpd smb dhcpd settime fslgnome watchdog bluetooth gtk2 pango telnetd usbmode S10setup autoexec"
-+all_services_r="autoexec S10setup usbmode telnetd pango gtk2 bluetooth watchdog fslgnome settime dhcpd smb vsftpd boa sshd dropbear setup portmap inetd iptables network syslog sdcheck filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
++all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems sdcheck syslog network iptables inetd portmap setup dropbear sshd boa vsftpd smb dhcpd settime fslgnome watchdog bluetooth gtk2 pango telnetd usbmode S10setup autoexec openvpn"
++all_services_r="openvpn autoexec S10setup usbmode telnetd pango gtk2 bluetooth watchdog fslgnome settime dhcpd smb vsftpd boa sshd dropbear setup portmap inetd iptables network syslog sdcheck filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
  
 -cfg_services_r="$pango $gtk2 $bluetooth $watchdog $fslgnome $settime $dhcpd $smb $boa $sshd $dropbear $portmap $inetd $network $syslog filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys"
-+cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $usbmode $network iptables $inetd $portmap setup $sdcheck $autoexec $dropbear $sshd $boa $vsftpd $telnetd $syslog $smb $dhcpd $settime $fslgnome $watchdog $bluetooth $gtk2 $pango $S10setup"
-+cfg_services_r="$autoexec $sdcheck $S10setup $usbmode $pango $gtk2 $bluetooth $watchdog $fslgnome $settime $dhcpd $smb $syslog $telnetd $vsftpd $boa $sshd $dropbear setup $portmap $inetd iptables $network filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys"
++cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $usbmode $network iptables $inetd $portmap setup $sdcheck $autoexec $dropbear $sshd $boa $vsftpd $telnetd $syslog $smb $dhcpd $settime $fslgnome $watchdog $bluetooth $gtk2 $pango $S10setup $openvpn"
++cfg_services_r="$openvpn $autoexec $sdcheck $S10setup $usbmode $pango $gtk2 $bluetooth $watchdog $fslgnome $settime $dhcpd $smb $syslog $telnetd $vsftpd $boa $sshd $dropbear setup $portmap $inetd iptables $network filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys"
  
  export HOSTNAME="${SYSCFG_HOSTNAME:-$PLATFORM}"
  export NTP_SERVER="$SYSCFG_NTP_SERVER"
-@@ -154,61 +216,7 @@
+@@ -145,74 +148,17 @@
+     fi
+ done
+ 
+-if [ "$PKG_BUSYBOX" = "y" -a "$PKG_SYSVINIT" != "y" ]
+-then
++if test "$PKG_BUSYBOX" = "y" -a "$PKG_SYSVINIT" != "y"; then
+     # BusyBox init
+-    if [ "$SYSCFG_WANT_LOGIN_TTY" = "y" ]
+-    then
++    if test "$SYSCFG_WANT_LOGIN_TTY" = "y"; then
+ 	sys_login=`echo "$SYSCFG_LOGING_TTY" | sed 's/\\\\\\\\n/\n/'`
      else
  	sys_login="::respawn:-/bin/sh"
      fi
@@ -7104,8 +7117,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +    install -m 644 %{SOURCE0} $RPM_BUILD_ROOT/%{pfx}/etc/inittab
  else
      # SysVInit
-     if [ "$SYSCFG_WANT_LOGIN_TTY" = "y" ]
-@@ -237,80 +245,32 @@
+-    if [ "$SYSCFG_WANT_LOGIN_TTY" = "y" ]
+-    then
++    if test "$SYSCFG_WANT_LOGIN_TTY" = "y"; then
+ 	run_level=3
+     else
+ 	run_level=1
+@@ -237,80 +183,31 @@
  EOF
  fi
  
@@ -7183,12 +7201,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -    ln -s /sbin/init $RPM_BUILD_ROOT/%{pfx}/init
 -fi
 +test "$SYSCFG_DEPLOYMENT_STYLE" = "INITRAMFS" && ln -s /sbin/init $RPM_BUILD_ROOT/%{pfx}/init
-+
-+cd %{_builddir}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed -n '
-+	p;
-+' all_files.lst > rfs_files.lst
  
  %Clean
 +export LC_ALL
@@ -7196,40 +7208,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
-+
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-,root,root)
 -%{pfx}/*
-diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/sysconfig.spec ltib/dist/lfs-5.1/sysconfig/sysconfig.spec
---- ltib.reference/dist/lfs-5.1/sysconfig/sysconfig.spec
-+++ ltib/dist/lfs-5.1/sysconfig/sysconfig.spec
-@@ -91,14 +91,18 @@
- then
- 	pango=pango
- fi
-+if [ "$SYSCFG_START_OPENVPN" = "y" ]
-+then
-+	openvpn=openvpn
-+fi
- 
- cat <<EOF > $RPM_BUILD_ROOT/%{pfx}/etc/rc.d/rc.conf
--all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems syslog network inetd portmap dropbear sshd boa smb dhcpd settime qtopia watchdog gtk2 pango"
--all_services_r="pango gtk2 watchdog qtopia settime dhcpd smb boa sshd dropbear portmap inetd network syslog filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
-+all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems syslog network inetd portmap dropbear sshd boa smb dhcpd settime qtopia watchdog gtk2 pango openvpn"
-+all_services_r="openvpn pango gtk2 watchdog qtopia settime dhcpd smb boa sshd dropbear portmap inetd network syslog filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
- 
--cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $syslog $network $inetd $portmap $dropbear $sshd $boa $smb $dhcpd $settime $qtopia $watchdog $gtk2 $pango"
-+cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $syslog $network $inetd $portmap $dropbear $sshd $boa $smb $dhcpd $settime $qtopia $watchdog $gtk2 $pango $openvpn"
- 
--cfg_services_r="$pango $gtk2 $watchdog $qtopia $settime $dhcpd $smb $boa $sshd $dropbear $portmap $inetd $network $syslog filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys"
-+cfg_services_r="$openvpn $pango $gtk2 $watchdog $qtopia $settime $dhcpd $smb $boa $sshd $dropbear $portmap $inetd $network $syslog filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys"
- 
- export HOSTNAME="${SYSCFG_HOSTNAME:-$PLATFORM}"
- export NTP_SERVER="$SYSCFG_NTP_SERVER"
++%{pfx}/etc/inittab
++%{pfx}/etc/issue
++%{pfx}/etc/rc.d/rc.conf
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/etc/inittab
++%{pfx}/etc/issue
++%{pfx}/etc/rc.d/rc.conf
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec ltib/dist/lfs-5.1/texinfo/texinfo.spec
 --- ltib.reference/dist/lfs-5.1/texinfo/texinfo.spec
 +++ ltib/dist/lfs-5.1/texinfo/texinfo.spec

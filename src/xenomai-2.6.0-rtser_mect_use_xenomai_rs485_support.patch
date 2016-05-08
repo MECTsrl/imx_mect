@@ -1,0 +1,113 @@
+diff -urN a/include/rtdm/rtserial.h b/include/rtdm/rtserial.h
+--- a/include/rtdm/rtserial.h	2016-05-05 15:09:48.046697917 +0200
++++ b/include/rtdm/rtserial.h	2016-05-09 00:18:16.337880338 +0200
+@@ -195,7 +195,6 @@
+ #define RTSER_SET_TIMESTAMP_HISTORY	0x0800
+ #define RTSER_SET_EVENT_MASK		0x1000
+ #define RTSER_SET_RS485			0x2000
+-#define RTSER_SET_MECT_RTS_MASK		0x4000	// TODO: remove
+ /** @} */
+ 
+ 
+@@ -306,10 +305,6 @@
+ 
+ 	/** enable RS485 mode, see @ref RTSER_RS485_xxx */
+ 	int		rs485;
+-
+-	// TODO: remove.
+-	/** RTS line value, see @ref RTSER_MECT_RTS_xxx */
+-	int		mect_rts;
+ } rtser_config_t;
+ 
+ /**
+diff -urN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_mxs_auart.c
+--- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-05-05 15:09:48.050697917 +0200
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-05-09 00:37:40.926781461 +0200
+@@ -111,9 +111,6 @@
+ 	 */
+ 	struct rt_imx_mxs_auart_port *port;
+ 
+-	/* TODO: Place holder pending the porting of Xenomai RS485 flag. */
+-	int rs485;
+-
+ 	RTIME char_time_ns; /* one character time in ns on wire */
+ 	RT_ALARM rts_deassert;
+ };
+@@ -137,7 +134,7 @@
+ 	.event_timeout = RTSER_DEF_TIMEOUT,
+ 	.timestamp_history = RTSER_DEF_TIMESTAMP_HISTORY,
+ 	.event_mask = RTSER_DEF_EVENT_MASK,
+-	.mect_rts = RTSER_MECT_RTS_CLR
++	.rs485 = RTSER_DEF_RS485
+ };
+ 
+ static void rt_imx_mxs_auart_break_ctl(struct rt_imx_mxs_auart_ctx *ctx, int break_state);
+@@ -200,7 +197,7 @@
+ 	} else {
+ 		__raw_writel(BM_UARTAPP_INTR_TXIEN, port->port.membase + HW_UARTAPP_INTR_CLR);
+         ctx->ier_status &= ~IER_TX;
+-        if (ctx->rs485) {
++        if (ctx->config.rs485 == RTSER_RS485_ENABLE) {
+ 			/* Deassert RTS at most one frame after the TX FIFO and SR are flushed. */
+             RTIME value = count * ctx->char_time_ns;
+             // RTIME interval = TM_INFINITE; /* the alarm will not be reloaded after it has expired */
+@@ -511,7 +508,7 @@
+ {
+     ctx->ier_status |= IER_TX;
+ 
+-	if (ctx->rs485) {
++	if (ctx->config.rs485 == RTSER_RS485_ENABLE) {
+ 		/* Disable RX and assert RTS to start the TX. */
+ 		__raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
+ 		__raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
+@@ -742,14 +739,14 @@
+ 	if (testbits(config->config_mask, RTSER_SET_HANDSHAKE))
+ 		ctx->config.handshake = config->handshake;
+ 
+-    if (testbits(config->config_mask, RTSER_SET_MECT_RTS_MASK)) {
++    if (testbits(config->config_mask, RTSER_SET_RS485)) {
+         /* MECT RS485 half-duplex: RTS set / clear with automatic stop / start of the receiver channel */
+-		ctx->config.mect_rts = config->mect_rts;
+-        if (ctx->config.mect_rts == RTSER_MECT_RTS_SET) {
++		ctx->config.rs485 = config->rs485;
++        if (ctx->config.rs485 == RTSER_RS485_ENABLE) {
+             // enable RTS and then the receive channel since we are going to receive
+             __raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
+             __raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
+-        } else if (ctx->config.mect_rts == RTSER_MECT_RTS_CLR) {
++        } else if (ctx->config.rs485 == RTSER_RS485_DISABLE) {
+             // disable the receive channel and then RTS since we are going to transmit
+             __raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
+             __raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
+@@ -819,13 +816,6 @@
+ 			if (((div + 1) * ctx->config.baud_rate - uc) < (uc - div * ctx->config.baud_rate))
+ 				div++;
+ 		}
+-#define HACK
+-#ifdef HACK
+-        if (ctx->config.baud_rate == 225000 && ctx->port->port.line == 3) {
+-            ctx->rs485 = 0;
+-            rtdm_printk("%s(%d): full-duplex enabled\n", DRIVER_NAME, ctx->port->port.line);
+-        }
+-#endif
+ 
+         ctrl &= ~BF_UARTAPP_LINECTRL_BAUD_DIVFRAC(0xffffffff);
+         ctrl |= BF_UARTAPP_LINECTRL_BAUD_DIVFRAC(div);
+@@ -877,7 +867,7 @@
+         __raw_writel(ctrl2, ctx->port->port.membase + HW_UARTAPP_CTRL2);
+         __raw_writel(ctrl0, ctx->port->port.membase + HW_UARTAPP_CTRL0);
+ 
+-        /* always enable the Receiver */ // if (!ctx->rs485)
++        /* always enable the Receiver */
+         __raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
+         __raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
+ 
+@@ -1222,8 +1212,6 @@
+ 
+ 	rt_alarm_create(&ctx->rts_deassert, "rts_deassert", rts_deassert_func, (void *)ctx);
+ 
+-	/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
+-	ctx->rs485 = 1;
+     ctx->char_time_ns = 1000000; /* 1 ms placeholder */
+ 
+ 	rt_imx_mxs_auart_reset(&port->port);

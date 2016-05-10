@@ -17785,9 +17785,9 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +QOcn0Icv4hf0g9q37Nl0E7JWSiFmj9Jq4oi7vLCIm3GOO4IiVbeNTh8L02396VYS
 +07gOABEfHsrGvfXhRjVn0n/+hzQiKn3M0XKSv6Yl/VR6BA==
 +-----END CERTIFICATE-----
-diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/openvpn/mect.conf ltib/config/platform/imx/merge/etc/openvpn/mect.conf
---- ltib.reference/config/platform/imx/merge/etc/openvpn/mect.conf
-+++ ltib/config/platform/imx/merge/etc/openvpn/mect.conf
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/openvpn/mect.conf-disabled ltib/config/platform/imx/merge/etc/openvpn/mect.conf-disabled
+--- ltib.reference/config/platform/imx/merge/etc/openvpn/mect.conf-disabled
++++ ltib/config/platform/imx/merge/etc/openvpn/mect.conf-disabled
 @@ -0,0 +1,142 @@
 +##############################################
 +# Sample client-side OpenVPN 2.0 config file #

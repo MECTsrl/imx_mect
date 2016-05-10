@@ -19609,79 +19609,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#!/bin/sh
 +
 +exec /local/root/fcrts
-diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/openvpn-mect.sh ltib/config/platform/imx/merge/usr/sbin/openvpn-mect.sh
---- ltib.reference/config/platform/imx/merge/usr/sbin/openvpn-mect.sh
-+++ ltib/config/platform/imx/merge/usr/sbin/openvpn-mect.sh
-@@ -0,0 +1,65 @@
-+#!/bin/sh
-+
-+config=mect.conf
-+wd=/etc/openvpn/
-+pidfile=/var/run/openvpn-mect.pid
-+
-+start()
-+{
-+    # Already running
-+    if test -f $pidfile; then
-+        if test -d /proc/$(cat $pidfile); then
-+            return 0
-+        fi
-+    fi
-+
-+    modprobe tun
-+
-+    /usr/sbin/openvpn --daemon --writepid $pidfile --cd $wd --config $config
-+}
-+
-+stop()
-+{
-+    if test -f $pidfile; then
-+        pid=$(cat $pidfile)
-+        test -n "$pid" || return 1
-+
-+        if test -d /proc/$pid; then
-+            kill $pid
-+
-+            for t in $(seq 1 1 10); do
-+                sleep 1
-+
-+                test -d /proc/$pid || break
-+            done
-+            test -d /proc/$pid && return 1
-+
-+            modprobe -r tun
-+        fi
-+    fi
-+
-+    return 0
-+}
-+
-+action="$1"
-+shift
-+
-+case "$action" in
-+    "setup")
-+        setup "$@"
-+    ;;
-+
-+    "start")
-+        start
-+    ;;
-+
-+    "stop")
-+        stop
-+    ;;
-+
-+    *)
-+        echo "Usage: $(basename $0) <start|stop>" >&2
-+
-+        exit 1
-+    ;;
-+esac
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/usb3g.sh ltib/config/platform/imx/merge/usr/sbin/usb3g.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/usb3g.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/usb3g.sh
-@@ -0,0 +1,138 @@
+@@ -0,0 +1,141 @@
 +#!/bin/sh
 +
 +ppp=ppp0
@@ -19793,6 +19724,9 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +                fi
 +            fi
 +        fi
++    else
++	# TODO may terminate unrelated PPP links.
++        killall pppd
 +    fi
 +
 +    return 0

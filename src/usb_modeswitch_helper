@@ -23,15 +23,18 @@ if test "$DEVTYPE" = "usb_device"; then
     else
         exit 0
     fi
-elif test "$SUBSYSTEM" = "usb-serial"; then
-    test -n "$MDEV" -a "$MDEV" = "ttyUSB0" || exit 0
+elif test -n "$MDEV" -a "$MDEV" = "ttyUSB2"; then
+    test "$SUBSYSTEM" = "usb-serial" || exit 0
 
     if test "$ACTION" = "add"; then
+        /bin/rm -f ppp
         /bin/mknod ppp c 108 0
 
-        /usr/sbin/pppd.sh start
+        /usr/sbin/usb3g.sh start
     elif test "$ACTION" = "remove"; then
-        /bin/rm ppp
+        /bin/rm -f ppp
+
+        /usr/sbin/usb3g.sh stop
     else
         exit 0
     fi

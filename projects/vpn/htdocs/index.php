@@ -24,7 +24,6 @@
         $filenames = glob(DATADIR . '/*' . LOGEXT);
         $header = '';
         $header_n = 0;
-        $rows = array();
         $plots = array();
 
         foreach ($filenames as $filename) {
@@ -95,12 +94,10 @@
 
                 $row = array_map('trim', $row);
 
-                $rows[] = $row;     // Append the new row.
-
                 // Add to plot data.
                 for ($i = 0; $i < $header_n; $i++) {
                     if ($i === 0) {
-                        $plots[0][] = strtotime(str_replace('/', '-', $row[0]) . " $row[1]") * 1000;
+                        $plots[0][] = strtotime(str_replace('/', '-', $row[0]) . "UTC $row[1]") * 1000;
 
                         continue;
                     }

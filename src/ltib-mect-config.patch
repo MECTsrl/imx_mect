@@ -18095,7 +18095,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
-@@ -0,0 +1,345 @@
+@@ -0,0 +1,339 @@
 +#!/bin/sh
 +#
 +# Load a new setup from USB or reset the PLC/CAN configurations.
@@ -18113,6 +18113,29 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +start() {
 +	sleep 1
 +
++	rm -f $UPDATE_DESCR_FILE
++	echo -n "Checking for configuration USB key...  "
++        if [ -e /sys/block/sda/sda1 ] || [ -e /sys/block/sda ]
++        then
++           
++	        [ -e /sys/block/sda/sda1 ] && usbdev=/dev/sda1
++		[ -d $mntdir ] || { mntdir=/tmp/mnt; /bin/mkdir $mntdir; }
++		[ -d $mntdir ] || exit 1
++		echo "Found scsi device: $usbdev"
++		if /bin/mount -orw $usbdev $mntdir
++		then
++			rm -f $logfile
++			echo "current mount point is $usbdev" | tee -a $logfile
++		else
++			echo "Cannot mount the usb pen drive"
++			exit 0
++		fi
++	else
++		echo "no usb key found in dmesg"
++		echo "exit from configuration script"
++		exit 0
++	fi
++
 +	# ts variable
 +	export TSLIB_CONFFILE=/usr/etc/ts.conf
 +	export TSLIB_PLUGINDIR=/usr/lib/ts
@@ -18124,35 +18147,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
 +	export QT_QWS_FONTDIR=/usr/lib/fonts
 +	export POINTERCAL_FILE=$TSLIB_CALIBFILE
-+
-+	rm -f $UPDATE_DESCR_FILE
-+	echo -n "Checking for configuration USB key...  "
-+        if [ -e /sys/block/sda/sda1 ] || [ -e /sys/block/sda ]
-+        then
-+           
-+	        [ -e /sys/block/sda/sda1 ] && usbdev=/dev/sda1
-+		[ -d $mntdir ] || { mntdir=/tmp/mnt; /bin/mkdir $mntdir; }
-+		[ -d $mntdir ] || exit 1
-+		echo "Found scsi device: $usbdev" | tee -a $logfile
-+		if /bin/mount -orw $usbdev $mntdir 2>$logfile
-+		then
-+			rm -f $logfile
-+			echo "current mount point is $usbdev" | tee -a $logfile
-+		else
-+			if [ -x /usr/bin/splash ]
-+			then
-+				killall splash
-+				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot mount the usb pen drive.</h1></font>" --dimension 12 >/dev/null 2>&1
-+				/bin/mount -oro,remount / 2>&1 | tee -a $logfile
-+				/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
-+				exit 1
-+			fi
-+		fi
-+	else
-+		echo "no usb key found in dmesg"
-+		echo "exit from configuration script"
-+		exit 0
-+	fi
 +
 +	echo -n "Starting the configuration process...  "
 +	/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
@@ -19538,72 +19532,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	modprobe g_file_storage file=/local/root/backing_file
 +	return $?
 +fi
-diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/root/setparam ltib/config/platform/imx/merge/local/root/setparam
---- ltib.reference/config/platform/imx/merge/local/root/setparam
-+++ ltib/config/platform/imx/merge/local/root/setparam
-@@ -0,0 +1,36 @@
-+
-+#!/bin/sh
-+
-+if [ $# -ne 2 ]
-+then
-+    echo "Usage - $0 mac_address serial_number"
-+    exit 1
-+fi
-+
-+#Customize net.conf
-+
-+LOCAL_ETC_DIR="/local/etc/sysconfig"
-+
-+NETFILE=$LOCAL_ETC_DIR/net.conf
-+echo MAC0=$1 > $NETFILE
-+echo IPADDR0=192.168.5.211 >> $NETFILE
-+echo NETMASK0=255.255.255.0 >> $NETFILE
-+echo GATEWAY0=192.168.5.10 >> $NETFILE
-+echo NAMESERVER01= >> $NETFILE
-+echo NAMESERVER02= >> $NETFILE
-+echo MAC1= >> $NETFILE
-+echo IPADDR1= >> $NETFILE
-+echo NETMASK1= >> $NETFILE
-+echo GATEWAY1= >> $NETFILE
-+echo NAMESERVER11= >> $NETFILE
-+echo NAMESERVER12= >> $NETFILE
-+
-+# Fill serial number
-+
-+echo $2 > $LOCAL_ETC_DIR/serial.conf
-+sync
-+sleep 1
-+chmod -x $0
-+#rm -f $0
-+
-+exit 0
-diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/root/writemac ltib/config/platform/imx/merge/local/root/writemac
---- ltib.reference/config/platform/imx/merge/local/root/writemac
-+++ ltib/config/platform/imx/merge/local/root/writemac
-@@ -0,0 +1,22 @@
-+
-+#!/bin/sh
-+
-+if [ $# -ne 1 ]
-+then
-+    echo "Usage - $0 mac_address"
-+    exit 1
-+fi
-+
-+#Customize net.conf
-+LOCAL_ETC_DIR="/local/etc/sysconfig"
-+
-+
-+echo $1
-+sed -i /MAC0/d  "$LOCAL_ETC_DIR/net.conf"
-+sed -i "1i\MAC0=$1" "$LOCAL_ETC_DIR/net.conf"
-+
-+sync
-+
-+#rm -f $0
-+
-+exit 0
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh ltib/config/platform/imx/merge/usr/bin/fcrts.sh
 --- ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh
 +++ ltib/config/platform/imx/merge/usr/bin/fcrts.sh

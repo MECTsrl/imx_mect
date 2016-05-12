@@ -167,6 +167,7 @@ MECT_COMMON_RFSPKGS := \
 	mtd-utils-rfs-201006-1.$(MECT_TARGET_ARCH).rpm \
 	mysql-rfs-4.1.12-0.$(MECT_TARGET_ARCH).rpm \
 	ncurses-rfs-5.3-1.$(MECT_TARGET_ARCH).rpm \
+	nrpe-rfs-2.15-1.$(MECT_TARGET_ARCH).rpm \
 	openssl-rfs-1.0.1s-1.$(MECT_TARGET_ARCH).rpm \
 	openvpn-rfs-2.3.10-1.$(MECT_TARGET_ARCH).rpm \
 	ppp-rfs-2.4.4-1.$(MECT_TARGET_ARCH).rpm \
@@ -311,6 +312,7 @@ MECT_PACKAGES = \
 	libx11-dev \
 	m4 \
 	make \
+	openssl \
 	patch \
 	perl \
 	qemu \

@@ -1,0 +1,11 @@
+diff -ruN a/configure b/configure
+--- a/configure	2013-09-06 17:27:13.000000000 +0200
++++ b/configure	2016-05-12 23:33:41.617161769 +0200
+@@ -6744,6 +6744,7 @@
+ 			else
+ 				sslbin=$ssldir/bin/openssl
+ 			fi
++			sslbin=/usr/bin/openssl
+ 			# awk to strip off meta data at bottom of dhparam output
+ 			$sslbin dhparam -C 512 | awk '/^-----/ {exit} {print}' > include/dh.h
+ 		fi

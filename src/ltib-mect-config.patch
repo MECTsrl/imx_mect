@@ -475,7 +475,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config
 +++ ltib/config/platform/imx/.config
-@@ -0,0 +1,664 @@
+@@ -0,0 +1,665 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -892,6 +892,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#
 +CONFIG_PKG_USB_MODESWITCH=y
 +CONFIG_PKG_USB_MODESWITCH_DATA=y
++CONFIG_PKG_NRPE=y
 +
 +#
 +# MECT projects
@@ -1169,7 +1170,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h
 +++ ltib/config/platform/imx/.tmpconfig.h
-@@ -0,0 +1,665 @@
+@@ -0,0 +1,666 @@
 +/*
 + * Automatically generated C config: don't edit
 + * LTIB version: 8.1.2
@@ -1587,6 +1588,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 + */
 +#define CONFIG_PKG_USB_MODESWITCH 1
 +#define CONFIG_PKG_USB_MODESWITCH_DATA 1
++#define CONFIG_PKG_NRPE 1
 +
 +/*
 + * MECT projects
@@ -2838,7 +2840,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev
 +++ ltib/config/platform/imx/defconfig.dev
-@@ -0,0 +1,664 @@
+@@ -0,0 +1,665 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -3255,6 +3257,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#
 +CONFIG_PKG_USB_MODESWITCH=y
 +CONFIG_PKG_USB_MODESWITCH_DATA=y
++CONFIG_PKG_NRPE=y
 +
 +#
 +# MECT projects
@@ -20375,7 +20378,16 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  endmenu
  
  menu "Qtopia"
-@@ -2767,6 +2828,81 @@
+@@ -2711,7 +2772,7 @@
+     default n
+     help
+        Select y here if you want Qtopia to use USB mouse by default.
+-    
++
+ config PKG_QTOPIA_WANT_TSLIB
+     depends CAP_HAS_MMU
+     depends PKG_QTOPIA || PKG_QTOPIA_4
+@@ -2767,6 +2828,88 @@
         Some host tools are not used when building Qtopia within ltib.
         Not building these tools saves time when building.  Select y here
         to enable designer, linguist, and assistant GUI tools.
@@ -20396,6 +20408,13 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +    help
 +       Data for the USB Modeswitch utility.
 +endmenu
++
++config PKG_NRPE
++    select PKG_OPENSSL
++    bool "Host/service/network monitoring agent for Nagios"
++    help
++       Select y if you want the host/service/network monitoring
++       agent for Nagios
 +
 +menu "MECT projects"
 +config PKG_ATCMCONTROL_RUNTIMESYSTEM
@@ -20457,7 +20476,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  menu "Applications"
  config PKG_QTOPIA_WANT_APP_CALCULATOR
-@@ -3346,7 +3482,7 @@
+@@ -3346,7 +3489,7 @@
      bool "totem-pl-parser"
      select PKG_EVOLUTION_DATA_SERVER
      select PKG_GTK2
@@ -20466,7 +20485,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3487,11 +3623,21 @@
+@@ -3487,11 +3630,21 @@
      depends CAP_HAS_MMU
      bool "wireless-tools"
      help
@@ -20489,7 +20508,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_XFSPROGS
      bool "xfsprogs"
      help
-@@ -3862,6 +4008,11 @@
+@@ -3862,6 +4015,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  
@@ -20544,7 +20563,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_MTD_UTILS                    = mtd-utils
  PKG_RPM                          = rpm
  PKG_RSYNC                        = rsync
-@@ -407,6 +411,22 @@
+@@ -407,6 +411,23 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
@@ -20564,6 +20583,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +PKG_SDCARD                       = SDcard
 +PKG_SPLASH                       = splash
 +PKG_MAC_SN                       = mac_sn
++PKG_NRPE                         = nrpe
  
  # leave these as the last 3 packages in the build order
  PKG_SYSCONFIG                    = sysconfig

@@ -496,15 +496,15 @@ spec_setup: MECT_LTIBSPECDIR := $(MECT_LTIBDIR)/dist/lfs-5.1
 spec_setup:
 	for s in ATCMcontrol_RunTimeSystem/ATCMcontrol_RunTimeSystem.spec 4c_runtime/4c_runtime.spec; do \
 		test -w $(MECT_LTIBSPECDIR)/$$s; \
-		sed -i 's/^\s*\(Version\s*:\).*/\1 $(MECT_BUILD_ATCMCRT_TAG)/I' $(MECT_LTIBSPECDIR)/$$s; \
+		sed -i 's|^\s*\(Version\s*:\).*|\1 $(MECT_BUILD_ATCMCRT_TAG)|I' $(MECT_LTIBSPECDIR)/$$s; \
 	done
 	for s in mect_plugins/mect_plugins.spec; do \
 		test -w $(MECT_LTIBSPECDIR)/$$s; \
-		sed -i 's/^\s*\(Version\s*:\).*/\1 $(MECT_BUILD_PLUGINSCRT_TAG)/I' $(MECT_LTIBSPECDIR)/$$s; \
+		sed -i 's|^\s*\(Version\s*:\).*|\1 $(MECT_BUILD_PLUGINSCRT_TAG)|I' $(MECT_LTIBSPECDIR)/$$s; \
 	done
 	for s in mect_apps/mect_apps.spec; do \
 		test -w $(MECT_LTIBSPECDIR)/$$s; \
-		sed -i 's/^\s*\(Version\s*:\).*/\1 $(MECT_BUILD_APPSCRT_TAG)/I' $(MECT_LTIBSPECDIR)/$$s; \
+		sed -i 's|^\s*\(Version\s*:\).*|\1 $(MECT_BUILD_APPSCRT_TAG)|I' $(MECT_LTIBSPECDIR)/$$s; \
 	done
 
 
@@ -767,6 +767,7 @@ ltib_update:
 	cp $(MECT_LTIBDIR_PATCH)/.tmpconfig.h $(MECT_LTIBDIR)/.tmpconfig.h
 	cp -a $(MECT_LTIBDIR_PATCH)/ltib $(MECT_LTIBDIR)/ltib
 	rm -rf $(MECT_LTIBDIR_PATCH)
+	$(MAKE) spec_setup
 
 
 # Utilities

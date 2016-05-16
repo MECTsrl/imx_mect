@@ -941,7 +941,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_PKG_TAR is not set
 +# CONFIG_PKG_TCLAP is not set
 +# CONFIG_PKG_TCPDUMP is not set
-+# CONFIG_PKG_TCP_WRAPPERS is not set
++CONFIG_PKG_TCP_WRAPPERS=y
 +# CONFIG_PKG_TERMCAP is not set
 +# CONFIG_PKG_TEXINFO is not set
 +# CONFIG_PKG_TIME is not set
@@ -1637,7 +1637,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#undef CONFIG_PKG_TAR
 +#undef CONFIG_PKG_TCLAP
 +#undef CONFIG_PKG_TCPDUMP
-+#undef CONFIG_PKG_TCP_WRAPPERS
++#define CONFIG_PKG_TCP_WRAPPERS 1
 +#undef CONFIG_PKG_TERMCAP
 +#undef CONFIG_PKG_TEXINFO
 +#undef CONFIG_PKG_TIME
@@ -3306,7 +3306,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_PKG_TAR is not set
 +# CONFIG_PKG_TCLAP is not set
 +# CONFIG_PKG_TCPDUMP is not set
-+# CONFIG_PKG_TCP_WRAPPERS is not set
++CONFIG_PKG_TCP_WRAPPERS=y
 +# CONFIG_PKG_TERMCAP is not set
 +# CONFIG_PKG_TEXINFO is not set
 +# CONFIG_PKG_TIME is not set

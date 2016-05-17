@@ -6,7 +6,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : v1.007
++Version         : v1.010
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -105,7 +105,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : v1.007
++Version         : v1.010
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3094,7 +3094,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1470 @@
+@@ -0,0 +1,1464 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Default HMI application.
@@ -3481,18 +3481,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1043_01_A
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1043/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3500,18 +3500,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1043_01_B
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1043/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3519,18 +3519,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1043_01_C
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1043/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3538,18 +3538,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1057_01_A
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1057/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3557,18 +3557,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1057_01_B
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1057/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3576,18 +3576,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1070_02_A
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1070/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3595,18 +3595,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1070_02_B
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1070/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3614,18 +3614,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1070_02_C
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1070/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3633,18 +3633,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1070_02_D
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1070/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3652,18 +3652,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1007_03
 +#
-+d=TPAC1007_03/Local_IO_HMI
++d=TPAC1007_03/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Local_IO_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Local_IO_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3671,18 +3671,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1007_04_AA
 +#
-+d=TPAC1007_04_AA/Local_IO_HMI
++d=TPAC1007_04_AA/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Local_IO_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Local_IO_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3728,18 +3728,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1006
 +#
-+d=TPAC1006/Local_IO_HMI
++d=TPAC1006/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Local_IO_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Local_IO_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3767,7 +3767,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1006_HR
 +#
-+d=AnyTPAC/Empty_HMI
++d=AnyTPAC/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -3786,18 +3786,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1008_01
 +#
-+d=TPAC1008_01/Local_IO_HMI
++d=TPAC1008_01/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Local_IO_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Local_IO_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3805,18 +3805,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1008_02_AA
 +#
-+d=AnyTPAC/Empty_HMI
++d=TPAC1008_02/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3964,7 +3964,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1043_01_A
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1043/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -3979,7 +3979,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1043_01_B
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1043/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -3994,7 +3994,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1043_01_C
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1043/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4009,7 +4009,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1057_01_A
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1043/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4024,7 +4024,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1057_01_B
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1043/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4039,7 +4039,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1070_02_A
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1043/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4054,7 +4054,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1070_02_B
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1043/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4069,7 +4069,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1070_02_C
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1043/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4084,7 +4084,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1070_02_D
 +#
-+d=AnyTPAC/Empty_HMI
++d=TP1043/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4099,7 +4099,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1007_03
 +#
-+d=TPAC1007_03/Local_IO_HMI
++d=TP1043/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4114,7 +4114,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1007_04_AA
 +#
-+d=TPAC1007_04_AA/Local_IO_HMI
++d=TPAC1007_04_AA/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4159,7 +4159,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1006
 +#
-+d=TPAC1006/Local_IO_HMI
++d=TPAC1006/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4170,8 +4170,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/data/customtrend/trend1.csv
 +	install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/network0.cmg
 +	install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/iomap0.cmg
-+	install -m644 -D config/network1.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/network1.cmg
-+	install -m644 -D config/iomap1.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/iomap1.cmg
 +
 +	cd -
 +fi
@@ -4209,7 +4207,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1008_01
 +#
-+d=TPAC1008_01/Local_IO_HMI
++d=TPAC1008_01/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4220,15 +4218,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/data/customtrend/trend1.csv
 +	install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/network0.cmg
 +	install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/iomap0.cmg
-+	install -m644 -D config/network1.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/network1.cmg
-+	install -m644 -D config/iomap1.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/iomap1.cmg
 +
 +	cd -
 +fi
 +
 +# TPAC1008_02_AA
 +#
-+d=AnyTPAC/Empty_HMI
++d=TPAC1008_02/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4237,6 +4233,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/img/splash.png
 +	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/system.ini
 +	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/data/customtrend/trend1.csv
++	install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/network0.cmg
++	install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/iomap0.cmg
 +
 +	cd -
 +fi
@@ -4471,8 +4469,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1006/local/data/customtrend/trend1.csv
 +%{pfx}/TPAC1006/local/etc/sysconfig/iomap0.cmg
 +%{pfx}/TPAC1006/local/etc/sysconfig/network0.cmg
-+%{pfx}/TPAC1006/local/etc/sysconfig/iomap1.cmg
-+%{pfx}/TPAC1006/local/etc/sysconfig/network1.cmg
 +
 +%files lfs-TPAC1006_GSM
 +%defattr(-,root,root)
@@ -4499,8 +4495,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1008_01/local/data/customtrend/trend1.csv
 +%{pfx}/TPAC1008_01/local/etc/sysconfig/iomap0.cmg
 +%{pfx}/TPAC1008_01/local/etc/sysconfig/network0.cmg
-+%{pfx}/TPAC1008_01/local/etc/sysconfig/iomap1.cmg
-+%{pfx}/TPAC1008_01/local/etc/sysconfig/network1.cmg
 +
 +%files lfs-TPAC1008_02_AA
 +%defattr(-,root,root)
@@ -4573,7 +4567,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v7.0rc24
++Version: v7.0rc26
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

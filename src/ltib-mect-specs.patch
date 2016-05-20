@@ -3094,12 +3094,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1464 @@
+@@ -0,0 +1,1466 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v2.0rc4
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -4099,7 +4099,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1007_03
 +#
-+d=TP1043/Simple
++d=TPAC1007_03/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4233,8 +4233,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/img/splash.png
 +	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/system.ini
 +	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/data/customtrend/trend1.csv
-+	install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/network0.cmg
-+	install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/iomap0.cmg
++	install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/network0.cmg
++	install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/iomap0.cmg
 +
 +	cd -
 +fi
@@ -4503,6 +4503,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/img/splash.png
 +%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/system.ini
 +%{pfx}/TPAC1008_02_AA/local/data/customtrend/trend1.csv
++%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/iomap0.cmg
++%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/network0.cmg
 +
 +%files lfs-TPAC1008_02_AB
 +%defattr(-,root,root)
@@ -4567,7 +4569,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v7.0rc26
++Version: v7.027
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

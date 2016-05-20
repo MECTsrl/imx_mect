@@ -1,17 +1,17 @@
 export LC_ALL := C
 
 # MECT Suite version
-export MECT_BUILD_RELEASE := 2.0.5
+export MECT_BUILD_RELEASE := 2.0.6
 
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := master
 # Set to 0.0 to skip tag checkout
-export MECT_BUILD_ATCMCRT_TAG := v1.010
+export MECT_BUILD_ATCMCRT_TAG := v1.011
 
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to skip tag checkout
-export MECT_BUILD_PLUGINSCRT_TAG := v7.0rc26
+export MECT_BUILD_PLUGINSCRT_TAG := v7.027
 
 # git branch and tag for the mect_apps project
 MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0

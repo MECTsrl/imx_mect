@@ -6,7 +6,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : v1.010
++Version         : v1.011
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -105,7 +105,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : v1.010
++Version         : v1.011
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -2479,6 +2479,78 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +
 +%Files
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libmodbus/libmodbus.spec ltib/dist/lfs-5.1/libmodbus/libmodbus.spec
+--- ltib.reference/dist/lfs-5.1/libmodbus/libmodbus.spec
++++ ltib/dist/lfs-5.1/libmodbus/libmodbus.spec
+@@ -0,0 +1,68 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : A Modbus library
++Name            : libmodbus
++Version         : 3.0.6
++Release         : 1
++License         : LGPLv2+
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/System
++Source          : %{name}-%{version}.tar.gz
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed %{name} for root file system requirements.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/System
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents restricted to just the files that
++are needed at run time on the target.
++
++
++%Description
++%{summary}
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++%setup
++
++./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++make
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++%Files
++%defattr(-,root,root)
++%{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/lib/libmodbus.so
++%{pfx}/usr/lib/libmodbus.so.5
++%{pfx}/usr/lib/libmodbus.so.5.0.5
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 --- ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 +++ ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
@@ -5043,6 +5115,81 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/nagios-plugins/nagios-plugins.spec ltib/dist/lfs-5.1/nagios-plugins/nagios-plugins.spec
+--- ltib.reference/dist/lfs-5.1/nagios-plugins/nagios-plugins.spec
++++ ltib/dist/lfs-5.1/nagios-plugins/nagios-plugins.spec
+@@ -0,0 +1,71 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++%define mb_name check_modbus
++%define mb_vers 0.46
++
++Summary         : Host/service/network monitoring plugins for Nagios
++Name            : nagios-plugins
++Version         : 1.0
++Release         : 1
++License         : GPL
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/System
++Source          : %{mb_name}-%{mb_vers}.tar.gz
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed %{name} for root file system requirements.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/System
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents restricted to just the files that
++are needed at run time on the target.
++
++
++%Description
++%{summary}
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++%setup -c
++
++cd %{mb_name}-%{mb_vers}
++./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++cd %{mb_name}-%{mb_vers}
++make
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++cd %{mb_name}-%{mb_vers}
++make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++%Files
++%defattr(-,root,root)
++%{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/bin/check_modbus
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec ltib/dist/lfs-5.1/ncurses/ncurses.spec
 --- ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec
 +++ ltib/dist/lfs-5.1/ncurses/ncurses.spec

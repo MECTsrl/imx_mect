@@ -6671,7 +6671,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +112,184 @@
+@@ -31,24 +112,181 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -6838,7 +6838,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/etc/rc.d/rc.serial
 +%{pfx}/etc/rc.d/rcS
 +%{pfx}/etc/securetty
-+%{pfx}/etc/services
 +%{pfx}/etc/shadow
 +%{pfx}/etc/shells
 +%{pfx}/etc/sysctl.conf
@@ -6853,13 +6852,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Files lfs
 +%defattr(-,root,root)
 +%{pfx}/local/control
-+%{pfx}/local/data
 +%{pfx}/local/data/alarms
 +%{pfx}/local/data/customstore
 +%{pfx}/local/data/recipe
 +%{pfx}/local/data/store
 +%{pfx}/local/data/trends
-+%{pfx}/local/etc
 +%{pfx}/local/etc/sysconfig
 +%{pfx}/local/retentive
 +%{pfx}/local/root

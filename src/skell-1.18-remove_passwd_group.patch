@@ -1,0 +1,283 @@
+diff -ruN a/etc/group b/etc/group
+--- a/etc/group	2016-05-24 23:40:42.512669007 +0200
++++ b/etc/group	1970-01-01 01:00:00.000000000 +0100
+@@ -1,56 +0,0 @@
+-root::0:root
+-bin::1:root,bin,daemon
+-daemon::2:root,bin,daemon
+-sys::3:root,bin,adm
+-adm::4:root,adm,daemon
+-tty::5:
+-disk::6:root
+-lp::7:daemon,lp
+-mem::8:
+-kmem::9:
+-wheel::10:root
+-mail::12:mail
+-news::13:news
+-uucp::14:uucp
+-man::15:
+-games::20:
+-gopher::30:
+-dip::40:
+-ftp::50:
+-lock::54:
+-nobody::99:
+-users::100:
+-slocate:x:21:
+-tape:x:16:
+-audio:x:17:
+-video:x:18:
+-cdrom:x:25:
+-floppy:x:19:
+-utmp:x:22:
+-mailnull:x:47:
+-xfs:x:43:
+-ntp:x:38:
+-rpc:x:32:
+-gdm:x:42:
+-rpcuser:x:29:
+-nfsnobody:x:65534:
+-nscd:x:28:
+-ident:x:98:
+-radvd:x:75:
+-postgres:x:26:
+-apache:x:48:seh
+-squid:x:23:
+-named:x:70:
+-pcap:x:77:
+-junkbust:x:73:
+-pppusers:x:44:
+-popusers:x:45:
+-slipusers:x:46:
+-mailman:x:41:
+-mysql:x:27:
+-ldap:x:55:
+-pvm:x:24:
+-nogroup:x:65534:
+-user:x:500:
+-messagebus:x:1000:
+-haldaemon:x:1001:
+diff -ruN a/etc/passwd b/etc/passwd
+--- a/etc/passwd	2016-05-24 23:40:42.516669008 +0200
++++ b/etc/passwd	1970-01-01 01:00:00.000000000 +0100
+@@ -1,41 +0,0 @@
+-root:x:0:0:root:/root:/bin/sh
+-bin:x:1:1:bin:/bin:/sbin/nologin
+-daemon:x:2:2:daemon:/sbin:/sbin/nologin
+-adm:x:3:4:adm:/var/adm:/sbin/nologin
+-lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+-sync:x:5:0:sync:/sbin:/bin/sync
+-shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+-halt:x:7:0:halt:/sbin:/sbin/halt
+-mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+-news:x:9:13:news:/var/spool/news:
+-uucp:x:10:14:uucp:/var/spool/uucp:/sbin/nologin
+-operator:x:11:0:operator:/root:/sbin/nologin
+-games:x:12:100:games:/usr/games:/sbin/nologin
+-gopher:x:13:30:gopher:/var/gopher:/sbin/nologin
+-ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
+-nobody:x:99:99:Nobody:/:/sbin/nologin
+-sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin
+-mailnull:x:47:47::/var/spool/mqueue:/dev/null
+-xfs:x:43:43:X Font Server:/etc/X11/fs:/bin/false
+-ntp:x:38:38::/etc/ntp:/sbin/nologin
+-rpc:x:32:32:Portmapper RPC user:/:/bin/false
+-gdm:x:42:42::/var/gdm:/sbin/nologin
+-rpcuser:x:29:29:RPC Service User:/var/lib/nfs:/sbin/nologin
+-nfsnobody:x:65534:65534:Anonymous NFS User:/var/lib/nfs:/sbin/nologin
+-nscd:x:28:28:NSCD Daemon:/:/bin/false
+-ident:x:98:98:pident user:/:/sbin/nologin
+-radvd:x:75:75:radvd user:/:/bin/false
+-postgres:x:26:26:PostgreSQL Server:/var/lib/pgsql:/bin/bash
+-apache:x:48:48:Apache:/var/www:/bin/false
+-squid:x:23:23::/var/spool/squid:/dev/null
+-named:x:70:70:Named:/var/named:/bin/false
+-pcap:x:77:77::/var/arpwatch:/bin/nologin
+-amanda:x:33:6:Amanda user:/var/lib/amanda:/bin/bash
+-junkbust:x:73:73::/etc/junkbuster:/bin/bash
+-mailman:x:41:41:GNU Mailing List Manager:/var/mailman:/bin/false
+-mysql:x:27:27:MySQL Server:/var/lib/mysql:/bin/bash
+-ldap:x:55:55:LDAP User:/var/lib/ldap:/bin/false
+-pvm:x:24:24::/usr/share/pvm3:/bin/bash
+-user:x:500:500:Linux User,,,:/home/user:/bin/sh
+-messagebus:x:1000:1000:Linux User,,,:/home/messagebus:/bin/sh
+-haldaemon:x:1001:1001:Linux User,,,:/home/haldaemon:/bin/sh
+diff -ruN a/etc/services b/etc/services
+--- a/etc/services	2008-09-23 14:48:39.000000000 +0200
++++ b/etc/services	1970-01-01 01:00:00.000000000 +0100
+@@ -1,174 +0,0 @@
+-#       $NetBSD: services,v 1.18 1996/03/26 00:07:58 mrg Exp $
+-#
+-# Network services, Internet style
+-#
+-#       from: @(#)services      5.8 (Berkeley) 5/9/91
+-#
+-tcpmux          1/tcp           
+-echo            7/tcp
+-echo            7/udp
+-discard         9/tcp           sink null
+-discard         9/udp           sink null
+-systat          11/tcp          users
+-daytime         13/tcp
+-daytime         13/udp
+-netstat         15/tcp
+-qotd            17/tcp          quote
+-msp             18/tcp          
+-msp             18/udp          
+-chargen         19/tcp          ttytst source
+-chargen         19/udp          ttytst source
+-ftp-data        20/tcp          
+-ftp             21/tcp
+-ssh             22/tcp
+-ssh             22/udp
+-telnet          23/tcp
+-# 24 - private
+-smtp            25/tcp          mail
+-# 26 - unassigned
+-time            37/tcp          timserver
+-time            37/udp          timserver
+-rlp             39/udp          resource        
+-nameserver      42/tcp          name            
+-whois           43/tcp          nicname
+-domain          53/tcp          nameserver      
+-domain          53/udp          nameserver
+-mtp             57/tcp                          
+-bootps          67/tcp          
+-bootps          67/udp
+-bootpc          68/tcp          
+-bootpc          68/udp
+-tftp            69/udp
+-gopher          70/tcp          
+-gopher          70/udp
+-rje             77/tcp          netrjs
+-finger          79/tcp
+-www             80/tcp          http    
+-www             80/udp                  
+-link            87/tcp          ttylink
+-kerberos        88/tcp          krb5    
+-kerberos        88/udp
+-supdup          95/tcp
+-# 100 - reserved
+-hostnames       101/tcp         hostname        
+-iso-tsap        102/tcp         tsap            
+-csnet-ns        105/tcp         cso-ns  
+-csnet-ns        105/udp         cso-ns
+-rtelnet         107/tcp         
+-rtelnet         107/udp
+-pop2            109/tcp         pop-2 postoffice        
+-pop2            109/udp
+-pop3            110/tcp         pop-3 
+-pop3            110/udp
+-sunrpc          111/tcp
+-sunrpc          111/udp
+-auth            113/tcp         authentication tap ident
+-sftp            115/tcp
+-uucp-path       117/tcp
+-nntp            119/tcp         readnews untp   
+-ntp             123/tcp
+-ntp             123/udp                         
+-netbios-ns      137/tcp                         
+-netbios-ns      137/udp
+-netbios-dgm     138/tcp                         
+-netbios-dgm     138/udp
+-netbios-ssn     139/tcp                         
+-netbios-ssn     139/udp
+-imap2           143/tcp         imap            
+-imap2           143/udp
+-snmp            161/udp                         
+-snmp-trap       162/udp         snmptrap        
+-cmip-man        163/tcp                         
+-cmip-man        163/udp
+-cmip-agent      164/tcp
+-cmip-agent      164/udp
+-xdmcp           177/tcp                         
+-xdmcp           177/udp
+-nextstep        178/tcp         NeXTStep NextStep       
+-nextstep        178/udp         NeXTStep NextStep       
+-bgp             179/tcp                         
+-bgp             179/udp
+-prospero        191/tcp                         
+-prospero        191/udp
+-irc             194/tcp                         
+-irc             194/udp
+-smux            199/tcp                         
+-smux            199/udp
+-at-rtmp         201/tcp                         
+-at-rtmp         201/udp
+-at-nbp          202/tcp                         
+-at-nbp          202/udp
+-at-echo         204/tcp                         
+-at-echo         204/udp
+-at-zis          206/tcp                         
+-at-zis          206/udp
+-z3950           210/tcp         wais            
+-z3950           210/udp         wais
+-ipx             213/tcp                         
+-ipx             213/udp
+-imap3           220/tcp                         
+-imap3           220/udp                         
+-ulistserv       372/tcp                         
+-ulistserv       372/udp
+-#
+-# UNIX specific services
+-#
+-exec            512/tcp
+-biff            512/udp         comsat
+-login           513/tcp
+-who             513/udp         whod
+-shell           514/tcp         cmd             
+-syslog          514/udp
+-printer         515/tcp         spooler         
+-talk            517/udp
+-ntalk           518/udp
+-route           520/udp         router routed   
+-timed           525/udp         timeserver
+-tempo           526/tcp         newdate
+-courier         530/tcp         rpc
+-conference      531/tcp         chat
+-netnews         532/tcp         readnews
+-netwall         533/udp                         
+-uucp            540/tcp         uucpd           
+-remotefs        556/tcp         rfs_server rfs  
+-#
+-webster         765/tcp                         
+-webster         765/udp
+-# temporary entry (not officially registered by the Samba Team!)
+-swat            901/tcp         
+-#
+-ingreslock      1524/tcp
+-ingreslock      1524/udp
+-prospero-np     1525/tcp                
+-prospero-np     1525/udp
+-rfe             5002/tcp                
+-rfe             5002/udp                
+-#
+-#
+-# Kerberos (Project Athena/MIT) services
+-# Note that these are for Kerberos v4, and are unofficial.
+-#
+-5A
+-klogin          543/tcp                 
+-kshell          544/tcp         krcmd   
+-kerberos-adm    749/tcp                 
+-kerberos4       750/udp         kdc     
+-kerberos4       750/tcp         kdc     
+-kerberos-master 751/udp                 
+-kerberos-master 751/tcp                 
+-krbupdate       760/tcp         kreg    
+-kpasswd         761/tcp         kpwd    
+-eklogin         2105/tcp                
+-#
+-# Unofficial but necessary (for NetBSD) services
+-#
+-supfilesrv      871/tcp                 
+-supfiledbg      1127/tcp                
+-#
+-# AppleTalk DDP entries (DDP: Datagram Delivery Protocol)
+-#
+-rtmp            1/ddp                   
+-nbp             2/ddp                   
+-echo            4/ddp                   
+-zip             6/ddp                   
+-

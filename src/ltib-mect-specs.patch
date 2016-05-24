@@ -5316,7 +5316,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-ssl-inc=$DEV_IMAGE/usr --with-ssl-lib=$DEV_IMAGE/usr/lib
++./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-ssl-inc=$DEV_IMAGE/usr --with-ssl-lib=$DEV_IMAGE/usr/lib --enable-command-args
 +make
 +
 +%Install

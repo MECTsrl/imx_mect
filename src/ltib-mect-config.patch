@@ -21098,7 +21098,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_ED                           = ed
  PKG_KBD                          = kbd
  PKG_E2FSPROGS                    = e2fsprogs
-@@ -92,19 +91,24 @@
+@@ -92,19 +91,23 @@
  PKG_NETPERF                      = netperf
  PKG_IPROUTE                      = iproute
  PKG_BOA                          = boa
@@ -21118,12 +21118,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_TIME                         = time
 +PKG_LIBSOCKETCAN                 = libsocketcan
  PKG_CAN4LINUX                    = can4linux
-+PKG_CANFESTIVAL                  = can-festival
 +PKG_ZIP30                        = zip30
  PKG_I2C_TOOLS                    = i2c-tools
  PKG_WATCHDOG                     = watchdog
  PKG_DSPI                         = dspi
-@@ -127,6 +131,7 @@
+@@ -127,6 +130,7 @@
  PKG_GEN_INIT_CPIO                = gen_init_cpio
  PKG_U_BOOT_TOOLS                 = u-boot-tools
  PKG_LZO                          = lzo
@@ -21131,7 +21130,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_MTD_UTILS                    = mtd-utils
  PKG_RPM                          = rpm
  PKG_RSYNC                        = rsync
-@@ -407,6 +412,25 @@
+@@ -407,6 +411,26 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
@@ -21143,6 +21142,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +PKG_LAST_KERNEL_BUILD            = last-kernel-build
 +PKG_WIFI_DRIVERS                 = wifi-drivers
 +PKG_XENOMAI                      = xenomai
++PKG_CANFESTIVAL                  = can-festival
 +PKG_ATCMCONTROL_RUNTIMESYSTEM    = ATCMcontrol_RunTimeSystem
 +PKG_4C_RUNTIME                   = 4c_runtime
 +PKG_MECT_PLUGINS                 = mect_plugins

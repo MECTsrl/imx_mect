@@ -475,7 +475,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config
 +++ ltib/config/platform/imx/.config
-@@ -0,0 +1,667 @@
+@@ -0,0 +1,668 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -645,6 +645,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_PKG_CAIRO is not set
 +CONFIG_PKG_LIBSOCKETCAN=y
 +# CONFIG_PKG_CAN4LINUX is not set
++CONFIG_PKG_CANFESTIVAL=y
 +CONFIG_PKG_CANTEST=y
 +# CONFIG_PKG_CCACHE is not set
 +# CONFIG_PKG_CHEESE is not set
@@ -1172,7 +1173,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h
 +++ ltib/config/platform/imx/.tmpconfig.h
-@@ -0,0 +1,668 @@
+@@ -0,0 +1,669 @@
 +/*
 + * Automatically generated C config: don't edit
 + * LTIB version: 8.1.2
@@ -1343,6 +1344,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#undef CONFIG_PKG_CAIRO
 +#define CONFIG_PKG_LIBSOCKETCAN 1
 +#undef CONFIG_PKG_CAN4LINUX
++#define CONFIG_PKG_CANFESTIVAL 1
 +#define CONFIG_PKG_CANTEST 1
 +#undef CONFIG_PKG_CCACHE
 +#undef CONFIG_PKG_CHEESE
@@ -2844,7 +2846,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev
 +++ ltib/config/platform/imx/defconfig.dev
-@@ -0,0 +1,667 @@
+@@ -0,0 +1,668 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -3014,6 +3016,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_PKG_CAIRO is not set
 +CONFIG_PKG_LIBSOCKETCAN=y
 +# CONFIG_PKG_CAN4LINUX is not set
++CONFIG_PKG_CANFESTIVAL=y
 +CONFIG_PKG_CANTEST=y
 +# CONFIG_PKG_CCACHE is not set
 +# CONFIG_PKG_CHEESE is not set
@@ -20776,7 +20779,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_BONNIE_PLUS_PLUS
      depends CAP_HAS_MMU
      bool "bonnie++"
-@@ -287,7 +294,13 @@
+@@ -287,12 +294,24 @@
      bool "cairo"
      help
        A 2D vectorial drawing library needed by GTK from 2.8.0
@@ -20791,7 +20794,18 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_CAN4LINUX
      bool "can4linux"
      help
-@@ -587,13 +600,6 @@
+       Userspace CANbus test programs
+ 
++config PKG_CANFESTIVAL
++    bool "can-festival"
++    default y
++    help
++      CANopen stack implementation.
++
+ config PKG_CANTEST
+     bool "cantest"
+     help
+@@ -587,13 +606,6 @@
        The dosfstools package includes the mkdosfs and dosfsck utilities,
        which make and check MS-DOS FAT filesystems.
  
@@ -20805,7 +20819,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_DROPBEAR
      depends CAP_HAS_MMU
      select PKG_ZLIB
-@@ -613,6 +619,16 @@
+@@ -613,6 +625,16 @@
        * TCP forwarding support
        * Features can easily be disabled when compiling to save space
  
@@ -20822,7 +20836,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_DROPBEAR_WANT_URANDOM_DEV
      depends CAP_HAS_MMU
      depends PKG_DROPBEAR
-@@ -1706,7 +1722,7 @@
+@@ -1706,7 +1728,7 @@
      depends CAP_HAS_MMU
      select PKG_LIBGNOME
      select PKG_GNOME_KEYRING
@@ -20831,7 +20845,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      select PKG_LIBBONOBOUI
      bool "libgnomeui"
      help
-@@ -1743,6 +1759,12 @@
+@@ -1743,6 +1765,12 @@
        format. All three audio layers (Layer I, Layer II, and Layer III
        a.k.a. MP3) are fully implemented.
  
@@ -20844,7 +20858,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_LIBMPEG2
      depends CAP_HAS_MMU
      bool "libmpeg2"
-@@ -1904,6 +1926,13 @@
+@@ -1904,6 +1932,13 @@
      help
        This package provides a way for applications to access USB devices.
  
@@ -20858,7 +20872,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_LIBXML2
      depends CAP_HAS_MMU
      bool "libxml2"
-@@ -2146,6 +2175,12 @@
+@@ -2146,6 +2181,12 @@
      help
        Build the module dependency file modules.dep
  
@@ -20871,7 +20885,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  choice
      prompt "module loading"
      default MODUTILS_NONE
-@@ -2207,6 +2242,13 @@
+@@ -2207,6 +2248,13 @@
        client/server implementation consisting of a server daemon (mysqld)
        and many different client programs and libraries
  
@@ -20885,7 +20899,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_NAUTILUS
      bool "nautilus"
      select PKG_EEL
-@@ -2320,6 +2362,17 @@
+@@ -2320,6 +2368,17 @@
        This is the full blown openssh package.  Normally dropbear is sufficient
        and smaller.
  
@@ -20903,7 +20917,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_OPENSSH_WANT_HACKABLE_KEYS
      depends CAP_HAS_MMU
      depends PKG_OPENSSH
-@@ -2673,6 +2726,27 @@
+@@ -2673,6 +2732,27 @@
      default n
      help
         Enable Phonon library.
@@ -20931,7 +20945,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  endmenu
  
  menu "Qtopia"
-@@ -2711,7 +2785,7 @@
+@@ -2711,7 +2791,7 @@
      default n
      help
         Select y here if you want Qtopia to use USB mouse by default.
@@ -20940,7 +20954,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_QTOPIA_WANT_TSLIB
      depends CAP_HAS_MMU
      depends PKG_QTOPIA || PKG_QTOPIA_4
-@@ -2767,6 +2841,88 @@
+@@ -2767,6 +2847,88 @@
         Some host tools are not used when building Qtopia within ltib.
         Not building these tools saves time when building.  Select y here
         to enable designer, linguist, and assistant GUI tools.
@@ -21029,7 +21043,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  menu "Applications"
  config PKG_QTOPIA_WANT_APP_CALCULATOR
-@@ -3346,7 +3502,7 @@
+@@ -3346,7 +3508,7 @@
      bool "totem-pl-parser"
      select PKG_EVOLUTION_DATA_SERVER
      select PKG_GTK2
@@ -21038,7 +21052,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3487,11 +3643,21 @@
+@@ -3487,11 +3649,21 @@
      depends CAP_HAS_MMU
      bool "wireless-tools"
      help
@@ -21061,7 +21075,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_XFSPROGS
      bool "xfsprogs"
      help
-@@ -3862,6 +4028,11 @@
+@@ -3862,6 +4034,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  
@@ -21084,7 +21098,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_ED                           = ed
  PKG_KBD                          = kbd
  PKG_E2FSPROGS                    = e2fsprogs
-@@ -92,19 +91,23 @@
+@@ -92,19 +91,24 @@
  PKG_NETPERF                      = netperf
  PKG_IPROUTE                      = iproute
  PKG_BOA                          = boa
@@ -21104,11 +21118,12 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_TIME                         = time
 +PKG_LIBSOCKETCAN                 = libsocketcan
  PKG_CAN4LINUX                    = can4linux
++PKG_CANFESTIVAL                  = can-festival
 +PKG_ZIP30                        = zip30
  PKG_I2C_TOOLS                    = i2c-tools
  PKG_WATCHDOG                     = watchdog
  PKG_DSPI                         = dspi
-@@ -127,6 +130,7 @@
+@@ -127,6 +131,7 @@
  PKG_GEN_INIT_CPIO                = gen_init_cpio
  PKG_U_BOOT_TOOLS                 = u-boot-tools
  PKG_LZO                          = lzo
@@ -21116,7 +21131,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_MTD_UTILS                    = mtd-utils
  PKG_RPM                          = rpm
  PKG_RSYNC                        = rsync
-@@ -407,6 +411,25 @@
+@@ -407,6 +412,25 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded

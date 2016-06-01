@@ -531,7 +531,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boa/boa.spec ltib/dist/lfs-5.1/boa/boa.spec
 --- ltib.reference/dist/lfs-5.1/boa/boa.spec
 +++ ltib/dist/lfs-5.1/boa/boa.spec
-@@ -12,47 +12,81 @@
+@@ -12,47 +12,82 @@
  Group           : System/Servers
  Source          : %{name}-%{version}.tar.gz
  Patch1          : boa-0.94.14rc21-nommu.patch
@@ -613,12 +613,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +install -m 755 src/boa_indexer $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/
 +ln -s conf/boa.conf $RPM_BUILD_ROOT%{pfx}/%{base}/etc/boa.conf
 +ln -s boa $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/boa_d
-+
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed -n '
-+    p
-+' all_files.lst > rfs_files.lst
  
  %Clean
 +export LC_ALL
@@ -626,14 +620,19 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
 +
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/etc/boa.conf
++%{pfx}/etc/conf
++%{pfx}/usr/sbin/boa
++%{pfx}/usr/sbin/boa_d
++%{pfx}/usr/sbin/boa_indexer
++%{pfx}/var/log/boa
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
 --- ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec
 +++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
@@ -896,6 +895,109 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/can-festival/can-festival.spec ltib/dist/lfs-5.1/can-festival/can-festival.spec
+--- ltib.reference/dist/lfs-5.1/can-festival/can-festival.spec
++++ ltib/dist/lfs-5.1/can-festival/can-festival.spec
+@@ -0,0 +1,99 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : CANopen stack implementation
++Name            : can-festival
++Version         : 3.0
++Release         : rc3
++License         : LGPL
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Development/System
++URL             : http://www.canfestival.org/
++Source          : CanFestival-%{version}-%{release}.tgz
++Patch0          : can-festival-build.patch
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed %{name} for root file system requirements.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Development/System
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents trimmed to just the files
++needed at run time on the target.
++
++
++%description
++CANopen is a CAN based highter layer protocol. It defines some
++protocols to:
++- Configure a CAN network.
++- Transmit data to a specific node or in broadcast.
++- Administrate the network. For example detecting a not
++  responding node.
++
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++%setup -n CanFestival-%{version}-%{release}
++%patch0 -p1
++
++ROOTFS=${DEV_IMAGE} ./configure \
++	--target=unix \
++	--arch=${LINTARCH} \
++	--timers=xeno \
++	--prefix=/usr \
++	--can=socket
++
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++make \
++	PROG_CFLAGS=-I${DEV_IMAGE}/usr/xenomai/include \
++	EXE_CFLAGS_PATH="-L${DEV_IMAGE}/usr/xenomai/lib -lxenomai"
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++make \
++	PROG_CFLAGS=-I${DEV_IMAGE}/usr/xenomai/include \
++	EXE_CFLAGS_PATH="-L${DEV_IMAGE}/usr/xenomai/lib -lxenomai" \
++	PREFIX=$RPM_BUILD_ROOT%{pfx}/usr \
++	install
++
++### %define  LIBPATH ${RPM_BUILD_ROOT}%{_elinos_install_dir}/%{_elinos_conftarget}/lib
++### %define  BINPATH ${RPM_BUILD_ROOT}%{_elinos_target_dir}/%{_elinos_libc}/default/usr/bin
++### 
++### install -d -m 755 %{LIBPATH}
++### install -d -m 755 %{BINPATH}
++### 
++### make -C CanOpen/CanOpenMain -f MakefileLinux LIBPATH=%{LIBPATH} install
++### make -C CanOpen/CanOpenDriverLinux -f MakefileLinux LIBPATH=%{LIBPATH} install
++### make -C CanOpen/CanOpenDriverLinuxPeak -f MakefileLinux LIBPATH=%{LIBPATH} install
++
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++
++%Files
++%defattr(-,root,root)
++%{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/lib/libcanfestival_can_socket.so
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cantest/cantest.spec ltib/dist/lfs-5.1/cantest/cantest.spec
 --- ltib.reference/dist/lfs-5.1/cantest/cantest.spec
 +++ ltib/dist/lfs-5.1/cantest/cantest.spec

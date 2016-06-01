@@ -1,0 +1,54 @@
+diff -ruN a/configure b/configure
+--- a/configure	2007-04-04 13:04:31.000000000 +0200
++++ b/configure	2016-06-01 16:17:17.572325099 +0200
+@@ -79,7 +79,7 @@
+ test=conftest
+ rm -f $test $test.c
+ 
+-XENO_CONFIG=/usr/xenomai/bin/xeno-config
++XENO_CONFIG=${ROOTFS}/usr/xenomai/bin/xeno-config
+ 
+ ###########################################################################
+ #                          ARGUMENTS PARSING                              #
+@@ -448,7 +448,7 @@
+ if [ "$SUB_TIMERS_DRIVER" = "xeno" ]; then
+ 	SUB_EXE_CFLAGS=$SUB_EXE_CFLAGS\ -lnative\ -lrtdm\
+ \	-L`$XENO_CONFIG --library-dir`
+-	SUB_PROG_CFLAGS=$SUB_PROG_CFLAGS\ `$XENO_CONFIG --xeno-cflags`
++	SUB_PROG_CFLAGS=$SUB_PROG_CFLAGS\ `$XENO_CONFIG --skin=native --cflags`
+ 	RTCAN_SOCKET=1
+ fi
+ 
+diff -ruN a/examples/TestMasterSlave/Makefile.in b/examples/TestMasterSlave/Makefile.in
+--- a/examples/TestMasterSlave/Makefile.in	2007-04-13 10:57:03.000000000 +0200
++++ b/examples/TestMasterSlave/Makefile.in	2016-06-01 16:17:17.572325099 +0200
+@@ -25,7 +25,7 @@
+ OPT_CFLAGS = -O2
+ CFLAGS = SUB_OPT_CFLAGS
+ PROG_CFLAGS = SUB_PROG_CFLAGS
+-EXE_CFLAGS = SUB_EXE_CFLAGS
++EXE_CFLAGS = $(EXE_CFLAGS_PATH) SUB_EXE_CFLAGS
+ OS_NAME = SUB_OS_NAME
+ ARCH_NAME = SUB_ARCH_NAME
+ PREFIX = SUB_PREFIX
+diff -ruN a/Makefile.in b/Makefile.in
+--- a/Makefile.in	2007-04-13 10:57:01.000000000 +0200
++++ b/Makefile.in	2016-06-01 16:36:07.383531214 +0200
+@@ -21,7 +21,7 @@
+ # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ # 
+ 
+-all: objdictgen canfestival examples
++all: canfestival examples
+ 
+ examples: canfestival driver
+ 	$(MAKE) -C examples all
+@@ -39,8 +39,6 @@
+ 	$(MAKE) -C drivers $@
+ 	$(MAKE) -C src $@
+ 	$(MAKE) -C examples $@
+-	$(MAKE) -C objdictgen $@
+-	ldconfig
+ 
+ uninstall:
+ 	$(MAKE) -C drivers $@

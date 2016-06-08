@@ -4738,7 +4738,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 --- ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 +++ ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
-@@ -0,0 +1,78 @@
+@@ -0,0 +1,117 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Custom Qt plugins for HMI development.
@@ -4798,12 +4798,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +make -j1 INSTALL_ROOT=$RPM_BUILD_ROOT%{pfx} install
 +
-+cd %{_builddir}/%{name}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed -n '
-+    \,%{pfx}%{_libdir}/, p;
-+' all_files.lst > rfs_files.lst
-+
 +
 +%Clean
 +export LC_ALL
@@ -4812,11 +4806,56 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +
 +
-+%Files -f all_files.lst
++%Files
 +%defattr(-,root,root)
++%{pfx}/*
 +
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/lib/libATCMalarms.so
++%{pfx}/usr/lib/libATCMalarms.so.1
++%{pfx}/usr/lib/libATCMalarms.so.1.0
++%{pfx}/usr/lib/libATCMalarms.so.1.0.0
++%{pfx}/usr/lib/libATCMcommon.so
++%{pfx}/usr/lib/libATCMcommon.so.1
++%{pfx}/usr/lib/libATCMcommon.so.1.0
++%{pfx}/usr/lib/libATCMcommon.so.1.0.0
++%{pfx}/usr/lib/libATCMcommunication.so
++%{pfx}/usr/lib/libATCMcommunication.so.1
++%{pfx}/usr/lib/libATCMcommunication.so.1.0
++%{pfx}/usr/lib/libATCMcommunication.so.1.0.0
++%{pfx}/usr/lib/libATCMinputdialog.so
++%{pfx}/usr/lib/libATCMinputdialog.so.1
++%{pfx}/usr/lib/libATCMinputdialog.so.1.0
++%{pfx}/usr/lib/libATCMinputdialog.so.1.0.0
++%{pfx}/usr/lib/libATCMlogger.so
++%{pfx}/usr/lib/libATCMlogger.so.1
++%{pfx}/usr/lib/libATCMlogger.so.1.0
++%{pfx}/usr/lib/libATCMlogger.so.1.0.0
++%{pfx}/usr/lib/libATCMplugin.so
++%{pfx}/usr/lib/libATCMplugin.so.1
++%{pfx}/usr/lib/libATCMplugin.so.1.0
++%{pfx}/usr/lib/libATCMplugin.so.1.0.0
++%{pfx}/usr/lib/libATCMrecipe.so
++%{pfx}/usr/lib/libATCMrecipe.so.1
++%{pfx}/usr/lib/libATCMrecipe.so.1.0
++%{pfx}/usr/lib/libATCMrecipe.so.1.0.0
++%{pfx}/usr/lib/libATCMstore.so
++%{pfx}/usr/lib/libATCMstore.so.1
++%{pfx}/usr/lib/libATCMstore.so.1.0
++%{pfx}/usr/lib/libATCMstore.so.1.0.0
++%{pfx}/usr/lib/libATCMsystem.so
++%{pfx}/usr/lib/libATCMsystem.so.1
++%{pfx}/usr/lib/libATCMsystem.so.1.0
++%{pfx}/usr/lib/libATCMsystem.so.1.0.0
++%{pfx}/usr/lib/libATCMtrend.so
++%{pfx}/usr/lib/libATCMtrend.so.1
++%{pfx}/usr/lib/libATCMtrend.so.1.0
++%{pfx}/usr/lib/libATCMtrend.so.1.0.0
++%{pfx}/usr/lib/libATCMutility.so
++%{pfx}/usr/lib/libATCMutility.so.1
++%{pfx}/usr/lib/libATCMutility.so.1.0
++%{pfx}/usr/lib/libATCMutility.so.1.0.0
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec

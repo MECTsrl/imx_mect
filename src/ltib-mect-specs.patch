@@ -4213,7 +4213,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1070_02_A
 +#
-+d=TP1043/Simple
++d=TP1070/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4228,7 +4228,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1070_02_B
 +#
-+d=TP1043/Simple
++d=TP1070/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4243,7 +4243,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1070_02_C
 +#
-+d=TP1043/Simple
++d=TP1070/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4258,7 +4258,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1070_02_D
 +#
-+d=TP1043/Simple
++d=TP1070/Simple
 +if test -d $d; then
 +	cd $d
 +

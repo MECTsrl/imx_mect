@@ -3864,18 +3864,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1007_04_AB
 +#
-+d=TPAC1007_04_AB/Local_IO_HMI
++d=TPAC1007_04_AB/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Local_IO_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Local_IO_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -3883,18 +3883,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1007_04_AC
 +#
-+d=TPAC1007_04_AC/Local_IO_HMI
++d=TPAC1007_04_AC/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Local_IO_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Local_IO_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -4303,7 +4303,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1007_04_AB
 +#
-+d=TPAC1007_04_AB/Local_IO_HMI
++d=TPAC1007_04_AB/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4318,7 +4318,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1007_04_AC
 +#
-+d=TPAC1007_04_AC/Local_IO_HMI
++d=TPAC1007_04_AC/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4743,7 +4743,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v7.027
++Version: 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

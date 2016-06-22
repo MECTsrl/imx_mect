@@ -19088,21 +19088,26 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/openvpn ltib/config/platform/imx/merge/etc/rc.d/init.d/openvpn
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/openvpn
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/openvpn
-@@ -0,0 +1,44 @@
+@@ -0,0 +1,49 @@
 +#!/bin/sh
 +
 +EXE=/usr/sbin/openvpn
 +CONFD=/etc/openvpn/
-+CONFF=mect.conf
-+PID=/var/run/openvpn-mect.pid
++CONFEXT=conf
++PIDD=/var/run
 +
 +start() {
 +	test -x "$EXE" || exit 1
-+	test -r "$CONFD$CONFF" || exit 1
-+	test -r "$PID" && test -d /proc/$(/bin/cat "$PID") && exit 2
++	test -d "$CONFD" || exit 1
++	test -d "$PIDD" || exit 1
 +
-+	/sbin/modprobe tun
-+	"$EXE" --daemon --writepid "$PID" --cd "$CONFD" --config "$CONFF"
++	for c in "$CONFD"/*.$CONFEXT; do
++		pidfile="$PIDD/$(/usr/bin/basename $EXE)-$(/usr/bin/basename $c .$CONFEXT).pid"
++		test -r "$pidfile" && test -s "$pidfile" && test -d /proc/$(/bin/cat "$pidfile") && continue
++
++		/sbin/modprobe tun
++		"$EXE" --daemon --writepid "$pidfile" --cd "$CONFD" --config $(/usr/bin/basename $c)
++	done
 +}
 +
 +stop() {

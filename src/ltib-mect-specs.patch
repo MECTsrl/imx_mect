@@ -4859,7 +4859,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,158 @@
+@@ -10,40 +10,157 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -4944,6 +4944,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +for f in \
 +	/etc/rc.d/init.d/autoexec \
 +	/etc/rc.d/init.d/boa \
++	/etc/rc.d/init.d/crond \
 +	/etc/rc.d/init.d/iptables \
 +	/etc/rc.d/init.d/mac_sn \
 +	/etc/rc.d/init.d/network \
@@ -4960,9 +4961,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +; do
 +	chmod 755 $RPM_BUILD_ROOT%{pfx}$f
 +done
-+
-+# Directory for cron tables
-+mkdir -p $RPM_BUILD_ROOT%{pfx}/var/spool/cron/crontabs
 +
 +# Symlink /etc/resolv.conf in the RW /local file system.
 +( cd $RPM_BUILD_ROOT%{pfx}/etc; ln -sf /local/etc/resolv.conf )
@@ -5001,13 +4999,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/etc/passwd
 +%{pfx}/etc/ppp
 +%{pfx}/etc/profile
-+%{pfx}/etc/rc.d/init.d/S10setup
 +%{pfx}/etc/rc.d/init.d/autoexec
 +%{pfx}/etc/rc.d/init.d/boa
++%{pfx}/etc/rc.d/init.d/crond
 +%{pfx}/etc/rc.d/init.d/iptables
 +%{pfx}/etc/rc.d/init.d/mac_sn
 +%{pfx}/etc/rc.d/init.d/network
 +%{pfx}/etc/rc.d/init.d/openvpn
++%{pfx}/etc/rc.d/init.d/S10setup
 +%{pfx}/etc/rc.d/init.d/sdcheck
 +%{pfx}/etc/rc.d/init.d/setup
 +%{pfx}/etc/rc.d/rc.local
@@ -5016,7 +5015,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/usr/bin/fcrts.sh
 +%{pfx}/usr/sbin/usb3g.sh
 +%{pfx}/usr/sbin/wifi.sh
-+%{pfx}/var/spool/cron/crontabs
 +
 +%Files lfs
 +%defattr(-,root,root)
@@ -5030,6 +5028,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/local/etc/sysconfig/lang_table.csv
 +%{pfx}/local/etc/sysconfig/net.conf
 +%{pfx}/local/root/make_usb_device
++%{pfx}/local/var/spool/cron/crontabs/root
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 --- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 +++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
@@ -7424,12 +7423,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -all_services_r="pango gtk2 bluetooth watchdog fslgnome settime dhcpd smb boa sshd dropbear portmap inetd network syslog filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
 -
 -cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $syslog $network $inetd $portmap $dropbear $sshd $boa $smb $dhcpd $settime $fslgnome $watchdog $bluetooth $gtk2 $pango"
-+all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems sdcheck syslog network iptables inetd portmap setup dropbear sshd boa vsftpd smb dhcpd settime fslgnome watchdog bluetooth gtk2 pango telnetd usbmode S10setup autoexec openvpn"
-+all_services_r="openvpn autoexec S10setup usbmode telnetd pango gtk2 bluetooth watchdog fslgnome settime dhcpd smb vsftpd boa sshd dropbear setup portmap inetd iptables network syslog sdcheck filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
++all_services="mount-proc-sys mdev udev hostname devfsd depmod modules filesystems sdcheck syslog network iptables inetd portmap setup dropbear sshd boa vsftpd smb dhcpd settime fslgnome watchdog bluetooth gtk2 pango telnetd usbmode S10setup autoexec openvpn crond"
++all_services_r="crond openvpn autoexec S10setup usbmode telnetd pango gtk2 bluetooth watchdog fslgnome settime dhcpd smb vsftpd boa sshd dropbear setup portmap inetd iptables network syslog sdcheck filesystems modules depmod devfsd hostname udev mdev mount-proc-sys"
  
 -cfg_services_r="$pango $gtk2 $bluetooth $watchdog $fslgnome $settime $dhcpd $smb $boa $sshd $dropbear $portmap $inetd $network $syslog filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys"
-+cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $usbmode $network iptables $inetd $portmap setup $sdcheck $autoexec $dropbear $sshd $boa $vsftpd $telnetd $syslog $smb $dhcpd $settime $fslgnome $watchdog $bluetooth $gtk2 $pango $S10setup $openvpn"
-+cfg_services_r="$openvpn $autoexec $sdcheck $S10setup $usbmode $pango $gtk2 $bluetooth $watchdog $fslgnome $settime $dhcpd $smb $syslog $telnetd $vsftpd $boa $sshd $dropbear setup $portmap $inetd iptables $network filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys"
++cfg_services="mount-proc-sys $mdev $udev hostname $devfsd depmod modules filesystems $usbmode $network iptables $inetd $portmap setup $sdcheck $autoexec $dropbear $sshd $boa $vsftpd $telnetd $syslog $smb $dhcpd $settime $fslgnome $watchdog $bluetooth $gtk2 $pango $S10setup $openvpn crond"
++cfg_services_r="crond $openvpn $autoexec $sdcheck $S10setup $usbmode $pango $gtk2 $bluetooth $watchdog $fslgnome $settime $dhcpd $smb $syslog $telnetd $vsftpd $boa $sshd $dropbear setup $portmap $inetd iptables $network filesystems modules depmod $devfsd hostname $udev $mdev mount-proc-sys"
  
  export HOSTNAME="${SYSCFG_HOSTNAME:-$PLATFORM}"
  export NTP_SERVER="$SYSCFG_NTP_SERVER"

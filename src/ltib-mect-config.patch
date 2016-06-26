@@ -2523,7 +2523,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  # CONFIG_FEATURE_CROND_D is not set
  # CONFIG_FEATURE_CROND_CALL_SENDMAIL is not set
 -CONFIG_FEATURE_CROND_DIR=""
-+CONFIG_FEATURE_CROND_DIR="/var/spool/cron"
++CONFIG_FEATURE_CROND_DIR="/local/flash/var/spool/cron"
  # CONFIG_CRONTAB is not set
 -CONFIG_DC=y
 +# CONFIG_DC is not set
@@ -4049,15 +4049,15 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_MECT_CUSTOMIZATION=y
 +# CONFIG_MECT_TPAC1006_320x240 is not set
 +# CONFIG_MECT_TPAC1006_640x480 is not set
-+CONFIG_MECT_TPAC1007_480x272=y
-+# CONFIG_MECT_TPAC1008_800x480 is not set
++# CONFIG_MECT_TPAC1007_480x272 is not set
++CONFIG_MECT_TPAC1008_800x480=y
 +# CONFIG_MECT_VAL01 is not set
 +# CONFIG_MECT_ATN01 is not set
 +# CONFIG_MECT_ACQUATI is not set
 +# CONFIG_MECT_ELE01 is not set
-+CONFIG_MECT_PRODUCT="MECT TPAC1007 480x272 panel"
++CONFIG_MECT_PRODUCT="MECT TPAC1008/TP1070 800x480 panel"
 +CONFIG_MECT_GPIO_POWERFAIL=y
-+# CONFIG_MECT_RAISING_PWRFAIL is not set
++CONFIG_MECT_RAISING_PWRFAIL=y
 +CONFIG_MXS_ICOLL=y
 +CONFIG_MXS_EARLY_CONSOLE=y
 +CONFIG_MXS_DMA_ENGINE=y
@@ -5264,8 +5264,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_FB_MXS=y
 +# CONFIG_FB_MXS_LCD_HH057 is not set
 +# CONFIG_FB_MXS_LCD_HH057_640x480 is not set
-+# CONFIG_FB_MXS_LCD_FRMK7 is not set
-+CONFIG_FB_MXS_LCD_TM043=y
++CONFIG_FB_MXS_LCD_FRMK7=y
++# CONFIG_FB_MXS_LCD_TM043 is not set
 +# CONFIG_FB_MXS_LCD_RK043 is not set
 +# CONFIG_FB_MXS_LCD_43WVF1G is not set
 +# CONFIG_FB_MXS_LCD_LMS430 is not set
@@ -5305,8 +5305,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_LOGO_MECT_CLUT224 is not set
 +# CONFIG_LOGO_MECT_320x240 is not set
 +# CONFIG_LOGO_MECT_640x480 is not set
-+CONFIG_LOGO_MECT_480x272=y
-+# CONFIG_LOGO_MECT_800x480 is not set
++# CONFIG_LOGO_MECT_480x272 is not set
++CONFIG_LOGO_MECT_800x480=y
 +# CONFIG_LOGO_VAL01_480x272 is not set
 +# CONFIG_LOGO_ATN01_480x272 is not set
 +# CONFIG_LOGO_ACQUATI_320x240 is not set
@@ -18772,6 +18772,53 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		exit 1
 +	;;
 +esac
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/crond ltib/config/platform/imx/merge/etc/rc.d/init.d/crond
+--- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/crond
++++ ltib/config/platform/imx/merge/etc/rc.d/init.d/crond
+@@ -0,0 +1,43 @@
++#!/bin/sh
++
++SPOOLDIR=/local/var/spool/cron/crontabs
++
++start() {
++	test -d "$SPOOLDIR" || return 1
++	test -x /usr/sbin/crond || return 1
++
++	echo -n "Starting cron daemon... "
++	/usr/sbin/crond
++	echo "Done."
++}
++
++stop() {
++	echo -n "Shutting down cron daemon... "
++	killall crond 2>/dev/null
++	echo "Done."
++}
++
++restart() {
++	stop
++	sleep 1
++	start
++}
++
++case "$1" in
++	start)
++		start
++	;;
++
++	stop)
++		stop
++	;;
++
++	restart)
++		restart
++	;;
++
++	*)
++		echo $"Usage: $0 {start|stop|restart}"
++		exit 1
++	;;
++esac
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/iptables ltib/config/platform/imx/merge/etc/rc.d/init.d/iptables
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/iptables
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/iptables
@@ -20076,6 +20123,14 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	modprobe g_file_storage file=/local/root/backing_file
 +	return $?
 +fi
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/var/spool/cron/crontabs/root ltib/config/platform/imx/merge/local/var/spool/cron/crontabs/root
+--- ltib.reference/config/platform/imx/merge/local/var/spool/cron/crontabs/root
++++ ltib/config/platform/imx/merge/local/var/spool/cron/crontabs/root
+@@ -0,0 +1,4 @@
++#min h dom m dow cmd
++#
++
++#crontab must end with the last line as space or a comment
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh ltib/config/platform/imx/merge/usr/bin/fcrts.sh
 --- ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh
 +++ ltib/config/platform/imx/merge/usr/bin/fcrts.sh

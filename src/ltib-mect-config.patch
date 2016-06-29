@@ -18775,7 +18775,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/crond ltib/config/platform/imx/merge/etc/rc.d/init.d/crond
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/crond
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/crond
-@@ -0,0 +1,43 @@
+@@ -0,0 +1,33 @@
 +#!/bin/sh
 +
 +SPOOLDIR=/local/var/spool/cron/crontabs
@@ -18795,12 +18795,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	echo "Done."
 +}
 +
-+restart() {
-+	stop
-+	sleep 1
-+	start
-+}
-+
 +case "$1" in
 +	start)
 +		start
@@ -18810,12 +18804,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		stop
 +	;;
 +
-+	restart)
-+		restart
-+	;;
-+
 +	*)
-+		echo $"Usage: $0 {start|stop|restart}"
++		echo $"Usage: $0 {start|stop}"
 +		exit 1
 +	;;
 +esac

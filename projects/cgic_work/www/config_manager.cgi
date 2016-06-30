@@ -35,32 +35,6 @@ cat <<EOF
 
 <table style="border:solid 2px #335970;" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >
 <tbody>
-<form name="due" method="POST" enctype="multipart/form-data" action="upload.cgi">
-	<tr>
-		<td align="right">
-			Choose Crosstable.csv:
-		</td>
-		<td>
-			<input type="file" name="CROSSTBL" required>
-		</td>
-		<td>
-			<input class=bottoni type="submit" value="Update Cross-table">
-		</td>
-	</tr>
-</form>
-<form name="quattro" method="POST" enctype="multipart/form-data" action="upload.cgi">
-	<tr>
-		<td align="right">
-			Choose system.ini file:
-		</td>
-		<td>
-			<input type="file" name="SYSINI" required>
-		</td>
-		<td>
-			<input class=bottoni type="submit" value="Update Configuration">
-		</td>
-	</tr>
-</form>
 <form name="sei" method="POST" enctype="multipart/form-data" action="upload.cgi">
 	<tr align="right">
 		<td>

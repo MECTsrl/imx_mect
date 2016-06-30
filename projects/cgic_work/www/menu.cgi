@@ -125,9 +125,6 @@ cat <<EOF
 			<td>
 					<input class=bottoni type="button" value="Manage Configuration" onclick="window.location.href='config_manager.cgi'">
 			</td>
-			<td>
-					<input class=bottoni type="button" value="Generic updates" onclick="window.location.href='updateall.cgi'">
-			</td>
 		</tr>
 </tbody>
 </table>
@@ -170,21 +167,6 @@ EOF
 fi
 cat <<EOF
 		</tr>
-EOF
-if [ "$PASSWORD" != "" ] && [ "$PASSWORD" = "$PWDSUPERUSER" ] || [ "$PASSWORD" = "$PWDADMIN" ]
-then
-cat <<EOF
-		<tr>
-			<td>
-					<input class=bottoni type="button" value="Reset cards" onclick="window.location.href='reset_mass_storage.cgi'">
-			</td>
-			<td>
-					<input class=bottoni type="button" value="Factory reset" onclick="window.location.href='factory_reset_confirm.cgi'">
-			</td>
-		</tr>
-EOF
-fi
-cat <<EOF
 </tbody>
 </table>
 EOF

@@ -55,71 +55,11 @@ static void ShowForm()
 
 	fprintf(cgiOut, "</td>\n");	
 	fprintf(cgiOut, "</tr>\n");
-	fprintf(cgiOut, "<tr>\n");
-	fprintf(cgiOut, "<td>\n");	
-
-	fprintf(cgiOut, "<form name=\"hmiform\" method=\"POST\" enctype=\"multipart/form-data\" ");
-	fprintf(cgiOut, "	action=\"upgrade.cgi\">\n");
-	fprintf(cgiOut, "<table cellspacing=10 cellpadding=4 align=right>");
-	fprintf(cgiOut, "<tbody>\n");
-	fprintf(cgiOut, "<tr>\n");
-	fprintf(cgiOut, "<td>\n");	
-	fprintf(cgiOut, "Choose hmi file:\n");
-	fprintf(cgiOut, "</td>\n"); 	 
-	fprintf(cgiOut, "<td>\n");
-	fprintf(cgiOut, "<input type=\"file\" name=\"HMI\" required>\n");
-	fprintf(cgiOut, "</td>\n");
-	fprintf(cgiOut, "<td>\n");	
-	fprintf(cgiOut, "<input class=bottoni type=\"submit\" value=\"Update\">\n");
-	fprintf(cgiOut, "</td>\n");
-	fprintf(cgiOut, "</tr>\n");
 	fprintf(cgiOut, "</tbody>\n");
 	fprintf(cgiOut, "</table>\n");
 	fprintf(cgiOut, "</form>\n");
 
 	fprintf(cgiOut, "</td>\n");	
-	fprintf(cgiOut, "</tr>\n");
-	fprintf(cgiOut, "<tr>\n");
-	fprintf(cgiOut, "<td>\n");	
-
-	fprintf(cgiOut, "<form name=\"fcrtsform\" method=\"POST\" enctype=\"multipart/form-data\" ");
-	fprintf(cgiOut, "	action=\"upgrade.cgi\">\n");
-	fprintf(cgiOut, "<table cellspacing=10 cellpadding=4 align=right>");
-	fprintf(cgiOut, "<tbody>\n");
-	fprintf(cgiOut, "<tr>\n");
-	fprintf(cgiOut, "<td>\n");	
-	fprintf(cgiOut, "Choose fcrts file:\n");
-	fprintf(cgiOut, "</td>\n"); 	 
-	fprintf(cgiOut, "<td>\n");
-	fprintf(cgiOut, "<input type=\"file\" name=\"FCRTS\" required>\n");
-	fprintf(cgiOut, "</td>\n");
-	fprintf(cgiOut, "<td>\n");	
-	fprintf(cgiOut, "<input class=bottoni type=\"submit\" value=\"Update\">\n");
-	fprintf(cgiOut, "</td>\n");
-	fprintf(cgiOut, "</tr>\n");
-	fprintf(cgiOut, "</tbody>\n");
-	fprintf(cgiOut, "</table>\n");
-	fprintf(cgiOut, "</form>\n");
-
-	fprintf(cgiOut, "</td>\n");	
-	fprintf(cgiOut, "</tr>\n");
-	fprintf(cgiOut, "<tr>\n");
-	fprintf(cgiOut, "<td>\n");	
-
-	fprintf(cgiOut, "<form name=\"plcform\" method=\"POST\" enctype=\"multipart/form-data\" ");
-	fprintf(cgiOut, "	action=\"upgrade.cgi\">\n");
-	fprintf(cgiOut, "<table cellspacing=10 cellpadding=4 align=right>");
-	fprintf(cgiOut, "<tbody>\n");
-	fprintf(cgiOut, "<tr>\n");
-	fprintf(cgiOut, "<td>\n");	
-	fprintf(cgiOut, "Choose control.tar.gz file:\n");
-	fprintf(cgiOut, "</td>\n"); 	 
-	fprintf(cgiOut, "<td>\n");
-	fprintf(cgiOut, "<input type=\"file\" name=\"PLC\" required>\n");
-	fprintf(cgiOut, "</td>\n");
-	fprintf(cgiOut, "<td>\n");	
-	fprintf(cgiOut, "<input class=bottoni type=\"submit\" value=\"Update\">\n");
-	fprintf(cgiOut, "</td>\n");
 	fprintf(cgiOut, "</tr>\n");
 	fprintf(cgiOut, "</tbody>\n");
 	fprintf(cgiOut, "</table>\n");

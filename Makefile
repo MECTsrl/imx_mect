@@ -523,9 +523,9 @@ MECT_DEFAULT_IMAGES := \
 	TP1043_232 \
 	TP1043_485 \
 	TP1057 \
-	TP1070_02_A \
-	TP1070_02_C \
-	TP1070_02_D \
+	TP1070_01_A \
+	TP1070_01_C \
+	TP1070_01_D \
 	TPAC1007_03 \
 	TPAC1007_04_AA \
 	TPAC1007_04_AB \
@@ -540,7 +540,7 @@ ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 MECT_DEFAULT_IMAGES += \
 	TP1043_CAN \
 	TP1057_CAN \
-	TP1070_02_B \
+	TP1070_01_B \
 	TPAC1006 \
 	TPAC1006_GSM \
 	TPAC1006_HR \
@@ -568,10 +568,10 @@ include targets/Makefile-TP1043_485.in
 include targets/Makefile-TP1043_CAN.in
 include targets/Makefile-TP1057.in
 include targets/Makefile-TP1057_CAN.in
-include targets/Makefile-TP1070_02_A.in
-include targets/Makefile-TP1070_02_B.in
-include targets/Makefile-TP1070_02_C.in
-include targets/Makefile-TP1070_02_D.in
+include targets/Makefile-TP1070_01_A.in
+include targets/Makefile-TP1070_01_B.in
+include targets/Makefile-TP1070_01_C.in
+include targets/Makefile-TP1070_01_D.in
 include targets/Makefile-TPAC1006.in
 include targets/Makefile-TPAC1006_GSM.in
 include targets/Makefile-TPAC1006_HR.in

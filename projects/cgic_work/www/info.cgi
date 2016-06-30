@@ -56,7 +56,7 @@ cat <<EOM
 							</td>
 							<td>
 EOM
-cat $NETCONF | grep MAC0 | cut -d\= -f2 | sed s/\"//g
+cat $MACCONF | grep MAC0 | cut -d\= -f2 | sed s/\"//g
 cat <<EOM
 							</td>
 							<td>

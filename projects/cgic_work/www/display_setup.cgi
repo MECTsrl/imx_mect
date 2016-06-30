@@ -20,6 +20,7 @@ then
 	then
 		awk '{if ($0 ~/screen_saver_s/) {printf "screen_saver_s = '$SCREENSAVER'\n"} else {print $0}}' $LOCAL_ETC_DIR/system.ini > /tmp/system.ini
 		mv /tmp/system.ini $LOCAL_ETC_DIR/system.ini
+		/etc/rc.d/init.d/autoexec restart > /dev/null 2>&1
 		MSG="Screen saver timeout set to $SCREENSAVER"
 	else
 		MSG="Cannot set the screen saver timeout to $SCREENSAVER"

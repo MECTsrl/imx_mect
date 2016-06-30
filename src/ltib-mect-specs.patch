@@ -3354,59 +3354,59 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
-+# TP1070_02_A
++# TP1070_01_A
 +#
-+%Package lfs-TP1070_02_A
++%Package lfs-TP1070_01_A
 +Summary         : Trimmed %{name} to just the run-times needed for local file system.
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
 +Group           : Applications/System
 +AutoReqProv     : no
-+Prefix          : %{pfx}/TP1070_02_A/local
++Prefix          : %{pfx}/TP1070_01_A/local
 +
-+%Description lfs-TP1070_02_A
++%Description lfs-TP1070_01_A
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
-+# TP1070_02_B
++# TP1070_01_B
 +#
-+%Package lfs-TP1070_02_B
++%Package lfs-TP1070_01_B
 +Summary         : Trimmed %{name} to just the run-times needed for local file system.
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
 +Group           : Applications/System
 +AutoReqProv     : no
-+Prefix          : %{pfx}/TP1070_02_B/local
++Prefix          : %{pfx}/TP1070_01_B/local
 +
-+%Description lfs-TP1070_02_B
++%Description lfs-TP1070_01_B
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
-+# TP1070_02_C
++# TP1070_01_C
 +#
-+%Package lfs-TP1070_02_C
++%Package lfs-TP1070_01_C
 +Summary         : Trimmed %{name} to just the run-times needed for local file system.
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
 +Group           : Applications/System
 +AutoReqProv     : no
-+Prefix          : %{pfx}/TP1070_02_C/local
++Prefix          : %{pfx}/TP1070_01_C/local
 +
-+%Description lfs-TP1070_02_C
++%Description lfs-TP1070_01_C
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
-+# TP1070_02_D
++# TP1070_01_D
 +#
-+%Package lfs-TP1070_02_D
++%Package lfs-TP1070_01_D
 +Summary         : Trimmed %{name} to just the run-times needed for local file system.
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
 +Group           : Applications/System
 +AutoReqProv     : no
-+Prefix          : %{pfx}/TP1070_02_D/local
++Prefix          : %{pfx}/TP1070_01_D/local
 +
-+%Description lfs-TP1070_02_D
++%Description lfs-TP1070_01_D
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
@@ -3748,7 +3748,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+# TP1070_02_A
++# TP1070_01_A
 +#
 +d=TP1070/Simple
 +if test -d $d; then
@@ -3767,7 +3767,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+# TP1070_02_B
++# TP1070_01_B
 +#
 +d=TP1070/Simple
 +if test -d $d; then
@@ -3786,7 +3786,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+# TP1070_02_C
++# TP1070_01_C
 +#
 +d=TP1070/Simple
 +if test -d $d; then
@@ -3805,7 +3805,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+# TP1070_02_D
++# TP1070_01_D
 +#
 +d=TP1070/Simple
 +if test -d $d; then
@@ -4211,62 +4211,62 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+# TP1070_02_A
++# TP1070_01_A
 +#
 +d=TP1070/Simple
 +if test -d $d; then
 +	cd $d
 +
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_02_A/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_02_A/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_02_A/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_02_A/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_02_A/local/data/customtrend/trend1.csv
++	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_01_A/local/root/hmi
++	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_01_A/local/etc/sysconfig/Crosstable.csv
++	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_01_A/local/etc/sysconfig/img/splash.png
++	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_01_A/local/etc/sysconfig/system.ini
++	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_01_A/local/data/customtrend/trend1.csv
 +
 +	cd -
 +fi
 +
-+# TP1070_02_B
++# TP1070_01_B
 +#
 +d=TP1070/Simple
 +if test -d $d; then
 +	cd $d
 +
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_02_B/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_02_B/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_02_B/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_02_B/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_02_B/local/data/customtrend/trend1.csv
++	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_01_B/local/root/hmi
++	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_01_B/local/etc/sysconfig/Crosstable.csv
++	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_01_B/local/etc/sysconfig/img/splash.png
++	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_01_B/local/etc/sysconfig/system.ini
++	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_01_B/local/data/customtrend/trend1.csv
 +
 +	cd -
 +fi
 +
-+# TP1070_02_C
++# TP1070_01_C
 +#
 +d=TP1070/Simple
 +if test -d $d; then
 +	cd $d
 +
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_02_C/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_02_C/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_02_C/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_02_C/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_02_C/local/data/customtrend/trend1.csv
++	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_01_C/local/root/hmi
++	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_01_C/local/etc/sysconfig/Crosstable.csv
++	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_01_C/local/etc/sysconfig/img/splash.png
++	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_01_C/local/etc/sysconfig/system.ini
++	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_01_C/local/data/customtrend/trend1.csv
 +
 +	cd -
 +fi
 +
-+# TP1070_02_D
++# TP1070_01_D
 +#
 +d=TP1070/Simple
 +if test -d $d; then
 +	cd $d
 +
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_02_D/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_02_D/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_02_D/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_02_D/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_02_D/local/data/customtrend/trend1.csv
++	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/root/hmi
++	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/etc/sysconfig/Crosstable.csv
++	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/etc/sysconfig/img/splash.png
++	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/etc/sysconfig/system.ini
++	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/data/customtrend/trend1.csv
 +
 +	cd -
 +fi
@@ -4570,37 +4570,37 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TP1057_01_B/local/etc/sysconfig/system.ini
 +%{pfx}/TP1057_01_B/local/data/customtrend/trend1.csv
 +
-+%files lfs-TP1070_02_A
++%files lfs-TP1070_01_A
 +%defattr(-,root,root)
-+%{pfx}/TP1070_02_A/local/root/hmi
-+%{pfx}/TP1070_02_A/local/etc/sysconfig/Crosstable.csv
-+%{pfx}/TP1070_02_A/local/etc/sysconfig/img/splash.png
-+%{pfx}/TP1070_02_A/local/etc/sysconfig/system.ini
-+%{pfx}/TP1070_02_A/local/data/customtrend/trend1.csv
++%{pfx}/TP1070_01_A/local/root/hmi
++%{pfx}/TP1070_01_A/local/etc/sysconfig/Crosstable.csv
++%{pfx}/TP1070_01_A/local/etc/sysconfig/img/splash.png
++%{pfx}/TP1070_01_A/local/etc/sysconfig/system.ini
++%{pfx}/TP1070_01_A/local/data/customtrend/trend1.csv
 +
-+%files lfs-TP1070_02_B
++%files lfs-TP1070_01_B
 +%defattr(-,root,root)
-+%{pfx}/TP1070_02_B/local/root/hmi
-+%{pfx}/TP1070_02_B/local/etc/sysconfig/Crosstable.csv
-+%{pfx}/TP1070_02_B/local/etc/sysconfig/img/splash.png
-+%{pfx}/TP1070_02_B/local/etc/sysconfig/system.ini
-+%{pfx}/TP1070_02_B/local/data/customtrend/trend1.csv
++%{pfx}/TP1070_01_B/local/root/hmi
++%{pfx}/TP1070_01_B/local/etc/sysconfig/Crosstable.csv
++%{pfx}/TP1070_01_B/local/etc/sysconfig/img/splash.png
++%{pfx}/TP1070_01_B/local/etc/sysconfig/system.ini
++%{pfx}/TP1070_01_B/local/data/customtrend/trend1.csv
 +
-+%files lfs-TP1070_02_C
++%files lfs-TP1070_01_C
 +%defattr(-,root,root)
-+%{pfx}/TP1070_02_C/local/root/hmi
-+%{pfx}/TP1070_02_C/local/etc/sysconfig/Crosstable.csv
-+%{pfx}/TP1070_02_C/local/etc/sysconfig/img/splash.png
-+%{pfx}/TP1070_02_C/local/etc/sysconfig/system.ini
-+%{pfx}/TP1070_02_C/local/data/customtrend/trend1.csv
++%{pfx}/TP1070_01_C/local/root/hmi
++%{pfx}/TP1070_01_C/local/etc/sysconfig/Crosstable.csv
++%{pfx}/TP1070_01_C/local/etc/sysconfig/img/splash.png
++%{pfx}/TP1070_01_C/local/etc/sysconfig/system.ini
++%{pfx}/TP1070_01_C/local/data/customtrend/trend1.csv
 +
-+%files lfs-TP1070_02_D
++%files lfs-TP1070_01_D
 +%defattr(-,root,root)
-+%{pfx}/TP1070_02_D/local/root/hmi
-+%{pfx}/TP1070_02_D/local/etc/sysconfig/Crosstable.csv
-+%{pfx}/TP1070_02_D/local/etc/sysconfig/img/splash.png
-+%{pfx}/TP1070_02_D/local/etc/sysconfig/system.ini
-+%{pfx}/TP1070_02_D/local/data/customtrend/trend1.csv
++%{pfx}/TP1070_01_D/local/root/hmi
++%{pfx}/TP1070_01_D/local/etc/sysconfig/Crosstable.csv
++%{pfx}/TP1070_01_D/local/etc/sysconfig/img/splash.png
++%{pfx}/TP1070_01_D/local/etc/sysconfig/system.ini
++%{pfx}/TP1070_01_D/local/data/customtrend/trend1.csv
 +
 +%files lfs-TPAC1007_03
 +%defattr(-,root,root)

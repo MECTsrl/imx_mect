@@ -35,14 +35,6 @@ cat <<EOF
 <form name="tre" method="POST" enctype="multipart/form-data" action="upload.cgi">
 <table style="border:solid 2px #335970;" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >
 <tbody>
-	<tr>
-		<td>
-			<input type="file" name="ALARMTBL" required>
-		</td>
-		<td>
-			<input class=bottoni type="submit" value="Update Alarms">
-		</td>
-	</tr>
 		</tr>
 			<td>
 			</td>

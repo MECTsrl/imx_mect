@@ -1,22 +1,23 @@
 export LC_ALL := C
 
 # MECT Suite version
-export MECT_BUILD_RELEASE := 2.0.9
+export MECT_BUILD_RELEASE := 2.0.9rc2
 
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := master
 # Set to 0.0 to skip tag checkout
-export MECT_BUILD_ATCMCRT_TAG := v1.012
+export MECT_BUILD_ATCMCRT_TAG := v1.013
+export MECT_BUILD_ATCMCRT_CAN_TAG := 185
 
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to skip tag checkout
-export MECT_BUILD_PLUGINSCRT_TAG := v7.029
+export MECT_BUILD_PLUGINSCRT_TAG := v7.029rc2
 
 # git branch and tag for the mect_apps project
 MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to skip tag checkout
-export MECT_BUILD_APPSCRT_TAG := v2.0.9
+export MECT_BUILD_APPSCRT_TAG := v2.0.9rc2
 
 # Mandatory prefix for all target device names.
 MECT_TARGET_PREFIX := MECT_
@@ -459,7 +460,7 @@ projects_setup_ATCMcontrol_RunTimeSystem:
 	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)' -a '$(MECT_BUILD_ATCMCRT_TAG)' != '0.0'; then cd ATCMcontrol_RunTimeSystem; git checkout -f tags/$(MECT_BUILD_ATCMCRT_TAG); fi
 	ping -W2 -c1 192.168.0.254 || exit 0; \
 	svn info svn://192.168.0.254/4c_runtime/branches/base_2 || exit 0; \
-		cd $(MECT_PRJDIR); rm -rf 4c_runtime; svn checkout svn://192.168.0.254/4c_runtime/branches/base_2 4c_runtime
+		cd $(MECT_PRJDIR); rm -rf 4c_runtime; svn checkout --revision $(MECT_BUILD_ATCMCRT_CAN_TAG) svn://192.168.0.254/4c_runtime/branches/base_2 4c_runtime
 
 # Setup the local projects: mect_plugins.
 .PHONY: projects_setup_mect_plugins

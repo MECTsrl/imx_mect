@@ -601,6 +601,7 @@ void mac_sn::on_pushButtonOk_clicked()
     system("mount -oro,remount /");
     system("sync");
     system("/etc/rc.d/init.d/network restart");
+    exit(0);
 }
 
 void mac_sn::on_pushButtonCancel_clicked()

@@ -4047,17 +4047,17 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_MXS_TIMER_WITH_MACH=y
 +# CONFIG_MEM_mDDR is not set
 +CONFIG_MECT_CUSTOMIZATION=y
-+CONFIG_MECT_TPAC1006_320x240=y
++# CONFIG_MECT_TPAC1006_320x240 is not set
 +# CONFIG_MECT_TPAC1006_640x480 is not set
-+# CONFIG_MECT_TPAC1007_480x272 is not set
++CONFIG_MECT_TPAC1007_480x272=y
 +# CONFIG_MECT_TPAC1008_800x480 is not set
 +# CONFIG_MECT_VAL01 is not set
 +# CONFIG_MECT_ATN01 is not set
 +# CONFIG_MECT_ACQUATI is not set
 +# CONFIG_MECT_ELE01 is not set
-+CONFIG_MECT_PRODUCT="MECT TPAC1006/TP1057 320x240 panel"
++CONFIG_MECT_PRODUCT="MECT TPAC1007 480x272 panel"
 +CONFIG_MECT_GPIO_POWERFAIL=y
-+CONFIG_MECT_RAISING_PWRFAIL=y
++# CONFIG_MECT_RAISING_PWRFAIL is not set
 +CONFIG_MXS_ICOLL=y
 +CONFIG_MXS_EARLY_CONSOLE=y
 +CONFIG_MXS_DMA_ENGINE=y
@@ -5262,10 +5262,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# Frame buffer hardware drivers
 +#
 +CONFIG_FB_MXS=y
-+CONFIG_FB_MXS_LCD_HH057=y
++# CONFIG_FB_MXS_LCD_HH057 is not set
 +# CONFIG_FB_MXS_LCD_HH057_640x480 is not set
 +# CONFIG_FB_MXS_LCD_FRMK7 is not set
-+# CONFIG_FB_MXS_LCD_TM043 is not set
++CONFIG_FB_MXS_LCD_TM043=y
 +# CONFIG_FB_MXS_LCD_RK043 is not set
 +# CONFIG_FB_MXS_LCD_43WVF1G is not set
 +# CONFIG_FB_MXS_LCD_LMS430 is not set
@@ -5303,9 +5303,9 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_LOGO_LINUX_VGA16 is not set
 +# CONFIG_LOGO_LINUX_CLUT224 is not set
 +# CONFIG_LOGO_MECT_CLUT224 is not set
-+CONFIG_LOGO_MECT_320x240=y
++# CONFIG_LOGO_MECT_320x240 is not set
 +# CONFIG_LOGO_MECT_640x480 is not set
-+# CONFIG_LOGO_MECT_480x272 is not set
++CONFIG_LOGO_MECT_480x272=y
 +# CONFIG_LOGO_MECT_800x480 is not set
 +# CONFIG_LOGO_VAL01_480x272 is not set
 +# CONFIG_LOGO_ATN01_480x272 is not set

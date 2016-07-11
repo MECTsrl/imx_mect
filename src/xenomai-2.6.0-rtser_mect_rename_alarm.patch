@@ -1,0 +1,33 @@
+diff -ruN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_mxs_auart.c
+--- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-06-07 19:54:24.900181645 +0200
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-07-11 18:02:15.597266884 +0200
+@@ -157,11 +157,6 @@
+ 		__raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
+ 
+         rtdm_event_signal(&ctx->out_event);
+-#if 0
+-    } else {
+-        __raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
+-        __raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
+-#endif
+     }
+ }
+ 
+@@ -1192,6 +1187,7 @@
+ 	struct rt_imx_mxs_auart_port *port;
+ 	int ret;
+ 	uint64_t *dummy;
++	char name[42];
+ 
+ 	ctx = (struct rt_imx_mxs_auart_ctx *)context->dev_private;
+ 	ctx->port = (struct rt_imx_mxs_auart_port *)context->device->device_data;
+@@ -1220,7 +1216,8 @@
+ 	ctx->status = 0;
+ 	ctx->saved_errors = 0;
+ 
+-	rt_alarm_create(&ctx->rts_deassert, "rts_deassert", rts_deassert_func, (void *)ctx);
++	sprintf(name, "rts_deassert_%d", port->port.line);
++	rt_alarm_create(&ctx->rts_deassert, name, rts_deassert_func, (void *)ctx);
+ 
+ 	/* TODO: Always true: place holder pending the porting of Xenomai RS485 flag. */
+ 	ctx->rs485 = 1;

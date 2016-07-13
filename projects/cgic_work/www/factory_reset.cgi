@@ -7,7 +7,7 @@ then
 	/etc/rc.d/init.d/autoexec stop > /dev/null 2>&1
 	if [ -x /usr/bin/splash ]
 	then
-		/usr/bin/splash --text "Restore factory ..." --dimension 42 -qws &
+		/usr/bin/splash --text "Restore factory ..." --dimension 42 -qws > /dev/null 2>&1 &
 	fi
 	old_dir=`pwd`
 	cd /local

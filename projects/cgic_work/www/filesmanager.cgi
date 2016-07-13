@@ -59,7 +59,7 @@ Content-Type: text/html
 <tr align="right">
 <td>
 EOF
-. ./info.cgi
+. $OLD_DIR/info.cgi
 cat <<EOF
 </td>
 </tr>
@@ -156,7 +156,7 @@ Content-Type: text/html
 <tr align="right">
 <td>
 EOF
-. ./info.cgi
+. $OLD_DIR/info.cgi
 cat <<EOF
 </td>
 </tr>
@@ -210,7 +210,7 @@ Content-Type: text/html
 <tr align="right">
 <td>
 EOF
-. ./info.cgi
+. $OLD_DIR/info.cgi
 cat <<EOF
 </td>
 </tr>

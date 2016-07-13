@@ -26,6 +26,8 @@ if [ "$REQUEST_METHOD" = "POST" ]; then
   SYSINI=`head $TMPOUT | grep -c name=\"SYSINI\"` 
   RCPTBL=`head $TMPOUT | grep -c name=\"RCPTBL\"` 
   RCPZIP=`head $TMPOUT | grep -c name=\"RCPZIP\"` 
+  TRENDTBL=`head $TMPOUT | grep -c name=\"TRENDTBL\"` 
+  LOGSTBL=`head $TMPOUT | grep -c name=\"LOGSTBL\"` 
   SPLASH=`head $TMPOUT | grep -c name=\"SPLASH\"` 
 
   # ship the first 4 lines and the lats line and the last \r
@@ -38,7 +40,7 @@ if [ "$REQUEST_METHOD" = "POST" ]; then
 	/etc/rc.d/init.d/autoexec stop > /dev/null 2>&1
 	if [ -x /usr/bin/splash ]
 	then
-		/usr/bin/splash --text "Updating ..." --dimension 42 -qws &
+		/usr/bin/splash --text "Updating ..." --dimension 42 -qws > /dev/null 2>&1 &
 	fi
 #    fi
 
@@ -138,6 +140,28 @@ if [ "$REQUEST_METHOD" = "POST" ]; then
             ERROR=$?
             chmod 644 $BASE_DIR/$RECIPE_DIR/$FILENAME
             /usr/bin/dos2unix $BASE_DIR/$RECIPE_DIR/$FILENAME
+          else
+              ERROR=1
+        fi
+    fi
+    if [ "$LOGSTBL" = "1" ]; then
+        MSG="Store '$FILENAME'"
+          if [ "$FILENAME" != "" ] && [ -s $TMPOUT.1 ]; then
+            mv $TMPOUT.1 $BASE_DIR/$PARTIAL_STORE_DIR/$FILENAME
+            ERROR=$?
+            chmod 644 $BASE_DIR/$PARTIAL_STORE_DIR/$FILENAME
+            /usr/bin/dos2unix $BASE_DIR/$PARTIAL_STORE_DIR/$FILENAME
+          else
+              ERROR=1
+        fi
+    fi
+    if [ "$TRENDTBL" = "1" ]; then
+        MSG="Trend '$FILENAME'"
+          if [ "$FILENAME" != "" ] && [ -s $TMPOUT.1 ]; then
+            mv $TMPOUT.1 $BASE_DIR/$TREND_DIR/$FILENAME
+            ERROR=$?
+            chmod 644 $BASE_DIR/$TREND_DIR/$FILENAME
+            /usr/bin/dos2unix $BASE_DIR/$TREND_DIR/$FILENAME
           else
               ERROR=1
         fi

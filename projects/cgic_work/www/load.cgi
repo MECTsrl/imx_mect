@@ -3,6 +3,18 @@
 # Questo è il file load.cgi, lo script che raccoglie le
 # impostazioni
 
+# Touchscreen variables
+export TSLIB_CONFFILE=/usr/etc/ts.conf
+export TSLIB_PLUGINDIR=/usr/lib/ts
+export TSLIB_TSDEVICE=/dev/input/ts0
+export TSLIB_CONSOLEDEVICE=none
+export TSLIB_CALIBFILE=/etc/pointercal
+
+# Qt variables
+export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
+export QT_QWS_FONTDIR=/usr/lib/fonts
+export POINTERCAL_FILE=$TSLIB_CALIBFILE
+
 WWW_DIR="/usr/share/www"
 TARGET_NAME=""
 COMPANY_NAME="MECT"

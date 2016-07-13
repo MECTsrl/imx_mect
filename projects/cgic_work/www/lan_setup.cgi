@@ -27,7 +27,7 @@ sync
 /etc/rc.d/init.d/autoexec stop > /dev/null 2>&1
 if [ -x /usr/bin/splash ]
 then
-	/usr/bin/splash --text "Modify network ..." --dimension 42 -qws &
+	/usr/bin/splash --text "Modify network ..." --dimension 42 -qws > /dev/null 2>&1 &
 fi
 # not working
 /etc/rc.d/init.d/network restart

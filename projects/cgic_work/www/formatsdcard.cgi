@@ -8,7 +8,7 @@ if [ -n "$mntpoint" ]; then
 	/etc/rc.d/init.d/autoexec stop > /dev/null 2>&1
 	if [ -x /usr/bin/splash ]
 	then
-		/usr/bin/splash --text "Resetting SD card ..." --dimension 42 -qws &
+		/usr/bin/splash --text "Resetting SD card ..." --dimension 42 -qws > /dev/null 2>&1 &
 	fi
 	if /bin/umount $mntdir 2>/dev/null; then
 		/sbin/mkfs.vfat $mntpoint

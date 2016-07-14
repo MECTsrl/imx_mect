@@ -17782,7 +17782,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# Secure shell
 +ssh           stream  tcp      nowait  root    /usr/sbin/dropbear   dropbear      -i
 +# NRPE
-+nrpe          stream  tcp      nowait  nrpe    /usr/bin/nrpe        nrpe          -c /local/etc/icinga/nrpe.cfg -i
++nrpe          stream  tcp      nowait  icinga  /usr/bin/nrpe        nrpe          -c /local/etc/icinga/nrpe.cfg -i
 +# End.
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/iptables.default ltib/config/platform/imx/merge/etc/iptables.default
 --- ltib.reference/config/platform/imx/merge/etc/iptables.default

@@ -19759,7 +19759,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#
 +# NOTE: This option is ignored if NRPE is running under either inetd or xinetd
 +
-+allowed_hosts=127.0.0.1
++allowed_hosts=10.8.0.1
 + 
 +
 +
@@ -19894,7 +19894,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +command[check_users]=/usr/lib/nrpe/plugins/check_users -w $ARG1$ -c $ARG2$
 +command[check_load]=/usr/lib/nrpe/plugins/check_load -w $ARG1$ -c $ARG2$
 +command[check_procs]=/usr/lib/nrpe/plugins/check_procs -w $ARG1$ -c $ARG2$ -s $ARG3$
-+command[check_modbus]=/usr/lib/nagios/plugins/check_modbus --ip=127.0.0.1 -d 1 -f 3 -a 7
++command[check_modbus]=/usr/bin/check_modbus --ip=127.0.0.1 -d 1 -f 3 -F $ARG2$ -a $ARG1$
 +
 +
 +

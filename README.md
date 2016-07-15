@@ -18,7 +18,7 @@ LTIB is built and installed as an unprivileged user, but it requires root privil
 ### Build prerequisites
 
 - a working (minimal) Ubuntu 14.04 LTS
-- a git clone of this directory
+- a git clone of this project
 - GNU make from the Linux distribution repositories
 - sudo enabled for the user that performs the build (optionally without a password)
 

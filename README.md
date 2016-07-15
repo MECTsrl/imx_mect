@@ -53,7 +53,7 @@ LTIB is built and installed as an unprivileged user, but it requires root privil
 
 More build options can be found in the [extended developer documentaiton](https://github.com/MECTsrl/imx_mect/wiki).
 
-At the end, the build flow creates the archive needed to program TPAC 1007 480x272 devices in *~/imx_mect/images-all/TPAC1007_480x272_r\<version\>/TPAC1007_480x272_r\<version\>.zip*.
+At the end, the build flow creates the archive needed to program TPAC 1007 480x272 devices in *~/imx_mect/images-all/TPAC1007_04_AA_r\<version\>.zip*.
 
 Unpack the archive in the *Profiles* directory of [Freescale i.MX Manufacturing Toolkit](https://www.freescale.com/webapp/sps/download/license.jsp?colCode=IMX_MFG_TOOL) and follow the Freescale instructions to program the device.
 

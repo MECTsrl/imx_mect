@@ -332,8 +332,16 @@ MECT_PACKAGES = \
 	zip \
 	zlib1g \
 	zlib1g-dev \
-	zlib-bin \
-	zlibc \
+	zlibc
+
+ifeq ($(shell lsb_release -r | cut -f2 | cut -d. -f1),14)
+MECT_PACKAGES += \
+	zlib-bin
+endif
+ifeq ($(shell lsb_release -r | cut -f2 | cut -d. -f1),16)
+MECT_PACKAGES += \
+	minizip
+endif
 
 
 .PHONY: all

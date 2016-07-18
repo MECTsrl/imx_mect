@@ -19675,6 +19675,22 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# Nagios Remote Plugin Executor
 +#
 +nrpe            5666/tcp        nrpe
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/bin/rsync-mect.sh ltib/config/platform/imx/merge/local/bin/rsync-mect.sh
+--- ltib.reference/config/platform/imx/merge/local/bin/rsync-mect.sh
++++ ltib/config/platform/imx/merge/local/bin/rsync-mect.sh
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++IP="$(/sbin/ip addr show dev tun0 2>/dev/null | /usr/bin/awk '/ inet / { print $2; }')"
++test -n "$IP" || exit 1
++
++PIDFILE=/var/run/rsync-$IP.log
++
++test -d /proc/$(cat $PIDFILE) && exit 2
++
++/usr/bin/rsync -a --timeout=45 --password-file=/local/etc/rsync-mect.pwd /local/flash/data/store/ mect@10.8.0.1::csv_tpac/$IP/ > /dev/null 2>&1 &
++
++echo -n $! > $PIDFILE
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/icinga/nrpe.cfg ltib/config/platform/imx/merge/local/etc/icinga/nrpe.cfg
 --- ltib.reference/config/platform/imx/merge/local/etc/icinga/nrpe.cfg
 +++ ltib/config/platform/imx/merge/local/etc/icinga/nrpe.cfg

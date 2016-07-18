@@ -4882,7 +4882,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,157 @@
+@@ -10,40 +10,159 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -4963,7 +4963,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      fi
  done
  
-+# Set execution permissions (discarded by VCS).
++# Set execution permissions (not preserved by VCS).
 +for f in \
 +	/etc/rc.d/init.d/autoexec \
 +	/etc/rc.d/init.d/boa \
@@ -4976,6 +4976,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	/etc/rc.d/init.d/sdcheck \
 +	/etc/rc.d/init.d/setup \
 +	/etc/rc.d/rc.local \
++	/local/bin/rsync-mect.sh \
 +	/local/etc/ppp/ip-down \
 +	/local/etc/ppp/ip-up \
 +	/usr/bin/fcrts.sh \
@@ -5041,6 +5042,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +%Files lfs
 +%defattr(-,root,root)
++%{pfx}/local/bin/rsync-mect.sh
 +%{pfx}/local/etc/icinga/nrpe.cfg
 +%{pfx}/local/etc/ppp/chat-usb3g
 +%{pfx}/local/etc/ppp/ip-down

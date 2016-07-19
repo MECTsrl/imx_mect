@@ -1,0 +1,12 @@
+diff -ruN dhcp-3.0.3b1-orig/configure dhcp-3.0.3b1/configure
+--- dhcp-3.0.3b1-orig/configure	2016-07-19 00:23:40.321446385 +0200
++++ dhcp-3.0.3b1/configure	2016-07-19 00:22:22.362296519 +0200
+@@ -104,7 +104,7 @@
+ 	     2) sysname=linux-2.2 ;;
+ 	     *) sysname=linux-2.2 ;;
+ 	   esac;;
+-	3) case $minor in
++	*) case $minor in
+ 		*) sysname=linux-2.2 ;;
+ 	   esac ;;
+       esac;;

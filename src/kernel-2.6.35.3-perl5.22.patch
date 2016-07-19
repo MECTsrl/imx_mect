@@ -1,0 +1,12 @@
+diff -ruN a/kernel/timeconst.pl b/kernel/timeconst.pl
+--- a/kernel/timeconst.pl	2016-07-16 22:13:10.126485852 +0200
++++ b/kernel/timeconst.pl	2016-07-16 22:13:16.826861267 +0200
+@@ -370,7 +370,7 @@
+ 	}
+ 
+ 	@val = @{$canned_values{$hz}};
+-	if (!defined(@val)) {
++	if (!@val) {
+ 		@val = compute_values($hz);
+ 	}
+ 	output($hz, @val);

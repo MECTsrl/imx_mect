@@ -1,0 +1,88 @@
+diff -ruN a/glib-1.2.8/glib.h b/glib-1.2.8/glib.h
+--- a/glib-1.2.8/glib.h	2000-03-24 03:34:01.000000000 +0100
++++ b/glib-1.2.8/glib.h	2016-07-16 21:24:45.705298758 +0200
+@@ -1553,58 +1553,11 @@
+  */
+ G_INLINE_FUNC gint	g_bit_nth_lsf (guint32 mask,
+ 				       gint    nth_bit);
+-#ifdef	G_CAN_INLINE
+-G_INLINE_FUNC gint
+-g_bit_nth_lsf (guint32 mask,
+-	       gint    nth_bit)
+-{
+-  do
+-    {
+-      nth_bit++;
+-      if (mask & (1 << (guint) nth_bit))
+-	return nth_bit;
+-    }
+-  while (nth_bit < 32);
+-  return -1;
+-}
+-#endif	/* G_CAN_INLINE */
+ 
+ G_INLINE_FUNC gint	g_bit_nth_msf (guint32 mask,
+ 				       gint    nth_bit);
+-#ifdef G_CAN_INLINE
+-G_INLINE_FUNC gint
+-g_bit_nth_msf (guint32 mask,
+-	       gint    nth_bit)
+-{
+-  if (nth_bit < 0)
+-    nth_bit = 32;
+-  do
+-    {
+-      nth_bit--;
+-      if (mask & (1 << (guint) nth_bit))
+-	return nth_bit;
+-    }
+-  while (nth_bit > 0);
+-  return -1;
+-}
+-#endif	/* G_CAN_INLINE */
+ 
+ G_INLINE_FUNC guint	g_bit_storage (guint number);
+-#ifdef G_CAN_INLINE
+-G_INLINE_FUNC guint
+-g_bit_storage (guint number)
+-{
+-  register guint n_bits = 0;
+-  
+-  do
+-    {
+-      n_bits++;
+-      number >>= 1;
+-    }
+-  while (number);
+-  return n_bits;
+-}
+-#endif	/* G_CAN_INLINE */
+ 
+ /* String Chunks
+  */
+diff -ruN a/glib-1.2.8/gmessages.c b/glib-1.2.8/gmessages.c
+--- a/glib-1.2.8/gmessages.c	1999-02-24 07:13:45.000000000 +0100
++++ b/glib-1.2.8/gmessages.c	2016-07-16 21:37:15.890043999 +0200
+@@ -407,6 +407,22 @@
+   va_end (args);
+ }
+ 
++gint
++g_bit_nth_msf (guint32 mask,
++	       gint    nth_bit)
++{
++  if (nth_bit < 0)
++    nth_bit = 32;
++  do
++    {
++      nth_bit--;
++      if (mask & (1 << (guint) nth_bit))
++	return nth_bit;
++    }
++  while (nth_bit > 0);
++  return -1;
++}
++
+ void
+ g_log_default_handler (const gchar    *log_domain,
+ 		       GLogLevelFlags  log_level,

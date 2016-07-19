@@ -645,7 +645,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_PKG_CAIRO is not set
 +CONFIG_PKG_LIBSOCKETCAN=y
 +# CONFIG_PKG_CAN4LINUX is not set
-+CONFIG_PKG_CANFESTIVAL=y
++# CONFIG_PKG_CANFESTIVAL is not set
 +CONFIG_PKG_CANTEST=y
 +# CONFIG_PKG_CCACHE is not set
 +# CONFIG_PKG_CHEESE is not set
@@ -1344,7 +1344,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#undef CONFIG_PKG_CAIRO
 +#define CONFIG_PKG_LIBSOCKETCAN 1
 +#undef CONFIG_PKG_CAN4LINUX
-+#define CONFIG_PKG_CANFESTIVAL 1
++#undef CONFIG_PKG_CANFESTIVAL
 +#define CONFIG_PKG_CANTEST 1
 +#undef CONFIG_PKG_CCACHE
 +#undef CONFIG_PKG_CHEESE
@@ -3023,7 +3023,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_PKG_CAIRO is not set
 +CONFIG_PKG_LIBSOCKETCAN=y
 +# CONFIG_PKG_CAN4LINUX is not set
-+CONFIG_PKG_CANFESTIVAL=y
++# CONFIG_PKG_CANFESTIVAL is not set
 +CONFIG_PKG_CANTEST=y
 +# CONFIG_PKG_CCACHE is not set
 +# CONFIG_PKG_CHEESE is not set
@@ -16142,7 +16142,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  Summary         : Linux kernel (core of the Linux operating system)
  Name            : kernel
-@@ -12,22 +14,650 @@
+@@ -12,22 +14,652 @@
  Packager        : Rob Herring
  Group           : System Environment/Kernel
  Source          : %{pkg_name}-%{version}.tar.bz2
@@ -16223,6 +16223,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +Patch100        : kernel-2.6.35.3-mxs_reset_block-undefined.patch
 +Patch101        : kernel-2.6.35.3-unlimited_stack.patch
 +Patch102        : kernel-2.6.35.3-independent_wext_config.patch
++Patch103        : kernel-2.6.35.3-perl5.22.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -16796,6 +16797,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +%patch100 -p1
 +%patch101 -p1
 +%patch102 -p1
++%patch103 -p1
  
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/main.lkc ltib/config/platform/imx/main.lkc
 --- ltib.reference/config/platform/imx/main.lkc

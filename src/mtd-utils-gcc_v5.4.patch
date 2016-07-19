@@ -1,0 +1,57 @@
+diff -ruN a/mkfs.ubifs/hashtable/hashtable_itr.h b/mkfs.ubifs/hashtable/hashtable_itr.h
+--- a/mkfs.ubifs/hashtable/hashtable_itr.h	2010-01-15 18:12:24.000000000 +0100
++++ b/mkfs.ubifs/hashtable/hashtable_itr.h	2016-07-16 21:10:51.420032494 +0200
+@@ -29,19 +29,13 @@
+  * - return the value of the (key,value) pair at the current position */
+ 
+ extern inline void *
+-hashtable_iterator_key(struct hashtable_itr *i)
+-{
+-    return i->e->k;
+-}
++hashtable_iterator_key(struct hashtable_itr *i);
+ 
+ /*****************************************************************************/
+ /* value - return the value of the (key,value) pair at the current position */
+ 
+ extern inline void *
+-hashtable_iterator_value(struct hashtable_itr *i)
+-{
+-    return i->e->v;
+-}
++hashtable_iterator_value(struct hashtable_itr *i);
+ 
+ /*****************************************************************************/
+ /* advance - advance the iterator to the next element
+diff -ruN a/recv_image.c b/recv_image.c
+--- a/recv_image.c	2010-01-15 18:12:24.000000000 +0100
++++ b/recv_image.c	2016-07-16 21:10:51.420032494 +0200
+@@ -1,5 +1,6 @@
+ 
+ #define _XOPEN_SOURCE 500
++#define _POSIX_C_SOURCE 200112L
+ 
+ #include <errno.h>
+ #include <error.h>
+@@ -14,6 +15,12 @@
+ #include <sys/stat.h>
+ #include <sys/socket.h>
+ #include <netinet/in.h>
++#include <linux/libc-compat.h>
++#ifdef __UAPI_DEF_IP_MREQ
++#undef __UAPI_DEF_IP_MREQ
++#endif
++#define __UAPI_DEF_IP_MREQ 1
++#include <linux/in.h>
+ #include <sys/ioctl.h>
+ #include <sys/time.h>
+ #include "crc32.h"
+diff -ruN a/serve_image.c b/serve_image.c
+--- a/serve_image.c	2016-07-16 21:14:04.076096825 +0200
++++ b/serve_image.c	2016-07-16 21:14:04.068096818 +0200
+@@ -1,4 +1,4 @@
+-#define _POSIX_C_SOURCE 199309
++#define _POSIX_C_SOURCE 200112L
+ 
+ #include <time.h>
+ 

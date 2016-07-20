@@ -35,7 +35,7 @@ mac_sn::mac_sn(QWidget *parent) :
         {
             ui->pushButtonSN_1->setText(QString(line).trimmed().mid(0,4));
             ui->pushButtonSN_2->setText(QString(line).trimmed().mid(4,2));
-            ui->pushButtonSN_3->setText(QString(line).trimmed().mid(6,2));
+            ui->pushButtonSN_3->setText(QString(line).trimmed().mid(6,4));
         }
         fclose(fp);
     }
@@ -62,10 +62,13 @@ mac_sn::mac_sn(QWidget *parent) :
         if (fp != NULL)
         {
             char line[32];
-            while (fgets(line, 32, fp) != NULL && QString(line).split("=").at(0).compare("MAC0") != 0);
-            if (QString(line).split("=").at(0).compare("MAC0") != 0)
+            while (fgets(line, 32, fp) != NULL)
+			{
+				if (QString(line).split("=").at(0).compare("MAC0") == 0)
             {
                 QString mac = QString(line).trimmed().split("=").at(1);
+					if (mac != "00:11:22:22:11:00")
+					{
                 ui->pushButtonMACeth0_1->setText(mac.split(":").at(0));
                 ui->pushButtonMACeth0_2->setText(mac.split(":").at(1));
                 ui->pushButtonMACeth0_3->setText(mac.split(":").at(2));
@@ -73,6 +76,8 @@ mac_sn::mac_sn(QWidget *parent) :
                 ui->pushButtonMACeth0_5->setText(mac.split(":").at(4));
                 ui->pushButtonMACeth0_6->setText(mac.split(":").at(5));
             }
+				}
+			}
             fclose(fp);
         }
     }

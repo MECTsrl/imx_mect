@@ -5102,7 +5102,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  %Description
  %{summary}
-@@ -20,20 +37,51 @@
+@@ -20,20 +37,53 @@
    SHA1 d769da93a56590c23ce9430a1d970e31e835ae88
  
  %Prep
@@ -5114,7 +5114,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%patch2 -p1
 +
 +%ifnarch arm
++if test "$(lsb_release -r | cut -f2 | cut -d. -f1)" -gt 14; then
 +%patch3 -p1
++fi
 +%endif
  
  %Build

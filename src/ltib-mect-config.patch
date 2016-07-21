@@ -18231,7 +18231,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
-@@ -0,0 +1,339 @@
+@@ -0,0 +1,367 @@
 +#!/bin/sh
 +#
 +# Load a new setup from USB or reset the PLC/CAN configurations.
@@ -18285,9 +18285,9 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	export POINTERCAL_FILE=$TSLIB_CALIBFILE
 +
 +	echo -n "Starting the configuration process...  "
-+	/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
 +	if [ -f $mntdir/reset.conf ]
 +	then
++		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
 +		echo " Resetting all!" | tee -a $logfile
 +		if [ -x /usr/bin/splash ]
 +		then
@@ -18347,20 +18347,28 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +		#Eventually add other configuration files to be removed for reset operations
 +		echo " Reset done!" | tee -a $logfile
++		killall splash
++		/bin/mount -oro,remount / 2>/dev/null
++		/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
 +
 +	elif [ `ls /local | grep sysupdate | wc -l` -gt  1 ]
 +	then
 +
++		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
 +		echo "Error multiple sysupdate file." | tee -a $logfile
 +		if [ -x /usr/bin/splash ]
 +		then
 +			killall splash
 +			/usr/bin/splash -qws --text "<font color=\"red\"><h1>Error: find multiple sysupdate file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +		fi
++		killall splash
++		/bin/mount -oro,remount / 2>/dev/null
++		/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
 +
 +	elif [ `ls /local | grep sysupdate | wc -l` -eq  1 ]
 +	then
 +
++		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
 +		echo " Found one sysupdate!" | tee -a $logfile
 +		countsys=1
 +		sysupdatename=`ls /local | grep sysupdate`
@@ -18388,6 +18396,9 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		else
 +			echo " Cannot update '/local/$sysupdatename'." | tee -a $logfile
 +		fi
++		killall splash
++		/bin/mount -oro,remount / 2>/dev/null
++		/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
 +
 +	elif [ `ls $mntdir | grep sysupdate_ | wc -l` -gt  1 ]
 +	then
@@ -18397,6 +18408,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	elif [ `ls $mntdir | grep sysupdate_ | wc -l` -eq  1 ]
 +	then
 +
++		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
 +		echo " Found one sysupdate!" | tee -a $logfile
 +		if [ -x /usr/bin/splash ]
 +		then
@@ -18437,10 +18449,14 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot apply the update.<BR>For more detail, see the file '$logfile' on the USB.</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
 +		fi
++		killall splash
++		/bin/mount -oro,remount / 2>/dev/null
++		/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
 +
 +	elif [ -f $mntdir/sysupdate.sh ] && [ $countsys -eq 0 ]
 +	then
 +
++		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
 +		echo " Performing standard sysupdate!" | tee -a $logfile
 +		if ! /bin/mount -orw,remount / 2>/dev/null
 +		then
@@ -18474,11 +18490,15 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot apply the update.<BR>For more detail, see the file '$logfile' on the USB.</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
 +		fi
++		killall splash
++		/bin/mount -oro,remount / 2>/dev/null
++		/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
 +
 +	else
 +		# Perform any other configurations
 +		if [ -f $mntdir/system.ini ]
 +		then
++			/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
 +			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
@@ -18489,9 +18509,13 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +			/bin/cp $mntdir/system.ini $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
 +			echo " Configuration file '$mntdir/system.ini' updated!" | tee -a $logfile
 +			echo "SYSTEM INI" >> $UPDATE_DESCR_FILE
++			killall splash
++			/bin/mount -oro,remount / 2>/dev/null
++			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
 +		fi
 +		if [ -f $mntdir/net.conf ]
 +		then
++			/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
 +			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
@@ -18502,9 +18526,13 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +			/bin/cp $mntdir/net.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
 +			echo " Network configuration file '$mntdir/net.conf' updated!" | tee -a $logfile
 +			echo "NETWORK" >> $UPDATE_DESCR_FILE
++			killall splash
++			/bin/mount -oro,remount / 2>/dev/null
++			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
 +		fi
 +		if [ -f $mntdir/autoexec ]
 +		then
++			/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
 +			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
@@ -18529,6 +18557,9 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
 +			echo " Autoexec file '$mntdir/autoexec' updated!" | tee -a $logfile
 +			echo "AUTOEXEC" >> $UPDATE_DESCR_FILE
++			killall splash
++			/bin/mount -oro,remount / 2>/dev/null
++			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
 +		fi
 +	fi
 +	#Sync for ubifs
@@ -18538,9 +18569,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		/bin/umount $mntdir
 +	fi
 +
-+	killall splash
-+	/bin/mount -oro,remount / 2>/dev/null
-+	/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
 +	echo "  Done."
 +}
 +

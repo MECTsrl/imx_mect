@@ -3684,7 +3684,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1043_01_A
 +#
-+d=TP1043/Simple
++d=TP1043_01_A/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -3703,7 +3703,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1043_01_B
 +#
-+d=TP1043/Simple
++d=TP1043_01_B/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -3722,7 +3722,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1043_01_C
 +#
-+d=TP1043/Simple
++d=TP1043_01_C/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4167,7 +4167,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1043_01_A
 +#
-+d=TP1043/Simple
++d=TP1043_01_A/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4182,7 +4182,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1043_01_B
 +#
-+d=TP1043/Simple
++d=TP1043_01_B/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4197,7 +4197,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1043_01_C
 +#
-+d=TP1043/Simple
++d=TP1043_01_C/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4212,7 +4212,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1057_01_A
 +#
-+d=TP1043/Simple
++d=TP1057/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4227,7 +4227,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TP1057_01_B
 +#
-+d=TP1043/Simple
++d=TP1057/Simple
 +if test -d $d; then
 +	cd $d
 +

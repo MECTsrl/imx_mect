@@ -81,6 +81,12 @@ MECT_LTIB_KERNEL_TS_NAME = last-kernel-build
 MECT_LTIB_KERNEL_TS_RPM = $(MECT_RPMDIR)/$(shell if test -x $(MECT_RPMBIN); then $(MECT_RPMBIN) --root $(MECT_LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides $(MECT_LTIB_KERNEL_TS_NAME); else echo 'no-package'; fi).$(MECT_TARGET_ARCH).rpm
 # Kernel configuration file.
 MECT_KERNEL_CONF := $(MECT_LTIBDIR)/config/platform/imx/kernel-2.6.35-imx28-tpac.config
+# Script to update target file systems
+MECT_SYSUPD_TMPL := $(MECT_FTPDIR)/sysupdate_imx28.sh
+# Program to update target kernel
+MECT_KOBS_TMPL := $(MECT_FTPDIR)/kobs-ng
+# Full path to write the update archive on target
+MECT_UPDATE_ARCH := /tmp/mnt/update.tar.gz
 
 
 # Extension of the MD5 checksums for the downloads.
@@ -322,6 +328,7 @@ MECT_PACKAGES = \
 	qemu \
 	rpm \
 	sed \
+	sharutils \
 	tar \
 	tcl \
 	texinfo \
@@ -561,6 +568,7 @@ MECT_DEFAULT_IMAGES += \
 endif
 
 # Generate all manufacturing images.
+#
 
 # Recurse to properly evaluate the targets.
 .PHONY: images
@@ -571,7 +579,6 @@ images_do: $(MECT_DEFAULT_IMAGES)
 
 
 # Image-specific settings and targets
-#
 include targets/Makefile-TP1043_232.in
 include targets/Makefile-TP1043_485.in
 include targets/Makefile-TP1043_CAN.in
@@ -696,15 +703,17 @@ target_lfs_flash:
 	sudo ln -s flash/data $(MECT_LFSDIR)/data
 
 # Build the target-specific project for Freescale manufacturing tool.
-.PHONY: target_mfg
-target_mfg: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
-target_mfg: MECT_TGTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)_ms$(MECT_BUILD_RELEASE)
-target_mfg: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
-target_mfg: MECT_MFGZIP = $(MECT_MFGDIR)/../../$(shell basename $(MECT_MFGDIR)).zip
-target_mfg: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
-target_mfg: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
-target_mfg: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
-target_mfg:
+.PHONY: target_mfg_upd
+target_mfg_upd: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
+target_mfg_upd: MECT_TGTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)_ms$(MECT_BUILD_RELEASE)
+target_mfg_upd: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
+target_mfg_upd: MECT_MFGZIP = $(shell readlink -m $(MECT_MFGDIR)/../../$(shell basename $(MECT_MFGDIR)).zip)
+target_mfg_upd: MECT_SYSUPD = $(shell readlink -m $(MECT_MFGDIR)/../../sysupdate_$(MECT_BUILD_RELEASE)_$(MECT_BUILD_TARGET).sh)
+target_mfg_upd: MECT_SYSUPDIR = $(shell readlink -m $(MECT_MFGDIR)/../../$(MECT_BUILD_TARGET))
+target_mfg_upd: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
+target_mfg_upd: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
+target_mfg_upd: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
+target_mfg_upd:
 	test -n '$(MECT_BUILD_TARGET)'
 	sudo rm -rf $(MECT_MFGDIR)
 	mkdir -p $(MECT_MFGDIR)/'OS firmware'/img $(MECT_MFGDIR)/'OS firmware'/sys $(MECT_TGTDIR)
@@ -716,7 +725,23 @@ target_mfg:
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_MFGDIR)/'OS firmware'/img
 	install -m 644 $(MECT_BOOTDIR)/boot/updater_ivt.sb $(MECT_MFGDIR)/'OS firmware'/sys
 	rm -f $(MECT_MFGZIP); cd $(MECT_MFGDIR); zip -0r $(MECT_MFGZIP) *
-	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_TGTDIR)
+	rm -rf $(MECT_SYSUPD) $(MECT_SYSUPDIR)
+	install -m 755 $(MECT_SYSUPD_TMPL) $(MECT_SYSUPD)
+	mkdir -p $(MECT_SYSUPDIR)
+	install -m 755 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/..
+	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_SYSUPDIR)
+	install -m 644 $(MECT_MFGDIR)/'OS firmware'/img/rootfs.tar $(MECT_SYSUPDIR)
+	tar cf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_LFSDIR) . \
+		--exclude=./flash/etc/sysconfig \
+		--exclude=./flash/root/hmi \
+		--exclude=./flash/control \
+		--exclude=./retentive \
+		--exclude=./flash/data \
+		--exclude=./var/spool/cron/crontabs/root \
+		--exclude=./flash/etc/ppp/chat-usb3g \
+		--exclude=./flash/etc/icinga/nrpe.cfg
+	GZIP=-9 tar czf - -C $(MECT_SYSUPDIR)/.. $(MECT_BUILD_TARGET) $(shell basename $(MECT_KOBS_TMPL)) | uuencode $(MECT_UPDATE_ARCH) >> $(MECT_SYSUPD)
+	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_SYSUPDIR) $(shell readlink -m $(MECT_SYSUPDIR)/../$(shell basename $(MECT_KOBS_TMPL))) $(MECT_TGTDIR)
 
 # Build the archive for target-specific development.
 .PHONY: target_dev

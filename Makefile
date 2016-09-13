@@ -14,7 +14,10 @@ export MECT_BUILD_RELEASE := 2.0.10rc1
 MECT_BUILD_ATCMCRT_BRANCH := master
 # Set to 0.0 to checkout HEAD
 export MECT_BUILD_ATCMCRT_TAG := v1.016
-export MECT_BUILD_ATCMCRT_CAN_REV := 190
+# svn branch and release for the ATCMcontrol_RunTimeSystem project
+MECT_BUILD_ATCMCRT_CAN_BRANCH := base_2
+MECT_BUILD_ATCMCRT_CAN_REV := 190
+MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := master
@@ -481,8 +484,11 @@ projects_setup_ATCMcontrol_RunTimeSystem:
 	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_BRANCH)'; then cd ATCMcontrol_RunTimeSystem; git checkout -f origin/$(MECT_BUILD_ATCMCRT_BRANCH); fi
 	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem -a -n '$(MECT_BUILD_ATCMCRT_TAG)' -a '$(MECT_BUILD_ATCMCRT_TAG)' != '0.0'; then cd ATCMcontrol_RunTimeSystem; git checkout -f tags/$(MECT_BUILD_ATCMCRT_TAG); fi
 	ping -W2 -c1 192.168.0.254 || exit 0; \
-	svn info svn://192.168.0.254/4c_runtime/branches/base_2 || exit 0; \
-		cd $(MECT_PRJDIR); rm -rf 4c_runtime; svn checkout --revision $(MECT_BUILD_ATCMCRT_CAN_REV) svn://192.168.0.254/4c_runtime/branches/base_2 4c_runtime
+	test -n "$(MECT_BUILD_ATCMCRT_CAN_URL)" || exit 0; \
+	test -n "$(MECT_BUILD_ATCMCRT_CAN_BRANCH)" || exit 0; \
+	test -n "$(MECT_BUILD_ATCMCRT_CAN_REV)" || exit 0; \
+	svn info $(MECT_BUILD_ATCMCRT_CAN_URL)/$(MECT_BUILD_ATCMCRT_CAN_BRANCH) || exit 0; \
+		cd $(MECT_PRJDIR); rm -rf 4c_runtime; svn checkout --revision $(MECT_BUILD_ATCMCRT_CAN_REV) $(MECT_BUILD_ATCMCRT_CAN_URL)/$(MECT_BUILD_ATCMCRT_CAN_BRANCH) 4c_runtime
 
 # Setup the local projects: mect_plugins.
 .PHONY: projects_setup_mect_plugins

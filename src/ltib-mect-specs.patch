@@ -6,7 +6,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : v1.014
++Version         : v1.016
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -105,7 +105,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : v1.014
++Version         : v1.016
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3297,12 +3297,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1470 @@
+@@ -0,0 +1,1474 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v2.0.9rc6
++Version         : v2.0.10rc1
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -4084,18 +4084,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1008_02_AE
 +#
-+d=AnyTPAC/Empty_HMI
++d=TPAC1008_02_AE/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
++		Simple.pro
 +	make -j`grep -c ^processor /proc/cpuinfo`
 +
 +	cd -
@@ -4491,7 +4491,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# TPAC1008_02_AE
 +#
-+d=AnyTPAC/Empty_HMI
++d=TPAC1008_02_AE/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4500,6 +4500,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AE/local/etc/sysconfig/img/splash.png
 +	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AE/local/etc/sysconfig/system.ini
 +	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AE/local/data/customtrend/trend1.csv
++	install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AE/local/etc/sysconfig/network0.cmg
++	install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AE/local/etc/sysconfig/iomap0.cmg
 +
 +	cd -
 +fi
@@ -4744,6 +4746,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1008_02_AE/local/etc/sysconfig/img/splash.png
 +%{pfx}/TPAC1008_02_AE/local/etc/sysconfig/system.ini
 +%{pfx}/TPAC1008_02_AE/local/data/customtrend/trend1.csv
++%{pfx}/TPAC1008_02_AE/local/etc/sysconfig/iomap0.cmg
++%{pfx}/TPAC1008_02_AE/local/etc/sysconfig/network0.cmg
 +
 +%files lfs-TPAC1008_02_AF
 +%defattr(-,root,root)
@@ -4776,7 +4780,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v7.031
++Version: 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

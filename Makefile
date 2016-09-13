@@ -8,15 +8,15 @@ export MECT_BUILD_RELEASE := 2.0.10rc1
 MECT_BUILD_IMXMECT_BRANCH := mect_suite_2.0
 # imx_mect tag used by ltib_update make target
 # Set to 0.0 to checkout HEAD
-MECT_BUILD_IMXMECT_TAG := 0.0
+MECT_BUILD_IMXMECT_TAG := v2.0.10rc1
 
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_ATCMCRT_TAG := v1.016
+export MECT_BUILD_ATCMCRT_TAG := v1.018
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_CAN_BRANCH := mect_suite_2.0
-MECT_BUILD_ATCMCRT_CAN_REV := 190
+MECT_BUILD_ATCMCRT_CAN_REV := 193
 MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
 # git branch and tag for the mect_plugins project
@@ -27,7 +27,7 @@ export MECT_BUILD_PLUGINSCRT_TAG := v7.037
 # git branch and tag for the mect_apps project
 MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_APPSCRT_TAG := 0.0
+export MECT_BUILD_APPSCRT_TAG := 2.0.10rc1
 
 # Mandatory prefix for all target device names.
 MECT_TARGET_PREFIX := MECT_

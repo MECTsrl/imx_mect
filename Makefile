@@ -739,6 +739,7 @@ target_mfg_upd:
 	rm -f $(MECT_MFGZIP); cd $(MECT_MFGDIR); zip -0r $(MECT_MFGZIP) *
 	rm -rf $(MECT_SYSUPD) $(MECT_SYSUPDIR)
 	install -m 755 $(MECT_SYSUPD_TMPL) $(MECT_SYSUPD)
+	sed -i "s/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/" $(MECT_SYSUPD)
 	mkdir -p $(MECT_SYSUPDIR)
 	install -m 755 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/..
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_SYSUPDIR)

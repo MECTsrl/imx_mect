@@ -24,7 +24,7 @@ do_exit()
 /etc/rc.d/init.d/inetd stop
 
 eval `grep Target /rootfs_version | awk '{print "TARGET="$2}'`
-echo "Starting update to version 2.0.9rc11 (on target $TARGET)" | tee /dev/tty1
+echo "Starting update to version @@THIS_VERSION@@ (on target $TARGET)" | tee /dev/tty1
 
 # check the running version
 UPDATEABLE_VERSIONS="2.0rc4 2.0.1 2.0.2 2.0.3 2.0.5 2.0.6 2.0.7 2.0.8 2.0.9 2.0.9rc4 2.0.9rc5 2.0.9rc6 2.0.9rc7 2.0.9rc8 2.0.9rc9"

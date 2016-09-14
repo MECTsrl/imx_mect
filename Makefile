@@ -22,7 +22,7 @@ MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_PLUGINSCRT_TAG := v7.037
+export MECT_BUILD_PLUGINSCRT_TAG := v7.038
 
 # git branch and tag for the mect_apps project
 MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0

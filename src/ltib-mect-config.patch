@@ -18231,7 +18231,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
-@@ -0,0 +1,367 @@
+@@ -0,0 +1,301 @@
 +#!/bin/sh
 +#
 +# Load a new setup from USB or reset the PLC/CAN configurations.
@@ -18285,73 +18285,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	export POINTERCAL_FILE=$TSLIB_CALIBFILE
 +
 +	echo -n "Starting the configuration process...  "
-+	if [ -f $mntdir/reset.conf ]
-+	then
-+		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
-+		echo " Resetting all!" | tee -a $logfile
-+		if [ -x /usr/bin/splash ]
-+		then
-+			killall splash
-+			/usr/bin/splash -qws --text "<font color=\"blue\"><h1>Found a reset command.<BR>Resetting...</h1></font>" --dimension 12 >/dev/null 2>&1 &
-+		fi
-+
-+		if ! /bin/mount -orw,remount / 2>/dev/null
-+		then
-+			echo "Cannot mount the file system in read/write." | tee -a $logfile
-+			if [ -x /usr/bin/splash ]
-+			then
-+				killall splash
-+				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
-+			fi
-+			/bin/umount $mntdir
-+			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
-+			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
-+			exit 1
-+		fi
-+		/bin/rm -f $mntdir/reset.conf
-+
-+		# Just apply factory defaults
-+		FACTORY_DATA="/local/factory_data.tar.gz"
-+		if [ -e $FACTORY_DATA ]
-+		then
-+			tar xzf /local/$FACTORY_DATA -C /
-+			if [ $? == 0 ]
-+			then
-+				chown root:root -R /local
-+				#reset also network configuration and put factory_test with exe permission
-+				chmod +x /local/root/factory_test
-+				sed -i /IPADDR0/d  "$LOCAL_ETC_DIR/net.conf"
-+				sed -i /NETMASK0/d  "$LOCAL_ETC_DIR/net.conf"
-+				sed -i /GATEWAY0/d  "$LOCAL_ETC_DIR/net.conf"
-+				sed -i /NAMESERVER01/d  "$LOCAL_ETC_DIR/net.conf"
-+				sed -i /NAMESERVER02/d  "$LOCAL_ETC_DIR/net.conf"
-+				sed -i '2i\IPADDR0=192.168.5.211' "$LOCAL_ETC_DIR/net.conf"
-+				sed -i '3i\NETMASK0=255.255.255.0' "$LOCAL_ETC_DIR/net.conf"
-+				sed -i '4i\GATEWAY0=192.168.5.10' "$LOCAL_ETC_DIR/net.conf"
-+				sed -i '5i\NAMESERVER01=' "$LOCAL_ETC_DIR/net.conf"
-+				sed -i '6i\NAMESERVER02=' "$LOCAL_ETC_DIR/net.conf"
-+
-+				echo "The target has been reset." | tee -a $logfile
-+				echo "RESET" >> $UPDATE_DESCR_FILE
-+			else
-+				echo "Error in restoring defaults" | tee -a $logfile
-+			fi
-+		else
-+			echo "Error missing factory data" | tee -a $logfile
-+			if [ -x /usr/bin/splash ]
-+			then
-+				killall splash
-+				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Error: missing factory data.</h1></font>" --dimension 12 >/dev/null 2>&1 &
-+			fi
-+		fi
-+
-+		#Eventually add other configuration files to be removed for reset operations
-+		echo " Reset done!" | tee -a $logfile
-+		killall splash
-+		/bin/mount -oro,remount / 2>/dev/null
-+		/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
-+
-+	elif [ `ls /local | grep sysupdate | wc -l` -gt  1 ]
++	if [ `ls /local | grep sysupdate | wc -l` -gt  1 ]
 +	then
 +
 +		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1

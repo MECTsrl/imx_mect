@@ -39,7 +39,6 @@ MECT_ALL_TARGETS += key_generator
 endif
 
 MECT_ALL_TARGETS += \
-	factory_data \
 	localfs_rpm \
 
 # All clean targets
@@ -55,7 +54,6 @@ MECT_CLEAN_TARGETS += key_generator_clean
 endif
 
 MECT_CLEAN_TARGETS += \
-	factory_data_clean \
 	localfs_rpm_clean \
 
 MECT_LOCAL_SPECS := \
@@ -100,67 +98,6 @@ local_prepare_install:
 .PHONY: local_prepare_clean
 local_prepare_clean:
 	sudo rm -rf $(MECT_LDIR)
-
-# ###############################################################
-#
-# Project mect_plugins
-#
-# TODO Convert to LTIB package (depends on several Makefile variables).
-#
-
-.PHONY: mect_plugins
-mect_plugins: mect_plugins_clean mect_plugins_build mect_plugins_install
-
-.PHONY: mect_plugins_build
-mect_plugins_build: MECT_PRJDIR := $(CURDIR)/mect_plugins
-mect_plugins_build:
-	test -n $(MECT_PRJDIR)
-	tar cf $(MECT_RPMBASEDIR)/SOURCES/mect_plugins-$(MECT_BUILD_PLUGINSCRT_TAG).tar -C $(MECT_PRJDIR) --exclude=.git --transform='s/^\./mect_plugins-$(MECT_BUILD_PLUGINSCRT_TAG)/' .
-	rpmbuild --define 'MECT_RFSDIR $(MECT_RFSDIR)' --define 'MECT_QMAKE $(MECT_QMAKE)' --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean --rmsource $(MECT_SPECDIR)/mect_plugins.spec
-
-.PHONY: mect_plugins_install
-mect_plugins_install: MECT_PRJDIR := $(CURDIR)/mect_plugins
-mect_plugins_install:
-	test -n $(MECT_PRJDIR)
-	-sudo $(MECT_RPMBIN) --root $(MECT_RFSDIR) --dbpath /var/lib/rpm -e --allmatches --nodeps --define '_tmppath /tmp/ltib' mect_plugins 2>/dev/null
-	sudo $(MECT_RPMBIN) --root $(MECT_RFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -ivh --force --excludedocs --define '_tmppath /tmp/ltib' $(MECT_RPMDIR)/mect_plugins-$(MECT_BUILD_PLUGINSCRT_TAG)-*.$(MECT_TARGET_ARCH).rpm
-
-.PHONY: mect_plugins_clean
-mect_plugins_clean: MECT_PRJDIR := $(CURDIR)/mect_plugins
-mect_plugins_clean:
-	test -n $(MECT_PRJDIR)
-	-test -d $(MECT_PRJDIR) && $(MAKE) -C $(MECT_PRJDIR) distclean
-
-# ###############################################################
-#
-# Project mect_apps
-#
-# TODO Convert to LTIB package (depends on several Makefile variables).
-#
-
-.PHONY: mect_apps
-mect_apps: mect_apps_clean mect_apps_build mect_apps_install
-
-.PHONY: mect_apps_build
-# FIXME Convert to LTIB the projects that generate RPMs
-mect_apps_build: MECT_PRJDIR := $(CURDIR)/mect_apps
-mect_apps_build:
-	test -n $(MECT_PRJDIR)
-	tar cf $(MECT_RPMBASEDIR)/SOURCES/mect_apps-$(MECT_BUILD_APPSCRT_TAG).tar -C $(MECT_PRJDIR) --exclude=.git --transform='s/^\./mect_apps-$(MECT_BUILD_APPSCRT_TAG)/' .
-	rpmbuild --define 'MECT_RFSDIR $(MECT_RFSDIR)' --define 'MECT_QMAKE $(MECT_QMAKE)' --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean --rmsource $(MECT_SPECDIR)/mect_apps.spec
-
-.PHONY: mect_apps_install
-mect_apps_install: MECT_PRJDIR := $(CURDIR)/mect_apps
-mect_apps_install:
-	test -n $(MECT_PRJDIR)
-	-sudo $(MECT_RPMBIN) --root $(MECT_RFSDIR) --dbpath /var/lib/rpm -e --allmatches --nodeps --define '_tmppath /tmp/ltib' mect_apps 2>/dev/null
-	sudo $(MECT_RPMBIN) --root $(MECT_RFSDIR) --dbpath /var/lib/rpm --prefix / --ignorearch -ivh --force --excludedocs --define '_tmppath /tmp/ltib' $(MECT_RPMDIR)/mect_apps-$(MECT_BUILD_PLUGINSCRT_TAG)-*.$(MECT_TARGET_ARCH).rpm
-
-.PHONY: mect_apps_clean
-mect_apps_clean: MECT_PRJDIR := $(CURDIR)/mect_apps
-mect_apps_clean:
-	test -n $(MECT_PRJDIR)
-	-test -d $(MECT_PRJDIR) && $(MAKE) -C $(MECT_PRJDIR) distclean
 
 # ###############################################################
 #
@@ -266,32 +203,6 @@ ATCMcontrol_RunTimeSystem_clean:
 4c_runtime_clean:
 	test -n $(MECT_PRJDIR)
 	-test -d $(MECT_PRJDIR) && $(MAKE) -j1 -C $(MECT_PRJDIR) -f _fcrts.mak TARGET=4CPC DEBUG=0 PRODUCT="USE_CROSSTABLE" $(MECT_TOOLCHAIN_FLAG) MECT_ROOTFS='$(MECT_LTIB_RFSDIR)' MECT_CC_VERSION='$(MECT_CC_VERSION)' MECT_CC_DIRECTORY='$(MECT_CC_DIRECTORY)' MECT_CC_RADIX='$(MECT_CC_RADIX)' clobber
-
-# ###############################################################
-#
-# Project factory_data
-#
-
-.PHONY: factory_data
-factory_data: factory_data_clean factory_data_build factory_data_install
-
-.PHONY: factory_data_build
-factory_data_build: MECT_PRJDIR := $(CURDIR)
-factory_data_build:
-	test -n $(MECT_PRJDIR)
-	tar czvf $(MECT_PRJDIR)/factory_data.tar.gz --exclude=.svn --exclude=.git -C $(MECT_PRJDIR)/localfs .
-
-.PHONY: factory_data_install
-factory_data_install: MECT_PRJDIR := $(CURDIR)
-factory_data_install:
-	test -n $(MECT_PRJDIR)
-	mv $(MECT_PRJDIR)/factory_data.tar.gz $(MECT_LDIR)
-
-.PHONY: factory_data_clean
-factory_data_clean: MECT_PRJDIR := $(CURDIR)
-factory_data_clean:
-	test -n $(MECT_PRJDIR)
-	rm -f $(MECT_LDIR)/factory_data.tar.gz
 
 # ###############################################################
 #

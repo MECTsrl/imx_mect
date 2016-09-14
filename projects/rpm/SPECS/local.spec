@@ -16,13 +16,6 @@ AutoReqProv     : no
 %description
 %{summary}
 
-%Package factory_data
-Summary         : Factory preset values
-Group           : Applications/File
-AutoReqProv     : no
-%Description factory_data
-Factory preset values for all panel settings.
-
 
 %prep
 export LC_ALL
@@ -55,7 +48,3 @@ sudo rm -rf $RPM_BUILD_ROOT
 %attr(0755, root, root) %dir %{pfx}/local/sd_card
 %attr(0755, root, root) %dir %{pfx}/local/update
 %{pfx}/local/retentive
-
-%files factory_data
-%defattr(-,root,root)
-%{pfx}/local/factory_data.tar.gz

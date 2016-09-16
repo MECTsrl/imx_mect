@@ -18231,7 +18231,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
-@@ -0,0 +1,367 @@
+@@ -0,0 +1,298 @@
 +#!/bin/sh
 +#
 +# Load a new setup from USB or reset the PLC/CAN configurations.
@@ -18250,7 +18250,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	sleep 1
 +
 +	rm -f $UPDATE_DESCR_FILE
-+	echo -n "Checking for configuration USB key...  "
++	echo -n "Checking USB storage device for configuration...  "
 +        if [ -e /sys/block/sda/sda1 ] || [ -e /sys/block/sda ]
 +        then
 +           
@@ -18263,12 +18263,13 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +			rm -f $logfile
 +			echo "current mount point is $usbdev" | tee -a $logfile
 +		else
-+			echo "Cannot mount the usb pen drive"
++			echo "Cannot mount the USB storage device."
 +			exit 0
 +		fi
 +	else
-+		echo "no usb key found in dmesg"
-+		echo "exit from configuration script"
++		echo "No USB storage device found"
++		echo "Exiting the configuration script."
++
 +		exit 0
 +	fi
 +
@@ -18285,77 +18286,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	export POINTERCAL_FILE=$TSLIB_CALIBFILE
 +
 +	echo -n "Starting the configuration process...  "
-+	if [ -f $mntdir/reset.conf ]
++	if [ `ls /local | grep sysupdate | wc -l` -gt  1 ]
 +	then
 +		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
-+		echo " Resetting all!" | tee -a $logfile
-+		if [ -x /usr/bin/splash ]
-+		then
-+			killall splash
-+			/usr/bin/splash -qws --text "<font color=\"blue\"><h1>Found a reset command.<BR>Resetting...</h1></font>" --dimension 12 >/dev/null 2>&1 &
-+		fi
-+
-+		if ! /bin/mount -orw,remount / 2>/dev/null
-+		then
-+			echo "Cannot mount the file system in read/write." | tee -a $logfile
-+			if [ -x /usr/bin/splash ]
-+			then
-+				killall splash
-+				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
-+			fi
-+			/bin/umount $mntdir
-+			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
-+			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
-+			exit 1
-+		fi
-+		/bin/rm -f $mntdir/reset.conf
-+
-+		# Just apply factory defaults
-+		FACTORY_DATA="/local/factory_data.tar.gz"
-+		if [ -e $FACTORY_DATA ]
-+		then
-+			tar xzf /local/$FACTORY_DATA -C /
-+			if [ $? == 0 ]
-+			then
-+				chown root:root -R /local
-+				#reset also network configuration and put factory_test with exe permission
-+				chmod +x /local/root/factory_test
-+				sed -i /IPADDR0/d  "$LOCAL_ETC_DIR/net.conf"
-+				sed -i /NETMASK0/d  "$LOCAL_ETC_DIR/net.conf"
-+				sed -i /GATEWAY0/d  "$LOCAL_ETC_DIR/net.conf"
-+				sed -i /NAMESERVER01/d  "$LOCAL_ETC_DIR/net.conf"
-+				sed -i /NAMESERVER02/d  "$LOCAL_ETC_DIR/net.conf"
-+				sed -i '2i\IPADDR0=192.168.5.211' "$LOCAL_ETC_DIR/net.conf"
-+				sed -i '3i\NETMASK0=255.255.255.0' "$LOCAL_ETC_DIR/net.conf"
-+				sed -i '4i\GATEWAY0=192.168.5.10' "$LOCAL_ETC_DIR/net.conf"
-+				sed -i '5i\NAMESERVER01=' "$LOCAL_ETC_DIR/net.conf"
-+				sed -i '6i\NAMESERVER02=' "$LOCAL_ETC_DIR/net.conf"
-+
-+				echo "The target has been reset." | tee -a $logfile
-+				echo "RESET" >> $UPDATE_DESCR_FILE
-+			else
-+				echo "Error in restoring defaults" | tee -a $logfile
-+			fi
-+		else
-+			echo "Error missing factory data" | tee -a $logfile
-+			if [ -x /usr/bin/splash ]
-+			then
-+				killall splash
-+				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Error: missing factory data.</h1></font>" --dimension 12 >/dev/null 2>&1 &
-+			fi
-+		fi
-+
-+		#Eventually add other configuration files to be removed for reset operations
-+		echo " Reset done!" | tee -a $logfile
-+		killall splash
-+		/bin/mount -oro,remount / 2>/dev/null
-+		/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
-+
-+	elif [ `ls /local | grep sysupdate | wc -l` -gt  1 ]
-+	then
-+
-+		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
-+		echo "Error multiple sysupdate file." | tee -a $logfile
++		echo "Error: more than one system update file." | tee -a $logfile
 +		if [ -x /usr/bin/splash ]
 +		then
 +			killall splash
@@ -18367,9 +18301,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +	elif [ `ls /local | grep sysupdate | wc -l` -eq  1 ]
 +	then
-+
 +		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
-+		echo " Found one sysupdate!" | tee -a $logfile
++		echo " System update found." | tee -a $logfile
 +		countsys=1
 +		sysupdatename=`ls /local | grep sysupdate`
 +		if ! /bin/mount -orw,remount / 2>/dev/null
@@ -18387,14 +18320,13 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		fi
 +		/usr/bin/dos2unix /local/$sysupdatename 2>&1 | tee -a $logfile
 +		/bin/sh /local/$sysupdatename 2>&1 | tee -a $logfile
-+
 +		if [ $? == 0 ]
 +		then
-+			echo " Update '/local/$sysupdatename' applied!!!" | tee -a $logfile
++			echo " Applied the system update '/local/$sysupdatename'." | tee -a $logfile
 +			rm -f /local/$sysupdatename
 +			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
 +		else
-+			echo " Cannot update '/local/$sysupdatename'." | tee -a $logfile
++			echo " Cannot apply the system update '/local/$sysupdatename'." | tee -a $logfile
 +		fi
 +		killall splash
 +		/bin/mount -oro,remount / 2>/dev/null
@@ -18407,9 +18339,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +	elif [ `ls $mntdir | grep sysupdate_ | wc -l` -eq  1 ]
 +	then
-+
 +		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
-+		echo " Found one sysupdate!" | tee -a $logfile
++		echo " System update found." | tee -a $logfile
 +		if [ -x /usr/bin/splash ]
 +		then
 +			killall splash
@@ -18434,7 +18365,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		/bin/sh $mntdir/$sysupdatename 2>&1 | tee -a $logfile
 +		if [ $? == 0 ]
 +		then
-+			echo " Update '$mntdir/$sysupdatename' applied!!!" | tee -a $logfile
++			echo " Applied the system update '$mntdir/$sysupdatename'." | tee -a $logfile
 +			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
 +			if [ -x /usr/bin/splash ]
 +			then
@@ -18442,7 +18373,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +				/usr/bin/splash -qws --text "<font color=\"green\"><h1>Update applied</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
 +		else
-+			echo " Cannot update '/local/$sysupdatename'." | tee -a $logfile
++			echo " Cannot apply the system update '/local/$sysupdatename'." | tee -a $logfile
 +			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
@@ -18455,9 +18386,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +	elif [ -f $mntdir/sysupdate.sh ] && [ $countsys -eq 0 ]
 +	then
-+
 +		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
-+		echo " Performing standard sysupdate!" | tee -a $logfile
++		echo " Performing the standard system update." | tee -a $logfile
 +		if ! /bin/mount -orw,remount / 2>/dev/null
 +		then
 +			echo "Cannot mount the file system in read/write." | tee -a $logfile
@@ -18475,7 +18405,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		/bin/sh $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
 +		if [ $? == 0 ]
 +		then
-+			echo " Update '$mntdir/sysupdate.sh' applied!!!" | tee -a $logfile
++			echo " Applied the system update '$mntdir/sysupdate.sh'." | tee -a $logfile
 +			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
 +			if [ -x /usr/bin/splash ]
 +			then
@@ -18483,7 +18413,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +				/usr/bin/splash -qws --text "<font color=\"green\"><h1>Update applied</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
 +		else
-+			echo " Cannot update '$mntdir/sysupdate.sh'." | tee -a $logfile
++			echo " Cannot apply the system update '$mntdir/sysupdate.sh'." | tee -a $logfile
 +			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
@@ -18507,7 +18437,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +			echo " Found a new configuration file '$mntdir/system.ini'" | tee -a $logfile
 +			/usr/bin/dos2unix $mntdir/system.ini 2>&1 | tee -a $logfile
 +			/bin/cp $mntdir/system.ini $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
-+			echo " Configuration file '$mntdir/system.ini' updated!" | tee -a $logfile
++			echo " Configuration file '$mntdir/system.ini' was updated." | tee -a $logfile
 +			echo "SYSTEM INI" >> $UPDATE_DESCR_FILE
 +			killall splash
 +			/bin/mount -oro,remount / 2>/dev/null
@@ -18524,7 +18454,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +			echo " Found a new network configuration file '$mntdir/net.conf'" | tee -a $logfile
 +			/usr/bin/dos2unix $mntdir/net.conf 2>&1 | tee -a $logfile
 +			/bin/cp $mntdir/net.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
-+			echo " Network configuration file '$mntdir/net.conf' updated!" | tee -a $logfile
++			echo " Network configuration file '$mntdir/net.conf' was updated." | tee -a $logfile
 +			echo "NETWORK" >> $UPDATE_DESCR_FILE
 +			killall splash
 +			/bin/mount -oro,remount / 2>/dev/null
@@ -18538,7 +18468,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +				killall splash
 +				/usr/bin/splash -qws --text "<font color=\"blue\"><h1>Found a new 'autoexec' file.<BR>Updating...</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
-+			echo " Found a new autoexec file file '$mntdir/autoexec'" | tee -a $logfile
++			echo " Found a new autoexec file '$mntdir/autoexec'" | tee -a $logfile
 +			if ! /bin/mount -orw,remount / 2>/dev/null
 +			then
 +				echo "Cannot mount the file system in read/write." | tee -a $logfile
@@ -18555,7 +18485,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +			/usr/bin/dos2unix $mntdir/autoexec 2>&1 | tee -a $logfile
 +			/bin/cp $mntdir/autoexec /usr/bin/autoexec 2>&1 | tee -a $logfile
 +			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
-+			echo " Autoexec file '$mntdir/autoexec' updated!" | tee -a $logfile
++			echo " Autoexec file '$mntdir/autoexec' was updated." | tee -a $logfile
 +			echo "AUTOEXEC" >> $UPDATE_DESCR_FILE
 +			killall splash
 +			/bin/mount -oro,remount / 2>/dev/null
@@ -18564,38 +18494,39 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	fi
 +	#Sync for ubifs
 +	/bin/sync
-+	if [ -n "$usbdev" ]
-+	then
-+		/bin/umount $mntdir
-+	fi
++	test -n "$usbdev" && /bin/umount $mntdir
 +
 +	echo "  Done."
 +}
 +
 +stop() {
-+#echo -n "Shutting down 'S10setup'... "
-+#start-stop-daemon  -K -q -x /usr/bin/S10setup
-+echo "Done."
++	#echo -n "Shutting down 'S10setup'... "
++	#start-stop-daemon  -K -q -x /usr/bin/S10setup
++	echo "Done."
 +}
 +
 +restart() {
-+stop
-+sleep 1
-+start
++	stop
++	sleep 1
++	start
 +}
 +
 +case "$1" in
-+start)
-+	start
-+;;
-+stop)
-+	stop
-+;;
-+restart)
-+	restart
-+;;
-+*)
-+  echo $"Usage: $0 {start|stop|restart}"
++	start)
++		start
++	;;
++
++	stop)
++		stop
++	;;
++
++	restart)
++		restart
++	;;
++
++	*)
++		echo $"Usage: $0 {start|stop|restart}"
++
 +		exit 1
 +	;;
 +esac

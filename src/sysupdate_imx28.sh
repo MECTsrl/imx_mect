@@ -1,114 +1,123 @@
-#!/bin/sh -x
+#!/bin/sh
 
-# create a new sysupdate:
-# 1. update UPDATEABLE_VERSIONS
-# 2. run make_sysupdate.sh
-#
+# Execution trace
+set -x
 
-# from /etc/rc.d/init.d/S10setup
+# Set in /etc/rc.d/init.d/S10setup
 mntdir=/tmp/mnt
 
+# Non-empty argument means to print that as error message and to exit with an error code.
 do_exit()
 {
 	sync 2>&1 | tee /dev/tty1
-	echo "******************************************" | tee /dev/tty1
-	echo "* Please power off and remove the usbkey *" | tee /dev/tty1
-	echo "******************************************" | tee /dev/tty1
-	while true; do read -rp ""; done
+
+	test -n "$1" && echo "SYSUPDATE ERROR: $1" | tee /dev/tty1
+	echo "" | tee /dev/tty1
+	echo "*******************************************************" | tee /dev/tty1
+	echo "* Please power off and remove the USB storage device. *" | tee /dev/tty1
+	echo "*******************************************************" | tee /dev/tty1
+
+	while true; do
+		read -rp ""
+	done
+
+	if test -n "$1"; then
+		exit 1
+	else
+		exit 0
+	fi
 }
 
-# stop as much as possible
+if ! test -r /rootfs_version; then
+	do_exit "malformed root file system."
+fi
+
+# Stop most of the running processes.
 /etc/rc.d/init.d/autoexec stop
 /etc/rc.d/init.d/crond stop
 /etc/rc.d/init.d/boa stop
 /etc/rc.d/init.d/inetd stop
 
-eval `grep Target /rootfs_version | awk '{print "TARGET="$2}'`
-echo "Starting update to version 2.0.9rc11 (on target $TARGET)" | tee /dev/tty1
+# Collect info on installed system
+#
 
-# check the running version
-UPDATEABLE_VERSIONS="2.0rc4 2.0.1 2.0.2 2.0.3 2.0.5 2.0.6 2.0.7 2.0.8 2.0.9 2.0.9rc4 2.0.9rc5 2.0.9rc6 2.0.9rc7 2.0.9rc8 2.0.9rc9"
-if [ ! -f /rootfs_version ]
-then
-	echo SYSUPDATE ERROR: unknown root filesystem. | tee /dev/tty1
-	do_exit
-fi
-OK=0
-eval `grep Release /rootfs_version | awk '{print "RELEASE="$2}'`
-for version in $UPDATEABLE_VERSIONS
-do
-	if [ "$version" = "$RELEASE" ]
-	then
-		OK=1
-	fi
-done
-if [ $OK = 0 ]
-then
-	echo SYSUPDATE ERROR: cannot update $RELEASE. | tee /dev/tty1
-	do_exit
+# Image version
+RELEASE="`awk '/^Release/ { print $2; }' /rootfs_version`"
+if test -z "$RELEASE"; then
+	do_exit "cannot find the installed version."
 fi
 
-# extract (uudecode) the update archive into the usb key
-echo Extracting the update archive ... | tee /dev/tty1
+# Target system type
+TARGET="`awk '/^Target/ { print $2; }' /rootfs_version`"
+if test -z "$TARGET"; then
+	do_exit "cannot find the system type."
+fi
+
+# Check the compatibility of the update with the installed version.
+if ! expr "$RELEASE" : 2\\.0 > /dev/null; then
+	do_exit "cannot update installed version ${RELEASE}."
+fi
+
+# Start the update.
+#
+
+echo "Updating the $TARGET to version @@THIS_VERSION@@." | tee /dev/tty1
+
+# Extract (uudecode) the update archive from the USB storage device.
+echo "Extracting the update archive..." | tee /dev/tty1
 uudecode $0 2>&1 | tee /dev/tty1
-echo done. 2>&1 | tee /dev/tty1
-
-# expanding (tar x) the update archive into the usb key
-if [ ! -s ${mntdir}/update.tar.gz ]
-then
-	echo SYSUPDATE ERROR: cannot find any update archive | tee /dev/tty1
-	do_exit
+if ! test -s ${mntdir}/update.tar.gz; then
+	do_exit "update archive extraction failed."
 fi
-echo Expanding the update archive ... | tee /dev/tty1
-tar xzf ${mntdir}/update.tar.gz -C ${mntdir}/ 2>&1 | tee /dev/tty1
-rm -f ${mntdir}/update.tar.gz 2>&1 | tee /dev/tty1
-echo done. 2>&1 | tee /dev/tty1
+echo "done." | tee /dev/tty1
 
-# check the update content wrt the running target
-if [ ! -d ${mntdir}/${TARGET} ]
-then
-	echo SYSUPDATE ERROR: cannot find any update content for ${TARGET} | tee /dev/tty1
-	# don't know how to clean the usb key
-	do_exit
+# Expand (tar x) the update archive on the USB storage device
+rm -rf ${mntdir}/${TARGET}
+echo "Expanding the update archive..." | tee /dev/tty1
+tar xzf ${mntdir}/update.tar.gz -C ${mntdir} 2>&1 | tee /dev/tty1
+rm -f ${mntdir}/update.tar.gz
+echo "done." | tee /dev/tty1
+
+# Check if we have an update for the running target.
+if ! test -d ${mntdir}/${TARGET}; then
+	# TODO: extract under a specific directory on the USB
+	# storage device and remove that directory here.
+	do_exit "cannot find an update for ${TARGET}."
 fi
 
-# kernel update
-if [ -e ${mntdir}/${TARGET}/imx28_ivt_linux.sb ]
-then
-	echo Updating the Linux kernel ... | tee /dev/tty1
-	if [ ! -x ${mntdir}/kobs-ng ]
-	then
-		echo SYSUPDATE ERROR: cannot find "${mntdir}/kobs-ng" | tee /dev/tty1
-		do_exit
+# Update the kernel.
+if test -s ${mntdir}/${TARGET}/imx28_ivt_linux.sb; then
+	if ! test -x ${mntdir}/kobs-ng; then
+		do_exit "cannot find \"${mntdir}/kobs-ng.\""
 	fi
-	flash_eraseall /dev/mtd0  2>&1 | tee /dev/tty1
+
+	echo "Updating the Linux kernel..." | tee /dev/tty1
+	flash_eraseall /dev/mtd0 2>&1 | tee /dev/tty1
 	${mntdir}/kobs-ng init ${mntdir}/${TARGET}/imx28_ivt_linux.sb 2>&1 | tee /dev/tty1
-	rm -f ${mntdir}/kobs-ng 2>&1 | tee /dev/tty1
-	echo done. 2>&1 | tee /dev/tty1
+	rm -f ${mntdir}/kobs-ng
+	echo "done." | tee /dev/tty1
 fi
 
-# rootfs update
-if [ -e ${mntdir}/${TARGET}/rootfs.tar ]
-then
-	echo Updating the root filesystem ... | tee /dev/tty1
-	# we already are in rw mode, see /etc/rc.d/init.d/S10setup
+# Update the root file system.
+if test -s ${mntdir}/${TARGET}/rootfs.tar; then
+	echo "Updating the root file system..." | tee /dev/tty1
+	# We already are in RW mode, see /etc/rc.d/init.d/S10setup
 	tar xf ${mntdir}/${TARGET}/rootfs.tar -C / 2>&1 | tee /dev/tty1
 	/sbin/ldconfig -r / 2>&1 | tee /dev/tty1
-	echo done. 2>&1 | tee /dev/tty1
+	echo "done." | tee /dev/tty1
 fi
 
-# localfs update
-if [ -e ${mntdir}/${TARGET}/localfs.tar ]
-then
-	echo Updating the local filesystem ... | tee /dev/tty1
+# Update the local file system.
+if test -s ${mntdir}/${TARGET}/localfs.tar; then
+	echo "Updating the local file system..." | tee /dev/tty1
 	tar xf ${mntdir}/${TARGET}/localfs.tar -C /local 2>&1 | tee /dev/tty1
-	echo done. 2>&1 | tee /dev/tty1
+	echo "done." | tee /dev/tty1
 fi
 
-# usb key cleanup
+# Clean the USB storage device.
 rm -rf ${mntdir}/${TARGET}
 
-# exiting
-echo ""  | tee /dev/tty1
-echo "SYSUPDATE DONE" | tee /dev/tty1
+# Exit
+echo "" | tee /dev/tty1
+echo "System updated successfully." | tee /dev/tty1
 do_exit

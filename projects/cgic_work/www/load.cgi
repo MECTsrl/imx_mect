@@ -33,8 +33,6 @@ CONFIG_DIR="AC3_STRATEGIES"
 PWDFILE="$WWW_DIR/.passwd"
 SESSIONFILE="/tmp/.session"
 
-FACTORY_DATA="/local/factory_data.tar.gz"
-#FACTORY_PWD="/local/factory_pwd.tar.gz"
 NETCONF="/local/etc/sysconfig/net.conf"
 MACCONF="/etc/mac.conf"
 SERIALCONF="/etc/serial.conf"

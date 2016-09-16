@@ -1,7 +1,7 @@
 export LC_ALL := C
 
 # MECT Suite version
-export MECT_BUILD_RELEASE := 2.0.10rc1
+export MECT_BUILD_RELEASE := 2.0.10rc2
 
 # imx_mect branch used by ltib_update make target
 # If empty it points to 'master'
@@ -13,21 +13,21 @@ export MECT_BUILD_RELEASE := 2.0.10rc1
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := master
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_ATCMCRT_TAG := v1.016
+export MECT_BUILD_ATCMCRT_TAG := v1.018
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_CAN_BRANCH := base_2
-MECT_BUILD_ATCMCRT_CAN_REV := 190
+MECT_BUILD_ATCMCRT_CAN_REV := 193
 MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := master
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_PLUGINSCRT_TAG := 0.0
+export MECT_BUILD_PLUGINSCRT_TAG := v7.038
 
 # git branch and tag for the mect_apps project
 MECT_BUILD_APPSCRT_BRANCH := master
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_APPSCRT_TAG := 0.0
+export MECT_BUILD_APPSCRT_TAG := v2.0.10rc1
 
 # Mandatory prefix for all target device names.
 MECT_TARGET_PREFIX := MECT_
@@ -217,7 +217,6 @@ MECT_COMMON_RFSPKGS := $(MECT_COMMON_RFSPKGS:%=$(MECT_RPMDIR)/%)
 MECT_COMMON_LFSPKGS := \
 	merge-lfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 	local-1.0-1.$(MECT_TARGET_ARCH).rpm \
-	local-factory_data-1.0-1.$(MECT_TARGET_ARCH).rpm \
 
 MECT_COMMON_LFSPKGS := $(MECT_COMMON_LFSPKGS:%=$(MECT_RPMDIR)/%)
 
@@ -740,6 +739,7 @@ target_mfg_upd:
 	rm -f $(MECT_MFGZIP); cd $(MECT_MFGDIR); zip -0r $(MECT_MFGZIP) *
 	rm -rf $(MECT_SYSUPD) $(MECT_SYSUPDIR)
 	install -m 755 $(MECT_SYSUPD_TMPL) $(MECT_SYSUPD)
+	sed -i "s/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/" $(MECT_SYSUPD)
 	mkdir -p $(MECT_SYSUPDIR)
 	install -m 755 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/..
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_SYSUPDIR)

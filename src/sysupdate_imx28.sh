@@ -117,7 +117,10 @@ fi
 # Clean the USB storage device.
 rm -rf ${mntdir}/${TARGET}
 
+echo "Recording all file system changes..." | tee /dev/tty1
+sync 2>&1 | tee /dev/tty1
+echo "done." | tee /dev/tty1
+
 # Exit
-echo "" | tee /dev/tty1
-echo "System updated successfully." | tee /dev/tty1
+( echo ""; echo "System update succeeded." ) | tee /dev/tty1
 do_exit

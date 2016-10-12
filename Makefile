@@ -725,8 +725,10 @@ target_mfg_upd: MECT_SYSUPDIR = $(shell readlink -m $(MECT_MFGDIR)/../../$(MECT_
 target_mfg_upd: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 target_mfg_upd: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 target_mfg_upd: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
+target_mfg_upd: MECT_TMPFILE := $(shell mktemp)
 target_mfg_upd:
 	test -n '$(MECT_BUILD_TARGET)'
+	test -n '$(MECT_TMPFILE)' -a -f $(MECT_TMPFILE)
 	sudo rm -rf $(MECT_MFGDIR)
 	mkdir -p $(MECT_MFGDIR)/'OS firmware'/img $(MECT_MFGDIR)/'OS firmware'/sys $(MECT_TGTDIR)
 	sed "s/@@PLAYER@@/$(shell basename $(MECT_MFGDIR))/" $(MECT_FTPDIR)/player.ini > $(MECT_MFGDIR)/player.ini
@@ -743,7 +745,8 @@ target_mfg_upd:
 	mkdir -p $(MECT_SYSUPDIR)
 	install -m 755 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/..
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_SYSUPDIR)
-	install -m 644 $(MECT_MFGDIR)/'OS firmware'/img/rootfs.tar $(MECT_SYSUPDIR)
+	cd $(MECT_RFSDIR); if test -d local; then sudo find local -print | grep -v '^local$$' > $(MECT_TMPFILE); fi
+	sudo tar cf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_RFSDIR) . -X $(MECT_TMPFILE)
 	tar cf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_LFSDIR) . \
 		--exclude=./flash/etc/sysconfig \
 		--exclude=./flash/root/hmi \
@@ -755,6 +758,7 @@ target_mfg_upd:
 		--exclude=./flash/etc/icinga/nrpe.cfg
 	GZIP=-9 tar czf - -C $(MECT_SYSUPDIR)/.. $(MECT_BUILD_TARGET) $(shell basename $(MECT_KOBS_TMPL)) | uuencode $(MECT_UPDATE_ARCH) >> $(MECT_SYSUPD)
 	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_SYSUPDIR) $(shell readlink -m $(MECT_SYSUPDIR)/../$(shell basename $(MECT_KOBS_TMPL))) $(MECT_TGTDIR)
+	rm -f $(MECT_TMPFILE)
 
 # Build the archive for target-specific development.
 .PHONY: target_dev

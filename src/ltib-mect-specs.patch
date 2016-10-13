@@ -3696,7 +3696,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3715,7 +3715,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3734,7 +3734,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3753,7 +3753,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3772,7 +3772,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3791,7 +3791,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3810,7 +3810,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3829,7 +3829,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3848,7 +3848,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3867,7 +3867,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3886,7 +3886,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3905,7 +3905,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3924,7 +3924,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3943,7 +3943,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3962,7 +3962,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Empty_HMI.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -3982,7 +3982,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Empty_HMI.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -4001,7 +4001,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -4020,7 +4020,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -4039,7 +4039,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -4058,7 +4058,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Empty_HMI.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -4077,7 +4077,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Empty_HMI.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -4096,7 +4096,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Simple.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -4115,7 +4115,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Empty_HMI.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -4134,7 +4134,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Empty_HMI.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -4153,7 +4153,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
 +		Empty_HMI.pro
-+	make -j`grep -c ^processor /proc/cpuinfo`
++	make -j1
 +
 +	cd -
 +fi
@@ -6907,7 +6907,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +112,166 @@
+@@ -31,24 +112,175 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -7037,7 +7037,16 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/etc/sysctl.conf
 +%{pfx}/etc/udhcpd.conf
 +%{pfx}/lib/modules
-+%{pfx}/local
++%{pfx}/local/control
++%{pfx}/local/data/alarms
++%{pfx}/local/data/customstore
++%{pfx}/local/data/recipe
++%{pfx}/local/data/store
++%{pfx}/local/data/trends
++%{pfx}/local/etc/sysconfig
++%{pfx}/local/root
++%{pfx}/local/sd_card
++%{pfx}/local/update
 +%{pfx}/mnt/cdrom
 +%{pfx}/mnt/floppy
 +%{pfx}/mnt/nfs

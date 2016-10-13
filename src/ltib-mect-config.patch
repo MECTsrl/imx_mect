@@ -18231,7 +18231,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/S10setup
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/S10setup
-@@ -0,0 +1,301 @@
+@@ -0,0 +1,298 @@
 +#!/bin/sh
 +#
 +# Load a new setup from USB or reset the PLC/CAN configurations.
@@ -18288,9 +18288,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	echo -n "Starting the configuration process...  "
 +	if [ `ls /local | grep sysupdate | wc -l` -gt  1 ]
 +	then
-+
 +		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
-+		echo "Error: multiple system update files." | tee -a $logfile
++		echo "Error: more than one system update file." | tee -a $logfile
 +		if [ -x /usr/bin/splash ]
 +		then
 +			killall splash
@@ -18302,9 +18301,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +	elif [ `ls /local | grep sysupdate | wc -l` -eq  1 ]
 +	then
-+
 +		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
-+		echo "System update found." | tee -a $logfile
++		echo " System update found." | tee -a $logfile
 +		countsys=1
 +		sysupdatename=`ls /local | grep sysupdate`
 +		if ! /bin/mount -orw,remount / 2>/dev/null
@@ -18324,11 +18322,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		/bin/sh /local/$sysupdatename 2>&1 | tee -a $logfile
 +		if [ $? == 0 ]
 +		then
-+			echo "Applied update '/local/$sysupdatename'." | tee -a $logfile
++			echo " Applied the system update '/local/$sysupdatename'." | tee -a $logfile
 +			rm -f /local/$sysupdatename
 +			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
 +		else
-+			echo "Cannot apply update '/local/$sysupdatename'." | tee -a $logfile
++			echo " Cannot apply the system update '/local/$sysupdatename'." | tee -a $logfile
 +		fi
 +		killall splash
 +		/bin/mount -oro,remount / 2>/dev/null
@@ -18341,9 +18339,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +	elif [ `ls $mntdir | grep sysupdate_ | wc -l` -eq  1 ]
 +	then
-+
 +		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
-+		echo "System update found." | tee -a $logfile
++		echo " System update found." | tee -a $logfile
 +		if [ -x /usr/bin/splash ]
 +		then
 +			killall splash
@@ -18368,7 +18365,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		/bin/sh $mntdir/$sysupdatename 2>&1 | tee -a $logfile
 +		if [ $? == 0 ]
 +		then
-+			echo "Applied update '$mntdir/$sysupdatename'." | tee -a $logfile
++			echo " Applied the system update '$mntdir/$sysupdatename'." | tee -a $logfile
 +			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
 +			if [ -x /usr/bin/splash ]
 +			then
@@ -18376,7 +18373,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +				/usr/bin/splash -qws --text "<font color=\"green\"><h1>Update applied</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
 +		else
-+			echo "Cannot apply update '/local/$sysupdatename'." | tee -a $logfile
++			echo " Cannot apply the system update '/local/$sysupdatename'." | tee -a $logfile
 +			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
@@ -18389,9 +18386,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +	elif [ -f $mntdir/sysupdate.sh ] && [ $countsys -eq 0 ]
 +	then
-+
 +		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
-+		echo "Performing standard sysupdate." | tee -a $logfile
++		echo " Performing the standard system update." | tee -a $logfile
 +		if ! /bin/mount -orw,remount / 2>/dev/null
 +		then
 +			echo "Cannot mount the file system in read/write." | tee -a $logfile
@@ -18409,7 +18405,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		/bin/sh $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
 +		if [ $? == 0 ]
 +		then
-+			echo "Applied update '$mntdir/sysupdate.sh'." | tee -a $logfile
++			echo " Applied the system update '$mntdir/sysupdate.sh'." | tee -a $logfile
 +			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
 +			if [ -x /usr/bin/splash ]
 +			then
@@ -18417,7 +18413,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +				/usr/bin/splash -qws --text "<font color=\"green\"><h1>Update applied</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
 +		else
-+			echo "Cannot apply update '$mntdir/sysupdate.sh'." | tee -a $logfile
++			echo " Cannot apply the system update '$mntdir/sysupdate.sh'." | tee -a $logfile
 +			if [ -x /usr/bin/splash ]
 +			then
 +				killall splash
@@ -18438,10 +18434,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +				killall splash
 +				/usr/bin/splash -qws --text "<font color=\"green\"><h1>Found and applied the new 'system.ini' file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
-+			echo "Found a new configuration file '$mntdir/system.ini'" | tee -a $logfile
++			echo " Found a new configuration file '$mntdir/system.ini'" | tee -a $logfile
 +			/usr/bin/dos2unix $mntdir/system.ini 2>&1 | tee -a $logfile
 +			/bin/cp $mntdir/system.ini $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
-+			echo "Configuration file '$mntdir/system.ini' updated!" | tee -a $logfile
++			echo " Configuration file '$mntdir/system.ini' was updated." | tee -a $logfile
 +			echo "SYSTEM INI" >> $UPDATE_DESCR_FILE
 +			killall splash
 +			/bin/mount -oro,remount / 2>/dev/null
@@ -18455,10 +18451,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +				killall splash
 +				/usr/bin/splash -qws --text "<font color=\"green\"><h1>Found and applied the new 'net.conf' file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
-+			echo "Found a new network configuration file '$mntdir/net.conf'" | tee -a $logfile
++			echo " Found a new network configuration file '$mntdir/net.conf'" | tee -a $logfile
 +			/usr/bin/dos2unix $mntdir/net.conf 2>&1 | tee -a $logfile
 +			/bin/cp $mntdir/net.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
-+			echo "Network configuration file '$mntdir/net.conf' updated!" | tee -a $logfile
++			echo " Network configuration file '$mntdir/net.conf' was updated." | tee -a $logfile
 +			echo "NETWORK" >> $UPDATE_DESCR_FILE
 +			killall splash
 +			/bin/mount -oro,remount / 2>/dev/null
@@ -18472,7 +18468,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +				killall splash
 +				/usr/bin/splash -qws --text "<font color=\"blue\"><h1>Found a new 'autoexec' file.<BR>Updating...</h1></font>" --dimension 12 >/dev/null 2>&1 &
 +			fi
-+			echo "Found a new autoexec file file '$mntdir/autoexec'" | tee -a $logfile
++			echo " Found a new autoexec file '$mntdir/autoexec'" | tee -a $logfile
 +			if ! /bin/mount -orw,remount / 2>/dev/null
 +			then
 +				echo "Cannot mount the file system in read/write." | tee -a $logfile
@@ -18489,7 +18485,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +			/usr/bin/dos2unix $mntdir/autoexec 2>&1 | tee -a $logfile
 +			/bin/cp $mntdir/autoexec /usr/bin/autoexec 2>&1 | tee -a $logfile
 +			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
-+			echo "Autoexec file '$mntdir/autoexec' updated!" | tee -a $logfile
++			echo " Autoexec file '$mntdir/autoexec' was updated." | tee -a $logfile
 +			echo "AUTOEXEC" >> $UPDATE_DESCR_FILE
 +			killall splash
 +			/bin/mount -oro,remount / 2>/dev/null
@@ -18498,38 +18494,39 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	fi
 +	#Sync for ubifs
 +	/bin/sync
-+	if [ -n "$usbdev" ]
-+	then
-+		/bin/umount $mntdir
-+	fi
++	test -n "$usbdev" && /bin/umount $mntdir
 +
 +	echo "  Done."
 +}
 +
 +stop() {
-+#echo -n "Shutting down 'S10setup'... "
-+#start-stop-daemon  -K -q -x /usr/bin/S10setup
-+echo "Done."
++	#echo -n "Shutting down 'S10setup'... "
++	#start-stop-daemon  -K -q -x /usr/bin/S10setup
++	echo "Done."
 +}
 +
 +restart() {
-+stop
-+sleep 1
-+start
++	stop
++	sleep 1
++	start
 +}
 +
 +case "$1" in
-+start)
-+	start
-+;;
-+stop)
-+	stop
-+;;
-+restart)
-+	restart
-+;;
-+*)
-+  echo $"Usage: $0 {start|stop|restart}"
++	start)
++		start
++	;;
++
++	stop)
++		stop
++	;;
++
++	restart)
++		restart
++	;;
++
++	*)
++		echo $"Usage: $0 {start|stop|restart}"
++
 +		exit 1
 +	;;
 +esac

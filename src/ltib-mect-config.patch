@@ -16215,7 +16215,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +Patch50         : xenomai-2.6.0-rtu_srv.patch
 +Patch51         : xenomai-2.6.0-rtser_mect_rename_alarm.patch
 +Patch52         : xenomai-2.6.0-unsigned_nsec.patch
-+#Patch53         : xenomai-2.6.0-rtser_mect_use_xenomai_rs485_support.patch
++Patch53         : xenomai-2.6.0-rtser_mect_no_rts_on_internal_uart.patch
 +#Patch54         : xenomai-2.6.0-rtser_mect_flush.patch
 +Patch99         : xenomai-2.6.0-fix-scriptpath-calculation.patch
 +
@@ -16781,7 +16781,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +%patch50 -p1
 +%patch51 -p1
 +%patch52 -p1
-+#%patch53 -p1
++%patch53 -p1
 +#%patch54 -p1
 +%patch99 -p1
 +cd %{_builddir}/%{buildsubdir}

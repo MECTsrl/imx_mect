@@ -93,6 +93,11 @@ MECT_LTIB_KERNEL_TS_RPM = $(MECT_RPMDIR)/$(shell if test -x $(MECT_RPMBIN); then
 MECT_KERNEL_CONF := $(MECT_LTIBDIR)/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 # Script to update target file systems
 MECT_SYSUPD_TMPL := $(MECT_FTPDIR)/sysupdate_imx28.sh
+MECT_SYSUPD_TMPLALL := $(MECT_FTPDIR)/sysupdate_imx28_all.sh
+# System update archives for all targets
+MECT_SYSUPD_SHARALL = $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL.sh
+MECT_SYSUPD_TARALL = $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL.tar
+MECT_SYSUPD_DIRALL = $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL
 # Program to update target kernel
 MECT_KOBS_TMPL := $(MECT_FTPDIR)/kobs-ng
 # Full path to write the update archive on target
@@ -334,6 +339,7 @@ MECT_PACKAGES = \
 	openssl \
 	patch \
 	perl \
+	pigz \
 	qemu \
 	rpm \
 	sed \
@@ -585,7 +591,13 @@ endif
 # Recurse to properly evaluate the targets.
 .PHONY: images
 images:
+	rm -rf $(MECT_SYSUPD_SHARALL) $(MECT_SYSUPD_TARALL) $(MECT_SYSUPD_DIRALL)
+	mkdir -p $(MECT_SYSUPD_DIRALL)
+	tar cf $(MECT_SYSUPD_TARALL) -C $(shell dirname $(MECT_KOBS_TMPL)) $(shell basename $(MECT_KOBS_TMPL))
 	$(MAKE) $@_do
+	sed "s/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/" $(MECT_SYSUPD_TMPLALL) > $(MECT_SYSUPD_DIRALL)/$(shell basename $(MECT_SYSUPD_SHARALL))
+	tar xf $(MECT_SYSUPD_TARALL) -C $(MECT_SYSUPD_DIRALL)
+	rm -f $(MECT_SYSUPD_TARALL)
 
 images_do: $(MECT_DEFAULT_IMAGES)
 
@@ -756,7 +768,8 @@ target_mfg_upd:
 		--exclude=./var/spool/cron/crontabs/root \
 		--exclude=./flash/etc/ppp/chat-usb3g \
 		--exclude=./flash/etc/icinga/nrpe.cfg
-	GZIP=-9 tar czf - -C $(MECT_SYSUPDIR)/.. $(MECT_BUILD_TARGET) $(shell basename $(MECT_KOBS_TMPL)) | uuencode $(MECT_UPDATE_ARCH) >> $(MECT_SYSUPD)
+	GZIP=-9 tar cf - -I pigz -C $(MECT_SYSUPDIR)/.. $(MECT_BUILD_TARGET) $(shell basename $(MECT_KOBS_TMPL)) | uuencode $(MECT_UPDATE_ARCH) >> $(MECT_SYSUPD)
+	tar rf $(MECT_SYSUPD_TARALL) -C $(MECT_SYSUPDIR)/.. $(MECT_BUILD_TARGET)
 	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_SYSUPDIR) $(shell readlink -m $(MECT_SYSUPDIR)/../$(shell basename $(MECT_KOBS_TMPL))) $(MECT_TGTDIR)
 	rm -f $(MECT_TMPFILE)
 

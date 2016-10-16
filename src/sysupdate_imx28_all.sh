@@ -62,12 +62,6 @@ fi
 
 echo "Updating the $TARGET to version @@THIS_VERSION@@." | tee /dev/tty1
 
-# Extract the update archive to the USB storage device.
-echo "Extracting the update archive..." | tee /dev/tty1
-rm -rf ${mntdir}/${TARGET}
-( uudecode -o - $0 | tar xzf - -C $mntdir kobs-ng $TARGET ) 2>&1 | tee /dev/tty1
-echo "done." | tee /dev/tty1
-
 # Check if we have an update for the running target.
 if ! test -d ${mntdir}/${TARGET}; then
 	# TODO: extract under a specific directory on the USB
@@ -84,7 +78,6 @@ if test -s ${mntdir}/${TARGET}/imx28_ivt_linux.sb; then
 	echo "Updating the Linux kernel..." | tee /dev/tty1
 	flash_eraseall /dev/mtd0 2>&1 | tee /dev/tty1
 	${mntdir}/kobs-ng init ${mntdir}/${TARGET}/imx28_ivt_linux.sb 2>&1 | tee /dev/tty1
-	rm -f ${mntdir}/kobs-ng
 	echo "done." | tee /dev/tty1
 fi
 
@@ -103,9 +96,6 @@ if test -s ${mntdir}/${TARGET}/localfs.tar; then
 	tar xf ${mntdir}/${TARGET}/localfs.tar -C /local 2>&1 | tee /dev/tty1
 	echo "done." | tee /dev/tty1
 fi
-
-# Clean the USB storage device.
-rm -rf ${mntdir}/${TARGET}
 
 echo "Recording all file system changes..." | tee /dev/tty1
 sync 2>&1 | tee /dev/tty1

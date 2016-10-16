@@ -96,7 +96,6 @@ MECT_SYSUPD_TMPL := $(MECT_FTPDIR)/sysupdate_imx28.sh
 MECT_SYSUPD_TMPLALL := $(MECT_FTPDIR)/sysupdate_imx28_all.sh
 # System update archives for all targets
 MECT_SYSUPD_SHARALL = $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL.sh
-MECT_SYSUPD_TARALL = $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL.tar
 MECT_SYSUPD_DIRALL = $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL
 # Program to update target kernel
 MECT_KOBS_TMPL := $(MECT_FTPDIR)/kobs-ng
@@ -591,13 +590,11 @@ endif
 # Recurse to properly evaluate the targets.
 .PHONY: images
 images:
-	rm -rf $(MECT_SYSUPD_SHARALL) $(MECT_SYSUPD_TARALL) $(MECT_SYSUPD_DIRALL)
+	rm -rf $(MECT_SYSUPD_SHARALL) $(MECT_SYSUPD_DIRALL)
 	mkdir -p $(MECT_SYSUPD_DIRALL)
-	tar cf $(MECT_SYSUPD_TARALL) -C $(shell dirname $(MECT_KOBS_TMPL)) $(shell basename $(MECT_KOBS_TMPL))
+	install -m 644 $(MECT_KOBS_TMPL) $(MECT_SYSUPD_DIRALL)
 	$(MAKE) $@_do
 	sed "s/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/" $(MECT_SYSUPD_TMPLALL) > $(MECT_SYSUPD_DIRALL)/$(shell basename $(MECT_SYSUPD_SHARALL))
-	tar xf $(MECT_SYSUPD_TARALL) -C $(MECT_SYSUPD_DIRALL)
-	rm -f $(MECT_SYSUPD_TARALL)
 
 images_do: $(MECT_DEFAULT_IMAGES)
 
@@ -737,10 +734,9 @@ target_mfg_upd: MECT_SYSUPDIR = $(shell readlink -m $(MECT_MFGDIR)/../../$(MECT_
 target_mfg_upd: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 target_mfg_upd: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 target_mfg_upd: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
-target_mfg_upd: MECT_TMPFILE := $(shell mktemp)
 target_mfg_upd:
-	test -n '$(MECT_BUILD_TARGET)'
-	test -n '$(MECT_TMPFILE)' -a -f $(MECT_TMPFILE)
+	test -n '$(MECT_BUILD_TARGET)' -a -n '$(MECT_SYSUPD_DIRALL)'
+	test -d $(MECT_SYSUPD_DIRALL)
 	sudo rm -rf $(MECT_MFGDIR)
 	mkdir -p $(MECT_MFGDIR)/'OS firmware'/img $(MECT_MFGDIR)/'OS firmware'/sys $(MECT_TGTDIR)
 	sed "s/@@PLAYER@@/$(shell basename $(MECT_MFGDIR))/" $(MECT_FTPDIR)/player.ini > $(MECT_MFGDIR)/player.ini
@@ -757,21 +753,20 @@ target_mfg_upd:
 	mkdir -p $(MECT_SYSUPDIR)
 	install -m 755 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/..
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_SYSUPDIR)
-	cd $(MECT_RFSDIR); if test -d local; then sudo find local -print | grep -v '^local$$' > $(MECT_TMPFILE); fi
-	sudo tar cf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_RFSDIR) . -X $(MECT_TMPFILE)
-	tar cf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_LFSDIR) . \
-		--exclude=./flash/etc/sysconfig \
-		--exclude=./flash/root/hmi \
-		--exclude=./flash/control \
-		--exclude=./retentive \
-		--exclude=./flash/data \
-		--exclude=./var/spool/cron/crontabs/root \
-		--exclude=./flash/etc/ppp/chat-usb3g \
-		--exclude=./flash/etc/icinga/nrpe.cfg
+	sudo rm -rf $(MECT_RFSDIR)/local/*
+	sudo tar cf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_RFSDIR) .
+	cd $(MECT_LFSDIR); sudo rm -rf flash/etc/sysconfig \
+		flash/root/hmi \
+		flash/control \
+		retentive \
+		flash/data \
+		var/spool/cron/crontabs/root \
+		flash/etc/ppp/chat-usb3g \
+		flash/etc/icinga/nrpe.cfg
+	tar cf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_LFSDIR) .
 	GZIP=-9 tar cf - -I pigz -C $(MECT_SYSUPDIR)/.. $(MECT_BUILD_TARGET) $(shell basename $(MECT_KOBS_TMPL)) | uuencode $(MECT_UPDATE_ARCH) >> $(MECT_SYSUPD)
-	tar rf $(MECT_SYSUPD_TARALL) -C $(MECT_SYSUPDIR)/.. $(MECT_BUILD_TARGET)
+	mv $(MECT_SYSUPDIR)/../$(MECT_BUILD_TARGET) $(MECT_SYSUPD_DIRALL)
 	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_SYSUPDIR) $(shell readlink -m $(MECT_SYSUPDIR)/../$(shell basename $(MECT_KOBS_TMPL))) $(MECT_TGTDIR)
-	rm -f $(MECT_TMPFILE)
 
 # Build the archive for target-specific development.
 .PHONY: target_dev

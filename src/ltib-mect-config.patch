@@ -16142,7 +16142,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  Summary         : Linux kernel (core of the Linux operating system)
  Name            : kernel
-@@ -12,22 +14,652 @@
+@@ -12,22 +14,654 @@
  Packager        : Rob Herring
  Group           : System Environment/Kernel
  Source          : %{pkg_name}-%{version}.tar.bz2
@@ -16217,6 +16217,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +Patch52         : xenomai-2.6.0-unsigned_nsec.patch
 +Patch53         : xenomai-2.6.0-rtser_mect_no_rts_on_internal_uart.patch
 +#Patch54         : xenomai-2.6.0-rtser_mect_flush.patch
++Patch55         : xenomai-2.6.0-rtser_mect_gpio.patch
 +Patch99         : xenomai-2.6.0-fix-scriptpath-calculation.patch
 +
 +# Generic kernel patches
@@ -16783,6 +16784,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +%patch52 -p1
 +%patch53 -p1
 +#%patch54 -p1
++#%patch55 -p1
 +%patch99 -p1
 +cd %{_builddir}/%{buildsubdir}
 +

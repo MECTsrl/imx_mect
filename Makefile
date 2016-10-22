@@ -764,7 +764,10 @@ target_mfg_upd:
 		flash/etc/icinga/nrpe.cfg
 	tar cf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_LFSDIR) .
 	GZIP=-9 tar cf - -I pigz -C $(MECT_SYSUPDIR)/.. $(MECT_BUILD_TARGET) $(shell basename $(MECT_KOBS_TMPL)) | uuencode $(MECT_UPDATE_ARCH) >> $(MECT_SYSUPD)
-	if test -n '$(MECT_SYSUPD_DIRALL)' -a -d '$(MECT_SYSUPD_DIRALL)'; then mv $(MECT_SYSUPDIR)/../$(MECT_BUILD_TARGET) $(MECT_SYSUPD_DIRALL); fi
+	if test -n '$(MECT_SYSUPD_DIRALL)' -a -d '$(MECT_SYSUPD_DIRALL)'; then \
+		sudo rm -rf $(MECT_SYSUPD_DIRALL)/$(MECT_BUILD_TARGET); \
+		mv $(MECT_SYSUPDIR)/../$(MECT_BUILD_TARGET) $(MECT_SYSUPD_DIRALL); \
+	fi
 	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_SYSUPDIR) $(shell readlink -m $(MECT_SYSUPDIR)/../$(shell basename $(MECT_KOBS_TMPL))) $(MECT_TGTDIR)
 
 # Build the archive for target-specific development.

@@ -848,7 +848,7 @@ clean: clean_projects
 
 .PHONY: distclean
 distclean: clean
-	which ccache && ccache -C
+	if which ccache; then ccache -C; fi
 	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIBDIR_REF)
 
 

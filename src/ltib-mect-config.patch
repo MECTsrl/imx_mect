@@ -19106,11 +19106,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/openvpn ltib/config/platform/imx/merge/etc/rc.d/init.d/openvpn
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/openvpn
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/openvpn
-@@ -0,0 +1,54 @@
+@@ -0,0 +1,57 @@
 +#!/bin/sh
 +
 +EXE=/usr/sbin/openvpn
-+CONFD=/etc/openvpn/
++CONFD=/etc/openvpn
 +CONFEXT="conf ovpn"
 +PIDD=/var/run
 +
@@ -19119,7 +19119,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	test -d "$CONFD" || exit 1
 +	test -d "$PIDD" || exit 1
 +
-+	for e in "$CONFEXT"; do
++	for e in $CONFEXT; do
 +		for c in "$CONFD"/*.$e; do
 +			test -r "$c" || continue
 +
@@ -19134,10 +19134,13 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +}
 +
 +stop() {
-+	test -r "$PID" || exit 0
-+	test -d /proc/$(/bin/cat "$PID") || exit 1
++        for pid in "" "$PIDD/$(/usr/bin/basename $EXE)-"*.pid; do
++                test -n "$pid" || continue
++                test -r "$pid" || continue
++                test -d /proc/$(/bin/cat "$pid") || continue
 +
-+	kill $(/bin/cat "$PID")
++                kill $(/bin/cat "$pid")
++        done
 +}
 +
 +case "$1" in

@@ -6,7 +6,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : v1.018
++Version         : v1.025
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -105,7 +105,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : v1.018
++Version         : v1.025
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3302,7 +3302,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v2.0.10rc1
++Version         : v2.0.11rc2
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -4780,7 +4780,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v7.038
++Version: v7.043
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

@@ -1,5 +1,6 @@
 .*.swp
 *.o
+tmp
 images
 ltib.reference
 ltib

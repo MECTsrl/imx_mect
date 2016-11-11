@@ -4,19 +4,19 @@ export LC_ALL := C
 export MECT_BUILD_RELEASE := 2.0.10rc2
 
 # imx_mect branch used by ltib_update make target
-# Points to "master" if empty.
+# If empty it points to 'master'
 #MECT_BUILD_IMXMECT_BRANCH := mect_suite_2.0
 # imx_mect tag used by ltib_update make target
-# Checkout HEAD if set to "0.0".
+# Set to 0.0 to checkout HEAD
 #MECT_BUILD_IMXMECT_TAG := 0.0
 
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := master
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_ATCMCRT_TAG := v1.018
+export MECT_BUILD_ATCMCRT_TAG := v1.025
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_CAN_BRANCH := base_2
-MECT_BUILD_ATCMCRT_CAN_REV := 193
+MECT_BUILD_ATCMCRT_CAN_REV := 201
 MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
 # git branch and tag for the mect_plugins project
@@ -57,17 +57,17 @@ MECT_USER_NAME := "Embedded developer"
 MECT_HOST_NAME := "development.localdomain"
 
 # Download the archives here.
-export MECT_FTPDIR = $(CURDIR)/src
+export MECT_FTPDIR := $(CURDIR)/src
 # LTIB is installed here.
-MECT_LTIBDIR = $(CURDIR)/ltib
+MECT_LTIBDIR := $(CURDIR)/ltib
 # LTIB (config and dist) before MECT patches is saved here.
-MECT_LTIBDIR_REF = $(CURDIR)/ltib.reference
+MECT_LTIBDIR_REF := $(CURDIR)/ltib.reference
 # LTIB (config and dist) on which to apply current patches.
-MECT_LTIBDIR_PATCH = $(CURDIR)/ltib.patched
+MECT_LTIBDIR_PATCH := $(CURDIR)/ltib.patched
 # LTIB rootfs is created here.
 export MECT_LTIB_RFSDIR = $(MECT_LTIBDIR)/rootfs
 # Unpack the archives here.
-MECT_TMPDIR = $(CURDIR)/tmp
+MECT_TMPDIR := $(CURDIR)/tmp
 # Archive repository
 MECT_FTPURL := http://www.mect.it/archive
 # Hardcoded Freescale directory
@@ -77,13 +77,15 @@ MECT_FSBINDIR := /opt/freescale/ltib/usr/bin
 # LTIB RPM binary
 export MECT_RPMBIN = $(MECT_FSBINDIR)/rpm
 # RPM archive
-export MECT_RPMBASEDIR = $(CURDIR)/ltib/rpm
+export MECT_RPMBASEDIR := $(CURDIR)/ltib/rpm
 MECT_RPMBUILDDIR = $(MECT_RPMBASEDIR)/BUILD
 export MECT_RPMDIR = $(MECT_RPMBASEDIR)/RPMS/$(MECT_TARGET_ARCH)
-# Top-level directory of target device images
-MECT_IMGDIR = $(CURDIR)/images
+# Top-level directory for target image build receipts
+MECT_MKIMGDIR := $(CURDIR)/targets
+# Top-level directory fo target device images
+MECT_IMGDIR := $(CURDIR)/images
 # Projects directory
-MECT_PRJDIR = $(CURDIR)/projects
+MECT_PRJDIR := $(CURDIR)/projects
 # Utility to compare current target images with a given reference set.
 MECT_IMG_TESTER = $(MECT_FTPDIR)/image-tester.sh
 # Staging directory for image test
@@ -559,10 +561,10 @@ image: $(MECT_DEFAULT_IMAGE)
 # Rules to build target root file systems
 #
 
-MECT_DEFAULT_IMAGES := \
-	TP1043_232 \
-	TP1043_485 \
-	TP1057 \
+MECT_IMAGES := \
+	TP1043_01_A \
+	TP1043_01_C \
+	TP1057_01_A \
 	TP1070_01_A \
 	TP1070_01_C \
 	TP1070_01_D \
@@ -570,26 +572,29 @@ MECT_DEFAULT_IMAGES := \
 	TPAC1007_04_AA \
 	TPAC1007_04_AB \
 	TPAC1007_04_AC \
+	TPAC1007_LV \
 
 ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
-MECT_DEFAULT_IMAGES += \
-	TP1043_CAN \
-	TP1057_CAN \
-	TP1070_01_B \
-	TPAC1006 \
-	TPAC1006_GSM \
-	TPAC1006_HR \
-	TPAC1008_01 \
-	TPAC1008_02_AA \
-	TPAC1008_02_AB \
-	TPAC1008_02_AC \
-	TPAC1008_02_AD \
-	TPAC1008_02_AE \
-	TPAC1008_02_AF \
-	TPLC100 \
-	TPLC150 \
+
+	MECT_IMAGES += \
+		TP1043_01_B \
+		TP1057_01_B \
+		TP1070_01_B \
+		TPAC1006 \
+		TPAC1008_01 \
+		TPAC1008_02_AA \
+		TPAC1008_02_AB \
+		TPAC1008_02_AC \
+		TPAC1008_02_AD \
+		TPAC1008_02_AE \
+		TPAC1008_02_AF \
+		TPLC100 \
+		TPLC150 \
 
 endif
+
+# Image-specific settings and targets
+$(foreach img,$(MECT_IMAGES),$(eval include $(MECT_MKIMGDIR)/Makefile-$(img).in))
 
 # Generate all manufacturing images.
 #
@@ -603,35 +608,7 @@ images:
 	$(MAKE) $@_do
 	sed "s/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/" $(MECT_SYSUPD_TMPLALL) > $(MECT_SYSUPD_DIRALL)/$(shell basename $(MECT_SYSUPD_SHARALL))
 
-images_do: $(MECT_DEFAULT_IMAGES)
-
-
-# Image-specific settings and targets
-include targets/Makefile-TP1043_232.in
-include targets/Makefile-TP1043_485.in
-include targets/Makefile-TP1043_CAN.in
-include targets/Makefile-TP1057.in
-include targets/Makefile-TP1057_CAN.in
-include targets/Makefile-TP1070_01_A.in
-include targets/Makefile-TP1070_01_B.in
-include targets/Makefile-TP1070_01_C.in
-include targets/Makefile-TP1070_01_D.in
-include targets/Makefile-TPAC1006.in
-include targets/Makefile-TPAC1006_GSM.in
-include targets/Makefile-TPAC1006_HR.in
-include targets/Makefile-TPAC1007_03.in
-include targets/Makefile-TPAC1007_04_AA.in
-include targets/Makefile-TPAC1007_04_AB.in
-include targets/Makefile-TPAC1007_04_AC.in
-include targets/Makefile-TPAC1008_01.in
-include targets/Makefile-TPAC1008_02_AA.in
-include targets/Makefile-TPAC1008_02_AB.in
-include targets/Makefile-TPAC1008_02_AC.in
-include targets/Makefile-TPAC1008_02_AD.in
-include targets/Makefile-TPAC1008_02_AE.in
-include targets/Makefile-TPAC1008_02_AF.in
-include targets/Makefile-TPLC100.in
-include targets/Makefile-TPLC150.in
+images_do: $(MECT_IMAGES)
 
 # Common target rules
 #

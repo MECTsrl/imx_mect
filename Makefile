@@ -29,8 +29,10 @@ MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
 export MECT_BUILD_APPSCRT_TAG := v2.0.11rc2
 
-# Mandatory prefix for all target device names.
+# Mandatory prefix for all target device names
 MECT_TARGET_PREFIX := MECT_
+# Release prefix for image files
+MECT_REL_PREFIX := _ms
 
 # Name of the default target device image that is part of the default build.
 MECT_DEFAULT_IMAGE := TPAC1007_04_AA
@@ -84,6 +86,12 @@ MECT_MKIMGDIR := $(CURDIR)/targets
 MECT_IMGDIR := $(CURDIR)/images
 # Projects directory
 MECT_PRJDIR := $(CURDIR)/projects
+# Utility to compare current target images with a given reference set.
+MECT_IMG_TESTER = $(MECT_FTPDIR)/image-tester.sh
+# Staging directory for image test
+MECT_TESTSHARE := /media/sf_share
+# Prefix of staging image directory
+MECT_TESTAME := mect_suite_
 # Draft directory for rpmbuild
 MECT_TMPRPMDIR = /tmp/rpm-$(USER)
 # Expand to the name of the kernel RPM built by LTIB.
@@ -103,7 +111,6 @@ MECT_SYSUPD_DIRALL = $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL
 MECT_KOBS_TMPL := $(MECT_FTPDIR)/kobs-ng
 # Full path to write the update archive on target
 MECT_UPDATE_ARCH := /tmp/mnt/update.tar.gz
-
 
 # Extension of the MD5 checksums for the downloads.
 MECT_MD5EXT := md5
@@ -626,7 +633,7 @@ $(MECT_LTIB_KERNEL_TS_RPM):
 # Build the target-specific boot.
 .PHONY: target_boot
 target_boot: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
-target_boot: MECT_BOOTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)_ms$(MECT_BUILD_RELEASE)/boot
+target_boot: MECT_BOOTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)/boot
 target_boot: $(MECT_COMMON_RFSPKGS)
 	test -n '$(MECT_BUILD_TARGET)' -a -n '$(MECT_KERNEL_TARGET_CONF)'
 	$(MAKE) MECT_BUILD_TARGET=$(MECT_BUILD_TARGET) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
@@ -641,7 +648,7 @@ target_boot: $(MECT_COMMON_RFSPKGS)
 # Build the target-specific root file system.
 .PHONY: target_rfs
 target_rfs: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
-target_rfs: MECT_RFSDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)_ms$(MECT_BUILD_RELEASE)/rootfs
+target_rfs: MECT_RFSDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)/rootfs
 target_rfs: $(MECT_COMMON_RFSPKGS)
 	test -n '$(MECT_BUILD_TARGET)' -a -n '$(MECT_KERNEL_TARGET_CONF)'
 	$(MAKE) MECT_BUILD_TARGET=$(MECT_BUILD_TARGET) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
@@ -672,7 +679,7 @@ target_rfs: $(MECT_COMMON_RFSPKGS)
 # Build the target-specific local file system.
 .PHONY: target_lfs
 target_lfs: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
-target_lfs_flash target_lfs: MECT_LFSDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)_ms$(MECT_BUILD_RELEASE)/localfs
+target_lfs_flash target_lfs: MECT_LFSDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)/localfs
 target_lfs: $(MECT_COMMON_LFSPKGS)
 	test -n '$(MECT_BUILD_TARGET)'
 	sudo rm -rf $(MECT_LFSDIR)
@@ -703,7 +710,7 @@ target_lfs_flash:
 # Build the target-specific project for Freescale manufacturing tool.
 .PHONY: target_mfg_upd
 target_mfg_upd: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
-target_mfg_upd: MECT_TGTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)_ms$(MECT_BUILD_RELEASE)
+target_mfg_upd: MECT_TGTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)
 target_mfg_upd: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
 target_mfg_upd: MECT_MFGZIP = $(shell readlink -m $(MECT_MFGDIR)/../../$(shell basename $(MECT_MFGDIR)).zip)
 target_mfg_upd: MECT_SYSUPD = $(shell readlink -m $(MECT_MFGDIR)/../../sysupdate_$(MECT_BUILD_RELEASE)_$(MECT_BUILD_TARGET).sh)
@@ -811,6 +818,38 @@ ltib_update:
 	$(MAKE) spec_setup
 
 
+# Create reference images for use to check future builds
+#
+
+.PHONY: images_check
+images_check: MECT_GOLD_REL = $(shell echo $(MECT_BUILD_RELEASE) | sed 's/\./_/g')
+ifeq ($(MECT_REF_IMG),)
+images_check: MECT_REF_IMG := $(GI)
+endif
+images_check:
+	if test -z "$(MECT_REF_IMG)" -o ! -d "$(MECT_REF_IMG)"; then \
+		echo "ERROR: no image reference directory ($(MECT_REF_IMG))."; \
+		exit 1; \
+	fi
+	test -s $(MECT_IMG_TESTER)
+	for i in "" $(MECT_IMGDIR)/*$(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; do \
+		test -z "$$i" -o ! -s "$$i" && continue; \
+		echo ""; \
+		echo "Checking $$i..."; \
+		sh $(MECT_IMG_TESTER) "$(MECT_REF_IMG)" "$$i" $(MECT_TMPDIR) $(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; \
+	done
+
+
+# Stage images for testing.
+#
+
+.PHONY: stage_images
+stage_images:
+	test -d $(MECT_TESTSHARE) -a -w $(MECT_TESTSHARE)
+	mount | grep -q ' $(MECT_TESTSHARE) '
+	rsync -ahP $(MECT_IMGDIR)/ $(MECT_TESTSHARE)/$(MECT_TESTAME)$(MECT_BUILD_RELEASE)/
+
+
 # Utilities
 #
 
@@ -825,7 +864,7 @@ clean: clean_projects
 
 .PHONY: distclean
 distclean: clean
-	ccache -C
+	if which ccache; then ccache -C; fi
 	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIBDIR_REF)
 
 

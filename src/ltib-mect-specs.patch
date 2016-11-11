@@ -3297,12 +3297,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1474 @@
+@@ -0,0 +1,1416 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v2.0.11rc2
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3495,6 +3495,20 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
++# TPAC1007_LV
++#
++%Package lfs-TPAC1007_LV
++Summary         : Trimmed %{name} to just the run-times needed for local file system.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/System
++AutoReqProv     : no
++Prefix          : %{pfx}/TPAC1007_LV/local
++
++%Description lfs-TPAC1007_LV
++%{name} package contents limited to just the run-times needed
++on the target.
++
 +# TPAC1006
 +#
 +%Package lfs-TPAC1006
@@ -3506,34 +3520,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Prefix          : %{pfx}/TPAC1006/local
 +
 +%Description lfs-TPAC1006
-+%{name} package contents limited to just the run-times needed
-+on the target.
-+
-+# TPAC1006_GSM
-+#
-+%Package lfs-TPAC1006_GSM
-+Summary         : Trimmed %{name} to just the run-times needed for local file system.
-+Vendor          : MECT s.r.l.
-+Packager        : Mihai Lazarescu
-+Group           : Applications/System
-+AutoReqProv     : no
-+Prefix          : %{pfx}/TPAC1006_GSM/local
-+
-+%Description lfs-TPAC1006_GSM
-+%{name} package contents limited to just the run-times needed
-+on the target.
-+
-+# TPAC1006_HR
-+#
-+%Package lfs-TPAC1006_HR
-+Summary         : Trimmed %{name} to just the run-times needed for local file system.
-+Vendor          : MECT s.r.l.
-+Packager        : Mihai Lazarescu
-+Group           : Applications/System
-+AutoReqProv     : no
-+Prefix          : %{pfx}/TPAC1006_HR/local
-+
-+%Description lfs-TPAC1006_HR
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
@@ -3929,9 +3915,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+# TPAC1006
++# TPAC1007_LV
 +#
-+d=TPAC1006/Simple
++d=TPAC1007_LV/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -3948,40 +3934,20 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+# TPAC1006_GSM
++# TPAC1006
 +#
-+d=AnyTPAC/Empty_HMI
++d=TPAC1006/Simple
 +if test -d $d; then
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+
-+# TPAC1006_HR
-+#
-+d=AnyTPAC/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
++		Simple.pro
 +	make -j1
 +
 +	cd -
@@ -4360,6 +4326,21 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
++# TPAC1007_LV
++#
++d=TPAC1007_LV/Simple
++if test -d $d; then
++	cd $d
++
++	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_LV/local/root/hmi
++	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_LV/local/etc/sysconfig/Crosstable.csv
++	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_LV/local/etc/sysconfig/img/splash.png
++	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_LV/local/etc/sysconfig/system.ini
++	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_LV/local/data/customtrend/trend1.csv
++
++	cd -
++fi
++
 +# TPAC1006
 +#
 +d=TPAC1006/Simple
@@ -4373,37 +4354,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/data/customtrend/trend1.csv
 +	install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/network0.cmg
 +	install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/iomap0.cmg
-+
-+	cd -
-+fi
-+
-+# TPAC1006_GSM
-+#
-+d=AnyTPAC/Empty_HMI
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1006_GSM/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1006_GSM/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1006_GSM/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1006_GSM/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1006_GSM/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+
-+# TPAC1006_HR
-+#
-+d=AnyTPAC/Empty_HMI
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1006_HR/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1006_HR/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1006_HR/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1006_HR/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1006_HR/local/data/customtrend/trend1.csv
 +
 +	cd -
 +fi
@@ -4667,6 +4617,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1007_04_AC/local/etc/sysconfig/system.ini
 +%{pfx}/TPAC1007_04_AC/local/data/customtrend/trend1.csv
 +
++%files lfs-TPAC1007_LV
++%defattr(-,root,root)
++%{pfx}/TPAC1007_LV/local/root/hmi
++%{pfx}/TPAC1007_LV/local/etc/sysconfig/Crosstable.csv
++%{pfx}/TPAC1007_LV/local/etc/sysconfig/img/splash.png
++%{pfx}/TPAC1007_LV/local/etc/sysconfig/system.ini
++%{pfx}/TPAC1007_LV/local/data/customtrend/trend1.csv
++
 +%files lfs-TPAC1006
 +%defattr(-,root,root)
 +%{pfx}/TPAC1006/local/root/hmi
@@ -4676,22 +4634,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1006/local/data/customtrend/trend1.csv
 +%{pfx}/TPAC1006/local/etc/sysconfig/iomap0.cmg
 +%{pfx}/TPAC1006/local/etc/sysconfig/network0.cmg
-+
-+%files lfs-TPAC1006_GSM
-+%defattr(-,root,root)
-+%{pfx}/TPAC1006_GSM/local/root/hmi
-+%{pfx}/TPAC1006_GSM/local/etc/sysconfig/Crosstable.csv
-+%{pfx}/TPAC1006_GSM/local/etc/sysconfig/img/splash.png
-+%{pfx}/TPAC1006_GSM/local/etc/sysconfig/system.ini
-+%{pfx}/TPAC1006_GSM/local/data/customtrend/trend1.csv
-+
-+%files lfs-TPAC1006_HR
-+%defattr(-,root,root)
-+%{pfx}/TPAC1006_HR/local/root/hmi
-+%{pfx}/TPAC1006_HR/local/etc/sysconfig/Crosstable.csv
-+%{pfx}/TPAC1006_HR/local/etc/sysconfig/img/splash.png
-+%{pfx}/TPAC1006_HR/local/etc/sysconfig/system.ini
-+%{pfx}/TPAC1006_HR/local/data/customtrend/trend1.csv
 +
 +%files lfs-TPAC1008_01
 +%defattr(-,root,root)

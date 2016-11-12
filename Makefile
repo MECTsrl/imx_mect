@@ -1,33 +1,39 @@
 export LC_ALL := C
 
-# MECT Suite version
-export MECT_BUILD_RELEASE := 2.0.10rc2
+# ---------------------------
+
+# MECT Suite version -- start with a digit.
+export MECT_BUILD_RELEASE := 2.1.0
+
+# ---------------------------
 
 # imx_mect branch used by ltib_update make target
 # If empty it points to 'master'
 #MECT_BUILD_IMXMECT_BRANCH := mect_suite_2.0
 # imx_mect tag used by ltib_update make target
 # Set to 0.0 to checkout HEAD
-#MECT_BUILD_IMXMECT_TAG := 0.0
+MECT_BUILD_IMXMECT_TAG := 0.0
 
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
-MECT_BUILD_ATCMCRT_BRANCH := master
+MECT_BUILD_ATCMCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_ATCMCRT_TAG := v1.025
+export MECT_BUILD_ATCMCRT_TAG := 0.0
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_CAN_BRANCH := base_2
 MECT_BUILD_ATCMCRT_CAN_REV := 201
 MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
 # git branch and tag for the mect_plugins project
-MECT_BUILD_PLUGINSCRT_BRANCH := master
+MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
 export MECT_BUILD_PLUGINSCRT_TAG := 0.0
 
 # git branch and tag for the mect_apps project
-MECT_BUILD_APPSCRT_BRANCH := master
+MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_APPSCRT_TAG := v2.0.10rc1
+export MECT_BUILD_APPSCRT_TAG := v2.0.11rc4
+
+# ---------------------------
 
 # Mandatory prefix for all target device names
 MECT_TARGET_PREFIX := MECT_
@@ -864,7 +870,7 @@ clean: clean_projects
 
 .PHONY: distclean
 distclean: clean
-	if which ccache; then ccache -C; fi
+	if which ccache > /dev/null; then ccache -C; fi
 	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIBDIR_REF)
 
 

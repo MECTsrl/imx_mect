@@ -1,12 +1,13 @@
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/4c_runtime/4c_runtime.spec ltib/dist/lfs-5.1/4c_runtime/4c_runtime.spec
 --- ltib.reference/dist/lfs-5.1/4c_runtime/4c_runtime.spec
 +++ ltib/dist/lfs-5.1/4c_runtime/4c_runtime.spec
-@@ -0,0 +1,95 @@
+@@ -0,0 +1,96 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : v1.018
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -100,12 +101,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ATCMcontrol_RunTimeSystem/ATCMcontrol_RunTimeSystem.spec ltib/dist/lfs-5.1/ATCMcontrol_RunTimeSystem/ATCMcontrol_RunTimeSystem.spec
 --- ltib.reference/dist/lfs-5.1/ATCMcontrol_RunTimeSystem/ATCMcontrol_RunTimeSystem.spec
 +++ ltib/dist/lfs-5.1/ATCMcontrol_RunTimeSystem/ATCMcontrol_RunTimeSystem.spec
-@@ -0,0 +1,82 @@
+@@ -0,0 +1,83 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : v1.018
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -186,7 +188,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/SDcard/SDcard.spec ltib/dist/lfs-5.1/SDcard/SDcard.spec
 --- ltib.reference/dist/lfs-5.1/SDcard/SDcard.spec
 +++ ltib/dist/lfs-5.1/SDcard/SDcard.spec
-@@ -0,0 +1,71 @@
+@@ -0,0 +1,72 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : GUI for SD card settings
@@ -261,6 +264,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec ltib/dist/lfs-5.1/base_libs/base_libs.spec
 --- ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec
 +++ ltib/dist/lfs-5.1/base_libs/base_libs.spec
+@@ -1,4 +1,4 @@
+-%define __os_install_post %{nil}
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : Base Libraries (from toolchain).
 @@ -11,6 +11,19 @@
  Group           : System Environment/Libraries
  BuildRoot       : %{_tmppath}/%{name}
@@ -531,7 +540,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boa/boa.spec ltib/dist/lfs-5.1/boa/boa.spec
 --- ltib.reference/dist/lfs-5.1/boa/boa.spec
 +++ ltib/dist/lfs-5.1/boa/boa.spec
-@@ -12,47 +12,82 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define base %(echo %{_prefix} | sed -e s,/usr.*$,,)
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+@@ -12,47 +13,83 @@
  Group           : System/Servers
  Source          : %{name}-%{version}.tar.gz
  Patch1          : boa-0.94.14rc21-nommu.patch
@@ -613,6 +627,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +install -m 755 src/boa_indexer $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/
 +ln -s conf/boa.conf $RPM_BUILD_ROOT%{pfx}/%{base}/etc/boa.conf
 +ln -s boa $RPM_BUILD_ROOT%{pfx}/%{_prefix}/sbin/boa_d
++
  
  %Clean
 +export LC_ALL
@@ -636,7 +651,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
 --- ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec
 +++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
-@@ -8,39 +8,92 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : imx233/imx28-style boot stream image creation
+@@ -8,39 +9,92 @@
  Vendor          : Freescale
  Packager        : Terry Lv
  Group           : Tools
@@ -738,7 +758,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/busybox/busybox.spec ltib/dist/lfs-5.1/busybox/busybox.spec
 --- ltib.reference/dist/lfs-5.1/busybox/busybox.spec
 +++ ltib/dist/lfs-5.1/busybox/busybox.spec
-@@ -3,24 +3,46 @@
+@@ -1,26 +1,49 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define base %(echo %{_prefix} | sed -e s,/usr.*$,,)
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
  
  Summary         : A small executable that replaces many UNIX utilities
  Name            : busybox
@@ -787,7 +810,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  PKG_BUSYBOX_PRECONFIG=${PKG_BUSYBOX_PRECONFIG:-busybox.config}
  if [ -f "$PLATFORM_PATH/${PKG_BUSYBOX_PRECONFIG}" ]
  then
-@@ -45,6 +67,9 @@
+@@ -45,6 +68,9 @@
  make HOSTCC="$BUILDCC" $MAKE_EXTRA
  
  %Install
@@ -797,7 +820,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  install -d $RPM_BUILD_ROOT/%{pfx}/%{base}/bin
  make HOSTCC="$BUILDCC" CONFIG_PREFIX=$RPM_BUILD_ROOT/%{pfx}/%{base} install
-@@ -71,10 +96,21 @@
+@@ -71,10 +97,21 @@
  EOF
  chmod 644 $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/busybox.conf
  
@@ -1001,7 +1024,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cantest/cantest.spec ltib/dist/lfs-5.1/cantest/cantest.spec
 --- ltib.reference/dist/lfs-5.1/cantest/cantest.spec
 +++ ltib/dist/lfs-5.1/cantest/cantest.spec
-@@ -9,18 +9,35 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : cantest
+@@ -9,18 +10,35 @@
  Packager        : Chen Hongjun
  Group           : Applications/System
  Source          : %{name}-%{version}.tar.gz
@@ -1038,7 +1066,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup -n %{name}-%{version}
  %patch0 -p1
  %patch1 -p1
-@@ -30,16 +47,34 @@
+@@ -30,16 +48,34 @@
  fi
  
  %Build
@@ -1080,7 +1108,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cgic_work/cgic_work.spec ltib/dist/lfs-5.1/cgic_work/cgic_work.spec
 --- ltib.reference/dist/lfs-5.1/cgic_work/cgic_work.spec
 +++ ltib/dist/lfs-5.1/cgic_work/cgic_work.spec
-@@ -0,0 +1,113 @@
+@@ -0,0 +1,114 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Support for web-based reporting and configuration
@@ -1197,7 +1226,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec
-@@ -10,36 +10,65 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define base %(echo %{_prefix} | sed -e s,/usr.*$,,)
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+@@ -10,36 +11,65 @@
  Packager        : John Faith
  Group           : Applications/Internet
  Source          : dhcp-3.0.3b1.tgz
@@ -1269,7 +1303,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  for i in %pfx/%base/etc/test %pfx/%base/etc/rc.d \
           %pfx/%base/sbin/S30dhclient %pfx/%_prefix/local
-@@ -47,8 +76,7 @@
+@@ -47,8 +77,7 @@
      rm -rf $RPM_BUILD_ROOT/$i
  done
  
@@ -1279,7 +1313,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      for i in %pfx/%base/etc/dhclient.conf \
               %pfx/%base/var/state/dhcp/dhclient.leases \
               %pfx/%base/sbin/dhclient-script \
-@@ -61,11 +89,11 @@
+@@ -61,11 +90,11 @@
               %pfx/%_mandir/man8/dhclient-script.8 \
               %pfx/%_mandir/man8/dhclient.8
      do
@@ -1294,7 +1328,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      for i in %pfx/%base/etc/dhcpd.conf \
               %pfx/%_bindir/omshell \
               %pfx/%_mandir/man1/omshell.1 \
-@@ -82,14 +110,26 @@
+@@ -82,14 +111,27 @@
               %pfx/%_sbindir/dhcrelay \
               %pfx/%base/var/state/dhcp/dhcpd.leases
       do
@@ -1309,6 +1343,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +    \,^%{pfx}%{_prefix}/share/man, d;
 +    \,^%{pfx}%{_sysconfdir}/dhclient.conf, d;
 +' all_files.lst > rfs_files.lst
++
 +
  %Clean
 +export LC_ALL
@@ -1327,7 +1362,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec ltib/dist/lfs-5.1/dropbear/dropbear.spec
 --- ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec
 +++ ltib/dist/lfs-5.1/dropbear/dropbear.spec
-@@ -2,61 +2,99 @@
+@@ -1,62 +1,101 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
  
  Summary         : Dropbear SSH server and client (embedded)
  Name            : dropbear
@@ -1456,7 +1493,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 --- ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 +++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
-@@ -13,25 +13,65 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary		: Second extended (ext2) filesystem and ext3 utilities
+@@ -13,25 +14,65 @@
  Patch1          : e2fsprogs-1.41.4-fix-lib-links.patch
  BuildRoot	: %{_tmppath}/%{name}
  Prefix		: %{pfx}
@@ -1547,7 +1589,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/expat/expat.spec ltib/dist/lfs-5.1/expat/expat.spec
 --- ltib.reference/dist/lfs-5.1/expat/expat.spec
 +++ ltib/dist/lfs-5.1/expat/expat.spec
-@@ -14,30 +14,64 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : XML 1.0 parser
+@@ -14,30 +15,64 @@
  Patch2          : expat-1.95.8-man1dir.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -1776,7 +1823,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec ltib/dist/lfs-5.1/fontconfig/fontconfig.spec
 --- ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec
 +++ ltib/dist/lfs-5.1/fontconfig/fontconfig.spec
-@@ -10,27 +10,53 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : Font configuration and customization library
+@@ -10,27 +11,53 @@
  Group           : System Environment/Libraries
  Source          : %{name}-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -1834,7 +1886,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  perl -pi -e 's,^</fontconfig>,
  <dir>%{_prefix}/X11R6/lib/X11/fonts/TTF</dir>
-@@ -38,13 +64,25 @@
+@@ -38,13 +65,25 @@
  <dir>%{_prefix}/X11R6/lib/X11/fonts/truetype</dir>
  </fontconfig>
  ,;
@@ -1866,7 +1918,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/freetype/freetype.spec ltib/dist/lfs-5.1/freetype/freetype.spec
 --- ltib.reference/dist/lfs-5.1/freetype/freetype.spec
 +++ ltib/dist/lfs-5.1/freetype/freetype.spec
-@@ -12,29 +12,63 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : TrueType font rasterizer
+@@ -12,29 +13,63 @@
  Patch1          : proper-armel-asm-declaration.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -1948,7 +2005,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/glib2/glib2.spec ltib/dist/lfs-5.1/glib2/glib2.spec
 --- ltib.reference/dist/lfs-5.1/glib2/glib2.spec
 +++ ltib/dist/lfs-5.1/glib2/glib2.spec
-@@ -1,47 +1,82 @@
+@@ -1,47 +1,83 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archname glib
  
@@ -2114,7 +2172,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/iproute/iproute.spec ltib/dist/lfs-5.1/iproute/iproute.spec
 --- ltib.reference/dist/lfs-5.1/iproute/iproute.spec
 +++ ltib/dist/lfs-5.1/iproute/iproute.spec
-@@ -1,18 +1,37 @@
+@@ -1,18 +1,38 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
  %define base %(echo %{_prefix} | sed -e s,/usr.*$,,)
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define verrel 050330
@@ -2155,7 +2214,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  %Description
  %{summary}
-@@ -22,20 +41,43 @@
+@@ -22,20 +42,43 @@
  capabilities of the Linux kernel.
  
  %Prep
@@ -2205,7 +2264,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/iptables/iptables.spec ltib/dist/lfs-5.1/iptables/iptables.spec
 --- ltib.reference/dist/lfs-5.1/iptables/iptables.spec
 +++ ltib/dist/lfs-5.1/iptables/iptables.spec
-@@ -14,45 +14,86 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary		: Tools for managing kernel packet filtering capabilities
+@@ -14,45 +15,86 @@
  Patch1		: iptables-1.4.2-libxt_TOS.patch
  BuildRoot	: %{_tmppath}/%{name}
  Prefix		: %{pfx}
@@ -2594,7 +2658,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libmodbus/libmodbus.spec ltib/dist/lfs-5.1/libmodbus/libmodbus.spec
 --- ltib.reference/dist/lfs-5.1/libmodbus/libmodbus.spec
 +++ ltib/dist/lfs-5.1/libmodbus/libmodbus.spec
-@@ -0,0 +1,68 @@
+@@ -0,0 +1,69 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : A Modbus library
@@ -2666,7 +2731,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 --- ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 +++ ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
-@@ -0,0 +1,77 @@
+@@ -0,0 +1,78 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Library to allow control of basic functions in socketcan from userspace
@@ -2747,13 +2813,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec ltib/dist/lfs-5.1/libtermcap/libtermcap.spec
 --- ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec
 +++ ltib/dist/lfs-5.1/libtermcap/libtermcap.spec
-@@ -1,4 +1,5 @@
+@@ -1,4 +1,6 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archname termcap
  
  Summary         : A basic system library for accessing the termcap database.
  Name            : libtermcap
-@@ -8,21 +9,35 @@
+@@ -8,21 +10,35 @@
  Vendor          : Freescale Inc
  Packager        : Steve Papacharalambous
  Group           : System Environment/Libraries
@@ -2802,7 +2869,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  %Description
  The libtermcap package contains a basic system library needed to
-@@ -31,7 +46,10 @@
+@@ -31,7 +47,10 @@
  displays in a terminal-independent manner.
  
  %Prep
@@ -2814,7 +2881,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %patch0 -p1 
  %patch1 -p1
  %patch2 -p1
-@@ -46,6 +64,9 @@
+@@ -46,6 +65,9 @@
  %patch11 -p1
  
  %Build
@@ -2824,7 +2891,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  if [ "$GNUTARCH" = m68knommu ]
  then
     MAKEOPTS="TARGETS=libtermcap.a"
-@@ -53,6 +74,9 @@
+@@ -53,6 +75,9 @@
  make $MAKEOPTS
  
  %Install
@@ -2834,7 +2901,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  for i in usr/lib %{_infodir} usr/include etc lib
  do
      mkdir -p ${RPM_BUILD_ROOT}/%{pfx}/$i
-@@ -61,7 +85,7 @@
+@@ -61,7 +86,7 @@
  if [ "$GNUTARCH" = m68knommu ]
  then
  ( cp libtermcap.a ${RPM_BUILD_ROOT}/%{pfx}/lib/
@@ -2843,7 +2910,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
    cp termcap.info* ${RPM_BUILD_ROOT}/%{pfx}/%{_infodir}
    cd ${RPM_BUILD_ROOT}/%{pfx}
    cd ./%{_infodir}
-@@ -71,7 +95,7 @@
+@@ -71,7 +96,7 @@
  
  else
  export PATH=/sbin:$PATH
@@ -2852,7 +2919,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  install -c -m644 termcap.src ${RPM_BUILD_ROOT}/%{pfx}/etc/termcap
  cp termcap.info* ${RPM_BUILD_ROOT}/%{pfx}/%{_infodir}
-@@ -79,24 +103,36 @@
+@@ -79,24 +104,36 @@
  ( cd ${RPM_BUILD_ROOT}/%{pfx}
    rm -f ./etc/termcap
    mv ./usr/lib/libtermcap.so* ./lib
@@ -2970,7 +3037,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb1.spec ltib/dist/lfs-5.1/libusb/libusb1.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb1.spec
 +++ ltib/dist/lfs-5.1/libusb/libusb1.spec
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,73 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define libname libusb
 +
@@ -3065,7 +3133,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
 --- ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec
 +++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
-@@ -10,38 +10,72 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : The lrz and lsz modem communications programs.
+@@ -10,38 +11,72 @@
  Group           : Applications/Communications
  Source          : lrzsz_0.12.21.orig.tar.gz
  Patch0          : lrzsz_0.12.21-4.diff
@@ -3147,7 +3220,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lzo/lzo.spec ltib/dist/lfs-5.1/lzo/lzo.spec
 --- ltib.reference/dist/lfs-5.1/lzo/lzo.spec
 +++ ltib/dist/lfs-5.1/lzo/lzo.spec
-@@ -11,14 +11,34 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : LZO is a portable lossless data compression library written in ANSI C.
+@@ -11,14 +12,34 @@
  Source          : lzo-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -3182,7 +3260,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  if [ "$GNUTARCH" = m68knommu ]
  then
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} \
-@@ -30,14 +50,28 @@
+@@ -30,14 +51,28 @@
  make
  
  %Install
@@ -3217,7 +3295,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mac_sn/mac_sn.spec ltib/dist/lfs-5.1/mac_sn/mac_sn.spec
 --- ltib.reference/dist/lfs-5.1/mac_sn/mac_sn.spec
 +++ ltib/dist/lfs-5.1/mac_sn/mac_sn.spec
-@@ -0,0 +1,76 @@
+@@ -0,0 +1,77 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : GUI to set up MAC address of Ethernet cards
@@ -3297,12 +3376,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1416 @@
+@@ -0,0 +1,1415 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v2.0.10rc1
++Version         : v2.0.11rc4
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -4501,8 +4581,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+exit 0
-+
 +%clean
 +export LC_ALL
 +LC_ALL=C
@@ -4717,12 +4795,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 --- ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 +++ ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
-@@ -0,0 +1,117 @@
+@@ -0,0 +1,118 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v7.038
++Version: 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -5013,7 +5092,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 --- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 +++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
-@@ -2,15 +2,32 @@
+@@ -1,16 +1,34 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
  
  Summary		: Memory Technology Device tools
  Name		: mtd-utils
@@ -5048,7 +5129,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  %Description
  %{summary}
-@@ -20,20 +37,53 @@
+@@ -20,20 +38,53 @@
    SHA1 d769da93a56590c23ce9430a1d970e31e835ae88
  
  %Prep
@@ -5196,7 +5277,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mysql/mysql.spec ltib/dist/lfs-5.1/mysql/mysql.spec
 --- ltib.reference/dist/lfs-5.1/mysql/mysql.spec
 +++ ltib/dist/lfs-5.1/mysql/mysql.spec
-@@ -13,16 +13,36 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : MySQL SQL database, client programs and shared library
+@@ -13,16 +14,36 @@
  Patch1          : mysql-4.1.12-gcc-4.2.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -5233,7 +5319,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure --prefix=/usr --host=$CFGHOST --build=%{_build} \
  	--enable-so	\
  	--with-named-curses-libs=-lncurses	\
-@@ -35,21 +55,38 @@
+@@ -35,21 +56,38 @@
  make
  
  %Install
@@ -5282,7 +5368,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/nagios-plugins/nagios-plugins.spec ltib/dist/lfs-5.1/nagios-plugins/nagios-plugins.spec
 --- ltib.reference/dist/lfs-5.1/nagios-plugins/nagios-plugins.spec
 +++ ltib/dist/lfs-5.1/nagios-plugins/nagios-plugins.spec
-@@ -0,0 +1,71 @@
+@@ -0,0 +1,72 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define mb_name check_modbus
 +%define mb_vers 0.46
@@ -5357,7 +5444,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec ltib/dist/lfs-5.1/ncurses/ncurses.spec
 --- ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec
 +++ ltib/dist/lfs-5.1/ncurses/ncurses.spec
-@@ -14,17 +14,37 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : CRT screen handling and optimization package
+@@ -14,17 +15,37 @@
  Patch2          : ncurses-5.3-wint_t.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -5395,7 +5487,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  CFLAGS="%{optflags} -DPURE_TERMINFO -DSVR4_CURSES"
  %define optflags $CFLAGS
  if [ "$GNUTARCH" != m68knommu ]
-@@ -45,6 +65,9 @@
+@@ -45,6 +66,9 @@
  mv misc/run_tic.sh.tmp misc/run_tic.sh
  
  %Install
@@ -5405,7 +5497,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx} includedir=%{_prefix}/include/ncurses libdir=%{_prefix}/lib mandir=%{_mandir}
  
-@@ -94,12 +117,24 @@
+@@ -94,12 +118,24 @@
      rm -rf $USR_SHARE/termtemp
  fi
  
@@ -5436,7 +5528,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/nrpe/nrpe.spec ltib/dist/lfs-5.1/nrpe/nrpe.spec
 --- ltib.reference/dist/lfs-5.1/nrpe/nrpe.spec
 +++ ltib/dist/lfs-5.1/nrpe/nrpe.spec
-@@ -0,0 +1,68 @@
+@@ -0,0 +1,69 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Host/service/network monitoring agent for Nagios
@@ -5508,7 +5601,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/openssl/openssl.spec ltib/dist/lfs-5.1/openssl/openssl.spec
 --- ltib.reference/dist/lfs-5.1/openssl/openssl.spec
 +++ ltib/dist/lfs-5.1/openssl/openssl.spec
-@@ -3,23 +3,46 @@
+@@ -1,25 +1,49 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define base %(echo %{_prefix} | sed -e s,/usr.*$,,)
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
  
  Summary         : Secure Sockets Layer toolkit
  Name            : openssl
@@ -5556,7 +5652,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  case $ENDIAN in
      big)
          XTRA_OPTS="-DB_ENDIAN"
-@@ -42,33 +65,51 @@
+@@ -42,33 +66,51 @@
         OSSL_ARCH="linux-$LINTARCH"
         ;;
  esac
@@ -5630,7 +5726,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/openvpn/openvpn.spec ltib/dist/lfs-5.1/openvpn/openvpn.spec
 --- ltib.reference/dist/lfs-5.1/openvpn/openvpn.spec
 +++ ltib/dist/lfs-5.1/openvpn/openvpn.spec
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,73 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : A full-featured SSL VPN solution
@@ -5732,7 +5829,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ppp/ppp.spec ltib/dist/lfs-5.1/ppp/ppp.spec
 --- ltib.reference/dist/lfs-5.1/ppp/ppp.spec
 +++ ltib/dist/lfs-5.1/ppp/ppp.spec
-@@ -13,16 +13,36 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : Point-to-Point Protocol daemon
+@@ -13,16 +14,36 @@
  Patch1          : ppp-2.4.3-hspeed.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -5769,7 +5871,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
  if [ "$PKG_PPP_WANT_FILTER" = "y" ]
  then
-@@ -34,15 +54,29 @@
+@@ -34,15 +55,29 @@
  
  
  %Install
@@ -5845,7 +5947,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec ltib/dist/lfs-5.1/qt/qt-embedded.spec
 --- ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec
 +++ ltib/dist/lfs-5.1/qt/qt-embedded.spec
-@@ -1,165 +1,163 @@
+@@ -1,165 +1,164 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archivename qt-everywhere-opensource-src
  
@@ -6141,7 +6244,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  load(qt_config)
  EOF
-@@ -173,10 +171,15 @@
+@@ -173,10 +172,15 @@
  
  EOF
  chmod 744 $initscript
@@ -6158,7 +6261,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  # Unset compiler to prevent gcc being used when the cross
  # tools should be used. (Trolltech issue# 138807)
-@@ -185,32 +188,111 @@
+@@ -185,32 +189,111 @@
  # Unset PLATFORM because this is used as host machine.
  unset PLATFORM
  
@@ -6290,7 +6393,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 +++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
-@@ -0,0 +1,93 @@
+@@ -0,0 +1,94 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define variant multiaxes
 +
@@ -6483,7 +6587,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rsync/rsync.spec ltib/dist/lfs-5.1/rsync/rsync.spec
 --- ltib.reference/dist/lfs-5.1/rsync/rsync.spec
 +++ ltib/dist/lfs-5.1/rsync/rsync.spec
-@@ -12,26 +12,61 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : A program for synchronizing files over a network
+@@ -12,26 +13,61 @@
  Patch1          : rsync-2.6.5-va_copy-2.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -6672,7 +6781,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
 --- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec
 +++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
-@@ -0,0 +1,67 @@
+@@ -0,0 +1,68 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define aname openssh
 +%define avers 4.3p2
@@ -6743,7 +6853,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec
 +++ ltib/dist/lfs-5.1/skell/skell.spec
-@@ -9,20 +9,101 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : Skelleton files for an embedded root filesystem
+@@ -9,20 +10,101 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -6849,7 +6964,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +112,175 @@
+@@ -31,24 +113,175 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -7037,7 +7152,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/splash/splash.spec ltib/dist/lfs-5.1/splash/splash.spec
 --- ltib.reference/dist/lfs-5.1/splash/splash.spec
 +++ ltib/dist/lfs-5.1/splash/splash.spec
-@@ -0,0 +1,67 @@
+@@ -0,0 +1,68 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : HMI splash screen
@@ -7108,7 +7224,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec ltib/dist/lfs-5.1/sqlite/sqlite.spec
 --- ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec
 +++ ltib/dist/lfs-5.1/sqlite/sqlite.spec
-@@ -12,26 +12,61 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : SQLite database engine
+@@ -12,26 +13,61 @@
  Source          : %{name}-amalgamation-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -7607,7 +7728,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/tcp_wrappers/tcp_wrappers.spec ltib/dist/lfs-5.1/tcp_wrappers/tcp_wrappers.spec
 --- ltib.reference/dist/lfs-5.1/tcp_wrappers/tcp_wrappers.spec
 +++ ltib/dist/lfs-5.1/tcp_wrappers/tcp_wrappers.spec
-@@ -16,11 +16,28 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : A security tool which acts as a wrapper for TCP daemons
+@@ -16,11 +17,28 @@
  Patch4          : tcp_wrappers-7.6-uclibc-strerror.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -7636,7 +7762,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup -n %{name}_%{version}
  %patch0 -p1
  %patch1 -p1
-@@ -29,6 +46,9 @@
+@@ -29,6 +47,9 @@
  %patch4 -p1
  
  %Build
@@ -7646,7 +7772,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  if [ -n "$UCLIBC" ]
  then 
      make REAL_DAEMON_DIR=/usr/sbin STYLE=-DPROCESS_OPTIONS linux-uclibc
-@@ -37,6 +57,9 @@
+@@ -37,6 +58,9 @@
  fi
  
  %Install
@@ -7656,7 +7782,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  for i in sbin lib include
  do
-@@ -49,8 +72,22 @@
+@@ -49,8 +73,22 @@
  make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
  
  %Clean
@@ -7694,7 +7820,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/tslib/tslib.spec ltib/dist/lfs-5.1/tslib/tslib.spec
 --- ltib.reference/dist/lfs-5.1/tslib/tslib.spec
 +++ ltib/dist/lfs-5.1/tslib/tslib.spec
-@@ -13,14 +13,32 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : Abstraction layer for touchscreen panel events 
+@@ -13,14 +14,32 @@
  Patch2          : tslib-1.0-mx-pre_gen-2.patch
  Patch3          : tslib-1.0-mx-pre_config.patch
  Patch4          : tslib-1.0-glibc-2.7.x-open-O_CREAT-lack-parameter.patch
@@ -7728,7 +7859,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1 
  %patch2 -p1 
-@@ -35,15 +53,19 @@
+@@ -35,15 +54,19 @@
  if [ `echo ${LIBC_VERSION} | cut -d '.' -f 1` -eq 2 -a `echo ${LIBC_VERSION} | cut -d '.' -f 2` -ge 7 ]; then
  %patch4 -p1
  fi
@@ -7749,7 +7880,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  #sed -i s/AS_HELP_STRING/AC_HELP_STRING/ configure.ac
  #./autogen.sh
  chmod +x ./configure
-@@ -52,18 +74,34 @@
+@@ -52,18 +75,34 @@
  make
  
  %Install
@@ -7804,7 +7935,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec ltib/dist/lfs-5.1/u-boot/u-boot.spec
 --- ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec
 +++ ltib/dist/lfs-5.1/u-boot/u-boot.spec
-@@ -17,16 +17,25 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : Universal Bootloader firmware
+@@ -17,16 +18,25 @@
  %{summary}
  
  %Prep
@@ -7830,7 +7966,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  mkdir -p $RPM_BUILD_ROOT/%{pfx}/boot
  for i in u-boot.bin u-boot
-@@ -35,6 +44,9 @@
+@@ -35,6 +45,9 @@
  done
  
  %Clean
@@ -8023,7 +8159,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 +++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
-@@ -0,0 +1,79 @@
+@@ -0,0 +1,80 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : USB Modeswitch gets mobile broadband cards in operational mode
@@ -8106,7 +8243,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 +++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
-@@ -0,0 +1,76 @@
+@@ -0,0 +1,77 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Data for the USB Modeswitch tool
@@ -8186,7 +8324,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 --- ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 +++ ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
-@@ -0,0 +1,200 @@
+@@ -0,0 +1,201 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define pkg_src  compat-drivers
 +%define pkg_rc   rc4
@@ -8390,7 +8529,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec ltib/dist/lfs-5.1/wireless-tools/wireless-tools.spec
 --- ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec
 +++ ltib/dist/lfs-5.1/wireless-tools/wireless-tools.spec
-@@ -8,28 +8,64 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : Wireless Ethernet configuration tools
+@@ -8,28 +9,64 @@
  Vendor          : Freescale
  Packager        : Stuart Hughes
  Group           : System Environment/Base
@@ -8462,7 +8606,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
 --- ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
 +++ ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
-@@ -7,13 +7,28 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : WPA Supplicant for wifi
+@@ -7,13 +8,28 @@
  License         : GPL
  Vendor          : Freescale
  Packager        : Sam Yang
@@ -8493,7 +8642,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  i.e., the part that runs in the client stations. It implements WPA key
  negotiation with a WPA Authenticator and EAP authentication with
  Authentication Server. In addition, it controls the roaming and IEEE
-@@ -22,9 +37,16 @@
+@@ -22,9 +38,16 @@
  %{summary}
  
  %Prep
@@ -8511,7 +8660,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  #Create .config file for build
  cat > .config << EOF
  #CONFIG_DRIVER_HOSTAP=n
-@@ -62,33 +84,31 @@
+@@ -62,33 +85,31 @@
  CONFIG_L2_PACKET=linux
  EOF
  
@@ -8565,7 +8714,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec ltib/dist/lfs-5.1/xenomai/xenomai.spec
 --- ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec
 +++ ltib/dist/lfs-5.1/xenomai/xenomai.spec
-@@ -0,0 +1,150 @@
+@@ -0,0 +1,151 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : xenomai - Real Time extension for the Linux kernel
@@ -8719,7 +8869,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zip30/zip30.spec ltib/dist/lfs-5.1/zip30/zip30.spec
 --- ltib.reference/dist/lfs-5.1/zip30/zip30.spec
 +++ ltib/dist/lfs-5.1/zip30/zip30.spec
-@@ -0,0 +1,70 @@
+@@ -0,0 +1,71 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : A file compression utility.
@@ -8793,7 +8944,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zlib/zlib.spec ltib/dist/lfs-5.1/zlib/zlib.spec
 --- ltib.reference/dist/lfs-5.1/zlib/zlib.spec
 +++ ltib/dist/lfs-5.1/zlib/zlib.spec
-@@ -12,15 +12,35 @@
+@@ -1,3 +1,4 @@
++%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
+ 
+ Summary         : zlib compression utilities and libraries
+@@ -12,15 +13,35 @@
  Patch1          : zlib-1.2.3-arflags-1.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -8829,7 +8985,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure --prefix=%{_prefix} --shared
  mv Makefile Makefile.shared
  ./configure --prefix=%{_prefix}
-@@ -29,17 +49,31 @@
+@@ -29,17 +50,31 @@
  make -f Makefile.static
  
  %Install

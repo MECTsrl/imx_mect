@@ -5947,8 +5947,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec ltib/dist/lfs-5.1/qt/qt-embedded.spec
 --- ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec
 +++ ltib/dist/lfs-5.1/qt/qt-embedded.spec
-@@ -1,165 +1,164 @@
+@@ -1,165 +1,166 @@
++%if %{?toolchain:0}%{!?toolchain:1}
 +%define __spec_install_post sudo -E sh $TOP/../src/mect-strip.sh
++%endif
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archivename qt-everywhere-opensource-src
  
@@ -6244,7 +6246,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  load(qt_config)
  EOF
-@@ -173,10 +172,15 @@
+@@ -173,10 +174,15 @@
  
  EOF
  chmod 744 $initscript
@@ -6261,7 +6263,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  # Unset compiler to prevent gcc being used when the cross
  # tools should be used. (Trolltech issue# 138807)
-@@ -185,32 +189,111 @@
+@@ -185,32 +191,111 @@
  # Unset PLATFORM because this is used as host machine.
  unset PLATFORM
  

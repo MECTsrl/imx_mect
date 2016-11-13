@@ -97,7 +97,7 @@ MECT_IMG_TESTER = $(MECT_FTPDIR)/image-tester.sh
 # Staging directory for image test
 MECT_TESTSHARE := /media/sf_share
 # Prefix of staging image directory
-MECT_TESTAME := mect_suite_
+MECT_TESTAME := MectSuite_
 # Draft directory for rpmbuild
 MECT_TMPRPMDIR = /tmp/rpm-$(USER)
 # Expand to the name of the kernel RPM built by LTIB.

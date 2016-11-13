@@ -158,15 +158,17 @@ if test -s $tmpfile; then
 			# Report details about the differenes.
 			echo -n '[ ]'
 			(
-				ls -l gold/"$f" test/"$f"
+				test -f gold/"$f" && ls -l gold/"$f"
+				test -f test/"$f" && ls -l test/"$f"
 
 				echo ""
-				md5sum gold/"$f" test/"$f"
+				test -f gold/"$f" && md5sum gold/"$f"
+				test -f test/"$f" && md5sum test/"$f"
 
-				if file --mime gold/"$f" | grep -q '\(: text/\|: application/xml\)'; then
+				if test -f gold/"$f" -a -f test/"$f" && file --mime gold/"$f" | grep -q '\(: text/\|: application/xml\)'; then
 					echo ""
 					diff -u gold/"$f" test/"$f"
-				elif file gold/"$f" | grep -qw ELF; then
+				elif test -f gold/"$f" -a -f test/"$f" && file gold/"$f" | grep -qw ELF; then
 					/opt/CodeSourcery/bin/arm-none-linux-gnueabi-objdump -d test/"$f" | tail -n +3 > ${tmpfile}.test
 					/opt/CodeSourcery/bin/arm-none-linux-gnueabi-objdump -d gold/"$f" | tail -n +3 > ${tmpfile}.gold
 					echo ""

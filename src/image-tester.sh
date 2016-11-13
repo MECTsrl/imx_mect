@@ -41,7 +41,7 @@ tmpfile=$(mktemp) || exit 1
 # Cleanup and abort execution with an error code.
 terminate()
 {
-	rm -f $tmpfile
+	sudo rm -f $tmpfile $workdir
 	exit 1
 }
 
@@ -54,7 +54,7 @@ if ! test -s "$goldimg"; then
 fi
 
 workdir="$tmpdir"/"$(basename $testimg .zip).testing"
-test -d "$workdir" && rm -rf "$workdir"
+test -d "$workdir" && sudo rm -rf "$workdir"
 
 mkdir "$workdir"
 cd "$workdir" > /dev/null
@@ -86,7 +86,7 @@ for d in test gold; do
 		fi
 
 		mkdir "$expanddir"
-		tar xf "$archive" -C "$expanddir"
+		sudo tar xf "$archive" -C "$expanddir"
 		rm -f "$archive"
 	done
 done
@@ -100,7 +100,9 @@ if test -s $tmpfile; then
 		echo "*** ERROR: MISSING files in \"$testimg\":"
 		echo "==============="
 		sed -n '/^deleting / { s/^deleting //; p; }' $tmpfile | while read f; do
-			ls -l gold/"$f"
+			echo -n '[ ]'
+
+			ls -l gold/"$f" 2>&1 | sed 's/^/\t/'
 			echo "==============="
 		done
 
@@ -115,7 +117,7 @@ if test -s $tmpfile; then
 		echo "*** ERROR: NEW files in \"$testimg\":"
 		echo "==============="
 		sed -n '/^deleting / { s/^deleting //; p; }' $tmpfile | while read f; do
-			ls -l test/"$f"
+			ls -l test/"$f" 2>&1 | sed 's/^/\t/'
 			echo "==============="
 		done
 
@@ -139,13 +141,13 @@ if test -s $tmpfile; then
 					# Last resort: disassemble and compare again.
 					/opt/CodeSourcery/bin/arm-none-linux-gnueabi-objdump -d test/"$f" | tail -n +3 > ${tmpfile}.test
 					/opt/CodeSourcery/bin/arm-none-linux-gnueabi-objdump -d gold/"$f" | tail -n +3 > ${tmpfile}.gold
-					cmp ${tmpfile}.gold ${tmpfile}.test && continue
+					cmp -s ${tmpfile}.gold ${tmpfile}.test && continue
 				elif expr "$f" : .*\.tar\.bz2\$ > /dev/null; then
-					rm -rf ${tmpfile}.gold.dir
+					sudo rm -rf ${tmpfile}.gold.dir
 					mkdir -p ${tmpfile}.gold.dir || exit 1
 					tar xjf gold/"$f" -C ${tmpfile}.gold.dir
 
-					rm -rf ${tmpfile}.test.dir
+					sudo rm -rf ${tmpfile}.test.dir
 					mkdir -p ${tmpfile}.test.dir || exit 1
 					tar xjf test/"$f" -C ${tmpfile}.test.dir
 
@@ -153,8 +155,24 @@ if test -s $tmpfile; then
 				fi
 			fi
 
-			ls -l gold/"$f" test/"$f"
-			md5sum gold/"$f" test/"$f"
+			# Report details about the differenes.
+			echo -n '[ ]'
+			(
+				ls -l gold/"$f" test/"$f"
+
+				echo ""
+				md5sum gold/"$f" test/"$f"
+
+				if file --mime gold/"$f" | grep -q '\(: text/\|: application/xml\)'; then
+					echo ""
+					diff -u gold/"$f" test/"$f"
+				elif file gold/"$f" | grep -qw ELF; then
+					/opt/CodeSourcery/bin/arm-none-linux-gnueabi-objdump -d test/"$f" | tail -n +3 > ${tmpfile}.test
+					/opt/CodeSourcery/bin/arm-none-linux-gnueabi-objdump -d gold/"$f" | tail -n +3 > ${tmpfile}.gold
+					echo ""
+					diff -u ${tmpfile}.gold ${tmpfile}.test
+				fi
+			) | sed 's/^/\t/'
 			echo "==============="
 		done
 
@@ -162,6 +180,7 @@ if test -s $tmpfile; then
 	fi
 fi
 
-rm -rf $tmpfile ${tmpfile}.gold ${tmpfile}.test ${tmpfile}.gold.dir ${tmpfile}.test.dir
+sudo rm -rf $tmpfile ${tmpfile}.gold ${tmpfile}.test ${tmpfile}.gold.dir ${tmpfile}.test.dir
+test "$retval" = 0 && sudo rm -rf $workdir
 
 exit $retval

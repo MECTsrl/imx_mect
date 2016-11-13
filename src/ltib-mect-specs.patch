@@ -1498,7 +1498,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
  
  Summary		: Second extended (ext2) filesystem and ext3 utilities
-@@ -13,25 +14,65 @@
+@@ -13,25 +14,109 @@
  Patch1          : e2fsprogs-1.41.4-fix-lib-links.patch
  BuildRoot	: %{_tmppath}/%{name}
  Prefix		: %{pfx}
@@ -1534,6 +1534,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  BUILD_CC=$BUILDCC ./configure --host=$CFGHOST --enable-elf-shlibs
  make
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -1542,16 +1543,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -make DESTDIR=$RPM_BUILD_ROOT/%{pfx} install install-libs
 +make DESTDIR=$RPM_BUILD_ROOT%{pfx} install install-libs
 +
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_prefix}/share/locale, d;
-+    \,^%{pfx}%{_prefix}/share/info, d;
-+    \,^%{pfx}%{_prefix}/share/man, d;
-+    \,^%{pfx}%{_prefix}/lib/pkgconfig, d;
-+    \,^%{pfx}%{_prefix}/include, d;
-+    /\.l\?a$/ d;
-+' all_files.lst > rfs_files.lst
  
  %Clean
 +export LC_ALL
@@ -1559,14 +1550,65 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
 +
-+%Files -f all_files.lst
-+%defattr(-, root, root)
-+
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-, root, root)
--%{pfx}/*
+ %{pfx}/*
++
++%Files rfs
++%defattr(-, root, root)
++%{pfx}/etc/mke2fs.conf
++%{pfx}/lib/libblkid.so.1
++%{pfx}/lib/libblkid.so.1.0
++%{pfx}/lib/libcom_err.so.2
++%{pfx}/lib/libcom_err.so.2.1
++%{pfx}/lib/libe2p.so.2
++%{pfx}/lib/libe2p.so.2.3
++%{pfx}/lib/libext2fs.so.2
++%{pfx}/lib/libext2fs.so.2.4
++%{pfx}/lib/libss.so.2
++%{pfx}/lib/libss.so.2.0
++%{pfx}/lib/libuuid.so.1
++%{pfx}/lib/libuuid.so.1.2
++%{pfx}/sbin/badblocks
++%{pfx}/sbin/blkid
++%{pfx}/sbin/debugfs
++%{pfx}/sbin/dumpe2fs
++%{pfx}/sbin/e2fsck
++%{pfx}/sbin/e2image
++%{pfx}/sbin/e2label
++%{pfx}/sbin/e2undo
++%{pfx}/sbin/findfs
++%{pfx}/sbin/fsck
++%{pfx}/sbin/fsck.ext2
++%{pfx}/sbin/fsck.ext3
++%{pfx}/sbin/fsck.ext4
++%{pfx}/sbin/fsck.ext4dev
++%{pfx}/sbin/logsave
++%{pfx}/sbin/mke2fs
++%{pfx}/sbin/mkfs.ext2
++%{pfx}/sbin/mkfs.ext3
++%{pfx}/sbin/mkfs.ext4
++%{pfx}/sbin/mkfs.ext4dev
++%{pfx}/sbin/resize2fs
++%{pfx}/sbin/tune2fs
++%{pfx}/usr/bin/chattr
++%{pfx}/usr/bin/lsattr
++%{pfx}/usr/bin/uuidgen
++%{pfx}/usr/lib/e2initrd_helper
++%{pfx}/usr/lib/libblkid.so
++%{pfx}/usr/lib/libcom_err.so
++%{pfx}/usr/lib/libe2p.so
++%{pfx}/usr/lib/libext2fs.so
++%{pfx}/usr/lib/libss.so
++%{pfx}/usr/lib/libuuid.so
++%{pfx}/usr/sbin/filefrag
++%{pfx}/usr/sbin/mklost+found
++%{pfx}/usr/sbin/uuidd
++%{pfx}/usr/share/et/et_c.awk
++%{pfx}/usr/share/et/et_h.awk
++%{pfx}/usr/share/ss/ct_c.awk
++%{pfx}/usr/share/ss/ct_c.sed
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec ltib/dist/lfs-5.1/elftosb/elftosb.spec
 --- ltib.reference/dist/lfs-5.1/elftosb/elftosb.spec
 +++ ltib/dist/lfs-5.1/elftosb/elftosb.spec

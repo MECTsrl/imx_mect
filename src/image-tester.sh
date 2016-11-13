@@ -167,12 +167,12 @@ if test -s $tmpfile; then
 
 				if test -f gold/"$f" -a -f test/"$f" && file --mime gold/"$f" | grep -q '\(: text/\|: application/xml\)'; then
 					echo ""
-					diff -u gold/"$f" test/"$f"
+					diff -u gold/"$f" test/"$f" | head --lines=50
 				elif test -f gold/"$f" -a -f test/"$f" && file gold/"$f" | grep -qw ELF; then
 					/opt/CodeSourcery/bin/arm-none-linux-gnueabi-objdump -d test/"$f" | tail -n +3 > ${tmpfile}.test
 					/opt/CodeSourcery/bin/arm-none-linux-gnueabi-objdump -d gold/"$f" | tail -n +3 > ${tmpfile}.gold
 					echo ""
-					diff -u ${tmpfile}.gold ${tmpfile}.test
+					diff -u ${tmpfile}.gold ${tmpfile}.test | head --lines=50
 				fi
 			) | sed 's/^/\t/'
 			echo "==============="

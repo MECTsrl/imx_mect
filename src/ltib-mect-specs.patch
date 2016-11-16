@@ -3346,7 +3346,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1414 @@
+@@ -0,0 +1,702 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Default HMI application.
@@ -3701,12 +3701,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%description
 +%{summary}
 +
++
 +%prep
 +export LC_ALL
 +LC_ALL=C
 +
 +%setup -T -c -n %{name}
 +rsync -av --inplace ../../../../projects/%{name}/ ./
++
 +
 +%build
 +export LC_ALL
@@ -3717,461 +3719,55 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export MECT_QT_INSTALL_DIR
 +MECT_QT_INSTALL_DIR=/opt/Trolltech
 +
-+# TP1043_01_A
-+#
-+d=TP1043_01_A/Simple
-+if test -d $d; then
++# Target (or placeholder) names
++for t in \
++	AnyTPAC \
++	TP1043_01_A \
++	TP1043_01_B \
++	TP1043_01_C \
++	TP1057 \
++	TP1070 \
++	TPAC1006 \
++	TPAC1007_03 \
++	TPAC1007_04_AA \
++	TPAC1007_04_AB \
++	TPAC1007_04_AC \
++	TPAC1007_LV \
++	TPAC1008_01 \
++	TPAC1008_02_AA \
++	TPAC1008_02_AB \
++	TPAC1008_02_AE \
++; do
++	test -z "$t" && exit 1
++	test -d $t || test -d AnyTPAC || exit 1
++
++	if test -d $t/Simple; then
++		d=$t/Simple
++		p=Simple.pro
++	elif test -d AnyTPAC/Empty_HMI; then
++		d=AnyTPAC/Empty_HMI
++		p=Empty_HMI.pro
++	else
++		exit 1
++	fi
++	test -z "$d" -o -z "$p" && exit 1
++
 +	cd $d
 +
 +	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
++
++	$MECT_QT_INSTALL_DIR/bin/lrelease $p
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
 +		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 +		"DEFINES+=TARGET_ARM" \
 +		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
++		$p
++
 +	make -j1
 +
 +	cd -
-+fi
-+
-+# TP1043_01_B
-+#
-+d=TP1043_01_B/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TP1043_01_C
-+#
-+d=TP1043_01_C/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TP1057_01_A
-+#
-+d=TP1057/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TP1057_01_B
-+#
-+d=TP1057/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TP1070_01_A
-+#
-+d=TP1070/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TP1070_01_B
-+#
-+d=TP1070/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TP1070_01_C
-+#
-+d=TP1070/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TP1070_01_D
-+#
-+d=TP1070/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPAC1007_03
-+#
-+d=TPAC1007_03/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPAC1007_04_AA
-+#
-+d=TPAC1007_04_AA/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPAC1007_04_AB
-+#
-+d=TPAC1007_04_AB/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPAC1007_04_AC
-+#
-+d=TPAC1007_04_AC/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPAC1007_LV
-+#
-+d=TPAC1007_LV/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPAC1006
-+#
-+d=TPAC1006/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPAC1008_01
-+#
-+d=TPAC1008_01/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPAC1008_02_AA
-+#
-+d=TPAC1008_02_AA/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPAC1008_02_AB
-+#
-+d=TPAC1008_02_AB/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPAC1008_02_AC
-+#
-+d=AnyTPAC/Empty_HMI
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPAC1008_02_AD
-+#
-+d=AnyTPAC/Empty_HMI
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPAC1008_02_AE
-+#
-+d=TPAC1008_02_AE/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPAC1008_02_AF
-+#
-+d=AnyTPAC/Empty_HMI
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPLC100
-+#
-+d=AnyTPAC/Empty_HMI
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TPLC150
-+#
-+d=AnyTPAC/Empty_HMI
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
-+	make -j1
-+
-+	cd -
-+fi
++done
 +
 +
 +%install
@@ -4180,381 +3776,73 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +rm -rf $RPM_BUILD_ROOT
 +
-+# TP1043_01_A
-+#
-+d=TP1043_01_A/Simple
-+if test -d $d; then
-+	cd $d
++# Source-destination tuplets
++(
++	echo  AnyTPAC         TPAC1008_02_AC  ;
++	echo  AnyTPAC         TPAC1008_02_AD  ;
++	echo  AnyTPAC         TPAC1008_02_AF  ;
++	echo  AnyTPAC         TPLC100         ;
++	echo  AnyTPAC         TPLC150         ;
++	echo  TP1043_01_A     TP1043_01_A     ;
++	echo  TP1043_01_B     TP1043_01_B     ;
++	echo  TP1043_01_C     TP1043_01_C     ;
++	echo  TP1057          TP1057_01_A     ;
++	echo  TP1057          TP1057_01_B     ;
++	echo  TP1070          TP1070_01_A     ;
++	echo  TP1070          TP1070_01_B     ;
++	echo  TP1070          TP1070_01_C     ;
++	echo  TP1070          TP1070_01_D     ;
++	echo  TPAC1006        TPAC1006        ;
++	echo  TPAC1007_03     TPAC1007_03     ;
++	echo  TPAC1007_04_AA  TPAC1007_04_AA  ;
++	echo  TPAC1007_04_AB  TPAC1007_04_AB  ;
++	echo  TPAC1007_04_AC  TPAC1007_04_AC  ;
++	echo  TPAC1007_LV     TPAC1007_LV     ;
++	echo  TPAC1008_01     TPAC1008_01     ;
++	echo  TPAC1008_02_AA  TPAC1008_02_AA  ;
++	echo  TPAC1008_02_AB  TPAC1008_02_AB  ;
++	echo  TPAC1008_02_AE  TPAC1008_02_AE  ;
++) \
++| while read t d; do
++	test -z $t && exit 1
++	test -d $t || exit 1
 +
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1043_01_A/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1043_01_A/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1043_01_A/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1043_01_A/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1043_01_A/local/data/customtrend/trend1.csv
++	if test -d $t/Simple; then
++		t=$t/Simple
++	elif test -d $t/Empty_HMI; then
++		t=$t/Empty_HMI
++	else
++		exit 1
++	fi
++	test -z "$t" && exit 1
 +
-+	cd -
-+fi
++	cd $t
 +
-+# TP1043_01_B
-+#
-+d=TP1043_01_B/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1043_01_B/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1043_01_B/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1043_01_B/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1043_01_B/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1043_01_B/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TP1043_01_C
-+#
-+d=TP1043_01_C/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1043_01_C/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1043_01_C/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1043_01_C/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1043_01_C/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1043_01_C/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TP1057_01_A
-+#
-+d=TP1057/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1057_01_A/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1057_01_A/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1057_01_A/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1057_01_A/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1057_01_A/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TP1057_01_B
-+#
-+d=TP1057/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1057_01_B/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1057_01_B/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1057_01_B/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1057_01_B/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1057_01_B/local/data/customtrend/trend1.csv
++	test -r hmi \
++		&& install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/$d/local/root/hmi
++	test -r config/Crosstable.csv \
++		&& install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/$d/local/etc/sysconfig/Crosstable.csv
++	test -r config/splash.png \
++		&& install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/$d/local/etc/sysconfig/img/splash.png
++	test -r config/system.ini \
++		&& install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/$d/local/etc/sysconfig/system.ini
++	test -r config/trend1.csv \
++		&& install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/$d/local/data/customtrend/trend1.csv
++	test -r config/network0.cmg \
++		&& install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/$d/local/etc/sysconfig/network0.cmg
++	test -r config/iomap0.cmg \
++		&& install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/$d/local/etc/sysconfig/iomap0.cmg
 +
 +	cd -
-+fi
++done
 +
-+# TP1070_01_A
-+#
-+d=TP1070/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_01_A/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_01_A/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_01_A/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_01_A/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_01_A/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TP1070_01_B
-+#
-+d=TP1070/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_01_B/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_01_B/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_01_B/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_01_B/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_01_B/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TP1070_01_C
-+#
-+d=TP1070/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_01_C/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_01_C/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_01_C/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_01_C/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_01_C/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TP1070_01_D
-+#
-+d=TP1070/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TPAC1007_03
-+#
-+d=TPAC1007_03/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TPAC1007_04_AA
-+#
-+d=TPAC1007_04_AA/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AA/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AA/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AA/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AA/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AA/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TPAC1007_04_AB
-+#
-+d=TPAC1007_04_AB/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AB/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AB/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AB/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AB/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AB/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TPAC1007_04_AC
-+#
-+d=TPAC1007_04_AC/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TPAC1007_LV
-+#
-+d=TPAC1007_LV/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_LV/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_LV/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_LV/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_LV/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_LV/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TPAC1006
-+#
-+d=TPAC1006/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/data/customtrend/trend1.csv
-+	install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/network0.cmg
-+	install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1006/local/etc/sysconfig/iomap0.cmg
-+
-+	cd -
-+fi
-+
-+# TPAC1008_01
-+#
-+d=TPAC1008_01/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/data/customtrend/trend1.csv
-+	install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/network0.cmg
-+	install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1008_01/local/etc/sysconfig/iomap0.cmg
-+
-+	cd -
-+fi
-+
-+# TPAC1008_02_AA
-+#
-+d=TPAC1008_02_AA/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/data/customtrend/trend1.csv
-+	install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/network0.cmg
-+	install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AA/local/etc/sysconfig/iomap0.cmg
-+
-+	cd -
-+fi
-+
-+# TPAC1008_02_AB
-+#
-+d=TPAC1008_02_AB/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AB/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AB/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AB/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AB/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AB/local/data/customtrend/trend1.csv
-+	install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AB/local/etc/sysconfig/network0.cmg
-+	install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AB/local/etc/sysconfig/iomap0.cmg
-+
-+	cd -
-+fi
-+
-+# TPAC1008_02_AC
-+#
-+d=AnyTPAC/Empty_HMI
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AC/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AC/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AC/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AC/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AC/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TPAC1008_02_AD
-+#
-+d=AnyTPAC/Empty_HMI
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AD/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AD/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AD/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AD/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AD/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TPAC1008_02_AE
-+#
-+d=TPAC1008_02_AE/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AE/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AE/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AE/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AE/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AE/local/data/customtrend/trend1.csv
-+	install -m644 -D config/network0.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AE/local/etc/sysconfig/network0.cmg
-+	install -m644 -D config/iomap0.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AE/local/etc/sysconfig/iomap0.cmg
-+
-+	cd -
-+fi
-+
-+# TPAC1008_02_AF
-+#
-+d=AnyTPAC/Empty_HMI
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AF/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AF/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AF/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AF/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AF/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TPLC100
-+#
-+d=AnyTPAC/Empty_HMI
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPLC100/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPLC100/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPLC100/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPLC100/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPLC100/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TPLC150
-+#
-+d=AnyTPAC/Empty_HMI
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPLC150/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPLC150/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPLC150/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPLC150/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPLC150/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
 +
 +%clean
 +export LC_ALL
 +LC_ALL=C
 +
 +rm -rf $RPM_BUILD_ROOT
++
 +
 +%files
 +%defattr(-,root,root)

@@ -82,7 +82,11 @@ if test -s ${mntdir}/${TARGET}/imx28_ivt_linux.sb; then
 	fi
 
 	echo "Updating the Linux kernel..." | tee /dev/tty1
-	flash_eraseall /dev/mtd0 2>&1 | tee /dev/tty1
+	if test "$TARGET" = TPAC1006; then
+		flash_eraseall -q /dev/mtd0 2>&1 | tee /dev/tty1
+	else
+		flash_eraseall /dev/mtd0 2>&1 | tee /dev/tty1
+	fi
 	${mntdir}/kobs-ng init ${mntdir}/${TARGET}/imx28_ivt_linux.sb 2>&1 | tee /dev/tty1
 	rm -f ${mntdir}/kobs-ng
 	echo "done." | tee /dev/tty1

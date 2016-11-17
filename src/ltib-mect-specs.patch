@@ -3303,7 +3303,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v2.0.11rc4
++Version         : v2.0.11rc5
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -4728,7 +4728,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v7.043
++Version: v7.044
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

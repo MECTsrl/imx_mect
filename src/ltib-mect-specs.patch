@@ -4173,7 +4173,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,159 @@
+@@ -10,40 +10,155 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -4307,10 +4307,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/etc/iptables.default
 +%{pfx}/etc/ltib-release
 +%{pfx}/etc/mdev.conf
-+%{pfx}/etc/openvpn/ca.crt
-+%{pfx}/etc/openvpn/mect.conf-disabled
-+%{pfx}/etc/openvpn/tpac-mect.crt
-+%{pfx}/etc/openvpn/tpac-mect.key
 +%{pfx}/etc/passwd
 +%{pfx}/etc/ppp
 +%{pfx}/etc/profile

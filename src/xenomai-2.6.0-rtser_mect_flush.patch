@@ -1,6 +1,6 @@
-diff -ruN rpm/BUILD/linux-2.6.35.3-xenomai-2.6.0/xenomai-2.6.0/ksrc/drivers/serial/rt_imx_mxs_auart.c rpm/BUILD/tmp/linux-2.6.35.3-xenomai-2.6.0/xenomai-2.6.0/ksrc/drivers/serial/rt_imx_mxs_auart.c
---- rpm/BUILD/linux-2.6.35.3-xenomai-2.6.0/xenomai-2.6.0/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-05-09 18:19:34.703469601 +0200
-+++ rpm/BUILD/tmp/linux-2.6.35.3-xenomai-2.6.0/xenomai-2.6.0/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-05-09 18:13:05.311461901 +0200
+diff -ruN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_mxs_auart.c
+--- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-05-09 18:19:34.703469601 +0200
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2016-05-09 18:13:05.311461901 +0200
 @@ -43,6 +43,7 @@
  #include <rtdm/rtserial.h>
  #include <rtdm/rtdm_driver.h>
@@ -9,35 +9,23 @@ diff -ruN rpm/BUILD/linux-2.6.35.3-xenomai-2.6.0/xenomai-2.6.0/ksrc/drivers/seri
  
  #include "regs-uartapp.h"
  
-@@ -137,7 +138,6 @@
- 	.rs485 = RTSER_DEF_RS485
+@@ -142,7 +143,6 @@
+ 	.mect_rts = RTSER_MECT_RTS_CLR
  };
  
 -static void rt_imx_mxs_auart_break_ctl(struct rt_imx_mxs_auart_ctx *ctx, int break_state);
  static int rt_imx_mxs_auart_set_config(struct rt_imx_mxs_auart_ctx *ctx, const struct rtser_config *config, uint64_t **in_history_ptr);
  
  
-@@ -145,7 +145,6 @@
+@@ -150,7 +150,6 @@
  {
  	struct rt_imx_mxs_auart_ctx *ctx = (struct rt_imx_mxs_auart_ctx *)data;
  
--    //rtdm_printk("%s(%d): rts_deassert_func\n", DRIVER_NAME, ctx->port->port.line);
-     if (!(__raw_readl(ctx->port->port.membase + HW_UARTAPP_STAT) & BM_UARTAPP_STAT_BUSY)) {
+-	//rtdm_printk("%s(%d): rts_deassert_func\n", DRIVER_NAME, ctx->port->port.line);
+ 	if (!(__raw_readl(ctx->port->port.membase + HW_UARTAPP_STAT) & BM_UARTAPP_STAT_BUSY)) {
  		rt_alarm_stop(&ctx->rts_deassert);
  
-@@ -154,11 +153,6 @@
- 		__raw_writel((BM_UARTAPP_CTRL2_RXE), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
- 
-         rtdm_event_signal(&ctx->out_event);
--#if 0
--    } else {
--        __raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_SET);
--        __raw_writel((BM_UARTAPP_CTRL2_RTS), ctx->port->port.membase + HW_UARTAPP_CTRL2_CLR);
--#endif
-     }
- }
- 
-@@ -322,6 +316,48 @@
+@@ -332,6 +331,48 @@
  	__raw_writel(ctrl2, port->port.membase + HW_UARTAPP_CTRL2);
  }
  
@@ -86,24 +74,20 @@ diff -ruN rpm/BUILD/linux-2.6.35.3-xenomai-2.6.0/xenomai-2.6.0/ksrc/drivers/seri
  static int
  rt_imx_mxs_auart_ioctl(struct rtdm_dev_context *context, rtdm_user_info_t *user_info, unsigned int request, void *arg)
  {
-@@ -487,11 +523,16 @@
- 		}
+@@ -499,11 +541,7 @@
  
- 		case RTSER_RTIOC_BREAK_CTL: {
-+#define FLUSH_TEST
-+#ifdef FLUSH_TEST
+ 	case RTSER_RTIOC_BREAK_CTL:
+ 		{
 +			rt_imx_mxs_auart_flush(ctx);
-+#else
- 			rtdm_lock_get_irqsave(&ctx->lock, lock_ctx);
- 
- 			rt_imx_mxs_auart_break_ctl(ctx, (int)arg);
- 
- 			rtdm_lock_put_irqrestore(&ctx->lock, lock_ctx);
-+#endif
- 
+-			rtdm_lock_get_irqsave(&ctx->lock, lock_ctx);
+-
+-			rt_imx_mxs_auart_break_ctl(ctx, (int)arg);
+-
+-			rtdm_lock_put_irqrestore(&ctx->lock, lock_ctx);
+
  			break;
  		}
-@@ -667,17 +708,6 @@
+@@ -686,17 +724,6 @@
  		return;
  }
  

@@ -3297,7 +3297,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1422 @@
+@@ -0,0 +1,1254 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define rhtbtr resources-hack-to-build-the-rpm
 +
@@ -3339,20 +3339,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Prefix          : %{pfx}/TP1043_01_B/local
 +
 +%Description lfs-TP1043_01_B
-+%{name} package contents limited to just the run-times needed
-+on the target.
-+
-+# TP1043_01_C
-+#
-+%Package lfs-TP1043_01_C
-+Summary         : Trimmed %{name} to just the run-times needed for local file system.
-+Vendor          : MECT s.r.l.
-+Packager        : Mihai Lazarescu
-+Group           : Applications/System
-+AutoReqProv     : no
-+Prefix          : %{pfx}/TP1043_01_C/local
-+
-+%Description lfs-TP1043_01_C
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
@@ -3423,20 +3409,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Prefix          : %{pfx}/TP1070_01_C/local
 +
 +%Description lfs-TP1070_01_C
-+%{name} package contents limited to just the run-times needed
-+on the target.
-+
-+# TP1070_01_D
-+#
-+%Package lfs-TP1070_01_D
-+Summary         : Trimmed %{name} to just the run-times needed for local file system.
-+Vendor          : MECT s.r.l.
-+Packager        : Mihai Lazarescu
-+Group           : Applications/System
-+AutoReqProv     : no
-+Prefix          : %{pfx}/TP1070_01_D/local
-+
-+%Description lfs-TP1070_01_D
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
@@ -3563,20 +3535,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Prefix          : %{pfx}/TPAC1008_02_AB/local
 +
 +%Description lfs-TPAC1008_02_AB
-+%{name} package contents limited to just the run-times needed
-+on the target.
-+
-+# TPAC1008_02_AC
-+#
-+%Package lfs-TPAC1008_02_AC
-+Summary         : Trimmed %{name} to just the run-times needed for local file system.
-+Vendor          : MECT s.r.l.
-+Packager        : Mihai Lazarescu
-+Group           : Applications/System
-+AutoReqProv     : no
-+Prefix          : %{pfx}/TPAC1008_02_AC/local
-+
-+%Description lfs-TPAC1008_02_AC
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
@@ -3708,25 +3666,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+# TP1043_01_C
-+#
-+d=TP1043_01_C/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
 +# TP1057_01_A
 +#
 +d=TP1057/Simple
@@ -3804,25 +3743,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +fi
 +
 +# TP1070_01_C
-+#
-+d=TP1070/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Simple.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
-+# TP1070_01_D
 +#
 +d=TP1070/Simple
 +if test -d $d; then
@@ -4012,25 +3932,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+# TPAC1008_02_AC
-+#
-+d=AnyTPAC/Empty_HMI
-+if test -d $d; then
-+	cd $d
-+
-+	test -r Makefile && make clean
-+	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
-+	$MECT_QT_INSTALL_DIR/bin/qmake \
-+		-spec qws/linux-g++-mx \
-+		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+		"DEFINES+=TARGET_ARM" \
-+		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+		Empty_HMI.pro
-+	make -j1
-+
-+	cd -
-+fi
-+
 +# TPAC1008_02_AD
 +#
 +d=TPAC1008_02_AD/Simple
@@ -4163,21 +4064,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+# TP1043_01_C
-+#
-+d=TP1043_01_C/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1043_01_C/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1043_01_C/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1043_01_C/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1043_01_C/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1043_01_C/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
 +# TP1057_01_A
 +#
 +d=TP1057/Simple
@@ -4249,21 +4135,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_01_C/local/etc/sysconfig/img/splash.png
 +	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_01_C/local/etc/sysconfig/system.ini
 +	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_01_C/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
-+# TP1070_01_D
-+#
-+d=TP1070/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_01_D/local/data/customtrend/trend1.csv
 +
 +	cd -
 +fi
@@ -4411,21 +4282,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+# TPAC1008_02_AC
-+#
-+d=AnyTPAC/Empty_HMI
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AC/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AC/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AC/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AC/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1008_02_AC/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
 +# TPAC1008_02_AD
 +#
 +d=TPAC1008_02_AD/Simple
@@ -4533,14 +4389,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TP1043_01_B/local/etc/sysconfig/system.ini
 +%{pfx}/TP1043_01_B/local/data/customtrend/trend1.csv
 +
-+%files lfs-TP1043_01_C
-+%defattr(-,root,root)
-+%{pfx}/TP1043_01_C/local/root/hmi
-+%{pfx}/TP1043_01_C/local/etc/sysconfig/Crosstable.csv
-+%{pfx}/TP1043_01_C/local/etc/sysconfig/img/splash.png
-+%{pfx}/TP1043_01_C/local/etc/sysconfig/system.ini
-+%{pfx}/TP1043_01_C/local/data/customtrend/trend1.csv
-+
 +%files lfs-TP1057_01_A
 +%defattr(-,root,root)
 +%{pfx}/TP1057_01_A/local/root/hmi
@@ -4580,14 +4428,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TP1070_01_C/local/etc/sysconfig/img/splash.png
 +%{pfx}/TP1070_01_C/local/etc/sysconfig/system.ini
 +%{pfx}/TP1070_01_C/local/data/customtrend/trend1.csv
-+
-+%files lfs-TP1070_01_D
-+%defattr(-,root,root)
-+%{pfx}/TP1070_01_D/local/root/hmi
-+%{pfx}/TP1070_01_D/local/etc/sysconfig/Crosstable.csv
-+%{pfx}/TP1070_01_D/local/etc/sysconfig/img/splash.png
-+%{pfx}/TP1070_01_D/local/etc/sysconfig/system.ini
-+%{pfx}/TP1070_01_D/local/data/customtrend/trend1.csv
 +
 +%files lfs-TPAC1007_03
 +%defattr(-,root,root)
@@ -4668,14 +4508,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1008_02_AB/local/data/customtrend/trend1.csv
 +%{pfx}/TPAC1008_02_AB/local/etc/sysconfig/iomap0.cmg
 +%{pfx}/TPAC1008_02_AB/local/etc/sysconfig/network0.cmg
-+
-+%files lfs-TPAC1008_02_AC
-+%defattr(-,root,root)
-+%{pfx}/TPAC1008_02_AC/local/root/hmi
-+%{pfx}/TPAC1008_02_AC/local/etc/sysconfig/Crosstable.csv
-+%{pfx}/TPAC1008_02_AC/local/etc/sysconfig/img/splash.png
-+%{pfx}/TPAC1008_02_AC/local/etc/sysconfig/system.ini
-+%{pfx}/TPAC1008_02_AC/local/data/customtrend/trend1.csv
 +
 +%files lfs-TPAC1008_02_AD
 +%defattr(-,root,root)

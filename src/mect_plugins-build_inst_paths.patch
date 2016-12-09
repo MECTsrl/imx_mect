@@ -1,0 +1,161 @@
+diff -ruN a/qt_designer_environment.pri b/qt_designer_environment.pri
+--- a/qt_designer_environment.pri	2016-10-18 22:26:47.395179002 +0200
++++ b/qt_designer_environment.pri	2016-10-18 23:50:04.085987210 +0200
+@@ -1,17 +1,16 @@
+ win32 {
+-	ATCM_QWT_LIB = C:/Qt485/desktop/lib
+-	ATCM_QWT_INCL = C:/Qt485/desktop/include/Qwt
+-        QT_CREATOR = C:/Qt485/desktop
++        ATCM_QWT_LIB = $$QT_ROOTFS/lib
++        ATCM_QWT_INCL = $$QT_ROOTFS/include
++        QT_CREATOR = $$(QTC_INST_DIR)/bin/qtcreator
+         ATCM_DIR_COPY = "cmd /c xcopy /Q /Y /E /S /I"
+-        ATCM_INSTALL_WIZARD = C:/Qt485/desktop/share/qtcreator/templates/wizards
+-        MECT_INSTALL_PLUGINS = $$[QT_INSTALL_PLUGINS]
++        ATCM_INSTALL_WIZARD = "$$(QTC_INST_DIR)/share/qtcreator/templates/wizards"
++        MECT_INSTALL_PLUGINS = "$$(QT_INST_DIR)/plugins"
+ }
+ unix:!macx {
+-	ATCM_QWT_LIB = $$QT_ROOTFS/usr/lib
+-	ATCM_QWT_INCL = $$QT_ROOTFS/usr/include
+-        QT_CREATOR = $$HOME/qtcreator-2.8.1/bin/qtcreator
++        ATCM_QWT_LIB = $$QT_ROOTFS/lib
++        ATCM_QWT_INCL = $$QT_ROOTFS/include
++        QT_CREATOR = $$(QTC_INST_DIR)/bin/qtcreator
+         ATCM_DIR_COPY = "cp -rf"
+-        ATCM_INSTALL_WIZARD = "$$(HOME)/qtcreator-2.8.1/share/qtcreator/templates/wizards/"
+-        MECT_INSTALL_PLUGINS = "$$(HOME)/qtcreator-2.8.1/bin/plugins"
++        ATCM_INSTALL_WIZARD = "$$(QTC_INST_DIR)/share/qtcreator/templates/wizards/"
++        MECT_INSTALL_PLUGINS = "$$(QT_INST_DIR)/plugins"
+ }
+-
+diff -ruN a/qt_plugins/qt_designer_plugins.pro b/qt_plugins/qt_designer_plugins.pro
+--- a/qt_plugins/qt_designer_plugins.pro	2016-09-05 04:26:23.000000000 +0200
++++ b/qt_plugins/qt_designer_plugins.pro	2016-09-16 00:26:48.655876439 +0200
+@@ -1,5 +1,3 @@
+-# /usr/local/Trolltech/Qt-4.6.0/bin/qmake -set QT_INSTALL_PLUGINS /home/mect/QtSDK/QtCreator/lib/qtcreator/plugins -o Makefile
+-
+ include(../qt_designer_environment.pri)
+ 
+ TEMPLATE      = subdirs
+@@ -33,18 +31,18 @@
+ SRCDIR="../qt_templates/ATCM-template-project"
+ DSTDIR="$${ATCM_INSTALL_WIZARD}/ATCM-template-project"
+ win32 {
+-SRCDIR ~=s,/,\\,g
+-DSTDIR ~=s,/,\\,g
++	SRCDIR ~=s,/,\\,g
++	DSTDIR ~=s,/,\\,g
+ }
+ copytemplateprj.commands = $$quote( $${ATCM_DIR_COPY} $${SRCDIR} $${DSTDIR})
+ 
+ SRCDIR="../qt_templates/ATCM-template-form-class"
+ DSTDIR="$${ATCM_INSTALL_WIZARD}/ATCM-template-form-class"
+ win32 {
+-SRCDIR ~=s,/,\\,g
+-DSTDIR ~=s,/,\\,g
++	SRCDIR ~=s,/,\\,g
++	DSTDIR ~=s,/,\\,g
+ }
+-copytemplateformclass.commands = $$quote( $${ATCM_DIR_COPY} $${SRCDIR} $${DSTDIR})
++copytemplateformclass.commands = $$quote($${ATCM_DIR_COPY} $${SRCDIR} $${DSTDIR})
+ 
+ first.depends = $(first) copytemplateprj copytemplateformclass
+ export(first.depends)
+@@ -53,5 +51,5 @@
+ QMAKE_EXTRA_TARGETS += first copytemplateprj copytemplateformclass
+ 
+ unix {
+-QT_INSTALL_PLUGINS = qtcreator-2.8.1/bin/plugins/designer
+-}
+\ No newline at end of file
++	QT_INSTALL_PLUGINS = $$(QT_INST_DIR)/plugins/designer
++}
+diff -ruN a/qt_environment.pri b/qt_environment.pri
+--- a/qt_environment.pri	2016-10-18 22:15:44.042115866 +0200
++++ b/qt_environment.pri	2016-10-18 22:12:30.041710588 +0200
+@@ -6,15 +6,15 @@
+ CONFIG += store alarms recipe trend
+ 
+ contains(QMAKE_HOST.os,Windows){
+-        QT_ROOTFS = C:/Qt485/imx28/rootfs
+-        QT_INSTALL_ROOTFS = C:/Qt485/imx28/rootfs
+-        QT_CREATOR = C:/Qt485/desktop
++        QT_ROOTFS = $$(MECT_RFSDIR)
++        QT_INSTALL_ROOTFS = $$(INSTALL_ROOT)
++        QT_CREATOR = $$(QTC_INST_DIR)
+         ATCM_DIR_COPY = "cmd /c xcopy /Q /Y /E /S /I"
+ }
+ !contains(QMAKE_HOST.os,Windows){
+         QT_ROOTFS = $$(MECT_RFSDIR)
+         QT_INSTALL_ROOTFS = $$(INSTALL_ROOT)
+-        QT_CREATOR = C:/Qt485/desktop
++        QT_CREATOR = $$(QTC_INST_DIR)
+         ATCM_DIR_COPY = "cp -rf"
+ }
+ 
+@@ -18,20 +18,20 @@
+         ATCM_DIR_COPY = "cp -rf"
+ }
+ 
+-ATCM_ARM_LIBRARY_LIBPATH = $$QT_ROOTFS/usr/lib
+-ATCM_ARM_PLUGINS_LIBPATH = $$QT_ROOTFS/usr/lib
+-ATCM_ARM_LIBRARY_INCPATH = $$QT_ROOTFS/usr/include
+-ATCM_ARM_PLUGINS_INCPATH = $$QT_ROOTFS/usr/include
++ATCM_ARM_LIBRARY_LIBPATH = $$QT_ROOTFS/lib
++ATCM_ARM_PLUGINS_LIBPATH = $$QT_ROOTFS/lib
++ATCM_ARM_LIBRARY_INCPATH = $$QT_ROOTFS/include
++ATCM_ARM_PLUGINS_INCPATH = $$QT_ROOTFS/include
+ 
+-ATCM_ARM_LIBRARY_INSTALL_LIBPATH = $$QT_INSTALL_ROOTFS/usr/lib
+-ATCM_ARM_PLUGINS_INSTALL_LIBPATH = $$QT_INSTALL_ROOTFS/usr/lib
+-ATCM_ARM_LIBRARY_INSTALL_INCPATH = $$QT_INSTALL_ROOTFS/usr/include
+-ATCM_ARM_PLUGINS_INSTALL_INCPATH = $$QT_INSTALL_ROOTFS/usr/include
++ATCM_ARM_LIBRARY_INSTALL_LIBPATH = $$QT_INSTALL_ROOTFS/lib
++ATCM_ARM_PLUGINS_INSTALL_LIBPATH = $$QT_INSTALL_ROOTFS/lib
++ATCM_ARM_LIBRARY_INSTALL_INCPATH = $$QT_INSTALL_ROOTFS/include
++ATCM_ARM_PLUGINS_INSTALL_INCPATH = $$QT_INSTALL_ROOTFS/include
+ 
+ INCLUDEPATH  += .
+-INCLUDEPATH  += $$QT_ROOTFS/usr/include
+-INCLUDEPATH  += $$QT_ROOTFS/usr/src/linux/include
+-QMAKE_LIBDIR += $$QT_ROOTFS/usr/lib
++INCLUDEPATH  += $$QT_ROOTFS/include
++INCLUDEPATH  += $$QT_ROOTFS/src/linux/include
++QMAKE_LIBDIR += $$QT_ROOTFS/lib
+ 
+ store {
+         DEFINES+=ENABLE_STORE
+diff -ruN a/qt_templates/ATCM-template-project/common.pri b/qt_templates/ATCM-template-project/common.pri
+--- a/qt_templates/ATCM-template-project/common.pri	2016-09-05 04:26:23.000000000 +0200
++++ b/qt_templates/ATCM-template-project/common.pri	2016-10-25 20:41:01.878407907 +0200
+@@ -9,10 +9,10 @@
+ #
+ 
+ contains(QMAKE_HOST.os,Windows){
+-        QT_ROOTFS = C:/Qt485/imx28/rootfs
+-        QT_LUPDATE_PATH = C:/Qt485/desktop/bin
+-        QT_LRELEASE_PATH = C:/Qt485/imx28/qt-everywhere-opensource-src-4.8.5/bin
+-        ATCM_TEMPLATE_BASE_DIR = C:/Qt485/desktop/share/qtcreator/templates/wizards
++        QT_ROOTFS=$$(MECT_RFSDIR)
++        QT_LUPDATE_PATH = 
++        QT_LRELEASE_PATH = $$(MECT_QT_INSTALL_DIR)/bin
++        ATCM_TEMPLATE_BASE_DIR = 
+ }
+ !contains(QMAKE_HOST.os,Windows){
+         QT_ROOTFS=$$(MECT_RFSDIR)
+@@ -34,10 +34,10 @@
+         warning(ATCM_TEMPLATE_BASE_DIR is empty)
+ }
+ 
+-ATCM_ARM_LIBRARY_LIBPATH = $$QT_ROOTFS/usr/lib
+-ATCM_ARM_PLUGINS_LIBPATH = $$QT_ROOTFS/usr/lib
+-ATCM_ARM_LIBRARY_INCPATH = $$QT_ROOTFS/usr/include
+-ATCM_ARM_PLUGINS_INCPATH = $$QT_ROOTFS/usr/include
++ATCM_ARM_LIBRARY_LIBPATH = $$QT_ROOTFS/lib
++ATCM_ARM_PLUGINS_LIBPATH = $$QT_ROOTFS/lib
++ATCM_ARM_LIBRARY_INCPATH = $$QT_ROOTFS/include
++ATCM_ARM_PLUGINS_INCPATH = $$QT_ROOTFS/include
+ 
+ QMAKE_CXXFLAGS_RELEASE -= -O2
+ QMAKE_CXXFLAGS_RELEASE += -O3

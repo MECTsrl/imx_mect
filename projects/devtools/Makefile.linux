@@ -3,6 +3,8 @@ ATCM_VERSION := 1.2.3-dummy
 
 export LC_ALL := en_US.UTF-8
 
+FTP_DIRECTORY := $(CURDIR)/../../src
+
 # Qt
 #
 QT_VER := 4.8.5
@@ -27,7 +29,10 @@ QWT_BUILD_DIR = $(CURDIR)/$(QWT_DIRECTORY)-build
 
 # MECT Qt Creator plugins
 #
-MP_DIRECTORY := mect_plugins
+MP_DIRECTORY := ../mect_plugins
+
+MP_PATCH_PATHS = $(FTP_DIRECTORY)/mect_plugins-build_inst_paths.patch
+MP_PATCH_QRC_INSTPATH = $(FTP_DIRECTORY)/mect_plugins-qrc_inst_paths.patch
 
 # MECT Cross Table Editor
 #
@@ -113,7 +118,10 @@ qwt:
 
 .PHONY: mp
 mp:
-	if test -r $(MP_DIRECTORY)/qt_plugins/Makefile; then $(MAKE) -C $(MP_DIRECTORY)/qt_plugins distclean; fi
+	# TODO Changes should be in the repo and the patches removed.
+	# Ignore patching errors.
+	-patch -d $(MP_DIRECTORY) -p1 -N -i $(MP_PATCH_PATHS)
+	-patch -d $(MP_DIRECTORY) -p1 -N -i $(MP_PATCH_QRC_INSTPATH)
 	cd $(MP_DIRECTORY)/qt_plugins; $(QMAKE) qt_designer_plugins.pro -r -config store -config trend -config recipe -config alarms CONFIG+=release DEFINES+=ATCM_VERSION=$(ATCM_VERSION)
 	$(MAKE) -j $(NPROCS) -C $(MP_DIRECTORY)/qt_plugins
 	$(MAKE) -C $(MP_DIRECTORY)/qt_plugins INSTALL_ROOT= install

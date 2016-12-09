@@ -1,0 +1,245 @@
+/****************************************************************************
+**
+** Copyright (c) 2013 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
+**
+** This file is part of Qt Creator
+**
+**
+** GNU Free Documentation License
+**
+** Alternatively, this file may be used under the terms of the GNU Free
+** Documentation License version 1.3 as published by the Free Software
+** Foundation and appearing in the file included in the packaging of this
+** file.
+**
+**
+****************************************************************************/
+
+// **********************************************************************
+// NOTE: the sections are not ordered by their logical order to avoid
+// reshuffling the file each time the index order changes (i.e., often).
+// Run the fixnavi.pl script to adjust the links to the index order.
+// **********************************************************************
+
+/*!
+
+    \contentspage index.html
+    \previouspage quick-scalable-image.html
+    \page quick-screens.html
+    \nextpage quick-animations.html
+
+    \title Creating Screens
+
+    You can use predefined QML types and your own components to create
+    screens. Typically, the main qml file in a Qt Quick project specifies the
+    main window of an application.
+
+    The QML files in the project folder are displayed in \gui {QML Components}
+    in the \gui Library pane.
+
+    You can also use ready-made Qt Quick 1 Components (for Qt 4) to create
+    screens with a native look and feel for a particular target platform.
+    Since Qt 5.1, a set of Qt Quick Controls is available for creating classic
+    desktop-style user interfaces using Qt Quick 2.1. You
+    can install Qt Quick 1 Components as part of the Qt 4 SDK and the Qt Quick
+    Controls as part of Qt 5.1, or later.
+
+    \section1 Adding Components to Screens
+
+    \list 1
+
+        \li Drag and drop components from the \gui Library pane to the editor.
+
+        \li Select components in the \gui Navigator pane to edit their
+            properties in the \gui Properties pane.
+
+            For example, you can anchor components to a position on the screen.
+
+    \endlist
+
+
+    \section1 Using Data Models
+
+    You can create the following types of views to organize items provided by
+    \l{http://qt-project.org/doc/qt-5.0/qtquick/qtquick-modelviewsdata-modelview.html}{data models}:
+
+    \list
+
+        \li \l{http://qt-project.org/doc/qt-5.0/qtquick/qml-qtquick2-gridview.html}{Grid View}
+            provides a grid vizualization of a model.
+
+        \li \l{http://qt-project.org/doc/qt-5.0/qtquick/qml-qtquick2-listview.html}{List View}
+            provides a list vizualization of a model.
+
+        \li \l{http://qt-project.org/doc/qt-5.0/qtquick/qml-qtquick2-pathview.html}{Path View}
+            visualizes the contents of a model along a path.
+
+    \endlist
+
+    When you add a Grid View, List View, or Path View, the
+    \l{http://qt-project.org/doc/qt-5.0/qtquick/qml-qtquick2-listmodel.html}{ListModel} and the
+    delegate component that creates an instance for each item in the model are
+    added automatically. You can edit item properties
+    in the \gui Properties pane or
+    in the code editor. You can also replace the default model and
+    delegate with other, more complex models and delegates in the code editor.
+
+    \section1 Positioning Items on Screens
+
+    You can use the following QML types to arrange items on screens:
+
+    \list
+
+        \li \l{http://qt-project.org/doc/qt-5.0/qtquick/qml-qtquick2-column.html}{Column}
+            arranges its child items vertically.
+
+        \li \l{http://qt-project.org/doc/qt-5.0/qtquick/qml-qtquick2-row.html}{Row}
+            arranges its child items horizontally.
+
+        \li \l{http://qt-project.org/doc/qt-5.0/qtquick/qml-qtquick2-grid.html}{Grid}
+            arranges its child items so that they are aligned in a grid and
+            are not overlapping.
+
+        \li \l{http://qt-project.org/doc/qt-5.0/qtquick/qml-qtquick2-flow.html}{Flow}
+            arranges its child items side by side, wrapping as necessary.
+
+    \endlist
+
+    To lay out several items in a Column, Row, Grid, or Flow, select
+    the items on the canvas, and then select \gui Layout in the context
+    menu.
+
+    \section1 Using States
+
+    Use states and transitions to navigate between screens.
+
+    QML states typically describe user interface configurations, such as the UI
+    controls, their properties and behavior and the available actions. For
+    example, you can use states to create two screens.
+
+    To add states, click the empty slot in the \gui States pane. Then modify the
+    new state in the visual editor.
+
+    \image qmldesigner-states.png "States pane"
+
+    The properties that you change in a state are highlighted with blue color.
+    In the code editor, you can see the changes recorded as changes to the base
+    state.
+
+    To keep the QML code clean, you should create a base state that contains all
+    the types you will need in the application. You can then create states,
+    in which you hide and show a set of items and modify their properties.
+    This allows you to:
+
+    \list
+
+        \li Align items on different screens with each other.
+
+        \li Avoid excessive property changes. If an item is invisible in the
+            base state, you must define all changes to its child types as
+            property changes, which leads to complicated QML code.
+
+        \li Minimize the differences between the base state and the other states
+            to keep the QML code short and readable and to improve performance.
+
+        \li Avoid problems when using transitions and animation when changing
+            states.
+
+    \endlist
+
+    To create screens for an application by using states:
+
+    \list 1
+
+        \li In the base state, add all items you will need in the
+            application (1).
+            While you work on one screen, you can click the
+            \inlineimage qmldesigner-show-hide-icon.png
+            icon to hide items on the canvas that are not part of a screen.
+
+        \li In the \gui States pane, click the empty slot to create a new state
+            and give it a name. For example, \c Normal.
+
+        \li In the \gui Properties pane (2), deselect the \gui Visibility check box
+            or set \gui Opacity to 0 for each item that is not needed in this
+            view. If you specify the setting for the parent item, all child
+            items inherit it and are also hidden.
+
+            \image qmldesigner-screen-design.png "Designing screens"
+
+        \li Create additional states for each screen and set the visibility
+            or opacity of the items in the screen.
+
+        \li To determine which view opens when the application starts, use the
+            code editor to set the state of the root item of the .qml file, as
+            specified by the following code snippet:
+
+            \qml
+            Item {
+                state: "Normal"
+            }
+            \endqml
+
+        \endlist
+
+*/
+
+
+/*!
+
+    \contentspage index.html
+    \previouspage quick-screens.html
+    \page quick-animations.html
+    \nextpage quick-user-interaction.html
+
+    \title Animating Screens
+
+    To make movement between states smooth, you can specify transitions. You can
+    use different types of animated transitions. For example, you can animate
+    changes to property values and colors. You can use rotation animation to
+    control the direction of rotation. For more information, see
+    \l{http://qt-project.org/doc/qt-5.0/qtquick/qtquick-statesanimations-animations.html}
+    {Animation and Transitions in Qt Quick}.
+
+    You can use the \c ParallelAnimation type to start several animations at
+    the same time. Or use the \c SequentialAnimation type to run them one
+    after another.
+
+    You can use the code editor to specify transitions. For more information,
+    see \l{http://qt-project.org/doc/qt-5.0/qtquick/qml-qtquick2-transition.html}
+    {Transition}.
+
+*/
+
+
+/*!
+
+    \contentspage index.html
+    \previouspage quick-animations.html
+    \page quick-user-interaction.html
+    \nextpage quick-export-to-qml.html
+
+    \title Adding User Interaction Methods
+
+    You can add the following basic interaction methods to scenes:
+
+    \list
+
+        \li \l{http://qt-project.org/doc/qt-5.0/qtquick/qml-qtquick2-flickable.html}{Flickable}
+            items can be flicked horizontally or vertically.
+
+        \li \l{http://qt-project.org/doc/qt-5.0/qtquick/qml-qtquick2-flipable.html}{Flipable}
+            items can be flipped between their front and back sides by using
+            rotation, state, and transition.
+
+        \li \l{http://qt-project.org/doc/qt-5.0/qtquick/qml-qtquick2-focusscope.html}{Focus Scope}
+            assists in keyboard focus handling when building reusable QML
+            components.
+
+        \li \l{http://qt-project.org/doc/qt-5.0/qtquick/qml-qtquick2-mousearea.html}{Mouse Area}
+            enables simple mouse handling.
+
+    \endlist
+
+*/

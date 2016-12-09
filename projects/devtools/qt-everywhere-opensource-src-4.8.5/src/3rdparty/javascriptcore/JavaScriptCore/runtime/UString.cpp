@@ -44,9 +44,7 @@
 #include <wtf/unicode/UTF8.h>
 #include <wtf/StringExtras.h>
 
-#if HAVE(STRINGS_H)
 #include <strings.h>
-#endif
 
 using namespace WTF;
 using namespace WTF::Unicode;

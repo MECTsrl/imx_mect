@@ -39,6 +39,7 @@
 #include "mdnsderived.h"
 #include "servicebrowser_p.h"
 
+#include <sys/types.h>
 #include <algorithm>
 #include <errno.h>
 #include <limits>

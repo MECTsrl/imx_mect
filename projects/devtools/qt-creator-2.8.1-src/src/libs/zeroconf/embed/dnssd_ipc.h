@@ -36,6 +36,7 @@
 //
 #if defined(WIN32)
 #    include <winsock2.h>
+#    include <ctype.h>
 #    define dnssd_InvalidSocket    INVALID_SOCKET
 #    define dnssd_SocketValid(s) ((s) != INVALID_SOCKET)
 #    define dnssd_EWOULDBLOCK    WSAEWOULDBLOCK

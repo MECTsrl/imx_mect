@@ -28,6 +28,8 @@
 ****************************************************************************/
 
 
+#include <algorithm>
+
 #include "includeutils.h"
 
 #include <cplusplus/pp-engine.h>

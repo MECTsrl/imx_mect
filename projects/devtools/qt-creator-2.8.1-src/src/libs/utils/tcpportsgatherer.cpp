@@ -46,7 +46,7 @@
 #if defined(Q_OS_WIN) && defined(Q_CC_MINGW)
 
 // Missing declarations for MinGW 32.
-#if __GNUC__ == 4 && (!defined(__MINGW64_VERSION_MAJOR) || __MINGW64_VERSION_MAJOR < 2)
+#if __GNUC__ >= 4 && (!defined(__MINGW64_VERSION_MAJOR) || __MINGW64_VERSION_MAJOR < 2)
 typedef enum { } MIB_TCP_STATE;
 #endif
 

@@ -29,9 +29,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#if HAVE(STRINGS_H) 
 #include <strings.h> 
-#endif 
 
 #if COMPILER(MSVC)
 // FIXME: why a COMPILER check instead of OS? also, these should be HAVE checks

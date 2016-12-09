@@ -1,0 +1,23 @@
+diff -ruN a/src/Makefile b/src/Makefile
+--- a/src/Makefile	2016-10-10 22:56:48.401458786 +0200
++++ b/src/Makefile	2016-10-10 22:56:27.573458719 +0200
+@@ -7,8 +7,8 @@
+ #############################################################################
+ 
+ first: all
+-install: release-install debug-install 
+-uninstall: release-uninstall debug-uninstall 
++install: release-install
++uninstall: release-uninstall
+ MAKEFILE      = Makefile
+ QMAKE         = c:/MECT/Qt-4.8.5/bin/qmake.exe
+ DEL_FILE      = rm
+@@ -137,7 +137,7 @@
+ 
+ make_default: release-make_default debug-make_default FORCE
+ make_first: release-make_first debug-make_first FORCE
+-all: release-all debug-all FORCE
++all: release-all FORCE
+ clean: release-clean debug-clean FORCE
+ 	-$(DEL_FILE) z:/home/mlazarescu/qtc-w/qwt-6.1-multiaxes-build/src/../lib/libqwt.a
+ distclean: release-distclean debug-distclean FORCE

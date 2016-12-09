@@ -1,0 +1,241 @@
+# TODO set the proper version.
+ATCM_VERSION := 1.2.3-dummy
+
+export LC_ALL := en_US.UTF-8
+export WINEARCH := win32
+export WINEPREFIX := $(CURDIR)/wine
+export WINEDEBUG := -all
+DISPLAY_SAVED := $(DISPLAY)
+export DISPLAY := 
+DRIVE_C = $(WINEPREFIX)/drive_c
+
+
+SRC_DIRECTORY := $(CURDIR)/../../src
+
+# MinGW
+#
+MGW_ARCHIVE = $(SRC_DIRECTORY)/mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip
+MGW_INST_DIR = $(DRIVE_C)/MinGW
+
+MGW_PROF_DEF = $(SRC_DIRECTORY)/mingw-profile-defaults.xml
+
+MAKE := wine mingw32-make
+
+# Qt
+#
+QT_VER := 4.8.5
+QT_DIRECTORY := qt-everywhere-opensource-src-$(QT_VER)
+QT_INST_DIR_H = $(DRIVE_C)/MECT/Qt-$(QT_VER)
+export QT_INST_DIR := C:/MECT/Qt-$(QT_VER)
+QT_DESIGNER_PLUGIN_DIR = $(QT_INST_DIR_H)/plugins/designer
+QT_BIN_DIR = $(QT_INST_DIR)/bin
+QT_BIN_DIR := $(subst /,\\\\,$(QT_BIN_DIR))
+
+# Qt Creator
+#
+QTC_VER := 2.8.1
+QTC_DIRECTORY := qt-creator-$(QTC_VER)-src
+# NOTE: No install. Build in the installation directory.
+QTC_BUILD_DIR = $(CURDIR)/$(QTC_DIRECTORY)-build
+QTC_INST_DIR_H := $(DRIVE_C)/MECT/Qt-Creator-$(QTC_VER)
+export QTC_INST_DIR := C:/MECT/Qt-Creator-$(QTC_VER)
+QTC_BIN_DIR = $(QTC_INST_DIR)/bin
+QTC_BIN_DIR := $(subst /,\\\\,$(QTC_BIN_DIR))
+
+# Qwt 6.1 mutiaxes
+#
+QWT_VER := 6.1
+QWT_DIRECTORY := qwt-$(QWT_VER)-multiaxes
+QWT_BUILD_DIR = $(CURDIR)/$(QWT_DIRECTORY)-build
+
+QWT_PATCH_NODEBUG = $(SRC_DIRECTORY)/qwt-6.1-multiaxes-no_debug.patch
+
+# MECT Qt Creator plugins
+#
+MP_DIRECTORY := mect_plugins
+ifeq ($(shell expr "$$(wine --version)" : "wine-1\\.6"),8)
+	MP_INST_DIR := C:
+else
+	MP_INST_DIR := $(QT_INST_DIR)
+endif
+
+# MECT Cross Table Editor
+#
+CTE_DIRECTORY = $(QTC_DIRECTORY)/src/plugins/cte
+
+# TODO Use for embeded targets
+#
+
+# Development files from root file system
+RFS_DIRECTORY := rootfs
+RFS_ARCHIVE := $(RFS_DIRECTORY)_dev.zip
+
+
+# Progs
+QMAKE = wine $(QT_INST_DIR_H)/bin/qmake.exe
+
+# Parallel build
+NPROCS := $(shell nproc)
+NPROCS := $(shell expr $(NPROCS) + 1)
+
+
+.PHONY: all
+all: wine tools qt qtc qwt mp
+
+.PHONY: wine
+wine: $(WINEPREFIX)
+
+$(WINEPREFIX):
+	DISPLAY= wineboot --init
+
+.PHONY: tools
+tools: wine
+	rm -rf $(MGW_INST_DIR)
+	mkdir -p $(MGW_INST_DIR)
+	cd $(MGW_INST_DIR); unzip $(MGW_ARCHIVE)
+	install -m 644 -D $(MGW_PROF_DEF) $(MGW_INST_DIR)/var/lib/mingw-get/data/profile.xml
+	install -m 644 -D $(MGW_PROF_DEF) $(MGW_INST_DIR)/var/lib/mingw-get/data/defaults.xml
+	-wineserver -k		# Sync the registry
+	sed -i '/^"PATH"=/ s/C:\\\\MinGW\\\\bin;//g' $(WINEPREFIX)/system.reg
+	sed -i '/^"PATH"=/ s/"C:/"C:\\\\MinGW\\\\bin;C:/' $(WINEPREFIX)/system.reg
+	wine mingw-get install mingw32-base msys-base mingw32-gcc-g++ msys-perl msys-rebase
+	-wineserver -k		# Sync the registry
+	sed -i '/^"PATH"=/ s/C:\\\\MinGW\\\\msys\\\\1.0\\\\bin;//g' $(WINEPREFIX)/system.reg
+	sed -i '/^"PATH"=/ s/"C:/"C:\\\\MinGW\\\\msys\\\\1.0\\\\bin;C:/' $(WINEPREFIX)/system.reg
+	sed -i '/^"PATH"=/ s/;$(QT_BIN_DIR)//g' $(WINEPREFIX)/system.reg
+	sed -i '/^"PATH"=/ s/"$$/;$(QT_BIN_DIR)"/' $(WINEPREFIX)/system.reg
+	sed -i '/^"PATH"=/ s/;$(QTC_BIN_DIR)//g' $(WINEPREFIX)/system.reg
+	sed -i '/^"PATH"=/ s/"$$/;$(QTC_BIN_DIR)"/' $(WINEPREFIX)/system.reg
+
+.PHONY: qt
+qt: rebase do_qt rebase
+
+.PHONY: do_qt
+do_qt: qt-dir
+	test -d $(QT_INST_DIR_H)
+	cd $(QT_INST_DIR_H); wine configure \
+	    -platform win32-g++-4.6 \
+	    -confirm-license \
+	    -declarative \
+	    -fast \
+	    -fontconfig \
+	    -little-endian \
+	    -no-3dnow \
+	    -no-accessibility \
+	    -nomake demos \
+	    -nomake examples \
+	    -no-mmx \
+	    -no-multimedia \
+	    -no-phonon \
+	    -no-phonon-backend \
+	    -no-qt3support \
+	    -no-scripttools \
+	    -no-sse \
+	    -no-sse2 \
+	    -no-stl \
+	    -no-webkit \
+	    -no-xmlpatterns \
+	    -opensource \
+	    -plugin-sql-sqlite \
+	    -release \
+	    -script \
+	    -shared \
+	    -no-libtiff
+	$(MAKE) -j $(NPROCS) -C $(QT_INST_DIR_H)
+
+.PHONY: qt-dir
+qt-dir:
+	rm -rf $(QT_INST_DIR_H)
+	mkdir -p $(shell dirname $(QT_INST_DIR_H))
+	ln -s ../../../$(QT_DIRECTORY) $(QT_INST_DIR_H)
+
+.PHONY: qtc
+qtc: rebase do_qtc rebase
+
+.PHONY: do_qtc
+do_qtc:
+	mkdir -p $(QTC_BUILD_DIR)
+	cd $(QTC_BUILD_DIR); $(QMAKE) -r ../$(QTC_DIRECTORY)/qtcreator.pro
+	$(MAKE) -j $(NPROCS) -C $(QTC_BUILD_DIR)
+	$(MAKE) -C $(QTC_BUILD_DIR) INSTALL_ROOT=$(QTC_INST_DIR) install; stty sane
+
+.PHONY: qwt
+qwt: rebase do_qwt rebase
+
+.PHONY: do_qwt
+do_qwt:
+	mkdir -p $(QWT_BUILD_DIR)
+	cd $(QWT_BUILD_DIR); $(QMAKE) -r ../$(QWT_DIRECTORY)/qwt.pro
+	patch -d $(QWT_BUILD_DIR) -p1 < $(QWT_PATCH_NODEBUG)
+	$(MAKE) -j $(NPROCS) -C $(QWT_BUILD_DIR)
+	$(MAKE) -C $(QWT_BUILD_DIR) INSTALL_ROOT= install; stty sane
+
+.PHONY: mp
+mp: rebase do_mp rebase
+
+.PHONY: do_mp
+do_mp:
+	if test -r $(MP_DIRECTORY)/qt_plugins/Makefile; then $(MAKE) -C $(MP_DIRECTORY)/qt_plugins distclean; fi
+	cd $(MP_DIRECTORY)/qt_plugins; $(QMAKE) qt_designer_plugins.pro -r -config store -config trend -config recipe -config alarms CONFIG+=release DEFINES+=ATCM_VERSION=$(ATCM_VERSION)
+	if grep -rIq 'c:$$(INSTALL_ROOT)' mect_plugins; then sed -i '/c:$$(INSTALL_ROOT)/ s/c:$$(INSTALL_ROOT)/$$(INSTALL_ROOT)/g;' `grep -rIl 'c:$$(INSTALL_ROOT)' mect_plugins`; fi # Old wines are broken. :-)
+	$(MAKE) -j $(NPROCS) -C $(MP_DIRECTORY)/qt_plugins
+	$(MAKE) -C $(MP_DIRECTORY)/qt_plugins INSTALL_ROOT=$(MP_INST_DIR) install; stty sane
+
+
+# Utils
+.PHONY: cmd
+cmd: export WINEDEBUG := 
+cmd: export DISPLAY := $(DISPLAY_SAVED)
+cmd:
+	wine $(QTC_INST_DIR)/bin/qtcreator.exe
+
+# msys-1.0.dll rebase is a workaround for a bug in Cygwin use of persistent memory
+.PHONY: rebase
+rebase:
+	-wineserver -k
+	cp $(DRIVE_C)/MinGW/msys/1.0/bin/msys-1.0.dll $(DRIVE_C)/msys-1.0.dll
+	wine rebase.exe -b 0x50000000 C:/msys-1.0.dll
+	cp $(DRIVE_C)/msys-1.0.dll $(DRIVE_C)/MinGW/msys/1.0/bin/msys-1.0.dll
+
+
+.PHONY: clean
+clean: clean-wine clean-qt clean-qtc clean-qwt clean-mp
+
+.PHONY: clean-wine
+clean-wine:
+
+.PHONY: clean-qt
+clean-qt:
+	-if test -d $(QT_DIRECTORY); then make -C $(QT_DIRECTORY) clean; fi
+
+.PHONY: clean-qtc
+clean-qtc:
+	-if test -d $(QTC_BUILD_DIR); then make -C $(QTC_BUILD_DIR) clean; fi
+
+.PHONY: clean-qwt
+clean-qwt:
+	-if test -d $(QWT_BUILD_DIR); then make -C $(QWT_BUILD_DIR) clean; fi
+
+.PHONY: clean-mp
+clean-mp:
+	-if test -d $(MP_DIRECTORY); then make -C $(MP_DIRECTORY) clean; fi
+
+
+.PHONY: distclean
+distclean: clean distclean-wine distclean-qt distclean-qtc distclean-qwt
+
+.PHONY: distclean-wine
+distclean-wine:
+	rm -rf $(WINEPREFIX)
+
+.PHONY: distclean-qt
+distclean-qt:
+	rm -rf $(QT_INST_DIR_H) $(QT_DIRECTORY)
+
+.PHONY: distclean-qtc
+distclean-qtc:
+	rm -rf $(QTC_BUILD_DIR) $(QTC_INST_DIR_H) $(QTC_DIRECTORY)
+
+.PHONY: distclean-qwt
+distclean-qwt:
+	rm -rf $(QWT_BUILD_DIR) $(QWT_DIRECTORY)

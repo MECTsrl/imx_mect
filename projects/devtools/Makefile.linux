@@ -1,0 +1,155 @@
+# TODO set the proper version.
+ATCM_VERSION := 1.2.3-dummy
+
+export LC_ALL := en_US.UTF-8
+
+# Qt
+#
+QT_VER := 4.8.5
+QT_DIRECTORY := qt-everywhere-opensource-src-$(QT_VER)
+export QT_INST_DIR := $(CURDIR)/qt
+QT_DESIGNER_PLUGIN_DIR = $(QT_INST_DIR)/plugins/designer
+
+# Qt Creator
+#
+QTC_VER := 2.8.1
+QTC_DIRECTORY := qt-creator-$(QTC_VER)-src
+# NOTE: archive and build directories should be
+# NOTE: on the same branch and at the same depth.
+QTC_BUILD_DIR = $(QTC_DIRECTORY)-build
+export QTC_INST_DIR := $(CURDIR)/qtc
+
+# Qwt 6.1 mutiaxes
+#
+QWT_VER := 6.1
+QWT_DIRECTORY := qwt-$(QWT_VER)-multiaxes
+QWT_BUILD_DIR = $(CURDIR)/$(QWT_DIRECTORY)-build
+
+# MECT Qt Creator plugins
+#
+MP_DIRECTORY := mect_plugins
+
+# MECT Cross Table Editor
+#
+CTE_DIRECTORY = $(QTC_DIRECTORY)/src/plugins/cte
+
+
+# TODO Use for embeded targets
+#
+
+# Development files from root file system
+RFS_DIRECTORY := rootfs
+RFS_ARCHIVE := $(RFS_DIRECTORY)_dev.zip
+
+
+# Progs
+QMAKE := $(CURDIR)/$(QT_DIRECTORY)/bin/qmake
+
+# Parallel build
+NPROCS := $(shell nproc)
+NPROCS := $(shell expr $(NPROCS) + 1)
+
+
+.PHONY: all
+all: qt qtc qwt mp
+
+.PHONY: qt
+qt:
+	test -d $(CURDIR)/$(QT_DIRECTORY)
+	cd $(CURDIR)/$(QT_DIRECTORY); ./configure \
+	    --prefix=$(QT_INST_DIR) \
+	    -xplatform linux-g++ \
+	    -confirm-license \
+	    -declarative \
+	    -fast \
+	    -fontconfig \
+	    -host-little-endian \
+	    -little-endian \
+	    -no-3dnow \
+	    -no-accessibility \
+	    -no-javascript-jit \
+	    -no-largefile \
+	    -nomake demos \
+	    -nomake examples \
+	    -no-mmx \
+	    -no-multimedia \
+	    -no-phonon \
+	    -no-phonon-backend \
+	    -no-qt3support \
+	    -no-scripttools \
+	    -no-sse \
+	    -no-sse2 \
+	    -no-sse3 \
+	    -no-ssse3 \
+	    -no-stl \
+	    -no-svg \
+	    -no-webkit \
+	    -no-xmlpatterns \
+	    -opensource \
+	    -plugin-sql-sqlite \
+	    -qt-gfx-transformed \
+	    -qt-kbd-tty \
+	    -release \
+	    -script \
+	    -shared \
+	    -sm \
+	    -v
+	$(MAKE) -j$(NPROCS) -C $(CURDIR)/$(QT_DIRECTORY)
+	$(MAKE) -C $(CURDIR)/$(QT_DIRECTORY) install
+
+.PHONY: qtc
+qtc:
+	mkdir -p $(QTC_BUILD_DIR)
+	cd $(QTC_BUILD_DIR); $(QMAKE) -r ../$(QTC_DIRECTORY)/qtcreator.pro
+	$(MAKE) -j $(NPROCS) -C $(QTC_BUILD_DIR)
+	$(MAKE) -C $(QTC_BUILD_DIR) INSTALL_ROOT=$(QTC_INST_DIR) install
+
+.PHONY: qwt
+qwt:
+	mkdir -p $(QWT_BUILD_DIR)
+	cd $(QWT_BUILD_DIR); $(QMAKE) -r ../$(QWT_DIRECTORY)/qwt.pro
+	$(MAKE) -j $(NPROCS) -C $(QWT_BUILD_DIR)
+	$(MAKE) -C $(QWT_BUILD_DIR) INSTALL_ROOT= install
+
+.PHONY: mp
+mp:
+	if test -r $(MP_DIRECTORY)/qt_plugins/Makefile; then $(MAKE) -C $(MP_DIRECTORY)/qt_plugins distclean; fi
+	cd $(MP_DIRECTORY)/qt_plugins; $(QMAKE) qt_designer_plugins.pro -r -config store -config trend -config recipe -config alarms CONFIG+=release DEFINES+=ATCM_VERSION=$(ATCM_VERSION)
+	$(MAKE) -j $(NPROCS) -C $(MP_DIRECTORY)/qt_plugins
+	$(MAKE) -C $(MP_DIRECTORY)/qt_plugins INSTALL_ROOT= install
+
+
+.PHONY: clean
+clean: clean-qt clean-qtc clean-qwt clean-mp
+
+.PHONY: clean-qt
+clean-qt:
+	-if test -d $(QT_DIRECTORY); then make -C $(QT_DIRECTORY) clean; fi
+
+.PHONY: clean-qtc
+clean-qtc:
+	-if test -d $(QTC_BUILD_DIR); then make -C $(QTC_BUILD_DIR) clean; fi
+
+.PHONY: clean-qwt
+clean-qwt:
+	-if test -d $(QWT_BUILD_DIR); then make -C $(QWT_BUILD_DIR) clean; fi
+
+.PHONY: clean-mp
+clean-mp:
+	-if test -d $(MP_DIRECTORY); then make -C $(MP_DIRECTORY) clean; fi
+
+
+.PHONY: distclean
+distclean: clean distclean-qt distclean-qtc distclean-qwt
+
+.PHONY: distclean-qt
+distclean-qt:
+	rm -rf $(QT_INST_DIR) $(QT_DIRECTORY)
+
+.PHONY: distclean-qtc
+distclean-qtc:
+	rm -rf $(QTC_BUILD_DIR) $(QTC_INST_DIR) $(QTC_DIRECTORY)
+
+.PHONY: distclean-qwt
+distclean-qwt:
+	rm -rf $(QWT_BUILD_DIR) $(QWT_DIRECTORY)

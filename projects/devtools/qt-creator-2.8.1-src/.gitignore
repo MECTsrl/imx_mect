@@ -22,7 +22,7 @@ core
 tags
 .DS_Store
 *.debug
-Makefile*
+### Makefile*
 *.prl
 *.app
 moc_*.cpp
@@ -30,7 +30,7 @@ ui_*.h
 qrc_*.cpp
 Thumbs.db
 *.res
-*.rc
+### *.rc
 *.embed.manifest
 /.qmake.cache
 
@@ -39,7 +39,7 @@ Thumbs.db
 *.qbs.user*
 *.qmlproject.user*
 *.pluginspec
-*.json
+### *.json
 /src/app/Info.plist
 app_version.h
 /src/plugins/coreplugin/ide_version.h
@@ -83,7 +83,7 @@ phony.c
 
 debug/
 release/
-/lib/
+### /lib/
 /lib64/
 /*-debug/
 /*-release/

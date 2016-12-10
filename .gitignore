@@ -10,10 +10,13 @@
 /projects/cgic_work/getdatesinterval
 /projects/cgic_work/updateall.cgi
 /projects/cgic_work/upgrade.cgi
+/projects/devtools/qt/
+/projects/devtools/qtc/
+/projects/devtools/qt-creator-2.8.1-build/
+/projects/devtools/qt-everywhere-opensource-src-4.8.5-build/
 /projects/devtools/qt-everywhere-opensource-src-4.8.5/bin
 /projects/devtools/qt-everywhere-opensource-src-4.8.5/config.status
 /projects/devtools/qt-everywhere-opensource-src-4.8.5/config.tests
-/projects/devtools/qt-everywhere-opensource-src-4.8.5/imports/
 /projects/devtools/qt-everywhere-opensource-src-4.8.5/lib/lib*
 /projects/devtools/qt-everywhere-opensource-src-4.8.5/lib/pkgconfig
 /projects/devtools/qt-everywhere-opensource-src-4.8.5/**/Makefile

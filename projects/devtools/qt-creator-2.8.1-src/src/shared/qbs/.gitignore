@@ -29,5 +29,5 @@ Makefile*
 /tests/auto/tools/tst_tools
 
 *.app/
-bin/*
+### bin/*
 doc/html/*

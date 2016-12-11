@@ -54,13 +54,14 @@ QWT_PATCH_NODEBUG = $(SRC_DIRECTORY)/qwt-6.1-multiaxes-no_debug.patch
 #
 MP_DIRECTORY := ../mect_plugins
 ifeq ($(shell expr "$$(wine --version)" : "wine-1\\.6"),8)
-	MP_INST_DIR := C:
+	# Makefile.Release binds install path to c:
+	MP_INST_DIR := 
 else
 	MP_INST_DIR := $(QT_INST_DIR)
 endif
 
-MP_PATCH_PATHS = $(FTP_DIRECTORY)/mect_plugins-build_inst_paths.patch
-MP_PATCH_QRC_INSTPATH = $(FTP_DIRECTORY)/mect_plugins-qrc_inst_paths.patch
+MP_PATCH_PATHS = $(SRC_DIRECTORY)/mect_plugins-build_inst_paths.patch
+MP_PATCH_QRC_INSTPATH = $(SRC_DIRECTORY)/mect_plugins-qrc_inst_paths.patch
 
 # MECT Cross Table Editor
 #
@@ -144,7 +145,7 @@ do_qt: qt-dir
 	    -script \
 	    -shared \
 	    -no-libtiff
-	$(MAKE) -j $(NPROCS) -C $(QT_INST_DIR_H)
+	$(MAKE) -j $(NPROCS) -C $(QT_INST_DIR_H); stty sane
 
 .PHONY: qt-dir
 qt-dir:
@@ -159,7 +160,7 @@ qtc: rebase do_qtc rebase
 do_qtc:
 	mkdir -p $(QTC_BUILD_DIR)
 	cd $(QTC_BUILD_DIR); $(QMAKE) -r ../$(QTC_DIRECTORY)/qtcreator.pro
-	$(MAKE) -j $(NPROCS) -C $(QTC_BUILD_DIR)
+	$(MAKE) -j $(NPROCS) -C $(QTC_BUILD_DIR); stty sane
 	$(MAKE) -C $(QTC_BUILD_DIR) INSTALL_ROOT=$(QTC_INST_DIR) install; stty sane
 
 .PHONY: qwt
@@ -170,7 +171,7 @@ do_qwt:
 	mkdir -p $(QWT_BUILD_DIR)
 	cd $(QWT_BUILD_DIR); $(QMAKE) -r ../$(QWT_DIRECTORY)/qwt.pro
 	patch -d $(QWT_BUILD_DIR) -p1 < $(QWT_PATCH_NODEBUG)
-	$(MAKE) -j $(NPROCS) -C $(QWT_BUILD_DIR)
+	$(MAKE) -j $(NPROCS) -C $(QWT_BUILD_DIR); stty sane
 	$(MAKE) -C $(QWT_BUILD_DIR) INSTALL_ROOT= install; stty sane
 
 .PHONY: mp
@@ -184,7 +185,7 @@ do_mp:
 	-patch -d $(MP_DIRECTORY) -p1 -N -i $(MP_PATCH_QRC_INSTPATH)
 	cd $(MP_DIRECTORY)/qt_plugins; $(QMAKE) qt_designer_plugins.pro -r -config store -config trend -config recipe -config alarms CONFIG+=release DEFINES+=ATCM_VERSION=$(ATCM_VERSION)
 	if grep -rIq 'c:$$(INSTALL_ROOT)' mect_plugins; then sed -i '/c:$$(INSTALL_ROOT)/ s/c:$$(INSTALL_ROOT)/$$(INSTALL_ROOT)/g;' `grep -rIl 'c:$$(INSTALL_ROOT)' mect_plugins`; fi # Old wines are broken. :-)
-	$(MAKE) -j $(NPROCS) -C $(MP_DIRECTORY)/qt_plugins
+	$(MAKE) -j $(NPROCS) -C $(MP_DIRECTORY)/qt_plugins; stty sane
 	$(MAKE) -C $(MP_DIRECTORY)/qt_plugins INSTALL_ROOT=$(MP_INST_DIR) install; stty sane
 
 

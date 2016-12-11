@@ -365,10 +365,11 @@ MECT_PACKAGES = \
 	uuid \
 	uuid-dev \
 	wget \
+	wine \
 	zip \
 	zlib1g \
 	zlib1g-dev \
-	zlibc
+	zlibc \
 
 ifeq ($(shell lsb_release -r | cut -f2 | cut -d. -f1),14)
 MECT_PACKAGES += \

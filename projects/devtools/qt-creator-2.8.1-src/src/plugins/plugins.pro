@@ -47,7 +47,8 @@ SUBDIRS   = \
     valgrind \
     todo \
     qnx \
-    cte
+    cte \
+    ctc \
 
 exists(../shared/qbs/qbs.pro): \
     SUBDIRS += \

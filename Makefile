@@ -341,6 +341,7 @@ MECT_PACKAGES = \
 	gcc \
 	gzip \
 	intltool \
+	libcsv-dev \
 	libdbus-glib-1-dev \
 	libglib2.0-dev \
 	libgtk2.0-dev \

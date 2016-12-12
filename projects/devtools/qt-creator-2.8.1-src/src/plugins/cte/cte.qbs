@@ -6,13 +6,15 @@ QtcPlugin {
     name: "CTE"
 
     Depends { name: "Core" }
-    Depends { name: "Qt"; submodules: ["widgets", "xml", "network", "script"] }
+    Depends { name: "Qt"; submodules: ["widgets"] }
 
     files: [
-        "cteplugin.cpp",
-        "cteplugin.h",
-        "ctewindow.cpp",
-        "ctewindow.h",
+	"ctedit.cpp",
+	"ctedit.h",
+	"cteplugin.cpp",
+	"cteplugin.h",
+	"parser.c",
+	"parser.h"
     ]
 }
 

@@ -905,6 +905,7 @@ main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
+    csv_set_delim(&p, ';');
     csv_set_space_func(&p, is_space);
     csv_set_term_func(&p, is_term);
 

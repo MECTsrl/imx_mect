@@ -13,7 +13,7 @@ MECT_BUILD_IMXMECT_TAG := v2.0.11rc5
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_ATCMCRT_TAG := v1.025
+export MECT_BUILD_ATCMCRT_TAG := 0.0
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_CAN_BRANCH := mect_suite_2.0
 MECT_BUILD_ATCMCRT_CAN_REV := 201
@@ -553,11 +553,6 @@ spec_setup:
 	done
 
 
-# Build the default target image.
-.PHONY: image
-image: $(MECT_DEFAULT_IMAGE)
-
-
 # Rules to build target root file systems
 #
 
@@ -592,6 +587,12 @@ endif
 
 # Image-specific settings and targets
 $(foreach img,$(MECT_IMAGES),$(eval include $(MECT_MKIMGDIR)/Makefile-$(img).in))
+
+
+# Build the default target image.
+.PHONY: image
+image: $(MECT_DEFAULT_IMAGE)
+
 
 # Generate all manufacturing images.
 #

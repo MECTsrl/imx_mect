@@ -18,6 +18,7 @@
 
 #include <coreplugin/imode.h>
 #include <extensionsystem/iplugin.h>
+#include "ctedit.h"
 
 namespace CTE {
 namespace Internal {
@@ -45,7 +46,9 @@ private slots:
 } // namespace Internal
 
 namespace Constants {
-    const char * const CT_PROJ_REL_PATH = "Crosstable.csv";
+
+    const char * const CT_PROJ_REL_PATH = "config";
+    const char * const CT_FILE_NAME = "Crosstable.csv";
 } // namespace Constants
 } // namespace CTE
 

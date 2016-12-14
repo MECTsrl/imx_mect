@@ -6683,7 +6683,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +112,175 @@
+@@ -31,24 +112,174 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -6819,7 +6819,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/local/data/recipe
 +%{pfx}/local/data/store
 +%{pfx}/local/data/trends
-+%{pfx}/local/etc/sysconfig
 +%{pfx}/local/root
 +%{pfx}/local/sd_card
 +%{pfx}/local/update

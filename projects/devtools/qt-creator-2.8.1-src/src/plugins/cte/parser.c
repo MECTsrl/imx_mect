@@ -6,6 +6,9 @@
 /* ----  Local Defines:   ----------------------------------------------------- */
 #define TRUE  1
 #define FALSE 0
+#define LINESIZE 1024
+#define ctCOLS 13
+#define SEMICOL ";"
 /* ----  Includes:	 ---------------------------------------------------------- */
 
 #include <ctype.h>
@@ -212,6 +215,7 @@ int LoadXTable(char *crossTableFile)
     uint32_t addr, indx;
     int ERR = FALSE;
     FILE *xtable = NULL;
+    char *cPosComment = 0;
 
     // init tables
     for (addr = 1; addr <= DimCrossTable; ++addr) {
@@ -256,9 +260,9 @@ int LoadXTable(char *crossTableFile)
 
     // read loop
     for (addr = 1; addr <= DimCrossTable; ++ addr) {
-        char row[1024], *p, *r;
+        char row[LINESIZE], *p, *r;
 
-        if (fgets(row, 1024, xtable) == NULL) {
+        if (fgets(row, LINESIZE, xtable) == NULL) {
             CrossTable[addr].Error = 1;
             // no ERR = TRUE;
             continue;
@@ -474,31 +478,42 @@ int LoadXTable(char *crossTableFile)
             break;
         }
         CrossTable[addr].BlockSize = atoi(p);
-
+        // Ultimo Token
         // Handle ([RO]||[RW]|[AL|EV SOURCE OP COND]){text}
         p = strtok_csv(NULL, ";", &r);
         if (p == NULL) {
             ERR = TRUE;
             break;
         }
+        // Commento alla riga
+        strcpy(CrossTable[addr].Comment, "");
         // Copia del dato letto in Comment
-        strncpy(CrossTable[addr].Comment, p, MAX_COMMENT_NAME);
-        if (strncmp(p, "[RW]", 4) == 0) {
-            CrossTable[addr].Output = TRUE;
-        } else if (strncmp(p, "[RO]", 4) == 0) {
-            CrossTable[addr].Output = FALSE;
-        } else if (strncmp(p, "[AL ", 4) == 0) {
-            CrossTable[addr].Output = FALSE;
-            if (strlen(p) < 10 || newAlarmEvent(1, addr, &(p[3]), strlen(p) - 3)) {
-                ERR = TRUE;
-                break;
+        if (strncmp(p, "\n",1) > 0)  {
+            cPosComment = strchr(p, ']');
+            if (cPosComment != NULL)  {
+                if (strlen(cPosComment + sizeof(char)) > 0)  {
+                    strncpy(CrossTable[addr].Comment, cPosComment + sizeof(char), MAX_COMMENT_NAME);
+                }
             }
-        } else if (strncmp(p, "[EV ", 4) == 0) {
-            CrossTable[addr].Output = FALSE;
-            if (strlen(p) < 10 || newAlarmEvent(0, addr, &p[3], strlen(p) - 3)) {
-                ERR = TRUE;
-                break;
+            if (strncmp(p, "[RW]", 4) == 0) {
+                CrossTable[addr].Output = TRUE;
+            } else if (strncmp(p, "[RO]", 4) == 0) {
+                CrossTable[addr].Output = FALSE;
+            } else if (strncmp(p, "[AL ", 4) == 0) {
+                CrossTable[addr].Output = FALSE;
+                if (strlen(p) < 10 || newAlarmEvent(1, addr, &(p[3]), strlen(p) - 3)) {
+                    ERR = TRUE;
+                    break;
+                }
+            } else if (strncmp(p, "[EV ", 4) == 0) {
+                CrossTable[addr].Output = FALSE;
+                if (strlen(p) < 10 || newAlarmEvent(0, addr, &p[3], strlen(p) - 3)) {
+                    ERR = TRUE;
+                    break;
+                }
             }
+            // fprintf(stderr, "Voice:%d - %s\n", addr, CrossTable[addr].Output == TRUE ? "R/W" : "R/O" );
+
         }
     }
     if (ERR) {
@@ -595,3 +610,53 @@ exit_function:
     return ERR;
 }
 
+int SaveXTable(char *crossTableFile)
+{
+    uint32_t addr, nCol;
+    int ERR = FALSE;
+    FILE *xtable = NULL;
+    char row[LINESIZE], token[LINESIZE];
+
+    // open file for writing
+    fprintf(stderr, "writing '%s' ...", crossTableFile);
+    xtable = fopen(crossTableFile, "w");
+    if (xtable == NULL)  {
+        ERR = TRUE;
+        goto exit_function;
+    }
+    // Cicle on Cross Table Elements
+    // read loop
+    for (addr = 1; addr <= DimCrossTable; ++ addr) {
+        // Clear Row
+        memset(row, 0, LINESIZE);
+        // Priority
+        if (CrossTable[addr].Enable == 0)
+        {
+            // Empty CT Line
+            for (nCol = 0;nCol < ctCOLS-1; nCol++)
+                strcat(row, SEMICOL);
+        }
+        else
+        {
+            // Priority Column
+            sprintf(token, "%1d;", CrossTable[addr].Enable);
+            strcat(row, token);
+            // Update
+
+        }
+        //
+        // Write Row
+        if (fputs(row, xtable) == EOF) {
+            ERR = TRUE;
+            break;
+        }
+    }
+    // close file
+
+exit_function:
+    if (xtable) {
+        fclose(xtable);
+    }
+    fprintf(stderr, " %s\n", (ERR) ? "ERROR" : "OK");
+    return ERR;
+}

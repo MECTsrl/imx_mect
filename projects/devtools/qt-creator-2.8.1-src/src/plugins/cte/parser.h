@@ -91,6 +91,7 @@ struct  Alarms {
  ***************************** PROTOTYPES SECTION *****************************
  ******************************************************************************/
 int     LoadXTable(char *crossTableFile);
+int     SaveXTable(char *crossTableFile);
 char    *ipaddr2str(uint32_t ipaddr, char *buffer);
 
 /******************************************************************************

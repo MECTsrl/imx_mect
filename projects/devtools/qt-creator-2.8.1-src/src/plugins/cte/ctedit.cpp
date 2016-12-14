@@ -14,13 +14,18 @@
 #include <QValidator>
 #include <QIntValidator>
 #include <QDoubleValidator>
+#include <QDebug>
+#include <QLocale>
 
-#define MAXCOLS = 13
+/* ----  Local Defines:   ----------------------------------------------------- */
+#define MAXCOLS 13
+#define _TRUE  1
+#define _FALSE 0
+#define MAXBLOCKSIZE 64
 
 enum colonne_e
 {
-    colRow = 0,
-    colPriority,
+    colPriority = 0,
     colUpdate,
     colName,
     colType,
@@ -31,14 +36,23 @@ enum colonne_e
     colNodeID,
     colRegister,
     colBlock,
-    colNReg,
+    colBlockSize,
     colComment,
+    colBehavior,
     colTotals
 };
 
-
+enum behavior_e
+{
+    bevReadOnly = 0,
+    bevReadWrite,
+    bevAlarm,
+    bevEvent,
+    bevTotals
+};
 
 extern int LoadXTable(char *crossTableFile);
+extern int SaveXTable(char *crossTableFile);
 extern char *ipaddr2str(uint32_t ipaddr, char *buffer);
 
 ctedit::ctedit(QWidget *parent) :
@@ -56,6 +70,7 @@ ctedit::ctedit(QWidget *parent) :
     lstValues.clear();
     lstPLC.clear();
     lstBusType.clear();
+    lstBehavior.clear();
     szEmpty = QString::fromAscii("");
     for (nCol = 0; nCol < colTotals; nCol++)  {
         lstHeadCols.append(szEmpty);
@@ -63,7 +78,6 @@ ctedit::ctedit(QWidget *parent) :
     }
     // Riempimento liste
     // Titoli colonne
-    lstHeadCols[colRow] = trUtf8("Row");
     lstHeadCols[colPriority] = trUtf8("Priority");
     lstHeadCols[colUpdate] = trUtf8("Update");
     lstHeadCols[colName] = trUtf8("Name");
@@ -75,8 +89,9 @@ ctedit::ctedit(QWidget *parent) :
     lstHeadCols[colNodeID] = trUtf8("Node ID");
     lstHeadCols[colRegister] = trUtf8("Register");
     lstHeadCols[colBlock] = trUtf8("Block");
-    lstHeadCols[colNReg] = trUtf8("N.Reg");
+    lstHeadCols[colBlockSize] = trUtf8("Blk Size");
     lstHeadCols[colComment] = trUtf8("Comment");
+    lstHeadCols[colBehavior] = trUtf8("Behavior");
     // Lista PLC
     lstPLC
             << trUtf8("H")
@@ -121,6 +136,12 @@ ctedit::ctedit(QWidget *parent) :
             << trUtf8("TCP SRV")
             << trUtf8("TCPRTU SRV")
         ;
+    lstBehavior
+            << trUtf8("READ")
+            << trUtf8("READ/WRITE")
+            << trUtf8("ALARM")
+            << trUtf8("EVENT")
+        ;
     // Caricamento delle varie Combos
     // Combo Priority
     for  (nCol=1; nCol<4; nCol++)   {
@@ -130,11 +151,11 @@ ctedit::ctedit(QWidget *parent) :
     for  (nCol=0; nCol<lstPLC.count(); nCol++)   {
         ui->cboUpdate->addItem(lstPLC[nCol], lstPLC[nCol]);
     }
-    // Combo Tipo
+    // Combo TipoCrossTable
     for  (nCol=0; nCol<lstTipi.count(); nCol++)   {
         ui->cboType->addItem(lstTipi[nCol], lstTipi[nCol]);
     }
-    // Combo Tipo
+    // Combo Tipo Bus
     for  (nCol=0; nCol<lstBusType.count(); nCol++)   {
         ui->cboProtocol->addItem(lstBusType[nCol], lstBusType[nCol]);
     }
@@ -142,6 +163,13 @@ ctedit::ctedit(QWidget *parent) :
     for  (nCol=0; nCol<4; nCol++)   {
         ui->cboDecimal->addItem(QString::number(nCol), QString::number(nCol));
     }
+    // Combo Behavior
+    for  (nCol=0; nCol<lstBehavior.count(); nCol++)   {
+        ui->cboBehavior->addItem(lstBehavior[nCol], lstBehavior[nCol]);
+    }
+    // Init Valori
+    m_szCurrentCTFile.clear();
+    m_szCurrentProjectPath.clear();
     m_nGridRow = 0;
     // Connessione Segnali - Slot
     connect(ui->tblCT, SIGNAL(clicked(QModelIndex)), this, SLOT(itemClicked(QModelIndex)));
@@ -156,29 +184,41 @@ ctedit::ctedit(QWidget *parent) :
     QString szExp = QString::fromAscii("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}");
     QRegExp regExprIP(szExp);
     ui->txtIP->setValidator(new QRegExpValidator(regExprIP, this));
+    // Campi sempre locked
+    ui->txtRow->setEnabled(false);
+    ui->fraOptions->setEnabled(false);
+    ui->txtBlock->setEnabled(false);
+    ui->txtBlockSize->setEnabled(false);
 }
 
 ctedit::~ctedit()
 {
     delete ui;
 }
+void    ctedit::setProjectPath(QString szProjectPath)
+{
+    m_szCurrentProjectPath = szProjectPath;
+}
 
-bool    ctedit::selectCTFile()
+bool    ctedit::selectCTFile(QString szFileCT)
 // Select a current CT File
 {
-    QString szFile;
-    QFile   ctFile;
+    QFileInfo   ctFileInfo(szFileCT);
+    QString     szFile;
 
-    szFile = QString::fromAscii("/home/emiliano/mect_suite/Test/BiotecHMI_rev4/config/Crosstable.csv");
-
-    if (! ctFile.exists(szFile))
-        szFile = QFileDialog::getOpenFileName(this, tr("Open Cross Table File"), szFile, tr("Cross Table File (*.csv)"));
+    if (ctFileInfo.exists() && ctFileInfo.isFile()) {
+        szFile = szFileCT;
+    }
+    else {
+        szFile = QFileDialog::getOpenFileName(this, tr("Open Cross Table File"), szFileCT, tr("Cross Table File (*.csv)"));
+    }
+    // Tries to Open CT File
     if (! szFile.isEmpty())   {
-        m_CurrentCTFile = szFile;
-        return true;
+        m_szCurrentCTFile = szFile;
+        return loadCTFile();
     }
     else  {
-        m_CurrentCTFile.clear();
+        m_szCurrentCTFile.clear();
         return false;
     }
 }
@@ -187,12 +227,15 @@ bool    ctedit::loadCTFile()
 {
     int nRes = 0;
 
-    if (m_CurrentCTFile.isEmpty())
+    if (m_szCurrentCTFile.isEmpty())
         return false;
     // Opening File
-    nRes = LoadXTable(m_CurrentCTFile.toAscii().data());
+    nRes = LoadXTable(m_szCurrentCTFile.toAscii().data());
     // Return value
-    return nRes == 0;
+    if (nRes == 0)
+        return ctable2Iface();
+    else
+        return false;
 }
 bool    ctedit::ctable2Iface()
 {
@@ -203,6 +246,9 @@ bool    ctedit::ctable2Iface()
     QString     szTemp;
     QTableWidgetItem    *tItem;
 
+    ui->tblCT->setEnabled(false);
+    ui->tblCT->clearSelection();
+    ui->tblCT->setRowCount(0);
     ui->tblCT->setColumnCount(colTotals);
     for (nCur = 1; nCur <= DimCrossTable+1; ++nCur)  {
         // Covert CT Record 2 User Values
@@ -231,10 +277,11 @@ bool    ctedit::ctable2Iface()
     ui->tblCT->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tblCT->setHorizontalHeaderLabels(lstHeadCols);
     // ui->tblCT->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tblCT->setEnabled(true);
     // Return value
     return fRes;
 }
-bool ctedit::recCT2List(QStringList &lstValues, int nPos)
+bool ctedit::recCT2List(QStringList &lstRecValues, int nPos)
 {
     int     nCol = 0;
     QString szTemp;
@@ -243,45 +290,57 @@ bool ctedit::recCT2List(QStringList &lstValues, int nPos)
     if (nPos <= 0 || nPos > DimCrossTable + 1)
         return false;
     szTemp.clear();
-    for (nCol = 0; nCol < lstValues.count(); nCol++)  {
-        lstValues[nCol] = szTemp;
+    for (nCol = 0; nCol < lstRecValues.count(); nCol++)  {
+        lstRecValues[nCol] = szTemp;
     }
     // Numero riga corrente
-    lstValues[colRow] = QString::number(nPos);
+    // lstRecValues[colRow] = QString::number(nPos);
     // Recupero informazioni da Record CT
     // Campo Priority abilita la riga
     if (CrossTable[nPos].Enable > 0)  {
         if (CrossTable[nPos].Enable > 0)
-            lstValues[colPriority] = QString::number(CrossTable[nPos].Enable);
+            lstRecValues[colPriority] = QString::number(CrossTable[nPos].Enable);
         // Campo Update
         if (CrossTable[nPos].Plc >= 0 && CrossTable[nPos].Plc < lstPLC.count())
-            lstValues[colUpdate] = lstPLC[CrossTable[nPos].Plc];
+            lstRecValues[colUpdate] = lstPLC[CrossTable[nPos].Plc];
         // Campo Name
-        lstValues[colName] = QString::fromAscii(CrossTable[nPos].Tag);
+        lstRecValues[colName] = QString::fromAscii(CrossTable[nPos].Tag);
         // Campo Type
         if (CrossTable[nPos].Types >= BIT && CrossTable[nPos].Types <= UNKNOWN)
-            lstValues[colType] = lstTipi[CrossTable[nPos].Types];
+            lstRecValues[colType] = lstTipi[CrossTable[nPos].Types];
         // Campo Decimal
-        lstValues[colDecimal] = QString::number(CrossTable[nPos].Decimal);
+        lstRecValues[colDecimal] = QString::number(CrossTable[nPos].Decimal);
         // Protocol
         if (CrossTable[nPos].Protocol >= 0 && CrossTable[nPos].Protocol < lstBusType.count())
-            lstValues[colProtocol] = lstBusType[CrossTable[nPos].Protocol];
+            lstRecValues[colProtocol] = lstBusType[CrossTable[nPos].Protocol];
         // IP Address
-        if (CrossTable[nPos].IPAddress > 0)  {
+        // if (CrossTable[nPos].IPAddress > 0)  {
             ipaddr2str(CrossTable[nPos].IPAddress, ip);
             szTemp = QString::fromAscii(ip);
-            lstValues[colIP] = szTemp;
-        }
+            lstRecValues[colIP] = szTemp;
+        // }
         // Port
-        lstValues[colPort] = QString::number(CrossTable[nPos].Port);
+        lstRecValues[colPort] = QString::number(CrossTable[nPos].Port);
         // Node Id
-        lstValues[colNodeID] = QString::number(CrossTable[nPos].NodeId);
+        lstRecValues[colNodeID] = QString::number(CrossTable[nPos].NodeId);
         // Register
-        lstValues[colRegister] = QString::number(CrossTable[nPos].Offset);
+        lstRecValues[colRegister] = QString::number(CrossTable[nPos].Offset);
         // Block
-        lstValues[colBlock] = QString::number(CrossTable[nPos].Block);
+        lstRecValues[colBlock] = QString::number(CrossTable[nPos].Block);
         // N.Registro
-        lstValues[colNReg] = QString::number(CrossTable[nPos].BlockSize);
+        lstRecValues[colBlockSize] = QString::number(CrossTable[nPos].BlockSize);
+        // Commento
+        lstRecValues[colComment] = QString::fromAscii(CrossTable[nPos].Comment).trimmed();
+        // Behavior
+        // Caso Read/ReadWrite
+        if (CrossTable[nPos].Output == _FALSE)
+            lstRecValues[colBehavior] = lstBehavior[bevReadOnly];
+        else if (CrossTable[nPos].Output == _TRUE)
+            lstRecValues[colBehavior] = lstBehavior[bevReadWrite];
+        // Caso Alarm / Event
+            // bevAlarm,
+            // bevEvent,
+
     }
     // Return value
     return true;
@@ -328,75 +387,86 @@ void ctedit::on_cmdHideShow_clicked(bool checked)
     ui->tblCT->setCurrentCell(m_nGridRow, 0, QItemSelectionModel::SelectCurrent);
     // ui->tblCT->setSelection(Zone, QItemSelectionModel::SelectCurrent);
 }
-bool ctedit::values2Iface(QStringList &lstValues)
+bool ctedit::values2Iface(QStringList &lstRecValues)
 {
     QString szTemp;
     int     nPos = 0;
 
+    // Row #
+    szTemp = QLocale::system().toString(m_nGridRow + 1);
+    ui->txtRow->setText(szTemp);
     // Priority
-    szTemp = lstValues[colPriority].trimmed();
+    szTemp = lstRecValues[colPriority].trimmed();
     ui->cboPriority->setCurrentIndex(-1);
     if (! szTemp.isEmpty())  {
-        nPos = ui->cboPriority->findText(szTemp, Qt::MatchFixedString);
+        nPos = searchCombo(ui->cboPriority, szTemp);
         if (nPos >= 0 && nPos < ui->cboPriority->count())
             ui->cboPriority->setCurrentIndex(nPos);
-    }
+    }       
     // Update
-    szTemp = lstValues[colUpdate].trimmed();
+    szTemp = lstRecValues[colUpdate].trimmed();
     ui->cboUpdate->setCurrentIndex(-1);
     if (! szTemp.isEmpty())  {
-        nPos = ui->cboUpdate->findText(szTemp, Qt::MatchFixedString);
+        nPos = searchCombo(ui->cboUpdate, szTemp);
         if (nPos >= 0 && nPos < ui->cboUpdate->count())
             ui->cboUpdate->setCurrentIndex(nPos);
     }
     // Name
-    szTemp = lstValues[colName].trimmed();
+    szTemp = lstRecValues[colName].trimmed();
     ui->txtName->setText(szTemp);
     // Type
-    szTemp = lstValues[colType].trimmed();
+    szTemp = lstRecValues[colType].trimmed();
     ui->cboType->setCurrentIndex(-1);
     if (! szTemp.isEmpty())  {
-        nPos = ui->cboType->findText(szTemp, Qt::MatchFixedString);
+        nPos = searchCombo(ui->cboType, szTemp);
         if (nPos >= 0 && nPos < ui->cboType->count())
             ui->cboType->setCurrentIndex(nPos);
     }
     // Decimal
-    szTemp = lstValues[colDecimal].trimmed();
+    szTemp = lstRecValues[colDecimal].trimmed();
     ui->cboDecimal->setCurrentIndex(-1);
     if (! szTemp.isEmpty())  {
-        nPos = ui->cboDecimal->findText(szTemp, Qt::MatchFixedString);
+        nPos = searchCombo(ui->cboDecimal, szTemp);
         if (nPos >= 0 && nPos < ui->cboDecimal->count())
             ui->cboDecimal->setCurrentIndex(nPos);
     }
     // Protocol
-    szTemp = lstValues[colProtocol].trimmed();
+    szTemp = lstRecValues[colProtocol].trimmed();
     ui->cboProtocol->setCurrentIndex(-1);
     if (! szTemp.isEmpty())  {
-        nPos = ui->cboProtocol->findText(szTemp, Qt::MatchFixedString);
+        nPos = searchCombo(ui->cboProtocol, szTemp);
         if (nPos >= 0 && nPos < ui->cboProtocol->count())
             ui->cboProtocol->setCurrentIndex(nPos);
     }
     // IP
-    szTemp = lstValues[colIP].trimmed();
+    szTemp = lstRecValues[colIP].trimmed();
     ui->txtIP->setText(szTemp);
     // Port
-    szTemp = lstValues[colPort].trimmed();
+    szTemp = lstRecValues[colPort].trimmed();
     ui->txtPort->setText(szTemp);
     // Node ID
-    szTemp = lstValues[colNodeID].trimmed();
+    szTemp = lstRecValues[colNodeID].trimmed();
     ui->txtNode->setText(szTemp);
     // Register
-    szTemp = lstValues[colRegister].trimmed();
+    szTemp = lstRecValues[colRegister].trimmed();
     ui->txtRegister->setText(szTemp);
     // Block
-    szTemp = lstValues[colBlock].trimmed();
+    szTemp = lstRecValues[colBlock].trimmed();
     ui->txtBlock->setText(szTemp);
     // N° Registro
-    szTemp = lstValues[colNReg].trimmed();
+    szTemp = lstRecValues[colBlockSize].trimmed();
     ui->txtBlockSize->setText(szTemp);
     // Comment
-    szTemp = lstValues[colComment].trimmed();
+    szTemp = lstRecValues[colComment].trimmed();
     ui->txtComment->setText(szTemp);
+    // Behavior
+    szTemp = lstRecValues[colBehavior].trimmed();
+    ui->cboBehavior->setCurrentIndex(-1);
+    if (! szTemp.isEmpty())  {
+        nPos = searchCombo(ui->cboBehavior, szTemp);
+        if (nPos >= 0 && nPos < ui->cboBehavior->count())
+            ui->cboBehavior->setCurrentIndex(nPos);
+    }
     return true;
 }
 
@@ -424,4 +494,106 @@ void ctedit::itemDoubleClicked(QModelIndex gridItem)
     if (nRow >= 0)  {
         m_nGridRow = nRow;
     }
+}
+
+void ctedit::on_cmdBlocchi_clicked()
+{
+    bool fRes = false;
+
+    fRes = riassegnaBlocchi();
+}
+
+void ctedit::on_cmdSave_clicked()
+{
+
+}
+int ctedit::searchCombo(QComboBox *Combo, QString szValue)
+// Ricerca del Valore aint16_tll'interno di una Combo scorrendo la parte Qt::UserRole
+{
+    int         nItem = 0;
+    QString     szCurValue;
+    int         retValue = -1;
+    QVariant    val;
+
+    if (Combo->count() == 0 || szValue.length() == 0)
+        return retValue;
+    szCurValue.clear();
+    for (nItem = 0; nItem < Combo->count(); nItem++)  {
+        val = Combo->itemData (nItem,  Qt::UserRole);
+        if (val.canConvert<QString>())  {
+            szCurValue = val.toString();
+            if (szCurValue.contains(szValue, Qt::CaseSensitive))  {
+                retValue =  nItem;
+                break;
+            }
+        }
+    }
+    return retValue;
+}
+// Riassegnazione blocchi variabili
+bool    ctedit::riassegnaBlocchi()
+{
+    int     nRow = 0;
+    bool    fRes = false;
+    int     nPrevRow = -1;
+    int     nBlockStart = 0;
+    int     j = 0;
+    FieldbusType    prevProtocol = (FieldbusType) 0;
+    uint32_t        prevIpAdr = 0;
+    uint16_t        prevPort = 0;
+    varTypes        prevType = (varTypes) 0;
+    uint16_t        curBlock = 0;
+    int16_t         curBSize = (int16_t) 0;
+
+    ui->cmdBlocchi->setEnabled(false);
+    this->setCursor(Qt::WaitCursor);
+    for (nRow = 1; nRow <= DimCrossTable+1; nRow++)  {
+        // Ignora le righe con Priority == 0
+        if (CrossTable[nRow].Enable > 0)  {
+            // Salto riga o condizione di inizio nuovo blocco
+            // Inizio nuovo blocco
+            if (nPrevRow != nRow - 1 || prevProtocol !=  CrossTable[nRow].Protocol || prevIpAdr != CrossTable[nRow].IPAddress ||
+                    prevPort != CrossTable[nRow].Port || prevType != CrossTable[nRow].Types || curBSize >= MAXBLOCKSIZE)  {
+                // Rinumera block start
+                if (nRow - nBlockStart > 1)  {
+                    for (j = nBlockStart; j < nRow; j++)  {
+                        CrossTable[j].BlockSize = curBSize;
+                    }
+                }
+                // Imposta i valori di confronto correnti
+                nBlockStart = nRow;
+                prevProtocol =  CrossTable[nRow].Protocol;
+                prevIpAdr = CrossTable[nRow].IPAddress;
+                prevPort = CrossTable[nRow].Port;
+                prevType = CrossTable[nRow].Types;
+                curBlock = (int16_t) nRow;
+                curBSize = 1;
+            }
+            else
+                ++curBSize;
+            // Aggiornamento Blocco e Size
+            CrossTable[nRow].Block = curBlock;
+            CrossTable[nRow].BlockSize = curBSize;
+            // Incremento ultima riga significativa
+            nPrevRow = nRow;
+        }
+        else
+            CrossTable[nRow].Block = 0;
+    }
+    // Return value as reload CT
+    fRes = ctable2Iface();
+    qDebug() << "Reload finished";
+    ui->cmdBlocchi->setEnabled(true);
+    this->setCursor(Qt::ArrowCursor);
+    return fRes;
+}
+bool ctedit::saveCTFile()
+{
+    int nRes = 0;
+    QString szCtFile = m_szCurrentCTFile;
+
+    // Saving File
+    nRes = SaveXTable(szCtFile.toAscii().data());
+    // Return Value
+    return nRes == 0;
 }

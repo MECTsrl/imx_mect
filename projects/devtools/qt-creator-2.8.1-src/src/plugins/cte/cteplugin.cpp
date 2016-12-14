@@ -31,20 +31,24 @@
 #include <QMenu>
 #include <QString>
 #include <QtPlugin>
-
+#include <QDebug>
 #include <iostream>
 
 namespace CTE {
 namespace Internal {
+
+ctedit * ctEditor;
 
 /*! A mode with a push button based on BaseMode */
 
 class CTEMode : public Core::IMode
 {
 public:
+
     CTEMode()
     {
-        setWidget(new ctedit());
+        ctEditor = new ctedit();
+        setWidget(ctEditor);
         setContext(Core::Context("CTE.MainView"));
         setDisplayName(tr("XTable"));
         setIcon(QIcon());
@@ -154,25 +158,39 @@ CTEPlugin::extensionsInitialized()
 void
 CTEPlugin::enableIfCT()
 {
+    bool    fFileExists = false;
+    QString szFileCT;
+
+    // Clear Project Path for Editor
+    szFileCT.clear();
+    ctEditor->setProjectPath(szFileCT);
+    // Retrieve current project if any
     ProjectExplorer::Project *p = ProjectExplorer::ProjectExplorerPlugin::currentProject();
     // No project
     if (p == NULL) {
         m_cteMode->setEnabled(false);
-
         return;
     }
-
+    // Retrieve Project directory
     QString pd = p->projectDirectory();
     // No project path
     if (pd.isEmpty()) {
         m_cteMode->setEnabled(false);
-
         return;
     }
-
+    // Building Cross Table File Name
+    szFileCT = pd + QString::fromAscii("/") + QString::fromAscii(Constants::CT_PROJ_REL_PATH) + QString::fromAscii("/") + QString::fromAscii(Constants::CT_FILE_NAME);
+    qDebug()  << "Checking File: " << szFileCT;
     // Any cross table in the project?
-    QFileInfo ctFile(pd + tr("/") + tr(Constants::CT_PROJ_REL_PATH));
-    m_cteMode->setEnabled(ctFile.exists() && ctFile.isFile());
+    QFileInfo ctFile(szFileCT);
+    fFileExists = ctFile.exists() && ctFile.isFile();
+    // Opening file
+    if (fFileExists)  {
+        fFileExists = ctEditor->selectCTFile(szFileCT);
+        ctEditor->setProjectPath(pd);
+    }
+    // Enabling CTEditor
+    m_cteMode->setEnabled(fFileExists);
 }
 
 } // namespace Internal

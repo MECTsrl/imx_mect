@@ -48,7 +48,8 @@ SUBDIRS   = \
     todo \
     qnx \
     cte \
-    ctc \
+
+#    ctc \
 
 exists(../shared/qbs/qbs.pro): \
     SUBDIRS += \

@@ -16,6 +16,8 @@
 #include <QDoubleValidator>
 #include <QDebug>
 #include <QLocale>
+#include <QDate>
+#include <QTime>
 
 /* ----  Local Defines:   ----------------------------------------------------- */
 #define MAXCOLS 13
@@ -189,6 +191,9 @@ ctedit::ctedit(QWidget *parent) :
     ui->fraOptions->setEnabled(false);
     ui->txtBlock->setEnabled(false);
     ui->txtBlockSize->setEnabled(false);
+    // Stringhe generiche per gestione dei formati di Data e ora
+    m_szFormatDate = QString::fromAscii("yyyy.MM.dd");
+    m_szFormatTime = QString::fromAscii("hh:mm:ss");
 }
 
 ctedit::~ctedit()
@@ -580,6 +585,10 @@ bool    ctedit::riassegnaBlocchi()
         else
             CrossTable[nRow].Block = 0;
     }
+    // Rinumera ultimo blocco trattato
+    for (j = nBlockStart; j < nRow; j++)  {
+        CrossTable[j].BlockSize = curBSize;
+    }
     // Return value as reload CT
     fRes = ctable2Iface();
     qDebug() << "Reload finished";
@@ -590,10 +599,48 @@ bool    ctedit::riassegnaBlocchi()
 bool ctedit::saveCTFile()
 {
     int nRes = 0;
-    QString szCtFile = m_szCurrentCTFile;
+    QString szCtFile;
 
+    // Trigo per ora per preparare un File name differente
+    szCtFile = QString(QDate::currentDate().toString(m_szFormatDate));
+    szCtFile.prepend(QString::fromAscii("_"));
+    szCtFile.append(QString::fromAscii("_"));
+    szCtFile.append(QString(QTime::currentTime().toString(m_szFormatTime)));
+    szCtFile.prepend(m_szCurrentCTFile);
     // Saving File
     nRes = SaveXTable(szCtFile.toAscii().data());
     // Return Value
     return nRes == 0;
+}
+bool ctedit::iface2Ctable()
+{
+    bool        fRes = true;
+    int         nCur = 0;
+    int         nCol = 0;
+    int         nRowCount = 0;
+    QString     szTemp;
+    QTableWidgetItem    *tItem;
+
+    // Ciclo sugli elementi di Grid
+    for (nCur = 1; nCur <= ui->tblCT->rowCount(); ++nCur)  {
+        lstValues.clear();
+        // Insert Items at Row, Col
+        for (nCol = 1; nCol < colTotals; nCol++)  {
+            tItem = ui->tblCT->item(nCur, nCol);
+            szTemp = tItem->text();
+            // Aggiunta alla Lista
+            lstValues.append(szTemp);
+        }
+        // Covert back User Values 2 CT Record
+        fRes = list2CTrec(lstValues, nCur);
+    }
+    // Return Value
+    return fRes;
+}
+bool ctedit::list2CTrec(QStringList &lstRecValues, int nPos)
+{
+    bool        fRes = true;
+
+    // Return Value
+    return fRes;
 }

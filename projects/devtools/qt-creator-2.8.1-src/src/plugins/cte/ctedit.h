@@ -23,6 +23,7 @@ public:
     bool    loadCTFile();
     bool    ctable2Iface();
     bool    saveCTFile();
+    bool    iface2Ctable();
 
 
 signals:
@@ -42,6 +43,7 @@ private:
     // Funzioni locali al modulo
     //---------------------------------------------------------------------
     bool    recCT2List(QStringList &lstRecValues, int nPos);
+    bool    list2CTrec(QStringList &lstRecValues, int nPos);
     bool    values2Iface(QStringList &lstRecValues);
     int     searchCombo(QComboBox *Combo, QString szValue);
     bool    riassegnaBlocchi();                       // Riassegnazione blocchi variabili
@@ -52,6 +54,8 @@ private:
     int         m_nGridRow;
     QString     m_szCurrentCTFile;
     QString     m_szCurrentProjectPath;
+    QString     m_szFormatDate;
+    QString     m_szFormatTime;
     QStringList lstHeadCols;
     QStringList lstPLC;
     QStringList lstTipi;

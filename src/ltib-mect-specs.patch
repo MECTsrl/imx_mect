@@ -2221,7 +2221,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/freetype/freetype.spec ltib/dist/lfs-5.1/freetype/freetype.spec
 --- ltib.reference/dist/lfs-5.1/freetype/freetype.spec
 +++ ltib/dist/lfs-5.1/freetype/freetype.spec
-@@ -12,29 +12,63 @@
+@@ -12,25 +12,54 @@
  Patch1          : proper-armel-asm-declaration.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -2243,6 +2243,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 +export LC_ALL
 +LC_ALL=C
@@ -2250,6 +2251,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  
++
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -2258,6 +2260,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
  make 
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -2266,13 +2269,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  make DESTDIR=$RPM_BUILD_ROOT/%{pfx} install
 -rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
 +
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_libdir}/pkgconfig, d;
-+    \,^%{pfx}%{_includedir}, d;
-+    /\.l\?a$/ d;
-+' all_files.lst > rfs_files.lst
  
  %Clean
 +export LC_ALL
@@ -2281,13 +2277,17 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
--%Files
-+%Files -f all_files.lst
+@@ -38,3 +67,10 @@
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
  
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/bin/freetype-config
++%{pfx}/usr/lib/libfreetype.so
++%{pfx}/usr/lib/libfreetype.so.6
++%{pfx}/usr/lib/libfreetype.so.6.3.20
++%{pfx}/usr/share/aclocal/freetype2.m4
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/git/git.spec ltib/dist/lfs-5.1/git/git.spec
 --- ltib.reference/dist/lfs-5.1/git/git.spec
 +++ ltib/dist/lfs-5.1/git/git.spec

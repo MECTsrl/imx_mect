@@ -1356,7 +1356,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +%setup -T -c -n %{name}
-+rsync -av --inplace ../../../../projects/%{name}/ ./
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
 +
 +%Build
@@ -1391,6 +1391,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/share/www/.passwd
 +%{pfx}/usr/share/www/alarms_manager.cgi
 +%{pfx}/usr/share/www/changepwd.cgi
 +%{pfx}/usr/share/www/checkpwd.cgi
@@ -1418,7 +1419,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/usr/share/www/logs_manager.cgi
 +%{pfx}/usr/share/www/managepwd.cgi
 +%{pfx}/usr/share/www/menu.cgi
-+%{pfx}/usr/share/www/.passwd
 +%{pfx}/usr/share/www/reboot.cgi
 +%{pfx}/usr/share/www/recipes_manager.cgi
 +%{pfx}/usr/share/www/reset_mass_storage.cgi

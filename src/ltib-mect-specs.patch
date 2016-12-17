@@ -140,7 +140,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +%setup -T -c -n %{name}
-+rsync -av --inplace ../../../../projects/%{name}/ ./
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
 +
 +%build
@@ -3346,7 +3346,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,701 @@
+@@ -0,0 +1,700 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Default HMI application.
@@ -3707,7 +3707,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +%setup -T -c -n %{name}
-+#rsync -av --inplace ../../../../projects/%{name}/ ./
 +cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
 +

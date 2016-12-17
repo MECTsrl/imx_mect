@@ -1845,8 +1845,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/expat/expat.spec ltib/dist/lfs-5.1/expat/expat.spec
 --- ltib.reference/dist/lfs-5.1/expat/expat.spec
 +++ ltib/dist/lfs-5.1/expat/expat.spec
-@@ -14,26 +14,55 @@
- Patch2          : expat-1.95.8-man1dir.patch
+@@ -8,32 +8,55 @@
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
+ Group           : Applications/Publishing/XML
+-Source0         : %{name}-%{version}.tar.gz
+-Patch0          : %{name}-DESTDIR-%{version}.patch 
+-Patch1          : %{name}-ac_fixes.patch
+-Patch2          : expat-1.95.8-man1dir.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -1869,15 +1875,17 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +
  %Prep
+-%setup
+-%patch0 -p1
+-%patch1 -p1
+-%patch2 -p1
 +export LC_ALL
 +LC_ALL=C
 +
- %setup
- %patch0 -p1
- %patch1 -p1
- %patch2 -p1
- 
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
+ 
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -1903,7 +1911,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
-@@ -41,3 +70,9 @@
+@@ -41,3 +64,9 @@
  %defattr(-,root,root)
  %{pfx}/*
  

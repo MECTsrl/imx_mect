@@ -2221,8 +2221,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/freetype/freetype.spec ltib/dist/lfs-5.1/freetype/freetype.spec
 --- ltib.reference/dist/lfs-5.1/freetype/freetype.spec
 +++ ltib/dist/lfs-5.1/freetype/freetype.spec
-@@ -12,25 +12,54 @@
- Patch1          : proper-armel-asm-declaration.patch
+@@ -8,29 +8,56 @@
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
+ Group           : System Environment/Libraries
+-Source          : %{name}-%{version}.tar.gz
+-Patch1          : proper-armel-asm-declaration.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -2245,13 +2249,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +
  %Prep
+-%setup
+-%patch1 -p1
 +export LC_ALL
 +LC_ALL=C
 +
- %setup
- %patch1 -p1
- 
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
+ 
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -2277,7 +2283,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
-@@ -38,3 +67,10 @@
+@@ -38,3 +65,10 @@
  %defattr(-,root,root)
  %{pfx}/*
  

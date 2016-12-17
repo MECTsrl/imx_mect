@@ -1704,8 +1704,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 --- ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 +++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
-@@ -13,25 +13,109 @@
- Patch1          : e2fsprogs-1.41.4-fix-lib-links.patch
+@@ -9,29 +9,113 @@
+ Packager	: Stuart Hughes, Emil Medve
+ Group		: System Environment/Base
+ URL		: http://e2fsprogs.sourceforge.net
+-Source		: %{name}-%{version}.tar.gz
+-Patch1          : e2fsprogs-1.41.4-fix-lib-links.patch
  BuildRoot	: %{_tmppath}/%{name}
  Prefix		: %{pfx}
 +AutoReqProv     : no
@@ -1726,12 +1730,16 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
+-%setup
+-%patch1 -p1
 +export LC_ALL
 +LC_ALL=C
 +
- %setup
- %patch1 -p1
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
++
  
  %Build
 +export LC_ALL

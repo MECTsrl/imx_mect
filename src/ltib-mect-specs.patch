@@ -3036,7 +3036,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libmodbus/libmodbus.spec ltib/dist/lfs-5.1/libmodbus/libmodbus.spec
 --- ltib.reference/dist/lfs-5.1/libmodbus/libmodbus.spec
 +++ ltib/dist/lfs-5.1/libmodbus/libmodbus.spec
-@@ -0,0 +1,68 @@
+@@ -0,0 +1,72 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : A Modbus library
@@ -3047,7 +3047,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
 +Group           : Applications/System
-+Source          : %{name}-%{version}.tar.gz
 +BuildRoot       : %{_tmppath}/%{name}
 +Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -3068,19 +3067,22 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Description
 +%{summary}
 +
++
 +%Prep
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
-+./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
 +
 +%Build
 +export LC_ALL
 +LC_ALL=C
 +
++./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
 +make
++
 +
 +%Install
 +export LC_ALL
@@ -3090,11 +3092,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 +
++
 +%Clean
 +export LC_ALL
 +LC_ALL=C
 +
 +rm -rf $RPM_BUILD_ROOT
++
 +
 +%Files
 +%defattr(-,root,root)

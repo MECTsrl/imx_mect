@@ -15,5 +15,8 @@ devtools/qt-everywhere-opensource-src-4.8.5/lib/*.prl
 devtools/qt-everywhere-opensource-src-4.8.5/qmake/qmake.exe
 devtools/qwt-6.1-multiaxes-build/
 devtools/wine/
+expat/xmlwf/.libs/
+freetype/builds/
+freetype/objs/
 release/
 tmp/

@@ -723,19 +723,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
 --- ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec
 +++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
-@@ -8,39 +8,93 @@
+@@ -8,39 +8,81 @@
  Vendor          : Freescale
  Packager        : Terry Lv
  Group           : Tools
 -Source          : %{name}-%{version}-%{release}.tar.gz
-+Source          : %{name}-11.01.00.tar.gz
 +Source1         : updater_ivt.sb
-+Patch1          : imx-bootlets-src-11.01.00-1315841439.patch
-+Patch2          : imx-bootlets-src-11.01.00-1332172356.patch
-+Patch3          : imx-bootlets-src-11.01.00-1337962710.patch
-+Patch4          : imx-bootlets-src-11.01.00-1412693346.patch
-+Patch5          : imx-bootlets-src-11.01.00-1418123773.patch
-+Patch6          : imx-bootlets-src-11.01.00-1418123774.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -766,13 +759,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup -n %{name}-11.01.00
-+%patch1 -p1
-+%patch2 -p1
-+%patch3 -p1
-+%patch4 -p1
-+%patch5 -p1
-+%patch6 -p1
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
  
  %Build

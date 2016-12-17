@@ -2595,7 +2595,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/iptables/iptables.spec ltib/dist/lfs-5.1/iptables/iptables.spec
 --- ltib.reference/dist/lfs-5.1/iptables/iptables.spec
 +++ ltib/dist/lfs-5.1/iptables/iptables.spec
-@@ -14,45 +14,86 @@
+@@ -14,45 +14,134 @@
  Patch1		: iptables-1.4.2-libxt_TOS.patch
  BuildRoot	: %{_tmppath}/%{name}
  Prefix		: %{pfx}
@@ -2646,6 +2646,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +* listing the contents of the packet filter ruleset
 +* adding/removing/modifying rules in the packet filter ruleset
 +* listing/zeroing per-rule counters of the packet filter ruleset
++
  
  %Prep
 +export LC_ALL
@@ -2656,6 +2657,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %patch0 -p1
  %patch1 -p1
  
++
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -2663,6 +2665,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
  make
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -2671,17 +2674,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
  find $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/ -name "*.la" | xargs rm -f
  
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,%{pfx}%{_bindir}/iptables-xml, d;
-+    \,%{pfx}%{_libdir}/pkgconfig, d;
-+    \,%{pfx}%{_libexecdir}/xtables/libip6t_, d;
-+    \,%{pfx}%{_libexecdir}/xtables/libipt_, d;
-+    \,%{pfx}%{_mandir}, d;
-+    \,%{pfx}%{_includedir}, d;
-+    \,%{pfx}%{_sbindir}/ip6tables.*, d;
-+' all_files.lst > rfs_files.lst
 +
  %Clean
 +export LC_ALL
@@ -2689,13 +2681,67 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
-+%Files -f all_files.lst
-+%defattr(-,root,root)
 +
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/lib/libxtables.so
++%{pfx}/usr/lib/libxtables.so.0
++%{pfx}/usr/lib/libxtables.so.0.0.0
++%{pfx}/usr/libexec/xtables/libxt_CLASSIFY.so
++%{pfx}/usr/libexec/xtables/libxt_CONNMARK.so
++%{pfx}/usr/libexec/xtables/libxt_CONNSECMARK.so
++%{pfx}/usr/libexec/xtables/libxt_DSCP.so
++%{pfx}/usr/libexec/xtables/libxt_MARK.so
++%{pfx}/usr/libexec/xtables/libxt_NFLOG.so
++%{pfx}/usr/libexec/xtables/libxt_NFQUEUE.so
++%{pfx}/usr/libexec/xtables/libxt_NOTRACK.so
++%{pfx}/usr/libexec/xtables/libxt_RATEEST.so
++%{pfx}/usr/libexec/xtables/libxt_SECMARK.so
++%{pfx}/usr/libexec/xtables/libxt_TCPMSS.so
++%{pfx}/usr/libexec/xtables/libxt_TCPOPTSTRIP.so
++%{pfx}/usr/libexec/xtables/libxt_TOS.so
++%{pfx}/usr/libexec/xtables/libxt_TRACE.so
++%{pfx}/usr/libexec/xtables/libxt_comment.so
++%{pfx}/usr/libexec/xtables/libxt_connbytes.so
++%{pfx}/usr/libexec/xtables/libxt_connlimit.so
++%{pfx}/usr/libexec/xtables/libxt_connmark.so
++%{pfx}/usr/libexec/xtables/libxt_conntrack.so
++%{pfx}/usr/libexec/xtables/libxt_dccp.so
++%{pfx}/usr/libexec/xtables/libxt_dscp.so
++%{pfx}/usr/libexec/xtables/libxt_esp.so
++%{pfx}/usr/libexec/xtables/libxt_hashlimit.so
++%{pfx}/usr/libexec/xtables/libxt_helper.so
++%{pfx}/usr/libexec/xtables/libxt_iprange.so
++%{pfx}/usr/libexec/xtables/libxt_l7pm.so
++%{pfx}/usr/libexec/xtables/libxt_length.so
++%{pfx}/usr/libexec/xtables/libxt_limit.so
++%{pfx}/usr/libexec/xtables/libxt_mac.so
++%{pfx}/usr/libexec/xtables/libxt_mark.so
++%{pfx}/usr/libexec/xtables/libxt_multiport.so
++%{pfx}/usr/libexec/xtables/libxt_owner.so
++%{pfx}/usr/libexec/xtables/libxt_physdev.so
++%{pfx}/usr/libexec/xtables/libxt_pkttype.so
++%{pfx}/usr/libexec/xtables/libxt_quota.so
++%{pfx}/usr/libexec/xtables/libxt_rateest.so
++%{pfx}/usr/libexec/xtables/libxt_sctp.so
++%{pfx}/usr/libexec/xtables/libxt_standard.so
++%{pfx}/usr/libexec/xtables/libxt_state.so
++%{pfx}/usr/libexec/xtables/libxt_statistic.so
++%{pfx}/usr/libexec/xtables/libxt_string.so
++%{pfx}/usr/libexec/xtables/libxt_tcp.so
++%{pfx}/usr/libexec/xtables/libxt_tcpmss.so
++%{pfx}/usr/libexec/xtables/libxt_time.so
++%{pfx}/usr/libexec/xtables/libxt_tos.so
++%{pfx}/usr/libexec/xtables/libxt_u32.so
++%{pfx}/usr/libexec/xtables/libxt_udp.so
++%{pfx}/usr/sbin/iptables
++%{pfx}/usr/sbin/iptables-multi
++%{pfx}/usr/sbin/iptables-restore
++%{pfx}/usr/sbin/iptables-save
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl ltib/dist/lfs-5.1/kernel/kernel-common.tmpl
 --- ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl
 +++ ltib/dist/lfs-5.1/kernel/kernel-common.tmpl

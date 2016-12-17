@@ -1845,7 +1845,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/expat/expat.spec ltib/dist/lfs-5.1/expat/expat.spec
 --- ltib.reference/dist/lfs-5.1/expat/expat.spec
 +++ ltib/dist/lfs-5.1/expat/expat.spec
-@@ -14,30 +14,64 @@
+@@ -14,26 +14,55 @@
  Patch2          : expat-1.95.8-man1dir.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -1867,6 +1867,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 +export LC_ALL
 +LC_ALL=C
@@ -1876,6 +1877,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %patch1 -p1
  %patch2 -p1
  
++
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -1883,6 +1885,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
  make
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -1892,13 +1895,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -rm $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
 +make install DESTDIR=$RPM_BUILD_ROOT%{pfx} install
 +
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_prefix}/share/man, d;
-+    \,^%{pfx}%{_prefix}/include, d;
-+    /\.l\?a$/ d;
-+' all_files.lst > rfs_files.lst
  
  %Clean
 +export LC_ALL
@@ -1907,13 +1903,16 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
--%Files
-+%Files -f all_files.lst
+@@ -41,3 +70,9 @@
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
  
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/bin/xmlwf
++%{pfx}/usr/lib/libexpat.so
++%{pfx}/usr/lib/libexpat.so.0
++%{pfx}/usr/lib/libexpat.so.0.5.0
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec ltib/dist/lfs-5.1/fake-provides/fake-provides.spec
 --- ltib.reference/dist/lfs-5.1/fake-provides/fake-provides.spec
 +++ ltib/dist/lfs-5.1/fake-provides/fake-provides.spec

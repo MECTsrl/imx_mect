@@ -1435,18 +1435,17 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec
-@@ -10,36 +10,68 @@
+@@ -9,37 +9,55 @@
+ Vendor          : Freescale
  Packager        : John Faith
  Group           : Applications/Internet
- Source          : dhcp-3.0.3b1.tgz
+-Source          : dhcp-3.0.3b1.tgz
+-Patch1          : dhcp-3.0.3b1-sip.patch
+-Patch2          : dhcp-3.0.3b1-defaults.patch
+-Patch3          : dhcp-3.0.3b1-types.patch
+-Patch4          : dhcp-3.0.3b1-usesockets.patch
+-Patch5          : dhcp-3.0.3b1-compat-with-linux-3.0.patch
 +URL             : http://www.isc.org/sw/dhcp/
- Patch1          : dhcp-3.0.3b1-sip.patch
- Patch2          : dhcp-3.0.3b1-defaults.patch
- Patch3          : dhcp-3.0.3b1-types.patch
- Patch4          : dhcp-3.0.3b1-usesockets.patch
- Patch5          : dhcp-3.0.3b1-compat-with-linux-3.0.patch
-+Patch6          : dhcp-3.0.3b1-fix_string_tests_script.patch
-+Patch7          : dhcp-3.0.3b1-kernel_version_check_above_2.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 -URL             : http://www.isc.org/sw/dhcp/
@@ -1470,17 +1469,17 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +
  %Prep
+-%setup -n %{name}-%{version}
+-%patch1 -p1
+-%patch2 -p1
+-%patch3 -p1
+-%patch4 -p1
+-%patch5 -p1
 +export LC_ALL
 +LC_ALL=C
 +
- %setup -n %{name}-%{version}
- %patch1 -p1
- %patch2 -p1
- %patch3 -p1
- %patch4 -p1
- %patch5 -p1
-+%patch6 -p1
-+%patch7 -p1
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
  
  %Build
@@ -1489,7 +1488,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  ./configure
 -make
-+make -j`grep -c ^processor /proc/cpuinfo`
++make -j$(nproc)
 +
  
  %Install
@@ -1510,7 +1509,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  for i in %pfx/%base/etc/test %pfx/%base/etc/rc.d \
           %pfx/%base/sbin/S30dhclient %pfx/%_prefix/local
-@@ -47,8 +79,7 @@
+@@ -47,8 +65,7 @@
      rm -rf $RPM_BUILD_ROOT/$i
  done
  
@@ -1520,7 +1519,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      for i in %pfx/%base/etc/dhclient.conf \
               %pfx/%base/var/state/dhcp/dhclient.leases \
               %pfx/%base/sbin/dhclient-script \
-@@ -61,11 +92,11 @@
+@@ -61,11 +78,11 @@
               %pfx/%_mandir/man8/dhclient-script.8 \
               %pfx/%_mandir/man8/dhclient.8
      do
@@ -1535,7 +1534,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      for i in %pfx/%base/etc/dhcpd.conf \
               %pfx/%_bindir/omshell \
               %pfx/%_mandir/man1/omshell.1 \
-@@ -82,14 +113,35 @@
+@@ -82,14 +99,35 @@
               %pfx/%_sbindir/dhcrelay \
               %pfx/%base/var/state/dhcp/dhcpd.leases
       do

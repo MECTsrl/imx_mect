@@ -1,0 +1,7 @@
+/opt/freescale/rootfs/arm/sbin/dhclient-script
+/opt/freescale/rootfs/arm/sbin/dhclient
+/opt/freescale/rootfs/arm/etc/dhclient-exit-hooks
+/opt/freescale/rootfs/arm/usr/sbin
+/opt/freescale/rootfs/arm/usr/bin
+/opt/freescale/rootfs/arm/bin/parse
+/opt/freescale/rootfs/arm/var/state/dhcp/dhclient.leases

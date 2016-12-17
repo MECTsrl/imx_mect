@@ -1,0 +1,8 @@
+#These are the instructions for building and installing dhcp.
+1) ./configure
+2) make
+3) make install prefix=$BUILD_ROOT
+	After this step, we can deploy the image onto the target board and test.
+
+ To remove the binary and object files use the command
+4) make clean  prefix=$BUILD_ROOT

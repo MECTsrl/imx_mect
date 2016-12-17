@@ -1,0 +1,23 @@
+# /bin/sh
+#
+#Description : This tests the dhclient with a lease time of 6 minutes 
+#
+#The following files is necessary for running the dhclient daemon(s)
+#
+#/etc/dhclient.conf             : The DHCP  client  normally  gets  its  configuration  information  from this file.
+#/var/lib/dhcp/dhclient.leases  : The DHCP client stores its lease database in this file.
+#/var/run/dhclient.pid          : The DHCP client stores its process ID in this file.
+#/sbin/dhclient-script          : The script specify the different names and/or locations for these files
+SCRIPT="dhclient"
+if [ ! -x /sbin/dhclient ]; then
+        echo "dhclient not installed check it out"
+        exit 1
+fi
+echo "Running dhclient with a default lease time of  6 minutes"
+echo "press control-c or controll-Z whenever u want to exit"
+rm -f /var/state/dhcp/dhclient.leases
+touch /var/state/dhcp/dhclient.leases
+cp -f ../config_script/dhclient2.conf /etc/dhclient.conf
+sleep 1
+${SCRIPT} -d
+exit 0

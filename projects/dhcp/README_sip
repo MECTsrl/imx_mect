@@ -1,0 +1,17 @@
+This README specifies new functionality added to dhclient
+1) The option "-sl <filename>" is used to specify the SIP server file path. 
+	where 
+		filename - the name of the SIP server file.
+
+
+2) The option "-dl" is included to obtain the IP renewal time.
+
+
+3) The default configuration file is tests/config_script/dhclient.conf.  Necessary changes such as default IP address, dns server address, and lease time must be added to this file before running test scripts.
+
+
+4) The test shell script is installed in etc/test/test_script/ directory on the target board , the same can be used to evaluate the test cases.
+
+5) Request for a SIP server option by using a request tag in dhclient.conf file
+	
+	Example: request subnet-mask,broadcast-address,time-offset,routers,domain-name,domain-name-servers,host-name,SIP-Servers;

@@ -266,7 +266,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
  
  Summary         : Base Libraries (from toolchain).
-@@ -11,6 +10,19 @@
+@@ -11,13 +10,32 @@
  Group           : System Environment/Libraries
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -279,6 +279,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Packager        : Mihai Lazarescu
 +Group           : System Environment/Libraries
 +AutoReqProv     : no
++
 +%Description rfs
 +base_libs package contents restricted to just the files that
 +are needed at run time on the target.
@@ -286,9 +287,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  %Description
  %{summary}
-@@ -18,6 +30,9 @@
+ 
++
  %Prep
  
++
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -296,7 +299,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  cat <<TXT
  PKG_LIBC_WANT_SHARED_LIBS   : $PKG_LIBC_WANT_SHARED_LIBS
  PKG_LIBC_WANT_CRT_FILES     : $PKG_LIBC_WANT_CRT_FILES
-@@ -35,7 +50,7 @@
+@@ -35,7 +53,7 @@
  # strip "bin/"
  set +e
  ${TOOLCHAIN_PREFIX}gcc -v 2>&1 | grep -q "prefix=/usr"
@@ -305,7 +308,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  then
  TC_PREFIX="`which ${TOOLCHAIN_PREFIX}gcc | perl -p -e 's,/bin/'${TOOLCHAIN_PREFIX}'gcc,,'`"
  else
-@@ -45,6 +60,9 @@
+@@ -45,6 +63,9 @@
  
  
  %Install
@@ -315,7 +318,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  X_DIR=`echo $TOOLCHAIN_PREFIX | sed -e 's,-$,,'`
  
-@@ -53,7 +71,7 @@
+@@ -53,7 +74,7 @@
  # strip "bin/"
  set +e
  ${TOOLCHAIN_PREFIX}gcc -v 2>&1 | grep -q "prefix=/usr"
@@ -324,7 +327,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  then
  TC_PREFIX="`which ${TOOLCHAIN_PREFIX}gcc | perl -p -e 's,/bin/'${TOOLCHAIN_PREFIX}'gcc,,'`"
  SYSROOT_TC="no"
-@@ -122,12 +140,12 @@
+@@ -122,12 +143,12 @@
      #       is a symbolic link to lib! - Stevep
      if [ "${TC_TYPE}" != "UCLIBC" ]
      then
@@ -340,7 +343,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
      # Only needed if gcc native is selected.
      #
-@@ -157,9 +175,9 @@
+@@ -157,9 +178,9 @@
          do
              if [ "$TC_TYPE" = "XTOOL" ]
              then
@@ -352,7 +355,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
              fi
          done
          for file in ldconfig sln
-@@ -170,54 +188,54 @@
+@@ -170,54 +191,54 @@
          do
              if [ "$TC_TYPE" = "XTOOL" ]
              then
@@ -420,7 +423,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  fi
  
  if [ -n "$PKG_LIBC_WANT_C_LOCALES" ]
-@@ -225,7 +243,7 @@
+@@ -225,7 +246,7 @@
      set +e
      if [ -n "$UCLIBC" ]
      then
@@ -429,7 +432,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      else
          if [ "$TC_TYPE" = "CSL" ]
          then
-@@ -241,16 +259,16 @@
+@@ -241,16 +262,16 @@
              i=
          fi
  
@@ -453,7 +456,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      fi
      set -e
  fi
-@@ -277,13 +295,13 @@
+@@ -277,13 +298,13 @@
      else
          i= 
      fi
@@ -470,7 +473,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  fi
  
  if [ -n "$PKG_GCC_WANT_LIBGCC_SHARED" ]
-@@ -296,7 +314,7 @@
+@@ -296,7 +317,7 @@
  
  # remove absolute paths from text search files (if they exist)
  perl -w -e '
@@ -479,7 +482,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      exit(0) unless @ARGV;
      $^I = ".bak";
      while(<>) {
-@@ -305,14 +323,14 @@
+@@ -305,14 +326,14 @@
      }
      ' $RPM_BUILD_ROOT/%{pfx}/lib/libc.so \
        $RPM_BUILD_ROOT/%{pfx}/lib/libpthread.so \
@@ -497,16 +500,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  # relocate all symlink .so (linker files) to usr/lib
  cd lib
-@@ -333,9 +351,21 @@
+@@ -333,9 +354,100 @@
     }
  ' 
  
-+cd %{_builddir}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( -not -type d \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,%{pfx}%{_includedir}, d;
-+    \,\.bak$, d;
-+' all_files.lst > rfs_files.lst
 +
  %Clean
 +export LC_ALL
@@ -514,13 +511,96 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
-+%Files -f all_files.lst
-+%defattr(-,root,root)
 +
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/lib/ld-2.13.so
++%{pfx}/lib/ld-linux.so.3
++%{pfx}/lib/libBrokenLocale-2.13.so
++%{pfx}/lib/libBrokenLocale.so.1
++%{pfx}/lib/libSegFault.so
++%{pfx}/lib/libanl-2.13.so
++%{pfx}/lib/libanl.so.1
++%{pfx}/lib/libc-2.13.so
++%{pfx}/lib/libc.so.6
++%{pfx}/lib/libcidn-2.13.so
++%{pfx}/lib/libcidn.so.1
++%{pfx}/lib/libcrypt-2.13.so
++%{pfx}/lib/libcrypt.so.1
++%{pfx}/lib/libdl-2.13.so
++%{pfx}/lib/libdl.so.2
++%{pfx}/lib/libgcc_s.so
++%{pfx}/lib/libgcc_s.so.1
++%{pfx}/lib/libm-2.13.so
++%{pfx}/lib/libm.so.6
++%{pfx}/lib/libmemusage.so
++%{pfx}/lib/libnsl-2.13.so
++%{pfx}/lib/libnsl.so.1
++%{pfx}/lib/libnss_compat-2.13.so
++%{pfx}/lib/libnss_compat.so.2
++%{pfx}/lib/libnss_dns-2.13.so
++%{pfx}/lib/libnss_dns.so.2
++%{pfx}/lib/libnss_files-2.13.so
++%{pfx}/lib/libnss_files.so.2
++%{pfx}/lib/libnss_hesiod-2.13.so
++%{pfx}/lib/libnss_hesiod.so.2
++%{pfx}/lib/libnss_nis-2.13.so
++%{pfx}/lib/libnss_nis.so.2
++%{pfx}/lib/libnss_nisplus-2.13.so
++%{pfx}/lib/libnss_nisplus.so.2
++%{pfx}/lib/libpcprofile.so
++%{pfx}/lib/libpthread-2.13.so
++%{pfx}/lib/libpthread.so.0
++%{pfx}/lib/libresolv-2.13.so
++%{pfx}/lib/libresolv.so.2
++%{pfx}/lib/librt-2.13.so
++%{pfx}/lib/librt.so.1
++%{pfx}/lib/libstdc++.so.6
++%{pfx}/lib/libstdc++.so.6.0.14
++%{pfx}/lib/libthread_db-1.0.so
++%{pfx}/lib/libthread_db.so.1
++%{pfx}/lib/libutil-2.13.so
++%{pfx}/lib/libutil.so.1
++%{pfx}/sbin/ldconfig
++%{pfx}/sbin/sln
++%{pfx}/usr/bin/catchsegv
++%{pfx}/usr/bin/gencat
++%{pfx}/usr/bin/getconf
++%{pfx}/usr/bin/getent
++%{pfx}/usr/bin/iconv
++%{pfx}/usr/bin/ldd
++%{pfx}/usr/bin/locale
++%{pfx}/usr/bin/localedef
++%{pfx}/usr/bin/rpcgen
++%{pfx}/usr/bin/sprof
++%{pfx}/usr/bin/tzselect
++%{pfx}/usr/lib/libBrokenLocale.so
++%{pfx}/usr/lib/libanl.so
++%{pfx}/usr/lib/libc.so
++%{pfx}/usr/lib/libcidn.so
++%{pfx}/usr/lib/libcrypt.so
++%{pfx}/usr/lib/libdl.so
++%{pfx}/usr/lib/libm.so
++%{pfx}/usr/lib/libnsl.so
++%{pfx}/usr/lib/libnss_compat.so
++%{pfx}/usr/lib/libnss_dns.so
++%{pfx}/usr/lib/libnss_files.so
++%{pfx}/usr/lib/libnss_hesiod.so
++%{pfx}/usr/lib/libnss_nis.so
++%{pfx}/usr/lib/libnss_nisplus.so
++%{pfx}/usr/lib/libpthread.so
++%{pfx}/usr/lib/libresolv.so
++%{pfx}/usr/lib/librt.so
++%{pfx}/usr/lib/libstdc++.so
++%{pfx}/usr/lib/libthread_db.so
++%{pfx}/usr/lib/libutil.so
++%{pfx}/usr/sbin/rpcinfo
++%{pfx}/usr/sbin/zdump
++%{pfx}/usr/sbin/zic
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bison/bison.spec ltib/dist/lfs-5.1/bison/bison.spec
 --- ltib.reference/dist/lfs-5.1/bison/bison.spec
 +++ ltib/dist/lfs-5.1/bison/bison.spec

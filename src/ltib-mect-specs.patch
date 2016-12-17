@@ -1236,7 +1236,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cantest/cantest.spec ltib/dist/lfs-5.1/cantest/cantest.spec
 --- ltib.reference/dist/lfs-5.1/cantest/cantest.spec
 +++ ltib/dist/lfs-5.1/cantest/cantest.spec
-@@ -9,18 +9,35 @@
+@@ -9,18 +9,36 @@
  Packager        : Chen Hongjun
  Group           : Applications/System
  Source          : %{name}-%{version}.tar.gz
@@ -1266,6 +1266,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 +export LC_ALL
 +LC_ALL=C
@@ -1273,15 +1274,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup -n %{name}-%{version}
  %patch0 -p1
  %patch1 -p1
-@@ -30,16 +47,34 @@
+@@ -29,17 +47,34 @@
+ %patch3 -p1
  fi
  
++
  %Build
 +export LC_ALL
 +LC_ALL=C
 +
  make
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -1292,11 +1296,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +mkdir -p $RPM_BUILD_ROOT%{pfx}%{_prefix}/bin
 +cp cantest $RPM_BUILD_ROOT%{pfx}%{_prefix}/bin
 +
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed -n '
-+    p
-+' all_files.lst > rfs_files.lst
  
  %Clean
 +export LC_ALL
@@ -1304,14 +1303,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
 +
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/bin/cantest
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cgic_work/cgic_work.spec ltib/dist/lfs-5.1/cgic_work/cgic_work.spec
 --- ltib.reference/dist/lfs-5.1/cgic_work/cgic_work.spec
 +++ ltib/dist/lfs-5.1/cgic_work/cgic_work.spec

@@ -2519,9 +2519,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  %Description
  %{summary}
-@@ -22,20 +41,43 @@
+@@ -21,21 +40,76 @@
+ example) which are designed to use the advanced networking
  capabilities of the Linux kernel.
  
++
  %Prep
 -%setup -n %{name}2-%{version}
 +export LC_ALL
@@ -2531,6 +2533,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %patch0 -p1
 +%patch1 -p0
 +%patch2 -p1
++
  
  %Build
 +export LC_ALL
@@ -2538,6 +2541,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  make -j1 KERNEL_INCLUDE=$DEV_IMAGE/usr/src/linux HOSTCC="$BUILDCC"
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -2552,20 +2556,47 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +    \,^%{pfx}/share/man, d;
 +' all_files.lst > rfs_files.lst
 +
++
  %Clean
 +export LC_ALL
 +LC_ALL=C
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
 +
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/etc/iproute2/ematch_map
++%{pfx}/etc/iproute2/rt_dsfield
++%{pfx}/etc/iproute2/rt_protos
++%{pfx}/etc/iproute2/rt_realms
++%{pfx}/etc/iproute2/rt_scopes
++%{pfx}/etc/iproute2/rt_tables
++%{pfx}/lib/tc
++%{pfx}/sbin/ctstat
++%{pfx}/sbin/genl
++%{pfx}/sbin/ifcfg
++%{pfx}/sbin/ifstat
++%{pfx}/sbin/ip
++%{pfx}/sbin/lnstat
++%{pfx}/sbin/nstat
++%{pfx}/sbin/routef
++%{pfx}/sbin/routel
++%{pfx}/sbin/rtacct
++%{pfx}/sbin/rtmon
++%{pfx}/sbin/rtpr
++%{pfx}/sbin/rtstat
++%{pfx}/sbin/ss
++%{pfx}/sbin/tc
++%{pfx}/usr/lib/tc/experimental.dist
++%{pfx}/usr/lib/tc/normal.dist
++%{pfx}/usr/lib/tc/pareto.dist
++%{pfx}/usr/lib/tc/paretonormal.dist
++%{pfx}/var/lib/arpd
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/iptables/iptables.spec ltib/dist/lfs-5.1/iptables/iptables.spec
 --- ltib.reference/dist/lfs-5.1/iptables/iptables.spec
 +++ ltib/dist/lfs-5.1/iptables/iptables.spec

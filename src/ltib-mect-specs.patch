@@ -2083,7 +2083,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec ltib/dist/lfs-5.1/fontconfig/fontconfig.spec
 --- ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec
 +++ ltib/dist/lfs-5.1/fontconfig/fontconfig.spec
-@@ -10,27 +10,53 @@
+@@ -10,27 +10,56 @@
  Group           : System Environment/Libraries
  Source          : %{name}-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
@@ -2107,12 +2107,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 +export LC_ALL
 +LC_ALL=C
 +
  %setup 
  
++
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -2126,6 +2128,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +            --with-freetype-config="$DEV_IMAGE%{_prefix}/bin/freetype-config --prefix=$DEV_IMAGE%{_prefix}"
  make
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -2141,20 +2144,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  perl -pi -e 's,^</fontconfig>,
  <dir>%{_prefix}/X11R6/lib/X11/fonts/TTF</dir>
-@@ -38,13 +64,25 @@
+@@ -38,9 +67,13 @@
  <dir>%{_prefix}/X11R6/lib/X11/fonts/truetype</dir>
  </fontconfig>
  ,;
 -        ' $RPM_BUILD_ROOT/%{pfx}/%{_sysconfdir}/fonts/local.conf
 +        ' $RPM_BUILD_ROOT%{pfx}%{_sysconfdir}/fonts/local.conf
 +
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_prefix}/share/man, d;
-+    \,^%{pfx}%{_prefix}/include, d;
-+    /\.l\?a$/ d;
-+' all_files.lst > rfs_files.lst
  
  %Clean
 +export LC_ALL
@@ -2163,13 +2159,61 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
--%Files
-+%Files -f all_files.lst
+@@ -48,3 +81,54 @@
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
  
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/etc/fonts/conf.avail/10-autohint.conf
++%{pfx}/etc/fonts/conf.avail/10-no-sub-pixel.conf
++%{pfx}/etc/fonts/conf.avail/10-sub-pixel-bgr.conf
++%{pfx}/etc/fonts/conf.avail/10-sub-pixel-rgb.conf
++%{pfx}/etc/fonts/conf.avail/10-sub-pixel-vbgr.conf
++%{pfx}/etc/fonts/conf.avail/10-sub-pixel-vrgb.conf
++%{pfx}/etc/fonts/conf.avail/10-unhinted.conf
++%{pfx}/etc/fonts/conf.avail/20-fix-globaladvance.conf
++%{pfx}/etc/fonts/conf.avail/20-lohit-gujarati.conf
++%{pfx}/etc/fonts/conf.avail/20-unhint-small-vera.conf
++%{pfx}/etc/fonts/conf.avail/30-amt-aliases.conf
++%{pfx}/etc/fonts/conf.avail/30-urw-aliases.conf
++%{pfx}/etc/fonts/conf.avail/40-generic.conf
++%{pfx}/etc/fonts/conf.avail/49-sansserif.conf
++%{pfx}/etc/fonts/conf.avail/50-user.conf
++%{pfx}/etc/fonts/conf.avail/51-local.conf
++%{pfx}/etc/fonts/conf.avail/60-latin.conf
++%{pfx}/etc/fonts/conf.avail/65-fonts-persian.conf
++%{pfx}/etc/fonts/conf.avail/65-nonlatin.conf
++%{pfx}/etc/fonts/conf.avail/69-unifont.conf
++%{pfx}/etc/fonts/conf.avail/70-no-bitmaps.conf
++%{pfx}/etc/fonts/conf.avail/70-yes-bitmaps.conf
++%{pfx}/etc/fonts/conf.avail/80-delicious.conf
++%{pfx}/etc/fonts/conf.avail/90-synthetic.conf
++%{pfx}/etc/fonts/conf.d/20-fix-globaladvance.conf
++%{pfx}/etc/fonts/conf.d/20-lohit-gujarati.conf
++%{pfx}/etc/fonts/conf.d/20-unhint-small-vera.conf
++%{pfx}/etc/fonts/conf.d/30-amt-aliases.conf
++%{pfx}/etc/fonts/conf.d/30-urw-aliases.conf
++%{pfx}/etc/fonts/conf.d/40-generic.conf
++%{pfx}/etc/fonts/conf.d/49-sansserif.conf
++%{pfx}/etc/fonts/conf.d/50-user.conf
++%{pfx}/etc/fonts/conf.d/51-local.conf
++%{pfx}/etc/fonts/conf.d/60-latin.conf
++%{pfx}/etc/fonts/conf.d/65-fonts-persian.conf
++%{pfx}/etc/fonts/conf.d/65-nonlatin.conf
++%{pfx}/etc/fonts/conf.d/69-unifont.conf
++%{pfx}/etc/fonts/conf.d/80-delicious.conf
++%{pfx}/etc/fonts/conf.d/90-synthetic.conf
++%{pfx}/etc/fonts/fonts.conf
++%{pfx}/etc/fonts/fonts.dtd
++%{pfx}/usr/bin/fc-cache
++%{pfx}/usr/bin/fc-cat
++%{pfx}/usr/bin/fc-list
++%{pfx}/usr/bin/fc-match
++%{pfx}/usr/lib/libfontconfig.so
++%{pfx}/usr/lib/libfontconfig.so.1
++%{pfx}/usr/lib/libfontconfig.so.1.2.0
++%{pfx}/usr/var/cache/fontconfig
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/freetype/freetype.spec ltib/dist/lfs-5.1/freetype/freetype.spec
 --- ltib.reference/dist/lfs-5.1/freetype/freetype.spec
 +++ ltib/dist/lfs-5.1/freetype/freetype.spec

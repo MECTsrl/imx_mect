@@ -1435,7 +1435,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec
-@@ -10,36 +10,65 @@
+@@ -10,36 +10,68 @@
  Packager        : John Faith
  Group           : Applications/Internet
  Source          : dhcp-3.0.3b1.tgz
@@ -1468,6 +1468,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 +export LC_ALL
 +LC_ALL=C
@@ -1480,6 +1481,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %patch5 -p1
 +%patch6 -p1
 +%patch7 -p1
++
  
  %Build
 +export LC_ALL
@@ -1488,6 +1490,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure
 -make
 +make -j`grep -c ^processor /proc/cpuinfo`
++
  
  %Install
 +export LC_ALL
@@ -1507,7 +1510,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  for i in %pfx/%base/etc/test %pfx/%base/etc/rc.d \
           %pfx/%base/sbin/S30dhclient %pfx/%_prefix/local
-@@ -47,8 +76,7 @@
+@@ -47,8 +79,7 @@
      rm -rf $RPM_BUILD_ROOT/$i
  done
  
@@ -1517,7 +1520,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      for i in %pfx/%base/etc/dhclient.conf \
               %pfx/%base/var/state/dhcp/dhclient.leases \
               %pfx/%base/sbin/dhclient-script \
-@@ -61,11 +89,11 @@
+@@ -61,11 +92,11 @@
               %pfx/%_mandir/man8/dhclient-script.8 \
               %pfx/%_mandir/man8/dhclient.8
      do
@@ -1532,7 +1535,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      for i in %pfx/%base/etc/dhcpd.conf \
               %pfx/%_bindir/omshell \
               %pfx/%_mandir/man1/omshell.1 \
-@@ -82,14 +110,27 @@
+@@ -82,14 +113,35 @@
               %pfx/%_sbindir/dhcrelay \
               %pfx/%base/var/state/dhcp/dhcpd.leases
       do
@@ -1555,14 +1558,20 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
 +
-+%Files -f all_files.lst
+ %Files
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
  
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/bin/parse
++%{pfx}/etc/dhclient-exit-hooks
++%{pfx}/sbin/dhclient
++%{pfx}/sbin/dhclient-script
++%{pfx}/usr/bin
++%{pfx}/usr/sbin
++%{pfx}/var/state/dhcp/dhclient.leases
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec ltib/dist/lfs-5.1/dropbear/dropbear.spec
 --- ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec
 +++ ltib/dist/lfs-5.1/dropbear/dropbear.spec

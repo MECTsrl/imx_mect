@@ -616,13 +616,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boa/boa.spec ltib/dist/lfs-5.1/boa/boa.spec
 --- ltib.reference/dist/lfs-5.1/boa/boa.spec
 +++ ltib/dist/lfs-5.1/boa/boa.spec
-@@ -12,47 +12,83 @@
+@@ -10,49 +10,80 @@
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
  Group           : System/Servers
- Source          : %{name}-%{version}.tar.gz
- Patch1          : boa-0.94.14rc21-nommu.patch
-+Patch2          : boa-0.94.14rc21-defines.patch
-+Patch3          : boa-0.94.14rc21-1416842658.patch
-+Patch4          : boa-0.94.14rc21-use_cgi_for_index.patch
+-Source          : %{name}-%{version}.tar.gz
+-Patch1          : boa-0.94.14rc21-nommu.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -648,16 +647,17 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +This is the uclinux version extracted
 +from uClinux-dist-test-20050906.tar.gz at
 +http://www.uclinux.org/pub/uClinux/dist/
++
  
  %Prep
+-%setup
+-%patch1 -p1 
 +export LC_ALL
 +LC_ALL=C
 +
- %setup
- %patch1 -p1 
-+%patch2 -p1
-+%patch3 -p1 
-+%patch4 -p1
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
++
  
  %Build
 +export LC_ALL
@@ -668,6 +668,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
 -make
 +make -j1
++
  
  %Install
 +export LC_ALL

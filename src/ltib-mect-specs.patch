@@ -825,7 +825,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/busybox/busybox.spec ltib/dist/lfs-5.1/busybox/busybox.spec
 --- ltib.reference/dist/lfs-5.1/busybox/busybox.spec
 +++ ltib/dist/lfs-5.1/busybox/busybox.spec
-@@ -3,24 +3,46 @@
+@@ -3,24 +3,48 @@
  
  Summary         : A small executable that replaces many UNIX utilities
  Name            : busybox
@@ -860,12 +860,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 +export LC_ALL
 +LC_ALL=C
 +
  %setup
 +%patch1 -p1
++
  
  %Build
 +export LC_ALL
@@ -874,9 +876,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  PKG_BUSYBOX_PRECONFIG=${PKG_BUSYBOX_PRECONFIG:-busybox.config}
  if [ -f "$PLATFORM_PATH/${PKG_BUSYBOX_PRECONFIG}" ]
  then
-@@ -45,6 +67,9 @@
+@@ -44,7 +68,11 @@
+ fi
  make HOSTCC="$BUILDCC" $MAKE_EXTRA
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -884,15 +888,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  install -d $RPM_BUILD_ROOT/%{pfx}/%{base}/bin
  make HOSTCC="$BUILDCC" CONFIG_PREFIX=$RPM_BUILD_ROOT/%{pfx}/%{base} install
-@@ -71,10 +96,21 @@
+@@ -71,10 +99,168 @@
  EOF
  chmod 644 $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/busybox.conf
  
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed -n '
-+    p
-+' all_files.lst > rfs_files.lst
 +
  %Clean
 +export LC_ALL
@@ -900,15 +899,165 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
 +
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-,root,root)
 -%attr(4755,root,root) %{pfx}/%{base}/bin/busybox
--%{pfx}/*
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/bin/addgroup
++%{pfx}/bin/adduser
++%{pfx}/bin/ash
++%{pfx}/bin/busybox
++%{pfx}/bin/cat
++%{pfx}/bin/catv
++%{pfx}/bin/chgrp
++%{pfx}/bin/chmod
++%{pfx}/bin/chown
++%{pfx}/bin/cp
++%{pfx}/bin/date
++%{pfx}/bin/dd
++%{pfx}/bin/delgroup
++%{pfx}/bin/deluser
++%{pfx}/bin/df
++%{pfx}/bin/dmesg
++%{pfx}/bin/dnsdomainname
++%{pfx}/bin/echo
++%{pfx}/bin/egrep
++%{pfx}/bin/false
++%{pfx}/bin/fgrep
++%{pfx}/bin/getopt
++%{pfx}/bin/grep
++%{pfx}/bin/gunzip
++%{pfx}/bin/gzip
++%{pfx}/bin/hostname
++%{pfx}/bin/kill
++%{pfx}/bin/ln
++%{pfx}/bin/login
++%{pfx}/bin/ls
++%{pfx}/bin/mkdir
++%{pfx}/bin/mknod
++%{pfx}/bin/more
++%{pfx}/bin/mount
++%{pfx}/bin/mv
++%{pfx}/bin/nice
++%{pfx}/bin/ping
++%{pfx}/bin/ps
++%{pfx}/bin/pwd
++%{pfx}/bin/rm
++%{pfx}/bin/rmdir
++%{pfx}/bin/sed
++%{pfx}/bin/sh
++%{pfx}/bin/sleep
++%{pfx}/bin/stty
++%{pfx}/bin/su
++%{pfx}/bin/sync
++%{pfx}/bin/tar
++%{pfx}/bin/touch
++%{pfx}/bin/true
++%{pfx}/bin/umount
++%{pfx}/bin/uname
++%{pfx}/bin/usleep
++%{pfx}/bin/vi
++%{pfx}/bin/watch
++%{pfx}/bin/zcat
++%{pfx}/etc/busybox.conf
++%{pfx}/etc/rc.d/init.d
++%{pfx}/sbin/adjtimex
++%{pfx}/sbin/depmod
++%{pfx}/sbin/devmem
++%{pfx}/sbin/fdisk
++%{pfx}/sbin/getty
++%{pfx}/sbin/halt
++%{pfx}/sbin/hwclock
++%{pfx}/sbin/ifconfig
++%{pfx}/sbin/init
++%{pfx}/sbin/insmod
++%{pfx}/sbin/klogd
++%{pfx}/sbin/logread
++%{pfx}/sbin/losetup
++%{pfx}/sbin/lsmod
++%{pfx}/sbin/mdev
++%{pfx}/sbin/mkdosfs
++%{pfx}/sbin/mkfs.vfat
++%{pfx}/sbin/modprobe
++%{pfx}/sbin/pidof
++%{pfx}/sbin/poweroff
++%{pfx}/sbin/reboot
++%{pfx}/sbin/rmmod
++%{pfx}/sbin/route
++%{pfx}/sbin/start-stop-daemon
++%{pfx}/sbin/sysctl
++%{pfx}/sbin/syslogd
++%{pfx}/sbin/udhcpc
++%{pfx}/usr/bin/[
++%{pfx}/usr/bin/[[
++%{pfx}/usr/bin/awk
++%{pfx}/usr/bin/basename
++%{pfx}/usr/bin/bunzip2
++%{pfx}/usr/bin/bzcat
++%{pfx}/usr/bin/bzip2
++%{pfx}/usr/bin/cal
++%{pfx}/usr/bin/chvt
++%{pfx}/usr/bin/cksum
++%{pfx}/usr/bin/cut
++%{pfx}/usr/bin/diff
++%{pfx}/usr/bin/dirname
++%{pfx}/usr/bin/dos2unix
++%{pfx}/usr/bin/du
++%{pfx}/usr/bin/env
++%{pfx}/usr/bin/expr
++%{pfx}/usr/bin/find
++%{pfx}/usr/bin/free
++%{pfx}/usr/bin/ftpget
++%{pfx}/usr/bin/ftpput
++%{pfx}/usr/bin/head
++%{pfx}/usr/bin/hexdump
++%{pfx}/usr/bin/hostid
++%{pfx}/usr/bin/id
++%{pfx}/usr/bin/install
++%{pfx}/usr/bin/killall
++%{pfx}/usr/bin/length
++%{pfx}/usr/bin/logger
++%{pfx}/usr/bin/logname
++%{pfx}/usr/bin/mesg
++%{pfx}/usr/bin/mkfifo
++%{pfx}/usr/bin/od
++%{pfx}/usr/bin/openvt
++%{pfx}/usr/bin/passwd
++%{pfx}/usr/bin/printf
++%{pfx}/usr/bin/readlink
++%{pfx}/usr/bin/renice
++%{pfx}/usr/bin/resize
++%{pfx}/usr/bin/seq
++%{pfx}/usr/bin/sort
++%{pfx}/usr/bin/tail
++%{pfx}/usr/bin/tee
++%{pfx}/usr/bin/telnet
++%{pfx}/usr/bin/test
++%{pfx}/usr/bin/tftp
++%{pfx}/usr/bin/top
++%{pfx}/usr/bin/tr
++%{pfx}/usr/bin/tty
++%{pfx}/usr/bin/uniq
++%{pfx}/usr/bin/unix2dos
++%{pfx}/usr/bin/unzip
++%{pfx}/usr/bin/uptime
++%{pfx}/usr/bin/uudecode
++%{pfx}/usr/bin/uuencode
++%{pfx}/usr/bin/wc
++%{pfx}/usr/bin/who
++%{pfx}/usr/bin/yes
++%{pfx}/usr/sbin/chroot
++%{pfx}/usr/sbin/crond
++%{pfx}/usr/sbin/ftpd
++%{pfx}/usr/sbin/inetd
++%{pfx}/usr/sbin/rdate
++%{pfx}/usr/sbin/telnetd
++%{pfx}/var/log/wtmp
++%{pfx}/var/run/utmp
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec ltib/dist/lfs-5.1/bzip2/bzip2.spec
 --- ltib.reference/dist/lfs-5.1/bzip2/bzip2.spec
 +++ ltib/dist/lfs-5.1/bzip2/bzip2.spec

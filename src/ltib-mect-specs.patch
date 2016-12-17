@@ -2324,7 +2324,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  Group           : System Environment/Libraries
 -Source          : glib-%{version}.tar.bz2
 -Patch1          : glib2-2.12.11-relink.patch
-+Source          : %{archname}-%{version}.tar.bz2
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -2352,7 +2351,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup -n %{archname}-%{version}
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
  
  %Build

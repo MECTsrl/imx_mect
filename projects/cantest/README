@@ -1,0 +1,19 @@
+This package is for CAN communication using the SocketCAN api.
+
+Run the following commands to compile and install the user space cantest programs:
+
+./ltib -m prep -p cantest
+./ltib -m scbuild -p cantest.spec
+./ltib -m scinstall -p cantest.spec
+./ltib -m scdeploy -p cantest.spec
+
+
+SVN version:
+cansend.c, lib.c, lib.h come from URL:http://svn.berlios.de/viewcvs/socketcan/trunk/can-utils/
+The svn version of can-utils is 731.
+
+can.h comes from URL: http://svn.berlios.de/viewcvs/socketcan/trunk/kernel/2.6/include/linux/
+The svn version of can.h is 516.
+
+raw.h comes from URL: http://svn.berlios.de/viewcvs/socketcan/trunk/kernel/2.6/include/linux/can/
+The svn version of raw.h is 508.

@@ -6,7 +6,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : v1.025
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -105,7 +105,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : v1.025
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3297,7 +3297,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1254 @@
+@@ -0,0 +1,1233 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define rhtbtr resources-hack-to-build-the-rpm
 +
@@ -3634,7 +3634,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3653,7 +3652,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3672,7 +3670,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3691,7 +3688,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3710,7 +3706,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3729,7 +3724,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3748,7 +3742,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3767,7 +3760,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3786,7 +3778,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3805,7 +3796,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3824,7 +3814,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3843,7 +3832,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3862,7 +3850,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3881,7 +3868,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3900,7 +3886,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3919,7 +3904,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3938,7 +3922,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3957,7 +3940,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3976,7 +3958,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -3995,7 +3976,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \
@@ -4014,7 +3994,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +if test -d $d; then
 +	cd $d
 +
-+	test -r Makefile && make clean
 +	$MECT_QT_INSTALL_DIR/bin/lrelease Empty_HMI.pro
 +	$MECT_QT_INSTALL_DIR/bin/qmake \
 +		-spec qws/linux-g++-mx \

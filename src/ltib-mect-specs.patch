@@ -825,7 +825,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/busybox/busybox.spec ltib/dist/lfs-5.1/busybox/busybox.spec
 --- ltib.reference/dist/lfs-5.1/busybox/busybox.spec
 +++ ltib/dist/lfs-5.1/busybox/busybox.spec
-@@ -3,24 +3,48 @@
+@@ -3,24 +3,46 @@
  
  Summary         : A small executable that replaces many UNIX utilities
  Name            : busybox
@@ -838,8 +838,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Shells
 -Source          : %{name}-%{version}.tar.bz2
-+Source          : %{name}-%{version}.tar.gz
-+Patch1          : %{name}-%{version}-getty-nobaud-1.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -862,11 +860,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +
  %Prep
+-%setup
 +export LC_ALL
 +LC_ALL=C
 +
- %setup
-+%patch1 -p1
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
  
  %Build
@@ -876,7 +875,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  PKG_BUSYBOX_PRECONFIG=${PKG_BUSYBOX_PRECONFIG:-busybox.config}
  if [ -f "$PLATFORM_PATH/${PKG_BUSYBOX_PRECONFIG}" ]
  then
-@@ -44,7 +68,11 @@
+@@ -44,7 +66,11 @@
  fi
  make HOSTCC="$BUILDCC" $MAKE_EXTRA
  
@@ -888,7 +887,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  install -d $RPM_BUILD_ROOT/%{pfx}/%{base}/bin
  make HOSTCC="$BUILDCC" CONFIG_PREFIX=$RPM_BUILD_ROOT/%{pfx}/%{base} install
-@@ -71,10 +99,168 @@
+@@ -71,10 +97,168 @@
  EOF
  chmod 644 $RPM_BUILD_ROOT/%{pfx}/%{base}/etc/busybox.conf
  

@@ -3696,7 +3696,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +%setup -T -c -n %{name}
-+rsync -av --inplace ../../../../projects/%{name}/ ./
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
 +
 +%Build

@@ -723,7 +723,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
 --- ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec
 +++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
-@@ -8,39 +8,92 @@
+@@ -8,39 +8,93 @@
  Vendor          : Freescale
  Packager        : Terry Lv
  Group           : Tools
@@ -760,6 +760,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 -%setup -n %{name}-%{version}-%{release}
 +export LC_ALL
@@ -772,6 +773,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%patch4 -p1
 +%patch5 -p1
 +%patch6 -p1
++
  
  %Build
 +export LC_ALL
@@ -791,6 +793,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      make -j1 MEM_TYPE="${PKG_BOOT_STREAM_MEMTYPE_PRECONFIG}" BOARD=iMX28_EVK
  fi
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -802,9 +805,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/boot
 +
 +
-+cd %{_builddir}/%{name}-11.01.00
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+
  %Clean
 +export LC_ALL
 +LC_ALL=C
@@ -812,14 +812,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  make clean
  
--%Files
 +
-+%Files -f all_files.lst
-+%defattr(-,root,root)
+ %Files
+ %defattr(-,root,root)
+ %{pfx}/*
 +
 +%Files mfg
- %defattr(-,root,root)
--%{pfx}/*
++%defattr(-,root,root)
 +%{pfx}/boot/imx28_ivt_linux.sb
 +%{pfx}/boot/updater_ivt.sb
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/busybox/busybox.spec ltib/dist/lfs-5.1/busybox/busybox.spec

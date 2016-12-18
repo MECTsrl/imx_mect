@@ -5687,7 +5687,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ppp/ppp.spec ltib/dist/lfs-5.1/ppp/ppp.spec
 --- ltib.reference/dist/lfs-5.1/ppp/ppp.spec
 +++ ltib/dist/lfs-5.1/ppp/ppp.spec
-@@ -13,16 +13,36 @@
+@@ -13,16 +13,38 @@
  Patch1          : ppp-2.4.3-hspeed.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -5709,6 +5709,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 +export LC_ALL
 +LC_ALL=C
@@ -5717,6 +5718,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %patch0 -p1
  %patch1 -p1
  
++
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -5724,7 +5726,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
  if [ "$PKG_PPP_WANT_FILTER" = "y" ]
  then
-@@ -34,15 +54,29 @@
+@@ -34,15 +56,38 @@
  
  
  %Install
@@ -5735,12 +5737,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  make -j1 install INSTALL=install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
  mkdir -p $RPM_BUILD_ROOT/%{pfx}/var/lock
  
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( -not -type d \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}/share/man, d;
-+    \,^%{pfx}/include, d;
-+' all_files.lst > rfs_files.lst
 +
  %Clean
 +export LC_ALL
@@ -5748,16 +5744,29 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
 +
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-,root,root)
 -%attr(4554,root,root)  %{pfx}//lib/pppd/2.4.4/pppoatm.so
 -%attr(4554,root,root)  %{pfx}//lib/pppd/2.4.4/rp-pppoe.so
--%{pfx}/*
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/lib/pppd/2.4.4/minconn.so
++%{pfx}/lib/pppd/2.4.4/passprompt.so
++%{pfx}/lib/pppd/2.4.4/passwordfd.so
++%{pfx}/lib/pppd/2.4.4/pppoatm.so
++%{pfx}/lib/pppd/2.4.4/radattr.so
++%{pfx}/lib/pppd/2.4.4/radius.so
++%{pfx}/lib/pppd/2.4.4/radrealms.so
++%{pfx}/lib/pppd/2.4.4/rp-pppoe.so
++%{pfx}/lib/pppd/2.4.4/winbind.so
++%{pfx}/sbin/chat
++%{pfx}/sbin/pppd
++%{pfx}/sbin/pppdump
++%{pfx}/sbin/pppoe-discovery
++%{pfx}/sbin/pppstats
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/prelink/prelink.spec ltib/dist/lfs-5.1/prelink/prelink.spec
 --- ltib.reference/dist/lfs-5.1/prelink/prelink.spec
 +++ ltib/dist/lfs-5.1/prelink/prelink.spec

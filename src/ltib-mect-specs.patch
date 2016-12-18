@@ -6748,7 +6748,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
 --- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec
 +++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
-@@ -0,0 +1,67 @@
+@@ -0,0 +1,74 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define aname openssh
 +%define avers 4.3p2
@@ -6782,18 +6782,21 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Description
 +%{summary}
 +
++
 +%Prep
 +export LC_ALL
 +LC_ALL=C
 +
 +%setup -n %{aname}-%{avers}
 +
++
 +%Build
 +export LC_ALL
 +LC_ALL=C
 +
 +LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-zlib=$DEV_IMAGE/usr/lib --with-ldflags=-L$DEV_IMAGE/usr/lib
-+make -j`grep -c ^processor /proc/cpuinfo` sysconfdir=%{_sysconfdir}/ssh sftp-server
++make -j$(nproc) sysconfdir=%{_sysconfdir}/ssh sftp-server
++
 +
 +%Install
 +export LC_ALL
@@ -6803,11 +6806,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +make -j1 DESTDIR=$RPM_BUILD_ROOT/%{pfx} sysconfdir=%{_sysconfdir}/ssh install
 +
++
 +%Clean
 +export LC_ALL
 +LC_ALL=C
 +
-+rm -rf $RPM_BUILD_ROOT
++if test -r Makefile; then
++	make clean
++fi
++
 +
 +%Files
 +%defattr(-,root,root)

@@ -7703,8 +7703,16 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/tcp_wrappers/tcp_wrappers.spec ltib/dist/lfs-5.1/tcp_wrappers/tcp_wrappers.spec
 --- ltib.reference/dist/lfs-5.1/tcp_wrappers/tcp_wrappers.spec
 +++ ltib/dist/lfs-5.1/tcp_wrappers/tcp_wrappers.spec
-@@ -16,11 +16,28 @@
- Patch4          : tcp_wrappers-7.6-uclibc-strerror.patch
+@@ -8,27 +8,39 @@
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
+ Group           : System Environment/Daemons
+-Source          : http://files.ichilton.co.uk/nfs/%{name}_%{version}.tar.gz
+-Patch0          : http://www.linuxfromscratch.org/patches/blfs/5.1/tcp_wrappers-7.6-shared-lib-plus-plus.patch
+-Patch1          : tcp_wrappers-7.6-uclibc.patch
+-Patch2          : tcp_wrappers-7.6-malloc.patch
+-Patch3          : tcp_wrappers-7.6-non-root.patch
+-Patch4          : tcp_wrappers-7.6-uclibc-strerror.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -7725,15 +7733,20 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
+-%setup -n %{name}_%{version}
+-%patch0 -p1
+-%patch1 -p1
+-%patch2 -p1
+-%patch3 -p1
+-%patch4 -p1
 +export LC_ALL
 +LC_ALL=C
 +
- %setup -n %{name}_%{version}
- %patch0 -p1
- %patch1 -p1
-@@ -29,6 +46,9 @@
- %patch4 -p1
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
++
  
  %Build
 +export LC_ALL
@@ -7742,9 +7755,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  if [ -n "$UCLIBC" ]
  then 
      make REAL_DAEMON_DIR=/usr/sbin STYLE=-DPROCESS_OPTIONS linux-uclibc
-@@ -37,6 +57,9 @@
+@@ -36,7 +48,11 @@
+     make REAL_DAEMON_DIR=/usr/sbin STYLE=-DPROCESS_OPTIONS linux
  fi
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -7752,14 +7767,20 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  for i in sbin lib include
  do
-@@ -49,8 +72,22 @@
+@@ -48,9 +64,27 @@
+ done
  make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
  
++
  %Clean
+-rm -rf $RPM_BUILD_ROOT
 +export LC_ALL
 +LC_ALL=C
 +
- rm -rf $RPM_BUILD_ROOT
++if test -r Makefile; then
++	make clean
++fi
++
  
  %Files
  %defattr(-,root,root)

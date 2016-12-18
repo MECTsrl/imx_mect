@@ -5453,7 +5453,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/openssl/openssl.spec ltib/dist/lfs-5.1/openssl/openssl.spec
 --- ltib.reference/dist/lfs-5.1/openssl/openssl.spec
 +++ ltib/dist/lfs-5.1/openssl/openssl.spec
-@@ -3,23 +3,46 @@
+@@ -3,23 +3,45 @@
  
  Summary         : Secure Sockets Layer toolkit
  Name            : openssl
@@ -5464,8 +5464,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  Vendor          : Freescale
  Packager        : Stuart Hughes
  Group           : System Environment/Libraries
- Source          : %{name}-%{version}.tar.gz
-+Patch1          : openssl-1.0.1s-fix_parallel_build.patch
+-Source          : %{name}-%{version}.tar.gz
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -5486,14 +5485,16 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
+-%setup 
 +export LC_ALL
 +LC_ALL=C
 +
- %setup 
- 
-+%patch1 -p1
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
+ 
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -5501,7 +5502,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  case $ENDIAN in
      big)
          XTRA_OPTS="-DB_ENDIAN"
-@@ -42,33 +65,51 @@
+@@ -42,33 +64,54 @@
         OSSL_ARCH="linux-$LINTARCH"
         ;;
  esac
@@ -5515,6 +5516,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +./Configure $OSSL_ARCH --prefix=%{_prefix} shared no-asm $XTRA_OPTS
 +make -j`grep -c ^processor /proc/cpuinfo`
++
  
  %Install
 +export LC_ALL
@@ -5540,6 +5542,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 -make install -j1
 +make INSTALL_PREFIX=$RPM_BUILD_ROOT/%{pfx} install_sw
++
  
  %Clean
 +export LC_ALL
@@ -5547,6 +5550,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
++
  %Files
  %defattr(-,root,root)
  %{pfx}/*

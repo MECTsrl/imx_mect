@@ -1,0 +1,34 @@
+This is Nagios plugin for Modbus TCP and RTU.
+The first version of this plugin was taken from
+http://exchange.nagios.org/directory/Plugins/Network-and-Systems-Management/Check_modbus_tcp/details
+
+Added many useful features:
+- support of IPv6 / IPv4 
+- support of DNS names
+- serial port connections (RS232 and RS485) with Modbus RTU (when compiled with libmodbus >= 3.0.0)
+- support of many data formats  (unsigned/signed int16_t, int32_t, float, double)
+- support of several data orders (LSB, MSB and some others)
+- retries can be sent to get reliable answer
+- supports performance data
+- supports creation dump of the registers in different formats (binary, hexadecimal, decimal)
+- support binary dump as an input source for data (useful for off-line data)
+- separate lock files for input and output
+
+
+In general, plugin can be build as usual
+
+./configure 
+make
+make install
+
+
+When you are trying to build plugin under MinGW, then maybe you will need to define path for libmodbus explicitly.
+
+libmodbus is installed by default in /usr/local/lib. In MinGW you will need to run 
+
+./configure LDFLAGS=-L/usr/local/lib CPPFLAGS=-I/usr/local/include
+
+instead of just ./configure
+
+
+For usage details see manual page or run ./check_modbus --help.

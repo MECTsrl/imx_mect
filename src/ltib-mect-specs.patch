@@ -8555,7 +8555,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec ltib/dist/lfs-5.1/wireless-tools/wireless-tools.spec
 --- ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec
 +++ ltib/dist/lfs-5.1/wireless-tools/wireless-tools.spec
-@@ -1,7 +1,7 @@
+@@ -1,35 +1,78 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
  
  Summary         : Wireless Ethernet configuration tools
@@ -8564,8 +8564,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  Version         : 29
  Release         : 1
  License         : GPL
-@@ -12,24 +12,67 @@
- Patch1          : wireless-tools-29-tc-segv.patch
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
+ Group           : System Environment/Base
+-Source          : wireless_tools.%{version}.tar.gz
+-Patch1          : wireless-tools-29-tc-segv.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -8588,13 +8591,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +
  %Prep
+-%setup -n wireless_tools.%{version}
+-%patch1 -p1
 +export LC_ALL
 +LC_ALL=C
 +
- %setup -n wireless_tools.%{version}
- %patch1 -p1
- 
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
+ 
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -8611,12 +8616,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +
  %Clean
+-rm -rf $RPM_BUILD_ROOT
 +export LC_ALL
 +LC_ALL=C
 +
- rm -rf $RPM_BUILD_ROOT
- 
++if test -r Makefile; then
++	make clean
++fi
 +
+ 
  %Files
  %defattr(-,root,root)
  %{pfx}/*

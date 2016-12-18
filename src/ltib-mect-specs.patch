@@ -8378,7 +8378,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 --- ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 +++ ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
-@@ -0,0 +1,199 @@
+@@ -0,0 +1,178 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define pkg_src  compat-drivers
 +%define pkg_rc   rc4
@@ -8395,10 +8395,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Packager        : Mihai Lazarescu
 +Group           : System Environment/Kernel
 +URL             : https://www.kernel.org/pub/linux/kernel/projects/backports/stable/v%{version}-%{pkg_rc}/%{pkg_src}-%{version}-%{release}-%{pkg_bld}.tar.xz
-+Source          : %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}.tar.xz
 +Source1         : firmware-realtek_20160110-1_all.deb
 +Source2         : htc_9271.fw
-+Patch1          : %{pkg_src}-3.9-rc4-2-su-no_depmod_etc.patch
 +BuildRoot       : %{_tmppath}/%{name}
 +Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -8450,18 +8448,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+# Setup to compile the rtlwifi driver.
-+%setup -c -n %{name}-%{version}/%{dir_rtl}
-+cd %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
-+%patch1 -p1
-+
-+# Setup to compile the ath9k_htc driver.
-+%setup -T -b 0 -c -n %{name}-%{version}/%{dir_ath}
-+cd %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
-+%patch1 -p1
-+
-+# Just reset RPM idea of top-level directory.
-+%setup -D -T -b 0 -c -n %{name}-%{version}
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
 +
 +#################################################################
@@ -8470,32 +8458,25 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +# Build the rtlwifi driver.
-+cd %{dir_rtl}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
++cd %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
 +
 +./scripts/driver-select rtlwifi
-+
 +make -j$(nproc) \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
 +	ARCH=$LINTARCH \
 +	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
 +	KLIB_BUILD=${TOP}/rpm/BUILD/linux
-+
-+cd ../..
-+
-+# Build the ath9k_htc driver.
-+cd %{dir_ath}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
++./scripts/driver-select restore
 +
 +./scripts/driver-select ath9k_htc
-+
 +make -j$(nproc) \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
 +	ARCH=$LINTARCH \
 +	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
 +	KLIB_BUILD=${TOP}/rpm/BUILD/linux
-+
-+cd ../..
++./scripts/driver-select restore
 +
 +
 +#################################################################
@@ -8515,9 +8496,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +# Firmware for ath9k_htc driver
 +install -D -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{pfx}/lib/firmware/$(basename %{SOURCE2})
 +
-+# Install the rtlwifi driver.
-+cd %{dir_rtl}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
++cd %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
 +
++./scripts/driver-select rtlwifi
 +make -j$(nproc) install \
 +	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
 +	prefix=%{_prefix} \
@@ -8525,12 +8506,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	ARCH=$LINTARCH \
 +	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
 +	KLIB_BUILD=${TOP}/rpm/BUILD/linux
++./scripts/driver-select restore
 +
-+cd ../..
-+
-+# Install the ath9k_htc driver.
-+cd %{dir_ath}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
-+
++./scripts/driver-select ath9k_htc
 +make -j$(nproc) install \
 +	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
 +	prefix=%{_prefix} \
@@ -8538,8 +8516,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	ARCH=$LINTARCH \
 +	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
 +	KLIB_BUILD=${TOP}/rpm/BUILD/linux
-+
-+cd ../..
++./scripts/driver-select restore
 +
 +
 +#################################################################
@@ -8547,7 +8524,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+rm -rf $RPM_BUILD_ROOT/%{name}-%{version}
++if test -r Makefile; then
++	make clean
++fi
 +
 +
 +#################################################################

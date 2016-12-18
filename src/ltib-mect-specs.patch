@@ -3501,11 +3501,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
 --- ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec
 +++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
-@@ -10,38 +10,76 @@
+@@ -8,40 +8,74 @@
+ Vendor          : Freescale
+ Packager        : Alan Tull
  Group           : Applications/Communications
- Source          : lrzsz_0.12.21.orig.tar.gz
- Patch0          : lrzsz_0.12.21-4.diff
-+Patch1          : lrzsz-0.12.21-1448891584.patch
+-Source          : lrzsz_0.12.21.orig.tar.gz
+-Patch0          : lrzsz_0.12.21-4.diff
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -3528,12 +3529,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  %Prep
 -%setup -n lrzsz-990823
+-%patch0 -p1
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup -n %{name}-990823
- %patch0 -p1
-+%patch1 -p1
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
  
  %Build

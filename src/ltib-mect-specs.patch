@@ -3407,12 +3407,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb1.spec ltib/dist/lfs-5.1/libusb/libusb1.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb1.spec
 +++ ltib/dist/lfs-5.1/libusb/libusb1.spec
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,71 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
-+%define libname libusb
 +
 +Summary         : A library which allows userspace access to USB devices 
-+Name            : %{libname}1
++Name            : libusb1
 +Version         : 1.0.20
 +Release         : 1
 +License         : LGPL

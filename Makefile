@@ -225,7 +225,7 @@ MECT_COMMON_RFSPKGS := \
 	wifi-drivers-ath9k_htc-rfs-3.9-2.$(MECT_TARGET_ARCH).rpm \
 	wifi-drivers-common-rfs-3.9-2.$(MECT_TARGET_ARCH).rpm \
 	wifi-drivers-rtlwifi-rfs-3.9-2.$(MECT_TARGET_ARCH).rpm \
-	wireless_tools-rfs-29-1.$(MECT_TARGET_ARCH).rpm \
+	wireless-tools-rfs-29-1.$(MECT_TARGET_ARCH).rpm \
 	wpa_supplicant-rfs-0.5.9-1.$(MECT_TARGET_ARCH).rpm \
 	xenomai-rfs-2.6.0-1.$(MECT_TARGET_ARCH).rpm \
 	zip-rfs-3.0.0-0.$(MECT_TARGET_ARCH).rpm \

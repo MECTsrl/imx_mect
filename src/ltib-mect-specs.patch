@@ -6360,7 +6360,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 +++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
-@@ -0,0 +1,101 @@
+@@ -0,0 +1,89 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define variant multiaxes
 +
@@ -6372,15 +6372,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Vendor          : Qwt Widget Library
 +Packager        : Mihai Lazarescu
 +Group           : Development/Libraries
-+URL             : svn://svn.code.sf.net/p/qwt/code/branches/%{name}-%{version}-%{variant}
-+Source          : qwt-%{version}-%{variant}.tar.bz2
-+Patch1          : qwt-6.0.1-multiaxes-1381834981.patch
-+Patch2          : qwt-6.1.0-multiaxes-1418122118.patch
++URL             : svn://svn.code.sf.net/p/qwt/code/branches/qwt-%{version}-%{variant}
 +BuildRoot       : %{_tmppath}/%{name}
 +Prefix          : %{pfx}
 +AutoReqProv     : no
-+
-+#Patch1          : qwt-6.0.1-1381834981.patch : put libQtSVG dependent object under conditional compilation
 +
 +
 +%Package rfs
@@ -6403,20 +6398,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup -n qwt-%{version}-%{variant}
-+%patch1 -p1
-+%patch2 -p1 
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
 +
 +%Build
 +export LC_ALL
 +LC_ALL=C
-+
-+cp qwt.pro qwt.pro.orig
-+awk '{if ($0 ~ /QwtDesigner/ || $0 ~ /QwtExamples/) {getline; getline;} else {print $0;}}' qwt.pro.orig > qwt.pro
-+
-+cp qwtconfig.pri qwtconfig.pri.orig
-+awk '{if ($0 ~ /\/usr\/local\//) {print "    QWT_INSTALL_PREFIX    = /usr/";} else{print $0;}}' qwtconfig.pri.orig > qwtconfig.pri
 +
 +/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx
 +

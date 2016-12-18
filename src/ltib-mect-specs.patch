@@ -609,7 +609,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Build
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
 -make
-+make -j`grep -c ^processor /proc/cpuinfo`
++make -j$(nproc)
  
  %Install
  rm -rf $RPM_BUILD_ROOT
@@ -2289,7 +2289,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  eval $config_opts \
  ./configure  --prefix=%{_prefix} --host=$CFGHOST
 -make
-+make -j`grep -c ^processor /proc/cpuinfo`
++make -j$(nproc)
  
  
  %Install
@@ -2756,11 +2756,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  # build the kernel and optionally the modules
  #
 -make $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" $SYSCFG_KTARG
-+make -j`grep -c ^processor /proc/cpuinfo` $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" $SYSCFG_KTARG
++make -j$(nproc) $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" $SYSCFG_KTARG
  if grep -q '^CONFIG_MODULES=' $KBOUT/.config
  then
 -    make $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" modules
-+    make -j`grep -c ^processor /proc/cpuinfo` $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" modules
++    make -j$(nproc) $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" modules
  fi
  
  # cscope index
@@ -5517,7 +5517,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export BUILDMACH=%{_build}
 +
 +./Configure $OSSL_ARCH --prefix=%{_prefix} shared no-asm $XTRA_OPTS
-+make -j`grep -c ^processor /proc/cpuinfo`
++make -j$(nproc)
 +
  
  %Install
@@ -5682,7 +5682,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  # stupid incorrect cross compile detection
  ./configure --prefix=%{_prefix} --host=$CFGHOST
 -make
-+make -j`grep -c ^processor /proc/cpuinfo`
++make -j$(nproc)
  
  %Install
  rm -rf $RPM_BUILD_ROOT
@@ -6544,7 +6544,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  --without-python --without-javaglue
  
 -make
-+make -j`grep -c ^processor /proc/cpuinfo`
++make -j$(nproc)
  
  
  %Install
@@ -6717,11 +6717,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +       ;;
 +esac
 +./Configure $OSSL_ARCH --prefix=%{_prefix} shared no-asm $XTRA_OPTS --with-cryptodev 
-+make -j`grep -c ^processor /proc/cpuinfo` build_crypto
++make -j$(nproc) build_crypto
 +
 +cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssh-4.3p2
 +LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-zlib=$DEV_IMAGE/usr --with-ssl-dir=$RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g --with-ldflags="-L$RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g" --config-cache
-+make -j`grep -c ^processor /proc/cpuinfo` sysconfdir=%{_sysconfdir}/ssh sftp-server
++make -j$(nproc) sysconfdir=%{_sysconfdir}/ssh sftp-server
 +
 +%Install
 +export LC_ALL
@@ -7804,7 +7804,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
                ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
  fi
 -make
-+make -j`grep -c ^processor /proc/cpuinfo`
++make -j$(nproc)
  
  %Install
  rm -rf $RPM_BUILD_ROOT
@@ -8474,7 +8474,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +./scripts/driver-select rtlwifi
 +
-+make -j`grep -c ^processor /proc/cpuinfo` \
++make -j$(nproc) \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
 +	ARCH=$LINTARCH \
@@ -8488,7 +8488,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +./scripts/driver-select ath9k_htc
 +
-+make -j`grep -c ^processor /proc/cpuinfo` \
++make -j$(nproc) \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
 +	ARCH=$LINTARCH \
@@ -8518,7 +8518,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +# Install the rtlwifi driver.
 +cd %{dir_rtl}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
 +
-+make -j`grep -c ^processor /proc/cpuinfo` install \
++make -j$(nproc) install \
 +	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
@@ -8531,7 +8531,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +# Install the ath9k_htc driver.
 +cd %{dir_ath}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
 +
-+make -j`grep -c ^processor /proc/cpuinfo` install \
++make -j$(nproc) install \
 +	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \

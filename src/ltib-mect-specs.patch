@@ -6903,7 +6903,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec ltib/dist/lfs-5.1/sysconfig/modeps.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/modeps.spec
 +++ ltib/dist/lfs-5.1/sysconfig/modeps.spec
-@@ -10,32 +10,70 @@
+@@ -10,32 +10,68 @@
  Group           : System Environment/Base
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -6925,6 +6925,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 +export LC_ALL
 +LC_ALL=C
@@ -6959,12 +6960,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      fi
  fi
  
-+cd %{_builddir}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed -n '
-+    \,/modules\.alias$, p;
-+    \,/modules\.dep$, p;
-+' all_files.lst > rfs_files.lst
 +
  %Clean
 +export LC_ALL
@@ -6972,14 +6967,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
 +
-+%Files -f all_files.lst
+ %Files
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
  
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/lib/modules/2.6.35.3/modules.alias
++%{pfx}/lib/modules/2.6.35.3/modules.dep
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
 --- ltib.reference/dist/lfs-5.1/sysconfig/sysconfig-mx.spec
 +++ ltib/dist/lfs-5.1/sysconfig/sysconfig-mx.spec

@@ -6360,7 +6360,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 +++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
-@@ -0,0 +1,92 @@
+@@ -0,0 +1,101 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define variant multiaxes
 +
@@ -6450,9 +6450,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +%Files
 +%defattr(-,root,root)
++%{pfx}/*
 +
 +%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/lib/libqwt.so
++%{pfx}/usr/lib/libqwt.so.6
++%{pfx}/usr/lib/libqwt.so.6.3
++%{pfx}/usr/lib/libqwt.so.6.3.0
++%{pfx}/usr/lib/libqwtmathml.so
++%{pfx}/usr/lib/libqwtmathml.so.6
++%{pfx}/usr/lib/libqwtmathml.so.6.3
++%{pfx}/usr/lib/libqwtmathml.so.6.3.0
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt.spec ltib/dist/lfs-5.1/qwt/qwt.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt.spec
 +++ ltib/dist/lfs-5.1/qwt/qwt.spec

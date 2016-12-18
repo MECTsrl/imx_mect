@@ -7950,15 +7950,28 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec ltib/dist/lfs-5.1/u-boot/u-boot.spec
 --- ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec
 +++ ltib/dist/lfs-5.1/u-boot/u-boot.spec
-@@ -17,16 +17,25 @@
+@@ -8,25 +8,34 @@
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
+ Group           : Applications/System
+-Source          : %{name}-%{version}.tar.bz2
+-Patch0          : %{name}-1.1.2-tqm8xxlds.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
+ 
+ %Description
  %{summary}
  
++
  %Prep
+-%setup 
+-%patch0 -p1
 +export LC_ALL
 +LC_ALL=C
 +
- %setup 
- %patch0 -p1
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
++
  
  %Build
 +export LC_ALL
@@ -7966,8 +7979,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  PKG_U_BOOT_CONFIG_TYPE=${PKG_U_BOOT_CONFIG_TYPE:-TQM823L_config}
  make HOSTCC="$BUILDCC" CROSS_COMPILE=$TOOLCHAIN_PREFIX $PKG_U_BOOT_CONFIG_TYPE
- make HOSTCC="$BUILDCC" HOSTSTRIP="$BUILDSTRIP" \
-      CROSS_COMPILE=$TOOLCHAIN_PREFIX $PKG_U_BOOT_BUILD_ARGS all
+-make HOSTCC="$BUILDCC" HOSTSTRIP="$BUILDSTRIP" \
+-     CROSS_COMPILE=$TOOLCHAIN_PREFIX $PKG_U_BOOT_BUILD_ARGS all
++make HOSTCC="$BUILDCC" HOSTSTRIP="$BUILDSTRIP" CROSS_COMPILE=$TOOLCHAIN_PREFIX $PKG_U_BOOT_BUILD_ARGS all
++
  
  %Install
 +export LC_ALL
@@ -7976,16 +7991,23 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  mkdir -p $RPM_BUILD_ROOT/%{pfx}/boot
  for i in u-boot.bin u-boot
-@@ -35,6 +44,9 @@
+@@ -34,8 +43,15 @@
+     cp $i $RPM_BUILD_ROOT/%{pfx}/boot
  done
  
++
  %Clean
+-rm -rf $RPM_BUILD_ROOT
 +export LC_ALL
 +LC_ALL=C
 +
- rm -rf $RPM_BUILD_ROOT
++if test -r Makefile; then
++	make clean
++fi
++
  
  %Files
+ %defattr(-,root,root)
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/udev/udev.spec ltib/dist/lfs-5.1/udev/udev.spec
 --- ltib.reference/dist/lfs-5.1/udev/udev.spec
 +++ ltib/dist/lfs-5.1/udev/udev.spec

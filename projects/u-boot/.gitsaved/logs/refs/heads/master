@@ -1,0 +1,207 @@
+0000000000000000000000000000000000000000 07b80f85e99521310d4ec645e929fc4c779b7ee0 Mihai Lazarescu <mlazarescu@mect.it> 1482072106 +0100	commit (initial): clean kernel
+07b80f85e99521310d4ec645e929fc4c779b7ee0 388e0e3508d69282fd38de09430da731ec2ffd43 Mihai Lazarescu <mlazarescu@mect.it> 1482072107 +0100	am: ENGR00081147 Support i.MX35 3stack board
+388e0e3508d69282fd38de09430da731ec2ffd43 528a43f9b4400f579e55c2749870440871d4d664 Mihai Lazarescu <mlazarescu@mect.it> 1482072107 +0100	am: ENGR00094618 Update .gitignore configure file
+528a43f9b4400f579e55c2749870440871d4d664 278a09006dcbf08ade8b269024d94b74eb84e3be Mihai Lazarescu <mlazarescu@mect.it> 1482072107 +0100	am: ENGR00094619 Support i.MX31 3stack board
+278a09006dcbf08ade8b269024d94b74eb84e3be ec491d6274d4f7fa76b534a9fda1ec554b64fa49 Mihai Lazarescu <mlazarescu@mect.it> 1482072107 +0100	am: ENGR00099697 Add nand driver for mx35
+ec491d6274d4f7fa76b534a9fda1ec554b64fa49 6fe45fddd535caa904e631b53911cfabb62791f4 Mihai Lazarescu <mlazarescu@mect.it> 1482072107 +0100	am: ENGR00102776 Support boot from NAND on i.mx35 3stack TO1
+6fe45fddd535caa904e631b53911cfabb62791f4 4aeff76a92ee80952f5c404a51319de2a4c9b497 Mihai Lazarescu <mlazarescu@mect.it> 1482072107 +0100	am: ENGR00102788 Remove CONFIG_NAND_BOOT on i.MX31 3stack
+4aeff76a92ee80952f5c404a51319de2a4c9b497 1429e1c61405d14f03e9277b2b09461f318b8d6b Mihai Lazarescu <mlazarescu@mect.it> 1482072107 +0100	am: ENGR00103914 Support i.MX35 TO2 and 3stack board version 2
+1429e1c61405d14f03e9277b2b09461f318b8d6b e81dad07f355e31e208f0f113e56081924bc13a6 Mihai Lazarescu <mlazarescu@mect.it> 1482072107 +0100	am: ENGR00104583 MX35 can not boot up kernel
+e81dad07f355e31e208f0f113e56081924bc13a6 8173389eae28deb0e0fdc47025e33088e3c90e24 Mihai Lazarescu <mlazarescu@mect.it> 1482072108 +0100	am: ENGR00107886 Porting MX31, MX35 3stack to u-boot V2009.01
+8173389eae28deb0e0fdc47025e33088e3c90e24 c4687b3544114d1664272f3e56cecfc6b9ecba0c Mihai Lazarescu <mlazarescu@mect.it> 1482072108 +0100	am: ENGR00108473 Porting i.MX51 3stack TO2 support to V2009.01
+c4687b3544114d1664272f3e56cecfc6b9ecba0c c78ef2b2d7839fed58ec18cc257bb42522a82eb5 Mihai Lazarescu <mlazarescu@mect.it> 1482072108 +0100	am: ENGR00108673 Add i.MX25 core to U-Boot
+c78ef2b2d7839fed58ec18cc257bb42522a82eb5 00e93b6d01296703e43894f30587c2dba557e3d2 Mihai Lazarescu <mlazarescu@mect.it> 1482072108 +0100	am: ENGR00107840 Add U-Boot for MX25 PDK board
+00e93b6d01296703e43894f30587c2dba557e3d2 06c44e0a1125d95f948cb25e7966de8a7cac9a7c Mihai Lazarescu <mlazarescu@mect.it> 1482072108 +0100	am: ENGR00109851 Add nand driver for MX51 uboot
+06c44e0a1125d95f948cb25e7966de8a7cac9a7c f1f60afc274e371218096f9fa0eaea055ea413cb Mihai Lazarescu <mlazarescu@mect.it> 1482072108 +0100	am: ENGR00110586 MX31: Resolve Copyright issue for mx31 files
+f1f60afc274e371218096f9fa0eaea055ea413cb a9d2ab75ccf8dae8516fa2cd36ac2e266496922a Mihai Lazarescu <mlazarescu@mect.it> 1482072108 +0100	am: ENGR00112298 BBG2: Basic boot.
+a9d2ab75ccf8dae8516fa2cd36ac2e266496922a 114692358fee7043a67d6a579d55c095177bc400 Mihai Lazarescu <mlazarescu@mect.it> 1482072108 +0100	am: ENGR00112273 BBG2: MMC boot support.
+114692358fee7043a67d6a579d55c095177bc400 ae5985bebc7a022e65c8eb84e2366dec35f010f9 Mihai Lazarescu <mlazarescu@mect.it> 1482072108 +0100	am: ENGR00112845 spi nor boot and pmic support for BBG2.
+ae5985bebc7a022e65c8eb84e2366dec35f010f9 536d8b63adf5ec60ab7a9362fc159febac0d6b01 Mihai Lazarescu <mlazarescu@mect.it> 1482072109 +0100	am: ENGR00113148 Add build option to uboot for different media type
+536d8b63adf5ec60ab7a9362fc159febac0d6b01 47c144a07b807a26c4d66f128780f3f7b4457112 Mihai Lazarescu <mlazarescu@mect.it> 1482072109 +0100	am: ENGR00113439: BBG2, enable SPI NOR and MMC in one image.
+47c144a07b807a26c4d66f128780f3f7b4457112 d4e0703495c502539a2a5f69b178575178c0af4e Mihai Lazarescu <mlazarescu@mect.it> 1482072109 +0100	am: ENGR00113475: Add auto-complete and platform prompt for each platform.
+d4e0703495c502539a2a5f69b178575178c0af4e 7378534a3e08ff27ebe815dccda4974eeac133c8 Mihai Lazarescu <mlazarescu@mect.it> 1482072109 +0100	am: ENGR00113611: Add FEC support for BBG2.
+7378534a3e08ff27ebe815dccda4974eeac133c8 45c62f7c195797020323d646ceedc775c9d8e23f Mihai Lazarescu <mlazarescu@mect.it> 1482072109 +0100	am: ENGR00111465: Remove Watchdog disable codes in MX51 uboot.
+45c62f7c195797020323d646ceedc775c9d8e23f e0c6b7ab8dfd110738b0c6d8b31a7f3fd2d2d8f0 Mihai Lazarescu <mlazarescu@mect.it> 1482072109 +0100	am: ENGR00114233 Add support for programming ubifs image on nand flash
+e0c6b7ab8dfd110738b0c6d8b31a7f3fd2d2d8f0 37de38f6cbd056dd854cf7ff96288bd034955dbe Mihai Lazarescu <mlazarescu@mect.it> 1482072109 +0100	am: ENGR00114236 Disable NAND driver interleave mode support
+37de38f6cbd056dd854cf7ff96288bd034955dbe ef7c6e17a8679a08604a68ba0c41bdb2bda5e3e0 Mihai Lazarescu <mlazarescu@mect.it> 1482072109 +0100	am: ENGR00114201: Add MMC configs to mx35 3stack config file.
+ef7c6e17a8679a08604a68ba0c41bdb2bda5e3e0 1af3b4631036df6877914748ee0f04a1594e3a52 Mihai Lazarescu <mlazarescu@mect.it> 1482072109 +0100	am: ENGR00114178 Support MMC/SD boot and enable dhcp in uboot on MX25
+1af3b4631036df6877914748ee0f04a1594e3a52 5f3e9f13dcdee7f41e891cab686d04297b26aa81 Mihai Lazarescu <mlazarescu@mect.it> 1482072109 +0100	am: ENGR00114393: Support Atmel AT45DB321D SPI NOR flash.
+5f3e9f13dcdee7f41e891cab686d04297b26aa81 11210bcdbd8000a2cd680ae347d75a4d74f66905 Mihai Lazarescu <mlazarescu@mect.it> 1482072110 +0100	am: ENGR00114367: Add BABBAGE machine id, BBG2.5 rev id for rootfs init.
+11210bcdbd8000a2cd680ae347d75a4d74f66905 1b469ceec68d14ca263a8b1530acbacbbf8c527a Mihai Lazarescu <mlazarescu@mect.it> 1482072110 +0100	am: ENGR00114746: Disable flash header for mx35 nand boot
+1b469ceec68d14ca263a8b1530acbacbbf8c527a 2893b49e59c154897ef9d3b0bf5055c8a426a012 Mihai Lazarescu <mlazarescu@mect.it> 1482072110 +0100	am: ENGR00113941 MX233: Make UBOOT v2009.01 work on EVK board
+2893b49e59c154897ef9d3b0bf5055c8a426a012 0a9e60a0aa77a56e98924f2274e87cb96a8e1a5e Mihai Lazarescu <mlazarescu@mect.it> 1482072110 +0100	am: ENGR00115333: Enable cp command for MMC
+0a9e60a0aa77a56e98924f2274e87cb96a8e1a5e 3aa87b559efbceb4581da7372524e00527febd59 Mihai Lazarescu <mlazarescu@mect.it> 1482072110 +0100	am: ENGR00115046: Add new MMC config option for mx35.
+3aa87b559efbceb4581da7372524e00527febd59 cce67a7883a22fa50963aedfef496a604403cb20 Mihai Lazarescu <mlazarescu@mect.it> 1482072110 +0100	am: ENGR00115592: Replace whitespaces with tabs in Makefile
+cce67a7883a22fa50963aedfef496a604403cb20 1bf980e49df2bcf6e8535fa0261541e31b0b69b8 Mihai Lazarescu <mlazarescu@mect.it> 1482072110 +0100	am: ENGR00116140 MX51 3stack low level does not set M4IF correctly
+1bf980e49df2bcf6e8535fa0261541e31b0b69b8 74fb323e1ff85f95dc170b7fa64771ab77cffb6a Mihai Lazarescu <mlazarescu@mect.it> 1482072110 +0100	am: ENGR00116083: Recovery mode support for Android on mx51.
+74fb323e1ff85f95dc170b7fa64771ab77cffb6a 0a9c0d18a6bf1229f3860cec5553d2242a4e6b62 Mihai Lazarescu <mlazarescu@mect.it> 1482072110 +0100	am: ENGR00116203: Change nand Makefile to use CONFIG_MXC_NAND.
+0a9c0d18a6bf1229f3860cec5553d2242a4e6b62 884484c29b3ac988aeb66fb4c68a7c5a114350e4 Mihai Lazarescu <mlazarescu@mect.it> 1482072110 +0100	am: ENGR00116243: I2C support for mx51 3ds board.
+884484c29b3ac988aeb66fb4c68a7c5a114350e4 7614f8149c9a3cf90560bc5a4c117c54ea383c8c Mihai Lazarescu <mlazarescu@mect.it> 1482072111 +0100	am: ENGR00116472-1 U-BOOT upgrade to V2009.08
+7614f8149c9a3cf90560bc5a4c117c54ea383c8c c07e28710bd2f85819c6586b9f778f3f32a797f8 Mihai Lazarescu <mlazarescu@mect.it> 1482072111 +0100	am: u-boot v2009.08 sd/mmc support.
+c07e28710bd2f85819c6586b9f778f3f32a797f8 9215a7ca09da34e39e6815229dfd72eeaf851098 Mihai Lazarescu <mlazarescu@mect.it> 1482072111 +0100	am: ENGR00116504-1: Sync clock and l2cc code with redboot.
+9215a7ca09da34e39e6815229dfd72eeaf851098 2304e219955c16ab97fc65d7d6e3c0e043f2e4c6 Mihai Lazarescu <mlazarescu@mect.it> 1482072111 +0100	am: ENGR00116504-2: Add mx51 bbg to3 support.
+2304e219955c16ab97fc65d7d6e3c0e043f2e4c6 3ae11f858c897829c9fe6f91d147e4daa0282c1d Mihai Lazarescu <mlazarescu@mect.it> 1482072111 +0100	am: ENGR00116924 Uboot: Boot up hang at detecting NAND when cold boot
+3ae11f858c897829c9fe6f91d147e4daa0282c1d 74f5b8a8b4a9d60ec783e526346efdb699b7c17a Mihai Lazarescu <mlazarescu@mect.it> 1482072111 +0100	am: ENGR00117616: PATA support in u-boot.
+74f5b8a8b4a9d60ec783e526346efdb699b7c17a adda936e6d325948d10cdd964428bc462a4da03b Mihai Lazarescu <mlazarescu@mect.it> 1482072111 +0100	am: ENGR00116772 Workaround for ARM errata ID #468414
+adda936e6d325948d10cdd964428bc462a4da03b e44741155b84bcf515c9ec1659ecfce8c93d20e0 Mihai Lazarescu <mlazarescu@mect.it> 1482072111 +0100	am: ENGR00118294: Misc changes for v2009.08 upgrade.
+e44741155b84bcf515c9ec1659ecfce8c93d20e0 d9db3bc695bccb248785b26522ecadd458475620 Mihai Lazarescu <mlazarescu@mect.it> 1482072112 +0100	am: ENGR00118362: Correct recovery NAND cmd
+d9db3bc695bccb248785b26522ecadd458475620 c037b5ddf9bbd921106b2677efa22c68cbb065f8 Mihai Lazarescu <mlazarescu@mect.it> 1482072112 +0100	am: ENGR00118428 MX233 Uboot: reslove the build error for branch imx_v2009.08
+c037b5ddf9bbd921106b2677efa22c68cbb065f8 68b89dc54ff3aa7f6a7dd1064820e3824a732f79 Mihai Lazarescu <mlazarescu@mect.it> 1482072112 +0100	am: ENGR00118576 MX25: Support Smc911x ethernet
+68b89dc54ff3aa7f6a7dd1064820e3824a732f79 176800d4576552f7454c6bdd1e1b31ca2a79e618 Mihai Lazarescu <mlazarescu@mect.it> 1482072112 +0100	am: ENGR00118647 Fix smc911x receive packet length not set correctly
+176800d4576552f7454c6bdd1e1b31ca2a79e618 5b36d513cedb09b2429188c24e5d1e7b89704283 Mihai Lazarescu <mlazarescu@mect.it> 1482072112 +0100	am: ENGR00118682 Update the MX25 MAX Priority
+5b36d513cedb09b2429188c24e5d1e7b89704283 3a95cfbd5549baa4ebcda021aadc88c683c37453 Mihai Lazarescu <mlazarescu@mect.it> 1482072112 +0100	am: ENGR00118816 Fix reboot/reset failure with image on nand
+3a95cfbd5549baa4ebcda021aadc88c683c37453 247285714206d278cc093d4f8edd1e3372dcf475 Mihai Lazarescu <mlazarescu@mect.it> 1482072112 +0100	am: ENGR00118751: Some mmc card can't read and write from right offset.
+247285714206d278cc093d4f8edd1e3372dcf475 bd47ed6a7dfdaf73732403b26c72c2fe68c4f739 Mihai Lazarescu <mlazarescu@mect.it> 1482072112 +0100	am: ENGR00118801: Unknown information when booting from SPI-NOR.
+bd47ed6a7dfdaf73732403b26c72c2fe68c4f739 d74baf3360e5aba820db48a94ed734f1b6d3f4a1 Mihai Lazarescu <mlazarescu@mect.it> 1482072112 +0100	am: ENGR00118579 Enable MMU
+d74baf3360e5aba820db48a94ed734f1b6d3f4a1 abca7d3aedd163ac6f88759a19f24ed51f633463 Mihai Lazarescu <mlazarescu@mect.it> 1482072112 +0100	am: ENGR00118978: Timer adjustment for all platforms
+abca7d3aedd163ac6f88759a19f24ed51f633463 767776547fa6d5263b470b547a3d53ca1ac6a2e8 Mihai Lazarescu <mlazarescu@mect.it> 1482072113 +0100	am: ENGR00118789 Uboot:Update NAND scan scheme to support new nand type
+767776547fa6d5263b470b547a3d53ca1ac6a2e8 9dc2113ae0637718fd255b6e1c9bc634ba4fdb6a Mihai Lazarescu <mlazarescu@mect.it> 1482072113 +0100	am: ENGR00119133: MX35 can't boot due to wrong frequency setting
+9dc2113ae0637718fd255b6e1c9bc634ba4fdb6a 4a7d7c87049cfd737777dfd0f4019d23ddc8a29c Mihai Lazarescu <mlazarescu@mect.it> 1482072113 +0100	am: ENGR00119171: ubifs support for android recovery mode.
+4a7d7c87049cfd737777dfd0f4019d23ddc8a29c 9a4a993529926ed24357b3706177ba3b2057efdb Mihai Lazarescu <mlazarescu@mect.it> 1482072113 +0100	am: ENGR00119224: mmu support for mx51 3stack and mx51 bbg
+9a4a993529926ed24357b3706177ba3b2057efdb 9ec1952a80a9a7e93a3816de6c5d4833c24620e0 Mihai Lazarescu <mlazarescu@mect.it> 1482072113 +0100	am: ENGR00118998: Can not get ip address when kernel boot up
+9ec1952a80a9a7e93a3816de6c5d4833c24620e0 7891f362fc0daac04b85754623e42bbcb29a08bc Mihai Lazarescu <mlazarescu@mect.it> 1482072113 +0100	am: ENGR00119246 Add CONFIG_MXC_NAND config flag in MX25 platform
+7891f362fc0daac04b85754623e42bbcb29a08bc 8c14ee56af3154d01132e192e87e1a5522908575 Mihai Lazarescu <mlazarescu@mect.it> 1482072113 +0100	am: ENGR00119254: Add mmu header for mx51 build error
+8c14ee56af3154d01132e192e87e1a5522908575 ffc98a2d2c85dbf88810a730a546c5ba61bc6537 Mihai Lazarescu <mlazarescu@mect.it> 1482072113 +0100	am: ENGR00119486 MX25: Improve Lan9217 ethernet transfer speed
+ffc98a2d2c85dbf88810a730a546c5ba61bc6537 e511a5133369268f55fe3cdf9c31c6a63a694cf7 Mihai Lazarescu <mlazarescu@mect.it> 1482072113 +0100	am: ENGR00119505 MX51 BBG: Change DDR2 settings
+e511a5133369268f55fe3cdf9c31c6a63a694cf7 2ebbc1a3566b27906fdae4f67935ec1108bb5611 Mihai Lazarescu <mlazarescu@mect.it> 1482072114 +0100	am: ENGR00119526 MX25: Fix mmc read/write failure on mmc uboot
+2ebbc1a3566b27906fdae4f67935ec1108bb5611 3662d68e35e63d457362a12383aad104a6bcecf6 Mihai Lazarescu <mlazarescu@mect.it> 1482072114 +0100	am: ENGR00119625 i.MX35: UBoot doesn't accept commands if program uboot to NOR
+3662d68e35e63d457362a12383aad104a6bcecf6 8b76d0604b5303d8a35b743ec7bf5b1c4c6efb35 Mihai Lazarescu <mlazarescu@mect.it> 1482072114 +0100	am: ENGR00119660 MX35 UBOOT: Can't boot up on 2k page size nand
+8b76d0604b5303d8a35b743ec7bf5b1c4c6efb35 cdc03ac6237f35a1b2e628357da65d3f0286bf97 Mihai Lazarescu <mlazarescu@mect.it> 1482072114 +0100	am: ENGR00119591 Fix SPI-NOR reset issue
+cdc03ac6237f35a1b2e628357da65d3f0286bf97 f1c7217596e01eef685715f0a08102b13b7ca451 Mihai Lazarescu <mlazarescu@mect.it> 1482072114 +0100	am: ENGR00118739 Correct the board version of MX51 EVK
+f1c7217596e01eef685715f0a08102b13b7ca451 15283edea638fa2a05c31862806c16015b00646f Mihai Lazarescu <mlazarescu@mect.it> 1482072114 +0100	am: ENGR00119701 MX51: merge some fixes in 200908 version
+15283edea638fa2a05c31862806c16015b00646f ff9167bad7366a1631c0590f7d900601a7ee3eb7 Mihai Lazarescu <mlazarescu@mect.it> 1482072114 +0100	am: ENGR00119715: Add multi network support for mx35
+ff9167bad7366a1631c0590f7d900601a7ee3eb7 41e67e7a47b84f2f4fe244e9da2de3ffc41aa733 Mihai Lazarescu <mlazarescu@mect.it> 1482072114 +0100	am: ENGR00119716: MX28 basic support.
+41e67e7a47b84f2f4fe244e9da2de3ffc41aa733 03167f21fa41d0fbb724261e11b4ed0be5fd6fed Mihai Lazarescu <mlazarescu@mect.it> 1482072114 +0100	am: ENGR00119738: eMMC card access failed.
+03167f21fa41d0fbb724261e11b4ed0be5fd6fed 6b32417aabf4c93909a69992d1a535e7d6f75636 Mihai Lazarescu <mlazarescu@mect.it> 1482072114 +0100	am: ENGR00119706: Add esdhcv1 support.
+6b32417aabf4c93909a69992d1a535e7d6f75636 99069844a64de03bed8084be08dfbbb4f24884a3 Mihai Lazarescu <mlazarescu@mect.it> 1482072114 +0100	am: ENGR00119834: Change PDR0 clock settings for mx35 TO2
+99069844a64de03bed8084be08dfbbb4f24884a3 517d08e97ca1a8896a63f8ed84d166be074475a2 Mihai Lazarescu <mlazarescu@mect.it> 1482072115 +0100	am: ENGR00119890: Set right mac addr to FEC register in init
+517d08e97ca1a8896a63f8ed84d166be074475a2 d7de81475b1edb42111c7ddb3edf6db358313a2a Mihai Lazarescu <mlazarescu@mect.it> 1482072115 +0100	am: ENGR00119894: Read right value in mxc_i2c
+d7de81475b1edb42111c7ddb3edf6db358313a2a 0d3b2e515cdee924185e740a261fd2ee82370d99 Mihai Lazarescu <mlazarescu@mect.it> 1482072115 +0100	am: ENGR00120191 MX51: Update the M4IF setting
+0d3b2e515cdee924185e740a261fd2ee82370d99 5725bc1581b5f8aac892ec511d8af52c80381c68 Mihai Lazarescu <mlazarescu@mect.it> 1482072115 +0100	am: ENGR00120203: Add fec_addr check for mx51
+5725bc1581b5f8aac892ec511d8af52c80381c68 bf7a83665a63e10eb147cdbdd5ad9827200e238b Mihai Lazarescu <mlazarescu@mect.it> 1482072115 +0100	am: ENGR00120207: Change recovery mode combo keys
+bf7a83665a63e10eb147cdbdd5ad9827200e238b 96e613b4fe268a96e4a7dc2dce9a7982e30507c3 Mihai Lazarescu <mlazarescu@mect.it> 1482072115 +0100	am: ENGR00120208: Change recovery mode boot_cmd strategy
+96e613b4fe268a96e4a7dc2dce9a7982e30507c3 3926a6da7508dbba23bb34782df5eb5ee58b6b26 Mihai Lazarescu <mlazarescu@mect.it> 1482072115 +0100	am: ENGR00120202 MX51: enable L2 cache
+3926a6da7508dbba23bb34782df5eb5ee58b6b26 9f595f93f9c396d19f1cc5a4d396116c2d1b1197 Mihai Lazarescu <mlazarescu@mect.it> 1482072115 +0100	am: ENGR00120206 iMX28 Enable Ethernet and MMC boot support
+9f595f93f9c396d19f1cc5a4d396116c2d1b1197 3674d79ef43742d55c2fadf47c72bcf8ee3d4be8 Mihai Lazarescu <mlazarescu@mect.it> 1482072115 +0100	am: ENGR00120476: Add fuse support for mx51
+3674d79ef43742d55c2fadf47c72bcf8ee3d4be8 ec5f285eb04652b4f3747404213d769c7c0b9462 Mihai Lazarescu <mlazarescu@mect.it> 1482072115 +0100	am: ENGR00120830: Add eMMC and eSD fast boot support
+ec5f285eb04652b4f3747404213d769c7c0b9462 f749aecabf0c243241b39b87d66cb05926628aa3 Mihai Lazarescu <mlazarescu@mect.it> 1482072116 +0100	am: ENGR00121029 Add MX51-BBG Uboot Firmware support
+f749aecabf0c243241b39b87d66cb05926628aa3 6df23f64c34cb991c77312221a22e80b240dd687 Mihai Lazarescu <mlazarescu@mect.it> 1482072116 +0100	am: ENGR00120520: Enable MMU for mx51 and mx35
+6df23f64c34cb991c77312221a22e80b240dd687 ba76a8cbe59d1666c77b749b38e51302693902d5 Mihai Lazarescu <mlazarescu@mect.it> 1482072116 +0100	am: ENGR00121079: Unable to get IP address in uboot
+ba76a8cbe59d1666c77b749b38e51302693902d5 2b8325cadb476258f03fb574c4dd7a126a139409 Mihai Lazarescu <mlazarescu@mect.it> 1482072116 +0100	am: ENGR00121314: Fix mx23 and mx28 u-boot build error
+2b8325cadb476258f03fb574c4dd7a126a139409 535d5780def30b0a49e8644b03cccd8d37448722 Mihai Lazarescu <mlazarescu@mect.it> 1482072116 +0100	am: ENGR00121504 Revert ENGR00120191 to restore M4IF values
+535d5780def30b0a49e8644b03cccd8d37448722 16b6ac60f35f6072a5dd84bd5109d5bd7810c304 Mihai Lazarescu <mlazarescu@mect.it> 1482072116 +0100	am: ENGR00121379: MX28 U-BOOT enhancements
+16b6ac60f35f6072a5dd84bd5109d5bd7810c304 2a17cf98067da1e2099d379e5356f2fa3755d583 Mihai Lazarescu <mlazarescu@mect.it> 1482072116 +0100	am: ENGR000121601: FEC not work in mx28 u-boot
+2a17cf98067da1e2099d379e5356f2fa3755d583 b96a9f309f9332456404c809a2a16b74acca21d9 Mihai Lazarescu <mlazarescu@mect.it> 1482072116 +0100	am: ENGR00121202 Add uboot support for MX53
+b96a9f309f9332456404c809a2a16b74acca21d9 017386c2db0b83edcedd25b548df26d61968cf2b Mihai Lazarescu <mlazarescu@mect.it> 1482072117 +0100	am: ENGR00121731: Add mmu, l1cache, l2cache support for mx53
+017386c2db0b83edcedd25b548df26d61968cf2b fedbc38d61d858ef26f65cc4ba2dd931d86479b5 Mihai Lazarescu <mlazarescu@mect.it> 1482072117 +0100	am: ENGR00121774 DDR 300Mhz support for MX53 uboot
+fedbc38d61d858ef26f65cc4ba2dd931d86479b5 aedac10df374437d3708a14350ad4ff9a3411d2c Mihai Lazarescu <mlazarescu@mect.it> 1482072117 +0100	am: ENGR00121779 Support a single kernel image on MX5x parts
+aedac10df374437d3708a14350ad4ff9a3411d2c de69d0001c4e2981fc2d918bf615a3060099b052 Mihai Lazarescu <mlazarescu@mect.it> 1482072117 +0100	am: ENGR00121832: Some code reconstructure for u-boot
+de69d0001c4e2981fc2d918bf615a3060099b052 ffc9985899016a945c0ac54fb3ddeb4584ccfb44 Mihai Lazarescu <mlazarescu@mect.it> 1482072117 +0100	am: ENGR00121976 UBOOT: some fix for SD/MMC card
+ffc9985899016a945c0ac54fb3ddeb4584ccfb44 e986de3ae58374e930ceda5465bba7a2b9ae6e51 Mihai Lazarescu <mlazarescu@mect.it> 1482072117 +0100	am: ENGR00122046 Update DDR init script for MX53 EVK
+e986de3ae58374e930ceda5465bba7a2b9ae6e51 0205bda64265e148c2744e27b008185380763530 Mihai Lazarescu <mlazarescu@mect.it> 1482072117 +0100	am: ENGR00122050: mmc can't read data whose size exceeds 32M
+0205bda64265e148c2744e27b008185380763530 828db343aff2f9647baecba1c197a4984cce2d95 Mihai Lazarescu <mlazarescu@mect.it> 1482072117 +0100	am: ENGR00119033: System can not find MMC/SD card in SD slot 1
+828db343aff2f9647baecba1c197a4984cce2d95 ad01b0e61cdae48711910b281392073780874c70 Mihai Lazarescu <mlazarescu@mect.it> 1482072117 +0100	am: ENGR00122085 MX35 Add Uboot Firmware support
+ad01b0e61cdae48711910b281392073780874c70 ccabeaec6a4e080759971a39050862b39c5d3326 Mihai Lazarescu <mlazarescu@mect.it> 1482072117 +0100	am: ENGR00122203 UBOOT: Add MX53 ARM2 board support
+ccabeaec6a4e080759971a39050862b39c5d3326 17cb6bab3a20f2392f06a35678cae26c8911da74 Mihai Lazarescu <mlazarescu@mect.it> 1482072118 +0100	am: ENGR00122217 Missed iomem_valid_addr in updater configration
+17cb6bab3a20f2392f06a35678cae26c8911da74 9127b02e1cb3215e55907f656247be8a7d48603d Mihai Lazarescu <mlazarescu@mect.it> 1482072118 +0100	am: ENGR00122030 Mfg Firmware support fot imx25
+9127b02e1cb3215e55907f656247be8a7d48603d f0a5d73589d6866081463d31a41fb7d54a6ef304 Mihai Lazarescu <mlazarescu@mect.it> 1482072118 +0100	am: ENGR00122395: fix license declaration issue in fsl_esdhc.h
+f0a5d73589d6866081463d31a41fb7d54a6ef304 509b39f34b6ce56a89b849e084ec4036205b831a Mihai Lazarescu <mlazarescu@mect.it> 1482072118 +0100	am: ENGR00122342: missing mx23 evk machine ID setting
+509b39f34b6ce56a89b849e084ec4036205b831a bf6111f848cebbbe77d1a74adac832babcbde2a5 Mihai Lazarescu <mlazarescu@mect.it> 1482072118 +0100	am: ENGR00122643: Integrate linear PMIC
+bf6111f848cebbbe77d1a74adac832babcbde2a5 a37b090ff69beebb69808b9e9a6a04c995b5778e Mihai Lazarescu <mlazarescu@mect.it> 1482072118 +0100	am: ENGR00122980: Change default env dev to mmc for bbg
+a37b090ff69beebb69808b9e9a6a04c995b5778e 78655f6e52421c000bce67f5ba9af2b738a90b7a Mihai Lazarescu <mlazarescu@mect.it> 1482072118 +0100	am: ENGR00123265 UBOOT:Preserve NAND bad block indication
+78655f6e52421c000bce67f5ba9af2b738a90b7a fe8fa1f9e6e526fa32f8bca5928b0904b3696ab3 Mihai Lazarescu <mlazarescu@mect.it> 1482072118 +0100	am: ENGR00123278: Support clock operation functions
+fe8fa1f9e6e526fa32f8bca5928b0904b3696ab3 c1093571acf498dddb48e918a5cca2a487c35edd Mihai Lazarescu <mlazarescu@mect.it> 1482072118 +0100	am: ENGR00123418: Add peripheral clock setup support
+c1093571acf498dddb48e918a5cca2a487c35edd 4fb912b0c0020c9722b9b64a193fd7c101adad1d Mihai Lazarescu <mlazarescu@mect.it> 1482072119 +0100	am: ENGR00123488 MX53 Board Identification
+4fb912b0c0020c9722b9b64a193fd7c101adad1d e74a94cb254af7a30f7c0d415afbaed4b5aeb8a9 Mihai Lazarescu <mlazarescu@mect.it> 1482072119 +0100	am: ENGR00123630 Set ddr clk clock according to the board ID
+e74a94cb254af7a30f7c0d415afbaed4b5aeb8a9 8ea9927bb50831950d4bb3a8c36630e388eefedc Mihai Lazarescu <mlazarescu@mect.it> 1482072119 +0100	am: ENGR00123641 MX53: Add DDR3 CPU board support
+8ea9927bb50831950d4bb3a8c36630e388eefedc 743bf9fa7acdaa6d3b7b239b3a078a40c72df0c4 Mihai Lazarescu <mlazarescu@mect.it> 1482072119 +0100	am: ENGR00123870 MX53: Set AXI_B clock to 200Mhz
+743bf9fa7acdaa6d3b7b239b3a078a40c72df0c4 202337e743f404af6bc8026afc3621fed1dd4db7 Mihai Lazarescu <mlazarescu@mect.it> 1482072119 +0100	am: ENGR00123551: Add mx25 splash screen support
+202337e743f404af6bc8026afc3621fed1dd4db7 5f80788e7009dc72e0555d581e8c0f9afc6ddcc4 Mihai Lazarescu <mlazarescu@mect.it> 1482072119 +0100	am: ENGR00124100: Add support for saving env data to active mmc device
+5f80788e7009dc72e0555d581e8c0f9afc6ddcc4 ccbf978b3158ca58e68f6dad46a3e10166302c09 Mihai Lazarescu <mlazarescu@mect.it> 1482072119 +0100	am: ENGR00124195 Uboot:Pass EVK RevB board ID to kernel
+ccbf978b3158ca58e68f6dad46a3e10166302c09 f446c3993eb5789f32bdb7ce076885e56b011c25 Mihai Lazarescu <mlazarescu@mect.it> 1482072119 +0100	am: ENGR00123484 mx28:support saving environment into sd1
+f446c3993eb5789f32bdb7ce076885e56b011c25 f7fe404f9e85fcb6ea5a40dccd763a3649c8a0fd Mihai Lazarescu <mlazarescu@mect.it> 1482072119 +0100	am: ENGR00124391 mx35: update mfg config file
+f7fe404f9e85fcb6ea5a40dccd763a3649c8a0fd da27f3466e8fb10d0aede09c90d6c51acf2b21ad Mihai Lazarescu <mlazarescu@mect.it> 1482072120 +0100	am: ENGR00122651: Add dwc_ahsata support
+da27f3466e8fb10d0aede09c90d6c51acf2b21ad 4cbcb57fd6391e745b807ef48109bf6a0b82d772 Mihai Lazarescu <mlazarescu@mect.it> 1482072120 +0100	am: ENGR00123782 Fix boot partition problem for emmc
+4cbcb57fd6391e745b807ef48109bf6a0b82d772 4066c08ba483e4267065b434a8e52a44376a18cd Mihai Lazarescu <mlazarescu@mect.it> 1482072120 +0100	am: ENGR00124652 UBOOT: MX53 env fails to load when booting from 2nd slot
+4066c08ba483e4267065b434a8e52a44376a18cd f0a52360d47df67efdaae3f22cac4c0ae954c2c3 Mihai Lazarescu <mlazarescu@mect.it> 1482072120 +0100	am: ENGR00124710 MX53 Uboot: Add MFG tool support
+f0a52360d47df67efdaae3f22cac4c0ae954c2c3 f1d31d6f88688362056abacf9d693dedd0aacba2 Mihai Lazarescu <mlazarescu@mect.it> 1482072120 +0100	am: ENGR00124819 Uboot reading/writing sd card fails
+f1d31d6f88688362056abacf9d693dedd0aacba2 c1ce31f9cbd87c52fec388ef081e6956986a36b6 Mihai Lazarescu <mlazarescu@mect.it> 1482072120 +0100	am: ENGR00124908 CSPI: make spi_get_cfg platform specific
+c1ce31f9cbd87c52fec388ef081e6956986a36b6 9c833ff23ccc346bf3cbd41ed87986b987cd0b9d Mihai Lazarescu <mlazarescu@mect.it> 1482072120 +0100	am: ENGR00124359 Add uboot support for MX50
+9c833ff23ccc346bf3cbd41ed87986b987cd0b9d d93e34eeafbf3ae309ede2d0e3a6082c484cbce2 Mihai Lazarescu <mlazarescu@mect.it> 1482072120 +0100	am: ENGR00124953 Uboot:Fix the build break for MX51 BBG board
+d93e34eeafbf3ae309ede2d0e3a6082c484cbce2 166a588a006927a8bd022cf1e75fe5d980d86a58 Mihai Lazarescu <mlazarescu@mect.it> 1482072120 +0100	am: ENGR00124954 MX50: init sys by ROM plug-in feature
+166a588a006927a8bd022cf1e75fe5d980d86a58 c63155aae09d841faae5804f7bdc38671fa1403c Mihai Lazarescu <mlazarescu@mect.it> 1482072121 +0100	am: ENGR00124951 Uboot cannot initialize MMC cards
+c63155aae09d841faae5804f7bdc38671fa1403c a09a1d2e3b765a5aa4dbc8f65782a625e3667488 Mihai Lazarescu <mlazarescu@mect.it> 1482072121 +0100	am: ENGR00124912 MX53: Fix board ID check issue
+a09a1d2e3b765a5aa4dbc8f65782a625e3667488 5be058a5ff4a2a9efaa8485aa39a18b612076364 Mihai Lazarescu <mlazarescu@mect.it> 1482072121 +0100	am: ENGR00124627: Dynamic SD slot support for env data.
+5be058a5ff4a2a9efaa8485aa39a18b612076364 a0edbf38d10ac3a1d849044265b695b77c69f91d Mihai Lazarescu <mlazarescu@mect.it> 1482072121 +0100	am: ENGR00124984 MX53:Add spi_get_cfg function support
+a0edbf38d10ac3a1d849044265b695b77c69f91d cfc65a6cd6bc933764cfc9b0630b488a25ac3f73 Mihai Lazarescu <mlazarescu@mect.it> 1482072121 +0100	am: ENGR00125042 mx35: Fix error in a comment for header file
+cfc65a6cd6bc933764cfc9b0630b488a25ac3f73 14dad85d4438270b6760bc7c2e7206f14549406e Mihai Lazarescu <mlazarescu@mect.it> 1482072121 +0100	am: ENGR00125045 MX53 Uboot: Adjust VDDGP voltage
+14dad85d4438270b6760bc7c2e7206f14549406e 2c3524ec12578c0c07b4d8860561a272bfd66b52 Mihai Lazarescu <mlazarescu@mect.it> 1482072121 +0100	am: ENGR00123924: Reconstructure fuse files and add fuse to mx53.
+2c3524ec12578c0c07b4d8860561a272bfd66b52 74986d8cd633855f62c9b7c555167594ba906c28 Mihai Lazarescu <mlazarescu@mect.it> 1482072121 +0100	am: ENGR00125174: MX50: change memory configurations
+74986d8cd633855f62c9b7c555167594ba906c28 5bece73a9eb91dae06631bd47138ebc5ebf41477 Mihai Lazarescu <mlazarescu@mect.it> 1482072121 +0100	am: ENGR00125036 Uboot Add eMMC 4.4 support
+5bece73a9eb91dae06631bd47138ebc5ebf41477 e3e8225a6192ba0adc1bcd8485362f4fa860ebf7 Mihai Lazarescu <mlazarescu@mect.it> 1482072121 +0100	am: ENGR00125220 MX28: SD(slot0)boot dhcp failed
+e3e8225a6192ba0adc1bcd8485362f4fa860ebf7 129eeedddb6df18057843d93f39fd414ead755f3 Mihai Lazarescu <mlazarescu@mect.it> 1482072122 +0100	am: ENGR00125613 mfg-tool: Add mx50 mfg firmware support
+129eeedddb6df18057843d93f39fd414ead755f3 66667d0b6c23e04203730da536868d8a29fbb5de Mihai Lazarescu <mlazarescu@mect.it> 1482072122 +0100	am: ENGR00125735 iMX28 read mac address from fuse
+66667d0b6c23e04203730da536868d8a29fbb5de 86b07660bd76f9288edce6142951aaac22ea3a00 Mihai Lazarescu <mlazarescu@mect.it> 1482072122 +0100	am: ENGR00125757 mx28: change the boot mode offset to TO1.2 version
+86b07660bd76f9288edce6142951aaac22ea3a00 fd306bfcff899579d2ecc109a919882ba7ce3382 Mihai Lazarescu <mlazarescu@mect.it> 1482072122 +0100	am: ENGR00125324: Add splash screen code and support for epdc
+fd306bfcff899579d2ecc109a919882ba7ce3382 63aa73065b446c36671beaf152c68592850fa2a5 Mihai Lazarescu <mlazarescu@mect.it> 1482072122 +0100	am: ENGR00125237: Fix incorrect copyright info.
+63aa73065b446c36671beaf152c68592850fa2a5 4ec5c0773830f05bc4f6c6bac78a1b16ec6b961e Mihai Lazarescu <mlazarescu@mect.it> 1482072122 +0100	am: ENGR00126079: Add clk command support for mx51
+4ec5c0773830f05bc4f6c6bac78a1b16ec6b961e b0ef95cdc338238b23d58588fab5bfa4d8ed9b7a Mihai Lazarescu <mlazarescu@mect.it> 1482072122 +0100	am: ENGR00126474 UBOOT: update DDR script on MX50 ARM2
+b0ef95cdc338238b23d58588fab5bfa4d8ed9b7a 68be91f35f56b4bbfe4a353000f4f7aa7813789e Mihai Lazarescu <mlazarescu@mect.it> 1482072122 +0100	am: ENGR00126566 MX50:Aligned LPDDR2 initialization to the latest script
+68be91f35f56b4bbfe4a353000f4f7aa7813789e 2fd34d56e3c2e6f312a97608f4d8368c90924821 Mihai Lazarescu <mlazarescu@mect.it> 1482072122 +0100	am: ENGR00126764 MX50: Set the memroy size to 512M on LPDDR2 board
+2fd34d56e3c2e6f312a97608f4d8368c90924821 917c44a21e262db90c5881e6caab416ba49e6df7 Mihai Lazarescu <mlazarescu@mect.it> 1482072122 +0100	am: ENGR00127368 UBOOT: Make the android recovery code common for platforms
+917c44a21e262db90c5881e6caab416ba49e6df7 13dad62e2610ff1fc0d05b8315f4a3435b2b3b81 Mihai Lazarescu <mlazarescu@mect.it> 1482072122 +0100	am: ENGR00131619 UBOOT: Gcc 4.4.x complains weak inline
+13dad62e2610ff1fc0d05b8315f4a3435b2b3b81 2147c456f01b58fb3754ebc63d190f1037a23a57 Mihai Lazarescu <mlazarescu@mect.it> 1482072123 +0100	am: ENGR00131712 UBOOT:add DDR2 support for IMX50
+2147c456f01b58fb3754ebc63d190f1037a23a57 ad467630c99d4545415f16674bbcb4f9cf7f86d3 Mihai Lazarescu <mlazarescu@mect.it> 1482072123 +0100	am: ENGR00127167: Add gpmi nfc and apbh dma support for mx50.
+ad467630c99d4545415f16674bbcb4f9cf7f86d3 0965c666d7e762d3711fcc619b36158d06a4aef3 Mihai Lazarescu <mlazarescu@mect.it> 1482072123 +0100	am: ENGR00131578: Add android recovery mode support for mx53
+0965c666d7e762d3711fcc619b36158d06a4aef3 ed19ee9d4f47ac64364a4f2320093f486fab221c Mihai Lazarescu <mlazarescu@mect.it> 1482072123 +0100	am: ENGR00131662: Fix that iram boot don't work
+ed19ee9d4f47ac64364a4f2320093f486fab221c 725ff603d7181034d08a4b81833803e0efb41a04 Mihai Lazarescu <mlazarescu@mect.it> 1482072123 +0100	am: ENGR00131705-1 rename mx53_evk folder as mx53_rd
+725ff603d7181034d08a4b81833803e0efb41a04 41d34d5e1712697d6586a37e7da9d536e922f555 Mihai Lazarescu <mlazarescu@mect.it> 1482072123 +0100	am: ENGR00131705-2 Add MX53 ARD support
+41d34d5e1712697d6586a37e7da9d536e922f555 f3ea88b382fb711cd3f300003e397be411bce971 Mihai Lazarescu <mlazarescu@mect.it> 1482072123 +0100	am: ENGR00131705-3 Import new mach-type header file
+f3ea88b382fb711cd3f300003e397be411bce971 0d3cc8a4d5ef6a29a182ef17ee527d5a849acb95 Mihai Lazarescu <mlazarescu@mect.it> 1482072123 +0100	am: ENGR00131705-4 MX53: fix typo error for recovery
+0d3cc8a4d5ef6a29a182ef17ee527d5a849acb95 f3ea8a89865a42086495d8801f00ce65bb3dce87 Mihai Lazarescu <mlazarescu@mect.it> 1482072124 +0100	am: ENGR00131792: Fix mx50 lpddr2 build errors
+f3ea8a89865a42086495d8801f00ce65bb3dce87 a1fcd4b8ce6320357b1a9d0cef9cc7f270bda3b3 Mihai Lazarescu <mlazarescu@mect.it> 1482072124 +0100	am: ENGR00131779: Use serial_mxc as uart driver for all platforms
+a1fcd4b8ce6320357b1a9d0cef9cc7f270bda3b3 000e6a9293b0d27cdd48f0d906fe01e3c3733c41 Mihai Lazarescu <mlazarescu@mect.it> 1482072124 +0100	am: ENGR00131691 MX50 RDP Uboot
+000e6a9293b0d27cdd48f0d906fe01e3c3733c41 8b7b7558deeeb2a08698c81095292122f56da64f Mihai Lazarescu <mlazarescu@mect.it> 1482072124 +0100	am: ENGR00131840 MX53 ARD:use serial_mxc as uart driver
+8b7b7558deeeb2a08698c81095292122f56da64f 47b8a3c7144805fca16861b58214f41302116689 Mihai Lazarescu <mlazarescu@mect.it> 1482072124 +0100	am: ENGR00131924: using ext4 as default recovery filesystem
+47b8a3c7144805fca16861b58214f41302116689 cebdddb566d864cae72f19572277d417d1670259 Mihai Lazarescu <mlazarescu@mect.it> 1482072124 +0100	am: ENGR00131936 MX5X corrent mx53_evk mx51_BBG android default env setting
+cebdddb566d864cae72f19572277d417d1670259 f3acd75471636b4adcd53b19f7d4c4a9823be552 Mihai Lazarescu <mlazarescu@mect.it> 1482072124 +0100	am: ENGR00132014: nand read and write page may fail in some pages
+f3acd75471636b4adcd53b19f7d4c4a9823be552 d7e32fc60757a26a04e329f937ab44fc25caa8f7 Mihai Lazarescu <mlazarescu@mect.it> 1482072125 +0100	am: ENGR00132526 MX50 RDP Update to latest LPDDR2 script
+d7e32fc60757a26a04e329f937ab44fc25caa8f7 cfaa7b48001ae2e1f84151235a687bcf65bcdcfb Mihai Lazarescu <mlazarescu@mect.it> 1482072125 +0100	am: ENGR00132618 MX53 MFG:use serial_mxc as uart driver
+cfaa7b48001ae2e1f84151235a687bcf65bcdcfb 006b2b28674b2030150bd7505d7cef12bc1b2cd3 Mihai Lazarescu <mlazarescu@mect.it> 1482072125 +0100	am: ENGR00132656 MX53 ARD: Add MFG tool support
+006b2b28674b2030150bd7505d7cef12bc1b2cd3 f4120cf8863634f05c13dba2e11aab827ac914b1 Mihai Lazarescu <mlazarescu@mect.it> 1482072125 +0100	am: ENGR00132617 MX53: add NAND support
+f4120cf8863634f05c13dba2e11aab827ac914b1 1f03373a0e06a745be7559ed503a31173d8eaaae Mihai Lazarescu <mlazarescu@mect.it> 1482072125 +0100	am: ENGR00132709 MX53: add "clk nfc" command support
+1f03373a0e06a745be7559ed503a31173d8eaaae bed26c291f8298ed345d0d9bfd1021fb54794dfa Mihai Lazarescu <mlazarescu@mect.it> 1482072125 +0100	am: ENGR00132727 NAND: remove REG_NFC_ONE_CYCLE calling
+bed26c291f8298ed345d0d9bfd1021fb54794dfa 717540ccf34280d2af534d7283734c84614c3da9 Mihai Lazarescu <mlazarescu@mect.it> 1482072125 +0100	am: ENGR00132758 correct NFC_CLK definition
+717540ccf34280d2af534d7283734c84614c3da9 1aa7ef5555243fd082c39dcf2d19c4d0c7f3c51c Mihai Lazarescu <mlazarescu@mect.it> 1482072125 +0100	am: ENGR00132759 MX53: use 32K CLK as GPT source
+1aa7ef5555243fd082c39dcf2d19c4d0c7f3c51c 357462339964e3d72bf8a9819d5892ce525f26d7 Mihai Lazarescu <mlazarescu@mect.it> 1482072125 +0100	am: ENGR00132886 mx50-rdp: add mx50 rdp board mfg-tool firmware defconfig
+357462339964e3d72bf8a9819d5892ce525f26d7 d5f51fe8303722f3707857bcae682395c93a68c2 Mihai Lazarescu <mlazarescu@mect.it> 1482072125 +0100	am: ENGR00132957 mfg-tool: should add stop usb operation for mx50 rdp
+d5f51fe8303722f3707857bcae682395c93a68c2 57fa49b9d02ce8feae3a2029a827b706ae56a942 Mihai Lazarescu <mlazarescu@mect.it> 1482072126 +0100	am: ENGR00132965 add MT29F16G08ABACA NAND description
+57fa49b9d02ce8feae3a2029a827b706ae56a942 f3aaa53a41b4379c83a944114b2a6685c01ecf4c Mihai Lazarescu <mlazarescu@mect.it> 1482072126 +0100	am: ENGR00133049 Support nand flash for MX28
+f3aaa53a41b4379c83a944114b2a6685c01ecf4c 527b68af57e0f6db69ce421aed800102384a2507 Mihai Lazarescu <mlazarescu@mect.it> 1482072126 +0100	am: ENGR00133530 plug-in support mfgtools and sb_loader
+527b68af57e0f6db69ce421aed800102384a2507 2dcb344db144d6561172921aba1204ff2a1fe9ed Mihai Lazarescu <mlazarescu@mect.it> 1482072126 +0100	am: ENGR00132909 MX53 Uboot: Support for TO2
+2dcb344db144d6561172921aba1204ff2a1fe9ed 89b5969b5e9c5332c4f7d56914e1cdc666e0de23 Mihai Lazarescu <mlazarescu@mect.it> 1482072126 +0100	am: Get common/cmd_fastboot.c and include/fastboot.h from omap uboot git. The code realized common Android USB fastboot protocol.
+89b5969b5e9c5332c4f7d56914e1cdc666e0de23 35d93da6c19fca8ba358cd1fcf68809a58ae2665 Mihai Lazarescu <mlazarescu@mect.it> 1482072126 +0100	am: ENGR00133743 Change code style of fastboot code to pass review-commits.
+35d93da6c19fca8ba358cd1fcf68809a58ae2665 486289cca11aeddc06eb2512bbf00f8354338fb2 Mihai Lazarescu <mlazarescu@mect.it> 1482072126 +0100	am: ENGR00133756:UBOOT:NAND:Remove the 2G limitation from NAND driver
+486289cca11aeddc06eb2512bbf00f8354338fb2 3b9130428462ca6b1b1b8adc5e9fafe4a1aa4c3c Mihai Lazarescu <mlazarescu@mect.it> 1482072126 +0100	am: ENGR00133689 MX51: set MC13892 charge output voltage as 4.2V
+3b9130428462ca6b1b1b8adc5e9fafe4a1aa4c3c 2e6cc6dff4efe267341b9c9f5ab59a2428bfd17e Mihai Lazarescu <mlazarescu@mect.it> 1482072126 +0100	am: ENGR00133551-1 Add freescale usb udc support for i.mx51 platform.
+2e6cc6dff4efe267341b9c9f5ab59a2428bfd17e e6a10090233eabee28d22c7625f87bb1d29f37f6 Mihai Lazarescu <mlazarescu@mect.it> 1482072126 +0100	am: ENGR00133551-2 Add fastboot driver support for android.
+e6a10090233eabee28d22c7625f87bb1d29f37f6 e75f8b2253a8aaf52062937926f709e43b9da136 Mihai Lazarescu <mlazarescu@mect.it> 1482072127 +0100	am: ENGR00133124: Add nand support for mx50 rdp
+e75f8b2253a8aaf52062937926f709e43b9da136 dcb57907bb42ba8577021351319558204bd481f0 Mihai Lazarescu <mlazarescu@mect.it> 1482072127 +0100	am: ENGR00134098-1 MX51: Update fastboot usb init seq
+dcb57907bb42ba8577021351319558204bd481f0 fb2cdef6aa75108ccb1201a8bb9b42609e88636d Mihai Lazarescu <mlazarescu@mect.it> 1482072127 +0100	am: ENGR00134098-2 MX53: Add fastboot support for android.
+fb2cdef6aa75108ccb1201a8bb9b42609e88636d 514f71c5b7cab28c1c9ae118acb2d367f352947b Mihai Lazarescu <mlazarescu@mect.it> 1482072127 +0100	am: ENGR00133579 Uboot ESDHCv3 Remove workaround for DLL
+514f71c5b7cab28c1c9ae118acb2d367f352947b a7184a8f1de4632cb66aefbe1e2bbdaf368119b4 Mihai Lazarescu <mlazarescu@mect.it> 1482072127 +0100	am: ENGR00133437 MX50 Uboot support for TO 1.1.1 precode
+a7184a8f1de4632cb66aefbe1e2bbdaf368119b4 3bf92f58284f2889dfef7321f83250d8098609ae Mihai Lazarescu <mlazarescu@mect.it> 1482072127 +0100	am: ENGR12345678 Change ddr write delay in the PHY
+3bf92f58284f2889dfef7321f83250d8098609ae e1450822dbc3ec54c9da962ba041e0f3858f66a3 Mihai Lazarescu <mlazarescu@mect.it> 1482072127 +0100	am: ENGR00025557: MX50 Add ZQ calibration support for TO1.1.1.
+e1450822dbc3ec54c9da962ba041e0f3858f66a3 f24cdf9c2d765fc22db70dde12f2266a0b274f95 Mihai Lazarescu <mlazarescu@mect.it> 1482072127 +0100	am: ENGR00133744: Merge mx50_arm2 to mx50_rdp
+f24cdf9c2d765fc22db70dde12f2266a0b274f95 d9f00ca9bfe43f01a838866c2edd548545beb5f4 Mihai Lazarescu <mlazarescu@mect.it> 1482072127 +0100	am: NAND: Update to support 64 bit device size
+d9f00ca9bfe43f01a838866c2edd548545beb5f4 1627cdd33159199f94a32b28621542f059c92857 Mihai Lazarescu <mlazarescu@mect.it> 1482072127 +0100	am: ENGR00134220-1 NAND: fix up the chip select handling
+1627cdd33159199f94a32b28621542f059c92857 734852c7c619c4815165bb436d36f9883b738c9c Mihai Lazarescu <mlazarescu@mect.it> 1482072128 +0100	am: ENGR00134220-2 Need use CONFIG_SYS_NAND_MAX_CHIPS
+734852c7c619c4815165bb436d36f9883b738c9c 355fee7570ffb0c993d91c41e9d2e93c53480d4a Mihai Lazarescu <mlazarescu@mect.it> 1482072128 +0100	am: ENGR00134220-3 Fix the nand bad command issue
+355fee7570ffb0c993d91c41e9d2e93c53480d4a c47b85fd6b9eb1ba3dee08ae86e2906365648846 Mihai Lazarescu <mlazarescu@mect.it> 1482072128 +0100	am: ENGR00136031 mfgtool: sync config file for mx50 rdp
+c47b85fd6b9eb1ba3dee08ae86e2906365648846 339a444c8a830d833e03cd30ce26d43e6dbb91c5 Mihai Lazarescu <mlazarescu@mect.it> 1482072128 +0100	am: ENGR00136042 Add ZQ calib config and update script for DDR2
+339a444c8a830d833e03cd30ce26d43e6dbb91c5 b9260cec736e4d5ee6c39c9a884f0f7ae03b6ec6 Mihai Lazarescu <mlazarescu@mect.it> 1482072128 +0100	am: ENGR00136081 DDR script update for MX53 TO2 ARD
+b9260cec736e4d5ee6c39c9a884f0f7ae03b6ec6 a42b46531fb7a13eb0244863365ffb6b7bf1436f Mihai Lazarescu <mlazarescu@mect.it> 1482072128 +0100	am: ENGR00136170 MX50 Add ZQ calibration revision for TO1.1
+a42b46531fb7a13eb0244863365ffb6b7bf1436f 483d6d3b7ec84c8cb541f36e42c34a25ccc80215 Mihai Lazarescu <mlazarescu@mect.it> 1482072128 +0100	am: Add linux framebuffer header include/linux/fb.h
+483d6d3b7ec84c8cb541f36e42c34a25ccc80215 558df152ddaea43406b3d84c5e7b723453d76780 Mihai Lazarescu <mlazarescu@mect.it> 1482072128 +0100	am: MX51: Add IPU driver for video support
+558df152ddaea43406b3d84c5e7b723453d76780 211323186638bcda80ee5db27202b8f0eab79e57 Mihai Lazarescu <mlazarescu@mect.it> 1482072128 +0100	am: MX51: Add video support
+211323186638bcda80ee5db27202b8f0eab79e57 3574c14accd8434d5658c869f7fb5e16ca69b146 Mihai Lazarescu <mlazarescu@mect.it> 1482072128 +0100	am: ENGR00137214 MX50: Turn on ZQ calib config by default and fix hang problem

@@ -7200,7 +7200,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec ltib/dist/lfs-5.1/sqlite/sqlite.spec
 --- ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec
 +++ ltib/dist/lfs-5.1/sqlite/sqlite.spec
-@@ -9,29 +9,67 @@
+@@ -9,29 +9,68 @@
  Packager        : ProFUSION embedded systems <contact@profusion.mobi>
  Group           : System Environment/Libraries
  URL             : http://www.sqlite.org/
@@ -7239,6 +7239,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
 -make
 +make -j$(nproc)

@@ -3440,11 +3440,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Description
 +%{summary}.
 +
++
 +%Prep
 +export LC_ALL
 +LC_ALL=C
 +
 +%setup -n %{libname}-%{version}
++
 +
 +%Build
 +export LC_ALL
@@ -3453,6 +3455,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --disable-udev --disable-build-docs
 +make -j1
 +
++
 +%Install
 +export LC_ALL
 +LC_ALL=C
@@ -3460,13 +3463,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 +
-+cd %{_builddir}/%{libname}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_prefix}/include, d;
-+    \,^%{pfx}%{_libdir}/pkgconfig, d;
-+    /\.l\?a$/ d;
-+' all_files.lst > rfs_files.lst
 +
 +%Clean
 +export LC_ALL
@@ -3475,11 +3471,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +
 +
-+%Files -f all_files.lst
++%Files
 +%defattr(-,root,root)
++%{pfx}/*
 +
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/lib/libusb-1.0.so
++%{pfx}/usr/lib/libusb-1.0.so.0
++%{pfx}/usr/lib/libusb-1.0.so.0.1.0
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lkc/lkc.spec ltib/dist/lfs-5.1/lkc/lkc.spec
 --- ltib.reference/dist/lfs-5.1/lkc/lkc.spec
 +++ ltib/dist/lfs-5.1/lkc/lkc.spec

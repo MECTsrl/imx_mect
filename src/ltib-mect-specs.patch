@@ -4957,7 +4957,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mysql/mysql.spec ltib/dist/lfs-5.1/mysql/mysql.spec
 --- ltib.reference/dist/lfs-5.1/mysql/mysql.spec
 +++ ltib/dist/lfs-5.1/mysql/mysql.spec
-@@ -8,21 +8,40 @@
+@@ -8,21 +8,41 @@
  Vendor          : Freescale
  Packager        : Jason Jin
  Group           : System Environment/Daemons
@@ -5001,10 +5001,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  ./configure --prefix=/usr --host=$CFGHOST --build=%{_build} \
  	--enable-so	\
  	--with-named-curses-libs=-lncurses	\
-@@ -34,17 +53,25 @@
+@@ -34,17 +54,25 @@
  
  make
  
@@ -5033,7 +5034,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
-@@ -52,4 +79,149 @@
+@@ -52,4 +80,149 @@
  %defattr(-,root,root)
  %{pfx}/*
  

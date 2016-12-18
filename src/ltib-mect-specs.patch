@@ -3036,7 +3036,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libmodbus/libmodbus.spec ltib/dist/lfs-5.1/libmodbus/libmodbus.spec
 --- ltib.reference/dist/lfs-5.1/libmodbus/libmodbus.spec
 +++ ltib/dist/lfs-5.1/libmodbus/libmodbus.spec
-@@ -0,0 +1,73 @@
+@@ -0,0 +1,75 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : A Modbus library
@@ -3098,7 +3098,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+rm -rf $RPM_BUILD_ROOT
++if test -r Makefile; then
++	make clean
++fi
 +
 +
 +%Files
@@ -6826,7 +6828,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec
 +++ ltib/dist/lfs-5.1/skell/skell.spec
-@@ -9,20 +9,101 @@
+@@ -9,20 +9,102 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -6925,6 +6927,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 +export LC_ALL
 +LC_ALL=C
@@ -6932,7 +6935,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +112,174 @@
+@@ -31,24 +113,177 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -6973,12 +6976,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%patch46 -p1
 +%patch47 -p1
 +%patch48 -p1
++
  
  %Build
 +export LC_ALL
 +LC_ALL=C
 +
 +DESTDIR=$RPM_BUILD_ROOT/%{pfx} 
++
  
  %Install
 +export LC_ALL
@@ -6999,6 +7004,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +tar xjvf %{SOURCE2} -C $RPM_BUILD_ROOT/%{pfx}
 +tar xjvf %{SOURCE3} -C $RPM_BUILD_ROOT/%{pfx}
 +install -m 755 -D %{SOURCE4} $RPM_BUILD_ROOT/%{pfx}%{_bindir}/`basename %{SOURCE4}`
++
  
  %Clean
 -rm -rf $RPM_BUILD_ROOT
@@ -7119,7 +7125,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/splash/splash.spec ltib/dist/lfs-5.1/splash/splash.spec
 --- ltib.reference/dist/lfs-5.1/splash/splash.spec
 +++ ltib/dist/lfs-5.1/splash/splash.spec
-@@ -0,0 +1,67 @@
+@@ -0,0 +1,71 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : HMI splash screen
@@ -7150,12 +7156,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Description
 +%{summary}
 +
++
 +%Prep
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup -T -c -n SDcard
-+rsync -av --inplace ../../../../projects/splash/ ./
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
++
 +
 +%Build
 +export LC_ALL
@@ -7165,6 +7173,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx
 +make -j1
 +
++
 +%Install
 +export LC_ALL
 +LC_ALL=C
@@ -7172,6 +7181,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +
 +install -D -m 0755 splash $RPM_BUILD_ROOT%{pfx}/usr/bin/splash
++
 +
 +%Clean
 +export LC_ALL

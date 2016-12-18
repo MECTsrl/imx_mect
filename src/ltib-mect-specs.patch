@@ -3113,7 +3113,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 --- ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 +++ ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
-@@ -0,0 +1,77 @@
+@@ -0,0 +1,76 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Library to allow control of basic functions in socketcan from userspace
@@ -3147,12 +3147,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Description
 +%{summary}
 +
++
 +%Prep
 +export LC_ALL
 +LC_ALL=C
 +
 +%setup
 +%patch1 -p1
++
 +
 +%Build
 +export LC_ALL
@@ -3163,6 +3165,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +make
 +
++
 +%Install
 +export LC_ALL
 +LC_ALL=C
@@ -3170,14 +3173,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 +
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_libdir}/pkgconfig, d;
-+    \,^%{pfx}%{_datadir}/doc, d;
-+    \,^%{pfx}%{_prefix}/include, d;
-+    /\.l\?a$/ d;
-+' all_files.lst > rfs_files.lst
 +
 +%Clean
 +export LC_ALL
@@ -3186,11 +3181,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +
 +
-+%Files -f all_files.lst
++%Files
 +%defattr(-,root,root)
++%{pfx}/*
 +
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/lib/libsocketcan.so
++%{pfx}/usr/lib/libsocketcan.so.2
++%{pfx}/usr/lib/libsocketcan.so.2.2.0
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec ltib/dist/lfs-5.1/libtermcap/libtermcap.spec
 --- ltib.reference/dist/lfs-5.1/libtermcap/libtermcap.spec
 +++ ltib/dist/lfs-5.1/libtermcap/libtermcap.spec

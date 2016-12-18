@@ -1,24 +1,27 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 1999-09-19 19:34+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-18 03:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: ENCODING\n"
+"Content-Transfer-Encoding: 8bit\n"
 
 #: src/lsz.c:227
 msgid "io_mode(,2) in rbsb.c not implemented\n"
 msgstr ""
 
-#: src/lrz.c:195 src/lsz.c:229
+#: src/lsz.c:229 src/lrz.c:195
 #, c-format
 msgid "caught signal %d; exiting"
 msgstr ""
@@ -45,7 +48,7 @@ msgstr ""
 msgid "framelength out of range 32..%ld"
 msgstr ""
 
-#: src/lrz.c:317 src/lsz.c:449
+#: src/lsz.c:449 src/lrz.c:317
 msgid "min_bps"
 msgstr ""
 
@@ -53,66 +56,65 @@ msgstr ""
 msgid "min_bps must be >= 0"
 msgstr ""
 
-#: src/lrz.c:323 src/lsz.c:457
+#: src/lsz.c:457 src/lrz.c:323
 msgid "min_bps_time"
 msgstr ""
 
-#: src/lrz.c:325 src/lsz.c:459
+#: src/lsz.c:459 src/lrz.c:325
 msgid "min_bps_time must be > 1"
 msgstr ""
 
-#: src/lrz.c:341 src/lsz.c:483
+#: src/lsz.c:483 src/lrz.c:341
 msgid "hour to large (0..23)"
 msgstr ""
 
-#: src/lrz.c:343 src/lsz.c:485
+#: src/lsz.c:485 src/lrz.c:343
 msgid "unparsable stop time\n"
 msgstr ""
 
-#: src/lrz.c:347 src/lsz.c:489
+#: src/lsz.c:489 src/lrz.c:347
 msgid "minute to large (0..59)"
 msgstr ""
 
-#: src/lrz.c:357 src/lrz.c:364 src/lsz.c:499 src/lsz.c:506
+#: src/lsz.c:499 src/lsz.c:506 src/lrz.c:357 src/lrz.c:364
 msgid "stop time to small"
 msgstr ""
 
-#: src/lrz.c:362 src/lsz.c:504
+#: src/lsz.c:504 src/lrz.c:362
 msgid "stop-at"
 msgstr ""
 
-#: src/lrz.c:393 src/lsz.c:515
+#: src/lsz.c:515 src/lrz.c:393
 msgid "timeout"
 msgstr ""
 
-#: src/lrz.c:395 src/lsz.c:517
+#: src/lsz.c:517 src/lrz.c:395
 msgid "timeout out of range 10..1000"
 msgstr ""
 
-#: src/lrz.c:411 src/lsz.c:525
+#: src/lsz.c:525 src/lrz.c:411
 msgid "security violation: can't do that under restricted shell\n"
 msgstr ""
 
-#: src/lrz.c:401 src/lsz.c:532
+#: src/lsz.c:532 src/lrz.c:401
 msgid "window size"
 msgstr ""
 
-#: src/lrz.c:426 src/lrz.c:433 src/lsz.c:555 src/lsz.c:562
+#: src/lsz.c:555 src/lsz.c:562 src/lrz.c:426 src/lrz.c:433
 msgid "cannot turnoff syslog"
 msgstr ""
 
-#: src/lrz.c:448 src/lsz.c:570
+#: src/lsz.c:570 src/lrz.c:448
 msgid "startup delay"
 msgstr ""
 
-#: src/lrz.c:464 src/lrz.c:482 src/lrz.c:759 src/lrz.c:1121 src/lrz.c:1243
-#: src/lrz.c:1291 src/lrz.c:1308 src/lrz.c:1323 src/lrz.c:1422 src/lsz.c:579
-#: src/lsz.c:595 src/lsz.c:692 src/lsz.c:827 src/lsz.c:1060
-#: src/zreadline.c:127
+#: src/lsz.c:579 src/lsz.c:595 src/lsz.c:692 src/lsz.c:827 src/lsz.c:1060
+#: src/zreadline.c:127 src/lrz.c:464 src/lrz.c:482 src/lrz.c:759 src/lrz.c:1121
+#: src/lrz.c:1243 src/lrz.c:1291 src/lrz.c:1308 src/lrz.c:1323 src/lrz.c:1422
 msgid "out of memory"
 msgstr ""
 
-#: src/lrz.c:474 src/lsz.c:591
+#: src/lsz.c:591 src/lrz.c:474
 msgid "this program was never intended to be used setuid\n"
 msgstr ""
 
@@ -121,14 +123,15 @@ msgid "need at least one file to send"
 msgstr ""
 
 #: src/lsz.c:628
+#, c-format
 msgid "Can't send command in restricted mode\n"
 msgstr ""
 
-#: src/lrz.c:526 src/lsz.c:655
+#: src/lsz.c:655 src/lrz.c:526
 msgid "hostname too long\n"
 msgstr ""
 
-#: src/lrz.c:541 src/lsz.c:670
+#: src/lsz.c:670 src/lrz.c:541
 msgid "illegal server address\n"
 msgstr ""
 
@@ -136,11 +139,11 @@ msgstr ""
 msgid "can read only one file from stdin"
 msgstr ""
 
-#: src/lrz.c:573 src/lsz.c:802
+#: src/lsz.c:802 src/lrz.c:573
 msgid "Transfer incomplete\n"
 msgstr ""
 
-#: src/lrz.c:575 src/lsz.c:804
+#: src/lsz.c:804 src/lrz.c:575
 msgid "Transfer complete\n"
 msgstr ""
 
@@ -196,7 +199,7 @@ msgstr ""
 msgid "security violation: not allowed to upload from %s"
 msgstr ""
 
-#: src/lrz.c:1383 src/lsz.c:1026
+#: src/lsz.c:1026 src/lrz.c:1383
 #, c-format
 msgid "cannot open %s"
 msgstr ""
@@ -287,12 +290,12 @@ msgstr ""
 msgid "Retry Count Exceeded"
 msgstr ""
 
-#: src/lrz.c:595 src/lsz.c:1501
+#: src/lsz.c:1501 src/lrz.c:595
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr ""
 
-#: src/lrz.c:600 src/lsz.c:1506
+#: src/lsz.c:1506 src/lrz.c:600
 #, c-format
 msgid "%s version %s\n"
 msgstr ""
@@ -311,7 +314,7 @@ msgstr ""
 msgid "Send file(s) with ZMODEM/YMODEM/XMODEM protocol\n"
 msgstr ""
 
-#: src/lrz.c:606 src/lsz.c:1514
+#: src/lsz.c:1514 src/lrz.c:606
 msgid ""
 "    (X) = option applies to XMODEM only\n"
 "    (Y) = option applies to YMODEM only\n"
@@ -375,7 +378,7 @@ msgstr ""
 msgid "got ZRQINIT"
 msgstr ""
 
-#: src/lrz.c:1078 src/lrz.c:1771 src/lsz.c:1773
+#: src/lsz.c:1773 src/lrz.c:1078 src/lrz.c:1771
 msgid "got ZCAN"
 msgstr ""
 
@@ -435,6 +438,10 @@ msgid ""
 "countem: Total %d %ld\n"
 msgstr ""
 
+#: src/zm.c:91
+msgid "Bad CRC"
+msgstr ""
+
 #: src/zm.c:245
 #, c-format
 msgid "Bad escape sequence %x"
@@ -444,7 +451,7 @@ msgstr ""
 msgid "Sender Canceled"
 msgstr ""
 
-#: src/lrz.c:1001 src/zm.c:586 src/zm.c:645
+#: src/zm.c:586 src/zm.c:645 src/lrz.c:1001
 msgid "TIMEOUT"
 msgstr ""
 

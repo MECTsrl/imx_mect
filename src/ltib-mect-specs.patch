@@ -3501,7 +3501,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
 --- ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec
 +++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
-@@ -8,40 +8,74 @@
+@@ -8,40 +8,75 @@
  Vendor          : Freescale
  Packager        : Alan Tull
  Group           : Applications/Communications
@@ -3545,6 +3545,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  then
      config_opts='ac_cv_lib_intl_gettext=no'
  fi
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  eval $config_opts \
 -./configure --disable-pubdir \
 -            --enable-syslog \

@@ -5001,7 +5001,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
++find . -type f -print0 | xargs -0 touch
  ./configure --prefix=/usr --host=$CFGHOST --build=%{_build} \
  	--enable-so	\
  	--with-named-curses-libs=-lncurses	\

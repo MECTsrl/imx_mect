@@ -8932,7 +8932,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zip30/zip30.spec ltib/dist/lfs-5.1/zip30/zip30.spec
 --- ltib.reference/dist/lfs-5.1/zip30/zip30.spec
 +++ ltib/dist/lfs-5.1/zip30/zip30.spec
-@@ -0,0 +1,70 @@
+@@ -0,0 +1,69 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : A file compression utility.
@@ -8964,11 +8964,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Description
 +%{summary}
 +
++
 +%Prep
 +export LC_ALL
 +LC_ALL=C
 +
 +%setup
++
 +
 +%Build
 +export LC_ALL
@@ -8985,11 +8987,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +make -f unix/Makefile install PREFIX=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
 +$TOOLCHAIN_PATH/bin/${TOOLCHAIN_PREFIX}strip --strip-unneeded $RPM_BUILD_ROOT/%{pfx}%{_prefix}/bin/zip
 +
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed -n '
-+    \,^%{pfx}%{_bindir}/zip, p;
-+' all_files.lst > rfs_files.lst
 +
 +%Clean
 +export LC_ALL
@@ -8998,11 +8995,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +
 +
-+%Files -f all_files.lst
++%Files
 +%defattr(-,root,root)
++%{pfx}/*
 +
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++/opt/freescale/rootfs/arm/usr/bin/zip
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zlib/zlib.spec ltib/dist/lfs-5.1/zlib/zlib.spec
 --- ltib.reference/dist/lfs-5.1/zlib/zlib.spec
 +++ ltib/dist/lfs-5.1/zlib/zlib.spec

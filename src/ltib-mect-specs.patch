@@ -5687,8 +5687,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ppp/ppp.spec ltib/dist/lfs-5.1/ppp/ppp.spec
 --- ltib.reference/dist/lfs-5.1/ppp/ppp.spec
 +++ ltib/dist/lfs-5.1/ppp/ppp.spec
-@@ -13,16 +13,38 @@
- Patch1          : ppp-2.4.3-hspeed.patch
+@@ -8,21 +8,39 @@
+ Vendor          : Freescale
+ Packager        : Michael Barkowski
+ Group           : System Environment/Daemons
+-Source          : %{name}-%{version}.tar.gz
+-Patch0          : ppp-2.4.4-header-checks-filter-off-df546d4c.patch
+-Patch1          : ppp-2.4.3-hspeed.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -5711,14 +5716,16 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +
  %Prep
+-%setup 
+-%patch0 -p1
+-%patch1 -p1
 +export LC_ALL
 +LC_ALL=C
 +
- %setup 
- %patch0 -p1
- %patch1 -p1
- 
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
+ 
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -5726,7 +5733,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
  if [ "$PKG_PPP_WANT_FILTER" = "y" ]
  then
-@@ -34,15 +56,38 @@
+@@ -34,15 +52,38 @@
  
  
  %Install

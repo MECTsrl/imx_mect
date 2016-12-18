@@ -3244,9 +3244,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  %Description
  The libtermcap package contains a basic system library needed to
-@@ -31,7 +46,10 @@
+@@ -30,8 +45,12 @@
+ to the termcap database, so that programs can output character-based
  displays in a terminal-independent manner.
  
++
  %Prep
 -%setup -q -n termcap-2.0.8
 +export LC_ALL
@@ -3256,9 +3258,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %patch0 -p1 
  %patch1 -p1
  %patch2 -p1
-@@ -46,6 +64,9 @@
+@@ -45,14 +64,22 @@
+ %patch10 -p1
  %patch11 -p1
  
++
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -3266,9 +3270,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  if [ "$GNUTARCH" = m68knommu ]
  then
     MAKEOPTS="TARGETS=libtermcap.a"
-@@ -53,6 +74,9 @@
+ fi
  make $MAKEOPTS
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -3276,7 +3281,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  for i in usr/lib %{_infodir} usr/include etc lib
  do
      mkdir -p ${RPM_BUILD_ROOT}/%{pfx}/$i
-@@ -61,7 +85,7 @@
+@@ -61,7 +88,7 @@
  if [ "$GNUTARCH" = m68knommu ]
  then
  ( cp libtermcap.a ${RPM_BUILD_ROOT}/%{pfx}/lib/
@@ -3285,7 +3290,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
    cp termcap.info* ${RPM_BUILD_ROOT}/%{pfx}/%{_infodir}
    cd ${RPM_BUILD_ROOT}/%{pfx}
    cd ./%{_infodir}
-@@ -71,7 +95,7 @@
+@@ -71,7 +98,7 @@
  
  else
  export PATH=/sbin:$PATH
@@ -3294,7 +3299,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  install -c -m644 termcap.src ${RPM_BUILD_ROOT}/%{pfx}/etc/termcap
  cp termcap.info* ${RPM_BUILD_ROOT}/%{pfx}/%{_infodir}
-@@ -79,24 +103,36 @@
+@@ -79,24 +106,34 @@
  ( cd ${RPM_BUILD_ROOT}/%{pfx}
    rm -f ./etc/termcap
    mv ./usr/lib/libtermcap.so* ./lib
@@ -3313,13 +3318,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  )
  fi
  
-+cd %{_builddir}/%{archname}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( -not -type d \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_prefix}/info, d;
-+    \,^%{pfx}%{_prefix}/include, d;
-+    /\.l\?a$/ d;
-+' all_files.lst > rfs_files.lst
 +
  %Clean
 +export LC_ALL
@@ -3328,16 +3326,19 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf ${RPM_BUILD_ROOT}
 -rm -rf ${RPM_BUILD_DIR}/termcap-%{version}
 +rm -rf ${RPM_BUILD_DIR}/%{archname}-%{version}
++
  
--%Files
--%defattr(-,root,root)
--%{pfx}/*
+ %Files
+ %defattr(-,root,root)
+ %{pfx}/*
  
-+%Files -f all_files.lst
+-
++%Files rfs
 +%defattr(-,root,root)
- 
-+%Files rfs -f rfs_files.lst
-+%defattr(-,root,root)
++%{pfx}/lib/libtermcap.so
++%{pfx}/lib/libtermcap.so.2
++%{pfx}/lib/libtermcap.so.2.0.8
++%{pfx}/usr/lib/libtermcap.so
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb.spec ltib/dist/lfs-5.1/libusb/libusb.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb.spec
 +++ ltib/dist/lfs-5.1/libusb/libusb.spec

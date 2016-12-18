@@ -3501,7 +3501,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
 --- ltib.reference/dist/lfs-5.1/lrzsz/lrzsz.spec
 +++ ltib/dist/lfs-5.1/lrzsz/lrzsz.spec
-@@ -10,38 +10,72 @@
+@@ -10,38 +10,76 @@
  Group           : Applications/Communications
  Source          : lrzsz_0.12.21.orig.tar.gz
  Patch0          : lrzsz_0.12.21-4.diff
@@ -3517,6 +3517,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Group           : Applications/Communications
 +AutoReqProv     : no
 +
++
 +%Description rfs
 +lrzsz package contents restricted to just the files that
 +are needed at run time on the target.
@@ -3524,6 +3525,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 -%setup -n lrzsz-990823
 +export LC_ALL
@@ -3532,6 +3534,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%setup -n %{name}-990823
  %patch0 -p1
 +%patch1 -p1
++
  
  %Build
 +export LC_ALL
@@ -3550,6 +3553,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  touch stamp-h.in
  make -j1
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -3558,11 +3562,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
  
-+cd %{_builddir}/%{name}-990823
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_prefix}/man, d;
-+' all_files.lst > rfs_files.lst
 +
  %Clean
 +export LC_ALL
@@ -3570,16 +3569,20 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
 +
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
  
- 
+-
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/bin/rb
++%{pfx}/usr/bin/rx
++%{pfx}/usr/bin/rz
++%{pfx}/usr/bin/sb
++%{pfx}/usr/bin/sx
++%{pfx}/usr/bin/sz
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lzo/lzo.spec ltib/dist/lfs-5.1/lzo/lzo.spec
 --- ltib.reference/dist/lfs-5.1/lzo/lzo.spec
 +++ ltib/dist/lfs-5.1/lzo/lzo.spec

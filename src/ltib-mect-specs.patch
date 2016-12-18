@@ -8191,7 +8191,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 +++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
-@@ -0,0 +1,79 @@
+@@ -0,0 +1,76 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : USB Modeswitch gets mobile broadband cards in operational mode
@@ -8226,17 +8226,20 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Description
 +%{summary}.
 +
++
 +%Prep
 +export LC_ALL
 +LC_ALL=C
 +
 +%setup
 +
++
 +%Build
 +export LC_ALL
 +LC_ALL=C
 +
 +make
++
 +
 +%Install
 +export LC_ALL
@@ -8249,15 +8252,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +install -m755 -D %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/usr/sbin/$(basename %{SOURCE1})
 +
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_sbindir}/usb_modeswitch_dispatcher, d;
-+    \,^%{pfx}%{_sysconfdir}, d;
-+    \,^%{pfx}/%{_lib}, d;
-+    \,^%{pfx}%{_localstatedir}/%{_lib}, d;
-+    \,^%{pfx}%{_mandir}, d;
-+' all_files.lst > rfs_files.lst
 +
 +%Clean
 +export LC_ALL
@@ -8266,15 +8260,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +
 +
-+%Files -f all_files.lst
++%Files
 +%defattr(-,root,root)
++%{pfx}/*
 +
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/sbin/usb_modeswitch
++%{pfx}/usr/sbin/usb_modeswitch_helper
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 +++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
-@@ -0,0 +1,76 @@
+@@ -0,0 +1,73 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Data for the USB Modeswitch tool
@@ -8306,11 +8303,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Description
 +%{summary}.
 +
++
 +%Prep
 +export LC_ALL
 +LC_ALL=C
 +
 +%setup
++
 +
 +%Build
 +export LC_ALL
@@ -8332,13 +8331,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +mv %{_tmppath}/configPack.tar.bz2 .
 +
 +
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_sysconfdir}, d;
-+    \,^%{pfx}/%{_lib}/udev, d;
-+' all_files.lst > rfs_files.lst
-+
 +%Clean
 +export LC_ALL
 +LC_ALL=C
@@ -8346,11 +8338,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +
 +
-+%Files -f all_files.lst
++%Files
 +%defattr(-,root,root)
++%{pfx}/*
 +
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/share/usb_modeswitch/configPack.tar.bz2
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 --- ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 +++ ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec

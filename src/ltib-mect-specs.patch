@@ -9007,8 +9007,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zlib/zlib.spec ltib/dist/lfs-5.1/zlib/zlib.spec
 --- ltib.reference/dist/lfs-5.1/zlib/zlib.spec
 +++ ltib/dist/lfs-5.1/zlib/zlib.spec
-@@ -12,15 +12,37 @@
- Patch1          : zlib-1.2.3-arflags-1.patch
+@@ -8,19 +8,39 @@
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
+ Group           : Development/Libraries
+-Source          : %{name}-%{version}.tar.bz2
+-Patch1          : zlib-1.2.3-arflags-1.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -9031,13 +9035,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +
  %Prep
+-%setup
+-%patch1 -p1
 +export LC_ALL
 +LC_ALL=C
 +
- %setup
- %patch1 -p1
- 
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
+ 
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -9045,7 +9051,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure --prefix=%{_prefix} --shared
  mv Makefile Makefile.shared
  ./configure --prefix=%{_prefix}
-@@ -28,13 +50,21 @@
+@@ -28,18 +48,32 @@
  make -f Makefile.shared
  make -f Makefile.static
  
@@ -9064,13 +9070,16 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  
  %Clean
+-rm -rf $RPM_BUILD_ROOT
 +export LC_ALL
 +LC_ALL=C
 +
- rm -rf $RPM_BUILD_ROOT
++if test -r Makefile; then
++	make clean
++fi
  
  
-@@ -42,4 +72,8 @@
+ %Files
  %defattr(-,root,root)
  %{pfx}/*
  

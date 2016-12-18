@@ -3195,7 +3195,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  Summary         : A basic system library for accessing the termcap database.
  Name            : libtermcap
-@@ -8,21 +9,35 @@
+@@ -8,21 +9,22 @@
  Vendor          : Freescale Inc
  Packager        : Steve Papacharalambous
  Group           : System Environment/Libraries
@@ -3212,19 +3212,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -Patch9: termcap-2.0.8-colon.patch
 -Patch10: libtermcap-aaargh.patch
 -Patch11: termcap-2.0.8-glibc22.patch
-+Source          : %{archname}-%{version}.tar.bz2
-+Patch0          : %{archname}-%{version}-shared.patch
-+Patch1          : %{archname}-%{version}-setuid.patch
-+Patch2          : %{archname}-%{version}-instnoroot.patch
-+Patch3          : %{archname}-%{version}-compat21.patch
-+Patch4          : %{archname}-%{version}-xref.patch
-+Patch5          : %{archname}-%{version}-fix-tc.patch
-+Patch6          : %{archname}-%{version}-ignore-p.patch
-+Patch7          : %{archname}-buffer.patch
-+Patch8          : %{archname}-%{version}-bufsize.patch
-+Patch9          : %{archname}-%{version}-colon.patch
-+Patch10         : libtermcap-aaargh.patch
-+Patch11         : %{archname}-%{version}-glibc22.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -3244,25 +3231,32 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  %Description
  The libtermcap package contains a basic system library needed to
-@@ -30,8 +45,12 @@
+@@ -30,29 +32,30 @@
  to the termcap database, so that programs can output character-based
  displays in a terminal-independent manner.
  
 +
  %Prep
 -%setup -q -n termcap-2.0.8
+-%patch0 -p1 
+-%patch1 -p1
+-%patch2 -p1
+-%patch3 -p1
+-%patch4 -p1
+-%patch5 -p1
+-%patch6 -p1
+-%patch7 -p1
+-%patch8 -p1
+-%patch9 -p1
+-%patch10 -p1
+-%patch11 -p1
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup -q -n %{archname}-%{version}
- %patch0 -p1 
- %patch1 -p1
- %patch2 -p1
-@@ -45,14 +64,22 @@
- %patch10 -p1
- %patch11 -p1
- 
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
+ 
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -3281,7 +3275,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  for i in usr/lib %{_infodir} usr/include etc lib
  do
      mkdir -p ${RPM_BUILD_ROOT}/%{pfx}/$i
-@@ -61,7 +88,7 @@
+@@ -61,7 +64,7 @@
  if [ "$GNUTARCH" = m68knommu ]
  then
  ( cp libtermcap.a ${RPM_BUILD_ROOT}/%{pfx}/lib/
@@ -3290,7 +3284,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
    cp termcap.info* ${RPM_BUILD_ROOT}/%{pfx}/%{_infodir}
    cd ${RPM_BUILD_ROOT}/%{pfx}
    cd ./%{_infodir}
-@@ -71,7 +98,7 @@
+@@ -71,7 +74,7 @@
  
  else
  export PATH=/sbin:$PATH
@@ -3299,7 +3293,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  install -c -m644 termcap.src ${RPM_BUILD_ROOT}/%{pfx}/etc/termcap
  cp termcap.info* ${RPM_BUILD_ROOT}/%{pfx}/%{_infodir}
-@@ -79,24 +106,34 @@
+@@ -79,24 +82,34 @@
  ( cd ${RPM_BUILD_ROOT}/%{pfx}
    rm -f ./etc/termcap
    mv ./usr/lib/libtermcap.so* ./lib

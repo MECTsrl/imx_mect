@@ -5188,7 +5188,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/nagios-plugins/nagios-plugins.spec ltib/dist/lfs-5.1/nagios-plugins/nagios-plugins.spec
 --- ltib.reference/dist/lfs-5.1/nagios-plugins/nagios-plugins.spec
 +++ ltib/dist/lfs-5.1/nagios-plugins/nagios-plugins.spec
-@@ -0,0 +1,75 @@
+@@ -0,0 +1,76 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define mb_name check_modbus
 +%define mb_vers 0.46
@@ -5235,6 +5235,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . -type f -print0 | xargs -0 touch
 +cd %{mb_name}-%{mb_vers}
 +./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
 +make

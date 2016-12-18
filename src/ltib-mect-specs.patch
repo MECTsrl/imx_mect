@@ -7811,7 +7811,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/tslib/tslib.spec ltib/dist/lfs-5.1/tslib/tslib.spec
 --- ltib.reference/dist/lfs-5.1/tslib/tslib.spec
 +++ ltib/dist/lfs-5.1/tslib/tslib.spec
-@@ -8,62 +8,87 @@
+@@ -8,62 +8,88 @@
  Vendor          : Freescale
  Packager        : Ross Wille
  Group           : System Environment/Libraries
@@ -7880,6 +7880,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
 +ac_cv_func_malloc_0_nonnull=yes ./configure CC=${TOOLCHAIN_PREFIX}gcc --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
  make
  

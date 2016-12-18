@@ -7937,15 +7937,41 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl
 --- ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl
 +++ ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl
-@@ -18,7 +18,8 @@
+@@ -18,10 +18,12 @@
      make HOSTCC="$BUILDCC" CROSS_COMPILE=$TOOLCHAIN_PREFIX O=$BUILD_DIR distclean
  fi
  make HOSTCC="$BUILDCC" CROSS_COMPILE=$TOOLCHAIN_PREFIX O=$BUILD_DIR $PKG_U_BOOT_CONFIG_TYPE
 -make HOSTCC="$BUILDCC" HOSTSTRIP="$BUILDSTRIP" \
-+make -j`grep -c ^processor /proc/cpuinfo` \
++make -j$(nproc) \
 +     HOSTCC="$BUILDCC" HOSTSTRIP="$BUILDSTRIP" \
       CROSS_COMPILE=$TOOLCHAIN_PREFIX $PKG_U_BOOT_BUILD_ARGS \
       O=$BUILD_DIR all
+ 
++
+ %Install
+ rm -rf $RPM_BUILD_ROOT
+ mkdir -p $RPM_BUILD_ROOT/%{pfx}/boot
+@@ -32,9 +34,11 @@
+     cp $i $RPM_BUILD_ROOT/%{pfx}/boot
+ done
+ 
++
+ %Clean
+ rm -rf $RPM_BUILD_ROOT
+ 
++
+ %Files
+ %defattr(-,root,root)
+ %{pfx}/*
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot-dir-build.spec.in ltib/dist/lfs-5.1/u-boot/u-boot-dir-build.spec.in
+--- ltib.reference/dist/lfs-5.1/u-boot/u-boot-dir-build.spec.in
++++ ltib/dist/lfs-5.1/u-boot/u-boot-dir-build.spec.in
+@@ -17,5 +17,6 @@
+ %Description
+ %{summary}
+ 
++
+ %Prep
  
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec ltib/dist/lfs-5.1/u-boot/u-boot.spec
 --- ltib.reference/dist/lfs-5.1/u-boot/u-boot.spec

@@ -20512,7 +20512,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/u-boot.spec.in ltib/config/platform/imx/u-boot.spec.in
 --- ltib.reference/config/platform/imx/u-boot.spec.in
 +++ ltib/config/platform/imx/u-boot.spec.in
-@@ -1,18 +1,20 @@
+@@ -1,18 +1,18 @@
  # template = u-boot-common.tmpl
  
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
@@ -20527,21 +20527,30 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  Vendor          : Freescale
  Packager        : MAD
  Group           : Applications/System
- Source          : %{name}-%{version}.tar.bz2
+-Source          : %{name}-%{version}.tar.bz2
 -Source1         : %{name}-v%{version}-%{release}.tar.bz2
-+Source1         : %{name}-v%{version}-%{verrel}.tar.bz2
  BuildRoot       : %{_tmppath}/%{name}
 +Patch1          : u-boot-2009.08-1418123257.patch
  Prefix          : %{pfx}
  
  %Description
-@@ -28,5 +30,6 @@
+@@ -20,13 +20,8 @@
  
- chmod 755 patches/patch-uboot.sh
- ./patches/patch-uboot.sh
-+%patch1 -p1
+ Open source u-boot v2009.08 version
  
+-%Prep
+-%setup
+-
+-# A single bz2 file contains all the patches and a series file.
+-tar jxvf %{SOURCE1}
+-
+-chmod 755 patches/patch-uboot.sh
+-./patches/patch-uboot.sh
  
++%Prep
+ 
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/updater.profile ltib/config/platform/imx/updater.profile
 --- ltib.reference/config/platform/imx/updater.profile
 +++ ltib/config/platform/imx/updater.profile

@@ -4740,7 +4740,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 --- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 +++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
-@@ -2,15 +2,32 @@
+@@ -2,38 +2,131 @@
  
  Summary		: Memory Technology Device tools
  Name		: mtd-utils
@@ -4775,9 +4775,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  %Description
  %{summary}
-@@ -20,20 +37,53 @@
+ 
+-Extracted source from the git tree: 
++Sources extracted from git tree: 
+   git clone git://git.infradead.org/mtd-utils.git
    SHA1 d769da93a56590c23ce9430a1d970e31e835ae88
  
++
  %Prep
 +export LC_ALL
 +LC_ALL=C
@@ -4791,6 +4795,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%patch3 -p1
 +fi
 +%endif
++
  
  %Build
 +export LC_ALL
@@ -4798,6 +4803,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  make -j1 WITHOUT_XATTR=1
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -4811,14 +4817,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +mkdir -p $RPM_BUILD_ROOT%{pfx}%{_prefix}/include/mtd
 +install -m 0644 include/mtd/*.h $RPM_BUILD_ROOT%{pfx}%{_prefix}/include/mtd
 +
-+cd %{_builddir}/%{name}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_mandir}, d;
-+    \,^%{pfx}%{_prefix}/include, d;
-+    \,^%{pfx}%{_bindir}/mkfs.jffs2, d;
-+    \,^%{pfx}%{_bindir}/mkfs.ubifs, d;
-+' all_files.lst > rfs_files.lst
  
  %Clean
 +export LC_ALL
@@ -4826,14 +4824,60 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
 +
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/bin/bin2nand
++%{pfx}/usr/bin/doc_loadbios
++%{pfx}/usr/bin/docfdisk
++%{pfx}/usr/bin/flash_erase
++%{pfx}/usr/bin/flash_eraseall
++%{pfx}/usr/bin/flash_info
++%{pfx}/usr/bin/flash_lock
++%{pfx}/usr/bin/flash_otp_dump
++%{pfx}/usr/bin/flash_otp_info
++%{pfx}/usr/bin/flash_unlock
++%{pfx}/usr/bin/flashcp
++%{pfx}/usr/bin/ftl_check
++%{pfx}/usr/bin/ftl_format
++%{pfx}/usr/bin/jffs2dump
++%{pfx}/usr/bin/mkbootenv
++%{pfx}/usr/bin/mkpfi
++%{pfx}/usr/bin/mtd_debug
++%{pfx}/usr/bin/mtdinfo
++%{pfx}/usr/bin/nand2bin
++%{pfx}/usr/bin/nanddump
++%{pfx}/usr/bin/nandtest
++%{pfx}/usr/bin/nandwrite
++%{pfx}/usr/bin/nftl_format
++%{pfx}/usr/bin/nftldump
++%{pfx}/usr/bin/pddcustomize
++%{pfx}/usr/bin/pfi2bin
++%{pfx}/usr/bin/pfiflash
++%{pfx}/usr/bin/recv_image
++%{pfx}/usr/bin/rfddump
++%{pfx}/usr/bin/rfdformat
++%{pfx}/usr/bin/serve_image
++%{pfx}/usr/bin/sumtool
++%{pfx}/usr/bin/ubiattach
++%{pfx}/usr/bin/ubicrc32
++%{pfx}/usr/bin/ubicrc32.pl
++%{pfx}/usr/bin/ubidetach
++%{pfx}/usr/bin/ubiformat
++%{pfx}/usr/bin/ubigen
++%{pfx}/usr/bin/ubimirror
++%{pfx}/usr/bin/ubimkvol
++%{pfx}/usr/bin/ubinfo
++%{pfx}/usr/bin/ubinize
++%{pfx}/usr/bin/ubirename
++%{pfx}/usr/bin/ubirmvol
++%{pfx}/usr/bin/ubirsvol
++%{pfx}/usr/bin/ubiupdatevol
++%{pfx}/usr/bin/unubi
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec ltib/dist/lfs-5.1/mxc-misc/imx-test.spec
 --- ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec
 +++ ltib/dist/lfs-5.1/mxc-misc/imx-test.spec

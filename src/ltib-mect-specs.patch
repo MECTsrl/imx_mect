@@ -8674,9 +8674,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  i.e., the part that runs in the client stations. It implements WPA key
  negotiation with a WPA Authenticator and EAP authentication with
  Authentication Server. In addition, it controls the roaming and IEEE
-@@ -22,9 +37,16 @@
+@@ -21,10 +36,14 @@
+ 
  %{summary}
  
++
  %Prep
 -%setup 
 +export LC_ALL
@@ -8685,14 +8687,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%setup
 +%patch1 -p1 
  
- %Build
-+export LC_ALL
-+LC_ALL=C
-+
+-%Build
  #Create .config file for build
  cat > .config << EOF
  #CONFIG_DRIVER_HOSTAP=n
-@@ -62,33 +84,31 @@
+@@ -62,33 +81,42 @@
  CONFIG_L2_PACKET=linux
  EOF
  
@@ -8709,9 +8708,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -        id_str="p2"
 -}
 -EOF
--
+ 
 -make CONFIG_L2_PACKET=linux
++%Build
++export LC_ALL
++LC_ALL=C
++
 +make CONFIG_L2_PACKET=linux prefix=%{_prefix}
++
  
  %Install
 +export LC_ALL
@@ -8722,12 +8726,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  make install CONFIG_L2_PACKET=linux prefix=%{_prefix} DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 -mkdir -p  $RPM_BUILD_ROOT/%{pfx}/usr/etc/unifi
 -cp ap_config.conf $RPM_BUILD_ROOT/%{pfx}/usr/etc/unifi
- 
++
 +cd %{_builddir}/%{name}-%{version}
 +( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
 +sed -n '
 +    p;
 +' all_files.lst > rfs_files.lst
+ 
  
  %Clean
 +export LC_ALL
@@ -8736,13 +8741,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
--%Files
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/sbin/wpa_cli
++%{pfx}/usr/sbin/wpa_passphrase
++%{pfx}/usr/sbin/wpa_supplicant
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec ltib/dist/lfs-5.1/xenomai/xenomai.spec
 --- ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec
 +++ ltib/dist/lfs-5.1/xenomai/xenomai.spec

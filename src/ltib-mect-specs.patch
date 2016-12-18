@@ -6761,7 +6761,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
 +Group           : Applications/Internet
-+Source          : %{aname}-%{avers}.tar.gz
 +BuildRoot       : %{_tmppath}/%{name}
 +Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -6787,7 +6786,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup -n %{aname}-%{avers}
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
 +
 +%Build

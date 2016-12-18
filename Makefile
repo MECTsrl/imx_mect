@@ -210,7 +210,7 @@ MECT_COMMON_RFSPKGS := \
 	openvpn-rfs-2.3.10-1.$(MECT_TARGET_ARCH).rpm \
 	ppp-rfs-2.4.4-1.$(MECT_TARGET_ARCH).rpm \
 	qt-embedded-rfs-4.8.5-1.$(MECT_TARGET_ARCH).rpm \
-	qwt-rfs-6.1-1_multiaxes.$(MECT_TARGET_ARCH).rpm \
+	qwt-multiaxes-rfs-6.1-1_multiaxes.$(MECT_TARGET_ARCH).rpm \
 	rsync-rfs-2.6.5-1.$(MECT_TARGET_ARCH).rpm \
 	SDcard-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	sftp-server-rfs-4.3p2-1.$(MECT_TARGET_ARCH).rpm \

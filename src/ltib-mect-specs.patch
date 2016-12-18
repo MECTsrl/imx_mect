@@ -6360,12 +6360,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 +++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
-@@ -0,0 +1,93 @@
+@@ -0,0 +1,92 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define variant multiaxes
 +
 +Summary         : Qwt widget library with multiaxes capability
-+Name            : qwt
++Name            : qwt-multiaxes
 +Version         : 6.1
 +Release         : 1_%{variant}
 +License         : GNU LGPLv2.1
@@ -6373,7 +6373,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Packager        : Mihai Lazarescu
 +Group           : Development/Libraries
 +URL             : svn://svn.code.sf.net/p/qwt/code/branches/%{name}-%{version}-%{variant}
-+Source          : %{name}-%{version}-%{variant}.tar.bz2
++Source          : qwt-%{version}-%{variant}.tar.bz2
 +Patch1          : qwt-6.0.1-multiaxes-1381834981.patch
 +Patch2          : qwt-6.1.0-multiaxes-1418122118.patch
 +BuildRoot       : %{_tmppath}/%{name}
@@ -6398,13 +6398,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Description
 +%{summary}
 +
++
 +%Prep
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup -n %{name}-%{version}-%{variant}
++%setup -n qwt-%{version}-%{variant}
 +%patch1 -p1
 +%patch2 -p1 
++
 +
 +%Build
 +export LC_ALL
@@ -6422,6 +6424,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +    sub-src-all-ordered \
 +    sub-textengines-all-ordered \
 +
++
 +%Install
 +export LC_ALL
 +LC_ALL=C
@@ -6435,24 +6438,20 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +    install_qwtspec \
 +    INSTALL_ROOT=$RPM_BUILD_ROOT/%{pfx} \
 +
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_prefix}/features, d;
-+    \,^%{pfx}%{_includedir}, d;
-+    \,^%{pfx}%{_libdir}/pkgconfig, d;
-+' all_files.lst > rfs_files.lst
 +
 +%Clean
 +export LC_ALL
 +LC_ALL=C
 +
-+rm -rf $RPM_BUILD_ROOT
++if test -r Makefile; then
++	make clean
++fi
 +
 +
-+%Files -f all_files.lst
++%Files
 +%defattr(-,root,root)
 +
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt.spec ltib/dist/lfs-5.1/qwt/qwt.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt.spec

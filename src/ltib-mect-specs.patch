@@ -8191,7 +8191,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 +++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
-@@ -0,0 +1,76 @@
+@@ -0,0 +1,78 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : USB Modeswitch gets mobile broadband cards in operational mode
@@ -8202,7 +8202,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Vendor          : MECT
 +Packager        : Mihai Lazarescu
 +Group           : Applications/System
-+Source          : %{name}-%{version}.tar.bz2
 +Source1         : usb_modeswitch_helper
 +Requires        : usb-modeswitch-data
 +BuildRoot       : %{_tmppath}/%{name}
@@ -8231,7 +8230,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
 +
 +%Build
@@ -8257,7 +8257,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+rm -rf $RPM_BUILD_ROOT
++if test -r Makefile; then
++	make clean
++fi
 +
 +
 +%Files

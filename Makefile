@@ -348,6 +348,7 @@ MECT_PACKAGES = \
 	liblzo2-dev \
 	libncurses5-dev \
 	liborbit2-dev \
+	libtool \
 	libx11-dev \
 	m4 \
 	make \

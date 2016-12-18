@@ -3036,7 +3036,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libmodbus/libmodbus.spec ltib/dist/lfs-5.1/libmodbus/libmodbus.spec
 --- ltib.reference/dist/lfs-5.1/libmodbus/libmodbus.spec
 +++ ltib/dist/lfs-5.1/libmodbus/libmodbus.spec
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,73 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : A Modbus library
@@ -3080,6 +3080,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++autoreconf -ivf || true
 +./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
 +make
 +

@@ -5816,7 +5816,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec ltib/dist/lfs-5.1/qt/qt-embedded.spec
 --- ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec
 +++ ltib/dist/lfs-5.1/qt/qt-embedded.spec
-@@ -1,165 +1,164 @@
+@@ -1,165 +1,167 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archivename qt-everywhere-opensource-src
  
@@ -5835,10 +5835,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -Source          : %{name}-%{version}.tar.gz
 -BuildRoot       : %{_tmppath}/%{name}
 +URL             : http://get.qt.nokia.com/qt/source/%{archivename}-%{version}.tar.gz
++%if %{?toolchain:1}%{!?toolchain:0}
 +Source          : %{archivename}-%{version}.tar.gz
 +Patch1          : %{archivename}-%{version}-1394522957.patch
 +Patch2          : %{archivename}-%{version}-1420823826.patch
 +Patch3          : %{archivename}-%{version}-1420823825.patch
++%endif
 +BuildRoot       : %{_tmppath}/%{name}-%{version}
  Prefix          : %{pfx}
 -URL             : http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.0.tar.gz
@@ -5869,26 +5871,33 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -%setup
 +export LC_ALL
 +LC_ALL=C
-+
-+%setup -n %{archivename}-%{version}
  
- #Checking what packages are available
+-#Checking what packages are available
++%if %{?toolchain:0}%{!?toolchain:1}
  
- export XTRA_OPTS=""
- export XTRA_OPTS_CONFIG=""
+-export XTRA_OPTS=""
+-export XTRA_OPTS_CONFIG=""
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
  
 -if [ -n "$PKG_QT_PHONON" ]
 -then
 -    export XTRA_OPTS="$XTRA_OPTS -multimedia -phonon -phonon-backend -lgstreamer-0.10"
 -    export XTRA_OPTS_CONFIG="$XTRA_OPTS_CONFIG -lgstreamer-0.10 -lxml2 -lasound"
 -fi
--
++%else
+ 
 -#if PKG_AMD_GPU_BIN_MX51 is already installed, uncomment the following line to add OpenGLES 2 support
 -#export XTRA_OPTS_CONFIG="$XTRA_OPTS_CONFIG -lGLESv2 -lEGL -lgsl -lc2d -lpanel2"
--
++%setup -n %{archivename}-%{version}
++
++#Checking what packages are available
+ 
 -#if PKG_MBX_BIN is already installed, uncomment the following line to add OpenGLES 1.1 support
 -#export XTRA_OPTS_CONFIG="$XTRA_OPTS_CONFIG -lEGL -lEGL"
--
++export XTRA_OPTS=""
++export XTRA_OPTS_CONFIG=""
+ 
  mkdir mkspecs/qws/linux-g++-mx
  initscript=mkspecs/qws/linux-g++-mx/qmake.conf
  cat > $initscript << EOF
@@ -6065,15 +6074,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -CONFIG                 += qt warn_on release incremental link_prl
 -QT                     += core gui network
 -QMAKE_INCREMENTAL_STYLE = sublib
-+%if %{?toolchain:1}%{!?toolchain:0}
 +QMAKE_INCDIR                   = %{toolchain_install_dir}/include %{toolchain_install_dir}/include/glib-2.0 %{toolchain_install_dir}/lib/glib-2.0/include/
 +QMAKE_LIBDIR                   = %{toolchain_install_dir}/lib
 +QMAKE_LIBS                     =
-+%else
-+QMAKE_INCDIR                   = $RPM_BUILD_DIR/../../rootfs/usr/include $RPM_BUILD_DIR/../../rootfs/usr/include/glib-2.0 $RPM_BUILD_DIR/../../rootfs/usr/lib/glib-2.0/include/
-+QMAKE_LIBDIR                   = $RPM_BUILD_DIR/../../rootfs/usr/lib
-+QMAKE_LIBS                     = -lglib-2.0 -lgthread-2.0 -lz -lgmodule-2.0 -lgobject-2.0 -lts -lfreetype
-+%endif
 +QMAKE_INCDIR_X11               =
 +QMAKE_LIBDIR_X11               =
 +QMAKE_LIBS_DYNLOAD             = -ldl
@@ -6113,13 +6116,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  load(qt_config)
  EOF
-@@ -173,10 +172,16 @@
+@@ -173,10 +175,18 @@
  
  EOF
  chmod 744 $initscript
 +%patch1 -p1
 +%patch2 -p1
 +%patch3 -p1
++
++%endif
 +
  
  %Build
@@ -6131,7 +6136,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  # Unset compiler to prevent gcc being used when the cross
  # tools should be used. (Trolltech issue# 138807)
-@@ -185,32 +190,204 @@
+@@ -185,32 +195,204 @@
  # Unset PLATFORM because this is used as host machine.
  unset PLATFORM
  
@@ -6198,6 +6203,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Install
 +export LC_ALL
 +LC_ALL=C
++
++test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
++
++%if %{?toolchain:1}%{!?toolchain:0}
++
++make INSTALL_ROOT=%{buildroot} install
  
 -export PATH=$UNSPOOF_PATH
 -install -d $RPM_BUILD_ROOT/%{pfx}/usr/local/Trolltech
@@ -6206,12 +6217,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -cp -a demos $RPM_BUILD_ROOT/%{pfx}/usr/local/Trolltech
 -cp -a examples $RPM_BUILD_ROOT/%{pfx}/usr/local/Trolltech
 -cp -a lib/* $RPM_BUILD_ROOT/%{pfx}/usr/lib
-+test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
-+
-+%if %{?toolchain:1}%{!?toolchain:0}
-+
-+make INSTALL_ROOT=%{buildroot} install
-+
 +%else
 +
 +install -d $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib

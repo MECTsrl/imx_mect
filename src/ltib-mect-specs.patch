@@ -4957,8 +4957,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mysql/mysql.spec ltib/dist/lfs-5.1/mysql/mysql.spec
 --- ltib.reference/dist/lfs-5.1/mysql/mysql.spec
 +++ ltib/dist/lfs-5.1/mysql/mysql.spec
-@@ -13,16 +13,39 @@
- Patch1          : mysql-4.1.12-gcc-4.2.patch
+@@ -8,21 +8,40 @@
+ Vendor          : Freescale
+ Packager        : Jason Jin
+ Group           : System Environment/Daemons
+-Source          : %{name}-%{version}.tar.gz
+-Patch0          : %{name}-%{version}-fsl.patch
+-Patch1          : mysql-4.1.12-gcc-4.2.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -4982,14 +4987,16 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +
  %Prep
+-%setup -n  %{name}-%{version}
+-%patch0 -p1
+-%patch1 -p1
 +export LC_ALL
 +LC_ALL=C
 +
- %setup -n  %{name}-%{version}
- %patch0 -p1
- %patch1 -p1
- 
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
+ 
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -4997,7 +5004,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure --prefix=/usr --host=$CFGHOST --build=%{_build} \
  	--enable-so	\
  	--with-named-curses-libs=-lncurses	\
-@@ -34,17 +57,25 @@
+@@ -34,17 +53,25 @@
  
  make
  
@@ -5026,7 +5033,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
-@@ -52,4 +83,149 @@
+@@ -52,4 +79,149 @@
  %defattr(-,root,root)
  %{pfx}/*
  

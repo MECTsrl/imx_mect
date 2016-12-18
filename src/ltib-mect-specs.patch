@@ -5268,7 +5268,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec ltib/dist/lfs-5.1/ncurses/ncurses.spec
 --- ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec
 +++ ltib/dist/lfs-5.1/ncurses/ncurses.spec
-@@ -14,17 +14,37 @@
+@@ -14,17 +14,39 @@
  Patch2          : ncurses-5.3-wint_t.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -5290,6 +5290,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 +export LC_ALL
 +LC_ALL=C
@@ -5299,6 +5300,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %patch1 -p1
  %patch2 -p1
  
++
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -5306,9 +5308,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  CFLAGS="%{optflags} -DPURE_TERMINFO -DSVR4_CURSES"
  %define optflags $CFLAGS
  if [ "$GNUTARCH" != m68knommu ]
-@@ -45,6 +65,9 @@
+@@ -44,7 +66,11 @@
+ mv misc/run_tic.sh misc/run_tic.sh.orig
  mv misc/run_tic.sh.tmp misc/run_tic.sh
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -5316,18 +5320,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx} includedir=%{_prefix}/include/ncurses libdir=%{_prefix}/lib mandir=%{_mandir}
  
-@@ -94,12 +117,24 @@
+@@ -94,7 +120,11 @@
      rm -rf $USR_SHARE/termtemp
  fi
  
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_mandir}, d;
-+    \,^%{pfx}%{_includedir}, d;
-+    \,^%{pfx}%{_datadir}/terminfo, d;
-+    /\.l\?a$/ d;
-+' all_files.lst > rfs_files.lst
 +
  %Clean
 +export LC_ALL
@@ -5336,14 +5332,41 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
--%Files
-+%Files -f all_files.lst
+@@ -102,4 +132,33 @@
  %defattr(-,root,root)
--%{pfx}/*
--
+ %{pfx}/*
  
-+%Files rfs -f rfs_files.lst
+-
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/bin/captoinfo
++%{pfx}/usr/bin/clear
++%{pfx}/usr/bin/infocmp
++%{pfx}/usr/bin/infotocap
++%{pfx}/usr/bin/reset
++%{pfx}/usr/bin/tack
++%{pfx}/usr/bin/tic
++%{pfx}/usr/bin/toe
++%{pfx}/usr/bin/tput
++%{pfx}/usr/bin/tset
++%{pfx}/usr/lib/libcurses.so
++%{pfx}/usr/lib/libform.so
++%{pfx}/usr/lib/libform.so.5
++%{pfx}/usr/lib/libform.so.5.3
++%{pfx}/usr/lib/libmenu.so
++%{pfx}/usr/lib/libmenu.so.5
++%{pfx}/usr/lib/libmenu.so.5.3
++%{pfx}/usr/lib/libncurses.so
++%{pfx}/usr/lib/libncurses.so.5
++%{pfx}/usr/lib/libncurses.so.5.3
++%{pfx}/usr/lib/libpanel.so
++%{pfx}/usr/lib/libpanel.so.5
++%{pfx}/usr/lib/libpanel.so.5.3
++%{pfx}/usr/lib/terminfo
++%{pfx}/usr/share/tabset/std
++%{pfx}/usr/share/tabset/stdcrt
++%{pfx}/usr/share/tabset/vt100
++%{pfx}/usr/share/tabset/vt300
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/nrpe/nrpe.spec ltib/dist/lfs-5.1/nrpe/nrpe.spec
 --- ltib.reference/dist/lfs-5.1/nrpe/nrpe.spec
 +++ ltib/dist/lfs-5.1/nrpe/nrpe.spec

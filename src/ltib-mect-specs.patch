@@ -9007,7 +9007,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zlib/zlib.spec ltib/dist/lfs-5.1/zlib/zlib.spec
 --- ltib.reference/dist/lfs-5.1/zlib/zlib.spec
 +++ ltib/dist/lfs-5.1/zlib/zlib.spec
-@@ -12,15 +12,35 @@
+@@ -12,15 +12,37 @@
  Patch1          : zlib-1.2.3-arflags-1.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -9029,6 +9029,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 +export LC_ALL
 +LC_ALL=C
@@ -9036,6 +9037,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  
++
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -9043,9 +9045,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure --prefix=%{_prefix} --shared
  mv Makefile Makefile.shared
  ./configure --prefix=%{_prefix}
-@@ -29,17 +49,31 @@
+@@ -28,13 +50,21 @@
+ make -f Makefile.shared
  make -f Makefile.static
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -9058,13 +9062,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +make -f Makefile.shared install prefix=${RPM_BUILD_ROOT}%{pfx}%{_prefix}
 +make -f Makefile.static install prefix=${RPM_BUILD_ROOT}%{pfx}%{_prefix}
 +
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_mandir}, d;
-+    \,^%{pfx}%{_includedir}, d;
-+    /\.l\?a$/ d;
-+' all_files.lst > rfs_files.lst
  
  %Clean
 +export LC_ALL
@@ -9073,11 +9070,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
--%Files
-+%Files -f all_files.lst
+@@ -42,4 +72,8 @@
  %defattr(-,root,root)
--%{pfx}/*
--
+ %{pfx}/*
  
-+%Files rfs -f rfs_files.lst
+-
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/lib/libz.so
++%{pfx}/usr/lib/libz.so.1
++%{pfx}/usr/lib/libz.so.1.2.3

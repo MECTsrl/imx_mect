@@ -5579,7 +5579,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/openvpn/openvpn.spec ltib/dist/lfs-5.1/openvpn/openvpn.spec
 --- ltib.reference/dist/lfs-5.1/openvpn/openvpn.spec
 +++ ltib/dist/lfs-5.1/openvpn/openvpn.spec
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,77 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : A full-featured SSL VPN solution
@@ -5590,7 +5590,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
 +Group           : Applications/Internet
-+Source          : %{name}-%{version}.tar.xz
 +BuildRoot       : %{_tmppath}/%{name}
 +Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -5616,11 +5615,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +use the Marcus Franz Xaver Johannes Oberhumer's LZO library
 +for compression.
 +
++
 +%Prep
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup 
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
++
 +
 +%Build
 +export LC_ALL
@@ -5630,6 +5632,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +make -j1
 +
++
 +%Install
 +export LC_ALL
 +LC_ALL=C
@@ -5638,11 +5641,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 +
++
 +%Clean
 +export LC_ALL
 +LC_ALL=C
 +
 +rm -rf $RPM_BUILD_ROOT
++
 +
 +%Files
 +%defattr(-,root,root)

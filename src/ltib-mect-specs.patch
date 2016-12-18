@@ -8932,7 +8932,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zip30/zip30.spec ltib/dist/lfs-5.1/zip30/zip30.spec
 --- ltib.reference/dist/lfs-5.1/zip30/zip30.spec
 +++ ltib/dist/lfs-5.1/zip30/zip30.spec
-@@ -0,0 +1,69 @@
+@@ -0,0 +1,71 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : A file compression utility.
@@ -8943,7 +8943,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Vendor          : Mect srl
 +Packager        : Monica Donno
 +Group           : Applications/File
-+Source          : %{name}-%{version}.tar.bz2
 +BuildRoot       : %{_tmppath}/%{name}
 +Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -8969,7 +8968,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
 +
 +%Build
@@ -8992,7 +8992,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+rm -rf $RPM_BUILD_ROOT
++if test -r Makefile; then
++	make clean
++fi
 +
 +
 +%Files

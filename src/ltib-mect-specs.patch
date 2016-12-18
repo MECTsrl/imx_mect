@@ -6549,7 +6549,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rsync/rsync.spec ltib/dist/lfs-5.1/rsync/rsync.spec
 --- ltib.reference/dist/lfs-5.1/rsync/rsync.spec
 +++ ltib/dist/lfs-5.1/rsync/rsync.spec
-@@ -12,26 +12,61 @@
+@@ -12,26 +12,67 @@
  Patch1          : rsync-2.6.5-va_copy-2.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -6571,6 +6571,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 +export LC_ALL
 +LC_ALL=C
@@ -6578,6 +6579,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  
++
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -6586,6 +6588,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
  make
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -6599,20 +6602,21 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +    \,^%{pfx}/usr/man, d;
 +' all_files.lst > rfs_files.lst
 +
++
  %Clean
 +export LC_ALL
 +LC_ALL=C
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
 +
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/bin/rsync
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server-openssl.spec ltib/dist/lfs-5.1/sftp-server/sftp-server-openssl.spec
 --- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server-openssl.spec
 +++ ltib/dist/lfs-5.1/sftp-server/sftp-server-openssl.spec

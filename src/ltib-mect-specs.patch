@@ -6549,8 +6549,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rsync/rsync.spec ltib/dist/lfs-5.1/rsync/rsync.spec
 --- ltib.reference/dist/lfs-5.1/rsync/rsync.spec
 +++ ltib/dist/lfs-5.1/rsync/rsync.spec
-@@ -12,26 +12,67 @@
- Patch1          : rsync-2.6.5-va_copy-2.patch
+@@ -8,30 +8,69 @@
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
+ Group           : Applications/Internet
+-Source          : %{name}-%{version}.tar.gz
+-Patch1          : rsync-2.6.5-va_copy-2.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -6573,13 +6577,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +
  %Prep
+-%setup
+-%patch1 -p1
 +export LC_ALL
 +LC_ALL=C
 +
- %setup
- %patch1 -p1
- 
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
+ 
  %Build
 +export LC_ALL
 +LC_ALL=C

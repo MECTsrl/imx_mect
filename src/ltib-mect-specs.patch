@@ -5268,8 +5268,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec ltib/dist/lfs-5.1/ncurses/ncurses.spec
 --- ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec
 +++ ltib/dist/lfs-5.1/ncurses/ncurses.spec
-@@ -14,17 +14,39 @@
- Patch2          : ncurses-5.3-wint_t.patch
+@@ -8,23 +8,39 @@
+ Vendor          : Freescale
+ Packager        : Stuart Hughes
+ Group           : System Environment/Libraries
+-Source          : ncurses-5.3.tar.gz
+-Patch0          : ncurses-5.3-etip-2.patch
+-Patch1          : ncurses-5.3-vsscanf.patch
+-Patch2          : ncurses-5.3-wint_t.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -5292,15 +5298,17 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +
  %Prep
+-%setup
+-%patch0 -p1 
+-%patch1 -p1
+-%patch2 -p1
 +export LC_ALL
 +LC_ALL=C
 +
- %setup
- %patch0 -p1 
- %patch1 -p1
- %patch2 -p1
- 
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
+ 
  %Build
 +export LC_ALL
 +LC_ALL=C
@@ -5308,7 +5316,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  CFLAGS="%{optflags} -DPURE_TERMINFO -DSVR4_CURSES"
  %define optflags $CFLAGS
  if [ "$GNUTARCH" != m68knommu ]
-@@ -44,7 +66,11 @@
+@@ -44,7 +60,11 @@
  mv misc/run_tic.sh misc/run_tic.sh.orig
  mv misc/run_tic.sh.tmp misc/run_tic.sh
  
@@ -5320,7 +5328,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx} includedir=%{_prefix}/include/ncurses libdir=%{_prefix}/lib mandir=%{_mandir}
  
-@@ -94,7 +120,11 @@
+@@ -94,7 +114,11 @@
      rm -rf $USR_SHARE/termtemp
  fi
  
@@ -5332,7 +5340,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
-@@ -102,4 +132,33 @@
+@@ -102,4 +126,33 @@
  %defattr(-,root,root)
  %{pfx}/*
  

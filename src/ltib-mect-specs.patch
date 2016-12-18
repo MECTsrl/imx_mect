@@ -8643,14 +8643,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
 --- ltib.reference/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
 +++ ltib/dist/lfs-5.1/wpa_supplicant/wpa_supplicant.spec
-@@ -7,13 +7,28 @@
+@@ -7,13 +7,26 @@
  License         : GPL
  Vendor          : Freescale
  Packager        : Sam Yang
 -Group           : Application/System
+-Source          : %{name}-%{version}.tar.gz
 +Group           : Applications/System
- Source          : %{name}-%{version}.tar.gz
-+Patch1          : wpa_supplicant-0.5.9-install_prefix.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -8674,7 +8673,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  i.e., the part that runs in the client stations. It implements WPA key
  negotiation with a WPA Authenticator and EAP authentication with
  Authentication Server. In addition, it controls the roaming and IEEE
-@@ -21,10 +36,14 @@
+@@ -21,74 +34,46 @@
  
  %{summary}
  
@@ -8684,17 +8683,48 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+%setup
-+%patch1 -p1 
++%setup -T -c -n %{name}
++cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
++
  
--%Build
- #Create .config file for build
- cat > .config << EOF
- #CONFIG_DRIVER_HOSTAP=n
-@@ -62,33 +81,42 @@
- CONFIG_L2_PACKET=linux
- EOF
- 
+ %Build
+-#Create .config file for build
+-cat > .config << EOF
+-#CONFIG_DRIVER_HOSTAP=n
+-#CONFIG_DRIVER_HERMES=n
+-#CONFIG_DRIVER_MADWIFI=n
+-#CONFIG_DRIVER_ATMEL=n
+-CONFIG_DRIVER_WEXT=y
+-#CONFIG_DRIVER_NDISWRAPPER=n
+-#CONFIG_DRIVER_BROADCOM=n
+-#CONFIG_DRIVER_IPW=n
+-#CONFIG_DRIVER_BSD=n
+-#CONFIG_DRIVER_NDIS=n
+-
+-CONFIG_WIRELESS_EXTENSION=y
+-CONFIG_IEEE8021X_EAPOL=y
+-
+-#CONFIG_EAP_MD5=y
+-#CONFIG_EAP_MSCHAPV2=y
+-#CONFIG_EAP_TLS=y
+-#CONFIG_EAP_PEAP=y
+-#CONFIG_EAP_TTLS=y
+-#CONFIG_EAP_GTC=y
+-#CONFIG_EAP_OTP=y
+-#CONFIG_EAP_SIM=y
+-#CONFIG_EAP_AKA=y
+-CONFIG_EAP_PSK=y
+-#CONFIG_EAP_SAKE=y
+-#CONFIG_EAP_GPSK=y
+-#CONFIG_EAP_PAX=y
+-#CONFIG_EAP_LEAP=y
+-#CONFIG_PCSC=y
+-
+-CONFIG_CTRL_IFACE=y
+-
+-CONFIG_L2_PACKET=linux
+-EOF
+-
 -#Create a default ap config file
 -cat > ap_config.conf << EOF
 -ctrl_interface=/var/run/wpa_supplicant
@@ -8708,14 +8738,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -        id_str="p2"
 -}
 -EOF
- 
--make CONFIG_L2_PACKET=linux
-+%Build
 +export LC_ALL
 +LC_ALL=C
 +
 +make CONFIG_L2_PACKET=linux prefix=%{_prefix}
-+
+ 
+-make CONFIG_L2_PACKET=linux
  
  %Install
 +export LC_ALL
@@ -8726,19 +8754,16 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  make install CONFIG_L2_PACKET=linux prefix=%{_prefix} DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 -mkdir -p  $RPM_BUILD_ROOT/%{pfx}/usr/etc/unifi
 -cp ap_config.conf $RPM_BUILD_ROOT/%{pfx}/usr/etc/unifi
-+
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed -n '
-+    p;
-+' all_files.lst > rfs_files.lst
  
  
  %Clean
+-rm -rf $RPM_BUILD_ROOT
 +export LC_ALL
 +LC_ALL=C
 +
- rm -rf $RPM_BUILD_ROOT
++if test -r Makefile; then
++	make clean
++fi
  
  
  %Files

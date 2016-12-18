@@ -7811,7 +7811,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/tslib/tslib.spec ltib/dist/lfs-5.1/tslib/tslib.spec
 --- ltib.reference/dist/lfs-5.1/tslib/tslib.spec
 +++ ltib/dist/lfs-5.1/tslib/tslib.spec
-@@ -13,14 +13,32 @@
+@@ -13,14 +13,33 @@
  Patch2          : tslib-1.0-mx-pre_gen-2.patch
  Patch3          : tslib-1.0-mx-pre_config.patch
  Patch4          : tslib-1.0-glibc-2.7.x-open-O_CREAT-lack-parameter.patch
@@ -7838,6 +7838,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 +export LC_ALL
 +LC_ALL=C
@@ -7845,7 +7846,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1 
  %patch2 -p1 
-@@ -35,15 +53,19 @@
+@@ -35,15 +54,20 @@
  if [ `echo ${LIBC_VERSION} | cut -d '.' -f 1` -eq 2 -a `echo ${LIBC_VERSION} | cut -d '.' -f 2` -ge 7 ]; then
  %patch4 -p1
  fi
@@ -7858,6 +7859,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  touch configure
 +%patch5 -p1
 +%patch6 -p1
++
  
  %Build
 +export LC_ALL
@@ -7866,9 +7868,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  #sed -i s/AS_HELP_STRING/AC_HELP_STRING/ configure.ac
  #./autogen.sh
  chmod +x ./configure
-@@ -52,18 +74,34 @@
+@@ -51,19 +75,51 @@
+ ./configure CC=${TOOLCHAIN_PREFIX}gcc --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
  make
  
++
  %Install
 +export LC_ALL
 +LC_ALL=C
@@ -7883,13 +7887,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  	rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/usr/lib/ts/$so
  done
  
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_libdir}/pkgconfig, d;
-+    \,^%{pfx}%{_includedir}, d;
-+    /\.l\?a$/ d;
-+' all_files.lst > rfs_files.lst
 +
  %Clean
 +export LC_ALL
@@ -7897,14 +7894,34 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
--%Files
 +
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files rfs -f rfs_files.lst
+ %Files
  %defattr(-,root,root)
--%{pfx}/*
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/bin/ts_calibrate
++%{pfx}/usr/bin/ts_harvest
++%{pfx}/usr/bin/ts_print
++%{pfx}/usr/bin/ts_print_raw
++%{pfx}/usr/bin/ts_test
++%{pfx}/usr/etc/ts.conf
++%{pfx}/usr/lib/libts-1.0.so.0
++%{pfx}/usr/lib/libts-1.0.so.0.1.1
++%{pfx}/usr/lib/libts.so
++%{pfx}/usr/lib/ts/arctic2.so
++%{pfx}/usr/lib/ts/collie.so
++%{pfx}/usr/lib/ts/corgi.so
++%{pfx}/usr/lib/ts/dejitter.so
++%{pfx}/usr/lib/ts/h3600.so
++%{pfx}/usr/lib/ts/input.so
++%{pfx}/usr/lib/ts/linear.so
++%{pfx}/usr/lib/ts/linear_h2200.so
++%{pfx}/usr/lib/ts/mk712.so
++%{pfx}/usr/lib/ts/pthres.so
++%{pfx}/usr/lib/ts/ucb1x00.so
++%{pfx}/usr/lib/ts/variance.so
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl
 --- ltib.reference/dist/lfs-5.1/u-boot/u-boot-common.tmpl
 +++ ltib/dist/lfs-5.1/u-boot/u-boot-common.tmpl

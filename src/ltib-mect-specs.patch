@@ -5816,7 +5816,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec ltib/dist/lfs-5.1/qt/qt-embedded.spec
 --- ltib.reference/dist/lfs-5.1/qt/qt-embedded.spec
 +++ ltib/dist/lfs-5.1/qt/qt-embedded.spec
-@@ -1,165 +1,163 @@
+@@ -1,165 +1,164 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archivename qt-everywhere-opensource-src
  
@@ -5864,6 +5864,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Description
  %{summary}
  
++
  %Prep
 -%setup
 +export LC_ALL
@@ -6112,13 +6113,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  load(qt_config)
  EOF
-@@ -173,10 +171,15 @@
+@@ -173,10 +172,16 @@
  
  EOF
  chmod 744 $initscript
 +%patch1 -p1
 +%patch2 -p1
 +%patch3 -p1
++
  
  %Build
 +export LC_ALL
@@ -6129,12 +6131,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  # Unset compiler to prevent gcc being used when the cross
  # tools should be used. (Trolltech issue# 138807)
-@@ -185,32 +188,111 @@
+@@ -185,32 +190,204 @@
  # Unset PLATFORM because this is used as host machine.
  unset PLATFORM
  
 -#if PKG_AMD_GPU_BIN_MX51 is already installed, uncomment the following line to add OpenGLES 2 support
 -#export XTRA_OPTS="$XTRA_OPTS -opengl es2"
+-
+-#if PKG_MBX_BIN is already installed, uncomment the following line to add OpenGLES 1.1 support
+-#export XTRA_OPTS="$XTRA_OPTS -opengl es1"
 +./configure \
 +%if %{?toolchain:1}%{!?toolchain:0}
 +	--prefix=%{toolchain_install_dir} \
@@ -6184,21 +6189,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	-v \
 +	$XTRA_OPTS
  
--#if PKG_MBX_BIN is already installed, uncomment the following line to add OpenGLES 1.1 support
--#export XTRA_OPTS="$XTRA_OPTS -opengl es1"
-+make -j`grep -c ^processor /proc/cpuinfo`
- 
 -./configure --prefix=$RPM_BUILD_DIR/../../rootfs/usr/local/Trolltech -embedded arm -xplatform qws/linux-g++-mx -release \
 -	-qt-gfx-linuxfb -qt-kbd-tty -qt-mouse-tslib -little-endian -host-little-endian -fontconfig -sm -v -opensource -confirm-license $XTRA_OPTS
-+%Install
-+export LC_ALL
-+LC_ALL=C
++make -j$(nproc)
  
 -make
-+test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
  
--%Install
-+%if %{?toolchain:1}%{!?toolchain:0}
+ %Install
++export LC_ALL
++LC_ALL=C
  
 -export PATH=$UNSPOOF_PATH
 -install -d $RPM_BUILD_ROOT/%{pfx}/usr/local/Trolltech
@@ -6207,9 +6206,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -cp -a demos $RPM_BUILD_ROOT/%{pfx}/usr/local/Trolltech
 -cp -a examples $RPM_BUILD_ROOT/%{pfx}/usr/local/Trolltech
 -cp -a lib/* $RPM_BUILD_ROOT/%{pfx}/usr/lib
++test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
++
++%if %{?toolchain:1}%{!?toolchain:0}
++
 +make INSTALL_ROOT=%{buildroot} install
- 
--export PATH=$SPOOF_PATH
++
 +%else
 +
 +install -d $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
@@ -6219,21 +6221,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +test -x plugins/sqldrivers/libqsqlmysql.so && install -m 644 plugins/sqldrivers/libqsqlmysql.so $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
 +
 +%endif
-+
-+%if %{?toolchain:0}%{!?toolchain:1}
-+
-+cd %{_builddir}/%{archivename}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_libdir}/pkgconfig, d;
-+    \,^%{pfx}%{_libdir}/[^/]*\.prl$, d;
-+    \,^%{pfx}%{_libdir}/libQtTest, d;
-+    \,^%{pfx}%{_libdir}/libQt3Support, d;
-+    \,^%{pfx}%{_libdir}/libQtWebKit, d;
-+    /\.l\?a$/ d;
-+' all_files.lst > rfs_files.lst
-+
-+%endif
+ 
+-export PATH=$SPOOF_PATH
  
  %Clean
 +export LC_ALL
@@ -6241,21 +6230,126 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  rm -rf $RPM_BUILD_ROOT
  
++
 +%if %{?toolchain:1}%{!?toolchain:0}
 +
-+
- %Files
- %defattr(-,root,root)
--%{pfx}/*
++%Files
++%defattr(-,root,root)
 +%{toolchain_install_dir}/*
 +
 +%else
 +
-+%Files -f all_files.lst
-+%defattr(-,root,root)
+ %Files
+ %defattr(-,root,root)
+ %{pfx}/*
 +
-+%Files rfs -f rfs_files.lst
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/lib/README
++%{pfx}/usr/lib/fonts/DejaVuSans-Bold.ttf
++%{pfx}/usr/lib/fonts/DejaVuSans-BoldOblique.ttf
++%{pfx}/usr/lib/fonts/DejaVuSans-Oblique.ttf
++%{pfx}/usr/lib/fonts/DejaVuSans.ttf
++%{pfx}/usr/lib/fonts/DejaVuSansMono-Bold.ttf
++%{pfx}/usr/lib/fonts/DejaVuSansMono-BoldOblique.ttf
++%{pfx}/usr/lib/fonts/DejaVuSansMono-Oblique.ttf
++%{pfx}/usr/lib/fonts/DejaVuSansMono.ttf
++%{pfx}/usr/lib/fonts/DejaVuSerif-Bold.ttf
++%{pfx}/usr/lib/fonts/DejaVuSerif-BoldOblique.ttf
++%{pfx}/usr/lib/fonts/DejaVuSerif-Oblique.ttf
++%{pfx}/usr/lib/fonts/DejaVuSerif.ttf
++%{pfx}/usr/lib/fonts/README
++%{pfx}/usr/lib/fonts/UTBI____.pfa
++%{pfx}/usr/lib/fonts/UTB_____.pfa
++%{pfx}/usr/lib/fonts/UTI_____.pfa
++%{pfx}/usr/lib/fonts/UTRG____.pfa
++%{pfx}/usr/lib/fonts/Vera.ttf
++%{pfx}/usr/lib/fonts/VeraBI.ttf
++%{pfx}/usr/lib/fonts/VeraBd.ttf
++%{pfx}/usr/lib/fonts/VeraIt.ttf
++%{pfx}/usr/lib/fonts/VeraMoBI.ttf
++%{pfx}/usr/lib/fonts/VeraMoBd.ttf
++%{pfx}/usr/lib/fonts/VeraMoIt.ttf
++%{pfx}/usr/lib/fonts/VeraMono.ttf
++%{pfx}/usr/lib/fonts/VeraSe.ttf
++%{pfx}/usr/lib/fonts/VeraSeBd.ttf
++%{pfx}/usr/lib/fonts/c0419bt_.pfb
++%{pfx}/usr/lib/fonts/c0582bt_.pfb
++%{pfx}/usr/lib/fonts/c0583bt_.pfb
++%{pfx}/usr/lib/fonts/c0611bt_.pfb
++%{pfx}/usr/lib/fonts/c0632bt_.pfb
++%{pfx}/usr/lib/fonts/c0633bt_.pfb
++%{pfx}/usr/lib/fonts/c0648bt_.pfb
++%{pfx}/usr/lib/fonts/c0649bt_.pfb
++%{pfx}/usr/lib/fonts/cour.pfa
++%{pfx}/usr/lib/fonts/courb.pfa
++%{pfx}/usr/lib/fonts/courbi.pfa
++%{pfx}/usr/lib/fonts/couri.pfa
++%{pfx}/usr/lib/fonts/cursor.pfa
++%{pfx}/usr/lib/fonts/dejavu_sans_11_50.qpf2
++%{pfx}/usr/lib/fonts/fixed_120_50.qpf
++%{pfx}/usr/lib/fonts/fixed_70_50.qpf
++%{pfx}/usr/lib/fonts/helvetica_100_50.qpf
++%{pfx}/usr/lib/fonts/helvetica_100_50i.qpf
++%{pfx}/usr/lib/fonts/helvetica_100_75.qpf
++%{pfx}/usr/lib/fonts/helvetica_100_75i.qpf
++%{pfx}/usr/lib/fonts/helvetica_120_50.qpf
++%{pfx}/usr/lib/fonts/helvetica_120_50i.qpf
++%{pfx}/usr/lib/fonts/helvetica_120_75.qpf
++%{pfx}/usr/lib/fonts/helvetica_120_75i.qpf
++%{pfx}/usr/lib/fonts/helvetica_140_50.qpf
++%{pfx}/usr/lib/fonts/helvetica_140_50i.qpf
++%{pfx}/usr/lib/fonts/helvetica_140_75.qpf
++%{pfx}/usr/lib/fonts/helvetica_140_75i.qpf
++%{pfx}/usr/lib/fonts/helvetica_180_50.qpf
++%{pfx}/usr/lib/fonts/helvetica_180_50i.qpf
++%{pfx}/usr/lib/fonts/helvetica_180_75.qpf
++%{pfx}/usr/lib/fonts/helvetica_180_75i.qpf
++%{pfx}/usr/lib/fonts/helvetica_240_50.qpf
++%{pfx}/usr/lib/fonts/helvetica_240_50i.qpf
++%{pfx}/usr/lib/fonts/helvetica_240_75.qpf
++%{pfx}/usr/lib/fonts/helvetica_240_75i.qpf
++%{pfx}/usr/lib/fonts/helvetica_80_50.qpf
++%{pfx}/usr/lib/fonts/helvetica_80_50i.qpf
++%{pfx}/usr/lib/fonts/helvetica_80_75.qpf
++%{pfx}/usr/lib/fonts/helvetica_80_75i.qpf
++%{pfx}/usr/lib/fonts/japanese_230_50.qpf
++%{pfx}/usr/lib/fonts/l047013t.pfa
++%{pfx}/usr/lib/fonts/l047016t.pfa
++%{pfx}/usr/lib/fonts/l047033t.pfa
++%{pfx}/usr/lib/fonts/l047036t.pfa
++%{pfx}/usr/lib/fonts/l048013t.pfa
++%{pfx}/usr/lib/fonts/l048016t.pfa
++%{pfx}/usr/lib/fonts/l048033t.pfa
++%{pfx}/usr/lib/fonts/l048036t.pfa
++%{pfx}/usr/lib/fonts/l049013t.pfa
++%{pfx}/usr/lib/fonts/l049016t.pfa
++%{pfx}/usr/lib/fonts/l049033t.pfa
++%{pfx}/usr/lib/fonts/l049036t.pfa
++%{pfx}/usr/lib/fonts/micro_40_50.qpf
++%{pfx}/usr/lib/fonts/unifont_160_50.qpf
++%{pfx}/usr/lib/libQtCore.so
++%{pfx}/usr/lib/libQtCore.so.4
++%{pfx}/usr/lib/libQtCore.so.4.8
++%{pfx}/usr/lib/libQtCore.so.4.8.5
++%{pfx}/usr/lib/libQtGui.so
++%{pfx}/usr/lib/libQtGui.so.4
++%{pfx}/usr/lib/libQtGui.so.4.8
++%{pfx}/usr/lib/libQtGui.so.4.8.5
++%{pfx}/usr/lib/libQtNetwork.so
++%{pfx}/usr/lib/libQtNetwork.so.4
++%{pfx}/usr/lib/libQtNetwork.so.4.8
++%{pfx}/usr/lib/libQtNetwork.so.4.8.5
++%{pfx}/usr/lib/libQtSql.so
++%{pfx}/usr/lib/libQtSql.so.4
++%{pfx}/usr/lib/libQtSql.so.4.8
++%{pfx}/usr/lib/libQtSql.so.4.8.5
++%{pfx}/usr/lib/libQtXml.so
++%{pfx}/usr/lib/libQtXml.so.4
++%{pfx}/usr/lib/libQtXml.so.4.8
++%{pfx}/usr/lib/libQtXml.so.4.8.5
++%{pfx}/usr/lib/libqsqlite.so
++%{pfx}/usr/lib/libqsqlmysql.so
 +
 +%endif
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec

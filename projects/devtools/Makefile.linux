@@ -5,6 +5,12 @@ export LC_ALL := en_US.UTF-8
 
 FTP_DIRECTORY := $(CURDIR)/../../src
 
+# libcsv
+#
+LC_VER := 3.0.3
+LC_DIRECTORY = libcsv-$(LC_VER)
+LC_LIB_A = $(LC_DIRECTORY)/.libs/libcsv.a
+
 # Qt
 #
 QT_VER := 4.8.5
@@ -53,10 +59,19 @@ QMAKE := $(CURDIR)/$(QT_DIRECTORY)/bin/qmake
 # Parallel build
 NPROCS := $(shell nproc)
 NPROCS := $(shell expr $(NPROCS) + 1)
+NPROCS := 1
 
 
 .PHONY: all
-all: qt qtc qwt mp
+all: libs qt qtc qwt mp
+
+.PHONY: libs
+libs: $(LC_LIB_A)
+
+$(LC_LIB_A):
+	test -d $(LC_DIRECTORY)
+	cd $(LC_DIRECTORY); ./configure
+	$(MAKE) -C $(LC_DIRECTORY)
 
 .PHONY: qt
 qt:

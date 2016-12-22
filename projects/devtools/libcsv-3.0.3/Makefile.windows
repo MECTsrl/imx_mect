@@ -1,0 +1,65 @@
+VERSION := 3.0.3
+
+DESTDIR := C:/MinGW
+
+MINGW := C:/MinGW
+BINDIR := bin
+LIBDIR := lib
+INCDIR := include
+MANDIR := share/man/man3
+
+CC = $(MINGW)/$(BINDIR)/gcc
+AR = $(MINGW)/$(BINDIR)/ar
+
+
+.PHONY: all
+all: libcsv.dll libcsv_static.a
+
+.PHONY: install
+install: install_headers install_shared_lib install_static_lib install_man
+
+.PHONY: install_shared
+install_shared: install_headers install_shared_lib
+
+.PHONY: install_static
+install_static: install_headers install_static_lib
+
+.PHONY: install_man
+install_man: csv.3.gz
+	cp -f $^ $(DESTDIR)/$(MANDIR)
+
+.PHONY: install_headers
+install_headers: csv.h
+	cp -f $^ $(DESTDIR)/$(INCDIR)
+
+.PHONY: install_shared_lib
+install_shared_lib: libcsv.dll
+	cp -f $< $(DESTDIR)/$(BINDIR)/$<
+
+.PHONY: install_static_lib
+install_static_lib: libcsv_static.a
+	cp -f $< $(DESTDIR)/$(LIBDIR)/$<
+
+libcsv.o: libcsv.c csv.h
+	$(CC) $< -c -O2 -s -o $@
+
+%.dll: %.o
+	$(CC) -shared -O2 -s $< -o $@
+
+%_static.a: %.o
+	$(AR) -rc $@ $^
+	$(AR) -s $@
+
+%.gz: %
+	gzip -9 $<
+
+
+.PHONY: clean
+clean:
+	rm -f libcsv.o libcsv.dll libcsv.a libcsv_static.a
+
+.PHONY: test
+test: libcsv.o
+	$(CC) test_csv.c -O2 -s $< -o $@.exe
+	./$@.exe
+	rm ./$@.exe

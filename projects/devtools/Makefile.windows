@@ -21,6 +21,12 @@ MGW_PROF_DEF = $(SRC_DIRECTORY)/mingw-profile-defaults.xml
 
 MAKE := wine mingw32-make
 
+# libcsv
+#
+LC_VER := 3.0.3
+LC_DIRECTORY = libcsv-$(LC_VER)
+LC_DLL = $(MGW_INST_DIR)/bin/libcsv.dll
+
 # Qt
 #
 QT_VER := 4.8.5
@@ -84,7 +90,7 @@ NPROCS := $(shell expr $(NPROCS) + 1)
 
 
 .PHONY: all
-all: wine tools qt qtc qwt mp
+all: wine tools libs qt qtc qwt mp
 
 .PHONY: wine
 wine: $(WINEPREFIX)
@@ -110,6 +116,13 @@ tools: wine
 	sed -i '/^"PATH"=/ s/"$$/;$(QT_BIN_DIR)"/' $(WINEPREFIX)/system.reg
 	sed -i '/^"PATH"=/ s/;$(QTC_BIN_DIR)//g' $(WINEPREFIX)/system.reg
 	sed -i '/^"PATH"=/ s/"$$/;$(QTC_BIN_DIR)"/' $(WINEPREFIX)/system.reg
+
+.PHONY: libs
+libs: $(LC_DLL)
+
+$(LC_DLL):
+	test -d $(LC_DIRECTORY)
+	$(MAKE) -C $(LC_DIRECTORY) -f Makefile.windows all install; stty sane
 
 .PHONY: qt
 qt: rebase do_qt rebase

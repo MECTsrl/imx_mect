@@ -40,13 +40,28 @@ enum EventAlarm { Event = 0, Alarm};
 
 enum UpdateType { Htype = 0, Ptype, Stype, Ftype, Vtype, Xtype};
 #undef WORD_BIT
-enum varTypes {BIT = 0, BYTE_BIT, WORD_BIT, DWORD_BIT,
-               UINT16, UINT16BA,
-               INT16, INT16BA,
-               REAL, REALDCBA, REALCDAB, REALBADC,
-               UDINT, UDINTDCBA, UDINTCDAB, UDINTBADC,
-               DINT, DINTDCBA, DINTCDAB, DINTBADC,
-               UNKNOWN};
+enum varTypes {BIT = 0,
+               BYTE_BIT,
+               WORD_BIT,
+               DWORD_BIT,
+               UINT16,
+               UINT16BA,
+               INT16,
+               INT16BA,
+               REAL,
+               REALDCBA,
+               REALCDAB,
+               REALBADC,
+               UDINT,
+               UDINTDCBA,
+               UDINTCDAB,
+               UDINTBADC,
+               DINT,
+               DINTDCBA,
+               DINTCDAB,
+               DINTBADC,
+               UNKNOWN
+              };
 
 struct  CrossTableRecord {
     int16_t Enable;

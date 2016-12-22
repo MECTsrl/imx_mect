@@ -106,9 +106,9 @@ ctedit::ctedit(QWidget *parent) :
 
     lstTipi
             << trUtf8("BIT")
-            << trUtf8("BYTE BIT")
-            << trUtf8("WORD BIT")
-            << trUtf8("DWORD BIT")
+            << trUtf8("BYTE_BIT")
+            << trUtf8("WORD_BIT")
+            << trUtf8("DWORD_BIT")
             << trUtf8("UINT16")
             << trUtf8("UINT16BA")
             << trUtf8("INT16")
@@ -131,11 +131,11 @@ ctedit::ctedit(QWidget *parent) :
             << trUtf8("PLC")
             << trUtf8("RTU")
             << trUtf8("TCP")
-            << trUtf8("TCP RTU")
+            << trUtf8("TCP_RTU")
             << trUtf8("CANOPEN")
             << trUtf8("MECT")
-            << trUtf8("RTU SRV")
-            << trUtf8("TCP SRV")
+            << trUtf8("RTU_SRV")
+            << trUtf8("TCP_SRV")
             << trUtf8("TCPRTU SRV")
         ;
     lstBehavior
@@ -146,7 +146,7 @@ ctedit::ctedit(QWidget *parent) :
         ;
     // Caricamento delle varie Combos
     // Combo Priority
-    for  (nCol=1; nCol<4; nCol++)   {
+    for  (nCol=0; nCol<4; nCol++)   {
         ui->cboPriority->addItem(QString::number(nCol), QString::number(nCol));
     }
     // Combo Update
@@ -236,7 +236,7 @@ bool    ctedit::loadCTFile()
         return false;
     // Opening File
     nRes = LoadXTable(m_szCurrentCTFile.toAscii().data());
-    // Return value
+    // Return value is the result of Parsing C structure to C++ Objects
     if (nRes == 0)
         return ctable2Iface();
     else
@@ -270,7 +270,8 @@ bool    ctedit::ctable2Iface()
                 tItem->setFlags(tItem->flags() ^ Qt::ItemIsEditable);
                 // Aggiunta al Grid
                 ui->tblCT->setItem(nRowCount, nCol, tItem);
-                if (CrossTable[nCur].Enable > 0)
+                // La presenza di un nome nella riga abilita la visualizzazione della riga
+                if (strlen(CrossTable[nCur].Tag) > 0)
                     ui->tblCT->showRow(nRowCount);
                 else
                     ui->tblCT->hideRow(nRowCount);
@@ -301,10 +302,10 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nPos)
     // Numero riga corrente
     // lstRecValues[colRow] = QString::number(nPos);
     // Recupero informazioni da Record CT
-    // Campo Priority abilita la riga
-    if (CrossTable[nPos].Enable > 0)  {
-        if (CrossTable[nPos].Enable > 0)
-            lstRecValues[colPriority] = QString::number(CrossTable[nPos].Enable);
+    // Campo Tag abilita la riga
+    if (strlen(CrossTable[nPos].Tag) > 0)  {
+        // Priority
+        lstRecValues[colPriority] = QString::number(CrossTable[nPos].Enable);
         // Campo Update
         if (CrossTable[nPos].Plc >= 0 && CrossTable[nPos].Plc < lstPLC.count())
             lstRecValues[colUpdate] = lstPLC[CrossTable[nPos].Plc];
@@ -319,11 +320,12 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nPos)
         if (CrossTable[nPos].Protocol >= 0 && CrossTable[nPos].Protocol < lstBusType.count())
             lstRecValues[colProtocol] = lstBusType[CrossTable[nPos].Protocol];
         // IP Address
-        // if (CrossTable[nPos].IPAddress > 0)  {
+        if (CrossTable[nPos].Protocol == TCP || CrossTable[nPos].Protocol == TCPRTU ||
+                CrossTable[nPos].Protocol == TCP_SRV || CrossTable[nPos].Protocol ==TCPRTU_SRV)  {
             ipaddr2str(CrossTable[nPos].IPAddress, ip);
             szTemp = QString::fromAscii(ip);
             lstRecValues[colIP] = szTemp;
-        // }
+        }
         // Port
         lstRecValues[colPort] = QString::number(CrossTable[nPos].Port);
         // Node Id
@@ -373,18 +375,18 @@ void ctedit::on_cmdHideShow_clicked(bool checked)
         // Nascondi i non abilitati
         else  {
             // Mostra o nascondi le righe se sono abilitate
-            if (CrossTable[nCur+1].Enable > 0)
+            if (strlen(CrossTable[nCur+1].Tag) > 0)
                 ui->tblCT->showRow(nCur);
             else
                 ui->tblCT->hideRow(nCur);
         }
         // Ricerca della prima riga visibile
         if (nFirstVisible < 0)
-            if (CrossTable[nCur+1].Enable > 0)
+            if (strlen(CrossTable[nCur+1].Tag) > 0)
                 nFirstVisible = nCur;
         // Verifica dello stato della riga corrente
         if (nCur == m_nGridRow)
-            fVisible = CrossTable[nCur+1].Enable > 0;
+            fVisible = strlen(CrossTable[nCur+1].Tag) > 0;
     }
     if (! fVisible)
         m_nGridRow = nFirstVisible;
@@ -510,6 +512,9 @@ void ctedit::on_cmdBlocchi_clicked()
 
 void ctedit::on_cmdSave_clicked()
 {
+    bool fRes = false;
+
+    fRes = saveCTFile();
 
 }
 int ctedit::searchCombo(QComboBox *Combo, QString szValue)
@@ -601,7 +606,8 @@ bool ctedit::saveCTFile()
     int nRes = 0;
     QString szCtFile;
 
-    // Trigo per ora per preparare un File name differente
+    // Trigo per ora per preparare un File name differente per non perdere l'originale
+    // Al momento riscrive (forse) una fotocopia della stuttura C di partenza
     szCtFile = QString(QDate::currentDate().toString(m_szFormatDate));
     szCtFile.prepend(QString::fromAscii("_"));
     szCtFile.append(QString::fromAscii("_"));

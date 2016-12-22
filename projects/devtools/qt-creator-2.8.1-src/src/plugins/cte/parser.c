@@ -23,6 +23,8 @@
 uint16_t lastAlarmEvent = 0;
 
 const char *fieldbusName[] = {"PLC", "RTU", "TCP", "TCPRTU", "CANOPEN", "MECT", "RTU_SRV", "TCP_SRV", "TCPRTU_SRV" };
+const char *varTypeName[] = {"BIT", "BYTE_BIT", "WORD_BIT", "DWORD_BIT", "UINT16", "UINT16BA", "INT16", "INT16BA", "REAL", "REALDCBA", "REALCDAB", "REALBADC", "UDINT", "UDINTDCBA", "UDINTCDAB", "UDINTBADC", "DINT", "DINTDCBA", "DINTCDAB", "DINTBADC", "UNKNOWN" };
+const char *updateTypeName[] = {"H", "P", "S", "F", "V", "X" };
 
 char *strtok_csv(char *string, const char *separators, char **savedptr)
 {
@@ -94,7 +96,6 @@ char *ipaddr2str(uint32_t ipaddr, char *buffer)
     }
     return buffer;
 }
-
 /*
  * Public domain strtok_r() by Charlie Gordon
  *
@@ -221,8 +222,8 @@ int LoadXTable(char *crossTableFile)
     for (addr = 1; addr <= DimCrossTable; ++addr) {
         CrossTable[addr].Enable = 0;
         CrossTable[addr].Plc = FALSE;
-        CrossTable[addr].Tag[0] = UNKNOWN;
-        CrossTable[addr].Types = 0;
+        CrossTable[addr].Tag[0] = 0;
+        CrossTable[addr].Types = UNKNOWN;
         CrossTable[addr].Decimal = 0;
         CrossTable[addr].Protocol = PLC;
         CrossTable[addr].IPAddress = 0x00000000;
@@ -278,7 +279,6 @@ int LoadXTable(char *crossTableFile)
         // skip empty or disabled variables
         if (CrossTable[addr].Enable == 0) {
             CrossTable[addr].Error = 1;
-            continue;
         }
 
         // Plc {H,P,S,F}
@@ -287,6 +287,9 @@ int LoadXTable(char *crossTableFile)
             ERR = TRUE;
             break;
         }
+        // Empty Line
+        if (strlen(p) == 0)
+            continue;
         switch (p[0]) {
         case 'H':
             CrossTable[addr].Plc = Htype;
@@ -493,6 +496,10 @@ int LoadXTable(char *crossTableFile)
             if (cPosComment != NULL)  {
                 if (strlen(cPosComment + sizeof(char)) > 0)  {
                     strncpy(CrossTable[addr].Comment, cPosComment + sizeof(char), MAX_COMMENT_NAME);
+                    // Rimuove il Cr-Lf
+                    cPosComment = strstr(CrossTable[addr].Comment, "\n");
+                    if (cPosComment  != NULL)
+                        cPosComment[0] = 0;
                 }
             }
             if (strncmp(p, "[RW]", 4) == 0) {
@@ -627,10 +634,10 @@ int SaveXTable(char *crossTableFile)
     // Cicle on Cross Table Elements
     // read loop
     for (addr = 1; addr <= DimCrossTable; ++ addr) {
-        // Clear Row
+        // Clear Rowfilling string with chars
         memset(row, 0, LINESIZE);
         // Priority
-        if (CrossTable[addr].Enable == 0)
+        if (CrossTable[addr].Enable == 0 && strlen(CrossTable[addr].Tag) == 0)
         {
             // Empty CT Line
             for (nCol = 0;nCol < ctCOLS-1; nCol++)
@@ -642,11 +649,65 @@ int SaveXTable(char *crossTableFile)
             sprintf(token, "%1d;", CrossTable[addr].Enable);
             strcat(row, token);
             // Update
-
+            sprintf(token, "%s;", updateTypeName[CrossTable[addr].Plc]);
+            strcat(row, token);
+            // Name
+            sprintf(token, "%-16s;", CrossTable[addr].Tag);
+            strcat(row, token);
+            // Type
+            sprintf(token, "%-9s;", varTypeName[CrossTable[addr].Types]);
+            strcat(row, token);
+            // Decimals CrossTable[addr].Decimal
+            sprintf(token, "%-4d;", CrossTable[addr].Decimal);
+            strcat(row, token);
+            // Protocol
+            sprintf(token, "%-9s;", fieldbusName[CrossTable[addr].Protocol]);
+            strcat(row, token);
+            // IP Address
+            if (CrossTable[addr].Protocol == TCP || CrossTable[addr].Protocol == TCPRTU || CrossTable[addr].Protocol == TCP_SRV || CrossTable[addr].Protocol ==TCPRTU_SRV)  {
+                ipaddr2str(CrossTable[addr].IPAddress, token);
+            }
+            else
+                strcpy(token, "");
+            sprintf(token, "%-15s;", token);
+            strcat(row, token);
+            // Port - NodeId - Register tutti a 0
+            if (CrossTable[addr].Port == 0 && CrossTable[addr].NodeId == 0 && CrossTable[addr].Offset == 0)  {
+                sprintf(token, "%-4s;", "");
+                strcat(row, token);
+                strcat(row, token);
+                strcat(row, token);
+            }
+            else  {
+                // Port
+                sprintf(token, "%-4d;", CrossTable[addr].Port);
+                strcat(row, token);
+                // Node Id
+                sprintf(token, "%-4d;", CrossTable[addr].NodeId);
+                strcat(row, token);
+                // Register - Offset
+                sprintf(token, "%-4d;", CrossTable[addr].Offset);
+                strcat(row, token);
+            }
+            // Block
+            sprintf(token, "%-4d;", CrossTable[addr].Block);
+            strcat(row, token);
+            // Reg.Num
+            sprintf(token, "%-4d;", CrossTable[addr].BlockSize);
+            strcat(row, token);
+            // Behavior (da completare con Gestione Allarmi)
+            if (CrossTable[addr].Output)  {
+                strcat(row, "[RW]");
+            }
+            else  {
+                strcat(row, "[RO]");
+            }
+            // Comment
+            strcat(row, CrossTable[addr].Comment);
         }
-        //
-        // Write Row
-        if (fputs(row, xtable) == EOF) {
+        // Finally Write Row
+        // strcat(row,"\n");
+        if (fprintf(xtable, "%s\n",row) < 0) {
             ERR = TRUE;
             break;
         }

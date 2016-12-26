@@ -6574,7 +6574,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rsync/rsync.spec ltib/dist/lfs-5.1/rsync/rsync.spec
 --- ltib.reference/dist/lfs-5.1/rsync/rsync.spec
 +++ ltib/dist/lfs-5.1/rsync/rsync.spec
-@@ -8,30 +8,69 @@
+@@ -8,30 +8,63 @@
  Vendor          : Freescale
  Packager        : Stuart Hughes
  Group           : Applications/Internet
@@ -6627,12 +6627,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  make install prefix=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
  
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}/usr/man, d;
-+' all_files.lst > rfs_files.lst
-+
 +
  %Clean
 +export LC_ALL

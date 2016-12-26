@@ -2515,7 +2515,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  %Description
  %{summary}
-@@ -21,21 +36,74 @@
+@@ -21,21 +36,67 @@
  example) which are designed to use the advanced networking
  capabilities of the Linux kernel.
  
@@ -2544,13 +2544,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  make -j1 install SBINDIR=%{base}/sbin DESTDIR=$RPM_BUILD_ROOT/%{pfx}
  
-+cd %{_builddir}/%{name}2-%{version}-%{verrel}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}/share/doc, d;
-+    \,^%{pfx}/share/man, d;
-+' all_files.lst > rfs_files.lst
-+
 +
  %Clean
 +export LC_ALL

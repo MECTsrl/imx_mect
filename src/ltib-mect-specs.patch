@@ -4742,7 +4742,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 --- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 +++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
-@@ -2,38 +2,120 @@
+@@ -2,38 +2,140 @@
  
  Summary		: Memory Technology Device tools
  Name		: mtd-utils
@@ -4754,6 +4754,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  Packager	: Ross Wille
  Group		: Applications/System
 -Source		: %{name}-%{version}.tar.gz
++%ifnarch arm
++Source		: %{name}-%{version}.tar.bz2
++Patch1          : mtd-utils-201006-4K-218-224-support.patch
++Patch2          : mtd-utils-201006-1418122799.patch
++Patch3          : mtd-utils-gcc_v5.4.patch
++%endif
  BuildRoot	: %{_tmppath}/%{name}
  Prefix		: %{pfx}
 +AutoReqProv     : no
@@ -4781,12 +4787,25 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +
  %Prep
--%setup -n %{name}
 +export LC_ALL
 +LC_ALL=C
 +
++%ifnarch arm
++
+ %setup -n %{name}
++%patch1 -p1
++%patch2 -p1
++
++if test "$(lsb_release -r | cut -f2 | cut -d. -f1)" -gt 14; then
++%patch3 -p1
++fi
++
++%else
++
 +%setup -T -c -n %{name}
 +cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
++
++%endif
 +
  
  %Build

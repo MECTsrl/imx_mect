@@ -4742,7 +4742,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 --- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 +++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
-@@ -2,38 +2,140 @@
+@@ -2,38 +2,151 @@
  
  Summary		: Memory Technology Device tools
  Name		: mtd-utils
@@ -4765,6 +4765,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +AutoReqProv     : no
 +
 +
++%ifarch arm
++
 +%Package rfs
 +Summary         : Trimmed mtd-utils for root file system requirements.
 +Vendor          : MECT s.r.l.
@@ -4775,6 +4777,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Description rfs
 +mtd-utils package contents restricted to just the files that are
 +needed at run time on the target.
++
++%endif
 +
  
  %Description
@@ -4828,6 +4832,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +mkdir -p $RPM_BUILD_ROOT%{pfx}%{_prefix}/include/mtd
 +install -m 0644 include/mtd/*.h $RPM_BUILD_ROOT%{pfx}%{_prefix}/include/mtd
 +
++cd $RPM_BUILD_ROOT
++tree
++
  
  %Clean
 +export LC_ALL
@@ -4839,6 +4846,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %Files
  %defattr(-,root,root)
  %{pfx}/*
++
++%ifarch arm
 +
 +%Files rfs
 +%defattr(-,root,root)
@@ -4889,6 +4898,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/usr/bin/ubirsvol
 +%{pfx}/usr/bin/ubiupdatevol
 +%{pfx}/usr/bin/unubi
++
++%endif
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec ltib/dist/lfs-5.1/mxc-misc/imx-test.spec
 --- ltib.reference/dist/lfs-5.1/mxc-misc/imx-test.spec
 +++ ltib/dist/lfs-5.1/mxc-misc/imx-test.spec

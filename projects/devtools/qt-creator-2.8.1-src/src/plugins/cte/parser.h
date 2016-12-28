@@ -65,6 +65,7 @@ enum varTypes {BIT = 0,
 
 struct  CrossTableRecord {
     int16_t Enable;
+    int  UsedEntry;
     enum UpdateType Plc;
     char Tag[MAX_IDNAME_LEN];
     enum varTypes Types;

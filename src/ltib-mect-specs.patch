@@ -4055,7 +4055,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
 +# Do not re-generate the systemicons resources (use Windows-specific paths).
-+find %{name} -name qrc_systemicons.cpp -exec touch {} \;
++find -L %{name} -name qrc_systemicons.cpp -exec touch {} \;
 +
 +
 +%build

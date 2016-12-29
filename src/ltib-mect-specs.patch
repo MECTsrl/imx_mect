@@ -4678,7 +4678,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 --- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 +++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
-@@ -2,38 +2,151 @@
+@@ -2,38 +2,150 @@
  
  Summary		: Memory Technology Device tools
  Name		: mtd-utils
@@ -4769,7 +4769,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +install -m 0644 include/mtd/*.h $RPM_BUILD_ROOT%{pfx}%{_prefix}/include/mtd
 +
 +cd $RPM_BUILD_ROOT
-+tree
 +
  
  %Clean

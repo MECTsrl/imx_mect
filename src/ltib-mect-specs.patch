@@ -3739,7 +3739,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,700 @@
+@@ -0,0 +1,642 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Default HMI application.
@@ -3780,20 +3780,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Prefix          : %{pfx}/TP1043_01_B/local
 +
 +%Description lfs-TP1043_01_B
-+%{name} package contents limited to just the run-times needed
-+on the target.
-+
-+# TP1043_01_C
-+#
-+%Package lfs-TP1043_01_C
-+Summary         : Trimmed %{name} to just the run-times needed for local file system.
-+Vendor          : MECT s.r.l.
-+Packager        : Mihai Lazarescu
-+Group           : Applications/System
-+AutoReqProv     : no
-+Prefix          : %{pfx}/TP1043_01_C/local
-+
-+%Description lfs-TP1043_01_C
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
@@ -3864,20 +3850,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Prefix          : %{pfx}/TP1070_01_C/local
 +
 +%Description lfs-TP1070_01_C
-+%{name} package contents limited to just the run-times needed
-+on the target.
-+
-+# TP1070_01_D
-+#
-+%Package lfs-TP1070_01_D
-+Summary         : Trimmed %{name} to just the run-times needed for local file system.
-+Vendor          : MECT s.r.l.
-+Packager        : Mihai Lazarescu
-+Group           : Applications/System
-+AutoReqProv     : no
-+Prefix          : %{pfx}/TP1070_01_D/local
-+
-+%Description lfs-TP1070_01_D
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
@@ -4007,20 +3979,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
-+# TPAC1008_02_AC
-+#
-+%Package lfs-TPAC1008_02_AC
-+Summary         : Trimmed %{name} to just the run-times needed for local file system.
-+Vendor          : MECT s.r.l.
-+Packager        : Mihai Lazarescu
-+Group           : Applications/System
-+AutoReqProv     : no
-+Prefix          : %{pfx}/TPAC1008_02_AC/local
-+
-+%Description lfs-TPAC1008_02_AC
-+%{name} package contents limited to just the run-times needed
-+on the target.
-+
 +# TPAC1008_02_AD
 +#
 +%Package lfs-TPAC1008_02_AD
@@ -4102,6 +4060,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%setup -T -c -n %{name}
 +cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 +
++# Do not re-generate the systemicons resources (use Windows-specific paths).
++find %{name} -name qrc_systemicons.cpp -exec touch {} \;
++
 +
 +%build
 +export LC_ALL
@@ -4117,9 +4078,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	AnyTPAC \
 +	TP1043_01_A \
 +	TP1043_01_B \
-+	TP1043_01_C \
-+	TP1057 \
-+	TP1070 \
++	TP1057_01_A \
++	TP1057_01_B \
++	TP1070_01_A \
++	TP1070_01_B \
++	TP1070_01_C \
 +	TPAC1006 \
 +	TPAC1007_03 \
 +	TPAC1007_04_AA \
@@ -4129,7 +4092,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	TPAC1008_01 \
 +	TPAC1008_02_AA \
 +	TPAC1008_02_AB \
++	TPAC1008_02_AD \
 +	TPAC1008_02_AE \
++	TPAC1008_02_AF \
 +; do
 +	test -z "$t" && exit 1
 +	test -d $t || test -d AnyTPAC || exit 1
@@ -4169,30 +4134,27 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# Source-destination tuplets
 +(
-+	echo  AnyTPAC         TPAC1008_02_AC  ;
-+	echo  AnyTPAC         TPAC1008_02_AD  ;
-+	echo  AnyTPAC         TPAC1008_02_AF  ;
 +	echo  AnyTPAC         TPLC100         ;
 +	echo  AnyTPAC         TPLC150         ;
++	echo  TPAC1006        TPAC1006        ;
 +	echo  TP1043_01_A     TP1043_01_A     ;
 +	echo  TP1043_01_B     TP1043_01_B     ;
-+	echo  AnyTPAC         TP1043_01_C     ;
-+	echo  TP1057          TP1057_01_A     ;
-+	echo  TP1057          TP1057_01_B     ;
-+	echo  TP1070          TP1070_01_A     ;
-+	echo  TP1070          TP1070_01_B     ;
-+	echo  TP1070          TP1070_01_C     ;
-+	echo  TP1070          TP1070_01_D     ;
-+	echo  TPAC1006        TPAC1006        ;
++	echo  TP1057_01_A     TP1057_01_A     ;
++	echo  TP1057_01_B     TP1057_01_B     ;
++	echo  TP1070_01_A     TP1070_01_A     ;
++	echo  TP1070_01_B     TP1070_01_B     ;
++	echo  TP1070_01_C     TP1070_01_C     ;
 +	echo  TPAC1007_03     TPAC1007_03     ;
++	echo  TPAC1007_LV     TPAC1007_LV     ;
++	echo  TPAC1008_01     TPAC1008_01     ;
 +	echo  TPAC1007_04_AA  TPAC1007_04_AA  ;
 +	echo  TPAC1007_04_AB  TPAC1007_04_AB  ;
 +	echo  TPAC1007_04_AC  TPAC1007_04_AC  ;
-+	echo  TPAC1007_LV     TPAC1007_LV     ;
-+	echo  TPAC1008_01     TPAC1008_01     ;
 +	echo  TPAC1008_02_AA  TPAC1008_02_AA  ;
 +	echo  TPAC1008_02_AB  TPAC1008_02_AB  ;
++	echo  TPAC1008_02_AD  TPAC1008_02_AD  ;
 +	echo  TPAC1008_02_AE  TPAC1008_02_AE  ;
++	echo  TPAC1008_02_AF  TPAC1008_02_AF  ;
 +) \
 +| while read t d; do
 +	test -z $t && exit 1
@@ -4255,14 +4217,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TP1043_01_B/local/etc/sysconfig/system.ini
 +%{pfx}/TP1043_01_B/local/data/customtrend/trend1.csv
 +
-+%files lfs-TP1043_01_C
-+%defattr(-,root,root)
-+%{pfx}/TP1043_01_C/local/root/hmi
-+%{pfx}/TP1043_01_C/local/etc/sysconfig/Crosstable.csv
-+%{pfx}/TP1043_01_C/local/etc/sysconfig/img/splash.png
-+%{pfx}/TP1043_01_C/local/etc/sysconfig/system.ini
-+%{pfx}/TP1043_01_C/local/data/customtrend/trend1.csv
-+
 +%files lfs-TP1057_01_A
 +%defattr(-,root,root)
 +%{pfx}/TP1057_01_A/local/root/hmi
@@ -4302,14 +4256,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TP1070_01_C/local/etc/sysconfig/img/splash.png
 +%{pfx}/TP1070_01_C/local/etc/sysconfig/system.ini
 +%{pfx}/TP1070_01_C/local/data/customtrend/trend1.csv
-+
-+%files lfs-TP1070_01_D
-+%defattr(-,root,root)
-+%{pfx}/TP1070_01_D/local/root/hmi
-+%{pfx}/TP1070_01_D/local/etc/sysconfig/Crosstable.csv
-+%{pfx}/TP1070_01_D/local/etc/sysconfig/img/splash.png
-+%{pfx}/TP1070_01_D/local/etc/sysconfig/system.ini
-+%{pfx}/TP1070_01_D/local/data/customtrend/trend1.csv
 +
 +%files lfs-TPAC1007_03
 +%defattr(-,root,root)
@@ -4391,14 +4337,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1008_02_AB/local/etc/sysconfig/iomap0.cmg
 +%{pfx}/TPAC1008_02_AB/local/etc/sysconfig/network0.cmg
 +
-+%files lfs-TPAC1008_02_AC
-+%defattr(-,root,root)
-+%{pfx}/TPAC1008_02_AC/local/root/hmi
-+%{pfx}/TPAC1008_02_AC/local/etc/sysconfig/Crosstable.csv
-+%{pfx}/TPAC1008_02_AC/local/etc/sysconfig/img/splash.png
-+%{pfx}/TPAC1008_02_AC/local/etc/sysconfig/system.ini
-+%{pfx}/TPAC1008_02_AC/local/data/customtrend/trend1.csv
-+
 +%files lfs-TPAC1008_02_AD
 +%defattr(-,root,root)
 +%{pfx}/TPAC1008_02_AD/local/root/hmi
@@ -4406,6 +4344,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1008_02_AD/local/etc/sysconfig/img/splash.png
 +%{pfx}/TPAC1008_02_AD/local/etc/sysconfig/system.ini
 +%{pfx}/TPAC1008_02_AD/local/data/customtrend/trend1.csv
++%{pfx}/TPAC1008_02_AD/local/etc/sysconfig/iomap0.cmg
++%{pfx}/TPAC1008_02_AD/local/etc/sysconfig/network0.cmg
 +
 +%files lfs-TPAC1008_02_AE
 +%defattr(-,root,root)
@@ -4424,6 +4364,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1008_02_AF/local/etc/sysconfig/img/splash.png
 +%{pfx}/TPAC1008_02_AF/local/etc/sysconfig/system.ini
 +%{pfx}/TPAC1008_02_AF/local/data/customtrend/trend1.csv
++%{pfx}/TPAC1008_02_AF/local/etc/sysconfig/iomap0.cmg
++%{pfx}/TPAC1008_02_AF/local/etc/sysconfig/network0.cmg
 +
 +%files lfs-TPLC100
 +%defattr(-,root,root)

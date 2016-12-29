@@ -1521,7 +1521,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      for i in %pfx/%base/etc/dhcpd.conf \
               %pfx/%_bindir/omshell \
               %pfx/%_mandir/man1/omshell.1 \
-@@ -82,14 +99,35 @@
+@@ -82,14 +99,28 @@
               %pfx/%_sbindir/dhcrelay \
               %pfx/%base/var/state/dhcp/dhcpd.leases
       do
@@ -1530,13 +1530,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
       done
  fi
  
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_prefix}/share/man, d;
-+    \,^%{pfx}%{_sysconfdir}/dhclient.conf, d;
-+' all_files.lst > rfs_files.lst
-+
 +
  %Clean
 +export LC_ALL

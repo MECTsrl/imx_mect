@@ -2759,32 +2759,129 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      make $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" DEPMOD=/bin/true INSTALL_MOD_PATH=$RPM_BUILD_ROOT/%{pfx} modules_install
      KERNEL_VER=`ls $RPM_BUILD_ROOT/%{pfx}/lib/modules`
      for i in build source
-@@ -333,6 +334,14 @@
-     fi
- fi
- 
-+cd %{_builddir}/%{pkg_name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}/boot, d;
-+    \,^%{pfx}%{_prefix}/src, d;
-+    \,^%{pfx}/%{_lib}/modules/%{version}-[^/]*/kernel/drivers/usb/serial/, d;
-+' all_files.lst > rfs_files.lst
-+cd -
+@@ -336,11 +337,310 @@
  
  %Clean
  rm -rf $RPM_BUILD_ROOT
-@@ -341,6 +350,200 @@
-     rm -f $RPM_BUILD_DIR/linux
- fi
- 
--%Files
-+%Files -f all_files.lst
- %defattr(-,root,root)
--%{pfx}/*
+-if [ -z "$PKG_KERNEL_LEAVESRC" ]
+-then
+-    rm -f $RPM_BUILD_DIR/linux
+-fi
++test -z "$PKG_KERNEL_LEAVESRC" && rm -f $RPM_BUILD_DIR/linux
 +
-+%Files rfs -f rfs_files.lst
+ 
+ %Files
+ %defattr(-,root,root)
+ %{pfx}/*
++
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/lib/firmware/edgeport/boot.fw
++%{pfx}/lib/firmware/edgeport/boot2.fw
++%{pfx}/lib/firmware/edgeport/down.fw
++%{pfx}/lib/firmware/edgeport/down2.fw
++%{pfx}/lib/firmware/edgeport/down3.bin
++%{pfx}/lib/firmware/keyspan_pda/keyspan_pda.fw
++%{pfx}/lib/firmware/keyspan_pda/xircom_pgs.fw
++%{pfx}/lib/firmware/mts_cdma.fw
++%{pfx}/lib/firmware/mts_edge.fw
++%{pfx}/lib/firmware/mts_gsm.fw
++%{pfx}/lib/firmware/ti_3410.fw
++%{pfx}/lib/firmware/ti_5052.fw
++%{pfx}/lib/firmware/whiteheat.fw
++%{pfx}/lib/firmware/whiteheat_loader.fw
++%{pfx}/lib/modules/2.6.35.3/build
++%{pfx}/lib/modules/2.6.35.3/kernel/crypto/arc4.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/crypto/crc32c.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/crypto/sha1_generic.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/input/misc/uinput.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/misc/eeprom/eeprom_93cx6.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/mmc/card/mmc_block.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/mmc/core/mmc_core.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/mmc/host/mxs-mmc.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/net/bsd_comp.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/net/can/flexcan/flexcan.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/net/ppp_async.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/net/ppp_deflate.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/net/ppp_generic.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/net/ppp_mppe.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/net/ppp_synctty.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/net/pppoe.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/net/pppox.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/net/slhc.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/net/tun.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/scsi/scsi_transport_fc.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/scsi/scsi_transport_iscsi.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/scsi/scsi_transport_spi.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/scsi/scsi_wait_scan.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/serial/mxs-auart.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/ssb/ssb.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/gadget/g_file_storage.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/gadget/gadgetfs.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/aircable.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/ark3116.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/belkin_sa.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/ch341.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/cp210x.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/cyberjack.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/cypress_m8.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/digi_acceleport.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/empeg.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/ftdi_sio.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/funsoft.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/garmin_gps.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/hp4x.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/io_edgeport.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/io_ti.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/ipaq.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/ipw.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/ir-usb.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/iuu_phoenix.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/keyspan.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/keyspan_pda.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/kl5kusb105.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/kobil_sct.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/mct_u232.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/mos7720.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/mos7840.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/moto_modem.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/navman.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/omninet.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/opticon.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/option.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/oti6858.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/pl2303.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/qcaux.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/qcserial.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/safe_serial.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/siemens_mpi.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/sierra.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/spcp8x5.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/symbolserial.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/ti_usb_3410_5052.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/usb_debug.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/usb_wwan.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/usbserial.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/visor.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/vivopay-serial.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/whiteheat.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/usb/serial/zio.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/drivers/xenomai/serial/xeno_imx_mxs_auart.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/fs/cifs/cifs.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/fs/nls/nls_utf8.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/lib/crc-ccitt.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/lib/crc-itu-t.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/lib/libcrc32c.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/net/ipv4/netfilter/ip_tables.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/net/ipv4/netfilter/ipt_REJECT.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/net/ipv4/netfilter/iptable_filter.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/net/mac80211/mac80211.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/net/netfilter/x_tables.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/net/netfilter/xt_tcpudp.ko
++%{pfx}/lib/modules/2.6.35.3/kernel/net/wireless/cfg80211.ko
++%{pfx}/lib/modules/2.6.35.3/modules.builtin
++%{pfx}/lib/modules/2.6.35.3/modules.order
++%{pfx}/lib/modules/2.6.35.3/source
 +
 +%Files rfs-usbserial
 +%defattr(-,root,root)

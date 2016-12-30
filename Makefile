@@ -578,19 +578,19 @@ MECT_IMAGES := \
 
 ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 
-	MECT_IMAGES += \
-		TP1043_01_B \
-		TP1057_01_B \
-		TP1070_01_B \
-		TPAC1006 \
-		TPAC1008_01 \
-		TPAC1008_02_AA \
-		TPAC1008_02_AB \
-		TPAC1008_02_AD \
-		TPAC1008_02_AE \
-		TPAC1008_02_AF \
-		TPLC100 \
-		TPLC150 \
+MECT_IMAGES += \
+	TP1043_01_B \
+	TP1057_01_B \
+	TP1070_01_B \
+	TPAC1006 \
+	TPAC1008_01 \
+	TPAC1008_02_AA \
+	TPAC1008_02_AB \
+	TPAC1008_02_AD \
+	TPAC1008_02_AE \
+	TPAC1008_02_AF \
+	TPLC100 \
+	TPLC150 \
 
 endif
 
@@ -624,10 +624,9 @@ images_do: $(MECT_IMAGES)
 $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM)): $(MECT_LTIB_KERNEL_TS_RPM)
 	test -n "$(MECT_BUILD_TARGET)" -a -n "$(MECT_KERNEL_TARGET_CONF)"
 	touch -r $(MECT_LTIB_KERNEL_TS_RPM) /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp)
-	rm -rf $(MECT_LTIBDIR)/rpm/BUILD/linux-*
 	rm -f $(MECT_KERNEL_CONF) $(MECT_KERNEL_CONF).dev
 	ln -s $(MECT_KERNEL_TARGET_CONF) $(MECT_KERNEL_CONF)
-	cd $(MECT_LTIBDIR); ./ltib -f -p kernel
+	cd $(MECT_LTIBDIR); LTIB_FULL_REBUILD=yes ./ltib -f -p kernel
 	touch -r /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp) $(MECT_LTIB_KERNEL_TS_RPM); rm -f /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp)
 	set -e; cd $(MECT_RPMDIR); for rpm in '' `ls kernel-rfs-*.$(MECT_TARGET_ARCH).rpm imx-bootlets-src-mfg-*.$(MECT_TARGET_ARCH).rpm 2>/dev/null | sed '/-$(MECT_TARGET_PREFIX)/ d;'`; do \
 		test -n "$$rpm" || continue; \

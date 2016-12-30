@@ -52,7 +52,7 @@ diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/bin/Ltibutils.pm l
  # package build dependencies
  # rebuild all packages in the list (rhs) if the key (lhs) has been installed
 -$build_deps = { PKG_KERNEL => [ qw/PKG_MODEPS/ ],
-+$build_deps = { PKG_KERNEL => [ qw/PKG_BOOT_STREAM PKG_MODEPS PKG_LAST_KERNEL_BUILD/ ],
++$build_deps = { PKG_KERNEL => [ qw/PKG_BOOT_STREAM PKG_MODEPS/ ],
                  PKG_SKELL  => [ qw/PKG_SYSCONFIG/ ],
                  PKG_MERGE  => [ qw/PKG_MODEPS/ ],
                  PKG_TSLIB  => [ qw/PKG_XORG_SERVER PKG_ENLIGHTENMENT

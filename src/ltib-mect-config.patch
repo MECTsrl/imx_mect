@@ -4105,15 +4105,15 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_MECT_CUSTOMIZATION=y
 +# CONFIG_MECT_TPAC1006_320x240 is not set
 +# CONFIG_MECT_TPAC1006_640x480 is not set
-+CONFIG_MECT_TPAC1007_480x272=y
-+# CONFIG_MECT_TPAC1008_800x480 is not set
++# CONFIG_MECT_TPAC1007_480x272 is not set
++CONFIG_MECT_TPAC1008_800x480=y
 +# CONFIG_MECT_VAL01 is not set
 +# CONFIG_MECT_ATN01 is not set
 +# CONFIG_MECT_ACQUATI is not set
 +# CONFIG_MECT_ELE01 is not set
-+CONFIG_MECT_PRODUCT="MECT TPAC1007 480x272 panel"
++CONFIG_MECT_PRODUCT="MECT TPAC1008/TP1070 800x480 panel"
 +CONFIG_MECT_GPIO_POWERFAIL=y
-+# CONFIG_MECT_RAISING_PWRFAIL is not set
++CONFIG_MECT_RAISING_PWRFAIL=y
 +CONFIG_MXS_ICOLL=y
 +CONFIG_MXS_EARLY_CONSOLE=y
 +CONFIG_MXS_DMA_ENGINE=y
@@ -5320,8 +5320,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_FB_MXS=y
 +# CONFIG_FB_MXS_LCD_HH057 is not set
 +# CONFIG_FB_MXS_LCD_HH057_640x480 is not set
-+# CONFIG_FB_MXS_LCD_FRMK7 is not set
-+CONFIG_FB_MXS_LCD_TM043=y
++CONFIG_FB_MXS_LCD_FRMK7=y
++# CONFIG_FB_MXS_LCD_TM043 is not set
 +# CONFIG_FB_MXS_LCD_RK043 is not set
 +# CONFIG_FB_MXS_LCD_43WVF1G is not set
 +# CONFIG_FB_MXS_LCD_LMS430 is not set
@@ -5361,8 +5361,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_LOGO_MECT_CLUT224 is not set
 +# CONFIG_LOGO_MECT_320x240 is not set
 +# CONFIG_LOGO_MECT_640x480 is not set
-+CONFIG_LOGO_MECT_480x272=y
-+# CONFIG_LOGO_MECT_800x480 is not set
++# CONFIG_LOGO_MECT_480x272 is not set
++CONFIG_LOGO_MECT_800x480=y
 +# CONFIG_LOGO_VAL01_480x272 is not set
 +# CONFIG_LOGO_ATN01_480x272 is not set
 +# CONFIG_LOGO_ACQUATI_320x240 is not set
@@ -20502,20 +20502,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_LIBXML2
      depends CAP_HAS_MMU
      bool "libxml2"
-@@ -2146,6 +2181,12 @@
-     help
-       Build the module dependency file modules.dep
- 
-+config PKG_LAST_KERNEL_BUILD
-+    bool "timestamp of the last build of the kernel" if n
-+    default y
-+    help
-+      Store the timestamp of the last build of the kernel package.
-+
- choice
-     prompt "module loading"
-     default MODUTILS_NONE
-@@ -2207,6 +2248,13 @@
+@@ -2207,6 +2242,13 @@
        client/server implementation consisting of a server daemon (mysqld)
        and many different client programs and libraries
  
@@ -20529,7 +20516,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_NAUTILUS
      bool "nautilus"
      select PKG_EEL
-@@ -2320,6 +2368,17 @@
+@@ -2320,6 +2362,17 @@
        This is the full blown openssh package.  Normally dropbear is sufficient
        and smaller.
  
@@ -20547,7 +20534,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_OPENSSH_WANT_HACKABLE_KEYS
      depends CAP_HAS_MMU
      depends PKG_OPENSSH
-@@ -2673,6 +2732,27 @@
+@@ -2673,6 +2726,27 @@
      default n
      help
         Enable Phonon library.
@@ -20575,7 +20562,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  endmenu
  
  menu "Qtopia"
-@@ -2711,7 +2791,7 @@
+@@ -2711,7 +2785,7 @@
      default n
      help
         Select y here if you want Qtopia to use USB mouse by default.
@@ -20584,7 +20571,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_QTOPIA_WANT_TSLIB
      depends CAP_HAS_MMU
      depends PKG_QTOPIA || PKG_QTOPIA_4
-@@ -2767,6 +2847,88 @@
+@@ -2767,6 +2841,88 @@
         Some host tools are not used when building Qtopia within ltib.
         Not building these tools saves time when building.  Select y here
         to enable designer, linguist, and assistant GUI tools.
@@ -20673,7 +20660,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  menu "Applications"
  config PKG_QTOPIA_WANT_APP_CALCULATOR
-@@ -3346,7 +3508,7 @@
+@@ -3346,7 +3502,7 @@
      bool "totem-pl-parser"
      select PKG_EVOLUTION_DATA_SERVER
      select PKG_GTK2
@@ -20682,7 +20669,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3487,11 +3649,21 @@
+@@ -3487,11 +3643,21 @@
      depends CAP_HAS_MMU
      bool "wireless-tools"
      help
@@ -20705,7 +20692,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_XFSPROGS
      bool "xfsprogs"
      help
-@@ -3862,6 +4034,11 @@
+@@ -3862,6 +4028,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  
@@ -20760,7 +20747,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_MTD_UTILS                    = mtd-utils
  PKG_RPM                          = rpm
  PKG_RSYNC                        = rsync
-@@ -407,6 +411,26 @@
+@@ -407,6 +411,25 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
@@ -20769,7 +20756,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +PKG_LIBUSB1                      = libusb1
 +PKG_USB_MODESWITCH_DATA          = usb_modeswitch_data
 +PKG_USB_MODESWITCH               = usb_modeswitch
-+PKG_LAST_KERNEL_BUILD            = last-kernel-build
 +PKG_WIFI_DRIVERS                 = wifi-drivers
 +PKG_XENOMAI                      = xenomai
 +PKG_CANFESTIVAL                  = can-festival

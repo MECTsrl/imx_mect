@@ -4917,7 +4917,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mysql/mysql.spec ltib/dist/lfs-5.1/mysql/mysql.spec
 --- ltib.reference/dist/lfs-5.1/mysql/mysql.spec
 +++ ltib/dist/lfs-5.1/mysql/mysql.spec
-@@ -8,21 +8,41 @@
+@@ -8,43 +8,73 @@
  Vendor          : Freescale
  Packager        : Jason Jin
  Group           : System Environment/Daemons
@@ -4958,33 +4958,50 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  
  %Build
+-./configure --prefix=/usr --host=$CFGHOST --build=%{_build} \
+-	--enable-so	\
+-	--with-named-curses-libs=-lncurses	\
+-	--without-man	\
+-	--without-docs	\
+-	ac_cv_sys_restartable_syscalls=${ac_cv_sys_restartable_syscalls='no'}	\
+-	ac_cv_conv_longlong_to_float=yes   \
 +export LC_ALL
 +LC_ALL=C
 +
 +find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
- ./configure --prefix=/usr --host=$CFGHOST --build=%{_build} \
- 	--enable-so	\
- 	--with-named-curses-libs=-lncurses	\
-@@ -34,17 +54,25 @@
- 
- make
- 
++./configure \
++	--prefix=/usr \
++	--host=$CFGHOST \
++	--build=%{_build} \
++	--enable-so \
++	--with-named-curses-libs=-lncurses \
++	--without-man \
++	--without-docs \
++	ac_cv_sys_restartable_syscalls=${ac_cv_sys_restartable_syscalls='no'} \
++	ac_cv_conv_longlong_to_float=yes \
+ 	--with-zlib	
++find . -name errmsg.sys -print0 | xargs -0 touch
 +
++make -j$(nproc)
+ 
+-make
+ 
  %Install
 +export LC_ALL
 +LC_ALL=C
 +
  rm -rf $RPM_BUILD_ROOT
- mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}
- make install prefix=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
-+
- cd $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/mysql
+-mkdir -p $RPM_BUILD_ROOT/%{pfx}/%{_prefix}
+-make install prefix=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}
+-cd $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/mysql
 -mv $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/mysql/* ../
 -rm mysql -rf
 -rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
-+mv * ..
-+cd ..
-+rmdir mysql
++mkdir -p $RPM_BUILD_ROOT%{pfx}%{_prefix}
++make install prefix=$RPM_BUILD_ROOT%{pfx}%{_prefix}
++
++mv $RPM_BUILD_ROOT%{pfx}%{_prefix}/lib/mysql/* $RPM_BUILD_ROOT%{pfx}%{_prefix}/lib
++rmdir $RPM_BUILD_ROOT%{pfx}%{_prefix}/lib/mysql
  
  
  %Clean
@@ -4994,7 +5011,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
-@@ -52,4 +80,149 @@
+@@ -52,4 +82,149 @@
  %defattr(-,root,root)
  %{pfx}/*
  

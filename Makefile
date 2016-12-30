@@ -873,7 +873,7 @@ clean: clean_projects
 distclean: clean
 	if which ccache > /dev/null; then ccache -C; fi
 	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIBDIR_REF)
-	#if test -d $(MECT_PRJDIR); then rm -rf $(MECT_PRJDIR); git checkout $(MECT_PRJDIR); fi
+	if test -d $(MECT_PRJDIR); then rm -rf $(MECT_PRJDIR); git checkout $(MECT_PRJDIR); fi
 
 
 # Downloads

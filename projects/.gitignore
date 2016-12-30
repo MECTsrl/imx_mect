@@ -6,7 +6,6 @@
 *_resource.rc
 /**/.deps/
 /**/.libs/
-debug/
 devtools/qt-creator-2.8.1-src-build/
 devtools/qt-everywhere-opensource-src-4.8.5/**/ui_*.h
 devtools/qt-everywhere-opensource-src-4.8.5/configure.cache

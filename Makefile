@@ -567,11 +567,9 @@ spec_setup:
 
 MECT_IMAGES := \
 	TP1043_01_A \
-	TP1043_01_C \
 	TP1057_01_A \
 	TP1070_01_A \
 	TP1070_01_C \
-	TP1070_01_D \
 	TPAC1007_03 \
 	TPAC1007_04_AA \
 	TPAC1007_04_AB \
@@ -588,7 +586,6 @@ ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 		TPAC1008_01 \
 		TPAC1008_02_AA \
 		TPAC1008_02_AB \
-		TPAC1008_02_AC \
 		TPAC1008_02_AD \
 		TPAC1008_02_AE \
 		TPAC1008_02_AF \
@@ -876,6 +873,7 @@ clean: clean_projects
 distclean: clean
 	if which ccache > /dev/null; then ccache -C; fi
 	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIBDIR_REF)
+	#if test -d $(MECT_PRJDIR); then rm -rf $(MECT_PRJDIR); git checkout $(MECT_PRJDIR); fi
 
 
 # Downloads

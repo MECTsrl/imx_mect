@@ -1,0 +1,11 @@
+--- arch/arm/mach-mx3/mach-mx31_3ds.c	2010-08-20 20:55:55.000000000 +0200
++++ arch/arm/mach-mx3/mach-mx31_3ds.c	2012-05-12 14:26:04.671670058 +0200
+@@ -264,7 +265,7 @@
+ 	for (; int_valid != 0; int_valid >>= 1, expio_irq++) {
+ 		if ((int_valid & 1) == 0)
+ 			continue;
+-		generic_handle_irq(expio_irq);
++		ipipe_handle_chained_irq(expio_irq);
+ 	}
+ }
+ 

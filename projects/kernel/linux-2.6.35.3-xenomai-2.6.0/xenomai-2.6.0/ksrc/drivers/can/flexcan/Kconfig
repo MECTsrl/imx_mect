@@ -1,0 +1,8 @@
+config XENO_DRIVERS_CAN_FLEXCAN
+	depends on XENO_DRIVERS_CAN && (ARCH_MX28)
+	tristate "FlexCAN driver for IMX28"
+	default n
+	help
+
+	This driver is for the FlexCAN on the i.MX28 from Freescale.
+

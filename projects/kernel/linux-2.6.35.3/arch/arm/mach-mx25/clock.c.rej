@@ -1,0 +1,12 @@
+--- arch/arm/mach-mx25/clock.c	2010-08-20 20:55:55.000000000 +0200
++++ arch/arm/mach-mx25/clock.c	2012-05-12 14:26:04.667670059 +0200
+@@ -242,7 +242,8 @@
+ 	/* Clock source for lcdc is upll */
+ 	__raw_writel(__raw_readl(CRM_BASE+0x64) | (1 << 7), CRM_BASE + 0x64);
+ 
+-	mxc_timer_init(&gpt_clk, MX25_IO_ADDRESS(MX25_GPT1_BASE_ADDR), 54);
++	mxc_timer_init(&gpt_clk, MX25_IO_ADDRESS(MX25_GPT1_BASE_ADDR),
++		       MX25_GPT1_BASE_ADDR, 54);
+ 
+ 	return 0;
+ }

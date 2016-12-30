@@ -1,0 +1,58 @@
+--- arch/arm/plat-mxc/tzic.c	2010-08-20 20:55:55.000000000 +0200
++++ arch/arm/plat-mxc/tzic.c	2012-05-12 14:26:04.683670058 +0200
+@@ -15,6 +15,7 @@
+ #include <linux/device.h>
+ #include <linux/errno.h>
+ #include <linux/io.h>
++#include <linux/ipipe.h>
+ 
+ #include <asm/mach/irq.h>
+ 
+@@ -108,9 +109,33 @@
+ 	.name = "MXC_TZIC",
+ 	.ack = tzic_mask_irq,
+ 	.mask = tzic_mask_irq,
++#ifdef CONFIG_IPIPE
++	.mask_ack = tzic_mask_irq,
++#endif /* CONFIG_IPIPE */
+ 	.unmask = tzic_unmask_irq,
+ 	.set_wake = tzic_set_wake_irq,
+ };
++#if defined(CONFIG_IPIPE) && defined(__IPIPE_FEATURE_PIC_MUTE)
++DEFINE_PER_CPU(__ipipe_irqbits_t, __ipipe_muted_irqs);
++
++void tzic_set_irq_prio(unsigned irq, unsigned hi)
++{
++	if (irq >= MXC_INTERNAL_IRQS)
++		return;
++
++	__raw_writeb(hi ? 0 : 0x80, tzic_base + TZIC_PRIORITY0 + irq);
++}
++
++void ipipe_mute_pic(void)
++{
++	__raw_writel(0x10, tzic_base + TZIC_PRIOMASK);
++}
++
++void ipipe_unmute_pic(void)
++{
++	__raw_writel(0xf0, tzic_base + TZIC_PRIOMASK);
++}
++#endif /* CONFIG_IPIPE && __IPIPE_FEATURE_PIC_MUTE */
+ 
+ /*
+  * This function initializes the TZIC hardware and disables all the
+@@ -128,8 +153,13 @@
+ 	i = __raw_readl(tzic_base + TZIC_INTCNTL);
+ 
+ 	__raw_writel(0x80010001, tzic_base + TZIC_INTCNTL);
++#ifndef CONFIG_IPIPE
+ 	__raw_writel(0x1f, tzic_base + TZIC_PRIOMASK);
+ 	__raw_writel(0x02, tzic_base + TZIC_SYNCCTRL);
++#else
++	__raw_writel(0xf0, tzic_base + TZIC_PRIOMASK);
++	__raw_writel(0, tzic_base + TZIC_SYNCCTRL);
++#endif
+ 
+ 	for (i = 0; i < 4; i++)
+ 		__raw_writel(0xFFFFFFFF, tzic_base + TZIC_INTSEC0(i));

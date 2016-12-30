@@ -1,0 +1,26 @@
+--- arch/arm/mach-mx25/devices.c	2010-08-20 20:55:55.000000000 +0200
++++ arch/arm/mach-mx25/devices.c	2012-05-12 14:26:04.667670059 +0200
+@@ -19,6 +19,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/gpio.h>
++#include <mach/common.h>
+ #include <mach/mx25.h>
+ #include <mach/irqs.h>
+ 
+@@ -515,3 +516,15 @@
+ 	.num_resources = ARRAY_SIZE(mxc_wdt_resources),
+ 	.resource = mxc_wdt_resources,
+ };
++
++#ifdef CONFIG_IPIPE
++static int post_cpu_init(void)
++{
++	if (cpu_is_mx25())
++		ipipe_mach_allow_hwtimer_uaccess(MX25_AIPS1_BASE_ADDR_VIRT,
++						 MX25_AIPS2_BASE_ADDR_VIRT);
++	return 0;
++}
++
++postcore_initcall(post_cpu_init);
++#endif /* CONFIG_IPIPE */

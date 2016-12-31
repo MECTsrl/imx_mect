@@ -3071,7 +3071,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libmodbus/libmodbus.spec ltib/dist/lfs-5.1/libmodbus/libmodbus.spec
 --- ltib.reference/dist/lfs-5.1/libmodbus/libmodbus.spec
 +++ ltib/dist/lfs-5.1/libmodbus/libmodbus.spec
-@@ -0,0 +1,75 @@
+@@ -0,0 +1,73 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : A Modbus library
@@ -3133,9 +3133,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+if test -r Makefile; then
-+	make clean
-+fi
++rm -rf $RPM_BUILD_ROOT
 +
 +
 +%Files
@@ -6385,7 +6383,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 +++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
-@@ -0,0 +1,89 @@
+@@ -0,0 +1,87 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define variant multiaxes
 +
@@ -6456,9 +6454,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+if test -r Makefile; then
-+	make clean
-+fi
++rm -rf $RPM_BUILD_ROOT
 +
 +
 +%Files
@@ -6767,7 +6763,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
 --- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec
 +++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
-@@ -0,0 +1,74 @@
+@@ -0,0 +1,72 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define aname openssh
 +%define avers 4.3p2
@@ -6830,9 +6826,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+if test -r Makefile; then
-+	make clean
-+fi
++rm -rf $RPM_BUILD_ROOT
 +
 +
 +%Files
@@ -7217,7 +7211,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec ltib/dist/lfs-5.1/sqlite/sqlite.spec
 --- ltib.reference/dist/lfs-5.1/sqlite/sqlite.spec
 +++ ltib/dist/lfs-5.1/sqlite/sqlite.spec
-@@ -9,29 +9,68 @@
+@@ -9,29 +9,66 @@
  Packager        : ProFUSION embedded systems <contact@profusion.mobi>
  Group           : System Environment/Libraries
  URL             : http://www.sqlite.org/
@@ -7272,15 +7266,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  
  %Clean
--rm -rf $RPM_BUILD_ROOT
 +export LC_ALL
 +LC_ALL=C
 +
-+if test -r Makefile; then
-+	make clean
-+fi
-+
+ rm -rf $RPM_BUILD_ROOT
  
++
  %Files
  %defattr(-,root,root)
  %{pfx}/*
@@ -7784,21 +7775,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  for i in sbin lib include
  do
-@@ -48,9 +64,27 @@
+@@ -48,9 +64,25 @@
  done
  make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
  
 +
  %Clean
--rm -rf $RPM_BUILD_ROOT
 +export LC_ALL
 +LC_ALL=C
 +
-+if test -r Makefile; then
-+	make clean
-+fi
-+
+ rm -rf $RPM_BUILD_ROOT
  
++
  %Files
  %defattr(-,root,root)
  %{pfx}/*
@@ -8034,23 +8022,21 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  mkdir -p $RPM_BUILD_ROOT/%{pfx}/boot
  for i in u-boot.bin u-boot
-@@ -34,8 +43,15 @@
+@@ -34,9 +43,14 @@
      cp $i $RPM_BUILD_ROOT/%{pfx}/boot
  done
  
 +
  %Clean
--rm -rf $RPM_BUILD_ROOT
 +export LC_ALL
 +LC_ALL=C
 +
-+if test -r Makefile; then
-+	make clean
-+fi
-+
+ rm -rf $RPM_BUILD_ROOT
  
++
  %Files
  %defattr(-,root,root)
+ %{pfx}/*
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/udev/udev.spec ltib/dist/lfs-5.1/udev/udev.spec
 --- ltib.reference/dist/lfs-5.1/udev/udev.spec
 +++ ltib/dist/lfs-5.1/udev/udev.spec
@@ -8234,7 +8220,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
 +++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch.spec
-@@ -0,0 +1,78 @@
+@@ -0,0 +1,76 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : USB Modeswitch gets mobile broadband cards in operational mode
@@ -8300,9 +8286,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+if test -r Makefile; then
-+	make clean
-+fi
++rm -rf $RPM_BUILD_ROOT
 +
 +
 +%Files
@@ -8316,7 +8300,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 +++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
-@@ -0,0 +1,75 @@
+@@ -0,0 +1,73 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Data for the USB Modeswitch tool
@@ -8380,9 +8364,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+if test -r Makefile; then
-+	make clean
-+fi
++rm -rf $RPM_BUILD_ROOT
 +
 +
 +%Files
@@ -8395,7 +8377,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 --- ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 +++ ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
-@@ -0,0 +1,178 @@
+@@ -0,0 +1,176 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define pkg_src  compat-drivers
 +%define pkg_rc   rc4
@@ -8541,9 +8523,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+if test -r Makefile; then
-+	make clean
-+fi
++rm -rf $RPM_BUILD_ROOT
 +
 +
 +#################################################################
@@ -8577,7 +8557,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec ltib/dist/lfs-5.1/wireless-tools/wireless-tools.spec
 --- ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec
 +++ ltib/dist/lfs-5.1/wireless-tools/wireless-tools.spec
-@@ -1,35 +1,78 @@
+@@ -1,35 +1,76 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
  
  Summary         : Wireless Ethernet configuration tools
@@ -8638,15 +8618,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
 +
  %Clean
--rm -rf $RPM_BUILD_ROOT
 +export LC_ALL
 +LC_ALL=C
 +
-+if test -r Makefile; then
-+	make clean
-+fi
-+
+ rm -rf $RPM_BUILD_ROOT
  
++
  %Files
  %defattr(-,root,root)
  %{pfx}/*
@@ -8695,7 +8672,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  i.e., the part that runs in the client stations. It implements WPA key
  negotiation with a WPA Authenticator and EAP authentication with
  Authentication Server. In addition, it controls the roaming and IEEE
-@@ -21,74 +34,46 @@
+@@ -21,74 +34,44 @@
  
  %{summary}
  
@@ -8779,13 +8756,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  
  %Clean
--rm -rf $RPM_BUILD_ROOT
 +export LC_ALL
 +LC_ALL=C
 +
-+if test -r Makefile; then
-+	make clean
-+fi
+ rm -rf $RPM_BUILD_ROOT
  
  
  %Files
@@ -8800,7 +8774,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec ltib/dist/lfs-5.1/xenomai/xenomai.spec
 --- ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec
 +++ ltib/dist/lfs-5.1/xenomai/xenomai.spec
-@@ -0,0 +1,150 @@
+@@ -0,0 +1,148 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : xenomai - Real Time extension for the Linux kernel
@@ -8863,9 +8837,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+if test -r Makefile; then
-+	make clean
-+fi
++rm -rf $RPM_BUILD_ROOT
 +
 +
 +%Files
@@ -8954,7 +8926,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zip30/zip30.spec ltib/dist/lfs-5.1/zip30/zip30.spec
 --- ltib.reference/dist/lfs-5.1/zip30/zip30.spec
 +++ ltib/dist/lfs-5.1/zip30/zip30.spec
-@@ -0,0 +1,71 @@
+@@ -0,0 +1,69 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : A file compression utility.
@@ -9014,9 +8986,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+if test -r Makefile; then
-+	make clean
-+fi
++rm -rf $RPM_BUILD_ROOT
 +
 +
 +%Files
@@ -9073,7 +9043,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  ./configure --prefix=%{_prefix} --shared
  mv Makefile Makefile.shared
  ./configure --prefix=%{_prefix}
-@@ -28,18 +48,32 @@
+@@ -28,13 +48,21 @@
  make -f Makefile.shared
  make -f Makefile.static
  
@@ -9092,16 +9062,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  
  %Clean
--rm -rf $RPM_BUILD_ROOT
 +export LC_ALL
 +LC_ALL=C
 +
-+if test -r Makefile; then
-+	make clean
-+fi
+ rm -rf $RPM_BUILD_ROOT
  
  
- %Files
+@@ -42,4 +70,8 @@
  %defattr(-,root,root)
  %{pfx}/*
  

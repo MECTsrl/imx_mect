@@ -1,12 +1,3 @@
-/* -*- mode: C++ ; c-file-style: "stroustrup" -*- *****************************
- * Qwt Widget Library
- * Copyright (C) 1997   Josef Wilgen
- * Copyright (C) 2002   Uwe Rathmann
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the Qwt License, Version 1.0
- *****************************************************************************/
-
 #include "qwt_date.h"
 #include <qdebug.h>
 #include <qlocale.h>
@@ -30,89 +21,6 @@ static const QwtJulianDay minJulianDayD = 1;
 static const QwtJulianDay maxJulianDayD = std::numeric_limits<int>::max();
 
 #endif
-
-static QString qwtExpandedFormat( const QString & format, 
-    const QDateTime &dateTime, QwtDate::Week0Type week0Type )
-{
-    const int week = QwtDate::weekNumber( dateTime.date(), week0Type );
-
-    QString weekNo;
-    weekNo.setNum( week );
-
-    QString weekNoWW;
-    if ( weekNo.length() == 1 )
-        weekNoWW += "0";
-
-    weekNoWW += weekNo;
-
-    QString fmt = format;
-    fmt.replace( "ww", weekNoWW );
-    fmt.replace( "w", weekNo );
-
-    if ( week == 1 && dateTime.date().month() != 1 )
-    {
-        // in case of week 1, we might need to increment the year
-
-        static QString s_yyyy = "yyyy";
-        static QString s_yy = "yy";
-
-        // week 1 might start in the previous year
-
-        bool doReplaceYear = fmt.contains( s_yy );
-
-        if ( doReplaceYear )
-        {
-            if ( fmt.contains( 'M' ) )
-            {
-                // in case of also having 'M' we have a conflict about
-                // which year to show
-
-                doReplaceYear = false;
-            }
-            else
-            {
-                // in case of also having 'd' or 'dd' we have a conflict about
-                // which year to show
-
-                int numD = 0;
-
-                for ( int i = 0; i < fmt.size(); i++ )
-                {
-                    if ( fmt[i] == 'd' )
-                    {
-                        numD++;
-                    }
-                    else
-                    {
-                        if ( numD > 0 && numD <= 2 )
-                            break;
-
-                        numD = 0;
-                    }
-                }
-
-                if ( numD > 0 && numD <= 2 )
-                    doReplaceYear = false;
-            }
-        }
-
-        if ( doReplaceYear )
-        {
-            const QDate dt( dateTime.date().year() + 1, 1, 1 );
-
-            if ( fmt.contains( s_yyyy ) )
-            {
-                fmt.replace( s_yyyy, dt.toString( s_yyyy ) );
-            }
-            else
-            {
-                fmt.replace( s_yy, dt.toString( s_yyyy ) );
-            }
-        }
-    }
-
-    return fmt;
-}
 
 static inline Qt::DayOfWeek qwtFirstDayOfWeek()
 {
@@ -656,22 +564,7 @@ int QwtDate::weekNumber( const QDate &date, Week0Type type )
 
     if ( type == QwtDate::FirstDay )
     {
-        QDate day0;
-
-        if ( date.month() == 12 && date.day() >= 24 )
-        {
-            // week 1 usually starts in the previous years.
-            // and we have to check if we are already there
-
-            day0 = dateOfWeek0( date.year() + 1, type );
-            if ( day0.daysTo( date ) < 0 )
-                day0 = dateOfWeek0( date.year(), type );
-        }
-        else
-        {
-            day0 = dateOfWeek0( date.year(), type );
-        }
-
+        const QDate day0 = dateOfWeek0( date.year(), type );
         weekNo = day0.daysTo( date ) / 7 + 1;
     }
     else
@@ -713,7 +606,6 @@ int QwtDate::utcOffset( const QDateTime &dateTime )
         case Qt::OffsetFromUTC:
         {
             seconds = dateTime.utcOffset();
-            break;
         }
         default:
         {
@@ -736,10 +628,6 @@ int QwtDate::utcOffset( const QDateTime &dateTime )
   - ww\n
     week number with a leading zero ( 01 - 53 )
 
-  As week 1 usually starts in the previous year a special rule 
-  is applied for formats, where the year is expected to match the
-  week number - even if the date belongs to the previous year.
-
   \param dateTime Datetime value
   \param format Format string
   \param week0Type Specification of week 0
@@ -750,11 +638,17 @@ int QwtDate::utcOffset( const QDateTime &dateTime )
 QString QwtDate::toString( const QDateTime &dateTime,
     const QString & format, Week0Type week0Type )
 {
+    QString weekNo;
+    weekNo.setNum( QwtDate::weekNumber( dateTime.date(), week0Type ) );
+
+    QString weekNoWW;
+    if ( weekNo.length() == 1 )
+        weekNoWW += "0";
+    weekNoWW += weekNo;
+
     QString fmt = format;
-    if ( fmt.contains( 'w' ) )
-    {
-        fmt = qwtExpandedFormat( fmt, dateTime, week0Type );
-    }
+    fmt.replace( "ww", weekNoWW );
+    fmt.replace( "w", weekNo );
 
     return dateTime.toString( fmt );
 }

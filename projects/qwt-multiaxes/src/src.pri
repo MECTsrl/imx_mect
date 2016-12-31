@@ -39,7 +39,6 @@ HEADERS += \
     qwt_scale_draw.h \
     qwt_scale_engine.h \
     qwt_scale_map.h \
-    qwt_scale_map_table.h \
     qwt_spline.h \
     qwt_symbol.h \
     qwt_system_clock.h \
@@ -77,7 +76,6 @@ SOURCES += \
     qwt_scale_div.cpp \
     qwt_scale_draw.cpp \
     qwt_scale_map.cpp \
-    qwt_scale_map_table.h \
     qwt_spline.cpp \
     qwt_scale_engine.cpp \
     qwt_symbol.cpp \
@@ -92,11 +90,7 @@ SOURCES += \
 contains(QWT_CONFIG, QwtPlot) {
 
     HEADERS += \
-        qwt_axis_id.h \
-        qwt_axes_mask.h \
         qwt_curve_fitter.h \
-        qwt_spline_curve_fitter.h \
-        qwt_weeding_curve_fitter.h \
         qwt_event_pattern.h \
         qwt_abstract_legend.h \
         qwt_legend.h \
@@ -143,11 +137,7 @@ contains(QWT_CONFIG, QwtPlot) {
         qwt_scale_widget.h 
 
     SOURCES += \
-        qwt_axis_id.cpp \
-        qwt_axes_mask.cpp \
         qwt_curve_fitter.cpp \
-        qwt_spline_curve_fitter.cpp \
-        qwt_weeding_curve_fitter.cpp \
         qwt_abstract_legend.cpp \
         qwt_legend.cpp \
         qwt_legend_data.cpp \
@@ -217,15 +207,6 @@ contains(QWT_CONFIG, QwtOpenGL) {
 
     HEADERS += qwt_plot_glcanvas.h
     SOURCES += qwt_plot_glcanvas.cpp
-
-    greaterThan(QT_MAJOR_VERSION, 4) {
-        
-        greaterThan(QT_MINOR_VERSION, 3) {
-
-            HEADERS += qwt_plot_opengl_canvas.h
-            SOURCES += qwt_plot_opengl_canvas.cpp
-        }
-    }
 }
 else {
 

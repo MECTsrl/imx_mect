@@ -1323,64 +1323,31 @@ void QwtSymbol::drawSymbols( QPainter *painter,
         }
         else if ( d_data->cache.policy == QwtSymbol::AutoCache )
         {
-            switch( painter->paintEngine()->type() )
+            if ( painter->paintEngine()->type() == QPaintEngine::Raster )
             {
-                case QPaintEngine::OpenGL:
-#if QT_VERSION >= 0x040600
-                case QPaintEngine::OpenGL2:
-#endif
+                useCache = true;
+            }
+            else
+            {
+                switch( d_data->style )
                 {
-                    // using a FBO as cache ?
-                    useCache = false;
-                    break;
-                }
-#if QT_VERSION >= 0x040500
-                case QPaintEngine::OpenVG:
-#endif
-                case QPaintEngine::SVG:
-                case QPaintEngine::Pdf:
-                case QPaintEngine::Picture:
-                {
-                    // vector graphics
-                    useCache = false;
-                    break;
-                }
-                case QPaintEngine::X11:
-                {
-                    switch( d_data->style )
+                    case QwtSymbol::XCross:
+                    case QwtSymbol::HLine:
+                    case QwtSymbol::VLine:
+                    case QwtSymbol::Cross:
+                        break;
+
+                    case QwtSymbol::Pixmap:
                     {
-                        case QwtSymbol::XCross:
-                        case QwtSymbol::HLine:
-                        case QwtSymbol::VLine:
-                        case QwtSymbol::Cross:
+                        if ( !d_data->size.isEmpty() &&
+                            d_data->size != d_data->pixmap.pixmap.size() ) 
                         {
-                            // for the very simple shapes using vector graphics is 
-                            // usually faster.
-
-                            useCache = false;
-                            break;
+                            useCache = true;
                         }
-
-                        case QwtSymbol::Pixmap:
-                        {
-                            if ( d_data->size.isEmpty() ||
-                                d_data->size == d_data->pixmap.pixmap.size() ) 
-                            {
-                                // no need to have a pixmap cache for a pixmap
-                                // of the same size
-
-                                useCache = false;
-                            }
-                            break;
-                        }                       
-                        default:
-                            break;
-                    }
-                    break;
-                }
-                default:
-                {
-                    useCache = true;
+                        break;
+                    }                       
+                    default:
+                        useCache = true;
                 }
             }
         }
@@ -1391,7 +1358,7 @@ void QwtSymbol::drawSymbols( QPainter *painter,
         const QRect br = boundingRect();
 
         const QRect rect( 0, 0, br.width(), br.height() );
-
+        
         if ( d_data->cache.pixmap.isNull() )
         {
             d_data->cache.pixmap = QwtPainter::backingStore( NULL, br.size() );
@@ -1401,7 +1368,7 @@ void QwtSymbol::drawSymbols( QPainter *painter,
             p.setRenderHints( painter->renderHints() );
             p.translate( -br.topLeft() );
 
-            const QPointF pos( 0.0, 0.0 );
+            const QPointF pos;
             renderSymbols( &p, &pos, 1 );
         }
 
@@ -1643,8 +1610,6 @@ QRect QwtSymbol::boundingRect() const
 {
     QRectF rect;
 
-    bool pinPointTranslation = false;
-
     switch ( d_data->style )
     {
         case QwtSymbol::Ellipse:
@@ -1688,7 +1653,6 @@ QRect QwtSymbol::boundingRect() const
 
             rect = qwtScaledBoundingRect( 
                 d_data->path.graphic, d_data->size );
-            pinPointTranslation = true;
 
             break;
         }
@@ -1699,15 +1663,15 @@ QRect QwtSymbol::boundingRect() const
             else
                 rect.setSize( d_data->size );
             
-            pinPointTranslation = true;
+            rect.moveCenter( QPointF( 0.0, 0.0 ) );
 
+            // pinpoint ???
             break;
         }
         case QwtSymbol::Graphic:
         {
             rect = qwtScaledBoundingRect( 
                 d_data->graphic.graphic, d_data->size );
-            pinPointTranslation = true;
 
             break;
         }
@@ -1729,7 +1693,6 @@ QRect QwtSymbol::boundingRect() const
 
                 rect = transform.mapRect( rect );
             }
-            pinPointTranslation = true;
             break;
         }
 #endif
@@ -1740,7 +1703,8 @@ QRect QwtSymbol::boundingRect() const
         }
     }
 
-    if ( pinPointTranslation )
+    if ( d_data->style == QwtSymbol::Graphic || 
+        d_data->style == QwtSymbol::SvgDocument || d_data->style == QwtSymbol::Path )
     {
         QPointF pinPoint( 0.0, 0.0 );
         if ( d_data->isPinPointEnabled )

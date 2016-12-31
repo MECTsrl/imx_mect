@@ -59,13 +59,13 @@ Plot::Plot( QWidget *parent ):
     grid->attach( this );
 
     // axes
-    enableAxis( QwtAxis::yRight );
-    setAxisTitle( QwtAxis::xBottom, "Normalized Frequency" );
-    setAxisTitle( QwtAxis::yLeft, "Amplitude [dB]" );
-    setAxisTitle( QwtAxis::yRight, "Phase [deg]" );
+    enableAxis( QwtPlot::yRight );
+    setAxisTitle( QwtPlot::xBottom, "Normalized Frequency" );
+    setAxisTitle( QwtPlot::yLeft, "Amplitude [dB]" );
+    setAxisTitle( QwtPlot::yRight, "Phase [deg]" );
 
-    setAxisMaxMajor( QwtAxis::xBottom, 6 );
-    setAxisMaxMinor( QwtAxis::xBottom, 9 );
+    setAxisMaxMajor( QwtPlot::xBottom, 6 );
+    setAxisMaxMinor( QwtPlot::xBottom, 9 );
     setAxisScaleEngine( QwtPlot::xBottom, new QwtLogScaleEngine );
 
     // curves
@@ -73,14 +73,14 @@ Plot::Plot( QWidget *parent ):
     d_curve1->setRenderHint( QwtPlotItem::RenderAntialiased );
     d_curve1->setPen( Qt::yellow );
     d_curve1->setLegendAttribute( QwtPlotCurve::LegendShowLine );
-    d_curve1->setYAxis( QwtAxis::yLeft );
+    d_curve1->setYAxis( QwtPlot::yLeft );
     d_curve1->attach( this );
 
     d_curve2 = new QwtPlotCurve( "Phase" );
     d_curve2->setRenderHint( QwtPlotItem::RenderAntialiased );
     d_curve2->setPen( Qt::cyan );
     d_curve2->setLegendAttribute( QwtPlotCurve::LegendShowLine );
-    d_curve2->setYAxis( QwtAxis::yRight );
+    d_curve2->setYAxis( QwtPlot::yRight );
     d_curve2->attach( this );
 
     // marker

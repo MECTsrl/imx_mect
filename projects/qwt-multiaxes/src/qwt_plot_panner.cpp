@@ -11,7 +11,6 @@
 #include "qwt_scale_div.h"
 #include "qwt_plot.h"
 #include "qwt_painter.h"
-#include "qwt_axes_mask.h"
 #include <qbitmap.h>
 #include <qstyle.h>
 #include <qstyleoption.h>
@@ -91,7 +90,13 @@ static QBitmap qwtBorderMask( const QWidget *canvas, const QSize &size )
 class QwtPlotPanner::PrivateData
 {
 public:
-    QwtAxesMask disabledAxes;
+    PrivateData()
+    {
+        for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
+            isAxisEnabled[axis] = true;
+    }
+
+    bool isAxisEnabled[QwtPlot::axisCnt];
 };
 
 /*!
@@ -124,27 +129,31 @@ QwtPlotPanner::~QwtPlotPanner()
    Axes that are enabled will be synchronized to the
    result of panning. All other axes will remain unchanged.
 
-   \param axisId Axis id
+   \param axis Axis, see QwtPlot::Axis
    \param on On/Off
 
    \sa isAxisEnabled(), moveCanvas()
 */
-void QwtPlotPanner::setAxisEnabled( QwtAxisId axisId, bool on )
+void QwtPlotPanner::setAxisEnabled( int axis, bool on )
 {
-    d_data->disabledAxes.setEnabled( axisId, !on );
+    if ( axis >= 0 && axis < QwtPlot::axisCnt )
+        d_data->isAxisEnabled[axis] = on;
 }
 
 /*!
    Test if an axis is enabled
 
-   \param axisId Axis id
+   \param axis Axis, see QwtPlot::Axis
    \return True, if the axis is enabled
 
    \sa setAxisEnabled(), moveCanvas()
 */
-bool QwtPlotPanner::isAxisEnabled( QwtAxisId axisId ) const
+bool QwtPlotPanner::isAxisEnabled( int axis ) const
 {
-    return !d_data->disabledAxes.isEnabled( axisId );
+    if ( axis >= 0 && axis < QwtPlot::axisCnt )
+        return d_data->isAxisEnabled[axis];
+
+    return true;
 }
 
 //! Return observed plot canvas
@@ -199,35 +208,29 @@ void QwtPlotPanner::moveCanvas( int dx, int dy )
     const bool doAutoReplot = plot->autoReplot();
     plot->setAutoReplot( false );
 
-    for ( int axisPos = 0; axisPos < QwtAxis::PosCount; axisPos++ )
+    for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
     {
-        const int axesCount = plot->axesCount( axisPos );
-        for ( int i = 0; i < axesCount; i++ )
+        if ( !d_data->isAxisEnabled[axis] )
+            continue;
+
+        const QwtScaleMap map = plot->canvasMap( axis );
+
+        const double p1 = map.transform( plot->axisScaleDiv( axis ).lowerBound() );
+        const double p2 = map.transform( plot->axisScaleDiv( axis ).upperBound() );
+
+        double d1, d2;
+        if ( axis == QwtPlot::xBottom || axis == QwtPlot::xTop )
         {
-            const QwtAxisId axisId( axisPos, i );
-
-            if ( !isAxisEnabled( axisId ) )
-                continue;
-
-            const QwtScaleMap map = plot->canvasMap( axisId );
-
-            const double p1 = map.transform( plot->axisScaleDiv( axisId ).lowerBound() );
-            const double p2 = map.transform( plot->axisScaleDiv( axisId ).upperBound() );
-
-            double d1, d2;
-            if ( QwtAxis::isXAxis( axisPos ) )
-            {
-                d1 = map.invTransform( p1 - dx );
-                d2 = map.invTransform( p2 - dx );
-            }
-            else
-            {
-                d1 = map.invTransform( p1 - dy );
-                d2 = map.invTransform( p2 - dy );
-            }
-
-            plot->setAxisScale( axisId, d1, d2 );
+            d1 = map.invTransform( p1 - dx );
+            d2 = map.invTransform( p2 - dx );
         }
+        else
+        {
+            d1 = map.invTransform( p1 - dy );
+            d2 = map.invTransform( p2 - dy );
+        }
+
+        plot->setAxisScale( axis, d1, d2 );
     }
 
     plot->setAutoReplot( doAutoReplot );

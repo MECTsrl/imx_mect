@@ -1,12 +1,3 @@
-/* -*- mode: C++ ; c-file-style: "stroustrup" -*- *****************************
- * Qwt Widget Library
- * Copyright (C) 1997   Josef Wilgen
- * Copyright (C) 2002   Uwe Rathmann
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the Qwt License, Version 1.0
- *****************************************************************************/
-
 #ifndef _QWT_DATE_SCALE_DRAW_H_
 #define _QWT_DATE_SCALE_DRAW_H_ 1
 
@@ -52,7 +43,7 @@
 class QWT_EXPORT QwtDateScaleDraw: public QwtScaleDraw
 {
 public:
-    explicit QwtDateScaleDraw( Qt::TimeSpec = Qt::LocalTime );
+    QwtDateScaleDraw( Qt::TimeSpec = Qt::LocalTime );
     virtual ~QwtDateScaleDraw();
 
     void setDateFormat( QwtDate::IntervalType, const QString & );

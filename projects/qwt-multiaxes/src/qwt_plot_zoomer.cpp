@@ -13,68 +13,6 @@
 #include "qwt_picker_machine.h"
 #include <qalgorithms.h>
 
-static QwtInterval qwtExpandedZoomInterval( double v1, double v2, 
-    double minRange, const QwtTransform* transform )
-{
-    double min = v1;
-    double max = v2;
-
-    if ( max - min < minRange )
-    {
-        min = 0.5 * ( min + max - minRange );
-        max = min + minRange;
-
-        if ( transform )
-        {
-            // f.e the logarithmic scale doesn't allow values
-            // outside [QwtLogTransform::LogMin/QwtLogTransform::LogMax]
-
-            double minBounded = transform->bounded( min );
-            double maxBounded = transform->bounded( max );
-
-            if ( minBounded != min )
-            {
-                maxBounded = transform->bounded( minBounded + minRange );
-            }
-            else if ( maxBounded != max )
-            {
-                minBounded = transform->bounded( maxBounded - minRange );
-            }
-
-            min = minBounded;
-            max = maxBounded;
-        }
-    }
-
-    return QwtInterval( min, max );
-}
-
-static QRectF qwtExpandedZoomRect( const QRectF &zoomRect, const QSizeF &minSize,
-    const QwtTransform* transformX, const QwtTransform* transformY )
-{
-    QRectF r = zoomRect;
-
-    if ( minSize.width() > r.width() )
-    {
-        const QwtInterval intv = qwtExpandedZoomInterval(
-            r.left(), r.right(), minSize.width(), transformX );
-
-        r.setLeft( intv.minValue() );
-        r.setRight( intv.maxValue() );
-    }
-
-    if ( minSize.height() > r.height() )
-    {
-        const QwtInterval intv = qwtExpandedZoomInterval(
-            zoomRect.top(), zoomRect.bottom(), minSize.height(), transformY );
-
-        r.setTop( intv.minValue() );
-        r.setBottom( intv.maxValue() );
-    }
-
-    return r;
-}
-
 class QwtPlotZoomer::PrivateData
 {
 public:
@@ -89,8 +27,8 @@ public:
 
   The zoomer is set to those x- and y-axis of the parent plot of the
   canvas that are enabled. If both or no x-axis are enabled, the picker
-  is set to QwtAxis::xBottom. If both or no y-axis are
-  enabled, it is set to QwtAxis::yLeft.
+  is set to QwtPlot::xBottom. If both or no y-axis are
+  enabled, it is set to QwtPlot::yLeft.
 
   The zoomer is initialized with a QwtPickerDragRectMachine,
   the tracker mode is set to QwtPicker::ActiveOnly and the rubber band
@@ -127,7 +65,7 @@ QwtPlotZoomer::QwtPlotZoomer( QWidget *canvas, bool doReplot ):
   \sa QwtPlot::autoReplot(), QwtPlot::replot(), setZoomBase()
 */
 
-QwtPlotZoomer::QwtPlotZoomer( QwtAxisId xAxis, QwtAxisId yAxis,
+QwtPlotZoomer::QwtPlotZoomer( int xAxis, int yAxis,
         QWidget *canvas, bool doReplot ):
     QwtPlotPicker( xAxis, yAxis, canvas )
 {
@@ -445,10 +383,13 @@ void QwtPlotZoomer::rescale()
   \param yAxis Y axis
 */
 
-void QwtPlotZoomer::axesChanged()
+void QwtPlotZoomer::setAxis( int xAxis, int yAxis )
 {
-    QwtPlotPicker::axesChanged();
-    setZoomBase( scaleRect() );
+    if ( xAxis != QwtPlotPicker::xAxis() || yAxis != QwtPlotPicker::yAxis() )
+    {
+        QwtPlotPicker::setAxis( xAxis, yAxis );
+        setZoomBase( scaleRect() );
+    }
 }
 
 /*!
@@ -647,13 +588,15 @@ bool QwtPlotZoomer::end( bool ok )
     QRect rect = QRect( pa[0], pa[int( pa.count() - 1 )] );
     rect = rect.normalized();
 
-    const QwtScaleMap xMap = plot->canvasMap( xAxis() );
-    const QwtScaleMap yMap = plot->canvasMap( yAxis() );
+    QRectF zoomRect = invTransform( rect ).normalized();
 
-    QRectF zoomRect = QwtScaleMap::invTransform( xMap, yMap, rect ).normalized();
-
-    zoomRect = qwtExpandedZoomRect( zoomRect, minZoomSize(),
-        xMap.transformation(), yMap.transformation() );
+    const QSizeF minSize = minZoomSize();
+    if ( minSize.isValid() )
+    {
+        const QPointF center = zoomRect.center();
+        zoomRect.setSize( zoomRect.size().expandedTo( minZoomSize() ) );
+        zoomRect.moveCenter( center );
+    }
 
     zoom( zoomRect );
 

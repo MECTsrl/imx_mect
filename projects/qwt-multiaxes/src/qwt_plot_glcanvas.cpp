@@ -53,16 +53,6 @@ public:
     int midLineWidth;
 };
 
-class QwtPlotGLCanvasFormat: public QGLFormat
-{
-public:
-    QwtPlotGLCanvasFormat():
-        QGLFormat( QGLFormat::defaultFormat() )
-    {
-        setSampleBuffers( true );
-    }
-};
-
 /*! 
   \brief Constructor
 
@@ -70,21 +60,10 @@ public:
   \sa QwtPlot::setCanvas()
 */
 QwtPlotGLCanvas::QwtPlotGLCanvas( QwtPlot *plot ):
-    QGLWidget( QwtPlotGLCanvasFormat(), plot )
+    QGLWidget( plot )
 {
     d_data = new PrivateData;
-    init();
-}
 
-QwtPlotGLCanvas::QwtPlotGLCanvas( const QGLFormat &format, QwtPlot *plot ):
-    QGLWidget( format, plot )
-{
-    d_data = new PrivateData;
-    init();
-}
-
-void QwtPlotGLCanvas::init()
-{
 #ifndef QT_NO_CURSOR
     setCursor( Qt::CrossCursor );
 #endif
@@ -243,12 +222,6 @@ void QwtPlotGLCanvas::paintEvent( QPaintEvent *event )
 
     QPainter painter( this );
 
-    if ( painter.paintEngine()->type() == QPaintEngine::OpenGL2 )
-    {
-        // work around a translation bug of QPaintEngine::OpenGL2
-        painter.translate( 1, 1 );
-    }
-
     drawBackground( &painter );
     drawItems( &painter );
 
@@ -324,11 +297,8 @@ void QwtPlotGLCanvas::drawBackground( QPainter *painter )
     }
     else 
     {
-        if ( !autoFillBackground() )
-        {
-            painter->fillRect( fillRect,
-                w->palette().brush( w->backgroundRole() ) );
-        }
+        painter->fillRect( fillRect,
+            w->palette().brush( w->backgroundRole() ) );
     }
 
     painter->restore();

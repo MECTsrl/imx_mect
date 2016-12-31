@@ -57,7 +57,7 @@ public:
         End
     };
 
-    explicit QwtPickerMachine( SelectionType );
+    QwtPickerMachine( SelectionType );
     virtual ~QwtPickerMachine();
 
     //! Transition

@@ -1,0 +1,20 @@
+D/BerkeleyDB////
+D/hints////
+D/patches////
+D/t////
+/BerkeleyDB.pm/1.1.2.1/Tue Nov 27 15:28:51 2001//Trpm-4_0
+/BerkeleyDB.pod/1.1.2.1/Tue Nov 27 15:28:53 2001//Trpm-4_0
+/BerkeleyDB.pod.P/1.1.2.1/Tue Nov 27 15:28:53 2001//Trpm-4_0
+/BerkeleyDB.xs/1.1.2.1/Tue Nov 27 15:28:54 2001//Trpm-4_0
+/Changes/1.1.2.1/Tue Nov 27 15:28:54 2001//Trpm-4_0
+/MANIFEST/1.1.2.1/Tue Nov 27 15:28:54 2001//Trpm-4_0
+/Makefile.PL/1.1.2.1/Tue Nov 27 15:28:54 2001//Trpm-4_0
+/README/1.1.2.1/Tue Nov 27 15:28:54 2001//Trpm-4_0
+/Todo/1.1.2.1/Thu Dec  9 15:49:59 1999//Trpm-4_0
+/config.in/1.1.2.1/Tue Nov 27 15:28:54 2001//Trpm-4_0
+/constants.h/1.1.2.1/Fri Oct 26 13:34:22 2001//Trpm-4_0
+/constants.xs/1.1.2.1/Fri Oct 26 13:34:22 2001//Trpm-4_0
+/dbinfo/1.1.2.1/Thu Jan 18 16:07:25 2001//Trpm-4_0
+/mkconsts/1.1.2.1/Tue Nov 27 15:28:55 2001//Trpm-4_0
+/mkpod/1.1.2.1/Mon Nov 29 14:16:16 1999//Trpm-4_0
+/typemap/1.1.2.1/Thu Aug  2 15:37:28 2001//Trpm-4_0

@@ -1,12 +1,3 @@
-/* -*- mode: C++ ; c-file-style: "stroustrup" -*- *****************************
- * Qwt Widget Library
- * Copyright (C) 1997   Josef Wilgen
- * Copyright (C) 2002   Uwe Rathmann
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the Qwt License, Version 1.0
- *****************************************************************************/
-
 #include "qwt_date_scale_engine.h"
 #include "qwt_math.h"
 #include "qwt_transform.h"
@@ -573,8 +564,8 @@ static QwtScaleDiv qwtDivideToMonths(
                 minStepDays = 5;
             else if ( maxMinSteps >= 3 )
                 minStepDays = 10;
-            else
-                minStepDays = 15;
+
+            minStepDays = 15;
         }
         else
         {
@@ -717,7 +708,7 @@ static QwtScaleDiv qwtDivideToYears(
 class QwtDateScaleEngine::PrivateData
 {
 public:
-    explicit PrivateData( Qt::TimeSpec spec ):
+    PrivateData( Qt::TimeSpec spec ):
         timeSpec( spec ),
         utcOffset( 0 ),
         week0Type( QwtDate::FirstThursday ),
@@ -912,7 +903,7 @@ QwtDate::IntervalType QwtDateScaleEngine::intervalType(
   The algorithm aligns and divides the interval into steps. 
 
   Datetime interval divisions are usually not equidistant and the
-  calculated stepSize can only be used as an approximation
+  calculated stepSize is can only be used as an approximation
   for the steps calculated by divideScale(). 
 
   \param maxNumSteps Max. number of steps
@@ -953,19 +944,19 @@ void QwtDateScaleEngine::autoScale( int maxNumSteps,
         const QwtDate::IntervalType intvType = 
             intervalType( from, to, maxNumSteps );
 
-        const double width = qwtIntervalWidth( from, to, intvType );
+        double width = qwtIntervalWidth( from, to, intvType );
+        width = QwtScaleArithmetic::divideInterval( width, maxNumSteps, 10 );
 
-        const double stepWidth = qwtDivideScale( width, maxNumSteps, intvType );
-        if ( stepWidth != 0.0 && !testAttribute( QwtScaleEngine::Floating ) )
+        if ( width != 0.0 && !testAttribute( QwtScaleEngine::Floating ) )
         {
-            const QDateTime d1 = alignDate( from, stepWidth, intvType, false );
-            const QDateTime d2 = alignDate( to, stepWidth, intvType, true );
+            const QDateTime d1 = alignDate( from, width, intvType, false );
+            const QDateTime d2 = alignDate( to, width, intvType, true );
 
             interval.setMinValue( QwtDate::toDouble( d1 ) );
             interval.setMaxValue( QwtDate::toDouble( d2 ) );
         }
 
-        stepSize = stepWidth * qwtMsecsForType( intvType );
+        stepSize = width * qwtMsecsForType( intvType );
     }
 
     x1 = interval.minValue();
@@ -1132,14 +1123,8 @@ QDateTime QwtDateScaleEngine::alignDate(
         }
         case QwtDate::Second:
         {
-            int second = dt.time().second();
-            if ( up )
-            {
-                if ( dt.time().msec() > 0 )
-                    second++;
-            }
-
-            const int s = qwtAlignValue( second, stepSize, up );
+            const int s = qwtAlignValue( 
+                dt.time().second(), stepSize, up );
 
             dt = QwtDate::floor( dt, QwtDate::Minute );
             dt = dt.addSecs( s );
@@ -1148,14 +1133,8 @@ QDateTime QwtDateScaleEngine::alignDate(
         }
         case QwtDate::Minute:
         {
-            int minute = dt.time().minute();
-            if ( up )
-            {
-                if ( dt.time().msec() > 0 || dt.time().second() > 0 )
-                    minute++;
-            }
-
-            const int m = qwtAlignValue( minute, stepSize, up );
+            const int m = qwtAlignValue( 
+                dt.time().minute(), stepSize, up );
 
             dt = QwtDate::floor( dt, QwtDate::Hour );
             dt = dt.addSecs( m * 60 );
@@ -1164,16 +1143,8 @@ QDateTime QwtDateScaleEngine::alignDate(
         }
         case QwtDate::Hour:
         {
-            int hour = dt.time().hour();
-            if ( up )
-            {
-                if ( dt.time().msec() > 0 || dt.time().second() > 0
-                    || dt.time().minute() > 0 )
-                {
-                    hour++;
-                }
-            }
-            const int h = qwtAlignValue( hour, stepSize, up );
+            const int h = qwtAlignValue( 
+                dt.time().hour(), stepSize, up );
 
             dt = QwtDate::floor( dt, QwtDate::Day );
             dt = dt.addSecs( h * 3600 );
@@ -1186,14 +1157,8 @@ QDateTime QwtDateScaleEngine::alignDate(
             // Aligning them to the beginning of the year avoids at least
             // jumping major ticks when panning
 
-            int day = dt.date().dayOfYear();
-            if ( up )
-            {
-                if ( dt.time() > QTime( 0, 0 ) )
-                    day++;
-            }
-
-            const int d = qwtAlignValue( day, stepSize, up );
+            const int d = qwtAlignValue(
+                dt.date().dayOfYear(), stepSize, up );
 
             dt = QwtDate::floor( dt, QwtDate::Year );
             dt = dt.addDays( d - 1 );
@@ -1205,16 +1170,7 @@ QDateTime QwtDateScaleEngine::alignDate(
             const QDate date = QwtDate::dateOfWeek0(
                 dt.date().year(), d_data->week0Type );
 
-            int numWeeks = date.daysTo( dt.date() ) / 7;
-            if ( up )
-            {
-                if ( dt.time() > QTime( 0, 0 ) ||
-                    date.daysTo( dt.date() ) % 7 )
-                {
-                    numWeeks++;
-                }
-            }
-
+            const int numWeeks = date.daysTo( dt.date() ) / 7;
             const int d = qwtAlignValue( numWeeks, stepSize, up ) * 7;
 
             dt = QwtDate::floor( dt, QwtDate::Day );
@@ -1225,17 +1181,8 @@ QDateTime QwtDateScaleEngine::alignDate(
         }
         case QwtDate::Month:
         {
-            int month = dt.date().month();
-            if ( up )
-            {
-                if ( dt.date().day() > 1 ||
-                    dt.time() > QTime( 0, 0 ) )
-                {
-                    month++;
-                }
-            }
-
-            const int m = qwtAlignValue( month - 1, stepSize, up );
+            const int m = qwtAlignValue( 
+                dt.date().month() - 1, stepSize, up );
 
             dt = QwtDate::floor( dt, QwtDate::Year );
             dt = dt.addMonths( m );
@@ -1244,17 +1191,8 @@ QDateTime QwtDateScaleEngine::alignDate(
         }
         case QwtDate::Year:
         {
-            int year = dateTime.date().year();
-            if ( up )
-            {
-                if ( dateTime.date().dayOfYear() > 1 ||
-                    dt.time() > QTime( 0, 0 ) )
-                {
-                    year++;
-                }
-            }
-
-            const int y = qwtAlignValue( year, stepSize, up );
+            const int y = qwtAlignValue(
+                dateTime.date().year(), stepSize, up );
 
             dt = QwtDate::floor( dt, QwtDate::Day );
             if ( y == 0 )

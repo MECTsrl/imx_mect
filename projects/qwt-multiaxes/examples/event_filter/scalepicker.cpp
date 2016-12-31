@@ -7,7 +7,7 @@
 ScalePicker::ScalePicker( QwtPlot *plot ):
     QObject( plot )
 {
-    for ( uint i = 0; i < QwtAxis::PosCount; i++ )
+    for ( uint i = 0; i < QwtPlot::axisCnt; i++ )
     {
         QwtScaleWidget *scaleWidget = plot->axisWidget( i );
         if ( scaleWidget )
@@ -53,25 +53,25 @@ void ScalePicker::mouseClicked( const QwtScaleWidget *scale, const QPoint &pos )
             case QwtScaleDraw::LeftScale:
             {
                 value = sd->scaleMap().invTransform( pos.y() );
-                axis = QwtAxis::yLeft;
+                axis = QwtPlot::yLeft;
                 break;
             }
             case QwtScaleDraw::RightScale:
             {
                 value = sd->scaleMap().invTransform( pos.y() );
-                axis = QwtAxis::yRight;
+                axis = QwtPlot::yRight;
                 break;
             }
             case QwtScaleDraw::BottomScale:
             {
                 value = sd->scaleMap().invTransform( pos.x() );
-                axis = QwtAxis::xBottom;
+                axis = QwtPlot::xBottom;
                 break;
             }
             case QwtScaleDraw::TopScale:
             {
                 value = sd->scaleMap().invTransform( pos.x() );
-                axis = QwtAxis::xTop;
+                axis = QwtPlot::xTop;
                 break;
             }
         }

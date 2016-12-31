@@ -40,7 +40,7 @@ public:
             // for resize and expose operations. Those might be expensive
             // when there are many points and the backing store of
             // the canvas is disabled. So in this application
-            // we better don't disable both backing stores.
+            // we better don't both backing stores.
 
             if ( testPaintAttribute( QwtPlotCanvas::BackingStore ) )
             {
@@ -88,9 +88,9 @@ Plot::Plot( QWidget *parent ):
 
     plotLayout()->setAlignCanvasToScales( true );
 
-    setAxisTitle( QwtAxis::xBottom, "Time [s]" );
-    setAxisScale( QwtAxis::xBottom, d_interval.minValue(), d_interval.maxValue() );
-    setAxisScale( QwtAxis::yLeft, -200.0, 200.0 );
+    setAxisTitle( QwtPlot::xBottom, "Time [s]" );
+    setAxisScale( QwtPlot::xBottom, d_interval.minValue(), d_interval.maxValue() );
+    setAxisScale( QwtPlot::yLeft, -200.0, 200.0 );
 
     QwtPlotGrid *grid = new QwtPlotGrid();
     grid->setPen( Qt::gray, 0.0, Qt::DotLine );
@@ -142,7 +142,7 @@ void Plot::setIntervalLength( double interval )
     if ( interval > 0.0 && interval != d_interval.width() )
     {
         d_interval.setMaxValue( d_interval.minValue() + interval );
-        setAxisScale( QwtAxis::xBottom,
+        setAxisScale( QwtPlot::xBottom,
             d_interval.minValue(), d_interval.maxValue() );
 
         replot();
@@ -197,7 +197,7 @@ void Plot::incrementInterval()
     // the autocalculation of the ticks and shift them
     // manually instead.
 
-    QwtScaleDiv scaleDiv = axisScaleDiv( QwtAxis::xBottom );
+    QwtScaleDiv scaleDiv = axisScaleDiv( QwtPlot::xBottom );
     scaleDiv.setInterval( d_interval );
 
     for ( int i = 0; i < QwtScaleDiv::NTickTypes; i++ )
@@ -207,7 +207,7 @@ void Plot::incrementInterval()
             ticks[j] += d_interval.width();
         scaleDiv.setTicks( i, ticks );
     }
-    setAxisScaleDiv( QwtAxis::xBottom, scaleDiv );
+    setAxisScaleDiv( QwtPlot::xBottom, scaleDiv );
 
     d_origin->setValue( d_interval.minValue() + d_interval.width() / 2.0, 0.0 );
 

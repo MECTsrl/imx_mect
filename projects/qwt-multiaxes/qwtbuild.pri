@@ -15,7 +15,6 @@ CONFIG           += qt
 CONFIG           += warn_on
 CONFIG           += no_keywords
 CONFIG           += silent
-CONFIG           -= depend_includepath
 
 ######################################################################
 # release/debug mode
@@ -51,24 +50,11 @@ linux-g++ | linux-g++-64 {
     #QMAKE_CXXFLAGS   *= -Wsign-conversion 
     #QMAKE_CXXFLAGS   *= -Wlogical-op
     #QMAKE_CXXFLAGS   *= -Werror=format-security
-    #QMAKE_CXXFLAGS   *= -Woverloaded-virtual
     #QMAKE_CXXFLAGS   *= -std=c++11
-
-    #QMAKE_CXXFLAGS_DEBUG   *= -fsanitize=address -fno-omit-frame-pointer 
-    #QMAKE_CXXFLAGS_DEBUG   *= -fsanitize=address -fno-omit-frame-pointer
-    #QMAKE_CXXFLAGS_DEBUG   *= -fsanitize=address
-
-    #QMAKE_CXXFLAGS_RELEASE  *= -O3
-    #QMAKE_CXXFLAGS_RELEASE  *= -Ofast
 
     # when using the gold linker ( Qt < 4.8 ) - might be 
     # necessary on non linux systems too
     #QMAKE_LFLAGS += -lrt
-}
-
-linux-clang {
-
-    #QMAKE_CXXFLAGS_RELEASE  *= -O3
 }
 
 ######################################################################
@@ -83,4 +69,18 @@ RCC_DIR      = resources
     # in case of debug_and_release object files
     # are built in the release and debug subdirectories
     OBJECTS_DIR       = obj
+}
+
+unix {
+
+    exists( $${QMAKE_LIBDIR_QT}/libqwt.* ) {
+
+        # On some Linux distributions the Qwt libraries are installed 
+        # in the same directory as the Qt libraries. Unfortunately
+        # qmake always adds QMAKE_LIBDIR_QT at the beginning of the 
+        # linker path, so that the installed libraries will be
+        # used instead of the local ones.
+
+        error( "local build will conflict with $${QMAKE_LIBDIR_QT}/libqwt.*" )
+    }
 }

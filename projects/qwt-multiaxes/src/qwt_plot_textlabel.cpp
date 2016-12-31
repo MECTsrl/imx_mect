@@ -183,23 +183,8 @@ void QwtPlotTextLabel::draw( QPainter *painter,
     const QRectF rect = textRect( canvasRect.adjusted( m, m, -m, -m ),
         d_data->text.textSize( painter->font() ) );
 
-    bool doCache = QwtPainter::roundingAlignment( painter );
-    if ( doCache )
-    {
-        switch( painter->paintEngine()->type() )
-        {
-            case QPaintEngine::Picture:
-            case QPaintEngine::User: // usually QwtGraphic
-            {
-                // don't use a cache for record/replay devices
-                doCache = false;
-                break;
-            }
-            default:;
-        }
-    }
-
-    if ( doCache )
+    const bool doAlign = QwtPainter::roundingAlignment( painter );
+    if ( doAlign )
     {
         // when the paint device is aligning it is not one
         // where scalability matters ( PDF, SVG ).

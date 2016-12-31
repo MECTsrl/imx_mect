@@ -508,22 +508,6 @@ QRectF QwtScaleWidget::colorBarRect( const QRectF& rect ) const
 }
 
 /*!
-  Change Event handler
-  \param event Change event
-
-  Invalidates internal caches if necessary
-*/
-void QwtScaleWidget::changeEvent( QEvent *event )
-{
-    if ( event->type() == QEvent::LocaleChange )
-    {
-        d_data->scaleDraw->invalidateCache();
-    }
-
-    QWidget::changeEvent( event );
-}
-
-/*!
   Event handler for resize events
   \param event Resize event
 */

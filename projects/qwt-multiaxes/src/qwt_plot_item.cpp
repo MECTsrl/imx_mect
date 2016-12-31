@@ -26,8 +26,8 @@ public:
         renderHints( 0 ),
         renderThreadCount( 1 ),
         z( 0.0 ),
-        xAxis( QwtAxis::xBottom ),
-        yAxis( QwtAxis::yLeft ),
+        xAxis( QwtPlot::xBottom ),
+        yAxis( QwtPlot::yLeft ),
         legendIconSize( 8, 8 )
     {
     }
@@ -44,8 +44,8 @@ public:
 
     double z;
 
-    QwtAxisId xAxis;
-    QwtAxisId yAxis;
+    int xAxis;
+    int yAxis;
 
     QwtText title;
     QSize legendIconSize;
@@ -468,23 +468,18 @@ void QwtPlotItem::legendChanged()
 
    The item will painted according to the coordinates of its Axes.
 
-   \param xAxis X Axis ( QwtAxis::xBottom or QwtAxis::xTop )
-   \param yAxis Y Axis ( QwtAxis::yLeft or QwtAxis::yRight )
+   \param xAxis X Axis ( QwtPlot::xBottom or QwtPlot::xTop )
+   \param yAxis Y Axis ( QwtPlot::yLeft or QwtPlot::yRight )
 
-   \sa setXAxis(), setYAxis(), xAxis(), yAxis()
+   \sa setXAxis(), setYAxis(), xAxis(), yAxis(), QwtPlot::Axis
 */
-void QwtPlotItem::setAxes( QwtAxisId xAxis, QwtAxisId yAxis )
+void QwtPlotItem::setAxes( int xAxis, int yAxis )
 {
-    if ( xAxis.id >= 0 &&
-        ( xAxis.pos == QwtAxis::xBottom || xAxis.pos == QwtAxis::xTop ) )
-    {
+    if ( xAxis == QwtPlot::xBottom || xAxis == QwtPlot::xTop )
         d_data->xAxis = xAxis;
-    }
 
-    if ( yAxis.id >= 0 && QwtAxis::isYAxis( yAxis.pos ) )
-    {
+    if ( yAxis == QwtPlot::yLeft || yAxis == QwtPlot::yRight )
         d_data->yAxis = yAxis;
-    }
 
     itemChanged();
 }
@@ -494,18 +489,15 @@ void QwtPlotItem::setAxes( QwtAxisId xAxis, QwtAxisId yAxis )
 
    The item will painted according to the coordinates its Axes.
 
-   \param axis X Axis ( QwtAxis::xBottom or QwtAxis::xTop )
-   \sa setAxes(), setYAxis(), xAxis()
+   \param axis X Axis ( QwtPlot::xBottom or QwtPlot::xTop )
+   \sa setAxes(), setYAxis(), xAxis(), QwtPlot::Axis
 */
-void QwtPlotItem::setXAxis( QwtAxisId axisId )
+void QwtPlotItem::setXAxis( int axis )
 {
-    if ( axisId.pos == QwtAxis::xBottom || axisId.pos == QwtAxis::xTop )
+    if ( axis == QwtPlot::xBottom || axis == QwtPlot::xTop )
     {
-        if ( axisId.id >= 0 )
-        {
-            d_data->xAxis = axisId;
-            itemChanged();
-        }
+        d_data->xAxis = axis;
+        itemChanged();
     }
 }
 
@@ -514,29 +506,26 @@ void QwtPlotItem::setXAxis( QwtAxisId axisId )
 
    The item will painted according to the coordinates its Axes.
 
-   \param axis Y Axis ( QwtAxis::yLeft or QwtAxis::yRight )
-   \sa setAxes(), setXAxis(), yAxis()
+   \param axis Y Axis ( QwtPlot::yLeft or QwtPlot::yRight )
+   \sa setAxes(), setXAxis(), yAxis(), QwtPlot::Axis
 */
-void QwtPlotItem::setYAxis( QwtAxisId axisId )
+void QwtPlotItem::setYAxis( int axis )
 {
-    if ( QwtAxis::isYAxis( axisId.pos ) )
+    if ( axis == QwtPlot::yLeft || axis == QwtPlot::yRight )
     {
-        if ( axisId.id >= 0 )
-        {
-            d_data->yAxis = axisId;
-            itemChanged();
-        }
+        d_data->yAxis = axis;
+        itemChanged();
     }
 }
 
 //! Return xAxis
-QwtAxisId QwtPlotItem::xAxis() const
+int QwtPlotItem::xAxis() const
 {
     return d_data->xAxis;
 }
 
 //! Return yAxis
-QwtAxisId QwtPlotItem::yAxis() const
+int QwtPlotItem::yAxis() const
 {
     return d_data->yAxis;
 }

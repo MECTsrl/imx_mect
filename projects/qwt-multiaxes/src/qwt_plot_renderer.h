@@ -11,11 +11,11 @@
 #define QWT_PLOT_RENDERER_H
 
 #include "qwt_global.h"
-#include "qwt_scale_map_table.h"
 #include <qobject.h>
 #include <qsize.h>
 
 class QwtPlot;
+class QwtScaleMap;
 class QRectF;
 class QPainter;
 class QPaintDevice;
@@ -139,12 +139,12 @@ public:
         QPainter *, const QRectF & ) const;
 
     virtual void renderScale( const QwtPlot *, QPainter *,
-        QwtAxisId axisId, int startDist, int endDist,
+        int axisId, int startDist, int endDist,
         int baseDist, const QRectF & ) const;
 
     virtual void renderCanvas( const QwtPlot *,
         QPainter *, const QRectF &canvasRect,
-        const QwtScaleMapTable & ) const;
+        const QwtScaleMap* maps ) const;
 
     virtual void renderLegend( 
         const QwtPlot *, QPainter *, const QRectF & ) const;
@@ -153,10 +153,11 @@ public:
         const QSizeF &sizeMM = QSizeF( 300, 200 ), int resolution = 85 );
 
 private:
-    QwtScaleMapTable buildCanvasMaps( const QwtPlot *, const QRectF & ) const;
+    void buildCanvasMaps( const QwtPlot *,
+        const QRectF &, QwtScaleMap maps[] ) const;
 
     bool updateCanvasMargins( QwtPlot *,
-        const QRectF &, const QwtScaleMapTable & ) const;
+        const QRectF &, const QwtScaleMap maps[] ) const;
 
 private:
     class PrivateData;

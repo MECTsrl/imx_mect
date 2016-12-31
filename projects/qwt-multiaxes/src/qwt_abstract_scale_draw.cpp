@@ -206,16 +206,12 @@ void QwtAbstractScaleDraw::draw( QPainter *painter,
         for ( int tickType = QwtScaleDiv::MinorTick;
             tickType < QwtScaleDiv::NTickTypes; tickType++ )
         {
-            const double tickLen = d_data->tickLength[tickType];
-            if ( tickLen <= 0.0 )
-                continue;
-
             const QList<double> &ticks = d_data->scaleDiv.ticks( tickType );
             for ( int i = 0; i < ticks.count(); i++ )
             {
                 const double v = ticks[i];
                 if ( d_data->scaleDiv.contains( v ) )
-                    drawTick( painter, v, tickLen );
+                    drawTick( painter, v, d_data->tickLength[tickType] );
             }
         }
 
@@ -373,6 +369,9 @@ double QwtAbstractScaleDraw::maxTickLength() const
 */
 QwtText QwtAbstractScaleDraw::label( double value ) const
 {
+    if ( qFuzzyCompare( value + 1.0, 1.0 ) )
+        value = 0.0; 
+
     return QLocale().toString( value );
 }
 

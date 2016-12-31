@@ -17,8 +17,8 @@ BarChart::BarChart( QWidget *parent ):
 
     setTitle( "Bar Chart" );
 
-    setAxisTitle( QwtAxis::yLeft, "Whatever" );
-    setAxisTitle( QwtAxis::xBottom, "Whatever" );
+    setAxisTitle( QwtPlot::yLeft, "Whatever" );
+    setAxisTitle( QwtPlot::xBottom, "Whatever" );
 
     d_barChartItem = new QwtPlotMultiBarChart( "Bar Chart " );
     d_barChartItem->setLayoutPolicy( QwtPlotMultiBarChart::AutoAdjustSamples );
@@ -88,19 +88,19 @@ void BarChart::setMode( int mode )
 
 void BarChart::setOrientation( int orientation )
 {
-    QwtAxis::Position axis1, axis2;
+    QwtPlot::Axis axis1, axis2;
 
     if ( orientation == 0 )
     {
-        axis1 = QwtAxis::xBottom;
-        axis2 = QwtAxis::yLeft;
+        axis1 = QwtPlot::xBottom;
+        axis2 = QwtPlot::yLeft;
 
         d_barChartItem->setOrientation( Qt::Vertical );
     }
     else
     {
-        axis1 = QwtAxis::yLeft;
-        axis2 = QwtAxis::xBottom;
+        axis1 = QwtPlot::yLeft;
+        axis2 = QwtPlot::xBottom;
 
         d_barChartItem->setOrientation( Qt::Horizontal );
     }

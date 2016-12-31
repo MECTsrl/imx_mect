@@ -131,7 +131,7 @@ public:
        Constructor
        \param samples Array of samples
     */
-    explicit QwtArraySeriesData( const QVector<T> &samples );
+    QwtArraySeriesData( const QVector<T> &samples );
 
     /*!
       Assign an array of samples

@@ -559,11 +559,6 @@ void QwtPlotLegendItem::draw( QPainter *painter,
     Q_UNUSED( yMap );
 
     d_data->layout->setGeometry( geometry( canvasRect ) );
-    if ( d_data->layout->geometry().isEmpty() )
-    {
-        // don't draw a legend when having no content
-        return;
-    }
 
     if ( d_data->backgroundMode == QwtPlotLegendItem::LegendBackground )
         drawBackground( painter, d_data->layout->geometry() );
@@ -682,8 +677,6 @@ void QwtPlotLegendItem::updateLegend( const QwtPlotItem *plotItem,
             d_data->layout->removeItem( layoutItems[i] );
             delete layoutItems[i];
         }
-        layoutItems.clear();
-
         if ( it != d_data->map.end() )
             d_data->map.remove( plotItem );
 

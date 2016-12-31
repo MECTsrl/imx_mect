@@ -133,7 +133,7 @@ protected:
         const QSize &imageSize, double pixelSize) const;
 
 private:
-    explicit QwtPlotRasterItem( const QwtPlotRasterItem & );
+    QwtPlotRasterItem( const QwtPlotRasterItem & );
     QwtPlotRasterItem &operator=( const QwtPlotRasterItem & );
 
     void init();

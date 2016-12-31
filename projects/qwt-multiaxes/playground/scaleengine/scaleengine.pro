@@ -13,7 +13,7 @@ TARGET       = scaleengine
 
 HEADERS = \
     transformplot.h \
-	plot.h \
+    plot.h \
     mainwindow.h
 
 SOURCES = \

@@ -45,9 +45,7 @@ public:
     PrivateData():
         attributes( 0 ),
         hasClipping(false),
-        seriesItem( NULL ),
-        from( 0 ),
-        to( 0 )
+        seriesItem( NULL )
     {
     }
 
@@ -189,8 +187,6 @@ void QwtPlotDirectPainter::drawSeries(
             painter.setClipRegion( d_data->clipRegion );
 
         qwtRenderItem( &painter, canvasRect, seriesItem, from, to );
-
-        painter.end();
 
         if ( testAttribute( QwtPlotDirectPainter::FullRepaint ) )
         {

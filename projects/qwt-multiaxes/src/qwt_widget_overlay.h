@@ -111,7 +111,7 @@ public:
         DrawOverlay
     };
 
-    explicit QwtWidgetOverlay( QWidget* );
+    QwtWidgetOverlay( QWidget* );
     virtual ~QwtWidgetOverlay();
 
     void setMaskMode( MaskMode );
@@ -120,11 +120,9 @@ public:
     void setRenderMode( RenderMode );
     RenderMode renderMode() const;
 
+    void updateOverlay();
 
     virtual bool eventFilter( QObject *, QEvent *);
-
-public Q_SLOTS:
-    void updateOverlay();
 
 protected:
     virtual void paintEvent( QPaintEvent* event );

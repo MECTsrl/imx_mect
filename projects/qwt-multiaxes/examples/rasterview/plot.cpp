@@ -74,26 +74,26 @@ Plot::Plot( QWidget *parent ):
 
     const QwtInterval zInterval = d_spectrogram->data()->interval( Qt::ZAxis );
     // A color bar on the right axis
-    QwtScaleWidget *rightAxis = axisWidget( QwtAxis::yRight );
+    QwtScaleWidget *rightAxis = axisWidget( QwtPlot::yRight );
     rightAxis->setColorBarEnabled( true );
     rightAxis->setColorBarWidth( 40 );
     rightAxis->setColorMap( zInterval, new ColorMap() );
 
-    setAxisScale( QwtAxis::yRight, zInterval.minValue(), zInterval.maxValue() );
-    setAxisVisible( QwtAxis::yRight );
+    setAxisScale( QwtPlot::yRight, zInterval.minValue(), zInterval.maxValue() );
+    enableAxis( QwtPlot::yRight );
 
     plotLayout()->setAlignCanvasToScales( true );
 
-    setAxisScale( QwtAxis::xBottom, 0.0, 3.0 );
-    setAxisMaxMinor( QwtAxis::xBottom, 0 );
-    setAxisScale( QwtAxis::yLeft, 0.0, 3.0 );
-    setAxisMaxMinor( QwtAxis::yLeft, 0 );
+    setAxisScale( QwtPlot::xBottom, 0.0, 3.0 );
+    setAxisMaxMinor( QwtPlot::xBottom, 0 );
+    setAxisScale( QwtPlot::yLeft, 0.0, 3.0 );
+    setAxisMaxMinor( QwtPlot::yLeft, 0 );
 
     QwtPlotMagnifier *magnifier = new QwtPlotMagnifier( canvas );
-    magnifier->setAxisEnabled( QwtAxis::yRight, false );
+    magnifier->setAxisEnabled( QwtPlot::yRight, false );
 
     QwtPlotPanner *panner = new QwtPlotPanner( canvas );
-    panner->setAxisEnabled( QwtAxis::yRight, false );
+    panner->setAxisEnabled( QwtPlot::yRight, false );
 }
 
 void Plot::exportPlot()

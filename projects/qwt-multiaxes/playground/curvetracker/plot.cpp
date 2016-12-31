@@ -19,7 +19,7 @@ Plot::Plot( QWidget *parent ):
     // we want to have the axis scales like a frame around the
     // canvas
     plotLayout()->setAlignCanvasToScales( true );
-    for ( int axis = 0; axis < QwtAxis::PosCount; axis++ )
+    for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
         axisWidget( axis )->setMargin( 0 );
 
     QwtPlotCanvas *canvas = new QwtPlotCanvas();
@@ -27,7 +27,7 @@ Plot::Plot( QWidget *parent ):
     canvas->setFrameStyle( QFrame::NoFrame );
     setCanvas( canvas );
 
-    setAxisScale( QwtAxis::yLeft, 0.0, 10.0 );
+    setAxisScale( QwtPlot::yLeft, 0.0, 10.0 );
 
     // a title 
     QwtText title( "Picker Demo" );

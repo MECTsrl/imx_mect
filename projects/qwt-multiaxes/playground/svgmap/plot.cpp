@@ -19,8 +19,8 @@ Plot::Plot( QWidget *parent ):
        hide the axes.
      */
     plotLayout()->setCanvasMargin( 0 );
-    for ( int axis = 0; axis < QwtAxis::PosCount; axis++ )
-        setAxisVisible( axis, false );
+    for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
+        enableAxis( axis, false );
 #else
     QwtPlotGrid *grid = new QwtPlotGrid();
     grid->attach( this );
@@ -72,8 +72,8 @@ void Plot::loadSVG( const QString &fileName )
 
 void Plot::rescale()
 {
-    setAxisScale( QwtAxis::xBottom,
+    setAxisScale( QwtPlot::xBottom,
         d_mapRect.left(), d_mapRect.right() );
-    setAxisScale( QwtAxis::yLeft,
+    setAxisScale( QwtPlot::yLeft,
         d_mapRect.top(), d_mapRect.bottom() );
 }

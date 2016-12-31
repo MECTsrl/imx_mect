@@ -12,7 +12,6 @@
 
 #include "qwt_global.h"
 #include "qwt_panner.h"
-#include "qwt_axis_id.h"
 
 class QwtPlot;
 
@@ -43,8 +42,8 @@ public:
     QwtPlot *plot();
     const QwtPlot *plot() const;
 
-    void setAxisEnabled( QwtAxisId axisId, bool on );
-    bool isAxisEnabled( QwtAxisId ) const;
+    void setAxisEnabled( int axis, bool on );
+    bool isAxisEnabled( int axis ) const;
 
 protected Q_SLOTS:
     virtual void moveCanvas( int dx, int dy );

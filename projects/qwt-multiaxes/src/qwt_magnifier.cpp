@@ -27,8 +27,7 @@ public:
         zoomInKeyModifiers( Qt::NoModifier ),
         zoomOutKey( Qt::Key_Minus ),
         zoomOutKeyModifiers( Qt::NoModifier ),
-        mousePressed( false ),
-        hasMouseTracking( false )
+        mousePressed( false )
     {
     }
 

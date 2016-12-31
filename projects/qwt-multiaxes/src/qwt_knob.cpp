@@ -267,9 +267,6 @@ void QwtKnob::setScaleDraw( QwtRoundScaleDraw *scaleDraw )
 {
     setAbstractScaleDraw( scaleDraw );
     setTotalAngle( d_data->totalAngle );
-
-    updateGeometry();
-    update();
 }
 
 /*!
@@ -359,7 +356,7 @@ bool QwtKnob::isScrollPosition( const QPoint &pos ) const
     if ( region.contains( pos ) && ( pos != kr.center() ) )
     {
         const double angle = QLineF( kr.center(), pos ).angle();
-        const double valueAngle = qwtToDegrees( scaleMap().transform( value() ) );
+        const double valueAngle = qwtToDegrees( transform( value() ) );
 
         d_data->mouseOffset = qwtNormalizeDegrees( angle - valueAngle );
 
@@ -386,7 +383,7 @@ double QwtKnob::scrolledTo( const QPoint &pos ) const
     {
         angle = qwtToDegrees( angle );
 
-        const double v = scaleMap().transform( value() );
+        const double v = transform( value() );
 
         int numTurns = qFloor( ( v - scaleMap().p1() ) / 360.0 );
 
@@ -411,24 +408,16 @@ double QwtKnob::scrolledTo( const QPoint &pos ) const
     {
         angle = qwtToScaleAngle( angle );
 
-        double boundedAngle = qBound( scaleMap().p1(), angle, scaleMap().p2() );
+        const double boundedAngle = 
+            qBound( scaleMap().p1(), angle, scaleMap().p2() );
 
         if ( !wrapping() )
-        {
-            const double currentAngle = scaleMap().transform( value() );
-
-            if ( ( currentAngle > 90.0 ) && ( boundedAngle < -90.0 ) )
-                boundedAngle = scaleMap().p2();
-            else if ( ( currentAngle < -90.0 ) && ( boundedAngle > 90.0 ) )
-                boundedAngle = scaleMap().p1();
-
             d_data->mouseOffset += ( boundedAngle - angle );
-        }
 
         angle = boundedAngle;
     }
 
-    return scaleMap().invTransform( angle );
+    return invTransform( angle );
 }
 
 /*! 
@@ -479,7 +468,7 @@ void QwtKnob::paintEvent( QPaintEvent *event )
     drawKnob( &painter, knobRect );
 
     drawMarker( &painter, knobRect, 
-        qwtNormalizeDegrees( scaleMap().transform( value() ) ) );
+        qwtNormalizeDegrees( transform( value() ) ) );
 
     painter.setRenderHint( QPainter::Antialiasing, false );
 
@@ -802,6 +791,7 @@ void QwtKnob::setBorderWidth( int borderWidth )
 
     updateGeometry();
     update();
+
 }
 
 //! Return the border width

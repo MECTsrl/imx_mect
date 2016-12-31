@@ -36,7 +36,7 @@ public:
         QwtText lbl;
 
         const int index = qRound( value );
-        if ( index >= 0 && index < d_labels.size() )
+        if ( index >= 0 && index <= d_labels.size() )
         {
             lbl = d_labels[ index ];
         }
@@ -56,10 +56,6 @@ public:
     {
         setLegendMode( QwtPlotBarChart::LegendBarTitles );
         setLegendIconSize( QSize( 10, 14 ) );
-        setLayoutPolicy( AutoAdjustSamples );
-        setLayoutHint( 4.0 ); // minimum width for a single bar
-		
-		setSpacing( 10 ); // spacing between bars
     }
 
     void addDistro( const QString &distro, const QColor &color )
@@ -166,8 +162,8 @@ void BarChart::setOrientation( int o )
     const Qt::Orientation orientation =
         ( o == 0 ) ? Qt::Vertical : Qt::Horizontal;
 
-    int axis1 = QwtAxis::xBottom;
-    int axis2 = QwtAxis::yLeft;
+    int axis1 = QwtPlot::xBottom;
+    int axis2 = QwtPlot::yLeft;
 
     if ( orientation == Qt::Horizontal )
         qSwap( axis1, axis2 );

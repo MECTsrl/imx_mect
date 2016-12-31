@@ -1,12 +1,3 @@
-/* -*- mode: C++ ; c-file-style: "stroustrup" -*- *****************************
- * Qwt Widget Library
- * Copyright (C) 1997   Josef Wilgen
- * Copyright (C) 2002   Uwe Rathmann
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the Qwt License, Version 1.0
- *****************************************************************************/
-
 #ifndef _QWT_DATE_SCALE_ENGINE_H_
 #define _QWT_DATE_SCALE_ENGINE_H_ 1
 
@@ -41,7 +32,7 @@
 class QWT_EXPORT QwtDateScaleEngine: public QwtLinearScaleEngine
 {
 public:
-    explicit QwtDateScaleEngine( Qt::TimeSpec = Qt::LocalTime );
+    QwtDateScaleEngine( Qt::TimeSpec = Qt::LocalTime );
     virtual ~QwtDateScaleEngine();
 
     void setTimeSpec( Qt::TimeSpec );

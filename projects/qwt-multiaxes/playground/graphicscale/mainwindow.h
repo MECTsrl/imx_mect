@@ -16,7 +16,7 @@ private Q_SLOTS:
 
 private:
     void loadSVG( const QString & );
-	void loadPath( const QPainterPath & );
+    void loadPath( const QPainterPath & );
 
     Canvas *d_canvas[2];
 };

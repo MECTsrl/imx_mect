@@ -41,11 +41,7 @@ void CpuStat::statistic( double &user, double &system )
 void CpuStat::lookUp( double values[NValues] ) const
 {
     QFile file( "/proc/stat" );
-#if 1
     if ( !file.open( QIODevice::ReadOnly ) )
-#else
-    if ( true )
-#endif
     {
         static double dummyValues[][NValues] =
         {

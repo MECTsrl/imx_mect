@@ -30,8 +30,8 @@ public:
         delete scaleDraw;
     }
 
-    QwtInterval scaleInterval( const QRectF &,
-        const QwtScaleMap &, const QwtScaleMap & ) const;
+    void updateBorders( const QRectF &,
+        const QwtScaleMap &, const QwtScaleMap & );
 
     QPalette palette;
     QFont font;
@@ -39,10 +39,11 @@ public:
     int borderDistance;
     bool scaleDivFromAxis;
     QwtScaleDraw *scaleDraw;
+    QRectF canvasRectCache;
 };
 
-QwtInterval QwtPlotScaleItem::PrivateData::scaleInterval( const QRectF &canvasRect,
-    const QwtScaleMap &xMap, const QwtScaleMap &yMap ) const
+void QwtPlotScaleItem::PrivateData::updateBorders( const QRectF &canvasRect,
+    const QwtScaleMap &xMap, const QwtScaleMap &yMap )
 {
     QwtInterval interval;
     if ( scaleDraw->orientation() == Qt::Horizontal )
@@ -56,7 +57,9 @@ QwtInterval QwtPlotScaleItem::PrivateData::scaleInterval( const QRectF &canvasRe
         interval.setMaxValue( yMap.invTransform( canvasRect.top() ) );
     }
 
-    return interval;
+    QwtScaleDiv scaleDiv = scaleDraw->scaleDiv();
+    scaleDiv.setInterval( interval );
+    scaleDraw->setScaleDiv( scaleDiv );
 }
 
 /*!
@@ -345,18 +348,12 @@ void QwtPlotScaleItem::draw( QPainter *painter,
     const QwtScaleMap &xMap, const QwtScaleMap &yMap,
     const QRectF &canvasRect ) const
 {
-    QwtScaleDraw *sd = d_data->scaleDraw;
-
     if ( d_data->scaleDivFromAxis )
     {
-        const QwtInterval interval = 
-            d_data->scaleInterval( canvasRect, xMap, yMap );
-
-        if ( interval != sd->scaleDiv().interval() )
+        if ( canvasRect != d_data->canvasRectCache )
         {
-            QwtScaleDiv scaleDiv = sd->scaleDiv();
-            scaleDiv.setInterval( interval );
-            sd->setScaleDiv( scaleDiv );
+            d_data->updateBorders( canvasRect, xMap, yMap );
+            d_data->canvasRectCache = canvasRect;
         }
     }
 
@@ -364,6 +361,7 @@ void QwtPlotScaleItem::draw( QPainter *painter,
     pen.setStyle( Qt::SolidLine );
     painter->setPen( pen );
 
+    QwtScaleDraw *sd = d_data->scaleDraw;
     if ( sd->orientation() == Qt::Horizontal )
     {
         double y;
@@ -443,36 +441,18 @@ void QwtPlotScaleItem::draw( QPainter *painter,
 void QwtPlotScaleItem::updateScaleDiv( const QwtScaleDiv& xScaleDiv,
     const QwtScaleDiv& yScaleDiv )
 {
-    QwtScaleDraw *scaleDraw = d_data->scaleDraw;
-
-    if ( d_data->scaleDivFromAxis && scaleDraw )
+    QwtScaleDraw *sd = d_data->scaleDraw;
+    if ( d_data->scaleDivFromAxis && sd )
     {
-        const QwtScaleDiv &scaleDiv = 
-            scaleDraw->orientation() == Qt::Horizontal ? xScaleDiv : yScaleDiv;
+        sd->setScaleDiv(
+            sd->orientation() == Qt::Horizontal ? xScaleDiv : yScaleDiv );
 
         const QwtPlot *plt = plot();
         if ( plt != NULL )
         {
-            const QRectF canvasRect = plt->canvas()->contentsRect();
-
-            const QwtInterval interval = d_data->scaleInterval( 
-                canvasRect, plt->canvasMap( xAxis() ), plt->canvasMap( yAxis() ) );
-
-            QwtScaleDiv sd = scaleDiv;
-            sd.setInterval( interval );
-
-            if ( sd != scaleDraw->scaleDiv() )
-            {
-                // the internal label cache of QwtScaleDraw
-                // is cleared here, so better avoid pointless
-                // assignments.
-
-                scaleDraw->setScaleDiv( sd );
-            }
-        }
-        else
-        {
-            scaleDraw->setScaleDiv( scaleDiv );
+            d_data->updateBorders( plt->canvas()->contentsRect(),
+                plt->canvasMap( xAxis() ), plt->canvasMap( yAxis() ) );
+            d_data->canvasRectCache = QRect();
         }
     }
 }

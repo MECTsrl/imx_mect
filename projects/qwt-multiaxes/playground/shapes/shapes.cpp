@@ -35,11 +35,11 @@ Plot::Plot( QWidget *parent ):
     insertLegend( new QwtLegend(), QwtPlot::RightLegend );
 
     // axes
-    setAxisTitle( QwtAxis::xBottom, "x -->" );
-    setAxisTitle( QwtAxis::yLeft, "y -->" );
+    setAxisTitle( xBottom, "x -->" );
+    setAxisTitle( yLeft, "y -->" );
 #if 0
-    setAxisScaleEngine( QwtAxis::xBottom, new QwtLog10ScaleEngine );
-    setAxisScaleEngine( QwtAxis::yLeft, new QwtLog10ScaleEngine );
+    setAxisScaleEngine( xBottom, new QwtLog10ScaleEngine );
+    setAxisScaleEngine( yLeft, new QwtLog10ScaleEngine );
 #endif
 
     populate();

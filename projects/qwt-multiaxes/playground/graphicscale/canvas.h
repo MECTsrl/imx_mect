@@ -25,9 +25,9 @@ private:
     void render( QPainter *, const QRect & ) const;
 
     const Mode d_mode;
-	union
-	{
-    	QSvgRenderer *d_renderer;
-		QwtGraphic *d_graphic;
-	};
+    union
+    {
+        QSvgRenderer *d_renderer;
+        QwtGraphic *d_graphic;
+    };
 };

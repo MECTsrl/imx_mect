@@ -475,7 +475,7 @@ m4trace:configure.ac:200: -1- AC_SUBST([LT_RELEASE])
 m4trace:configure.ac:201: -1- AC_SUBST([LT_CURRENT])
 m4trace:configure.ac:202: -1- AC_SUBST([LT_REVISION])
 m4trace:configure.ac:203: -1- AC_SUBST([LT_AGE])
-m4trace:configure.ac:205: -1- AC_CONFIG_FILES([Makefile
+m4trace:configure.ac:210: -1- AC_CONFIG_FILES([Makefile
                  etc/Makefile
                  plugins/Makefile
                  src/Makefile

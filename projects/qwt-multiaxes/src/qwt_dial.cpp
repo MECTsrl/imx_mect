@@ -103,6 +103,7 @@ public:
     double minScaleArc;
     double maxScaleArc;
 
+    double scalePenWidth;
     QwtDialNeedle *needle;
 
     double arcOffset;
@@ -463,7 +464,7 @@ void QwtDial::drawNeedle( QPainter *painter ) const
     painter->save();
     painter->setRenderHint( QPainter::Antialiasing, true );
     drawNeedle( painter, sr.center(), 0.5 * sr.width(),
-        scaleMap().transform( value() ) + 270.0, colorGroup );
+        transform( value() ) + 270.0, colorGroup );
     painter->restore();
 }
 
@@ -730,7 +731,7 @@ bool QwtDial::isScrollPosition( const QPoint &pos ) const
             angle = 360.0 - angle;
 
         double valueAngle = 
-            qwtNormalizeDegrees( 90.0 - scaleMap().transform( value() ) );
+            qwtNormalizeDegrees( 90.0 - transform( value() ) );
 
         d_data->mouseOffset = qwtNormalizeDegrees( angle - valueAngle );
         d_data->arcOffset = scaleMap().p1();
@@ -771,7 +772,7 @@ double QwtDial::scrolledTo( const QPoint &pos ) const
         {
             double boundedAngle = angle;
 
-            const double arc = angle - scaleMap().transform( value() );
+            const double arc = angle - transform( value() );
             if ( qAbs( arc ) > 180.0 )
             {
                 boundedAngle = ( arc > 0 ) 
@@ -794,7 +795,7 @@ double QwtDial::scrolledTo( const QPoint &pos ) const
         angle = boundedAngle;
     }
 
-    return scaleMap().invTransform( angle );
+    return invTransform( angle );
 }
 
 /*!
@@ -862,7 +863,7 @@ void QwtDial::sliderChange()
 
     if ( mode() == RotateScale )
     {
-        const double arc = scaleMap().transform( value() ) - scaleMap().p1();
+        const double arc = transform( value() ) - scaleMap().p1();
         setAngleRange( d_data->origin - arc,
             d_data->maxScaleArc - d_data->minScaleArc );
     }

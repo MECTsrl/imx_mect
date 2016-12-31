@@ -1,0 +1,544 @@
+# Makefile.in generated automatically by automake 1.4-p5 from Makefile.am
+
+# Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+# Makefile for rpm library.
+
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+DESTDIR =
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+transform = @program_transform_name@
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+build_alias = @build_alias@
+build_triplet = @build@
+host_alias = @host_alias@
+host_triplet = @host@
+target_alias = @target_alias@
+target_triplet = @target@
+AR = @AR@
+AS = @AS@
+AWK = @AWK@
+BUILD_INCLUDED_LIBINTL = @BUILD_INCLUDED_LIBINTL@
+BUILD_RPMNLSTOOLS = @BUILD_RPMNLSTOOLS@
+BZIP2BIN = @BZIP2BIN@
+CATALOGS = @CATALOGS@
+CATOBJEXT = @CATOBJEXT@
+CC = @CC@
+CPP = @CPP@
+CSCOPE = @CSCOPE@
+CTAGS = @CTAGS@
+CXX = @CXX@
+DATADIRNAME = @DATADIRNAME@
+DBLIBOBJS = @DBLIBOBJS@
+DBLIBSRCS = @DBLIBSRCS@
+DLLTOOL = @DLLTOOL@
+ECHO = @ECHO@
+EXEEXT = @EXEEXT@
+FINDPROVIDES = @FINDPROVIDES@
+FINDREQUIRES = @FINDREQUIRES@
+FIXPERMS = @FIXPERMS@
+GENCAT = @GENCAT@
+GLIBC21 = @GLIBC21@
+GMOFILES = @GMOFILES@
+GMSGFMT = @GMSGFMT@
+GZIPBIN = @GZIPBIN@
+INCPATH = @INCPATH@
+INSTOBJEXT = @INSTOBJEXT@
+INTLBISON = @INTLBISON@
+INTLLIBS = @INTLLIBS@
+INTLOBJS = @INTLOBJS@
+INTL_LIBTOOL_SUFFIX_PREFIX = @INTL_LIBTOOL_SUFFIX_PREFIX@
+LDFLAGS_STATIC = @LDFLAGS_STATIC@
+LIBDIR = @LIBDIR@
+LIBICONV = @LIBICONV@
+LIBMISC = @LIBMISC@
+LIBOBJS = @LIBOBJS@
+LIBRPMALIAS_FILENAME = @LIBRPMALIAS_FILENAME@
+LIBRPMRC_FILENAME = @LIBRPMRC_FILENAME@
+LIBS = @LIBS@
+LIBTOOL = @LIBTOOL@
+LN_S = @LN_S@
+LOCALEDIR = @LOCALEDIR@
+MACROFILES = @MACROFILES@
+MAKEINFO = @MAKEINFO@
+MKDIR = @MKDIR@
+MKDIR_P = @MKDIR_P@
+MKINSTALLDIRS = @MKINSTALLDIRS@
+MSGFMT = @MSGFMT@
+OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
+PACKAGE = @PACKAGE@
+PGPBIN = @PGPBIN@
+POFILES = @POFILES@
+POSUB = @POSUB@
+RANLIB = @RANLIB@
+ROOT_GROUP = @ROOT_GROUP@
+RPM = @RPM@
+RPMCANONARCH = @RPMCANONARCH@
+RPMCANONOS = @RPMCANONOS@
+RPMCANONVENDOR = @RPMCANONVENDOR@
+RPMCONFIGDIR = @RPMCONFIGDIR@
+RPMGID = @RPMGID@
+RPMGROUP = @RPMGROUP@
+RPMUID = @RPMUID@
+RPMUSER = @RPMUSER@
+STRIP = @STRIP@
+SYSCONFIGDIR = @SYSCONFIGDIR@
+U = @U@
+UNZIPBIN = @UNZIPBIN@
+USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
+USE_NLS = @USE_NLS@
+VERSION = @VERSION@
+WITH_APIDOCS = @WITH_APIDOCS@
+WITH_APIDOCS_TARGET = @WITH_APIDOCS_TARGET@
+WITH_BZIP2 = @WITH_BZIP2@
+WITH_DB_SUBDIR = @WITH_DB_SUBDIR@
+WITH_INTERNAL_DB = @WITH_INTERNAL_DB@
+WITH_PYTHON_SUBDIR = @WITH_PYTHON_SUBDIR@
+WITH_PYTHON_SUBPACKAGE = @WITH_PYTHON_SUBPACKAGE@
+WITH_PYTHON_VERSION = @WITH_PYTHON_VERSION@
+WITH_ZLIB_INCLUDE = @WITH_ZLIB_INCLUDE@
+WITH_ZLIB_LIB = @WITH_ZLIB_LIB@
+WITH_ZLIB_SUBDIR = @WITH_ZLIB_SUBDIR@
+__CAT = @__CAT@
+__CHGRP = @__CHGRP@
+__CHGRP_RHF = @__CHGRP_RHF@
+__CHMOD = @__CHMOD@
+__CHOWN = @__CHOWN@
+__CHOWN_RHF = @__CHOWN_RHF@
+__CP = @__CP@
+__CPIO = @__CPIO@
+__DOXYGEN = @__DOXYGEN@
+__FILE = @__FILE@
+__GPG = @__GPG@
+__GREP = @__GREP@
+__ID = @__ID@
+__ID_U = @__ID_U@
+__INSTALL = @__INSTALL@
+__LD = @__LD@
+__MAKE = @__MAKE@
+__MKDIR = @__MKDIR@
+__MV = @__MV@
+__NM = @__NM@
+__OBJCOPY = @__OBJCOPY@
+__OBJDUMP = @__OBJDUMP@
+__PATCH = @__PATCH@
+__PERL = @__PERL@
+__PYTHON = @__PYTHON@
+__RM = @__RM@
+__RSH = @__RSH@
+__SED = @__SED@
+__SSH = @__SSH@
+__STRIP = @__STRIP@
+__TAR = @__TAR@
+libdb3 = @libdb3@
+libdb3a = @libdb3a@
+testdir = @testdir@
+tmpdir = @tmpdir@
+varprefix = @varprefix@
+
+AUTOMAKE_OPTIONS = 1.4 foreign
+
+PYVER = @WITH_PYTHON_VERSION@
+
+INCLUDES = \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/lib \
+	-I$(top_srcdir)/rpmdb \
+	-I$(top_srcdir)/rpmio \
+	-I$(top_srcdir)/beecrypt \
+	-I$(top_srcdir)/popt \
+	-I/usr/include/python${PYVER} \
+	@INCPATH@
+
+
+EXTRA_DIST = db-py.c db-py.h hash.h header-py.c header-py.h upgrade.h
+
+mylibs = \
+	$(top_builddir)/lib/librpm.la \
+	$(top_builddir)/rpmdb/librpmdb.la \
+	$(top_builddir)/rpmio/librpmio.la \
+	$(top_builddir)/popt/libpopt.la
+
+
+LDADD = 
+
+pythondir = $(prefix)/lib/python${PYVER}/site-packages
+python_PROGRAMS = rpmmodule.so poptmodule.so
+
+rpmmodule_so_SOURCES = rpmmodule.c
+rpmmodule_so_LDFLAGS = $(mylibs) $(LIBS) -shared -Wl,-soname,rpmmodule.so
+poptmodule_so_SOURCES = poptmodule.c
+poptmodule_so_LDFLAGS = $(mylibs) $(LIBS) -shared -Wl,-soname,poptmodule.so
+
+noinst_LTLIBRARIES = librpmmodule.la
+librpmmodule_la_SOURCES = rpmmodule.c hash.c upgrade.c header-py.c db-py.c
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_HEADER = ../config.h
+CONFIG_CLEAN_FILES = 
+LTLIBRARIES =  $(noinst_LTLIBRARIES)
+
+
+DEFS = @DEFS@ -I. -I$(srcdir) -I..
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+librpmmodule_la_LDFLAGS = 
+librpmmodule_la_LIBADD = 
+librpmmodule_la_OBJECTS =  rpmmodule.lo hash.lo upgrade.lo header-py.lo \
+db-py.lo
+python_PROGRAMS =  rpmmodule.so poptmodule.so
+PROGRAMS =  $(python_PROGRAMS)
+
+rpmmodule_so_OBJECTS =  rpmmodule.$(OBJEXT)
+rpmmodule_so_LDADD = $(LDADD)
+rpmmodule_so_DEPENDENCIES = 
+poptmodule_so_OBJECTS =  poptmodule.$(OBJEXT)
+poptmodule_so_LDADD = $(LDADD)
+poptmodule_so_DEPENDENCIES = 
+CFLAGS = @CFLAGS@
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+DIST_COMMON =  ChangeLog Makefile.am Makefile.in
+
+
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+
+TAR = gtar
+GZIP_ENV = --best
+SOURCES = $(librpmmodule_la_SOURCES) $(rpmmodule_so_SOURCES) $(poptmodule_so_SOURCES)
+OBJECTS = $(librpmmodule_la_OBJECTS) $(rpmmodule_so_OBJECTS) $(poptmodule_so_OBJECTS)
+
+all: all-redirect
+.SUFFIXES:
+.SUFFIXES: .S .c .lo .o .obj .s
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --foreign --include-deps python/Makefile
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+
+mostlyclean-noinstLTLIBRARIES:
+
+clean-noinstLTLIBRARIES:
+	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
+
+distclean-noinstLTLIBRARIES:
+
+maintainer-clean-noinstLTLIBRARIES:
+
+.c.o:
+	$(COMPILE) -c $<
+
+# FIXME: We should only use cygpath when building on Windows,
+# and only if it is available.
+.c.obj:
+	$(COMPILE) -c `cygpath -w $<`
+
+.s.o:
+	$(COMPILE) -c $<
+
+.S.o:
+	$(COMPILE) -c $<
+
+mostlyclean-compile:
+	-rm -f *.o core *.core
+	-rm -f *.$(OBJEXT)
+
+clean-compile:
+
+distclean-compile:
+	-rm -f *.tab.c
+
+maintainer-clean-compile:
+
+.c.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.s.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.S.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+
+maintainer-clean-libtool:
+
+librpmmodule.la: $(librpmmodule_la_OBJECTS) $(librpmmodule_la_DEPENDENCIES)
+	$(LINK)  $(librpmmodule_la_LDFLAGS) $(librpmmodule_la_OBJECTS) $(librpmmodule_la_LIBADD) $(LIBS)
+
+mostlyclean-pythonPROGRAMS:
+
+clean-pythonPROGRAMS:
+	-test -z "$(python_PROGRAMS)" || rm -f $(python_PROGRAMS)
+
+distclean-pythonPROGRAMS:
+
+maintainer-clean-pythonPROGRAMS:
+
+install-pythonPROGRAMS: $(python_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(pythondir)
+	@list='$(python_PROGRAMS)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(pythondir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(pythondir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	  else :; fi; \
+	done
+
+uninstall-pythonPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	list='$(python_PROGRAMS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(pythondir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	done
+
+rpmmodule.so: $(rpmmodule_so_OBJECTS) $(rpmmodule_so_DEPENDENCIES)
+	@rm -f rpmmodule.so
+	$(LINK) $(rpmmodule_so_LDFLAGS) $(rpmmodule_so_OBJECTS) $(rpmmodule_so_LDADD) $(LIBS)
+
+poptmodule.so: $(poptmodule_so_OBJECTS) $(poptmodule_so_DEPENDENCIES)
+	@rm -f poptmodule.so
+	$(LINK) $(poptmodule_so_LDFLAGS) $(poptmodule_so_OBJECTS) $(poptmodule_so_LDADD) $(LIBS)
+
+tags: TAGS
+
+ID: $(HEADERS) $(SOURCES) $(LISP)
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	here=`pwd` && cd $(srcdir) \
+	  && mkid -f$$here/ID $$unique $(LISP)
+
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
+
+mostlyclean-tags:
+
+clean-tags:
+
+distclean-tags:
+	-rm -f TAGS ID
+
+maintainer-clean-tags:
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = python
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
+	done
+db-py.lo db-py.o : db-py.c ../rpmio/rpmio_internal.h ../rpmio/rpmio.h \
+	../rpmio/rpmurl.h ../rpmio/rpmpgp.h ../beecrypt/base64.h \
+	../beecrypt/beecrypt.h ../beecrypt/config.h \
+	../beecrypt/config.gnu.h ../beecrypt/memchunk.h \
+	../beecrypt/mp32number.h ../beecrypt/dsa.h \
+	../beecrypt/mp32barrett.h ../beecrypt/endianness.h \
+	../beecrypt/mp32.h ../beecrypt/mp32opt.h ../beecrypt/rsa.h \
+	../beecrypt/rsakp.h ../beecrypt/rsapk.h ../lib/rpmcli.h \
+	../lib/rpmlib.h ../rpmio/rpmmessages.h ../rpmio/rpmlog.h \
+	../rpmio/rpmerr.h ../lib/header.h ../lib/hdrinline.h \
+	../popt/popt.h ../rpmio/rpmmacro.h ../lib/misc.h \
+	../lib/header_internal.h upgrade.h db-py.h header-py.h
+hash.lo hash.o : hash.c hash.h
+header-py.lo header-py.o : header-py.c ../rpmio/rpmio_internal.h \
+	../rpmio/rpmio.h ../rpmio/rpmurl.h ../rpmio/rpmpgp.h \
+	../beecrypt/base64.h ../beecrypt/beecrypt.h \
+	../beecrypt/config.h ../beecrypt/config.gnu.h \
+	../beecrypt/memchunk.h ../beecrypt/mp32number.h \
+	../beecrypt/dsa.h ../beecrypt/mp32barrett.h \
+	../beecrypt/endianness.h ../beecrypt/mp32.h \
+	../beecrypt/mp32opt.h ../beecrypt/rsa.h ../beecrypt/rsakp.h \
+	../beecrypt/rsapk.h ../lib/rpmcli.h ../lib/rpmlib.h \
+	../rpmio/rpmmessages.h ../rpmio/rpmlog.h ../rpmio/rpmerr.h \
+	../lib/header.h ../lib/hdrinline.h ../popt/popt.h \
+	../rpmio/rpmmacro.h ../lib/misc.h ../lib/header_internal.h \
+	header-py.h
+poptmodule.o: poptmodule.c ../popt/popt.h
+rpmmodule.lo rpmmodule.o : rpmmodule.c ../rpmio/rpmio_internal.h \
+	../rpmio/rpmio.h ../rpmio/rpmurl.h ../rpmio/rpmpgp.h \
+	../beecrypt/base64.h ../beecrypt/beecrypt.h \
+	../beecrypt/config.h ../beecrypt/config.gnu.h \
+	../beecrypt/memchunk.h ../beecrypt/mp32number.h \
+	../beecrypt/dsa.h ../beecrypt/mp32barrett.h \
+	../beecrypt/endianness.h ../beecrypt/mp32.h \
+	../beecrypt/mp32opt.h ../beecrypt/rsa.h ../beecrypt/rsakp.h \
+	../beecrypt/rsapk.h ../lib/rpmcli.h ../lib/rpmlib.h \
+	../rpmio/rpmmessages.h ../rpmio/rpmlog.h ../rpmio/rpmerr.h \
+	../lib/header.h ../lib/hdrinline.h ../popt/popt.h \
+	../rpmio/rpmmacro.h ../lib/misc.h ../lib/header_internal.h \
+	upgrade.h db-py.h header-py.h
+upgrade.lo upgrade.o : upgrade.c ../lib/rpmlib.h ../rpmio/rpmio.h \
+	../rpmio/rpmmessages.h ../rpmio/rpmlog.h ../rpmio/rpmerr.h \
+	../lib/header.h ../lib/hdrinline.h ../popt/popt.h hash.h \
+	upgrade.h
+
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am:
+install-exec: install-exec-am
+
+install-data-am: install-pythonPROGRAMS
+install-data: install-data-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am: uninstall-pythonPROGRAMS
+uninstall: uninstall-am
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS)
+all-redirect: all-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
+installdirs:
+	$(mkinstalldirs)  $(DESTDIR)$(pythondir)
+
+
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+mostlyclean-am:  mostlyclean-noinstLTLIBRARIES mostlyclean-compile \
+		mostlyclean-libtool mostlyclean-pythonPROGRAMS \
+		mostlyclean-tags mostlyclean-generic
+
+mostlyclean: mostlyclean-am
+
+clean-am:  clean-noinstLTLIBRARIES clean-compile clean-libtool \
+		clean-pythonPROGRAMS clean-tags clean-generic \
+		mostlyclean-am
+
+clean: clean-am
+
+distclean-am:  distclean-noinstLTLIBRARIES distclean-compile \
+		distclean-libtool distclean-pythonPROGRAMS \
+		distclean-tags distclean-generic clean-am
+	-rm -f libtool
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-noinstLTLIBRARIES \
+		maintainer-clean-compile maintainer-clean-libtool \
+		maintainer-clean-pythonPROGRAMS maintainer-clean-tags \
+		maintainer-clean-generic distclean-am
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+maintainer-clean: maintainer-clean-am
+
+.PHONY: mostlyclean-noinstLTLIBRARIES distclean-noinstLTLIBRARIES \
+clean-noinstLTLIBRARIES maintainer-clean-noinstLTLIBRARIES \
+mostlyclean-compile distclean-compile clean-compile \
+maintainer-clean-compile mostlyclean-libtool distclean-libtool \
+clean-libtool maintainer-clean-libtool mostlyclean-pythonPROGRAMS \
+distclean-pythonPROGRAMS clean-pythonPROGRAMS \
+maintainer-clean-pythonPROGRAMS uninstall-pythonPROGRAMS \
+install-pythonPROGRAMS tags mostlyclean-tags distclean-tags clean-tags \
+maintainer-clean-tags distdir info-am info dvi-am dvi check check-am \
+installcheck-am installcheck install-exec-am install-exec \
+install-data-am install-data install-am install uninstall-am uninstall \
+all-redirect all-am all installdirs mostlyclean-generic \
+distclean-generic clean-generic maintainer-clean-generic clean \
+mostlyclean distclean maintainer-clean
+
+
+rpmmodule.so$(EXEEXT): $(librpmmodule_la_OBJECTS)
+	$(LINK) -o $@ $(librpmmodule_la_OBJECTS) $(rpmmodule_so_LDFLAGS)
+
+poptmodule.so$(EXEEXT): $(poptmodule_so_OBJECTS)
+	$(LINK) -o $@ $(poptmodule_so_OBJECTS) $(poptmodule_so_LDFLAGS)
+
+.PHONY:	lclint
+lclint:
+	lclint $(DEFS) $(INCLUDES) $(librpmmodule_la_SOURCES)
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

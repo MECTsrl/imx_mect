@@ -11,7 +11,6 @@
 #define QWT_PLOT_H
 
 #include "qwt_global.h"
-#include "qwt_axis_id.h"
 #include "qwt_text.h"
 #include "qwt_plot_dict.h"
 #include "qwt_scale_map.h"
@@ -27,10 +26,6 @@ class QwtScaleEngine;
 class QwtScaleDiv;
 class QwtScaleDraw;
 class QwtTextLabel;
-class QwtScaleMapTable;
-
-#define QWT_COMPAT 1 // flag to disable compatibilities - will be removed later
-#define QWT_DUMMY_ID 0 // dummy id to help for migrating the code - will be removed later
 
 /*!
   \brief A 2-D plotting widget
@@ -94,6 +89,25 @@ class QWT_EXPORT QwtPlot: public QFrame, public QwtPlotDict
 #endif
 
 public:
+    //! \brief Axis index
+    enum Axis
+    {
+        //! Y axis left of the canvas
+        yLeft,
+
+        //! Y axis right of the canvas
+        yRight,
+
+        //! X axis below the canvas
+        xBottom,
+
+        //! X axis above the canvas
+        xTop,
+
+        //! Number of axes
+        axisCnt
+    };
+
     /*!
         Position of the legend, relative to the canvas.
 
@@ -101,10 +115,10 @@ public:
      */
     enum LegendPosition
     {
-        //! The legend will be left from the QwtAxis::yLeft axis.
+        //! The legend will be left from the QwtPlot::yLeft axis.
         LeftLegend,
 
-        //! The legend will be right from the QwtAxis::yRight axis.
+        //! The legend will be right from the QwtPlot::yRight axis.
         RightLegend,
 
         //! The legend will be below the footer 
@@ -122,7 +136,7 @@ public:
     void applyProperties( const QString & );
     QString grabProperties() const;
 
-    void setAutoReplot( bool on = true );
+    void setAutoReplot( bool = true );
     bool autoReplot() const;
 
     // Layout
@@ -160,59 +174,53 @@ public:
     void setCanvasBackground( const QBrush & );
     QBrush canvasBackground() const;
 
-    virtual QwtScaleMap canvasMap( QwtAxisId ) const;
+    virtual QwtScaleMap canvasMap( int axisId ) const;
 
-    double invTransform( QwtAxisId, double value ) const;
-    double transform( QwtAxisId, double value ) const;
+    double invTransform( int axisId, int pos ) const;
+    double transform( int axisId, double value ) const;
 
     // Axes
 
-    void setAxesCount( int axisPos, int count );
+    QwtScaleEngine *axisScaleEngine( int axisId );
+    const QwtScaleEngine *axisScaleEngine( int axisId ) const;
+    void setAxisScaleEngine( int axisId, QwtScaleEngine * );
 
-    int axesCount( int axisPos, bool onlyVisible = false ) const;
-    bool isAxisValid( QwtAxisId ) const;
+    void setAxisAutoScale( int axisId, bool on = true );
+    bool axisAutoScale( int axisId ) const;
 
-    QwtScaleEngine *axisScaleEngine( QwtAxisId );
-    const QwtScaleEngine *axisScaleEngine( QwtAxisId ) const;
+    void enableAxis( int axisId, bool tf = true );
+    bool axisEnabled( int axisId ) const;
 
-    void setAxisScaleEngine( QwtAxisId, QwtScaleEngine * );
+    void setAxisFont( int axisId, const QFont &f );
+    QFont axisFont( int axisId ) const;
 
-    void setAxisAutoScale( QwtAxisId, bool on = true );
-    bool axisAutoScale( QwtAxisId ) const;
+    void setAxisScale( int axisId, double min, double max, double step = 0 );
+    void setAxisScaleDiv( int axisId, const QwtScaleDiv & );
+    void setAxisScaleDraw( int axisId, QwtScaleDraw * );
 
-    void setAxisVisible( QwtAxisId, bool on = true );
-    bool isAxisVisible( QwtAxisId ) const;
+    double axisStepSize( int axisId ) const;
+    QwtInterval axisInterval( int axisId ) const;
 
-    void setAxisFont( QwtAxisId, const QFont & );
-    QFont axisFont( QwtAxisId ) const;
+    const QwtScaleDiv &axisScaleDiv( int axisId ) const;
 
-    void setAxisScale( QwtAxisId, double min, double max, double step = 0 );
-    void setAxisScaleDiv( QwtAxisId, const QwtScaleDiv & );
-    void setAxisScaleDraw( QwtAxisId, QwtScaleDraw * );
+    const QwtScaleDraw *axisScaleDraw( int axisId ) const;
+    QwtScaleDraw *axisScaleDraw( int axisId );
 
-    double axisStepSize( QwtAxisId ) const;
-    QwtInterval axisInterval( QwtAxisId ) const;
+    const QwtScaleWidget *axisWidget( int axisId ) const;
+    QwtScaleWidget *axisWidget( int axisId );
 
-    const QwtScaleDiv &axisScaleDiv( QwtAxisId ) const;
+    void setAxisLabelAlignment( int axisId, Qt::Alignment );
+    void setAxisLabelRotation( int axisId, double rotation );
 
-    const QwtScaleDraw *axisScaleDraw( QwtAxisId ) const;
-    QwtScaleDraw *axisScaleDraw( QwtAxisId );
+    void setAxisTitle( int axisId, const QString & );
+    void setAxisTitle( int axisId, const QwtText & );
+    QwtText axisTitle( int axisId ) const;
 
-    const QwtScaleWidget *axisWidget( QwtAxisId ) const;
-    QwtScaleWidget *axisWidget( QwtAxisId );
+    void setAxisMaxMinor( int axisId, int maxMinor );
+    int axisMaxMinor( int axisId ) const;
 
-    void setAxisLabelAlignment( QwtAxisId, Qt::Alignment );
-    void setAxisLabelRotation( QwtAxisId, double rotation );
-
-    void setAxisTitle( QwtAxisId, const QString & );
-    void setAxisTitle( QwtAxisId, const QwtText & );
-    QwtText axisTitle( QwtAxisId ) const;
-
-    void setAxisMaxMinor( QwtAxisId, int maxMinor );
-    int axisMaxMinor( QwtAxisId ) const;
-
-    void setAxisMaxMajor( QwtAxisId, int maxMajor );
-    int axisMaxMajor( QwtAxisId ) const;
+    void setAxisMaxMajor( int axisId, int maxMajor );
+    int axisMaxMajor( int axisId ) const;
 
     // Legend
 
@@ -237,39 +245,17 @@ public:
     void updateCanvasMargins();
 
     virtual void getCanvasMarginsHint( 
-        const QwtScaleMapTable &, const QRectF &canvasRect,
+        const QwtScaleMap maps[], const QRectF &canvasRect,
         double &left, double &top, double &right, double &bottom) const;
 
     virtual bool event( QEvent * );
     virtual bool eventFilter( QObject *, QEvent * );
 
     virtual void drawItems( QPainter *, const QRectF &,
-        const QwtScaleMapTable & ) const;
+        const QwtScaleMap maps[axisCnt] ) const;
 
     virtual QVariant itemToInfo( QwtPlotItem * ) const;
     virtual QwtPlotItem *infoToItem( const QVariant & ) const;
-
-#if QWT_COMPAT
-    enum Axis
-    {
-        yLeft = QwtAxis::yLeft,
-        yRight = QwtAxis::yRight,
-        xBottom = QwtAxis::xBottom,
-        xTop = QwtAxis::xTop,
-        axisCnt = QwtAxis::PosCount
-    };
-
-
-    void enableAxis( int axisId, bool on = true )
-    {
-        setAxisVisible( axisId, on );
-    }
-        
-    bool axisEnabled( int axisId ) const
-    {
-        return isAxisVisible( axisId );
-    }
-#endif
 
 Q_SIGNALS:
     /*!
@@ -298,6 +284,7 @@ public Q_SLOTS:
     void autoRefresh();
 
 protected:
+    static bool axisValid( int axisId );
 
     virtual void resizeEvent( QResizeEvent *e );
 
@@ -309,14 +296,14 @@ private:
     friend class QwtPlotItem;
     void attachItem( QwtPlotItem *, bool );
 
-    void initScaleData();
-    void deleteScaleData();
+    void initAxesData();
+    void deleteAxesData();
     void updateScaleDiv();
 
     void initPlot( const QwtText &title );
 
-    class ScaleData;
-    ScaleData *d_scaleData;
+    class AxisData;
+    AxisData *d_axisData[axisCnt];
 
     class PrivateData;
     PrivateData *d_data;

@@ -58,20 +58,20 @@ MainWindow::MainWindow( QWidget *parent ):
 
     setContextMenuPolicy( Qt::NoContextMenu );
 
-    d_zoomer[0] = new Zoomer( 
-        QwtAxis::xBottom, QwtAxis::yLeft, d_plot->canvas() );
+    d_zoomer[0] = new Zoomer( QwtPlot::xBottom, QwtPlot::yLeft,
+        d_plot->canvas() );
     d_zoomer[0]->setRubberBand( QwtPicker::RectRubberBand );
     d_zoomer[0]->setRubberBandPen( QColor( Qt::green ) );
     d_zoomer[0]->setTrackerMode( QwtPicker::ActiveOnly );
     d_zoomer[0]->setTrackerPen( QColor( Qt::white ) );
 
-    d_zoomer[1] = new Zoomer( QwtAxis::xTop, QwtAxis::yRight,
+    d_zoomer[1] = new Zoomer( QwtPlot::xTop, QwtPlot::yRight,
          d_plot->canvas() );
 
     d_panner = new QwtPlotPanner( d_plot->canvas() );
     d_panner->setMouseButton( Qt::MidButton );
 
-    d_picker = new QwtPlotPicker( QwtAxis::xBottom, QwtAxis::yLeft,
+    d_picker = new QwtPlotPicker( QwtPlot::xBottom, QwtPlot::yLeft,
         QwtPlotPicker::CrossRubberBand, QwtPicker::AlwaysOn,
         d_plot->canvas() );
     d_picker->setStateMachine( new QwtPickerDragPointMachine() );
@@ -218,9 +218,9 @@ void MainWindow::moved( const QPoint &pos )
 {
     QString info;
     info.sprintf( "Freq=%g, Ampl=%g, Phase=%g",
-        d_plot->invTransform( QwtAxis::xBottom, pos.x() ),
-        d_plot->invTransform( QwtAxis::yLeft, pos.y() ),
-        d_plot->invTransform( QwtAxis::yRight, pos.y() )
+        d_plot->invTransform( QwtPlot::xBottom, pos.x() ),
+        d_plot->invTransform( QwtPlot::yLeft, pos.y() ),
+        d_plot->invTransform( QwtPlot::yRight, pos.y() )
     );
     showInfo( info );
 }

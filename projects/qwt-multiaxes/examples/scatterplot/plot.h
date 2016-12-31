@@ -13,8 +13,8 @@ class Plot : public QwtPlot
 public:
     Plot( QWidget *parent = NULL );
 
-	void setSymbol( QwtSymbol * );
-	void setSamples( const QVector<QPointF> &samples );
+    void setSymbol( QwtSymbol * );
+    void setSamples( const QVector<QPointF> &samples );
 
 private:
     QwtPlotCurve *d_curve;

@@ -255,15 +255,15 @@ QwtPlotShapeItem* Editor::itemAt( const QPoint& pos ) const
         return NULL;
 
     // translate pos into the plot coordinates
-    double coords[ QwtAxis::PosCount ];
-    coords[ QwtAxis::xBottom ] =
-        plot->canvasMap( QwtAxis::xBottom ).invTransform( pos.x() );
-    coords[ QwtAxis::xTop ] =
-        plot->canvasMap( QwtAxis::xTop ).invTransform( pos.x() );
-    coords[ QwtAxis::yLeft ] =
-        plot->canvasMap( QwtAxis::yLeft ).invTransform( pos.y() );
-    coords[ QwtAxis::yRight ] =
-        plot->canvasMap( QwtAxis::yRight ).invTransform( pos.y() );
+    double coords[ QwtPlot::axisCnt ];
+    coords[ QwtPlot::xBottom ] =
+        plot->canvasMap( QwtPlot::xBottom ).invTransform( pos.x() );
+    coords[ QwtPlot::xTop ] =
+        plot->canvasMap( QwtPlot::xTop ).invTransform( pos.x() );
+    coords[ QwtPlot::yLeft ] =
+        plot->canvasMap( QwtPlot::yLeft ).invTransform( pos.y() );
+    coords[ QwtPlot::yRight ] =
+        plot->canvasMap( QwtPlot::yRight ).invTransform( pos.y() );
 
     QwtPlotItemList items = plot->itemList();
     for ( int i = items.size() - 1; i >= 0; i-- )
@@ -273,7 +273,7 @@ QwtPlotShapeItem* Editor::itemAt( const QPoint& pos ) const
             item->rtti() == QwtPlotItem::Rtti_PlotShape )
         {
             QwtPlotShapeItem *shapeItem = static_cast<QwtPlotShapeItem *>( item );
-            const QPointF p( coords[ item->xAxis().pos ], coords[ item->yAxis().pos ] );
+            const QPointF p( coords[ item->xAxis() ], coords[ item->yAxis() ] );
 
             if ( shapeItem->boundingRect().contains( p )
                 && shapeItem->shape().contains( p ) )

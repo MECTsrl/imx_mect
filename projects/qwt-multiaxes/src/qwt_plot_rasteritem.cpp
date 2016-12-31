@@ -15,9 +15,11 @@
 #include <qpainter.h>
 #include <qpaintengine.h>
 #include <qmath.h>
+#if QT_VERSION >= 0x040400
 #include <qthread.h>
 #include <qfuture.h>
 #include <qtconcurrentrun.h>
+#endif
 #include <float.h>
 
 class QwtPlotRasterItem::PrivateData
@@ -848,7 +850,7 @@ QImage QwtPlotRasterItem::compose(
     {
         QImage alphaImage( image.size(), QImage::Format_ARGB32 );
 
-#if !defined(QT_NO_QFUTURE)
+#if QT_VERSION >= 0x040400 && !defined(QT_NO_QFUTURE)
         uint numThreads = renderThreadCount();
 
         if ( numThreads <= 0 )

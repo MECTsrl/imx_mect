@@ -107,8 +107,8 @@ public:
 
     virtual QwtTransform *copy() const;
 
-    static const double LogMin;
-    static const double LogMax;
+    QT_STATIC_CONST double LogMin;
+    QT_STATIC_CONST double LogMax;
 };
 
 /*!
@@ -122,7 +122,7 @@ public:
 class QWT_EXPORT QwtPowerTransform: public QwtTransform
 {
 public:
-    explicit QwtPowerTransform( double exponent );
+    QwtPowerTransform( double exponent );
     virtual ~QwtPowerTransform();
 
     virtual double transform( double value ) const;

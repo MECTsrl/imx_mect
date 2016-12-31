@@ -136,10 +136,6 @@ protected:
     QwtInterval buildInterval( double v ) const;
 
 private:
-    // Disabled copy constructor and operator=
-    explicit QwtScaleEngine( const QwtScaleEngine & );
-    QwtScaleEngine &operator=( const QwtScaleEngine & );
-
     class PrivateData;
     PrivateData *d_data;
 };
@@ -154,7 +150,7 @@ private:
 class QWT_EXPORT QwtLinearScaleEngine: public QwtScaleEngine
 {
 public:
-    explicit QwtLinearScaleEngine( uint base = 10 );
+    QwtLinearScaleEngine( uint base = 10 );
     virtual ~QwtLinearScaleEngine();
 
     virtual void autoScale( int maxSteps,
@@ -194,7 +190,7 @@ protected:
 class QWT_EXPORT QwtLogScaleEngine: public QwtScaleEngine
 {
 public:
-    explicit QwtLogScaleEngine( uint base = 10 );
+    QwtLogScaleEngine( uint base = 10 );
     virtual ~QwtLogScaleEngine();
 
     virtual void autoScale( int maxSteps,

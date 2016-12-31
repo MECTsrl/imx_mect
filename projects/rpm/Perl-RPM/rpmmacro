@@ -1,0 +1,7 @@
+%_rpmfilename           %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
+%_builddir              %{_topdir}
+%_sourcedir             %{_topdir}
+%_specdir               %{_topdir}
+%_srcrpmdir             %{_topdir}
+%_rpmdir                %{_topdir}
+%_topdir                /X/src/rpm403/Perl-RPM

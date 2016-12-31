@@ -1,0 +1,17 @@
+D/hints////
+D/patches////
+D/t////
+/Changes/1.1.2.1/Tue Nov 27 15:28:56 2001//Trpm-4_0
+/DB_File.pm/1.1.2.1/Tue Nov 27 15:28:56 2001//Trpm-4_0
+/DB_File.xs/1.1.2.1/Tue Nov 27 15:28:56 2001//Trpm-4_0
+/DB_File_BS/1.1.2.1/Wed Nov 17 16:29:14 1999//Trpm-4_0
+/MANIFEST/1.1.2.1/Tue Nov 27 15:28:56 2001//Trpm-4_0
+/Makefile.PL/1.1.2.1/Tue Nov 27 15:28:57 2001//Trpm-4_0
+/README/1.1.2.1/Tue Nov 27 15:28:57 2001//Trpm-4_0
+/config.in/1.1.2.1/Tue Jul 31 00:54:07 2001//Trpm-4_0
+/dbinfo/1.1.2.1/Thu Jan 18 16:07:27 2001//Trpm-4_0
+/fallback.h/1.1.2.1/Mon Nov 26 17:59:04 2001//Trpm-4_0
+/fallback.xs/1.1.2.1/Mon Nov 26 17:59:04 2001//Trpm-4_0
+/ppport.h/1.1.2.1/Mon Nov 26 17:59:04 2001//Trpm-4_0
+/typemap/1.1.2.1/Thu Dec 14 19:35:37 2000//Trpm-4_0
+/version.c/1.1.2.1/Wed Oct 31 01:20:53 2001//Trpm-4_0

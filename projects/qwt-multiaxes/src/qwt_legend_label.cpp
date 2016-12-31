@@ -66,8 +66,7 @@ void QwtLegendLabel::setData( const QwtLegendData &legendData )
     d_data->legendData = legendData;
 
     const bool doUpdate = updatesEnabled();
-    if ( doUpdate )
-        setUpdatesEnabled( false );
+    setUpdatesEnabled( false );
 
     setText( legendData.title() );
     setIcon( legendData.icon().toPixmap() );
@@ -76,7 +75,10 @@ void QwtLegendLabel::setData( const QwtLegendData &legendData )
         setItemMode( legendData.mode() );
 
     if ( doUpdate )
+    {
         setUpdatesEnabled( true );
+        update();
+    }
 }
 
 /*!

@@ -77,7 +77,7 @@ class QWT_EXPORT QwtSetSample
 {
 public:
     QwtSetSample();
-    explicit QwtSetSample( double, const QVector<double> & = QVector<double>() );
+    QwtSetSample( double, const QVector<double> & = QVector<double>() );
 
     bool operator==( const QwtSetSample &other ) const;
     bool operator!=( const QwtSetSample &other ) const;

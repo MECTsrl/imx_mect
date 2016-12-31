@@ -12,7 +12,6 @@
 
 #include "qwt_global.h"
 #include "qwt_interval.h"
-#include "qwt_axis_id.h"
 #include "qwt_plot.h"
 #include <qobject.h>
 
@@ -78,7 +77,7 @@ public:
     };
 
     explicit QwtPlotRescaler( QWidget *canvas,
-        QwtAxisId referenceAxis = QwtAxis::xBottom,
+        int referenceAxis = QwtPlot::xBottom,
         RescalePolicy = Expanding );
 
     virtual ~QwtPlotRescaler();
@@ -90,18 +89,18 @@ public:
     RescalePolicy rescalePolicy() const;
 
     void setExpandingDirection( ExpandingDirection );
-    void setExpandingDirection( QwtAxisId axisId, ExpandingDirection );
-    ExpandingDirection expandingDirection( QwtAxisId axisId ) const;
+    void setExpandingDirection( int axis, ExpandingDirection );
+    ExpandingDirection expandingDirection( int axis ) const;
 
-    void setReferenceAxis( QwtAxisId axisId );
-    QwtAxisId referenceAxis() const;
+    void setReferenceAxis( int axis );
+    int referenceAxis() const;
 
     void setAspectRatio( double ratio );
-    void setAspectRatio( QwtAxisId axisId, double ratio );
-    double aspectRatio( QwtAxisId axisId ) const;
+    void setAspectRatio( int axis, double ratio );
+    double aspectRatio( int axis ) const;
 
-    void setIntervalHint( QwtAxisId axisId, const QwtInterval& );
-    QwtInterval intervalHint( QwtAxisId axisId ) const;
+    void setIntervalHint( int axis, const QwtInterval& );
+    QwtInterval intervalHint( int axis ) const;
 
     QWidget *canvas();
     const QWidget *canvas() const;
@@ -117,22 +116,23 @@ protected:
     virtual void canvasResizeEvent( QResizeEvent * );
 
     virtual void rescale( const QSize &oldSize, const QSize &newSize ) const;
-    virtual QwtInterval expandScale( QwtAxisId axisId,
-        const QSize &oldSize, const QSize &newSize ) const;
+    virtual QwtInterval expandScale( 
+        int axis, const QSize &oldSize, const QSize &newSize ) const;
 
-    virtual QwtInterval syncScale( QwtAxisId axisId,
-        const QwtInterval& reference, const QSize &size ) const;
+    virtual QwtInterval syncScale(
+        int axis, const QwtInterval& reference,
+        const QSize &size ) const;
 
     virtual void updateScales(
-        QwtInterval intervals[QwtAxis::PosCount] ) const;
+        QwtInterval intervals[QwtPlot::axisCnt] ) const;
 
-    Qt::Orientation orientation( QwtAxisId ) const;
-    QwtInterval interval( QwtAxisId axisId ) const;
+    Qt::Orientation orientation( int axis ) const;
+    QwtInterval interval( int axis ) const;
     QwtInterval expandInterval( const QwtInterval &,
         double width, ExpandingDirection ) const;
 
 private:
-    double pixelDist( QwtAxisId, const QSize & ) const;
+    double pixelDist( int axis, const QSize & ) const;
 
     class AxisData;
     class PrivateData;

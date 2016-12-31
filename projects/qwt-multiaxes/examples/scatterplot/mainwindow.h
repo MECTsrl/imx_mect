@@ -13,7 +13,7 @@ public:
     MainWindow();
 
 private:
-	void setSamples( int samples );
+    void setSamples( int samples );
 
 private:
     Plot *d_plot;

@@ -61,7 +61,7 @@ private:
     ScrollData *d_vScrollData;
 
     bool d_inZoom;
-    bool d_alignCanvasToScales[ QwtAxis::PosCount ];
+    bool d_alignCanvasToScales[ QwtPlot::axisCnt ];
 };
 
 #endif

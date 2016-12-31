@@ -1,9 +1,7 @@
 #include <qapplication.h>
 #include <qpainter.h>
 #include <qbuffer.h>
-#ifdef QT_SVG_LIB
 #include <qsvggenerator.h>
-#endif
 #include <qwt_plot.h>
 #include <qwt_plot_marker.h>
 #include <qwt_plot_curve.h>
@@ -91,7 +89,6 @@ public:
             }
             case QwtSymbol::SvgDocument:
             {
-#ifndef QWT_NO_SVG
                 QBuffer buf;
 
                 QSvgGenerator generator;
@@ -106,7 +103,6 @@ public:
                 painter.end();
 
                 setSvgDocument( buf.data() );
-#endif
                 break;
             }
             case QwtSymbol::Path:
@@ -128,8 +124,6 @@ private:
         const double y0 = 0.6 * h;
 
         QPainterPath path; 
-        path.moveTo( -0.2 * w, h );
-        path.lineTo( 0.2 * w, h );
         path.moveTo( 0, h );
         path.lineTo( 0, y0 );
         path.lineTo( -0.5 * w, y0 );
@@ -153,9 +147,10 @@ int main( int argc, char **argv )
     plot.setTitle( "Plot Demo" );
     plot.setCanvasBackground( Qt::white );
 
-    plot.setAxisScale( QwtAxis::xBottom, -1.0, 6.0 );
+    plot.setAxisScale( QwtPlot::xBottom, -1.0, 6.0 );
 
     QwtLegend *legend = new QwtLegend();
+    legend->setDefaultItemMode( QwtLegendData::Checkable );
     plot.insertLegend( legend );
 
     for ( int i = 0; i < 4; i++ )

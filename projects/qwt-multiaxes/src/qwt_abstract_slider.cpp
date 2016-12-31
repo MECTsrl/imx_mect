@@ -749,11 +749,11 @@ double QwtAbstractSlider::alignedValue( double value ) const
     if ( d_data->totalSteps == 0 )
         return value;
 
-    double stepSize;
-
     if ( scaleMap().transformation() == NULL )
     {
-        stepSize = ( maximum() - minimum() ) / d_data->totalSteps;
+        const double stepSize = 
+            ( maximum() - minimum() ) / d_data->totalSteps;
+
         if ( stepSize > 0.0 )
         {
             value = lowerBound() + 
@@ -762,7 +762,8 @@ double QwtAbstractSlider::alignedValue( double value ) const
     }
     else
     {
-        stepSize = ( scaleMap().p2() - scaleMap().p1() ) / d_data->totalSteps;
+        const double stepSize = 
+            ( scaleMap().p2() - scaleMap().p1() ) / d_data->totalSteps;
 
         if ( stepSize > 0.0 )
         {
@@ -775,21 +776,18 @@ double QwtAbstractSlider::alignedValue( double value ) const
         }
     }
 
-    if ( qAbs( stepSize ) > 1e-12 )
+    // correct rounding error if value = 0
+    if ( qFuzzyCompare( value + 1.0, 1.0 ) )
     {
-        if ( qFuzzyCompare( value + 1.0, 1.0 ) )
-        {
-            // correct rounding error if value = 0
-            value = 0.0;
-        }
-        else
-        {
-            // correct rounding error at the border
-            if ( qFuzzyCompare( value, upperBound() ) )
-                value = upperBound();
-            else if ( qFuzzyCompare( value, lowerBound() ) )
-                value = lowerBound();
-        }
+        value = 0.0;
+    }
+    else
+    {
+        // correct rounding error at the border
+        if ( qFuzzyCompare( value, upperBound() ) )
+            value = upperBound();
+        else if ( qFuzzyCompare( value, lowerBound() ) )
+            value = lowerBound();
     }
 
     return value;

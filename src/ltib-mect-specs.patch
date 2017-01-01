@@ -6465,12 +6465,12 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%defattr(-,root,root)
 +%{pfx}/usr/lib/libqwt.so
 +%{pfx}/usr/lib/libqwt.so.6
-+%{pfx}/usr/lib/libqwt.so.6.1
-+%{pfx}/usr/lib/libqwt.so.6.1.0
++%{pfx}/usr/lib/libqwt.so.6.3
++%{pfx}/usr/lib/libqwt.so.6.3.0
 +%{pfx}/usr/lib/libqwtmathml.so
 +%{pfx}/usr/lib/libqwtmathml.so.6
-+%{pfx}/usr/lib/libqwtmathml.so.6.1
-+%{pfx}/usr/lib/libqwtmathml.so.6.1.0
++%{pfx}/usr/lib/libqwtmathml.so.6.3
++%{pfx}/usr/lib/libqwtmathml.so.6.3.0
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt.spec ltib/dist/lfs-5.1/qwt/qwt.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt.spec
 +++ ltib/dist/lfs-5.1/qwt/qwt.spec

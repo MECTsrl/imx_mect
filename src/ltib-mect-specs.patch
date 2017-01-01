@@ -1688,7 +1688,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 --- ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 +++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
-@@ -9,29 +9,116 @@
+@@ -9,29 +9,114 @@
  Packager	: Stuart Hughes, Emil Medve
  Group		: System Environment/Base
  URL		: http://e2fsprogs.sourceforge.net
@@ -1726,14 +1726,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  
  %Build
--BUILD_CC=$BUILDCC ./configure --host=$CFGHOST --enable-elf-shlibs
 +export LC_ALL
 +LC_ALL=C
 +
-+export BUILD_CC=$BUILDCC
-+
 +find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
-+./configure --host=$CFGHOST --enable-elf-shlibs
+ BUILD_CC=$BUILDCC ./configure --host=$CFGHOST --enable-elf-shlibs
  make
  
 +

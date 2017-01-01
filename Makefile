@@ -464,10 +464,10 @@ build: ltib_build projects_build
 .PHONY: ltib_build
 ltib_build: hosttools
 	sudo rm -rf $(MECT_FSDIR)/rootfs
-	mkdir -p $(MECT_FSDIR)/rootfs
 	sudo rm -rf $(MECT_FSDIR)/rpm/BUILD
-	mkdir -p $(MECT_FSDIR)/rpm/BUILD
 	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') $(MECT_FSDIR)
+	mkdir -p $(MECT_FSDIR)/rootfs
+	mkdir -p $(MECT_FSDIR)/rpm/BUILD
 	cd $(MECT_LTIBDIR); PATH=/usr/lib/ccache:$$PATH GIT_AUTHOR_NAME=$(MECT_USER_NAME) GIT_AUTHOR_EMAIL=$(MECT_TARGET_UNIX_NAME)@$(MECT_HOST_NAME) GIT_COMMITTER_NAME=$(MECT_USER_NAME) GIT_COMMITTER_EMAIL=$(MECT_TARGET_UNIX_NAME)@$(MECT_HOST_NAME) ./ltib
 
 # Set up the host tools.

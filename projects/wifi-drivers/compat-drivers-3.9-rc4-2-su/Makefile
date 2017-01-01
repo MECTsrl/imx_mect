@@ -201,14 +201,14 @@ install-scripts:
 	@# it for you. Reason is some old version of modutils
 	@# won't know mac80211.ko should be used instead of
 	@# mac80211.ko.gz
-	@./scripts/compress_modules
+	#@./scripts/compress_modules
 	@# Mandrake doesn't have a depmod.d/ conf file to prefer
 	@# the updates/ dir which is what we use so we add one for it
 	@# (or any other distribution that doens't have this).
-	@./scripts/check_depmod
+	#@./scripts/check_depmod
 	@# Udev stuff needed for the new compat_firmware_class.
-	@./compat/scripts/compat_firmware_install
-	@/sbin/depmod -a
+	#@./compat/scripts/compat_firmware_install
+	#@/sbin/depmod -a
 	@echo 
 	@echo Now run:
 	@echo 
@@ -237,8 +237,8 @@ uninstall:
 	@rm -f $(KLIB)/$(KMODDIR)/drivers/misc/eeprom/eeprom_93cx6.ko*
 	@rm -f $(KLIB)/$(KMODDIR)/drivers/misc/eeprom_93cx6.ko*
 	@rm -f $(KLIB)/$(KMODDIR)/drivers/net/b44.ko*
-	@/sbin/depmod -a
-	@./scripts/update-initramfs
+	#@/sbin/depmod -a
+	#@./scripts/update-initramfs
 	@echo 
 
 clean:

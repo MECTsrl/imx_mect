@@ -8377,13 +8377,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 --- ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 +++ ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
-@@ -0,0 +1,176 @@
+@@ -0,0 +1,174 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define pkg_src  compat-drivers
 +%define pkg_rc   rc4
 +%define pkg_bld  su
-+%define dir_rtl  rtlwifi
-+%define dir_ath  ath9k_htc
 +
 +Summary         : Wi-Fi drivers ported from newer kernels.
 +Name            : wifi-drivers
@@ -8464,7 +8462,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
 +	ARCH=$LINTARCH \
-+	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
++	KLIB=${RPM_BUILD_ROOT}%{pfx} \
 +	KLIB_BUILD=${TOP}/rpm/BUILD/linux
 +./scripts/driver-select restore
 +
@@ -8473,7 +8471,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
 +	ARCH=$LINTARCH \
-+	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
++	KLIB=${RPM_BUILD_ROOT}%{pfx} \
 +	KLIB_BUILD=${TOP}/rpm/BUILD/linux
 +./scripts/driver-select restore
 +
@@ -8499,21 +8497,21 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +./scripts/driver-select rtlwifi
 +make -j$(nproc) install \
-+	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
++	DESTDIR=$RPM_BUILD_ROOT%{pfx} \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
 +	ARCH=$LINTARCH \
-+	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
++	KLIB=${RPM_BUILD_ROOT}%{pfx} \
 +	KLIB_BUILD=${TOP}/rpm/BUILD/linux
 +./scripts/driver-select restore
 +
 +./scripts/driver-select ath9k_htc
 +make -j$(nproc) install \
-+	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
++	DESTDIR=$RPM_BUILD_ROOT%{pfx} \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
 +	ARCH=$LINTARCH \
-+	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
++	KLIB=${RPM_BUILD_ROOT}%{pfx} \
 +	KLIB_BUILD=${TOP}/rpm/BUILD/linux
 +./scripts/driver-select restore
 +

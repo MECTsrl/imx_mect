@@ -616,7 +616,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boa/boa.spec ltib/dist/lfs-5.1/boa/boa.spec
 --- ltib.reference/dist/lfs-5.1/boa/boa.spec
 +++ ltib/dist/lfs-5.1/boa/boa.spec
-@@ -10,49 +10,80 @@
+@@ -10,49 +10,81 @@
  Vendor          : Freescale
  Packager        : Stuart Hughes
  Group           : System/Servers
@@ -663,6 +663,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  ac_cv_func_setvbuf_reversed=no \
  CFLAGS="-DSERVER_ROOT='\"/etc\"' -g -Os" \
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
@@ -1120,7 +1121,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/can-festival/can-festival.spec ltib/dist/lfs-5.1/can-festival/can-festival.spec
 --- ltib.reference/dist/lfs-5.1/can-festival/can-festival.spec
 +++ ltib/dist/lfs-5.1/can-festival/can-festival.spec
-@@ -0,0 +1,99 @@
+@@ -0,0 +1,100 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : CANopen stack implementation
@@ -1167,6 +1168,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%setup -n CanFestival-%{version}-%{release}
 +%patch0 -p1
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
 +ROOTFS=${DEV_IMAGE} ./configure \
 +	--target=unix \
 +	--arch=${LINTARCH} \
@@ -1422,7 +1424,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec
-@@ -9,37 +9,55 @@
+@@ -9,37 +9,56 @@
  Vendor          : Freescale
  Packager        : John Faith
  Group           : Applications/Internet
@@ -1473,6 +1475,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  ./configure
 -make
 +make -j$(nproc)
@@ -1496,7 +1499,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  for i in %pfx/%base/etc/test %pfx/%base/etc/rc.d \
           %pfx/%base/sbin/S30dhclient %pfx/%_prefix/local
-@@ -47,8 +65,7 @@
+@@ -47,8 +66,7 @@
      rm -rf $RPM_BUILD_ROOT/$i
  done
  
@@ -1506,7 +1509,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      for i in %pfx/%base/etc/dhclient.conf \
               %pfx/%base/var/state/dhcp/dhclient.leases \
               %pfx/%base/sbin/dhclient-script \
-@@ -61,11 +78,11 @@
+@@ -61,11 +79,11 @@
               %pfx/%_mandir/man8/dhclient-script.8 \
               %pfx/%_mandir/man8/dhclient.8
      do
@@ -1521,7 +1524,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      for i in %pfx/%base/etc/dhcpd.conf \
               %pfx/%_bindir/omshell \
               %pfx/%_mandir/man1/omshell.1 \
-@@ -82,14 +99,28 @@
+@@ -82,14 +100,28 @@
               %pfx/%_sbindir/dhcrelay \
               %pfx/%base/var/state/dhcp/dhcpd.leases
       do
@@ -1554,7 +1557,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec ltib/dist/lfs-5.1/dropbear/dropbear.spec
 --- ltib.reference/dist/lfs-5.1/dropbear/dropbear.spec
 +++ ltib/dist/lfs-5.1/dropbear/dropbear.spec
-@@ -2,61 +2,100 @@
+@@ -2,61 +2,101 @@
  
  Summary         : Dropbear SSH server and client (embedded)
  Name            : dropbear
@@ -1617,9 +1620,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +test "$PKG_DROPBEAR_WANT_URANDOM_DEV" = "y" && perl -pi -e 's,^#define DROPBEAR_RANDOM_DEV.*,#define DROPBEAR_RANDOM_DEV "/dev/urandom",; ' options.h
 +
 +test "$PKG_DROPBEAR_WANT_NO_REV_DNS" = "y" && perl -pi -e 's,^(#define DO_HOST_LOOKUP),//\1,; ' options.h
-+
-+test "$PKG_DROPBEAR_WANT_NO_X11FWD" = "y" && perl -pi -e 's,^(#define ENABLE_X11FWD),//\1,; ' options.h
  
++test "$PKG_DROPBEAR_WANT_NO_X11FWD" = "y" && perl -pi -e 's,^(#define ENABLE_X11FWD),//\1,; ' options.h
++
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
  make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp" MULTI=1 SCPPROGRESS=1
  
@@ -1684,7 +1688,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 --- ltib.reference/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
 +++ ltib/dist/lfs-5.1/e2fsprogs/e2fsprogs.spec
-@@ -9,29 +9,113 @@
+@@ -9,29 +9,116 @@
  Packager	: Stuart Hughes, Emil Medve
  Group		: System Environment/Base
  URL		: http://e2fsprogs.sourceforge.net
@@ -1722,10 +1726,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  
  %Build
+-BUILD_CC=$BUILDCC ./configure --host=$CFGHOST --enable-elf-shlibs
 +export LC_ALL
 +LC_ALL=C
 +
- BUILD_CC=$BUILDCC ./configure --host=$CFGHOST --enable-elf-shlibs
++export BUILD_CC=$BUILDCC
++
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
++./configure --host=$CFGHOST --enable-elf-shlibs
  make
  
 +
@@ -1825,7 +1833,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/expat/expat.spec ltib/dist/lfs-5.1/expat/expat.spec
 --- ltib.reference/dist/lfs-5.1/expat/expat.spec
 +++ ltib/dist/lfs-5.1/expat/expat.spec
-@@ -8,32 +8,55 @@
+@@ -8,32 +8,56 @@
  Vendor          : Freescale
  Packager        : Stuart Hughes
  Group           : Applications/Publishing/XML
@@ -1870,6 +1878,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
  make
  
@@ -1891,7 +1900,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
-@@ -41,3 +64,9 @@
+@@ -41,3 +65,9 @@
  %defattr(-,root,root)
  %{pfx}/*
  
@@ -2063,7 +2072,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec ltib/dist/lfs-5.1/fontconfig/fontconfig.spec
 --- ltib.reference/dist/lfs-5.1/fontconfig/fontconfig.spec
 +++ ltib/dist/lfs-5.1/fontconfig/fontconfig.spec
-@@ -8,29 +8,58 @@
+@@ -8,29 +8,59 @@
  Vendor          : Freescale
  Packager        : Stuart Hughes
  Group           : System Environment/Libraries
@@ -2103,6 +2112,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  # we don't have docbook-utils in the distribution
  ac_cv_prog_HASDOCBOOK=no \
  ac_cv_prog_CC_FOR_BUILD="${BUILDCC}" \
@@ -2128,7 +2138,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  perl -pi -e 's,^</fontconfig>,
  <dir>%{_prefix}/X11R6/lib/X11/fonts/TTF</dir>
-@@ -38,9 +67,13 @@
+@@ -38,9 +68,13 @@
  <dir>%{_prefix}/X11R6/lib/X11/fonts/truetype</dir>
  </fontconfig>
  ,;
@@ -2143,7 +2153,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
-@@ -48,3 +81,54 @@
+@@ -48,3 +82,54 @@
  %defattr(-,root,root)
  %{pfx}/*
  
@@ -2201,7 +2211,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/freetype/freetype.spec ltib/dist/lfs-5.1/freetype/freetype.spec
 --- ltib.reference/dist/lfs-5.1/freetype/freetype.spec
 +++ ltib/dist/lfs-5.1/freetype/freetype.spec
-@@ -8,29 +8,56 @@
+@@ -8,29 +8,58 @@
  Vendor          : Freescale
  Packager        : Stuart Hughes
  Group           : System Environment/Libraries
@@ -2243,6 +2253,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
  export CC_BUILD="$BUILDCC"
++
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
  make 
  
@@ -2263,7 +2275,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
-@@ -38,3 +65,10 @@
+@@ -38,3 +67,10 @@
  %defattr(-,root,root)
  %{pfx}/*
  
@@ -2289,7 +2301,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/glib2/glib2.spec ltib/dist/lfs-5.1/glib2/glib2.spec
 --- ltib.reference/dist/lfs-5.1/glib2/glib2.spec
 +++ ltib/dist/lfs-5.1/glib2/glib2.spec
-@@ -1,47 +1,100 @@
+@@ -1,47 +1,101 @@
  %define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define archname glib
  
@@ -2339,6 +2351,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  # prevent configure from trying to compile and
  # run test binaries for the target.
  glib_cv_stack_grows=no \
@@ -3148,7 +3161,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 --- ltib.reference/dist/lfs-5.1/libsocketcan/libsocketcan.spec
 +++ ltib/dist/lfs-5.1/libsocketcan/libsocketcan.spec
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,73 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Library to allow control of basic functions in socketcan from userspace
@@ -3193,6 +3206,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
 +./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
 +make
 +
@@ -3442,7 +3456,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libusb/libusb1.spec ltib/dist/lfs-5.1/libusb/libusb1.spec
 --- ltib.reference/dist/lfs-5.1/libusb/libusb1.spec
 +++ ltib/dist/lfs-5.1/libusb/libusb1.spec
-@@ -0,0 +1,71 @@
+@@ -0,0 +1,72 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : A library which allows userspace access to USB devices 
@@ -3486,6 +3500,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
 +./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --disable-udev --disable-build-docs
 +make -j1
 +
@@ -3623,7 +3638,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/lzo/lzo.spec ltib/dist/lfs-5.1/lzo/lzo.spec
 --- ltib.reference/dist/lfs-5.1/lzo/lzo.spec
 +++ ltib/dist/lfs-5.1/lzo/lzo.spec
-@@ -8,17 +8,40 @@
+@@ -8,17 +8,41 @@
  Vendor          : Freescale
  Packager        : Ross Wille
  Group           : System Environment/Libraries
@@ -3663,10 +3678,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  if [ "$GNUTARCH" = m68knommu ]
  then
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} \
-@@ -29,15 +52,28 @@
+@@ -29,15 +53,28 @@
  fi
  make
  
@@ -5291,7 +5307,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec ltib/dist/lfs-5.1/ncurses/ncurses.spec
 --- ltib.reference/dist/lfs-5.1/ncurses/ncurses.spec
 +++ ltib/dist/lfs-5.1/ncurses/ncurses.spec
-@@ -8,23 +8,39 @@
+@@ -8,25 +8,42 @@
  Vendor          : Freescale
  Packager        : Stuart Hughes
  Group           : System Environment/Libraries
@@ -5338,8 +5354,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  CFLAGS="%{optflags} -DPURE_TERMINFO -DSVR4_CURSES"
  %define optflags $CFLAGS
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  if [ "$GNUTARCH" != m68knommu ]
-@@ -44,7 +60,11 @@
+ then
+ ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} \
+@@ -44,7 +61,11 @@
  mv misc/run_tic.sh misc/run_tic.sh.orig
  mv misc/run_tic.sh.tmp misc/run_tic.sh
  
@@ -5351,7 +5370,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx} includedir=%{_prefix}/include/ncurses libdir=%{_prefix}/lib mandir=%{_mandir}
  
-@@ -94,7 +114,11 @@
+@@ -94,7 +115,11 @@
      rm -rf $USR_SHARE/termtemp
  fi
  
@@ -5363,7 +5382,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
-@@ -102,4 +126,33 @@
+@@ -102,4 +127,33 @@
  %defattr(-,root,root)
  %{pfx}/*
  
@@ -5401,7 +5420,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/nrpe/nrpe.spec ltib/dist/lfs-5.1/nrpe/nrpe.spec
 --- ltib.reference/dist/lfs-5.1/nrpe/nrpe.spec
 +++ ltib/dist/lfs-5.1/nrpe/nrpe.spec
-@@ -0,0 +1,71 @@
+@@ -0,0 +1,72 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Host/service/network monitoring agent for Nagios
@@ -5445,6 +5464,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
 +./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-ssl-inc=$DEV_IMAGE/usr --with-ssl-lib=$DEV_IMAGE/usr/lib --enable-command-args
 +make
 +
@@ -5525,7 +5545,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  case $ENDIAN in
      big)
          XTRA_OPTS="-DB_ENDIAN"
-@@ -42,33 +64,54 @@
+@@ -42,33 +64,55 @@
         OSSL_ARCH="linux-$LINTARCH"
         ;;
  esac
@@ -5537,6 +5557,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export BUILDMACH
 +export BUILDMACH=%{_build}
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
 +./Configure $OSSL_ARCH --prefix=%{_prefix} shared no-asm $XTRA_OPTS
 +make -j$(nproc)
 +
@@ -5710,7 +5731,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ppp/ppp.spec ltib/dist/lfs-5.1/ppp/ppp.spec
 --- ltib.reference/dist/lfs-5.1/ppp/ppp.spec
 +++ ltib/dist/lfs-5.1/ppp/ppp.spec
-@@ -8,21 +8,39 @@
+@@ -8,21 +8,40 @@
  Vendor          : Freescale
  Packager        : Michael Barkowski
  Group           : System Environment/Daemons
@@ -5753,10 +5774,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
  if [ "$PKG_PPP_WANT_FILTER" = "y" ]
  then
-@@ -34,15 +52,38 @@
+@@ -34,15 +53,38 @@
  
  
  %Install
@@ -6159,7 +6181,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  # Unset compiler to prevent gcc being used when the cross
  # tools should be used. (Trolltech issue# 138807)
-@@ -185,32 +195,204 @@
+@@ -185,32 +195,205 @@
  # Unset PLATFORM because this is used as host machine.
  unset PLATFORM
  
@@ -6168,6 +6190,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -
 -#if PKG_MBX_BIN is already installed, uncomment the following line to add OpenGLES 1.1 support
 -#export XTRA_OPTS="$XTRA_OPTS -opengl es1"
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
 +./configure \
 +%if %{?toolchain:1}%{!?toolchain:0}
 +	--prefix=%{toolchain_install_dir} \
@@ -6570,7 +6593,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/rsync/rsync.spec ltib/dist/lfs-5.1/rsync/rsync.spec
 --- ltib.reference/dist/lfs-5.1/rsync/rsync.spec
 +++ ltib/dist/lfs-5.1/rsync/rsync.spec
-@@ -8,30 +8,63 @@
+@@ -8,30 +8,64 @@
  Vendor          : Freescale
  Packager        : Stuart Hughes
  Group           : Applications/Internet
@@ -6611,6 +6634,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  rsync_cv_HAVE_GETTIMEOFDAY_TZ=yes \
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
  make
@@ -6641,7 +6665,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server-openssl.spec ltib/dist/lfs-5.1/sftp-server/sftp-server-openssl.spec
 --- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server-openssl.spec
 +++ ltib/dist/lfs-5.1/sftp-server/sftp-server-openssl.spec
-@@ -0,0 +1,118 @@
+@@ -0,0 +1,119 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define aname openssh
 +%define avers 4.3p2
@@ -6733,6 +6757,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +make -j$(nproc) build_crypto
 +
 +cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssh-4.3p2
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
 +LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-zlib=$DEV_IMAGE/usr --with-ssl-dir=$RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g --with-ldflags="-L$RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g" --config-cache
 +make -j$(nproc) sysconfdir=%{_sysconfdir}/ssh sftp-server
 +
@@ -6763,7 +6788,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
 --- ltib.reference/dist/lfs-5.1/sftp-server/sftp-server.spec
 +++ ltib/dist/lfs-5.1/sftp-server/sftp-server.spec
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,73 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define aname openssh
 +%define avers 4.3p2
@@ -6809,6 +6834,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
 +LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-zlib=$DEV_IMAGE/usr/lib --with-ldflags=-L$DEV_IMAGE/usr/lib
 +make -j$(nproc) sysconfdir=%{_sysconfdir}/ssh sftp-server
 +
@@ -8772,7 +8798,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec ltib/dist/lfs-5.1/xenomai/xenomai.spec
 --- ltib.reference/dist/lfs-5.1/xenomai/xenomai.spec
 +++ ltib/dist/lfs-5.1/xenomai/xenomai.spec
-@@ -0,0 +1,148 @@
+@@ -0,0 +1,149 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : xenomai - Real Time extension for the Linux kernel
@@ -8819,6 +8845,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
 +./configure CFLAGS="-march=armv5te" LDFLAGS="-march=armv5te" --build=%{_build} --host=$CFGHOST
 +make DESTDIR=$RPM_BUILD_ROOT%{pfx} all
 +
@@ -8997,7 +9024,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/zlib/zlib.spec ltib/dist/lfs-5.1/zlib/zlib.spec
 --- ltib.reference/dist/lfs-5.1/zlib/zlib.spec
 +++ ltib/dist/lfs-5.1/zlib/zlib.spec
-@@ -8,19 +8,39 @@
+@@ -8,19 +8,40 @@
  Vendor          : Freescale
  Packager        : Stuart Hughes
  Group           : Development/Libraries
@@ -9038,10 +9065,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
++find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.am -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
  ./configure --prefix=%{_prefix} --shared
  mv Makefile Makefile.shared
  ./configure --prefix=%{_prefix}
-@@ -28,13 +48,21 @@
+@@ -28,13 +49,21 @@
  make -f Makefile.shared
  make -f Makefile.static
  
@@ -9066,7 +9094,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
-@@ -42,4 +70,8 @@
+@@ -42,4 +71,8 @@
  %defattr(-,root,root)
  %{pfx}/*
  

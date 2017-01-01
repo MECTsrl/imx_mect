@@ -1,6 +1,8 @@
-qwt_mml_document.h/qwt_mml_document.cpp have been stripped down from
-"MML Widget" package of the solutions package, that is distributed under
-the following licenses:
+The Qwt MathML renderer has been derived from the "MML Widget" 
+that was part of the former TrollTech solutions package. 
+( see http://doc.qt.digia.com/solutions/4/qtmmlwidget )
+
+It once was distributed under the following licenses:
 
 -----------------------------------------------------------------
 Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).

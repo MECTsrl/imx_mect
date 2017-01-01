@@ -33,7 +33,7 @@ class QWT_EXPORT QwtAbstractSlider: public QwtAbstractScale
 {
     Q_OBJECT
 
-    Q_PROPERTY( double value READ value WRITE setValue )
+    Q_PROPERTY( double value READ value WRITE setValue NOTIFY valueChanged USER true )
 
     Q_PROPERTY( uint totalSteps READ totalSteps WRITE setTotalSteps )
     Q_PROPERTY( uint singleSteps READ singleSteps WRITE setSingleSteps )

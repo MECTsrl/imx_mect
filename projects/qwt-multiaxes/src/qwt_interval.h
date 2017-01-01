@@ -69,6 +69,7 @@ public:
     double maxValue() const;
 
     double width() const;
+    long double widthL() const;
 
     void setMinValue( double );
     void setMaxValue( double );
@@ -227,6 +228,24 @@ inline bool QwtInterval::isValid() const
 inline double QwtInterval::width() const
 {
     return isValid() ? ( d_maxValue - d_minValue ) : 0.0;
+}
+
+/*!
+   \brief Return the width of an interval as long double
+
+   The width of invalid intervals is 0.0, otherwise the result is
+   maxValue() - minValue().
+
+   \return Interval width
+   \sa isValid()
+*/
+inline long double QwtInterval::widthL() const
+{
+    if ( !isValid() )
+        return 0.0;
+
+    return static_cast<long double>( d_maxValue )
+        - static_cast<long double>( d_minValue );
 }
 
 /*!

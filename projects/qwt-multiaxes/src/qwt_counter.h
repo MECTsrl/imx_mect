@@ -49,7 +49,7 @@ class QWT_EXPORT QwtCounter : public QWidget
 {
     Q_OBJECT
 
-    Q_PROPERTY( double value READ value WRITE setValue )
+    Q_PROPERTY( double value READ value WRITE setValue NOTIFY valueChanged USER true )
     Q_PROPERTY( double minimum READ minimum WRITE setMinimum )
     Q_PROPERTY( double maximum READ maximum WRITE setMaximum )
     Q_PROPERTY( double singleStep READ singleStep WRITE setSingleStep )

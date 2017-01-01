@@ -1,7 +1,7 @@
 /* -*- mode: C++ ; c-file-style: "stroustrup" -*- *****************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
- * Copyright (C) 2003   Uwe Rathmann
+ * Copyright (C) 2002   Uwe Rathmann
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the Qwt License, Version 1.0
@@ -42,7 +42,27 @@ public:
           Try to remove points, that are translated to the
           same position.
          */
-        WeedOutPoints = 0x02
+        WeedOutPoints = 0x02,
+
+        /*!
+          An even more aggressive weeding algorithm, that
+          can be used in toPolygon().
+
+          A consecutive chunk of points being mapped to the
+          same x coordinate is reduced to 4 points:
+
+              - first point
+              - point with the minimum y coordinate
+              - point with the maximum y coordinate
+              - last point
+
+          In the worst case ( first and last points are never one of the extremes )
+          the number of points will be 4 times the width.
+
+          As the algorithm is fast it can be used inside of 
+          a polyline render cycle.
+         */
+        WeedOutIntermediatePoints = 0x04
     };
 
     /*!  

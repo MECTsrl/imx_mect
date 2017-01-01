@@ -13,15 +13,17 @@ include( $${QWT_ROOT}/qwtconfig.pri )
 include( $${QWT_ROOT}/qwtbuild.pri )
 include( $${QWT_ROOT}/qwtfunctions.pri )
 
+QWT_OUT_ROOT = $${OUT_PWD}/../..
+
 TEMPLATE  = lib
 
-DESTDIR         = $${QWT_ROOT}/lib
+DESTDIR         = $${QWT_OUT_ROOT}/lib
 INCLUDEPATH    += $${QWT_ROOT}/src
 DEPENDPATH     += $${QWT_ROOT}/src
 
 contains(QWT_CONFIG, QwtDll) {
     CONFIG += dll
-    win32|symbian: DEFINES += QT_DLL QWT_DLL QWT_MAKEDLL
+    DEFINES += QT_DLL QWT_DLL QWT_MAKEDLL
 }   
 else {
     CONFIG += staticlib
@@ -30,14 +32,9 @@ else {
 contains(QWT_CONFIG, QwtFramework) {
 
     CONFIG += lib_bundle
-    LIBS      += -F$${QWT_ROOT}/lib
-}
-else {
-
-    LIBS      += -L$${QWT_ROOT}/lib
 }
 
-qwtAddLibrary(qwt)
+qwtAddLibrary($${QWT_OUT_ROOT}/lib, qwt)
 
 # Install directives
 

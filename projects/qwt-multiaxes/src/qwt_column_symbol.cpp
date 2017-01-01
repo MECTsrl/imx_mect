@@ -114,9 +114,9 @@ public:
     PrivateData():
         style( QwtColumnSymbol::Box ),
         frameStyle( QwtColumnSymbol::Raised ),
+        palette( Qt::gray ),
         lineWidth( 2 )
     {
-        palette = QPalette( Qt::gray );
     }
 
     QwtColumnSymbol::Style style;

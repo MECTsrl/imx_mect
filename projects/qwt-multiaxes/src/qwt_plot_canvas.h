@@ -94,7 +94,37 @@ public:
 
           \sa replot(), QWidget::repaint(), QWidget::update()
          */
-        ImmediatePaint = 8
+        ImmediatePaint = 8,
+
+        /*!
+          \brief Render the canvas via an OpenGL buffer
+
+          In OpenGLBuffer mode the plot scene will be rendered to a temporary
+          OpenGL buffer, that will be translated to a QImage afterwards.
+          Then this image will be painted to the canvas.
+
+          This mode might be useful for "heavy" plots on platforms to achieve 
+          hardware acceleration on platforms, where the raster paint engine 
+          ( = software renderer ) would be used otherwise.
+          But the penalty for copying out the buffer to the image makes this mode
+          less optimal when looking for high rfresh rates of a "lightweight" plot.
+
+          On a hardware accelerated graphics system ( f.e. Qt4/X11 "native" ) 
+          using this mode does not make much sense. Unfortunately those systems have 
+          been removed from Qt5.
+
+          \note Using QwtPlotGLCanvas is an hardware accelerated alternative without 
+                suffering from the extra roundtrip of the rendered image. But this 
+                type of canvas does not have a backing store, that helps to avoid
+                replots in combination with of overlay widgets ( f.e the 
+                rubberband of a zoomer ).
+
+          \note The OpenGLBuffer mode has no effect, when "QwtOpenGL" has been disabled in 
+                qwtconfig.pri.
+
+          \sa QwtPlotGLCanvas
+         */
+        OpenGLBuffer = 16
     };
 
     //! Paint attributes
@@ -141,7 +171,7 @@ public:
     bool testPaintAttribute( PaintAttribute ) const;
 
     const QPixmap *backingStore() const;
-    void invalidateBackingStore();
+    Q_INVOKABLE void invalidateBackingStore();
 
     virtual bool event( QEvent * );
 
@@ -160,6 +190,7 @@ protected:
     void updateStyleSheetInfo();
 
 private:
+    QImage toImageFBO( const QSize &size );
     void drawCanvas( QPainter *, bool withBackground );
 
     class PrivateData;

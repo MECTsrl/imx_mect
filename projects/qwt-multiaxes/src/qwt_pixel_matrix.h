@@ -1,7 +1,7 @@
 /* -*- mode: C++ ; c-file-style: "stroustrup" -*- *****************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
- * Copyright (C) 2003   Uwe Rathmann
+ * Copyright (C) 2002   Uwe Rathmann
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the Qwt License, Version 1.0
@@ -23,7 +23,7 @@
 class QWT_EXPORT QwtPixelMatrix: public QBitArray
 {
 public:
-    QwtPixelMatrix( const QRect& rect );
+    explicit QwtPixelMatrix( const QRect& rect );
     ~QwtPixelMatrix();
 
     void setRect( const QRect& rect );

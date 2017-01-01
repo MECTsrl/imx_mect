@@ -37,10 +37,10 @@ class QPalette;
   \verbatim
 QwtPlotScaleItem *scaleItem =
     new QwtPlotScaleItem(QwtScaleDraw::RightScale, 0.0);
-scaleItem->setFont(plot->axisWidget(QwtPlot::yLeft)->font());
+scaleItem->setFont(plot->axisWidget(QwtAxis::yLeft)->font());
 scaleItem->attach(plot);
 
-plot->enableAxis(QwtPlot::yLeft, false);
+plot->enableAxis(QwtAxis::yLeft, false);
 \endverbatim
 */
 

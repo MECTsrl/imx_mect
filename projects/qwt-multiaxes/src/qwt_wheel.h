@@ -31,7 +31,8 @@ class QWT_EXPORT QwtWheel: public QWidget
     Q_PROPERTY( Qt::Orientation orientation
                 READ orientation WRITE setOrientation )
 
-    Q_PROPERTY( double value READ value WRITE setValue )
+    Q_PROPERTY( double value READ value WRITE setValue NOTIFY valueChanged USER true  )
+
     Q_PROPERTY( double minimum READ minimum WRITE setMinimum )
     Q_PROPERTY( double maximum READ maximum WRITE setMaximum )
 

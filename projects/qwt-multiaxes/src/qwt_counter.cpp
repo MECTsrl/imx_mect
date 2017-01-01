@@ -79,7 +79,6 @@ void QwtCounter::initCounter()
         QwtArrowButton *btn =
             new QwtArrowButton( i + 1, Qt::DownArrow, this );
         btn->setFocusPolicy( Qt::NoFocus );
-        btn->installEventFilter( this );
         layout->addWidget( btn );
 
         connect( btn, SIGNAL( released() ), SLOT( btnReleased() ) );
@@ -103,7 +102,6 @@ void QwtCounter::initCounter()
         QwtArrowButton *btn =
             new QwtArrowButton( i + 1, Qt::UpArrow, this );
         btn->setFocusPolicy( Qt::NoFocus );
-        btn->installEventFilter( this );
         layout->addWidget( btn );
 
         connect( btn, SIGNAL( released() ), SLOT( btnReleased() ) );
@@ -661,11 +659,20 @@ void QwtCounter::incrementValue( int numSteps )
     }
 
     value = min + qRound( ( value - min ) / stepSize ) * stepSize;
-    if ( qFuzzyCompare( value, max ) )
-        value = max;
 
-    if ( qFuzzyCompare( value + 1.0, 1.0 ) )
-        value = 0.0;
+    if ( stepSize > 1e-12 )
+    {
+        if ( qFuzzyCompare( value + 1.0, 1.0 ) )
+        {
+            // correct rounding error if value = 0
+            value = 0.0;
+        }
+        else if ( qFuzzyCompare( value, max ) )
+        {
+            // correct rounding error at the border
+            value = max;
+        }
+    }
 
     if ( value != d_data->value )
     {

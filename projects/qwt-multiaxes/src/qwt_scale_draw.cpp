@@ -121,7 +121,7 @@ void QwtScaleDraw::getBorderDistHint(
     const QFont &font, int &start, int &end ) const
 {
     start = 0;
-    end = 0;
+    end = 1.0;
 
     if ( !hasComponent( QwtAbstractScaleDraw::Labels ) )
         return;
@@ -614,7 +614,7 @@ QPointF QwtScaleDraw::pos() const
 */
 void QwtScaleDraw::setLength( double length )
 {
-#if 1
+#if 0
     if ( length >= 0 && length < 10 )
         length = 10;
 
@@ -622,7 +622,7 @@ void QwtScaleDraw::setLength( double length )
     if ( length < 0 && length > -10 )
         length = -10;
 #else
-    length = qMax( length, 10 );
+    length = qMax( length, 10.0 );
 #endif
 
     d_data->len = length;

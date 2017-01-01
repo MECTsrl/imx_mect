@@ -60,7 +60,7 @@ Panel::Panel( QWidget *parent ):
 
     connect( d_curveAntialiasing, SIGNAL( stateChanged( int ) ), SLOT( edited() ) );
     connect( d_curveClipping, SIGNAL( stateChanged( int ) ), SLOT( edited() ) );
-    connect( d_curveFiltering, SIGNAL( stateChanged( int ) ), SLOT( edited() ) );
+    connect( d_curveWeeding, SIGNAL( currentIndexChanged( int ) ), SLOT( edited() ) );
     connect( d_lineSplitting, SIGNAL( stateChanged( int ) ), SLOT( edited() ) );
     connect( d_curveFilled, SIGNAL( stateChanged( int ) ), SLOT( edited() ) );
 
@@ -150,9 +150,13 @@ QWidget *Panel::createCurveTab( QWidget *parent )
 
     d_curveAntialiasing = new CheckBox( "Antialiasing", page );
     d_curveClipping = new CheckBox( "Clipping", page );
-    d_curveFiltering = new CheckBox( "Filtering", page );
     d_lineSplitting = new CheckBox( "Split Lines", page );
 
+    d_curveWeeding = new QComboBox( page );
+    d_curveWeeding->addItem( "None" );
+    d_curveWeeding->addItem( "Normal" );
+    d_curveWeeding->addItem( "Aggressive" );
+    
     d_curveWidth = new SpinBox( 0, 10, 1, page );
 
     d_curvePen = new QComboBox( page );
@@ -169,8 +173,10 @@ QWidget *Panel::createCurveTab( QWidget *parent )
 
     layout->addWidget( d_curveAntialiasing, row++, 0, 1, -1 );
     layout->addWidget( d_curveClipping, row++, 0, 1, -1 );
-    layout->addWidget( d_curveFiltering, row++, 0, 1, -1 );
     layout->addWidget( d_lineSplitting, row++, 0, 1, -1 );
+
+    layout->addWidget( new QLabel( "Weeding", page ), row, 0 );
+    layout->addWidget( d_curveWeeding, row++, 1 );
 
     layout->addWidget( new QLabel( "Width", page ), row, 0 );
     layout->addWidget( d_curveWidth, row++, 1 );
@@ -219,14 +225,28 @@ Settings Panel::settings() const
     s.curve.numPoints = d_numPoints->value();
     s.curve.functionType = static_cast<Settings::FunctionType>(
         d_curveType->currentIndex() );
+
     if ( d_curveClipping->isChecked() )
         s.curve.paintAttributes |= QwtPlotCurve::ClipPolygons;
     else
         s.curve.paintAttributes &= ~QwtPlotCurve::ClipPolygons;
-    if ( d_curveFiltering->isChecked() )
-        s.curve.paintAttributes |= QwtPlotCurve::FilterPoints;
-    else
-        s.curve.paintAttributes &= ~QwtPlotCurve::FilterPoints;
+
+    s.curve.paintAttributes &= ~QwtPlotCurve::FilterPoints;
+    s.curve.paintAttributes &= ~QwtPlotCurve::FilterPointsAggressive;
+
+    switch( d_curveWeeding->currentIndex() )
+    {
+        case 1:
+        {
+            s.curve.paintAttributes |= QwtPlotCurve::FilterPoints;
+            break;
+        }
+        case 2:
+        {
+            s.curve.paintAttributes |= QwtPlotCurve::FilterPointsAggressive;
+            break;
+        }
+    }
 
     if ( d_curveAntialiasing->isChecked() )
         s.curve.renderHint |= QwtPlotItem::RenderAntialiased;
@@ -285,8 +305,14 @@ void Panel::setSettings( const Settings &s )
 
     d_curveClipping->setChecked(
         s.curve.paintAttributes & QwtPlotCurve::ClipPolygons );
-    d_curveFiltering->setChecked(
-        s.curve.paintAttributes & QwtPlotCurve::FilterPoints );
+
+    int weedingIndex = 0;
+    if ( s.curve.paintAttributes & QwtPlotCurve::FilterPointsAggressive )
+        weedingIndex = 2;
+    else if ( s.curve.paintAttributes & QwtPlotCurve::FilterPoints )
+        weedingIndex = 1;
+
+    d_curveWeeding->setCurrentIndex( weedingIndex );
 
     d_lineSplitting->setChecked( s.curve.lineSplitting );
 

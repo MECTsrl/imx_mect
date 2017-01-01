@@ -8,7 +8,7 @@
 ################################################################
 
 QWT_VER_MAJ      = 6
-QWT_VER_MIN      = 1
+QWT_VER_MIN      = 3
 QWT_VER_PAT      = 0
 QWT_VERSION      = $${QWT_VER_MAJ}.$${QWT_VER_MIN}.$${QWT_VER_PAT}
 
@@ -20,10 +20,12 @@ QWT_INSTALL_PREFIX = $$[QT_INSTALL_PREFIX]
 
 unix {
     QWT_INSTALL_PREFIX    = /usr/
+    QWT_INSTALL_PREFIX    = /usr/
 }
 
 win32 {
-    QWT_INSTALL_PREFIX    = C:/Qwt-$$QWT_VERSION
+    QWT_INSTALL_PREFIX    = C:/Qwt-$$QWT_VERSION-svn
+    # QWT_INSTALL_PREFIX = C:/Qwt-$$QWT_VERSION-svn-qt-$$QT_VERSION
 }
 
 QWT_INSTALL_DOCS      = $${QWT_INSTALL_PREFIX}/doc
@@ -139,7 +141,7 @@ win32 {
 # Otherwise you have to build them from the examples directory.
 ######################################################################
 
-#QWT_CONFIG     += QwtExamples
+QWT_CONFIG     += QwtExamples
 
 ######################################################################
 # The playground is primarily intended for the Qwt development 
@@ -150,7 +152,7 @@ win32 {
 # Otherwise you have to build them from the playground directory.
 ######################################################################
 
-#QWT_CONFIG     += QwtPlayground
+QWT_CONFIG     += QwtPlayground
 
 ######################################################################
 # When Qt has been built as framework qmake wants 
@@ -161,3 +163,13 @@ macx:!static:CONFIG(qt_framework, qt_framework|qt_no_framework) {
 
     QWT_CONFIG += QwtFramework
 }  
+
+######################################################################
+# Create and install pc files for pkg-config
+# See http://www.freedesktop.org/wiki/Software/pkg-config/
+######################################################################
+
+unix {
+
+    QWT_CONFIG     += QwtPkgConfig
+}

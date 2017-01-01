@@ -127,7 +127,7 @@ template<class Point>
 class QwtClip::PointBuffer
 {
 public:
-    PointBuffer( int capacity = 0 ):
+    explicit PointBuffer( int capacity = 0 ):
         m_capacity( 0 ),
         m_size( 0 ),
         m_buffer( NULL )
@@ -207,7 +207,7 @@ template <class Polygon, class Rect, class Point, typename T>
 class QwtPolygonClipper
 {
 public:
-    QwtPolygonClipper( const Rect &clipRect ):
+    explicit QwtPolygonClipper( const Rect &clipRect ):
         d_clipRect( clipRect )
     {
     }
@@ -303,7 +303,7 @@ private:
 class QwtCircleClipper
 {
 public:
-    QwtCircleClipper( const QRectF &r );
+    explicit QwtCircleClipper( const QRectF &r );
     QVector<QwtInterval> clipCircle( const QPointF &, double radius ) const;
 
 private:

@@ -1,7 +1,6 @@
 #include <qapplication.h>
 #include <qwt_math.h>
 #include <qwt_symbol.h>
-#include <qwt_curve_fitter.h>
 #include <qwt_plot_curve.h>
 #include <qwt_plot_canvas.h>
 #include <qwt_plot_layout.h>
@@ -35,10 +34,6 @@ public:
     {
         setPen( QColor( 150, 150, 200 ), 2 );
         setStyle( QwtPlotCurve::Lines );
-
-        QwtSplineCurveFitter *curveFitter = new QwtSplineCurveFitter();
-        curveFitter->setSplineSize( 150 );
-        setCurveFitter( curveFitter );
 
         setCurveAttribute( QwtPlotCurve::Fitted, true );
 
@@ -106,11 +101,6 @@ public:
     {
         setStyle( QwtPlotCurve::Lines );
         setPen( QColor( 100, 200, 150 ), 2 );
-
-        QwtSplineCurveFitter* curveFitter = new QwtSplineCurveFitter();
-        curveFitter->setFitMode( QwtSplineCurveFitter::ParametricSpline );
-        curveFitter->setSplineSize( 200 );
-        setCurveFitter( curveFitter );
 
         setCurveAttribute( QwtPlotCurve::Fitted, true );
 
@@ -206,8 +196,8 @@ Plot::Plot( QWidget *parent ):
     setTitle( "Animated Curves" );
 
     // hide all axes
-    for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
-        enableAxis( axis, false );
+    for ( int axis = 0; axis < QwtAxis::PosCount; axis++ )
+        setAxisVisible( axis, false );
 
     plotLayout()->setCanvasMargin( 10 );
 

@@ -73,17 +73,6 @@ inline int qwtFuzzyCompare( double value1, double value2, double intervalSize )
     return 0;
 }
 
-
-inline bool qwtFuzzyGreaterOrEqual( double d1, double d2 )
-{
-    return ( d1 >= d2 ) || qFuzzyCompare( d1, d2 );
-}
-
-inline bool qwtFuzzyLessOrEqual( double d1, double d2 )
-{
-    return ( d1 <= d2 ) || qFuzzyCompare( d1, d2 );
-}
-
 //! Return the sign
 inline int qwtSign( double x )
 {
@@ -134,13 +123,13 @@ inline double qwtFastAtan2( double y, double x )
     return 0.0;
 }
 
-// Translate degrees into radians
+//! Translate degrees into radians
 inline double qwtRadians( double degrees )
 {
     return degrees * M_PI / 180.0;
 }
 
-// Translate radians into degrees
+//! Translate radians into degrees
 inline double qwtDegrees( double degrees )
 {
     return degrees * 180.0 / M_PI;

@@ -87,6 +87,7 @@ contains(QWT_CONFIG, QwtDesigner) {
         qwtAddLibrary($${QWT_OUT_ROOT}/lib, qwt)
 
         contains(QWT_CONFIG, QwtDll) {
+
 			DEFINES += QT_DLL QWT_DLL
         }
     }

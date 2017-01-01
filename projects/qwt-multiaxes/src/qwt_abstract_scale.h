@@ -46,7 +46,7 @@ class QWT_EXPORT QwtAbstractScale: public QWidget
     Q_PROPERTY( double scaleStepSize READ scaleStepSize WRITE setScaleStepSize )
 
 public:
-    QwtAbstractScale( QWidget *parent = NULL );
+    explicit QwtAbstractScale( QWidget *parent = NULL );
     virtual ~QwtAbstractScale();
 
     void setScale( double lowerBound, double upperBound );
@@ -85,6 +85,8 @@ public:
     const QwtScaleMap &scaleMap() const;
 
 protected:
+    virtual void changeEvent( QEvent * );
+
     void rescale( double lowerBound, 
         double upperBound, double stepSize );
 
@@ -93,11 +95,10 @@ protected:
     const QwtAbstractScaleDraw *abstractScaleDraw() const;
     QwtAbstractScaleDraw *abstractScaleDraw();
 
+    void updateScaleDraw();
     virtual void scaleChange();
 
 private:
-    void updateScaleDraw();
-
     class PrivateData;
     PrivateData *d_data;
 };

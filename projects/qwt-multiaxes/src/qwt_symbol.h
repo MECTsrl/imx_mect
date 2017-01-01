@@ -164,7 +164,7 @@ public:
     };
 
 public:
-    QwtSymbol( Style = NoSymbol );
+    explicit QwtSymbol( Style = NoSymbol );
     QwtSymbol( Style, const QBrush &, const QPen &, const QSize & );
     QwtSymbol( const QPainterPath &, const QBrush &, const QPen & );
 

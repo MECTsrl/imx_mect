@@ -12,6 +12,7 @@
 
 #include "qwt_global.h"
 #include "qwt_plot.h"
+#include "qwt_axis_id.h"
 
 /*!
   \brief Layout engine for QwtPlot.
@@ -28,7 +29,7 @@ class QWT_EXPORT QwtPlotLayout
 public:
     /*!
       Options to configure the plot layout engine
-      \sa activate(), QwtPlotRenderer
+      \sa update(), QwtPlotRenderer
      */
     enum Option
     {
@@ -80,7 +81,7 @@ public:
 
     virtual QSize minimumSizeHint( const QwtPlot * ) const;
 
-    virtual void activate( const QwtPlot *,
+    void update( const QwtPlot *,
         const QRectF &rect, Options options = 0x00 );
 
     virtual void invalidate();
@@ -88,32 +89,26 @@ public:
     QRectF titleRect() const;
     QRectF footerRect() const;
     QRectF legendRect() const;
-    QRectF scaleRect( int axis ) const;
+    QRectF scaleRect( QwtAxisId axis ) const;
     QRectF canvasRect() const;
 
-    class LayoutData;
 
 protected:
+    virtual void activate( const QwtPlot *,
+        const QRectF &rect, Options options );
 
     void setTitleRect( const QRectF & );
     void setFooterRect( const QRectF & );
     void setLegendRect( const QRectF & );
-    void setScaleRect( int axis, const QRectF & );
+    void setScaleRect( QwtAxisId axis, const QRectF & );
     void setCanvasRect( const QRectF & );
 
-    QRectF layoutLegend( Options options, const QRectF & ) const;
-    QRectF alignLegend( const QRectF &canvasRect,
-        const QRectF &legendRect ) const;
-
-    void expandLineBreaks( Options options, const QRectF &rect,
-        int &dimTitle, int &dimFooter, int dimAxes[QwtPlot::axisCnt] ) const;
-
-    void alignScales( Options options, QRectF &canvasRect,
-        QRectF scaleRect[QwtPlot::axisCnt] ) const;
-
 private:
-    class PrivateData;
+    // Disabled copy constructor and operator=
+    explicit QwtPlotLayout( const QwtPlotLayout & );
+    QwtPlotLayout &operator=( const QwtPlotLayout & );
 
+    class PrivateData;
     PrivateData *d_data;
 };
 

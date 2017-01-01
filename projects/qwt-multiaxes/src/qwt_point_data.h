@@ -97,8 +97,8 @@ int main(int argc, char **argv)
     QApplication a( argc, argv );
 
     QwtPlot plot;
-    plot.setAxisScale( QwtPlot::xBottom, 0.0, 10.0 );
-    plot.setAxisScale( QwtPlot::yLeft, -1.0, 1.0 );
+    plot.setAxisScale( QwtAxis::xBottom, 0.0, 10.0 );
+    plot.setAxisScale( QwtAxis::yLeft, -1.0, 1.0 );
 
     QwtPlotCurve *curve = new QwtPlotCurve( "y = sin(x)" );
     curve->setData( new SinusData() );

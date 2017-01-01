@@ -93,7 +93,7 @@ public:
     QwtPainterCommand();
     QwtPainterCommand(const QwtPainterCommand &);
 
-    QwtPainterCommand( const QPainterPath & );
+    explicit QwtPainterCommand( const QPainterPath & );
 
     QwtPainterCommand( const QRectF &rect,
             const QPixmap &, const QRectF& subRect );
@@ -102,7 +102,7 @@ public:
             const QImage &, const QRectF& subRect,
             Qt::ImageConversionFlags );
 
-    QwtPainterCommand( const QPaintEngineState & );
+    explicit QwtPainterCommand( const QPaintEngineState & );
 
     ~QwtPainterCommand();
 

@@ -204,7 +204,30 @@ public:
           With a reasonable number of points QPainter::drawPoints()
           will be faster.
          */
-        ImageBuffer = 0x08
+        ImageBuffer = 0x08,
+
+        /*!
+          More aggressive point filtering trying to filter out
+          intermediate points, accepting minor visual differences.
+
+          Has only an effect, when drawing the curve to a paint device
+          in integer coordinates ( f.e. all widgets on screen ) using the fact, 
+          that consecutive points are often mapped to the same x or y coordinate.
+          Each chunk of samples mapped to the same coordinate can be reduced to
+          4 points ( first, min, max last ).
+
+          In the worst case the polygon to be rendered will be 4 times the width
+          of the plot canvas.
+
+          The algorithm is very fast and effective for huge datasets, and can be used
+          inside a replot cycle.
+
+          \note Implemented for QwtPlotCurve::Lines only
+          \note As this algo replaces many small lines by a long one
+                a nasty bug of the raster paint engine becomes more dominant, 
+                that is worked around in QwtPainter::polylineSplitting() mode.
+         */
+        FilterPointsAggressive = 0x10,
     };
 
     //! Paint attributes
@@ -231,7 +254,7 @@ public:
     void setSamples( const QVector<QPointF> & );
     void setSamples( QwtSeriesData<QPointF> * );
 
-    int closestPoint( const QPoint &pos, double *dist = NULL ) const;
+    virtual int closestPoint( const QPoint &pos, double *dist = NULL ) const;
 
     double minXValue() const;
     double maxXValue() const;

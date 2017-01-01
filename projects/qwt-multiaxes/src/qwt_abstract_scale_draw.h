@@ -95,6 +95,8 @@ public:
     void setMinimumExtent( double );
     double minimumExtent() const;
 
+    void invalidateCache();
+
 protected:
     /*!
        Draw a tick
@@ -125,11 +127,10 @@ protected:
     */
     virtual void drawLabel( QPainter *painter, double value ) const = 0;
 
-    void invalidateCache();
     const QwtText &tickLabel( const QFont &, double value ) const;
 
 private:
-    QwtAbstractScaleDraw( const QwtAbstractScaleDraw & );
+    explicit QwtAbstractScaleDraw( const QwtAbstractScaleDraw & );
     QwtAbstractScaleDraw &operator=( const QwtAbstractScaleDraw & );
 
     class PrivateData;

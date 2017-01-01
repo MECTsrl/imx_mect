@@ -54,7 +54,7 @@ public:
     };
 
 public:
-    QwtIntervalSymbol( Style = NoSymbol );
+    explicit QwtIntervalSymbol( Style = NoSymbol );
     QwtIntervalSymbol( const QwtIntervalSymbol & );
     virtual ~QwtIntervalSymbol();
 

@@ -118,6 +118,7 @@ public:
 protected:
     virtual void paintEvent( QPaintEvent * );
     virtual void resizeEvent( QResizeEvent * );
+    virtual void changeEvent( QEvent * );
 
     void draw( QPainter *p ) const;
 

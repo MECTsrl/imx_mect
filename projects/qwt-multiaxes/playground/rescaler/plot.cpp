@@ -111,7 +111,7 @@ private:
 Plot::Plot( QWidget *parent, const QwtInterval &interval ):
     QwtPlot( parent )
 {
-    for ( int axis = 0; axis < QwtPlot::axisCnt; axis ++ )
+    for ( int axis = 0; axis < QwtAxis::PosCount; axis ++ )
         setAxisScale( axis, interval.minValue(), interval.maxValue() );
 
     setCanvasBackground( QColor( Qt::darkBlue ) );
@@ -160,8 +160,8 @@ void Plot::updateLayout()
 {
     QwtPlot::updateLayout();
 
-    const QwtScaleMap xMap = canvasMap( QwtPlot::xBottom );
-    const QwtScaleMap yMap = canvasMap( QwtPlot::yLeft );
+    const QwtScaleMap xMap = canvasMap( QwtAxis::xBottom );
+    const QwtScaleMap yMap = canvasMap( QwtAxis::yLeft );
 
     const QRect cr = canvas()->contentsRect();
     const double x1 = xMap.invTransform( cr.left() );

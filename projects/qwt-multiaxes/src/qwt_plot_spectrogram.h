@@ -68,6 +68,9 @@ public:
     void setColorMap( QwtColorMap * );
     const QwtColorMap *colorMap() const;
 
+    void setMaxRGBTableSize( int numColors );
+    int maxRGBTableSize() const;
+    
     virtual QwtInterval interval(Qt::Axis) const;
     virtual QRectF pixelHint( const QRectF & ) const;
 

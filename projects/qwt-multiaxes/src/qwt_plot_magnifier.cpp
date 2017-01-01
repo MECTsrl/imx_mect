@@ -10,18 +10,12 @@
 #include "qwt_plot.h"
 #include "qwt_scale_div.h"
 #include "qwt_plot_magnifier.h"
-#include <qevent.h>
+#include "qwt_axes_mask.h"
 
 class QwtPlotMagnifier::PrivateData
 {
 public:
-    PrivateData()
-    {
-        for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
-            isAxisEnabled[axis] = true;
-    }
-
-    bool isAxisEnabled[QwtPlot::axisCnt];
+    QwtAxesMask disabledAxes;
 };
 
 /*!
@@ -46,31 +40,27 @@ QwtPlotMagnifier::~QwtPlotMagnifier()
    Only Axes that are enabled will be zoomed.
    All other axes will remain unchanged.
 
-   \param axis Axis, see QwtPlot::Axis
+   \param axisId Axis id
    \param on On/Off
 
    \sa isAxisEnabled()
 */
-void QwtPlotMagnifier::setAxisEnabled( int axis, bool on )
+void QwtPlotMagnifier::setAxisEnabled( QwtAxisId axisId, bool on )
 {
-    if ( axis >= 0 && axis < QwtPlot::axisCnt )
-        d_data->isAxisEnabled[axis] = on;
+    d_data->disabledAxes.setEnabled( axisId, !on );
 }
 
 /*!
    Test if an axis is enabled
 
-   \param axis Axis, see QwtPlot::Axis
+   \param axisId Axis id
    \return True, if the axis is enabled
 
    \sa setAxisEnabled()
 */
-bool QwtPlotMagnifier::isAxisEnabled( int axis ) const
+bool QwtPlotMagnifier::isAxisEnabled( QwtAxisId axisId ) const
 {
-    if ( axis >= 0 && axis < QwtPlot::axisCnt )
-        return d_data->isAxisEnabled[axis];
-
-    return true;
+    return !d_data->disabledAxes.isEnabled( axisId );
 }
 
 //! Return observed plot canvas
@@ -124,17 +114,44 @@ void QwtPlotMagnifier::rescale( double factor )
     const bool autoReplot = plt->autoReplot();
     plt->setAutoReplot( false );
 
-    for ( int axisId = 0; axisId < QwtPlot::axisCnt; axisId++ )
+    for ( int axisPos = 0; axisPos < QwtAxis::PosCount; axisPos++ )
     {
-        const QwtScaleDiv &scaleDiv = plt->axisScaleDiv( axisId );
-        if ( isAxisEnabled( axisId ) )
-        {
-            const double center =
-                scaleDiv.lowerBound() + scaleDiv.range() / 2;
-            const double width_2 = scaleDiv.range() / 2 * factor;
+        const int axesCount = plt->axesCount( axisPos );
 
-            plt->setAxisScale( axisId, center - width_2, center + width_2 );
-            doReplot = true;
+        for ( int i = 0; i < axesCount; i++ )
+        {
+            const QwtAxisId axisId( axisPos, i );
+
+            if ( isAxisEnabled( axisId ) )
+            {
+                const QwtScaleMap scaleMap = plt->canvasMap( axisId );
+
+                double v1 = scaleMap.s1();
+                double v2 = scaleMap.s2();
+
+                if ( scaleMap.transformation() )
+                {
+                    // the coordinate system of the paint device is always linear
+
+                    v1 = scaleMap.transform( v1 ); // scaleMap.p1()
+                    v2 = scaleMap.transform( v2 ); // scaleMap.p2()
+                }
+
+                const double center = 0.5 * ( v1 + v2 );
+                const double width_2 = 0.5 * ( v2 - v1 ) * factor;
+
+                v1 = center - width_2;
+                v2 = center + width_2;
+
+                if ( scaleMap.transformation() )
+                {
+                    v1 = scaleMap.invTransform( v1 );
+                    v2 = scaleMap.invTransform( v2 );
+                }
+
+                plt->setAxisScale( axisId, v1, v2 );
+                doReplot = true;
+            }
         }
     }
 

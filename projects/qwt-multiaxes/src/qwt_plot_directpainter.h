@@ -73,7 +73,7 @@ public:
     //! Paint attributes
     typedef QFlags<Attribute> Attributes;
 
-    QwtPlotDirectPainter( QObject *parent = NULL );
+    explicit QwtPlotDirectPainter( QObject *parent = NULL );
     virtual ~QwtPlotDirectPainter();
 
     void setAttribute( Attribute, bool on );

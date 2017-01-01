@@ -10,6 +10,7 @@
 #include <qwt_wheel.h>
 #include <stdlib.h>
 
+
 Plot::Plot( QWidget *parent ):
     QwtPlot( parent )
 {
@@ -23,14 +24,14 @@ Plot::Plot( QWidget *parent ):
 
     // axes
 
-    setAxisScale( QwtPlot::xBottom, 0.0, 100.0 );
-    setAxisScale( QwtPlot::yLeft, 0.0, 100.0 );
+    setAxisScale( QwtAxis::xBottom, 0.0, 100.0 );
+    setAxisScale( QwtAxis::yLeft, 0.0, 100.0 );
 
     // Avoid jumping when label with 3 digits
     // appear/disappear when scrolling vertically
 
-    QwtScaleDraw *sd = axisScaleDraw( QwtPlot::yLeft );
-    sd->setMinimumExtent( sd->extent( axisWidget( QwtPlot::yLeft )->font() ) );
+    QwtScaleDraw *sd = axisScaleDraw( QwtAxis::yLeft );
+    sd->setMinimumExtent( sd->extent( axisWidget( QwtAxis::yLeft )->font() ) );
 
     plotLayout()->setAlignCanvasToScales( true );
 
@@ -45,7 +46,7 @@ Plot::Plot( QWidget *parent ):
     // We add a color bar to the left axis
     // ------------------------------------
 
-    QwtScaleWidget *scaleWidget = axisWidget( yLeft );
+    QwtScaleWidget *scaleWidget = axisWidget( QwtAxis::yLeft );
     scaleWidget->setMargin( 10 ); // area for the color bar
     d_colorBar = new ColorBar( Qt::Vertical, scaleWidget );
     d_colorBar->setRange( Qt::red, Qt::darkBlue );
@@ -80,7 +81,7 @@ Plot::Plot( QWidget *parent ):
         "Selecting a value at the scale will insert a new curve." );
     d_wheel->setWhatsThis(
         "With the wheel you can move the visible area." );
-    axisWidget( xBottom )->setWhatsThis(
+    axisWidget( QwtAxis::xBottom )->setWhatsThis(
         "Selecting a value at the scale will insert a new curve." );
 }
 
@@ -92,7 +93,7 @@ void Plot::setCanvasColor( const QColor &c )
 
 void Plot::scrollLeftAxis( double value )
 {
-    setAxisScale( yLeft, value, value + 100.0 );
+    setAxisScale( QwtAxis::yLeft, value, value + 100.0 );
     replot();
 }
 
@@ -101,9 +102,9 @@ bool Plot::eventFilter( QObject *object, QEvent *e )
     if ( e->type() == QEvent::Resize )
     {
         const QSize size = static_cast<QResizeEvent *>( e )->size();
-        if ( object == axisWidget( yLeft ) )
+        if ( object == axisWidget( QwtAxis::yLeft ) )
         {
-            const QwtScaleWidget *scaleWidget = axisWidget( yLeft );
+            const QwtScaleWidget *scaleWidget = axisWidget( QwtAxis::yLeft );
 
             const int margin = 2;
 
@@ -133,11 +134,8 @@ bool Plot::eventFilter( QObject *object, QEvent *e )
 
 void Plot::insertCurve( int axis, double base )
 {
-    Qt::Orientation o;
-    if ( axis == yLeft || axis == yRight )
-        o = Qt::Horizontal;
-    else
-        o = Qt::Vertical;
+    const Qt::Orientation o = 
+		QwtAxis::isYAxis( axis ) ? Qt::Horizontal : Qt::Vertical;
 
     QRgb rgb = static_cast<QRgb>( rand() );
     insertCurve( o, QColor( rgb ), base );
@@ -148,6 +146,9 @@ void Plot::insertCurve( Qt::Orientation o,
     const QColor &c, double base )
 {
     QwtPlotCurve *curve = new QwtPlotCurve();
+
+    curve->setCurveAttribute( QwtPlotCurve::Fitted, true );
+    curve->setRenderHint( QwtPlotItem::RenderAntialiased );
 
     curve->setPen( c );
     curve->setSymbol( new QwtSymbol( QwtSymbol::Ellipse,

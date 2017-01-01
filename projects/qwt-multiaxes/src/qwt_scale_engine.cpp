@@ -13,6 +13,7 @@
 #include <qalgorithms.h>
 #include <qmath.h>
 #include <float.h>
+#include <limits>
 
 #if QT_VERSION < 0x040601
 #define qFabs(x) ::fabs(x)
@@ -581,6 +582,13 @@ QwtScaleDiv QwtLinearScaleEngine::divideScale( double x1, double x2,
     int maxMajorSteps, int maxMinorSteps, double stepSize ) const
 {
     QwtInterval interval = QwtInterval( x1, x2 ).normalized();
+
+    if ( interval.widthL() > std::numeric_limits<double>::max() )
+    {
+        qWarning() << "QwtLinearScaleEngine::divideScale: overflow";
+        return QwtScaleDiv();
+    }
+
     if ( interval.width() <= 0 )
         return QwtScaleDiv();
 
@@ -1027,6 +1035,9 @@ void QwtLogScaleEngine::buildMinorTicks(
 
             if ( s >= 1.0 )
             {
+                if ( !qFuzzyCompare( s, 1.0 ) )
+                    minorTicks += v * s;
+
                 for ( int j = 2; j < numSteps; j++ )
                 {
                     minorTicks += v * j * s;

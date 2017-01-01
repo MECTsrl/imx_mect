@@ -93,8 +93,8 @@ Plot::Plot( QWidget *parent ):
     grid->attach( this );
 
     // axis
-    setAxisScale( QwtPlot::yLeft, 0.0, 1000.0 );
-    setAxisScale( QwtPlot::xBottom, 0.0, 1000.0 );
+    setAxisScale( QwtAxis::yLeft, 0.0, 1000.0 );
+    setAxisScale( QwtAxis::xBottom, 0.0, 1000.0 );
 }
 
 Plot::~Plot()

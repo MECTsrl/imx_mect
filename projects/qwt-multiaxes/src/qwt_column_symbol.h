@@ -133,7 +133,7 @@ public:
     };
 
 public:
-    QwtColumnSymbol( Style = NoStyle );
+    explicit QwtColumnSymbol( Style = NoStyle );
     virtual ~QwtColumnSymbol();
 
     void setFrameStyle( FrameStyle style );

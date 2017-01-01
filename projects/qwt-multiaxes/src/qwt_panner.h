@@ -37,7 +37,7 @@ class QWT_EXPORT QwtPanner: public QWidget
     Q_OBJECT
 
 public:
-    QwtPanner( QWidget* parent );
+    explicit QwtPanner( QWidget* parent );
     virtual ~QwtPanner();
 
     void setEnabled( bool );

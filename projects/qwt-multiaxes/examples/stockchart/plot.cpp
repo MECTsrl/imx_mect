@@ -105,13 +105,13 @@ Plot::Plot( QWidget *parent ):
     QwtDateScaleDraw *scaleDraw = new DateScaleDraw( Qt::UTC );
     QwtDateScaleEngine *scaleEngine = new QwtDateScaleEngine( Qt::UTC );
 
-    setAxisTitle( QwtPlot::xBottom, QString( "2010" ) );
-    setAxisScaleDraw( QwtPlot::xBottom, scaleDraw );
-    setAxisScaleEngine( QwtPlot::xBottom, scaleEngine );
-    setAxisLabelRotation( QwtPlot::xBottom, -50.0 );
-    setAxisLabelAlignment( QwtPlot::xBottom, Qt::AlignLeft | Qt::AlignBottom );
+    setAxisTitle( QwtAxis::xBottom, QString( "2010" ) );
+    setAxisScaleDraw( QwtAxis::xBottom, scaleDraw );
+    setAxisScaleEngine( QwtAxis::xBottom, scaleEngine );
+    setAxisLabelRotation( QwtAxis::xBottom, -50.0 );
+    setAxisLabelAlignment( QwtAxis::xBottom, Qt::AlignLeft | Qt::AlignBottom );
 
-    setAxisTitle( QwtPlot::yLeft, QString( "Price [EUR]" ) );
+    setAxisTitle( QwtAxis::yLeft, QString( "Price [EUR]" ) );
 
 #if 0
     QwtLegend *legend = new QwtLegend;

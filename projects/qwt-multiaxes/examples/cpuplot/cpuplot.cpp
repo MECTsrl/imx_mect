@@ -73,7 +73,7 @@ public:
         QColor c = color;
         c.setAlpha( 150 );
 
-        setPen( c );
+        setPen( QPen( Qt::NoPen ) );
         setBrush( c );
     }
 };
@@ -95,12 +95,12 @@ CpuPlot::CpuPlot( QWidget *parent ):
     legend->setDefaultItemMode( QwtLegendData::Checkable );
     insertLegend( legend, QwtPlot::RightLegend );
 
-    setAxisTitle( QwtPlot::xBottom, " System Uptime [h:m:s]" );
-    setAxisScaleDraw( QwtPlot::xBottom,
+    setAxisTitle( QwtAxis::xBottom, " System Uptime [h:m:s]" );
+    setAxisScaleDraw( QwtAxis::xBottom,
         new TimeScaleDraw( cpuStat.upTime() ) );
-    setAxisScale( QwtPlot::xBottom, 0, HISTORY );
-    setAxisLabelRotation( QwtPlot::xBottom, -50.0 );
-    setAxisLabelAlignment( QwtPlot::xBottom, Qt::AlignLeft | Qt::AlignBottom );
+    setAxisScale( QwtAxis::xBottom, 0, HISTORY );
+    setAxisLabelRotation( QwtAxis::xBottom, -50.0 );
+    setAxisLabelAlignment( QwtAxis::xBottom, Qt::AlignLeft | Qt::AlignBottom );
 
     /*
      In situations, when there is a label at the most right position of the
@@ -111,12 +111,12 @@ CpuPlot::CpuPlot( QWidget *parent ):
      is enough space for the overlapping label below the left scale.
      */
 
-    QwtScaleWidget *scaleWidget = axisWidget( QwtPlot::xBottom );
+    QwtScaleWidget *scaleWidget = axisWidget( QwtAxis::xBottom );
     const int fmh = QFontMetrics( scaleWidget->font() ).height();
     scaleWidget->setMinBorderDist( 0, fmh / 2 );
 
-    setAxisTitle( QwtPlot::yLeft, "Cpu Usage [%]" );
-    setAxisScale( QwtPlot::yLeft, 0, 100 );
+    setAxisTitle( QwtAxis::yLeft, "Cpu Usage [%]" );
+    setAxisScale( QwtAxis::yLeft, 0, 100 );
 
     Background *bg = new Background();
     bg->attach( this );
@@ -185,7 +185,7 @@ void CpuPlot::timerEvent( QTimerEvent * )
     for ( int j = 0; j < HISTORY; j++ )
         timeData[j]++;
 
-    setAxisScale( QwtPlot::xBottom,
+    setAxisScale( QwtAxis::xBottom,
         timeData[HISTORY - 1], timeData[0] );
 
     for ( int c = 0; c < NCpuData; c++ )

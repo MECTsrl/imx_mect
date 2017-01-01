@@ -16,6 +16,11 @@
 #include <qpainter.h>
 #include <qpen.h>
 
+static inline bool qwtFuzzyGreaterOrEqual( double d1, double d2 )
+{
+    return ( d1 >= d2 ) || qFuzzyCompare( d1, d2 );
+}
+
 class QwtPlotGrid::PrivateData
 {
 public:
@@ -339,7 +344,7 @@ void QwtPlotGrid::drawLines( QPainter *painter, const QRectF &canvasRect,
         if ( orientation == Qt::Horizontal )
         {
             if ( qwtFuzzyGreaterOrEqual( value, y1 ) &&
-                qwtFuzzyLessOrEqual( value, y2 ) )
+                qwtFuzzyGreaterOrEqual( y2, value ) )
             {
                 QwtPainter::drawLine( painter, x1, value, x2, value );
             }
@@ -347,7 +352,7 @@ void QwtPlotGrid::drawLines( QPainter *painter, const QRectF &canvasRect,
         else
         {
             if ( qwtFuzzyGreaterOrEqual( value, x1 ) &&
-                qwtFuzzyLessOrEqual( value, x2 ) )
+                qwtFuzzyGreaterOrEqual( x2, value ) )
             {
                 QwtPainter::drawLine( painter, value, y1, value, y2 );
             }

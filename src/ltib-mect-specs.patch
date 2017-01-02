@@ -3701,7 +3701,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+exec touch {} \;
++find . \( -name configure.ac -o -name configure.in -o -name Makefile.am \) -exec touch {} \;
 +find . \( -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -exec touch {} \;
  if [ "$GNUTARCH" = m68knommu ]
  then

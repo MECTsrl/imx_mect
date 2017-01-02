@@ -663,10 +663,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  ac_cv_func_setvbuf_reversed=no \
  CFLAGS="-DSERVER_ROOT='\"/etc\"' -g -Os" \
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
@@ -1171,10 +1171,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%setup -n CanFestival-%{version}-%{release}
 +%patch0 -p1
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
 +ROOTFS=${DEV_IMAGE} ./configure \
 +	--target=unix \
 +	--arch=${LINTARCH} \
@@ -1481,10 +1481,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  ./configure
 -make
 +make -j$(nproc)
@@ -1629,13 +1629,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +test "$PKG_DROPBEAR_WANT_URANDOM_DEV" = "y" && perl -pi -e 's,^#define DROPBEAR_RANDOM_DEV.*,#define DROPBEAR_RANDOM_DEV "/dev/urandom",; ' options.h
 +
 +test "$PKG_DROPBEAR_WANT_NO_REV_DNS" = "y" && perl -pi -e 's,^(#define DO_HOST_LOOKUP),//\1,; ' options.h
-+
+ 
 +test "$PKG_DROPBEAR_WANT_NO_X11FWD" = "y" && perl -pi -e 's,^(#define ENABLE_X11FWD),//\1,; ' options.h
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
- 
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
  make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp" MULTI=1 SCPPROGRESS=1
  
@@ -1741,10 +1741,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  BUILD_CC=$BUILDCC ./configure --host=$CFGHOST --enable-elf-shlibs
  make
  
@@ -1890,10 +1890,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
  make
  
@@ -2127,10 +2127,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  # we don't have docbook-utils in the distribution
  ac_cv_prog_HASDOCBOOK=no \
  ac_cv_prog_CC_FOR_BUILD="${BUILDCC}" \
@@ -2272,10 +2272,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  export CC_BUILD="$BUILDCC"
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
  make 
  
@@ -2372,10 +2372,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  # prevent configure from trying to compile and
  # run test binaries for the target.
  glib_cv_stack_grows=no \
@@ -2691,10 +2691,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
  make
  
@@ -3167,10 +3167,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
 +./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
 +make
 +
@@ -3248,10 +3248,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
 +./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
 +make
 +
@@ -3545,10 +3545,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
 +./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --disable-udev --disable-build-docs
 +make -j1
 +
@@ -3643,10 +3643,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  then
      config_opts='ac_cv_lib_intl_gettext=no'
  fi
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  eval $config_opts \
 -./configure --disable-pubdir \
 -            --enable-syslog \
@@ -3729,10 +3729,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  if [ "$GNUTARCH" = m68knommu ]
  then
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} \
@@ -5084,10 +5084,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
 +./configure \
 +	--prefix=/usr \
 +	--host=$CFGHOST \
@@ -5331,10 +5331,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
 +cd %{mb_name}-%{mb_vers}
 +./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
 +make
@@ -5414,10 +5414,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
  CFLAGS="%{optflags} -DPURE_TERMINFO -DSVR4_CURSES"
  %define optflags $CFLAGS
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  if [ "$GNUTARCH" != m68knommu ]
  then
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} \
@@ -5527,10 +5527,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
 +./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-ssl-inc=$DEV_IMAGE/usr --with-ssl-lib=$DEV_IMAGE/usr/lib --enable-command-args
 +make
 +
@@ -5737,10 +5737,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
 +./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --disable-plugin-auth-pam
 +
 +make -j1
@@ -5842,10 +5842,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --mandir=%{_mandir}
  if [ "$PKG_PPP_WANT_FILTER" = "y" ]
  then
@@ -6261,10 +6261,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -
 -#if PKG_MBX_BIN is already installed, uncomment the following line to add OpenGLES 1.1 support
 -#export XTRA_OPTS="$XTRA_OPTS -opengl es1"
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
 +./configure \
 +%if %{?toolchain:1}%{!?toolchain:0}
 +	--prefix=%{toolchain_install_dir} \
@@ -6708,10 +6708,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  rsync_cv_HAVE_GETTIMEOFDAY_TZ=yes \
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
  make
@@ -6834,10 +6834,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +make -j$(nproc) build_crypto
 +
 +cd $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssh-4.3p2
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
 +LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-zlib=$DEV_IMAGE/usr --with-ssl-dir=$RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g --with-ldflags="-L$RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/openssl-0.9.8g" --config-cache
 +make -j$(nproc) sysconfdir=%{_sysconfdir}/ssh sftp-server
 +
@@ -6914,10 +6914,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
 +LD=gcc ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} --with-zlib=$DEV_IMAGE/usr/lib --with-ldflags=-L$DEV_IMAGE/usr/lib
 +make -j$(nproc) sysconfdir=%{_sysconfdir}/ssh sftp-server
 +
@@ -7359,10 +7359,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
 -make
 +make -j$(nproc)
@@ -7997,10 +7997,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
 +ac_cv_func_malloc_0_nonnull=yes ./configure CC=${TOOLCHAIN_PREFIX}gcc --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
  make
  
@@ -8934,10 +8934,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
 +./configure CFLAGS="-march=armv5te" LDFLAGS="-march=armv5te" --build=%{_build} --host=$CFGHOST
 +make DESTDIR=$RPM_BUILD_ROOT%{pfx} all
 +
@@ -9157,10 +9157,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+to_touch="$(find . \( -name configure.ac -o -name configure.in -o -name Makefile.am -o -name configure -o -name aclocal.m4 -o -name config.h.in -o -name Makefile.in \) -print)"
-+test -n "$to_touch" && touch $to_touch
-+unset to_touch
-+
++# Timestamp order is important.
++for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
++	find . -name $f -exec touch {} \;
++done
  ./configure --prefix=%{_prefix} --shared
  mv Makefile Makefile.shared
  ./configure --prefix=%{_prefix}

@@ -5554,7 +5554,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  case $ENDIAN in
      big)
          XTRA_OPTS="-DB_ENDIAN"
-@@ -42,33 +64,55 @@
+@@ -42,33 +64,54 @@
         OSSL_ARCH="linux-$LINTARCH"
         ;;
  esac
@@ -5566,7 +5566,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export BUILDMACH
 +export BUILDMACH=%{_build}
 +
-+find . \( -name configure.ac -o -name aclocal.m4 -o -name configure -o -name Makefile.in -o -name config.h.in \) -print0 | xargs -0 touch
 +./Configure $OSSL_ARCH --prefix=%{_prefix} shared no-asm $XTRA_OPTS
 +make -j$(nproc)
 +

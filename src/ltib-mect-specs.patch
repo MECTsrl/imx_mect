@@ -2748,7 +2748,19 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl ltib/dist/lfs-5.1/kernel/kernel-common.tmpl
 --- ltib.reference/dist/lfs-5.1/kernel/kernel-common.tmpl
 +++ ltib/dist/lfs-5.1/kernel/kernel-common.tmpl
-@@ -182,10 +182,10 @@
+@@ -22,6 +22,11 @@
+ rm -f $RPM_BUILD_DIR/linux
+ ln -s $KSRC_DIR $RPM_BUILD_DIR/linux
+ 
++# Setup the kernel for Xenomai
++cd %{_builddir}/%{x_dir}
++sh %{x_name}-%{x_ver}/scripts/prepare-kernel.sh --arch=arm --adeos=/dev/null --linux=$KSRC_DIR
++cd -
++
+ # From now on it won't matter if KBOUT is relative or absolute; 
+ # if it's relative it must be relative to KSRC_DIR
+ cd $KSRC_DIR
+@@ -182,10 +187,10 @@
  #
  # build the kernel and optionally the modules
  #
@@ -2761,7 +2773,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  fi
  
  # cscope index
-@@ -261,6 +261,7 @@
+@@ -261,6 +266,7 @@
  
  if grep -q '^CONFIG_MODULES=' $KBOUT/.config
  then
@@ -2769,7 +2781,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      make $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" DEPMOD=/bin/true INSTALL_MOD_PATH=$RPM_BUILD_ROOT/%{pfx} modules_install
      KERNEL_VER=`ls $RPM_BUILD_ROOT/%{pfx}/lib/modules`
      for i in build source
-@@ -341,6 +342,308 @@
+@@ -341,6 +347,308 @@
      rm -f $RPM_BUILD_DIR/linux
  fi
  

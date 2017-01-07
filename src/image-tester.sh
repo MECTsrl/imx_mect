@@ -130,7 +130,7 @@ if test -s $tmpfile; then
 		retval=1
 	fi
 
-	# Check for changed file contents.
+	# Check for contents differences.
 	if sed '/^deleting / d' $tmpfile | grep -q .; then
 		echo "*** ERROR: CHANGED files in \"$testimg\":"
 		echo "==============="
@@ -138,7 +138,7 @@ if test -s $tmpfile; then
 			if test -f test/"$f" -a -f gold/"$f"; then
 				# Are we comparing binaries?
 				if file gold/"$f" | grep -q ' ELF 32-bit LSB '; then
-					# Strip and compare again.
+					# Strip and check again.
 					cp gold/"$f" ${tmpfile}.gold
 					cp test/"$f" ${tmpfile}.test
 					/opt/CodeSourcery/bin/arm-none-linux-gnueabi-strip -s ${tmpfile}.gold ${tmpfile}.test
@@ -161,7 +161,7 @@ if test -s $tmpfile; then
 				fi
 			fi
 
-			# Report details about the differenes.
+			# Detailed difference report.
 			if test -f gold/"$f" -a -f test/"$f"; then
 				echo -n '[ ]'
 				(
@@ -177,7 +177,7 @@ if test -s $tmpfile; then
 						/opt/CodeSourcery/bin/arm-none-linux-gnueabi-objdump -d test/"$f" | tail -n +3 > ${tmpfile}.test
 						/opt/CodeSourcery/bin/arm-none-linux-gnueabi-objdump -d gold/"$f" | tail -n +3 > ${tmpfile}.gold
 						echo ""
-						diff -u ${tmpfile}.gold ${tmpfile}.test | head --lines=50
+						diff -u ${tmpfile}.gold ${tmpfile}.test # | head --lines=50
 					fi
 				) | sed 's/^/\t/'
 				echo "==============="

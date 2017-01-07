@@ -1,0 +1,27 @@
+# template = u-boot-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define verrel imx_2.6.35.3_1.1.0
+
+Summary         : Universal Bootloader firmware
+Name            : u-boot
+Version         : 2009.08
+Release         : %{verrel}
+License         : GPL
+Vendor          : Freescale
+Packager        : MAD
+Group           : Applications/System
+BuildRoot       : %{_tmppath}/%{name}
+Patch1          : u-boot-2009.08-1418123257.patch
+Prefix          : %{pfx}
+
+%Description
+%{summary}
+
+Open source u-boot v2009.08 version
+
+
+%Prep
+
+%setup -T -c -n %{name}
+cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}

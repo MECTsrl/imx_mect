@@ -1,0 +1,70 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define dversion 2.6.23
+%define pkg_name linux
+
+Summary         : Linux kernel (core of the Linux operating system)
+Name            : kernel
+Version         : 2.6.23
+Release         : 0
+License         : GPL
+Vendor          : kernel.org + freescale patches
+Packager        : Ken Wan
+Group           : System Environment/Kernel
+Source          : %{pkg_name}-%{dversion}.tar.bz2
+Patch0          : linux-fsl-2.6.23-MPC8313ERDB-Fix-TSECIrqNum.patch
+Patch1          : linux-fsl-2.6.23-mpc8xxx-CodeWarrior.patch 
+Patch2          : linux-fsl-2.6.23-MPC8313ERDB-Fix-Phy-Support.patch
+Patch3          : linux-fsl-2.6.23-MPC8313ERDB-Backport-Fixed-Phy.patch
+Patch4          : linux-fsl-2.6.23-MISC_FIX_FOR_GIANFAR_DRIVER.patch
+Patch5          : linux-fsl-2.6.23-GIANFAR_SKB_BUFFER_RECYCLING_SUPPORT-2.patch
+Patch6          : linux-fsl-2.6.23-GIANFAR_PARAMETER_ADJUST.patch
+Patch7          : linux-fsl-2.6.23-MPC8313ERDB-Nand.patch
+Patch8          : linux-fsl-2.6.23-MPC8313ERDB-JFFS.patch
+Patch9          : linux-fsl-2.6.23-MPC83xx-original-mmc-spi-from-2.6.26.patch
+Patch10         : linux-fsl-2.6.23-MPC83xx-backport-mmc-spi-from-2.6.26-2.patch
+Patch11         : linux-fsl-2.6.23-MPC8313ERDB-spi.patch
+Patch12         : linux-fsl-2.6.23-MPC8313ERDB-RTC.patch
+Patch13         : linux-fsl-2.6.23-MPC8313ERDB-sgmii.patch
+Patch14         : linux-fsl-2.6.23-MPC8313ERDB-IEEE-1588.patch
+Patch15         : linux-fsl-2.6.23-MPC8313ERDB-PowerManagement.patch
+Patch16         : linux-fsl-2.6.23-MPC831x-LFC.patch
+Patch17         : linux-fsl-2.6.23-MPC8313ERDB-Performance-Monitor.patch
+Patch18         : linux-2.6.20-MPC8313ERDB-Marvell.patch
+Patch19         : linux-fsl-2.6.23-MPC8313ERDB-ETSEC27-errata-workaround.patch
+Patch20         : linux-2.6.23-mpc8315erdb-otg-2.patch
+Patch21         : linux-fsl-2.6.23-MPC83xx-SGMII-fix.patch
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+
+%Description
+%{summary}
+
+From kernel.org
+All patches from Freescale
+
+%Prep
+%setup -n %{pkg_name}-%{dversion}
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1

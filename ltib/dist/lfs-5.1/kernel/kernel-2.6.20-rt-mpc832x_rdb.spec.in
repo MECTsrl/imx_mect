@@ -1,0 +1,103 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define dversion 2.6.20
+%define pkg_name linux
+%define dtc_name mpc832x_rdb
+
+Summary         : Linux kernel (core of the Linux operating system)
+Name            : kernel
+Version         : 2.6.20
+Release         : 0
+License         : GPL
+Vendor          : Kernel.org + freescale patches
+Packager        : Michael Barkowski
+Group           : System Environment/Kernel
+Source          : %{pkg_name}-%{dversion}.tar.bz2
+Patch1          : patch-2.6.20.6.bz2
+Patch2          : linux-2.6.20.6-rt8.patch
+Patch3          : linux-2.6.20.6-rt8-powerpc-toshiba.patch
+Patch4          : linux-2.6.20-ucc-geth-rm-obsolete-workaround.patch
+Patch5          : linux-2.6.20-UCC-GETH-BD-processing-3.patch
+Patch6          : linux-2.6.20-Fix-QE-SDMA-setup-errors.patch
+Patch7          : linux-2.6.20-UCC-GETH-Fix-NAPI-2.patch
+Patch8          : linux-2.6.20-ucc-geth-Transmit-on-Demand.patch
+Patch9          : linux-2.6.20-ucc-geth-Fix-interrupt-coalescing-struct.patch
+Patch10         : linux-2.6.20-mpc832x_rdb-board-3.patch
+Patch11         : linux-2.6.20-phylib-document-interface.patch
+Patch12         : linux-2.6.20-phylib-dts-interface.patch
+Patch13         : linux-2.6.20-qe-boardconfigs-enable-phylib.patch
+Patch14         : linux-2.6.20-ucc-geth-migrate-to-phylib-rt-2.patch
+Patch15         : linux-2.6.20-ucc-geth-version-number.patch
+Patch16         : linux-2.6.20-Add-ICPlus-IP175C-PHY-3.patch
+Patch17         : linux-2.6.20-ucc-geth-write-uccm-to-mask-events.patch
+Patch18         : linux-2.6.20-ucc-geth-implement-changemtu-method.patch
+Patch19         : linux-2.6.20-ucc-geth-skb-recycling-3.patch
+Patch20         : linux-2.6.20-Codewarrior-debug-support-for-83xx.patch
+Patch21         : linux-2.6.20-mpc832x_rdb-ucc-geth-settings-2.patch
+Patch22         : linux-2.6.20-ucc-geth-tx-sw-coalescing.patch
+Patch23         : linux-2.6.20-ucc-geth-tx-threads.patch
+Patch24         : linux-2.6.20-Codewarrior-module-debug.patch
+Patch25         : linux-2.6.20.6-mpc832x_rdb-add-flash-node.patch
+Patch26         : linux-2.6.20-qe_clock_source.patch
+Patch27         : linux-2.6.20-UCC-TDM-driver.patch
+Patch28         : linux-2.6.20-Platform-changes-for-UCC-TDM.patch
+Patch29         : linux-2.6.20-of-doc-tdm.patch
+Patch30         : linux-2.6.20-spi_mpc83xx-support-QE.patch
+Patch31         : linux-2.6.20-spi_mpc83xx-of_platform_driver.patch
+Patch32         : linux-2.6.20-spi-mpc832x_rdb.patch
+Patch33         : linux-2.6.20-turn-off-SPI-unit-while-switching-mode.patch
+Patch34         : linux-2.6.20-legerity-dts-entry.patch
+Patch35         : linux-2.6.20-mpc832x_rdb-Add-aliases-to-device-tree-file.patch
+Patch36         : linux-2.6.20.6-mpc8323erdb-tdm-test.patch
+Patch37         : linux-2.6.20-mpc8323erdb-backported-rheap-fixes.patch
+Patch38         : linux-2.6.20-mpc832x_rdb-fix-swapped-ethernet-ids-v2.patch
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+
+%Description
+%{summary}
+
+From kernel.org plus Freescale patches
+
+%Prep
+%setup -n %{pkg_name}-%{dversion}
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1
+%patch23 -p1
+%patch24 -p1
+%patch25 -p1
+%patch26 -p1
+%patch27 -p1
+%patch28 -p1
+%patch29 -p1
+%patch30 -p1
+%patch31 -p1
+%patch32 -p1
+%patch33 -p1
+%patch34 -p1
+%patch35 -p1
+%patch36 -p1
+%patch37 -p1
+%patch38 -p1
+

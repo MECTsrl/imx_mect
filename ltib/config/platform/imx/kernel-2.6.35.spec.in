@@ -1,0 +1,479 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define pkg_name linux
+%define x_name   xenomai
+%define x_ver    2.6.0
+
+Summary         : Linux kernel (core of the Linux operating system)
+Name            : kernel
+Version         : 2.6.35.3
+Release         : imx_1.1.0
+License         : GPL
+Vendor          : Freescale Semiconductor
+Packager        : Rob Herring
+Group           : System Environment/Kernel
+URL             : http://www.kernel.org/
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+AutoReqProv     : no
+
+
+%Package rfs
+Summary         : Trimmed kernel for root file system requirements.
+Vendor          : MECT s.r.l.
+Packager        : Mihai Lazarescu
+Group           : System Environment/Kernel
+AutoReqProv     : no
+%Description rfs
+kernel package contents restricted to just the files that are
+needed at run time on the target.
+
+%Package rfs-usbserial
+Summary         : Kernel module for the USB serial driver.
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+%Description rfs-usbserial
+%{summary}
+
+%Package rfs-usbserial-aircable
+Summary         : USB AIRcable Bluetooth Dongle Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-aircable
+%{summary}
+
+%Package rfs-usbserial-ark3116
+Summary         : USB ARK Micro 3116 USB Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-ark3116
+%{summary}
+
+%Package rfs-usbserial-belkin_sa
+Summary         : USB Belkin and Peracom Single Port Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-belkin_sa
+%{summary}
+
+%Package rfs-usbserial-ch341
+Summary         : USB Winchiphead CH341 Single Port Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-ch341
+%{summary}
+
+%Package rfs-usbserial-cp210x
+Summary         : USB CP210x family of UART Bridge Controllers
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-cp210x
+%{summary}
+
+%Package rfs-usbserial-cyberjack
+Summary         : USB REINER SCT cyberJack pinpad/e-com chipcard reader
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-cyberjack
+%{summary}
+
+%Package rfs-usbserial-cypress_m8
+Summary         : USB Cypress M8 USB Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-cypress_m8
+%{summary}
+
+%Package rfs-usbserial-digi_acceleport
+Summary         : USB Digi International AccelePort USB Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-digi_acceleport
+%{summary}
+
+%Package rfs-usbserial-empeg
+Summary         : USB Empeg empeg-car Mark I/II Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-empeg
+%{summary}
+
+%Package rfs-usbserial-ftdi_sio
+Summary         : USB FTDI Single Port Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-ftdi_sio
+%{summary}
+
+%Package rfs-usbserial-funsoft
+Summary         : USB Fundamental Software Dongle Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-funsoft
+%{summary}
+
+%Package rfs-usbserial-garmin_gps
+Summary         : USB Garmin GPS driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-garmin_gps
+%{summary}
+
+%Package rfs-usbserial-hp4x
+Summary         : USB HP4x Calculators support
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-hp4x
+%{summary}
+
+%Package rfs-usbserial-io_edgeport
+Summary         : USB Inside Out Edgeport Serial Driver (TI devices)
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-io_edgeport
+%{summary}
+
+%Package rfs-usbserial-io_ti
+Summary         : Edgeport USB Serial Converter driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-io_ti
+%{summary}
+
+%Package rfs-usbserial-ipaq
+Summary         : USB PocketPC PDA Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-ipaq
+%{summary}
+
+%Package rfs-usbserial-ipw
+Summary         : USB IPWireless (3G UMTS TDD) Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-ipw
+%{summary}
+
+%Package rfs-usbserial-ir
+Summary         : USB IR Dongle Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-ir
+%{summary}
+
+%Package rfs-usbserial-iuu_phoenix
+Summary         : USB Infinity USB Unlimited Phoenix Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-iuu_phoenix
+%{summary}
+
+%Package rfs-usbserial-keyspan
+Summary         : USB Keyspan USA-xxx Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-keyspan
+%{summary}
+
+%Package rfs-usbserial-keyspan_pda
+Summary         : USB Keyspan PDA Single Port Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-keyspan_pda
+%{summary}
+
+%Package rfs-usbserial-kl5kusb105
+Summary         : USB KL5KUSB105 (Palmconnect) Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-kl5kusb105
+%{summary}
+
+%Package rfs-usbserial-kobil_sct
+Summary         : USB KOBIL chipcard reader
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-kobil_sct
+%{summary}
+
+%Package rfs-usbserial-mct_u232
+Summary         : USB MCT Single Port Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-mct_u232
+%{summary}
+
+%Package rfs-usbserial-mos7720
+Summary         : USB Moschip 7720 Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-mos7720
+%{summary}
+
+%Package rfs-usbserial-mos7840
+Summary         : USB Moschip 7840/7820 USB Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-mos7840
+%{summary}
+
+%Package rfs-usbserial-moto_modem
+Summary         : USB Motorola Phone modem driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-moto_modem
+%{summary}
+
+%Package rfs-usbserial-navman
+Summary         : USB Navman GPS device
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-navman
+%{summary}
+
+%Package rfs-usbserial-omninet
+Summary         : USB ZyXEL omni.net LCD Plus Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-omninet
+%{summary}
+
+%Package rfs-usbserial-opticon
+Summary         : USB Opticon Barcode driver (serial mode)
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-opticon
+%{summary}
+
+%Package rfs-usbserial-option
+Summary         : USB driver for GSM and CDMA modems
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial kernel-usbserial-wwan
+%Description rfs-usbserial-option
+%{summary}
+
+%Package rfs-usbserial-oti6858
+Summary         : USB Ours Technology Inc. OTi-6858 USB To RS232 Bridge Controller
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-oti6858
+%{summary}
+
+%Package rfs-usbserial-pl2303
+Summary         : USB Prolific 2303 Single Port Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-pl2303
+%{summary}
+
+%Package rfs-usbserial-qcaux
+Summary         : USB Qualcomm Auxiliary Serial Port Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-qcaux
+%{summary}
+
+%Package rfs-usbserial-qcserial
+Summary         : USB Qualcomm Serial modem
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial kernel-usbserial-wwan
+%Description rfs-usbserial-qcserial
+%{summary}
+
+%Package rfs-usbserial-safe_serial
+Summary         : USB Safe Serial (Encapsulated) Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-safe_serial
+%{summary}
+
+%Package rfs-usbserial-siemens_mpi
+Summary         : USB Siemens MPI driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-siemens_mpi
+%{summary}
+
+%Package rfs-usbserial-sierra
+Summary         : USB Sierra Wireless Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-sierra
+%{summary}
+
+%Package rfs-usbserial-spcp8x5
+Summary         : USB SPCP8x5 USB To Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-spcp8x5
+%{summary}
+
+%Package rfs-usbserial-symbolserial
+Summary         : USB Symbol Barcode driver (serial mode)
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-symbolserial
+%{summary}
+
+%Package rfs-usbserial-ti_3410_5052
+Summary         : USB TI 3410/5052 Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-ti_3410_5052
+%{summary}
+
+%Package rfs-usbserial-debug
+Summary         : USB Debugging Device
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-debug
+%{summary}
+
+%Package rfs-usbserial-wwan
+Summary         : USB serial mobile broadband cards
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-wwan
+%{summary}
+
+%Package rfs-usbserial-visor
+Summary         : USB Handspring Visor / Palm m50x / Sony Clie Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-visor
+%{summary}
+
+%Package rfs-usbserial-vivopay-serial
+Summary         : USB ViVOpay serial interface driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-vivopay-serial
+%{summary}
+
+%Package rfs-usbserial-whiteheat
+Summary         : USB ConnectTech WhiteHEAT Serial Driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-whiteheat
+%{summary}
+
+%Package rfs-usbserial-zio
+Summary         : ZIO Motherboard USB serial interface driver
+Packager        : Mihai Lazarescu (MECT s.r.l.)
+Group           : System Environment/Kernel
+AutoReqProv     : no
+Requires        : kernel-rfs-usbserial
+%Description rfs-usbserial-zio
+%{summary}
+
+
+%Description
+%{summary}
+
+
+%Prep
+%define buildsubdir %{pkg_name}-%{version}
+%define x_dir    %{buildsubdir}-%{x_name}-%{x_ver}
+KSRC_DIR=${PKG_KERNEL_PATH_PRECONFIG:-%{_builddir}/%{buildsubdir}}
+
+# Unpack Xenomai source tree
+%setup -T -c -n %{x_dir}
+cd ..; rmdir %{x_dir}; ln -s ../../../projects/%{name}/%{x_dir} %{x_dir}
+%setup -T -c -n %{buildsubdir}
+cd ..; rmdir %{buildsubdir}; ln -s ../../../projects/%{name}/%{buildsubdir} %{buildsubdir}
+
+

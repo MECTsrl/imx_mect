@@ -1,0 +1,298 @@
+#!/bin/sh
+#
+# Load a new setup from USB or reset the PLC/CAN configurations.
+#
+
+countsys=0
+
+mntdir=/tmp/mnt
+
+LOCAL_ETC_DIR="/local/etc/sysconfig"
+
+logfile=$mntdir/update.log
+UPDATE_DESCR_FILE=/local/kindofupdate.lck
+
+start() {
+	sleep 1
+
+	rm -f $UPDATE_DESCR_FILE
+	echo -n "Checking USB storage device for configuration...  "
+        if [ -e /sys/block/sda/sda1 ] || [ -e /sys/block/sda ]
+        then
+           
+	        [ -e /sys/block/sda/sda1 ] && usbdev=/dev/sda1
+		[ -d $mntdir ] || { mntdir=/tmp/mnt; /bin/mkdir $mntdir; }
+		[ -d $mntdir ] || exit 1
+		echo "Found scsi device: $usbdev"
+		if /bin/mount -orw $usbdev $mntdir
+		then
+			rm -f $logfile
+			echo "current mount point is $usbdev" | tee -a $logfile
+		else
+			echo "Cannot mount the USB storage device."
+			exit 0
+		fi
+	else
+		echo "No USB storage device found"
+		echo "Exiting the configuration script."
+
+		exit 0
+	fi
+
+	# ts variable
+	export TSLIB_CONFFILE=/usr/etc/ts.conf
+	export TSLIB_PLUGINDIR=/usr/lib/ts
+	export TSLIB_TSDEVICE=/dev/input/ts0
+	export TSLIB_CONSOLEDEVICE=none
+	export TSLIB_CALIBFILE=/etc/pointercal
+	
+	# qt variable
+	export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
+	export QT_QWS_FONTDIR=/usr/lib/fonts
+	export POINTERCAL_FILE=$TSLIB_CALIBFILE
+
+	echo -n "Starting the configuration process...  "
+	if [ `ls /local | grep sysupdate | wc -l` -gt  1 ]
+	then
+		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
+		echo "Error: more than one system update file." | tee -a $logfile
+		if [ -x /usr/bin/splash ]
+		then
+			killall splash
+			/usr/bin/splash -qws --text "<font color=\"red\"><h1>Error: find multiple sysupdate file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
+		fi
+		killall splash
+		/bin/mount -oro,remount / 2>/dev/null
+		/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
+
+	elif [ `ls /local | grep sysupdate | wc -l` -eq  1 ]
+	then
+		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
+		echo " System update found." | tee -a $logfile
+		countsys=1
+		sysupdatename=`ls /local | grep sysupdate`
+		if ! /bin/mount -orw,remount / 2>/dev/null
+		then
+			echo "Cannot mount the file system in read/write." | tee -a $logfile
+			if [ -x /usr/bin/splash ]
+			then
+				killall splash
+				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
+			fi
+			/bin/umount $mntdir
+			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
+			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
+			exit 1
+		fi
+		/usr/bin/dos2unix /local/$sysupdatename 2>&1 | tee -a $logfile
+		/bin/sh /local/$sysupdatename 2>&1 | tee -a $logfile
+		if [ $? == 0 ]
+		then
+			echo " Applied the system update '/local/$sysupdatename'." | tee -a $logfile
+			rm -f /local/$sysupdatename
+			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
+		else
+			echo " Cannot apply the system update '/local/$sysupdatename'." | tee -a $logfile
+		fi
+		killall splash
+		/bin/mount -oro,remount / 2>/dev/null
+		/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
+
+	elif [ `ls $mntdir | grep sysupdate_ | wc -l` -gt  1 ]
+	then
+
+		echo "Error multiple sysupdate file." | tee -a $logfile
+
+	elif [ `ls $mntdir | grep sysupdate_ | wc -l` -eq  1 ]
+	then
+		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
+		echo " System update found." | tee -a $logfile
+		if [ -x /usr/bin/splash ]
+		then
+			killall splash
+			/usr/bin/splash -qws --text "<font color=\"blue\"><h1>Found an update...</h1></font>" --dimension 12 >/dev/null 2>&1 &
+		fi
+		countsys=1
+		sysupdatename=`ls $mntdir | grep sysupdate_`
+		if ! /bin/mount -orw,remount / 2>/dev/null
+		then
+			echo "Cannot mount the file system in read/write." | tee -a $logfile
+			if [ -x /usr/bin/splash ]
+			then
+				killall splash
+				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
+			fi
+			/bin/umount $mntdir
+			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
+			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
+			exit 1
+		fi
+		/usr/bin/dos2unix $mntdir/$sysupdatename 2>&1 | tee -a $logfile
+		/bin/sh $mntdir/$sysupdatename 2>&1 | tee -a $logfile
+		if [ $? == 0 ]
+		then
+			echo " Applied the system update '$mntdir/$sysupdatename'." | tee -a $logfile
+			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
+			if [ -x /usr/bin/splash ]
+			then
+				killall splash
+				/usr/bin/splash -qws --text "<font color=\"green\"><h1>Update applied</h1></font>" --dimension 12 >/dev/null 2>&1 &
+			fi
+		else
+			echo " Cannot apply the system update '/local/$sysupdatename'." | tee -a $logfile
+			if [ -x /usr/bin/splash ]
+			then
+				killall splash
+				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot apply the update.<BR>For more detail, see the file '$logfile' on the USB.</h1></font>" --dimension 12 >/dev/null 2>&1 &
+			fi
+		fi
+		killall splash
+		/bin/mount -oro,remount / 2>/dev/null
+		/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
+
+	elif [ -f $mntdir/sysupdate.sh ] && [ $countsys -eq 0 ]
+	then
+		/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
+		echo " Performing the standard system update." | tee -a $logfile
+		if ! /bin/mount -orw,remount / 2>/dev/null
+		then
+			echo "Cannot mount the file system in read/write." | tee -a $logfile
+			if [ -x /usr/bin/splash ]
+			then
+				killall splash
+				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
+			fi
+			/bin/umount $mntdir
+			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
+			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
+			exit 1
+		fi
+		/usr/bin/dos2unix $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
+		/bin/sh $mntdir/sysupdate.sh 2>&1 | tee -a $logfile
+		if [ $? == 0 ]
+		then
+			echo " Applied the system update '$mntdir/sysupdate.sh'." | tee -a $logfile
+			echo "SYSUPDATE" >> $UPDATE_DESCR_FILE
+			if [ -x /usr/bin/splash ]
+			then
+				killall splash
+				/usr/bin/splash -qws --text "<font color=\"green\"><h1>Update applied</h1></font>" --dimension 12 >/dev/null 2>&1 &
+			fi
+		else
+			echo " Cannot apply the system update '$mntdir/sysupdate.sh'." | tee -a $logfile
+			if [ -x /usr/bin/splash ]
+			then
+				killall splash
+				/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot apply the update.<BR>For more detail, see the file '$logfile' on the USB.</h1></font>" --dimension 12 >/dev/null 2>&1 &
+			fi
+		fi
+		killall splash
+		/bin/mount -oro,remount / 2>/dev/null
+		/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
+
+	else
+		# Perform any other configurations
+		if [ -f $mntdir/system.ini ]
+		then
+			/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
+			if [ -x /usr/bin/splash ]
+			then
+				killall splash
+				/usr/bin/splash -qws --text "<font color=\"green\"><h1>Found and applied the new 'system.ini' file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
+			fi
+			echo " Found a new configuration file '$mntdir/system.ini'" | tee -a $logfile
+			/usr/bin/dos2unix $mntdir/system.ini 2>&1 | tee -a $logfile
+			/bin/cp $mntdir/system.ini $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
+			echo " Configuration file '$mntdir/system.ini' was updated." | tee -a $logfile
+			echo "SYSTEM INI" >> $UPDATE_DESCR_FILE
+			killall splash
+			/bin/mount -oro,remount / 2>/dev/null
+			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
+		fi
+		if [ -f $mntdir/net.conf ]
+		then
+			/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
+			if [ -x /usr/bin/splash ]
+			then
+				killall splash
+				/usr/bin/splash -qws --text "<font color=\"green\"><h1>Found and applied the new 'net.conf' file.</h1></font>" --dimension 12 >/dev/null 2>&1 &
+			fi
+			echo " Found a new network configuration file '$mntdir/net.conf'" | tee -a $logfile
+			/usr/bin/dos2unix $mntdir/net.conf 2>&1 | tee -a $logfile
+			/bin/cp $mntdir/net.conf $LOCAL_ETC_DIR 2>&1 | tee -a $logfile
+			echo " Network configuration file '$mntdir/net.conf' was updated." | tee -a $logfile
+			echo "NETWORK" >> $UPDATE_DESCR_FILE
+			killall splash
+			/bin/mount -oro,remount / 2>/dev/null
+			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
+		fi
+		if [ -f $mntdir/autoexec ]
+		then
+			/etc/rc.d/init.d/autoexec stop >/dev/null 2>&1
+			if [ -x /usr/bin/splash ]
+			then
+				killall splash
+				/usr/bin/splash -qws --text "<font color=\"blue\"><h1>Found a new 'autoexec' file.<BR>Updating...</h1></font>" --dimension 12 >/dev/null 2>&1 &
+			fi
+			echo " Found a new autoexec file '$mntdir/autoexec'" | tee -a $logfile
+			if ! /bin/mount -orw,remount / 2>/dev/null
+			then
+				echo "Cannot mount the file system in read/write." | tee -a $logfile
+				if [ -x /usr/bin/splash ]
+				then
+					killall splash
+					/usr/bin/splash -qws --text "<font color=\"red\"><h1>Cannot mount the filesystem in read/write mode.</h1></font>" --dimension 12 >/dev/null 2>&1
+				fi
+				/bin/umount $mntdir
+				/bin/mount -oro,remount / 2>&1 | tee -a $logfile
+				/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
+				exit 1
+			fi
+			/usr/bin/dos2unix $mntdir/autoexec 2>&1 | tee -a $logfile
+			/bin/cp $mntdir/autoexec /usr/bin/autoexec 2>&1 | tee -a $logfile
+			/bin/mount -oro,remount / 2>&1 | tee -a $logfile
+			echo " Autoexec file '$mntdir/autoexec' was updated." | tee -a $logfile
+			echo "AUTOEXEC" >> $UPDATE_DESCR_FILE
+			killall splash
+			/bin/mount -oro,remount / 2>/dev/null
+			/etc/rc.d/init.d/autoexec start >/dev/null 2>&1
+		fi
+	fi
+	#Sync for ubifs
+	/bin/sync
+	test -n "$usbdev" && /bin/umount $mntdir
+
+	echo "  Done."
+}
+
+stop() {
+	#echo -n "Shutting down 'S10setup'... "
+	#start-stop-daemon  -K -q -x /usr/bin/S10setup
+	echo "Done."
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+	start)
+		start
+	;;
+
+	stop)
+		stop
+	;;
+
+	restart)
+		restart
+	;;
+
+	*)
+		echo $"Usage: $0 {start|stop|restart}"
+
+		exit 1
+	;;
+esac

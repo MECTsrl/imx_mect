@@ -1,0 +1,15 @@
+exit 0
+
+ perl -p -e 's,^(PKG_[\S=]+)\s+=.*,CONFIG_\1=y,' dist/lfs-5.1/common/pkg_map > max.config
+
+# remove by hand: grub, file
+
+# also can do this to capture packag configs from a bsp config
+perl -n -e 'if(m,^CONFIG_PKG_[\S=]+,){print}' config/platform/imx21ads/.config > config/profiles/max_imx.config 
+
+# also to turn off all packages
+perl -p -e 's,^(PKG_[\S=]+)\s+=.*,# CONFIG_\1 is not set,' dist/lfs-5.1/common/pkg_map > min.config
+
+# the min config should turn on the following:
+# CONFIG_PKG_FAKE_PROVIDES, CONFIG_PKG_DEV, CONFIG_PKG_SKELL, 
+# CONFIG_PKG_BASE_LIBS, CONFIG_PKG_BUSYBOX

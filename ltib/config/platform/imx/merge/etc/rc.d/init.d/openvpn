@@ -1,0 +1,57 @@
+#!/bin/sh
+
+EXE=/usr/sbin/openvpn
+CONFD=/etc/openvpn
+CONFEXT="conf ovpn"
+PIDD=/var/run
+
+start() {
+	test -x "$EXE" || exit 1
+	test -d "$CONFD" || exit 1
+	test -d "$PIDD" || exit 1
+
+	for e in $CONFEXT; do
+		for c in "$CONFD"/*.$e; do
+			test -r "$c" || continue
+
+			pidfile="$PIDD/$(/usr/bin/basename $EXE)-$(/usr/bin/basename $c .$e).pid"
+			test -r "$pidfile" && test -s "$pidfile" && test -d /proc/$(/bin/cat "$pidfile") && continue
+
+			/sbin/modprobe tun	# Make sure that the module is loaded
+
+			"$EXE" --daemon --writepid "$pidfile" --cd "$CONFD" --config $(/usr/bin/basename $c)
+		done
+	done
+}
+
+stop() {
+        for pid in "" "$PIDD/$(/usr/bin/basename $EXE)-"*.pid; do
+                test -n "$pid" || continue
+                test -r "$pid" || continue
+                test -d /proc/$(/bin/cat "$pid") || continue
+
+                kill $(/bin/cat "$pid")
+        done
+}
+
+case "$1" in
+	start)
+		start
+	;;
+
+	stop)
+		stop
+	;;
+
+	restart)
+		stop
+		sleep 1
+		start
+	;;
+
+	*)
+		echo $"Usage: $0 {start|stop|restart}"
+
+		exit 1
+	;;
+esac

@@ -1,0 +1,49 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define pkg_name linux
+
+Summary         : Linux kernel (core of the Linux operating system)
+Name            : kernel
+Version         : 2.6.25
+Release         : 1
+License         : GPL
+Vendor          : kernel.org
+Packager        : Joe D'Abbraccio
+Group           : System Environment/Kernel
+Source          : %{pkg_name}-%{version}.tar.bz2
+Patch1          : kernel-2.6.25-gianfar-Fix-frame-size.patch
+Patch2          : kernel-2.6.25-gianfar-only-process-completed-frames.patch
+Patch3          : kernel-2.6.25-gianfar-Fix-Rx-Tx-HW-interrupt-coalescing.patch
+Patch4          : kernel-2.6.25-gianfar-Support-NAPI-for-TX-Frames.patch
+Patch5          : kernel-2.6.25-gianfar-Fix-skb-allocation-strategy.patch
+Patch6          : kernel-2.6.25-gianfar-Fix-a-locking-bug.patch
+Patch7          : kernel-2.6.25-Gianfar-SKB-recycling-support.patch
+Patch8          : kernel-2.6.25-VSC7385-MDIO.patch
+Patch9          : kernel-2.6.25-MPC837xE-RDB-add-pcie-msi-support.patch
+Patch10         : kernel-2.6.25-MPC837xE-RDB-add-esdhc-support.patch
+Patch11         : kernel-2.6.25-MPC837xE-RDB-add-PM-support.patch
+
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+
+
+%Description
+%{summary}
+
+From kernel.org
+All patches from Freescale
+
+%Prep
+%setup -n %{pkg_name}-%{version}
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1

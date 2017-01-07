@@ -1,0 +1,60 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define dversion 2.6.23
+%define pkg_name linux
+%define dtc_name mpc8572ds
+
+Summary         : Linux kernel (core of the Linux operating system)
+Name            : kernel
+Version         : 2.6.23
+Release         : fsl20071101
+License         : GPL
+Vendor          : Kernel.org + freescale patches
+Packager        : Haiying Wang
+Group           : System Environment/Kernel
+Source          : %{pkg_name}-%{dversion}.tar.bz2
+Patch0		: linux-fsl-2.6.2x-E500V2_IEEE754_spfp-2.patch
+Patch1		: linux-fsl-2.6.2x-E500V2_IEEE754_dpfp-2.patch
+Patch2		: linux-fsl-2.6.2x-E500V2_IEEE754_vspfp-2.patch
+Patch3		: linux-fsl-2.6.2x-E500V2_IEEE754_round.patch
+Patch4		: linux-fsl-2.6.2x-E500V2_IEEE754_general-2.patch
+Patch5		: linux-fsl-2.6.23-MISC_FIX_FOR_GIANFAR_DRIVER.patch
+Patch6		: linux-fsl-2.6.23-GIANFAR_SKB_BUFFER_RECYCLING_SUPPORT.patch 
+Patch7		: linux-fsl-2.6.23-POWERPC_FIX_MODPOST_WARNING.patch
+Patch8		: linux-fsl-2.6.23-E500_SMP_SUPPORT-2.patch
+Patch9		: linux-fsl-2.6.23-MPC8572_PLATFORM_SUPPORT-2.patch
+Patch10		: linux-fsl-2.6.23-MPC8572_DEFCONFIG.patch 
+Patch11		: linux-fsl-2.6.23-MPC8572_PME.patch
+Patch12         : kernel-2.6.22-layer7-2.13-2.patch
+Patch13         : linux-fsl-2.6.23-MPC8572_PME_l7.patch
+Patch14         : linux-fsl-2.6.23-MPC8572_TLU.patch
+Patch15         : linux-fsl-2.6.23-MPC85xx_SMP_FIX.patch
+Patch16         : linux-fsl-2.6.23-GIANFAR_PARAMETER_ADJUST.patch
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+
+%Description
+%{summary}
+
+From kernel.org plus Freescale patches and l7-filter.sf.net
+
+%Prep
+%setup -n %{pkg_name}-%{dversion}
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1

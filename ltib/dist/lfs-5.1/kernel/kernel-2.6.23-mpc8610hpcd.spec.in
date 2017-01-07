@@ -1,0 +1,63 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define dversion 2.6.23
+%define pkg_name linux
+
+Summary         : Linux kernel (core of the Linux operating system)
+Name            : kernel
+Version         : 2.6.23
+Release         : 0
+License         : GPL
+Vendor          : Kernel.org + freescale patches
+Packager        : Ebony Zhu
+Group           : System Environment/Kernel
+Source          : %{pkg_name}-%{dversion}.tar.bz2
+Patch1          : linux-2.6.23-MPC8610HPCD_IRDA.patch
+Patch2          : linux-2.6.23-MPC8610HPCD_MAC.patch
+Patch3          : linux-2.6.23-MPC8610HPCD_DIU-3.patch
+Patch4          : linux-2.6.23-MPC8610HPCD_AUDIO-4.patch
+Patch5          : linux-2.6.23-MPC8610HPCD_FIX_POWERPC_PHB.patch
+Patch6          : linux-2.6.23-MPC8610HPCD_PLATFORM-3.patch
+Patch7          : linux-2.6.23-MPC8610HPCD_DTS-5.patch
+Patch8          : linux-2.6.23-MPC8610HPCD_DEFCONFIG-4.patch
+Patch9          : linux-2.6.23-MPC8610HPCD_MSI.patch
+Patch10         : linux-2.6.23-MPC8610HPCD_PM.patch
+Patch11         : linux-2.6.23-MPC8610HPCD_WDT.patch
+Patch12         : linux-fsl-2.6.23-ATI_X700_X800.patch
+Patch13         : linux-fsl-2.6.23-POWERPC_FIX_MODPOST_WARNING.patch 
+Patch14         : linux-fsl-2.6.23-PROM.patch
+Patch15         : linux-2.6.23-MPC8610HPCD_ELBC.patch
+Patch16         : linux-fsl-2.6.23-CT.patch
+Patch17         : linux-fsl-2.6.23-MPC86xx_CW.patch
+Patch18         : linux-2.6.23-MPC8610HPCD_SD_SPI.patch
+Patch19         : linux-2.6.23-MPC8610HPCD_SPI.patch
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+
+%Description
+%{summary}
+
+From kernel.org plus Freescale patches
+
+%Prep
+%setup -n %{pkg_name}-%{dversion}
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1

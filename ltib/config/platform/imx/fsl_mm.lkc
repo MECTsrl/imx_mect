@@ -1,0 +1,46 @@
+menu "Freescale Multimedia Plugins/Codecs"
+
+config PKG_FSL_MMCODECLIB
+    select PKG_GST_PLUGINS_BASE
+    select PKG_GSTREAMER_CORE
+    bool "fsl-mm-codec-libs"
+    help
+          This package provides the Freescale Multimedia codec/parser core libraries.
+
+config PKG_FSL_MM_MS_CODECLIB
+    bool "fsl-mm-ms-codec-libs"
+    help
+          This package provides the Freescale Multimedia ASF parser core library and WMA/WMV core libraries.
+
+config PKG_FSL_MM_AACPDEC_CODECLIB
+    bool "fsl-mm-aacpdec-codec-libs"
+    help
+          This package provides the Freescale Multimedia HE-AAC decoder core library.
+
+config PKG_FSL_MM_MP3ENC_CODECLIB
+    bool "fsl-mm-mp3enc-codec-libs"
+    help
+          This package provides the Freescale Multimedia MP3 encoder core library.
+
+config PKG_FSL_MM_AC3DEC_CODECLIB
+    bool "fsl-mm-ac3dec-codec-libs"
+    help
+          This package provides the Freescale Multimedia AC3 decoder core library.
+config PKG_FSL_MM_FLV_CODECLIB
+    bool "fsl-mm-flv-codec-libs"
+    help
+          This package provides the Freescale Multimedia Flash Video parser core library.
+
+config PKG_FSL_EXCLUDED_MMCODECLIB
+    bool "fsl-mm-excluded-codec-libs"
+    help
+         This package provides the Freescale Multimedia excluded codec/parser core libraries.
+
+config PKG_GST_FSL_PLUGIN
+    select PKG_FSL_MMCODECLIB
+    select PKG_ZLIB
+    bool "gstreamer-fsl-plugins"
+    help
+          This package provides the Freescale Gstreamer based plugins. 
+		 
+endmenu

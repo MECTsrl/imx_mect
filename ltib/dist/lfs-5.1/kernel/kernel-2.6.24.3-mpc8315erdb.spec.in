@@ -1,0 +1,98 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define dversion 2.6.24
+%define pkg_name linux
+
+Summary         : Linux kernel for MPC8315 RDB
+Name            : kernel
+Version         : 2.6.24.3
+Release         : 1
+License         : GPL
+Vendor          : kernel.org
+Packager        : Olivia Yin
+Group           : System Environment/Kernel
+Source          : %{pkg_name}-%{dversion}.tar.bz2
+Patch0          : patch-2.6.24.3.bz2 
+Patch1          : patch-2.6.24.3-rt3.bz2
+Patch2          : linux-fsl-2.6.24.3-MPC8315ERDB-platform-support.patch
+Patch3          : linux-fsl-2.6.24.3-MPC8315ERDB-add-all-interrupts.patch
+Patch4          : linux-fsl-2.6.24.3-MPC8315ERDB-Realtek-821x-phy.patch
+Patch5          : linux-fsl-2.6.24.3-MPC8315ERDB-fix-gianfar.patch
+Patch6          : linux-fsl-2.6.24.3-MPC8315ERDB-Gianfar-buffer-recycling.patch
+Patch7          : linux-fsl-2.6.24.3-MPC8315ERDB-Gianfar-performance.patch
+patch8          : linux-fsl-2.6.24.3-MPC8315ERDB-sata-support.patch
+Patch9          : linux-fsl-2.6.24.3-MPC8315ERDB-fsl-serdes-support.patch
+Patch10         : linux-fsl-2.6.24.3-MPC8315ERDB-pcie-INTx-support.patch
+Patch11         : linux-fsl-2.6.24.3-MPC8315ERDB-ipic-msi.patch 
+Patch12         : linux-fsl-2.6.24.3-MPC8315ERDB-usb-support.patch
+Patch13         : linux-fsl-2.6.24.3-MPC8315ERDB-power-management.patch
+Patch14         : linux-fsl-2.6.24.3-MPC8315ERDB-usb-power-mangement.patch
+Patch15         : linux-fsl-2.6.24.3-MPC8315ERDB-NAND-flash.patch
+Patch16         : linux-fsl-2.6.24.3-MPC8315ERDB-elbc-jffs2-on-nand.patch
+Patch17         : linux-fsl-2.6.24.3-MPC8315ERDB-Codewarrior-kernel-debug.patch
+Patch18         : linux-fsl-2.6.24.3-MPC8315ERDB-otg.patch
+Patch19         : linux-fsl-2.6.24.3-MPC831x-LFC.patch
+Patch20         : linux-fsl-2.6.24.3-MPC8315ERDB-TDM.patch
+Patch21         : linux-fsl-2.6.24.3-MPC8315ERDB-tdm-test-modules.patch
+Patch22         : linux-fsl-2.6.24.3-MPC8315ERDB-spi-for-tdm-module.patch
+Patch23         : linux-fsl-2.6.24.3-MPC8315ERDB-port-mutiplier-in-sata.patch 
+Patch24         : linux-fsl-2.6.24.3-MPC8315ERDB-performance-monitor.patch
+Patch25         : linux-fsl-2.6.24.3-MPC8315ERDB-ieee-1588.patch
+Patch26         : linux-fsl-2.6.24.3-MPC8315ERDB-DTS.patch
+Patch27         : linux-fsl-2.6.24.3-MPC8315ERDB-sata-pm.patch
+Patch28         : linux-fsl-2.6.24.3-MPC8315ERDB-fix-large-file-transfer.patch
+Patch29         : linux-fsl-2.6.24.3-MPC8315ERDB-default-configuration.patch
+Patch30         : ocf-linux-26-20071215.patch.gz
+Patch31         : ocf-linux-20071215-20080427.diff
+Patch32         : linux-fsl-2.6.24-OCF-fsl_soc-2.patch
+Patch33         : linux-2.6.24-Openswan-2.4.12.patch
+patch34         : linux-fsl-2.6.24.3-openswan-sysctl.patch
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+
+%Description
+%{summary}
+
+From kernel.org
+All patches from Freescale
+
+%Prep
+%setup -n %{pkg_name}-%{dversion}
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1
+%patch23 -p1
+%patch24 -p1
+%patch25 -p1
+%patch26 -p1
+%patch27 -p1
+%patch28 -p1
+%patch29 -p1
+%patch30 -p1
+cd crypto/ocf/
+%patch31 -p1
+cd ../../
+%patch32 -p1
+%patch33 -p1
+%patch34 -p1

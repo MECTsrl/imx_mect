@@ -1,0 +1,53 @@
+#! /bin/sh
+
+CGIFILE=index.cgi
+INDEXFILE=$(/usr/bin/awk '/^\s*DocumentRoot/ { print $2; }' /etc/boa.conf)/index.html
+
+test -f $INDEXFILE && /bin/rm -f $INDEXFILE
+
+start() {
+	IP=$(/sbin/ifconfig | awk -F: '/inet addr:127\.0\.0\.1/ { next; } /inet addr/ { print gensub("\\s .*", "", 1, $2); exit 0; }')
+	IPCHECK=$(echo "$IP" | sed 's/[0-9]\{1,3\}//g')
+
+	if [ -x /usr/sbin/boa  ]; then
+		if test "${IPCHECK}" = "..."; then
+			echo -n "Starting boa webserver... "
+			/usr/sbin/boa
+			echo "Done."
+
+		else
+			echo "Cannot start boa webserver: invalid IP address $IP."
+		fi
+	fi
+}
+
+stop() {
+	echo -n "Shutting down boa webserver... "
+	killall boa 2>/dev/null
+	echo "Done."
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+	start)
+		start
+	;;
+
+	stop)
+		stop
+	;;
+
+	restart)
+		restart
+	;;
+
+	*)
+		echo $"Usage: $0 {start|stop|restart}"
+		exit 1
+	;;
+esac

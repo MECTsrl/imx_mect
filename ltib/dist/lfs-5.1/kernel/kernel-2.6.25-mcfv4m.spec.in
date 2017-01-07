@@ -1,0 +1,312 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define dversion 2.6.25
+%define pkg_name linux
+
+Summary         : Linux kernel for Coldfire V4M M54451/M54455
+Name            : kernel
+Version         : 2.6.25
+Release         : 1
+License         : GPL
+Vendor          : kernel.org
+Packager        : Kurt Mahan
+Group           : System Environment/Kernel
+Source          : %{pkg_name}-%{dversion}.tar.bz2
+Patch1		: linux-2.6.25-mcfv4e-checkfiles-script.patch
+Patch2		: linux-2.6.25-mcfv4e-coldfire-headers.patch
+Patch3		: linux-2.6.25-mcfv4e-coldfire-headers2.patch
+Patch4		: linux-2.6.25-m5445x-headers.patch
+Patch5		: linux-2.6.25-mcfv4e-kernel-mods.patch
+Patch6		: linux-2.6.25-mcfv4e-arch-lib-mods.patch
+Patch7		: linux-2.6.25-mcfv4e-arch-mm-mods-1.patch
+Patch8		: linux-2.6.25-mcfv4e-coldfire-code.patch
+Patch9		: linux-2.6.25-m5445x-serial.patch
+Patch10		: linux-2.6.25-m5445x-fec.patch
+Patch11		: linux-2.6.25-mcfv4e-namespace-align.patch
+Patch12		: linux-2.6.25-m5445x-defconfig-base.patch
+Patch13		: linux-2.6.25-m5445x-ata.patch
+Patch14		: linux-2.6.25-m5445x-ioremap-xf0000000.patch
+Patch15		: linux-2.6.25-m5445x-cau-crypto.patch
+Patch16		: linux-2.6.25-m5445x-usb-initial-port.patch
+Patch17		: linux-2.6.25-mcfv4e-elf-entry-stext.patch
+Patch18		: linux-2.6.25-mcfv4e-linker-script-update.patch
+Patch19		: linux-2.6.25-m5445x-spi.patch
+Patch20		: linux-2.6.25-mcfv4e-inline-memory-params.patch
+Patch21		: linux-2.6.25-m5445x-usb-premerge.patch
+Patch22		: linux-2.6.25-m5445x-ccm-bitdefs.patch
+Patch23		: linux-2.6.25-mcfv4e-cache-base-update.patch
+Patch24		: linux-2.6.25-m5445x-enable-cache-store.patch
+Patch25		: linux-2.6.25-m5445x-usb-autosuspend-delay.patch
+Patch26		: linux-2.6.25-m5445x-usb-cleanup-2.patch
+Patch27		: linux-2.6.25-m5445x-usb-sdram-priority.patch
+Patch28		: linux-2.6.25-mcfv4e-cache-ck-0-len.patch
+Patch29		: linux-2.6.25-m5445x-usb-disable-debug.patch
+Patch30		: linux-2.6.25-m5445x-usb-add-dualspeed.patch
+Patch31		: linux-2.6.25-m5445x-usb-defconfig.patch
+Patch32		: linux-2.6.25-m5445x-edma-update.patch
+Patch33		: linux-2.6.25-m5445x-ssi-cleanup.patch
+Patch34		: linux-2.6.25-m5445x-spi-deprecated-api.patch
+Patch35		: linux-2.6.25-mcfv4e-bitops-cleanup.patch
+Patch36		: linux-2.6.25-m5445x-pci.patch
+Patch37		: linux-2.6.25-m5445x-edma-callback.patch
+Patch38		: linux-2.6.25-m5445x-audio-rates.patch
+Patch39		: linux-2.6.25-mcfv4e-kbuild-flags-update.patch
+Patch40		: linux-2.6.25-m5445x-usb-header-move.patch
+Patch41		: linux-2.6.25-mcfv4e-bitops-lock-hdr.patch
+Patch42		: linux-2.6.25-m5445x-pata-24-cleanup.patch
+Patch43		: linux-2.6.25-m5445x-spi-cdev-remove.patch
+Patch44		: linux-2.6.25-m547x-8x-initial.patch
+Patch45		: linux-2.6.25-m547x-8x-fec-dma.patch
+Patch46		: linux-2.6.25-mcfv4e-kern-to-phys.patch
+Patch47		: linux-2.6.25-m547x-8x-fec-cleanup.patch
+Patch48		: linux-2.6.25-m547x-8x-internal-rename.patch
+Patch49		: linux-2.6.25-mcfv4e-linker-bss-cleanup.patch
+Patch50		: linux-2.6.25-mcfv4e-irq-magic-bit.patch
+Patch51		: linux-2.6.25-m547x-8x-mcdma-1.0.patch
+Patch52		: linux-2.6.25-m547x-8x-dspi.patch
+Patch53		: linux-2.6.25-mcfv4e-brcache-inval.patch
+Patch54		: linux-2.6.25-mcfv4e-defconfig-upd.patch
+Patch55		: linux-2.6.25-m547x-8x-i2c.patch
+Patch56		: linux-2.6.25-m547x-8x-rtc-rv5c387a.patch
+# Patch57		: linux-2.6.25-m547x-8x-sec11-1.patch
+# Patch58		: linux-2.6.25-m547x-8x-sec-crypto-hooks.patch
+Patch59		: linux-2.6.25-mcfv4e-add-mm-args.patch
+Patch60		: linux-2.6.25-mcfv4e-tlsnptl-elf-reloc.patch
+Patch61		: linux-2.6.25-mcfv4e-vdso-headers.patch
+Patch62		: linux-2.6.25-m547x-8x-move-memmap.patch
+Patch63		: linux-2.6.25-m5445x-rename-config.patch
+Patch64		: linux-2.6.25-mcfv4e-cache-split.patch
+Patch65		: linux-2.6.25-m5445x-rambar-config.patch
+Patch66		: linux-2.6.25-mcfv4e-update-cmdlines.patch
+Patch67		: linux-2.6.25-mcfv4e-bss-clear-move.patch
+Patch68		: linux-2.6.25-mcfv4e-endmem-fix.patch
+Patch69		: linux-2.6.25-mcfv4e-acr-cleanup.patch
+Patch70		: linux-2.6.25-m547x-8x-NOR-FLASH-baseaddr.patch
+Patch71		: linux-2.6.25-m5445x-fecint-nest-1.patch
+Patch72		: linux-2.6.25-m5445x-rambar-init-1.patch
+Patch73		: linux-2.6.25-m5445x-i2c.patch
+Patch74		: linux-2.6.25-mcfv4e-disable-irq-nosync.patch
+Patch75		: linux-2.6.25-mcfv4e-uboot-bootargs.patch
+Patch76		: linux-2.6.25-mcfv4e-except-vector-fix.patch
+Patch77		: linux-2.6.25-mcfv4e-watchdog.patch
+Patch78		: linux-2.6.25-mcfv4e-irda.patch
+Patch79		: linux-2.6.25-mcfv4e-flexcan.patch
+Patch80         : linux-2.6.25-m547x-8x-pci-initial.patch
+Patch81         : linux-2.6.25-m547x-8x-pci-video-sm712.patch
+Patch82         : linux-2.6.25-mcfv4e-dspi-update.patch
+Patch83         : linux-2.6.25-mcfv4e-vmalloc-fix.patch
+Patch84         : linux-2.6.25-m547x-8x-ocf-openswan-ipsec.patch
+Patch85         : linux-2.6.25-m547x-8x-ipsec-kernel.patch
+Patch86         : linux-2.6.25-m547x-8x-ocf-talitos.patch
+Patch87         : linux-2.6.25-m547x-8x-ocf-talitos-kernel.patch
+Patch88         : linux-2.6.25-m547x-8x-dma-dipr.patch
+Patch89         : linux-2.6.25-m547x-8x-reboot-wd.patch 
+Patch90         : linux-2.6.25-m547x-8x-i2c-timeout-fix.patch
+Patch91         : linux-2.6.25-m547x-8x-pci-reset-usb-fix.patch
+Patch92         : linux-2.6.25-m547x-8x-fec-rxfifo-check.patch
+Patch93         : linux-2.6.25-m547x-8x-dma-exports.patch
+
+
+
+Patch94		: linux-2.6.25-m5445x-nonpci-fix.patch
+Patch95		: linux-2.6.25-m5445x-spi-fixes.patch
+Patch96		: linux-2.6.25-m5445x-initial-sound.patch
+Patch97		: linux-2.6.25-m5445x-defconfig-update.patch
+Patch98		: linux-2.6.25-m5445x-new-edma.patch
+Patch99		: linux-2.6.25-m5445x-edma-spi-ssi.patch
+Patch100	: linux-2.6.25-m5445x-edma-cleanup.patch
+Patch101	: linux-2.6.25-m5445x-highres-timing.patch
+Patch102	: linux-2.6.25-m5445x-head-build-fix.patch
+Patch103	: linux-2.6.25-mcfv4e-vdso.patch
+Patch104	: linux-2.6.25-m5445x-enable-flash-mtd.patch
+Patch105	: linux-2.6.25-m5445x-remove-old-ssi.patch
+Patch106	: linux-2.6.25-m5445x-dspi-kconfig.patch
+Patch107	: linux-2.6.25-m5445x-uart-edma-1.patch
+Patch108	: linux-2.6.25-m5445x-spi-mmc.patch
+Patch109	: linux-2.6.25-m5445x-spi-mmc-detect.patch
+Patch110	: linux-2.6.25-m5445x-cf-header-split-1.patch
+Patch111	: linux-2.6.25-m5445x-usb-infrastructure.patch
+Patch112	: linux-2.6.25-m5445x-usb-host.patch
+Patch113	: linux-2.6.25-m5445x-usb-gadget.patch
+Patch114	: linux-2.6.25-m5445x-usb-otg.patch
+Patch115	: linux-2.6.25-m5445x-usb-host-ehci.patch
+Patch116	: linux-2.6.25-m5445x-usb-gadget-usb2.patch
+Patch117	: linux-2.6.25-m5445x-usb-infrastructure-usb_dr.patch
+Patch118	: linux-2.6.25-m5445x-usb-serial-gadget-acm.patch
+Patch119	: linux-2.6.25-m5445x-usb-config-54451.patch
+Patch120	: linux-2.6.25-m5445x-usb-device_test.patch
+Patch121	: linux-2.6.25-m5445x-usb-defconfig-1.patch
+Patch122	: linux-2.6.25-m5445x-irq-affinity.patch
+Patch123	: linux-2.6.25-m5445x-generic-time.patch
+Patch124	: linux-2.6.25-m5445x-fec-fixes.patch
+Patch125	: linux-2.6.25-m5445x-dma-mem-alloc.patch
+Patch126	: linux-2.6.25-mcfv4e-makefile-uimage.patch
+Patch127	: linux-2.6.25-m5445x-initial-alsa-1.patch
+Patch128	: linux-2.6.25-m5445x-usb-update-copyright.patch
+Patch129	: linux-2.6.25-m5445x-edma-halfirq.patch
+Patch130	: linux-2.6.25-m5445x-fec-hash-fix.patch
+Patch131	: linux-2.6.25-mcfv4e-align-nfsdata.patch
+Patch132	: linux-2.6.25-mcfv4e-mmap-writable.patch
+
+
+Patch133	: linux-2.6.25-mcfv4e-fix-inline-warning.patch
+Patch134	: linux-2.6.25-mcfv4e-fix-usbcv-halt-endpoint.patch
+Patch135	: linux-2.6.25-mcfv4e-fix-usbcv-remote-wakeup.patch
+Patch136	: linux-2.6.25-mcfv4e-ata-pci-mapping.patch
+Patch137	: linux-2.6.25-mcfv4e-pci-update.patch
+Patch138	: linux-2.6.25-mcfv4e-fsl-pata-dma-support.patch
+
+
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+
+%Description
+%{summary}
+
+From kernel.org
+All patches from Freescale
+
+%Prep
+%setup -n %{pkg_name}-%{dversion}
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1
+%patch23 -p1
+%patch24 -p1
+%patch25 -p1
+%patch26 -p1
+%patch27 -p1
+%patch28 -p1
+%patch29 -p1
+%patch30 -p1
+%patch31 -p1
+%patch32 -p1
+%patch33 -p1
+%patch34 -p1
+%patch35 -p1
+%patch36 -p1
+%patch37 -p1
+%patch38 -p1
+%patch39 -p1
+%patch40 -p1
+%patch41 -p1
+%patch42 -p1
+%patch43 -p1
+%patch44 -p1
+%patch45 -p1
+%patch46 -p1
+%patch47 -p1
+%patch48 -p1
+%patch49 -p1
+%patch50 -p1
+%patch51 -p1
+%patch52 -p1
+%patch53 -p1
+%patch54 -p1
+%patch55 -p1
+%patch56 -p1
+# %patch57 -p1
+# %patch58 -p1
+%patch59 -p1
+%patch60 -p1
+%patch61 -p1
+%patch62 -p1
+%patch63 -p1
+%patch64 -p1
+%patch65 -p1
+%patch66 -p1
+%patch67 -p1
+%patch68 -p1
+%patch69 -p1
+%patch70 -p1
+%patch71 -p1
+%patch72 -p1
+%patch73 -p1
+%patch74 -p1
+%patch75 -p1
+%patch76 -p1
+%patch77 -p1
+%patch78 -p1
+%patch79 -p1
+%patch80 -p1
+%patch81 -p1
+%patch82 -p1
+%patch83 -p1
+%patch84 -p1
+%patch85 -p1
+%patch86 -p1
+%patch87 -p1
+%patch88 -p1
+%patch89 -p1
+%patch90 -p1
+%patch91 -p1
+%patch92 -p1
+%patch93 -p1
+
+%patch94 -p1
+%patch95 -p1
+%patch96 -p1
+%patch97 -p1
+%patch98 -p1
+%patch99 -p1
+%patch100 -p1
+%patch101 -p1
+%patch102 -p1
+%patch103 -p1
+%patch104 -p1
+%patch105 -p1
+%patch106 -p1
+%patch107 -p1
+%patch108 -p1
+%patch109 -p1
+%patch110 -p1
+%patch111 -p1
+%patch112 -p1
+%patch113 -p1
+%patch114 -p1
+%patch115 -p1
+%patch116 -p1
+%patch117 -p1
+%patch118 -p1
+%patch119 -p1
+%patch120 -p1
+%patch121 -p1
+%patch122 -p1
+%patch123 -p1
+%patch124 -p1
+%patch125 -p1
+%patch126 -p1
+%patch127 -p1
+%patch128 -p1
+%patch129 -p1
+%patch130 -p1
+%patch131 -p1
+%patch132 -p1
+
+%patch133 -p1
+%patch134 -p1
+%patch135 -p1
+%patch136 -p1
+%patch137 -p1
+%patch138 -p1
+

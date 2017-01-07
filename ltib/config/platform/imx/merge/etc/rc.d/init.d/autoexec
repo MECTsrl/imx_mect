@@ -1,0 +1,146 @@
+#!/bin/sh
+
+start() {
+	# Touchscreen variables
+	export TSLIB_CONFFILE=/usr/etc/ts.conf
+	export TSLIB_PLUGINDIR=/usr/lib/ts
+	export TSLIB_TSDEVICE=/dev/input/ts0
+	export TSLIB_CONSOLEDEVICE=none
+	export TSLIB_CALIBFILE=/etc/pointercal
+
+	# Qt variables
+	export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
+	export QT_QWS_FONTDIR=/usr/lib/fonts
+	export POINTERCAL_FILE=$TSLIB_CALIBFILE
+
+	# Make sure / is mounted R/O
+	mount -oro,remount /
+
+	if test -x /local/root/systool -a ! -x /local/root/factory_test; then
+		echo "Starting systool application."
+
+		/local/root/systool -qws > /dev/null 2>&1
+
+		echo "Started."
+	fi
+
+	# if factory test is preset and executable, start it
+	if test -x /local/root/factory_test; then
+		echo "Starting factory test application."
+
+		/local/root/factory_test -qws > /dev/null 2>&1 &
+
+		echo "Started."
+	elif test -x /local/root/keyGenerator; then
+		echo "Starting keyGenerator application."
+
+		/local/root/keyGenerator -qws > /dev/null 2>&1 &
+
+		echo "Started."
+	elif test -x /local/root/fcrts; then
+		echo "Starting PLC run-time support."
+
+		if test -x /usr/bin/fcrts.sh; then
+			/usr/bin/fcrts.sh > /dev/null 2>&1 &
+		else
+			/local/root/fcrts > /dev/null 2>&1 &
+		fi
+
+		echo "Started."
+	else
+		echo "No PLC run-time support."
+	fi
+
+	if test -x /local/root/hmi; then
+		echo "Starting HMI."
+
+		/local/root/hmi > /dev/null 2>&1 &
+	elif test -x /usr/bin/splash; then
+		echo "Starting splash screen."
+
+		/usr/bin/splash -qws --text "<font color=\"blue\"><h1>No HMI on the target</h1></font><BR>`ifconfig eth0 | head -1`<BR>`ifconfig eth0 | head -2 | tail -1`" --dimension 12 > /dev/null 2>&1 &
+	else
+		echo "No HMI."
+
+		dd if=/dev/zero of=/dev/fb0 > /dev/null 2>&1
+	fi
+
+	echo "Done."
+
+	return 0
+}
+
+stop() {
+	echo -n "Shutting down 'autoexec' programs... "
+
+	progs="keyGenerator factory_test fcrts hmi ts_calibrate splash"
+
+	# Wait a while for the programs to terminate.
+	active=0
+	for t in $(/usr/bin/seq 1 1 5); do
+		# Make sure the screen stays blanked.
+		/bin/dd if=/dev/zero of=/dev/fb0 > /dev/null 2>&1
+
+		# Stop nicely the programs.
+		/usr/bin/killall $progs > /dev/null 2>&1
+
+		active=0
+		for p in $progs; do
+			/usr/bin/test -n "$(/sbin/pidof $p)" && active=1
+		done
+		/usr/bin/test $active -eq 0 && break
+
+		/bin/sleep 1
+	done
+
+	# Programs still hanging on.
+	if /usr/bin/test $active -ne 0; then
+		# Wait for a while for programs to really terminate.
+		for t in $(/usr/bin/seq 1 1 5); do
+			# Make sure the screen stays blanked.
+			/bin/dd if=/dev/zero of=/dev/fb0 > /dev/null 2>&1
+
+			# Terminate all programs.
+			/usr/bin/killall -KILL $progs > /dev/null 2>&1
+
+			/bin/sleep 1
+
+			active=0
+			for p in $progs; do
+				/usr/bin/test -n "$(/sbin/pidof $p)" && active=1
+			done
+			/usr/bin/test $active -eq 0 && break
+		done
+	fi
+
+	# Blank screen on exit.
+	/bin/dd if=/dev/zero of=/dev/fb0 >/dev/null 2>&1
+
+	echo "Done."
+
+	return $active
+}
+
+restart() {
+	stop
+	start
+}
+
+case "$1" in
+	start)
+		start
+	;;
+
+	stop)
+		stop
+	;;
+
+	restart)
+		restart
+	;;
+
+	*)
+		echo $"Usage: $0 {start|stop|restart}"
+			exit 1
+	;;
+esac

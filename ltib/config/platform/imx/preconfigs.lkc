@@ -1,0 +1,91 @@
+config CONFIG_TITLE
+    string
+    default "Freescale i.MX development platforms"
+
+comment "Choose the platform type"
+choice
+    prompt Selection
+    config PCF_PLATFORM_IMX25_3STACK
+        bool imx25_3stack
+    config PCF_PLATFORM_IMX233
+        bool imx233/stmp3780
+    config PCF_PLATFORM_IMX27ADS
+        bool imx27ads
+    config PCF_PLATFORM_IMX28
+        bool imx28
+    config PCF_PLATFORM_IMX31ADS
+        bool imx31ads
+    config PCF_PLATFORM_IMX31_3STACK
+        bool imx31_3stack
+    config PCF_PLATFORM_IMX35_3STACK
+        bool imx35_3stack
+    config PCF_PLATFORM_IMX37_3STACK
+        bool imx37_3stack
+#    config PCF_PLATFORM_IMX51_3STACK
+#        bool imx51_3stack
+    config PCF_PLATFORM_IMX5
+        bool imx5x
+endchoice
+
+config PLATFORM
+    string
+    default imx27ads     if PCF_PLATFORM_IMX27ADS
+    default imx31ads     if PCF_PLATFORM_IMX31ADS
+    default imx25_3stack if PCF_PLATFORM_IMX25_3STACK
+    default imx233       if PCF_PLATFORM_IMX233
+    default imx28        if PCF_PLATFORM_IMX28
+    default imx31_3stack if PCF_PLATFORM_IMX31_3STACK
+    default imx35_3stack if PCF_PLATFORM_IMX35_3STACK
+    default imx37_3stack if PCF_PLATFORM_IMX37_3STACK
+    default imx51_3stack if PCF_PLATFORM_IMX51_3STACK
+    default imx51        if PCF_PLATFORM_IMX5
+
+comment "Choose the packages profile"
+choice
+    prompt Selection
+    config PCF_NO_PROFILE
+        bool "use packages in preconfig (Min profile)"
+    config PCF_MIN_PROFILE
+        bool "Minimum bootable root filesystem"
+    config PCF_DEV_PROFILE
+        bool "Test and Development packages"
+    config PCF_MAX_PROFILE
+        bool "All supported packages"
+    config PCF_REL_GNOME_PROFILE
+        bool "FSL gnome release package"
+    config PCF_UPDATER_PROFILE
+	bool "mfg firmware profile"
+endchoice
+
+config PCF_PRECONFIG
+    string
+    default imx27ads.cf     if PCF_PLATFORM_IMX27ADS
+    default imx31ads.cf     if PCF_PLATFORM_IMX31ADS
+    default imx25_3stack.cf if ( PCF_PLATFORM_IMX25_3STACK && !PCF_UPDATER_PROFILE)
+    default imx25_updater.cf if ( PCF_PLATFORM_IMX25_3STACK && PCF_UPDATER_PROFILE)
+    default imx233.cf       if (PCF_PLATFORM_IMX233 && !PCF_UPDATER_PROFILE)
+    default imx233_updater.cf if (PCF_PLATFORM_IMX233 && PCF_UPDATER_PROFILE)
+    default imx28.cf       if (PCF_PLATFORM_IMX28 && !PCF_UPDATER_PROFILE)
+    default imx28_updater.cf if (PCF_PLATFORM_IMX28 && PCF_UPDATER_PROFILE)
+    default imx31_3stack.cf if PCF_PLATFORM_IMX31_3STACK
+    default imx35_3stack.cf if (PCF_PLATFORM_IMX35_3STACK && !PCF_UPDATER_PROFILE)
+    default imx35_updater.cf if (PCF_PLATFORM_IMX35_3STACK && PCF_UPDATER_PROFILE)
+    default imx37_3stack.cf if PCF_PLATFORM_IMX37_3STACK
+    default imx51_3stack.cf if PCF_PLATFORM_IMX51_3STACK
+    default imx51.cf        if (PCF_PLATFORM_IMX5 && !PCF_UPDATER_PROFILE)
+    default imx51_updater.cf if (PCF_PLATFORM_IMX5 && PCF_UPDATER_PROFILE)
+
+config PCF_PROFILE
+    string
+    default ""                    if PCF_NO_PROFILE
+    default min.profile           if PCF_MIN_PROFILE
+    default dev.profile           if PCF_DEV_PROFILE
+    default max.profile           if PCF_MAX_PROFILE
+    default release_gnome.profile if PCF_REL_GNOME_PROFILE
+    default updater.profile	  if PCF_UPDATER_PROFILE
+
+config PCF_KCONFIG
+    string
+    default main.lkc
+
+source userspace/defaults.lkc

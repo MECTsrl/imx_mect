@@ -1,0 +1,57 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define pkg_name linux
+%define IntGitUrl git://sw-git.freescale.net/linux-2.6-imx.git
+%define ExtGitUrl git://git.freescale.com/imx/linux-2.6-imx.git
+
+Summary         : Linux kernel (core of the Linux operating system)
+Name            : kernel
+Version         : 3.0.35
+Release         : imx_10.12.01
+License         : GPL
+Vendor          : Freescale Semiconductor
+Packager        : Rob Herring
+Group           : System Environment/Kernel
+Source          : %{pkg_name}-%{version}.tar.bz2
+Source1         : %{pkg_name}-%{version}-%{release}.bz2
+URL             : http://www.kernel.org/
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+
+%Description
+%{summary}
+
+%Prep
+%define buildsubdir %{pkg_name}-%{version}
+rel_ver="$(echo %{release} | cut -d_ -f2)"
+zz="$(echo %{release} | cut -d. -f3 | cut -c2)"
+git_tag="rel_imx_%{version}_${rel_ver}"
+if [ "$zz" != 0 ]; then
+	git_br="imx_%{version}_${rel_ver}"
+else
+	git_br="imx_%{version}"
+fi
+KSRC_DIR=${PKG_KERNEL_PATH_PRECONFIG:-%{_builddir}/%{buildsubdir}}
+
+if [ -z "$PKG_KERNEL_LEAVESRC" ] || [ ! -d "$KSRC_DIR" ]; then
+	if [ -n "$USE_GIT_MODE" ]; then
+		mkdir -p %{buildsubdir}
+		cd %{buildsubdir}
+		if [ "$USE_GIT_MODE" = "internal" ]; then
+			git_url=%{IntGitUrl}
+		else if [ "$USE_GIT_MODE" = "external" ]; then
+			# external git
+			git_url=%{ExtGitUrl}
+		fi
+		fi
+		git init
+		git fetch --depth=1000 ${git_url} tags/${git_tag}:${git_br}
+		git checkout FETCH_HEAD
+	else
+%setup -n %{buildsubdir} -a 1
+		chmod 755 patches/patch-kernel.sh
+		./patches/patch-kernel.sh
+	fi
+fi
+

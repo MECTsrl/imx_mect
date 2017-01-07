@@ -401,6 +401,8 @@ env:
 # Initial downloads (toolchain, LTIB, LTIB patches, spec files patches, ...)
 .PHONY: downloads
 downloads: $(MECT_FTPDIR) downloads_fc $(MECT_DOWNLOADS)
+	# Save LTIB from git.
+	if test -d $(MECT_LTIBDIR); then mv $(MECT_LTIBDIR) $(MECT_LTIBDIR).git; fi
 
 $(MECT_FTPDIR):
 	test -d $@
@@ -420,6 +422,8 @@ setup: ltib_setup projects_setup spec_setup
 # Install and build LTIB.
 .PHONY: ltib_setup
 ltib_setup: ltib_inst ltib_patch
+	# Restore LTIB from git.
+	if test -d $(MECT_LTIBDIR).git; then rsync -av --inplace $(MECT_LTIBDIR).git/ $(MECT_LTIBDIR)/; rm -rf $(MECT_LTIBDIR).git; fi
 
 .PHONY: ltib_inst
 ltib_inst: $(MECT_TMPDIR) downloads
@@ -430,6 +434,7 @@ ltib_inst: $(MECT_TMPDIR) downloads
 	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); (echo -e "qy\nyes" ) | ./install
 	chmod 0775 $(MECT_LTIBDIR)
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
+	test -d $(MECT_LTIBDIR)
 
 $(MECT_TMPDIR):
 	rm -rf $(MECT_TMPDIR)

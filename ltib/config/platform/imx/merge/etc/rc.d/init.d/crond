@@ -1,0 +1,33 @@
+#!/bin/sh
+
+SPOOLDIR=/local/var/spool/cron/crontabs
+
+start() {
+	test -d "$SPOOLDIR" || return 1
+	test -x /usr/sbin/crond || return 1
+
+	echo -n "Starting cron daemon... "
+	/usr/sbin/crond
+	echo "Done."
+}
+
+stop() {
+	echo -n "Shutting down cron daemon... "
+	killall crond 2>/dev/null
+	echo "Done."
+}
+
+case "$1" in
+	start)
+		start
+	;;
+
+	stop)
+		stop
+	;;
+
+	*)
+		echo $"Usage: $0 {start|stop}"
+		exit 1
+	;;
+esac

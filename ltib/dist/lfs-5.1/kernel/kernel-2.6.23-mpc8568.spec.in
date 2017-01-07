@@ -1,0 +1,70 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define dversion 2.6.23
+%define pkg_name linux
+%define dtc_name mpc8568mds
+
+Summary         : Linux kernel (core of the Linux operating system)
+Name            : kernel
+Version         : 2.6.23
+Release         : 1
+License         : GPL
+Vendor          : Kernel.org + freescale patches
+Packager        : Haiying Wang
+Group           : System Environment/Kernel
+Source          : %{pkg_name}-%{dversion}.tar.bz2
+Patch0          : linux-fsl-2.6.2x-E500V2_IEEE754_spfp-2.patch
+Patch1          : linux-fsl-2.6.2x-E500V2_IEEE754_dpfp-2.patch
+Patch2          : linux-fsl-2.6.2x-E500V2_IEEE754_vspfp-2.patch
+Patch3          : linux-fsl-2.6.2x-E500V2_IEEE754_round.patch
+Patch4          : linux-fsl-2.6.2x-E500V2_IEEE754_general-2.patch
+Patch5          : linux-fsl-2.6.23-MISC_FIX_FOR_GIANFAR_DRIVER.patch
+Patch6          : linux-fsl-2.6.23-GIANFAR_SKB_BUFFER_RECYCLING_SUPPORT.patch
+Patch7          : linux-fsl-2.6.23-POWERPC_FIX_MODPOST_WARNING.patch
+Patch8          : linux-fsl-2.6.23-MPC8568MDS_QE.patch
+Patch9          : linux-fsl-2.6.23-UCC_GETH_performance.patch
+Patch10         : linux-fsl-2.6.23-MPC8568MDS_RTC.patch
+Patch11         : linux-fsl-2.6.23-MPC8568MDS_MTD.patch 
+Patch12         : linux-fsl-2.6.23-CT.patch 
+Patch13         : linux-fsl-2.6.23-MPC8568MDS_SPI.patch 
+Patch14         : linux-fsl-2.6.23-PROM.patch
+Patch15         : linux-fsl-2.6.23-MPC85xx_DMA.patch 
+Patch16         : linux-fsl-2.6.23-MPC85xx_RIO.patch 
+Patch17         : linux-fsl-2.6.23-MPC8568MDS_DTS-2.patch
+Patch18         : linux-fsl-2.6.23-OCF_framework-2.patch 
+Patch19         : linux-fsl-2.6.23-OCF-SEC2_support-2.patch 
+Patch20         : linux-fsl-2.6.23-SEC_TEST.patch
+Patch21         : linux-fsl-2.6.23-GIANFAR_PARAMETER_ADJUST.patch
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+
+%Description
+%{summary}
+
+From kernel.org plus Freescale patches
+
+%Prep
+%setup -n %{pkg_name}-%{dversion}
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1

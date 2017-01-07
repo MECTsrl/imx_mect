@@ -1,0 +1,28 @@
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [18:2180]
+-A INPUT -i lo -j ACCEPT 
+#
+# Accept input connections for selected services
+#
+# SSH
+-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT 
+# Telnet
+-A INPUT -p tcp -m tcp --dport 23 -j ACCEPT 
+# HTTP
+-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT 
+# Modbus TCP Server
+-A INPUT -p tcp -m tcp --dport 502 -j ACCEPT 
+# NRPE
+-A INPUT -p tcp -m tcp --dport 5666 -j ACCEPT 
+# VNC :0
+-A INPUT -p tcp -m tcp --dport 5900 -j ACCEPT 
+# ATCMControl_RunTimeSystem control
+-A INPUT -p tcp -m tcp --dport 17290 -j ACCEPT 
+#
+# Discard everything else
+#
+-A INPUT -j DROP
+#
+COMMIT

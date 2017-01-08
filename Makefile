@@ -361,20 +361,11 @@ all: env downloads setup build image target_dev
 .PHONY: env
 env:
 	@for p in $(MECT_UTILS); do which $$p; done
-	if test -d $(MECT_LTIBDIR); then \
-		echo "*** Error: Destination directory $(MECT_LTIBDIR) exists, will not overwrite."; \
-		echo "Hint: To continue an interupted installation try running LTIB directly:"; \
-		echo "          cd $(MECT_LTIBDIR); ./ltib"; \
-		echo "Aborting."; \
-		exit 1; \
-	fi
 	sudo apt-get install $(MECT_PACKAGES)
 
 # Initial downloads (toolchain, LTIB, LTIB patches, spec files patches, ...)
 .PHONY: downloads
 downloads: $(MECT_FTPDIR) downloads_fc $(MECT_DOWNLOADS)
-	# Save LTIB from git clone.
-	if test -d $(MECT_LTIBDIR); then mv $(MECT_LTIBDIR) $(MECT_LTIBDIR).git; fi
 
 $(MECT_FTPDIR):
 	test -d $@
@@ -383,8 +374,8 @@ $(MECT_FTPDIR):
 .PHONY: downloads_fc
 downloads_fc:
 	for f in "" $(MECT_DOWNLOADS); do \
-	    test -z "$$f" && continue; \
-	    rm -f $$f.$(MECT_MD5EXT); \
+		test -z "$$f" && continue; \
+		rm -f $$f.$(MECT_MD5EXT); \
 	done; exit 0		# Don't break the build if the download list is empty.
 
 # Set up LTIB and projects
@@ -393,12 +384,25 @@ setup: ltib_setup projects_setup spec_setup
 
 # Install and build LTIB.
 .PHONY: ltib_setup
-ltib_setup: ltib_inst ltib_patch
-	# Restore LTIB from git.
+ltib_setup: ltib_git_save ltib_inst ltib_patch ltib_git_restore
+
+.PHONY: ltib_git_save
+ltib_git_save:
+	if test -d $(MECT_LTIBDIR); then mv $(MECT_LTIBDIR) $(MECT_LTIBDIR).git; fi
+
+.PHONY: ltib_git_restore
+ltib_git_restore:
 	if test -d $(MECT_LTIBDIR).git; then rsync -av --inplace $(MECT_LTIBDIR).git/ $(MECT_LTIBDIR)/; rm -rf $(MECT_LTIBDIR).git; fi
 
 .PHONY: ltib_inst
 ltib_inst: $(MECT_TMPDIR) downloads
+	if test -d $(MECT_LTIBDIR); then \
+		echo "*** Error: Destination directory $(MECT_LTIBDIR) exists, will not overwrite."; \
+		echo "Hint: To continue an interupted installation try running LTIB directly:"; \
+		echo "          cd $(MECT_LTIBDIR); ./ltib"; \
+		echo "Aborting."; \
+		exit 1; \
+	fi
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 	tar xzvf $(MECT_FTPDIR)/$(MECT_LTIB_EVKARCH) -C $(MECT_TMPDIR)
 	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); patch -p1 < $(MECT_FTPDIR)/$(MECT_LTIBINST_TARGETDIR_PATHCH)
@@ -415,7 +419,7 @@ $(MECT_TMPDIR):
 .PHONY: ltib_patch
 ltib_patch: downloads
 	if test ! -e /usr/include/sys; then \
-		sudo ln -s /usr/include/$(uname -m | sed 's/686/386/')-linux-gnu/sys /usr/include/sys; \
+		sudo ln -s /usr/include/$$(uname -m | sed 's/686/386/')-linux-gnu/sys /usr/include/sys; \
 	fi
 
 # Build LTIB and projects
@@ -764,7 +768,7 @@ images_check:
 		test -z "$$i" -o ! -s "$$i" && continue; \
 		echo ""; \
 		echo "Checking $$i..."; \
-		sh $(MECT_IMG_TESTER) "$(MECT_REF_IMG)" "$$i" $(MECT_TMPDIR) $(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; \
+		sudo sh $(MECT_IMG_TESTER) "$(MECT_REF_IMG)" "$$i" $(MECT_TMPDIR) $(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; \
 	done
 
 
@@ -787,14 +791,13 @@ clean_projects:
 
 .PHONY: clean
 clean: clean_projects
-	sudo rm -rf $(MECT_LTIBDIR) $(MECT_TMPDIR) $(MECT_CSXCUNPACK) $(MECT_CSXCDIR) $(MECT_FSDIR)/ltib $(MECT_FSDIR)/pkgs $(MECT_FSDIR)/rootfs $(MECT_TMPRPMDIR) $(MECT_QT_INSTALL_DIR)
+	sudo rm -rf $(MECT_TMPDIR) $(MECT_LTIBDIR)/rpm $(MECT_LTIBDIR)/tmp $(MECT_LTIBDIR)/host_config.log $(MECT_CSXCUNPACK) $(MECT_FSDIR)/rootfs $(MECT_TMPRPMDIR)
 	if test -d $(MECT_FSDIR); then sudo rmdir --ignore-fail-on-non-empty $(MECT_FSDIR); fi
 
 .PHONY: distclean
 distclean: clean
 	if which ccache > /dev/null; then ccache -C; fi
-	sudo rm -rf $(MECT_IMGDIR)
-	if test -d $(MECT_PRJDIR); then rm -rf $(MECT_PRJDIR); git checkout $(MECT_PRJDIR); fi
+	sudo rm -rf $(MECT_IMGDIR) $(MECT_CSXCDIR) $(MECT_FSDIR)/ltib $(MECT_FSDIR)/pkgs $(MECT_QT_INSTALL_DIR)
 
 
 # Downloads

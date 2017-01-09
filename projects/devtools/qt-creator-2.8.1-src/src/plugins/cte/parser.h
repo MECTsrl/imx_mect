@@ -109,6 +109,7 @@ struct  Alarms {
 int     LoadXTable(char *crossTableFile);
 int     SaveXTable(char *crossTableFile);
 char    *ipaddr2str(uint32_t ipaddr, char *buffer);
+uint32_t str2ipaddr(char *str);
 
 /******************************************************************************
  ***************************** VARIABLES SECTION *****************************

@@ -17,7 +17,7 @@ LTIB is built and installed as an unprivileged user, but it requires root privil
 
 ### Build prerequisites
 
-- a working (minimal) Ubuntu 14.04 LTS
+- a working (minimal) Ubuntu 16.04 LTS with git, OpenSSL and CA certificates
 - a git clone of this project
 - GNU make from the Linux distribution repositories
 - sudo enabled for the user that performs the build (optionally without a password)
@@ -26,7 +26,7 @@ LTIB is built and installed as an unprivileged user, but it requires root privil
 
 1. Install the *make* and *git* utilities from the Linux distribution repositories:
 
-        apt-get install make git
+        apt-get install make git openssl ca-certificates
 
 1. Enable the build user for sudo (optionally without a password).  
    Edit */etc/sudoers* and append a line as follows:

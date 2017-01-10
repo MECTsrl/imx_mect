@@ -361,6 +361,11 @@ all: env downloads setup build image target_dev
 .PHONY: env
 env:
 	@for p in $(MECT_UTILS); do which $$p; done
+	if test "`uname -m`" = x86_64; then \
+		sudo dpkg --add-architecture i386; \
+		sudo apt-get update; \
+		sudo apt-get install libc6:i386; \
+	fi
 	sudo apt-get install $(MECT_PACKAGES)
 
 # Initial downloads (toolchain, LTIB, LTIB patches, spec files patches, ...)

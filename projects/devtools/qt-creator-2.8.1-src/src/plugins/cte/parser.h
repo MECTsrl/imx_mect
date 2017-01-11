@@ -65,6 +65,7 @@ enum varTypes {BIT = 0,
 
 struct  CrossTableRecord {
     int16_t Enable;
+    int  UsedEntry;
     enum UpdateType Plc;
     char Tag[MAX_IDNAME_LEN];
     enum varTypes Types;
@@ -108,6 +109,7 @@ struct  Alarms {
 int     LoadXTable(char *crossTableFile);
 int     SaveXTable(char *crossTableFile);
 char    *ipaddr2str(uint32_t ipaddr, char *buffer);
+uint32_t str2ipaddr(char *str);
 
 /******************************************************************************
  ***************************** VARIABLES SECTION *****************************

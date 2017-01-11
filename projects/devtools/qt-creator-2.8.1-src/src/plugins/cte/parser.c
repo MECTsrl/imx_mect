@@ -221,6 +221,7 @@ int LoadXTable(char *crossTableFile)
     // init tables
     for (addr = 1; addr <= DimCrossTable; ++addr) {
         CrossTable[addr].Enable = 0;
+        CrossTable[addr].UsedEntry = 0;
         CrossTable[addr].Plc = FALSE;
         CrossTable[addr].Tag[0] = 0;
         CrossTable[addr].Types = UNKNOWN;
@@ -290,6 +291,7 @@ int LoadXTable(char *crossTableFile)
         // Empty Line
         if (strlen(p) == 0)
             continue;
+
         switch (p[0]) {
         case 'H':
             CrossTable[addr].Plc = Htype;
@@ -323,6 +325,9 @@ int LoadXTable(char *crossTableFile)
             break;
         }
         strncpy(CrossTable[addr].Tag, p, MAX_IDNAME_LEN);
+        // Marked Entry as used
+        if (strlen(CrossTable[addr].Tag) > 0)
+            CrossTable[addr].UsedEntry = 1;
 
         // Types {UINT, UDINT, DINT, FDCBA, ...}
         p = strtok_csv(NULL, ";", &r);

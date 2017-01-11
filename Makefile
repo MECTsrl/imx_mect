@@ -399,7 +399,7 @@ ltib_git_save:
 ltib_git_restore:
 	if test -d $(MECT_LTIBDIR).git; then rsync -av --inplace $(MECT_LTIBDIR).git/ $(MECT_LTIBDIR)/; rm -rf $(MECT_LTIBDIR).git; fi
 	if ! grep -q '^$(MECT_LTIBDIR)/../src$$' $(MECT_LTIBDIR)/.ltibrc; then \
-		sed -i 's|^%ldirs$$|%ldirs\n$(MECT_LTIBDIR)/../src|' $(MECT_LTIBDIR)/.ltibrc; \
+		sed -i '/\/ltib\/..\/src$$/ d; s|^%ldirs$$|%ldirs\n$(MECT_LTIBDIR)/../src|' $(MECT_LTIBDIR)/.ltibrc; \
 	fi
 
 .PHONY: ltib_inst

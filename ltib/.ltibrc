@@ -34,7 +34,7 @@ ccache /usr/bin/gcc -B/usr/bin/
 # Local directories, these are searched before the Local Package Pool
 # for files.  This can be a whitespace separated list (including new-lines)
 %ldirs
-/home/imx28/20170107/src
+/home/imx28/20170110_est/ltib/src
 /opt/CodeSourcery/arm-none-linux-gnueabi/libc/usr/bin
 /var/tmp/pkgs
 
@@ -92,8 +92,8 @@ http://auslxsc02.mtwk.freescale.net/cpp/
 0
 
 # use for multi-processor, or with distcc
-%MAKEFLAGS
--j 8
+#%MAKEFLAGS
+#-j 8
 
 # distcc
 #%DISTCC_HOSTS

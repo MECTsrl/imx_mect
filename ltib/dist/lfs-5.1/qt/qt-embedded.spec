@@ -205,7 +205,7 @@ unset PLATFORM
 for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am Makefile.in; do
 	find . -name $f -exec touch {} \;
 done
-./configure \
+MAKEFLAGS=j$(nproc) ./configure \
 %if %{?toolchain:1}%{!?toolchain:0}
 	--prefix=%{toolchain_install_dir} \
 %else

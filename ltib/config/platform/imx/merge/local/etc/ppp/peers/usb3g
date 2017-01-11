@@ -1,0 +1,9 @@
+/dev/ttyUSB0
+460800
+lock
+crtscts
+modem
+noauth
+noipdefault
+updetach
+connect "/sbin/chat -f /etc/ppp/chat-usb3g"

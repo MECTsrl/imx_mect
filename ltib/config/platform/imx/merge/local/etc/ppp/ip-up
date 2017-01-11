@@ -1,0 +1,14 @@
+#!/bin/sh
+
+statd=/var/pppd
+test -d $statd || mkdir -p $statd
+env > $statd/up.stat
+
+rc=/etc/resolv.conf
+if test "$USEPEERDNS" -eq 1; then
+    if test -n "$DNS1" -o -n "$DNS2"; then
+        echo "# Automatically written by pppd using $0" > $rc
+        test -n "$DNS1" && echo "nameserver $DNS1" >> $rc
+        test -n "$DNS2" && echo "nameserver $DNS2" >> $rc
+    fi
+fi

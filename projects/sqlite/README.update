@@ -1,0 +1,41 @@
+
+This file describes how to use the files in this directory to create a new
+version of the "autoconf-amalgamation" package.
+
+1. The following files should have executable permission:
+
+  chmod 755 install-sh 
+  chmod 755 missing 
+  chmod 755 depcomp
+  chmod 755 config.sub
+  chmod 755 config.guess
+  chmod 755 ltmain.sh
+  chmod 755 configure
+
+2. Update the following SQLite files with new versions:
+
+  sqlite3.c
+  sqlite3.h
+  sqlite3ext.h
+  shell.c
+
+3. Update the SQLite version number in the AC_INIT macro in file 
+   configure.ac:
+
+     AC_INIT(sqlite, 3.6.3, http://www.sqlite.org)
+
+4. Run the following commands to push the version number change through
+   to the generated files.
+
+  autoconf
+  automake
+
+5. Commit the changes to fossil.
+
+6. Run "./configure && make dist". This builds a distribution package
+   named something like "sqlite-3.6.3.tar.gz". Rename to
+   "sqlite-amalgamation-3.6.3.tar.gz" and use.
+
+   
+
+

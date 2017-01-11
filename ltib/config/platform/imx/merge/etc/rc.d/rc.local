@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+# This script will be executed *after* all the other init scripts.
+# You can put your own initialization stuff in here
+
+# Fix root home directory permissions.
+test -d /local/flash/root && chmod 0755 /local/flash/root

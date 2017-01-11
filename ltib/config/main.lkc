@@ -1,0 +1,18 @@
+config CONFIG_TITLE
+    string
+    default "GNU/Linux Target Image Builder : Platform Selection"
+
+mainmenu "GNU/Linux Target Image Builder main menu"
+
+choice
+    prompt "Platform choice"
+    help
+       This menu will let you choose from a list of boards
+
+    config PLATFORM_imx
+        bool "Freescale iMX reference boards"
+endchoice
+
+config PLATFORM_DIR
+    string
+    default "config/platform/imx" if PLATFORM_imx

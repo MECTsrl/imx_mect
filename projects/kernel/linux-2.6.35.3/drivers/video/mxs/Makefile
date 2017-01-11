@@ -1,0 +1,11 @@
+obj-$(CONFIG_ARCH_MXS)				+= lcdif.o
+obj-$(CONFIG_FB_MXS)				+= mxsfb.o
+obj-$(CONFIG_FB_MXS_LCD_43WVF1G)		+= lcd_43wvf1g.o
+obj-$(CONFIG_FB_MXS_LCD_TM043)			+= lcd_tm043.o
+obj-$(CONFIG_FB_MXS_LCD_RK043)			+= lcd_rk043.o
+obj-$(CONFIG_FB_MXS_LCD_HH057)			+= lcd_hitachi57.o
+obj-$(CONFIG_FB_MXS_LCD_HH057_640x480)		+= lcd_hitachi57_640x480.o
+obj-$(CONFIG_FB_MXS_LCD_FRMK7)			+= lcd_formike7.o
+obj-$(CONFIG_FB_MXS_LCD_LMS430)			+= lcd_lms430.o
+# TVOUT support
+obj-$(CONFIG_FB_MXS_TVENC)			+= tvenc.o

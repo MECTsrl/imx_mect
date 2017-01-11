@@ -66,10 +66,6 @@ MECT_HOST_NAME := "development.localdomain"
 export MECT_FTPDIR := $(CURDIR)/src
 # LTIB is installed here.
 MECT_LTIBDIR := $(CURDIR)/ltib
-# LTIB (config and dist) before MECT patches is saved here.
-MECT_LTIBDIR_REF := $(CURDIR)/ltib.reference
-# LTIB (config and dist) on which to apply current patches.
-MECT_LTIBDIR_PATCH := $(CURDIR)/ltib.patched
 # LTIB rootfs is created here.
 export MECT_LTIB_RFSDIR = $(MECT_LTIBDIR)/rootfs
 # Unpack the archives here.
@@ -97,14 +93,11 @@ MECT_IMG_TESTER = $(MECT_FTPDIR)/image-tester.sh
 # Staging directory for image test
 MECT_TESTSHARE := /media/sf_share
 # Prefix of staging image directory
-MECT_TESTAME := MectSuite_
+MECT_TESTNAME := MectSuite_
 # Draft directory for rpmbuild
 MECT_TMPRPMDIR = /tmp/rpm-$(USER)
 # Expand to the name of the kernel RPM built by LTIB.
 MECT_LTIB_KERNEL_RPM = $(MECT_RPMDIR)/$(shell if test -x $(MECT_RPMBIN); then $(MECT_RPMBIN) --root $(MECT_LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides kernel; else echo 'no-package'; fi).$(MECT_TARGET_ARCH).rpm
-# Expand to the name of the timestamp when the kernel RPM was built by LTIB.
-MECT_LTIB_KERNEL_TS_NAME = last-kernel-build
-MECT_LTIB_KERNEL_TS_RPM = $(MECT_RPMDIR)/$(shell if test -x $(MECT_RPMBIN); then $(MECT_RPMBIN) --root $(MECT_LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides $(MECT_LTIB_KERNEL_TS_NAME); else echo 'no-package'; fi).$(MECT_TARGET_ARCH).rpm
 # Kernel configuration file.
 MECT_KERNEL_CONF := $(MECT_LTIBDIR)/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 # Script to update target file systems
@@ -210,7 +203,7 @@ MECT_COMMON_RFSPKGS := \
 	openvpn-rfs-2.3.10-1.$(MECT_TARGET_ARCH).rpm \
 	ppp-rfs-2.4.4-1.$(MECT_TARGET_ARCH).rpm \
 	qt-embedded-rfs-4.8.5-1.$(MECT_TARGET_ARCH).rpm \
-	qwt-rfs-6.1-1_multiaxes.$(MECT_TARGET_ARCH).rpm \
+	qwt-multiaxes-rfs-6.1-1_multiaxes.$(MECT_TARGET_ARCH).rpm \
 	rsync-rfs-2.6.5-1.$(MECT_TARGET_ARCH).rpm \
 	SDcard-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	sftp-server-rfs-4.3p2-1.$(MECT_TARGET_ARCH).rpm \
@@ -225,7 +218,7 @@ MECT_COMMON_RFSPKGS := \
 	wifi-drivers-ath9k_htc-rfs-3.9-2.$(MECT_TARGET_ARCH).rpm \
 	wifi-drivers-common-rfs-3.9-2.$(MECT_TARGET_ARCH).rpm \
 	wifi-drivers-rtlwifi-rfs-3.9-2.$(MECT_TARGET_ARCH).rpm \
-	wireless_tools-rfs-29-1.$(MECT_TARGET_ARCH).rpm \
+	wireless-tools-rfs-29-1.$(MECT_TARGET_ARCH).rpm \
 	wpa_supplicant-rfs-0.5.9-1.$(MECT_TARGET_ARCH).rpm \
 	xenomai-rfs-2.6.0-1.$(MECT_TARGET_ARCH).rpm \
 	zip-rfs-3.0.0-0.$(MECT_TARGET_ARCH).rpm \
@@ -258,8 +251,8 @@ MECT_CSXCPREFIX = arm-2011.03
 MECT_CSXCARCH = $(MECT_CSXCPREFIX)-41-arm-none-linux-gnueabi-i686-pc-linux-gnu.tar.bz2
 MECT_CSXCUNPACK = $(CURDIR)/$(MECT_CSXCPREFIX)
 # Keep this in sync with LTIB config
-export MECT_CSXCDIR = /opt/CodeSourcery
-export MECT_CC_DIRECTORY := $(MECT_CSXCDIR)
+export MECT_CSXCDIR := /opt/CodeSourcery
+export MECT_CC_DIRECTORY = $(MECT_CSXCDIR)
 export MECT_CC_VERSION := 
 export MECT_CC_RADIX := arm-none-linux-gnueabi
 
@@ -269,27 +262,6 @@ MECT_LTIB_EVKDIR = $(MECT_LTIB_EVKARCH:%.tar.gz=%)
 
 # LTIB pre-configuration for install (MECT patch)
 MECT_LTIBINST_TARGETDIR_PATHCH = ltib-install-preset-target-dir.patch
-
-# LTIB fix downloads for Ubuntu 12.04 (MECT patch)
-MECT_LTIB_UBUNTU_URL_PATHCH = ltib-ubuntu12.04-url.patch
-
-# LTIB fix /usr/include/sys for i386 architectures for Ubuntu 12.04 (MECT patch)
-MECT_LTIB_UBUNTU_INCLUDE_SYS_PATHCH = ltib-ubuntu12.04-include-sys.patch
-
-# LTIB fix configuration and specs (MECT patches)
-MECT_LTIB_MECT_CONFIG_PATCH = ltib-mect-config.patch
-MECT_LTIB_MECT_SPECS_PATCH = ltib-mect-specs.patch
-MECT_LTIB_MECT_BIN_PATCH = ltib-mect-bin.patch
-
-# LTIB set MECT PPP (MECT patch)
-MECT_LTIB_MECT_PPP_PATCH = ltib-mect-ppp-url.patch
-
-# LTIB Ubuntu 12.04 patch bundle
-MECT_LTIB_UBUNTU_12_04_PATCH = patch-ltib-ubuntu12.04.sh
-MECT_URL_LTIB_UBUNTU_12_04_PATCH = $(MECT_FTPURL)/$(MECT_LTIB_UBUNTU_12_04_PATCH)
-
-# LTIB Ubuntu 12.04 patch bundle fix /usr/include/sys for i386 architectures (MECT patch)
-MECT_LTIB_UBUNTU_12_04_PATCH_INCLUDE_SYS_PATCH = ubuntu-ltib-patch-include-sys-i386.patch
 
 # LTIB qt spec file (MECT patch)
 export MECT_QT_INSTALL_DIR = /opt/Trolltech
@@ -319,7 +291,6 @@ MECT_FSPKG := $(MECT_FSPKG:%=$(MECT_FTPDIR)/%)
 MECT_DOWNLOADS := \
 	$(MECT_CSXCARCH) \
 	$(MECT_LTIB_EVKARCH) \
-	$(MECT_LTIB_UBUNTU_12_04_PATCH) \
 	$(MECT_FSPKG_DL) \
 
 MECT_DLMD5 := $(MECT_DOWNLOADS:%=%.$(MECT_MD5EXT))
@@ -348,6 +319,7 @@ MECT_PACKAGES = \
 	liblzo2-dev \
 	libncurses5-dev \
 	liborbit2-dev \
+	libtool \
 	libx11-dev \
 	m4 \
 	make \
@@ -389,12 +361,10 @@ all: env downloads setup build image target_dev
 .PHONY: env
 env:
 	@for p in $(MECT_UTILS); do which $$p; done
-	if test -d $(MECT_LTIBDIR); then \
-		echo "*** Error: Destination directory $(MECT_LTIBDIR) exists, will not overwrite."; \
-		echo "Hint: To continue an interupted installation try running LTIB directly:"; \
-		echo "          cd $(MECT_LTIBDIR); ./ltib"; \
-		echo "Aborting."; \
-		exit 1; \
+	if test "`uname -m`" = x86_64; then \
+		sudo dpkg --add-architecture i386; \
+		sudo apt-get update; \
+		sudo apt-get install libc6:i386; \
 	fi
 	sudo apt-get install $(MECT_PACKAGES)
 
@@ -409,8 +379,8 @@ $(MECT_FTPDIR):
 .PHONY: downloads_fc
 downloads_fc:
 	for f in "" $(MECT_DOWNLOADS); do \
-	    test -z "$$f" && continue; \
-	    rm -f $$f.$(MECT_MD5EXT); \
+		test -z "$$f" && continue; \
+		rm -f $$f.$(MECT_MD5EXT); \
 	done; exit 0		# Don't break the build if the download list is empty.
 
 # Set up LTIB and projects
@@ -419,10 +389,28 @@ setup: ltib_setup projects_setup spec_setup
 
 # Install and build LTIB.
 .PHONY: ltib_setup
-ltib_setup: ltib_inst ltib_patch
+ltib_setup: ltib_git_save ltib_inst ltib_patch ltib_git_restore
+
+.PHONY: ltib_git_save
+ltib_git_save:
+	if test -d $(MECT_LTIBDIR); then mv $(MECT_LTIBDIR) $(MECT_LTIBDIR).git; fi
+
+.PHONY: ltib_git_restore
+ltib_git_restore:
+	if test -d $(MECT_LTIBDIR).git; then rsync -av --inplace $(MECT_LTIBDIR).git/ $(MECT_LTIBDIR)/; rm -rf $(MECT_LTIBDIR).git; fi
+	if ! grep -q '^$(MECT_LTIBDIR)/../src$$' $(MECT_LTIBDIR)/.ltibrc; then \
+		sed -i '/\/ltib\/..\/src$$/ d; s|^%ldirs$$|%ldirs\n$(MECT_LTIBDIR)/../src|' $(MECT_LTIBDIR)/.ltibrc; \
+	fi
 
 .PHONY: ltib_inst
 ltib_inst: $(MECT_TMPDIR) downloads
+	if test -d $(MECT_LTIBDIR); then \
+		echo "*** Error: Destination directory $(MECT_LTIBDIR) exists, will not overwrite."; \
+		echo "Hint: To continue an interupted installation try running LTIB directly:"; \
+		echo "          cd $(MECT_LTIBDIR); ./ltib"; \
+		echo "Aborting."; \
+		exit 1; \
+	fi
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 	tar xzvf $(MECT_FTPDIR)/$(MECT_LTIB_EVKARCH) -C $(MECT_TMPDIR)
 	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); patch -p1 < $(MECT_FTPDIR)/$(MECT_LTIBINST_TARGETDIR_PATHCH)
@@ -430,6 +418,7 @@ ltib_inst: $(MECT_TMPDIR) downloads
 	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); (echo -e "qy\nyes" ) | ./install
 	chmod 0775 $(MECT_LTIBDIR)
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
+	test -d $(MECT_LTIBDIR)
 
 $(MECT_TMPDIR):
 	rm -rf $(MECT_TMPDIR)
@@ -437,25 +426,9 @@ $(MECT_TMPDIR):
 
 .PHONY: ltib_patch
 ltib_patch: downloads
-	test -d $(MECT_LTIBDIR)
-	cd $(MECT_LTIBDIR); cp $(MECT_FTPDIR)/$(MECT_LTIB_UBUNTU_12_04_PATCH) .
-	cd $(MECT_LTIBDIR); cp $(MECT_FTPDIR)/$(MECT_LTIB_UBUNTU_12_04_PATCH_INCLUDE_SYS_PATCH) .
-	cd $(MECT_LTIBDIR); patch -p1 < $(MECT_FTPDIR)/$(MECT_LTIB_UBUNTU_URL_PATHCH)
-	cd $(MECT_LTIBDIR); patch -p1 < $(MECT_FTPDIR)/$(MECT_LTIB_UBUNTU_INCLUDE_SYS_PATHCH)
-	cd $(MECT_LTIBDIR); sh ./$(MECT_LTIB_UBUNTU_12_04_PATCH) $(MECT_FTPURL)
-	cd $(MECT_LTIBDIR); rm -f $(MECT_LTIB_UBUNTU_12_04_PATCH) $(MECT_LTIB_UBUNTU_12_04_PATCH_INCLUDE_SYS_PATCH)
-	rm -rf $(MECT_LTIBDIR_REF)
-	mkdir -p $(MECT_LTIBDIR_REF)
-	rsync -a $(MECT_LTIBDIR)/config $(MECT_LTIBDIR)/dist $(MECT_LTIBDIR)/bin $(MECT_LTIBDIR)/ltib $(MECT_LTIBDIR_REF)/
-	cd $(MECT_LTIBDIR); for p in \
-		$(MECT_LTIB_MECT_CONFIG_PATCH) \
-		$(MECT_LTIB_MECT_PPP_PATCH) \
-		$(MECT_LTIB_MECT_SPECS_PATCH) \
-		$(MECT_LTIB_MECT_BIN_PATCH) \
-	; do \
-		patch -p1 < $(MECT_FTPDIR)/$$p; \
-	done
-	sed -i "s,^%ldirs$$,\0\n$(MECT_FTPDIR)\n$(MECT_CSXCDIR)/arm-none-linux-gnueabi/libc/usr/bin," $(MECT_LTIBDIR)/.ltibrc
+	if test ! -e /usr/include/sys; then \
+		sudo ln -s /usr/include/$$(uname -m | sed 's/686/386/')-linux-gnu/sys /usr/include/sys; \
+	fi
 
 # Build LTIB and projects
 .PHONY: build
@@ -465,6 +438,7 @@ build: ltib_build projects_build
 ltib_build: hosttools
 	sudo rm -rf $(MECT_FSDIR)/rootfs
 	sudo rm -rf $(MECT_FSDIR)/rpm/BUILD
+	sudo install -d -o $(USER) -g $(shell groups | awk '{print $$1}') -m 755 $(MECT_FSDIR)
 	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') $(MECT_FSDIR)
 	mkdir -p $(MECT_FSDIR)/rootfs
 	mkdir -p $(MECT_FSDIR)/rpm/BUILD
@@ -566,11 +540,9 @@ spec_setup:
 
 MECT_IMAGES := \
 	TP1043_01_A \
-	TP1043_01_C \
 	TP1057_01_A \
 	TP1070_01_A \
 	TP1070_01_C \
-	TP1070_01_D \
 	TPAC1007_03 \
 	TPAC1007_04_AA \
 	TPAC1007_04_AB \
@@ -579,20 +551,19 @@ MECT_IMAGES := \
 
 ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 
-	MECT_IMAGES += \
-		TP1043_01_B \
-		TP1057_01_B \
-		TP1070_01_B \
-		TPAC1006 \
-		TPAC1008_01 \
-		TPAC1008_02_AA \
-		TPAC1008_02_AB \
-		TPAC1008_02_AC \
-		TPAC1008_02_AD \
-		TPAC1008_02_AE \
-		TPAC1008_02_AF \
-		TPLC100 \
-		TPLC150 \
+MECT_IMAGES += \
+	TP1043_01_B \
+	TP1057_01_B \
+	TP1070_01_B \
+	TPAC1006 \
+	TPAC1008_01 \
+	TPAC1008_02_AA \
+	TPAC1008_02_AB \
+	TPAC1008_02_AD \
+	TPAC1008_02_AE \
+	TPAC1008_02_AF \
+	TPLC100 \
+	TPLC150 \
 
 endif
 
@@ -622,30 +593,32 @@ images_do: $(MECT_IMAGES)
 # Common target rules
 #
 
+.PHONY: build_kernel
+build_kernel: clean_kernel_build
+	$(MAKE) $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
+
 # Build the target-specific kernel.
-$(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM)): $(MECT_LTIB_KERNEL_TS_RPM)
+$(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM)):
 	test -n "$(MECT_BUILD_TARGET)" -a -n "$(MECT_KERNEL_TARGET_CONF)"
-	touch -r $(MECT_LTIB_KERNEL_TS_RPM) /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp)
-	rm -rf $(MECT_LTIBDIR)/rpm/BUILD/linux-*
 	rm -f $(MECT_KERNEL_CONF) $(MECT_KERNEL_CONF).dev
 	ln -s $(MECT_KERNEL_TARGET_CONF) $(MECT_KERNEL_CONF)
-	cd $(MECT_LTIBDIR); ./ltib -f -p kernel
-	touch -r /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp) $(MECT_LTIB_KERNEL_TS_RPM); rm -f /tmp/$(shell basename $(MECT_LTIB_KERNEL_TS_RPM).ltib-timestamp)
+	cd $(MECT_LTIBDIR); LTIB_FULL_REBUILD=yes ./ltib -f -p kernel
 	set -e; cd $(MECT_RPMDIR); for rpm in '' `ls kernel-rfs-*.$(MECT_TARGET_ARCH).rpm imx-bootlets-src-mfg-*.$(MECT_TARGET_ARCH).rpm 2>/dev/null | sed '/-$(MECT_TARGET_PREFIX)/ d;'`; do \
 		test -n "$$rpm" || continue; \
 		mv $$rpm `echo $$rpm | sed 's/^\(kernel\|imx-bootlets-src\)-\(rfs\|mfg\)-/\1-\2-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-/'`; \
 	done
 
-$(MECT_LTIB_KERNEL_TS_RPM):
-	cd $(MECT_LTIBDIR); ./ltib -f -p $(MECT_LTIB_KERNEL_TS_NAME)
+.PHONY: clean_kernel_build
+clean_kernel_build:
+	rm -f $(MECT_RPMBUILDDIR)/linux*
+	rm -f $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-*,$(MECT_LTIB_KERNEL_RPM))
 
 # Build the target-specific boot.
 .PHONY: target_boot
 target_boot: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
 target_boot: MECT_BOOTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)/boot
-target_boot: $(MECT_COMMON_RFSPKGS)
+target_boot: $(MECT_COMMON_RFSPKGS) build_kernel
 	test -n '$(MECT_BUILD_TARGET)' -a -n '$(MECT_KERNEL_TARGET_CONF)'
-	$(MAKE) MECT_BUILD_TARGET=$(MECT_BUILD_TARGET) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
 	sudo rm -rf $(MECT_BOOTDIR)
 	mkdir -p $(MECT_BOOTDIR)/var/lib/rpm
 	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_RPMDIR)/imx-bootlets-src-mfg-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-2.6.35.3-1.1.0.$(MECT_TARGET_ARCH).rpm
@@ -658,9 +631,8 @@ target_boot: $(MECT_COMMON_RFSPKGS)
 .PHONY: target_rfs
 target_rfs: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
 target_rfs: MECT_RFSDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)/rootfs
-target_rfs: $(MECT_COMMON_RFSPKGS)
+target_rfs: $(MECT_COMMON_RFSPKGS) build_kernel
 	test -n '$(MECT_BUILD_TARGET)' -a -n '$(MECT_KERNEL_TARGET_CONF)'
-	$(MAKE) MECT_BUILD_TARGET=$(MECT_BUILD_TARGET) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
 	sudo rm -rf $(MECT_RFSDIR)
 	mkdir -p $(MECT_RFSDIR)/var/lib/rpm $(MECT_RFSDIR)/tmp/ltib
 	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_COMMON_RFSPKGS) $(subst /kernel-rfs-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_TARGET_RFSPKGS))
@@ -774,30 +746,9 @@ target_dev:
 	cd $(MECT_IMGDIR)/dev; sudo zip -1r $(MECT_IMGDIR)/rootfs_dev.zip rootfs
 	sudo rm -rf $(MECT_IMGDIR)/dev
 
-# Handle the patches for LTIB configuration and spec files.
-# 
-
-# Create new patches from the current installation.
-
-.PHONY: ltib_genpatch
-ltib_genpatch: ltib_genpatch_config ltib_genpatch_specs ltib_genpatch_bin
-
-.PHONY: ltib_genpatch_config
-ltib_genpatch_config: $(MECT_LTIBDIR_REF)/config
-	cd $(MECT_LTIBDIR)/.. && { diff -aurN --exclude=.config.old --exclude=*.config.dev --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/config $(shell basename $(MECT_LTIBDIR))/config; diff -auN $(shell basename $(MECT_LTIBDIR_REF))/.config $(shell basename $(MECT_LTIBDIR))/.config; diff -auN $(shell basename $(MECT_LTIBDIR_REF))/.config.cmd $(shell basename $(MECT_LTIBDIR))/.config.cmd; diff -auN $(shell basename $(MECT_LTIBDIR_REF))/.tmpconfig.h $(shell basename $(MECT_LTIBDIR))/.tmpconfig.h; } | sed '/^\(---\|\+\+\+\) / s/\t.*//' > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_CONFIG_PATCH); true
-	cd $(MECT_FTPDIR); md5sum $(MECT_LTIB_MECT_CONFIG_PATCH) > $(MECT_LTIB_MECT_CONFIG_PATCH).$(MECT_MD5EXT)
-
-.PHONY: ltib_genpatch_specs
-ltib_genpatch_specs: $(MECT_LTIBDIR_REF)/dist
-	cd $(MECT_LTIBDIR)/.. && diff -aurN --exclude=*-orig.spec --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/dist $(shell basename $(MECT_LTIBDIR))/dist | sed '/^\(---\|\+\+\+\) / s/\t.*//' > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_SPECS_PATCH); true
-	cd $(MECT_FTPDIR); md5sum $(MECT_LTIB_MECT_SPECS_PATCH) > $(MECT_LTIB_MECT_SPECS_PATCH).$(MECT_MD5EXT)
-
-.PHONY: ltib_genpatch_bin
-ltib_genpatch_bin: $(MECT_LTIBDIR_REF)/bin
-	cd $(MECT_LTIBDIR)/.. && { diff -aurN --exclude=*.bak --exclude=*.swp $(shell basename $(MECT_LTIBDIR_REF))/bin $(shell basename $(MECT_LTIBDIR))/bin; diff -auN $(shell basename $(MECT_LTIBDIR_REF))/ltib $(shell basename $(MECT_LTIBDIR))/ltib; } | sed '/^\(---\|\+\+\+\) / s/\t.*//' > $(MECT_FTPDIR)/$(MECT_LTIB_MECT_BIN_PATCH); true
-	cd $(MECT_FTPDIR); md5sum $(MECT_LTIB_MECT_BIN_PATCH) > $(MECT_LTIB_MECT_BIN_PATCH).$(MECT_MD5EXT)
 
 # Update an existing LTIB installation from repository.
+#
 
 .PHONY: ltib_update
 ltib_update:
@@ -805,25 +756,6 @@ ltib_update:
 	git reset --hard origin/master
 	if test -n '$(MECT_BUILD_IMXMECT_BRANCH)'; then git checkout $(MECT_BUILD_IMXMECT_BRANCH); git pull; fi
 	if test -n '$(MECT_BUILD_IMXMECT_TAG)' -a '$(MECT_BUILD_IMXMECT_TAG)' != '0.0'; then git checkout tags/$(MECT_BUILD_IMXMECT_TAG); fi
-	if ! test -d $(MECT_LTIBDIR_REF); then \
-		mv $(MECT_LTIBDIR) $(MECT_LTIBDIR).precious; \
-		$(MAKE) ltib_inst ltib_patch; \
-		rm -rf $(MECT_LTIBDIR); \
-		mv $(MECT_LTIBDIR).precious $(MECT_LTIBDIR); \
-	fi
-	rm -rf $(MECT_LTIBDIR_PATCH)
-	rsync -a $(MECT_LTIBDIR_REF)/ $(MECT_LTIBDIR_PATCH)/
-	cd $(MECT_LTIBDIR_PATCH); patch -p1 < $(MECT_FTPDIR)/$(MECT_LTIB_MECT_CONFIG_PATCH)
-	cd $(MECT_LTIBDIR_PATCH); patch -p1 < $(MECT_FTPDIR)/$(MECT_LTIB_MECT_SPECS_PATCH)
-	cd $(MECT_LTIBDIR_PATCH); patch -p1 < $(MECT_FTPDIR)/$(MECT_LTIB_MECT_BIN_PATCH)
-	rsync -a --delete $(MECT_LTIBDIR_PATCH)/config/ $(MECT_LTIBDIR)/config/
-	rsync -a --delete $(MECT_LTIBDIR_PATCH)/dist/ $(MECT_LTIBDIR)/dist/
-	rsync -a --delete $(MECT_LTIBDIR_PATCH)/bin/ $(MECT_LTIBDIR)/bin/
-	cp $(MECT_LTIBDIR_PATCH)/.config $(MECT_LTIBDIR)/.config
-	cp $(MECT_LTIBDIR_PATCH)/.config.cmd $(MECT_LTIBDIR)/.config.cmd
-	cp $(MECT_LTIBDIR_PATCH)/.tmpconfig.h $(MECT_LTIBDIR)/.tmpconfig.h
-	cp -a $(MECT_LTIBDIR_PATCH)/ltib $(MECT_LTIBDIR)/ltib
-	rm -rf $(MECT_LTIBDIR_PATCH)
 	$(MAKE) spec_setup
 
 
@@ -845,7 +777,7 @@ images_check:
 		test -z "$$i" -o ! -s "$$i" && continue; \
 		echo ""; \
 		echo "Checking $$i..."; \
-		sh $(MECT_IMG_TESTER) "$(MECT_REF_IMG)" "$$i" $(MECT_TMPDIR) $(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; \
+		sudo sh $(MECT_IMG_TESTER) "$(MECT_REF_IMG)" "$$i" $(MECT_TMPDIR) $(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; \
 	done
 
 
@@ -856,7 +788,7 @@ images_check:
 stage_images:
 	test -d $(MECT_TESTSHARE) -a -w $(MECT_TESTSHARE)
 	mount | grep -q ' $(MECT_TESTSHARE) '
-	rsync -ahP $(MECT_IMGDIR)/ $(MECT_TESTSHARE)/$(MECT_TESTAME)$(MECT_BUILD_RELEASE)/
+	rsync -ahP $(MECT_IMGDIR)/ $(MECT_TESTSHARE)/$(MECT_TESTNAME)$(MECT_BUILD_RELEASE)/
 
 
 # Utilities
@@ -868,13 +800,13 @@ clean_projects:
 
 .PHONY: clean
 clean: clean_projects
-	sudo rm -rf $(MECT_LTIBDIR) $(MECT_TMPDIR) $(MECT_CSXCUNPACK) $(MECT_CSXCDIR) $(MECT_FSDIR)/ltib $(MECT_FSDIR)/pkgs $(MECT_FSDIR)/rootfs $(MECT_TMPRPMDIR) $(MECT_QT_INSTALL_DIR)
+	sudo rm -rf $(MECT_TMPDIR) $(MECT_LTIBDIR)/rpm $(MECT_LTIBDIR)/tmp $(MECT_LTIBDIR)/host_config.log $(MECT_CSXCUNPACK) $(MECT_FSDIR)/rootfs $(MECT_TMPRPMDIR)
 	if test -d $(MECT_FSDIR); then sudo rmdir --ignore-fail-on-non-empty $(MECT_FSDIR); fi
 
 .PHONY: distclean
 distclean: clean
 	if which ccache > /dev/null; then ccache -C; fi
-	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIBDIR_REF)
+	sudo rm -rf $(MECT_IMGDIR) $(MECT_CSXCDIR) $(MECT_FSDIR)/ltib $(MECT_FSDIR)/pkgs $(MECT_QT_INSTALL_DIR)
 
 
 # Downloads
@@ -892,19 +824,3 @@ $(MECT_FTPDIR)/%.$(MECT_MD5EXT):
 	wget -O $@ "$(MECT_FTPURL)/$(shell basename $@)"
 	touch -c $@			# Force the re-check of the downloaded file, if any.
 	$(MAKE) $(@:%.$(MECT_MD5EXT)=%)	# Re-check the downloaded file, if any.
-
-
-# Specific download rules from non-MECT sites
-$(MECT_FTPDIR)/$(MECT_LTIB_UBUNTU_12_04_PATCH): $(MECT_FTPDIR)/$(MECT_LTIB_UBUNTU_12_04_PATCH).$(MECT_MD5EXT)
-	dir=$(shell dirname $@); mkdir -p $$dir; cd $$dir; md5sum -c $@.$(MECT_MD5EXT) 2>/dev/null || { rm -f $@; wget -O $@ --progress=dot:mega --no-check-certificate "$(MECT_URL_LTIB_UBUNTU_12_04_PATCH)"; md5sum -c $@.$(MECT_MD5EXT); }
-
-$(MECT_FTPDIR)/$(MECT_LTIB_UBUNTU_12_04_PATCH).$(MECT_MD5EXT):
-	mkdir -p $(shell dirname $@)
-	wget -O $@ "$(MECT_FTPURL)/$(shell basename $@)"
-	touch -c $@			# Force the re-check of the downloaded file, if any.
-	$(MAKE) $(@:%.$(MECT_MD5EXT)=%)	# Re-check the downloaded file, if any.
-
-
-# Test targets, if any
-#
--include ../tests.in

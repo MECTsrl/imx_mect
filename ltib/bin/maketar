@@ -1,0 +1,94 @@
+#!/bin/bash
+
+#
+# Make a tarfile of the LTIB source
+#
+
+# Defaults
+tmpdir=/tmp/ltibdist
+ltibdir="ltib"
+#version=
+versionInName=0
+
+# Usage
+usage() {
+	echo "Usage:"
+	echo "$0 [--version [version_string]]"
+	exit 1
+}
+
+# Get options
+numbadparams=0
+while [ "$#" -ne 0 ]
+do
+	if [ "$1" == "--version" ]; then
+		versionInName=1
+		# Get optional version string
+		# (todo make sure $2 is not a script "--option")
+		version=$2
+		shift
+	elif [ "$1" == "--help" ]; then
+		usage
+	else
+		numbadparams=`expr $numbadparams + 1`
+	fi
+
+	# next option
+	shift
+done
+
+if [ $numbadparams -gt 0 ]; then
+	usage
+	#echo Bad parameters $numbadparams
+fi
+
+# If versioning the tarfile name and main dir, use date
+# as a deafult if a version string is not provided.
+if [ $versionInName -eq 1 -a "$version" == "" ]; then
+	version=`date +%Y%m%d`
+fi
+ltibdir=$ltibdir$version
+
+# Debug
+echo Making tarfile ltib$version.tar.gz with main dir $ltibdir
+
+# Assume that the main ltib dir is the parent dir
+startdir=$PWD
+cd ..
+
+# Copy current sources to tmp dir
+rm -rf $tmpdir
+mkdir -p $tmpdir/$ltibdir
+cp -a * $tmpdir/$ltibdir
+cd $tmpdir/$ltibdir
+
+
+# Clean out unneeded directories and files from source.
+rm -rf internal
+rm -f bin/ltib*.tar.gz
+
+cd ..
+
+# Change user in CVS/Root files to anonyous
+for f in `find $ltibdir -name Root`; do
+	echo ":pserver:anonymous@cvs.freescale.net:/cm/vault/ltib" > $f
+done
+
+# Make a tarfile with all the CVS dirs
+tar czf ltibCvs$version.tar.gz `find $ltibdir -name CVS`
+
+find $ltibdir -name CVS | xargs rm -rf
+
+# Make source tarfile
+tar czf ltib$version.tar.gz $ltibdir/*
+
+# Put tarfile in dir where this script was run
+cd $startdir
+rm -f ltib$version.tar.gz
+mv $tmpdir/ltib$version.tar.gz ./
+mv $tmpdir/ltibCvs$version.tar.gz ./
+
+# Clean up
+rm -rf $tmpdir
+
+

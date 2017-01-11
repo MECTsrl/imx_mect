@@ -1,0 +1,30 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define dversion 2.6.22
+%define pkg_name linux
+
+Summary         : Linux kernel for MPC8315E DS
+Name            : kernel
+Version         : 2.6.22
+Release         : 20071031
+License         : GPL
+Vendor          : kernel.org + freescale patches
+Packager        : P.V.Suresh
+Group           : NCSG
+Source          : %{pkg_name}-%{dversion}.tar.bz2
+Patch0          : linux-2.6.22-mpc8315eds-pre.patch
+Patch1          : linux-2.6.22-mpc8315eds-board.patch
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+
+%Description
+%{summary}
+
+From kernel.org
+All patches from Freescale
+
+%Prep
+%setup -n %{pkg_name}-%{dversion}
+%patch0 -p1
+%patch1 -p1

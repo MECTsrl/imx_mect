@@ -1,0 +1,11 @@
+# /bin/sh
+#
+#Description : This tests the simulates the dhclient sip server option for a encode bit set to 0
+#
+SCRIPT="/etc/dhclient-exit-hooks"
+echo "test sip server option with encode bit set to 0"
+export new_SIP="0:7:65:78:61:6d:70:6c:65:3:63:6f:6d:0:7:65:78:61:6d:70:6c:65:3:6e:65:74"
+sleep 1
+${SCRIPT}
+echo "now check the file /var/sip_server for sip-server data"
+exit 0

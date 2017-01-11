@@ -1,0 +1,7 @@
+--- arch/arm/plat-mxc/irq.c	2010-08-20 20:55:55.000000000 +0200
++++ arch/arm/plat-mxc/irq.c	2012-05-12 14:26:04.683670058 +0200
+@@ -155,4 +158,3 @@
+ 
+ 	printk(KERN_INFO "MXC IRQ initialized\n");
+ }
+-

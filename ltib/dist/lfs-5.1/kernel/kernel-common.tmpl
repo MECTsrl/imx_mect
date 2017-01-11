@@ -1,0 +1,654 @@
+%Build
+
+# Allow variables to be expanded
+PKG_KERNEL_PATH_PRECONFIG=$(eval echo $PKG_KERNEL_PATH_PRECONFIG)
+PKG_KERNEL_KBUILD_PRECONFIG=$(eval echo $PKG_KERNEL_KBUILD_PRECONFIG)
+PKG_KERNEL_PRECONFIG=$(eval echo $PKG_KERNEL_PRECONFIG)
+
+KSRC_DIR=${PKG_KERNEL_PATH_PRECONFIG:-%{_builddir}/%{buildsubdir}}
+%{!?showsrcpath: %define showsrcpath 0}
+%if %{showsrcpath}
+%{echo:%(eval echo ${PKG_KERNEL_PATH_PRECONFIG:-%{_builddir}/%{buildsubdir}})}
+%endif
+
+: ${LINTARCH:?must be set to the kernel architecture name}
+: ${BUILDCC:?must be set to the token for your build machines compiler}
+: ${PKG_KERNEL_PRECONFIG:?must be set to the name of your .config file}
+: ${PLATFORM_PATH:?must be set to your ltib platform path}
+: ${KSRC_DIR:?cannot find source directory (PKG_KERNEL_PATH_PRECONFIG)}
+
+# I'm not sure if this bit is right.  Do packages need the build
+# output, or the source tree?
+rm -f $RPM_BUILD_DIR/linux
+ln -s $KSRC_DIR $RPM_BUILD_DIR/linux
+
+# Setup the kernel for Xenomai
+cd %{_builddir}/%{x_dir}
+sh %{x_name}-%{x_ver}/scripts/prepare-kernel.sh --arch=arm --adeos=/dev/null --linux=$KSRC_DIR
+cd -
+
+# From now on it won't matter if KBOUT is relative or absolute; 
+# if it's relative it must be relative to KSRC_DIR
+cd $KSRC_DIR
+
+KBOUT=$PKG_KERNEL_KBUILD_PRECONFIG
+if [ -n "$KBOUT" -a "$KBOUT" != "." ]
+then
+    # this is to work with symlinked kernel souce trees
+    test -d $KBOUT || mkdir -p $KBOUT
+    export KBUILD_OUTPUT=$KBOUT
+else
+    KBOUT="."
+fi
+
+case $LINTARCH in
+    m68k*)
+        KTARG=uImage
+        ;;
+    ppc*)
+        KTARG=uImage
+        ;;
+    powerpc*)
+        KTARG=uImage
+        ;;
+    *)
+        KTARG=zImage
+        ;;
+esac
+SYSCFG_KTARG=${SYSCFG_KTARG:-$KTARG}
+
+#
+# This section makes sure there is a .config in the kernel build directory
+#
+if [ "$PKG_KERNEL_PRECONFIG" = "defconfig" ]
+then
+    # this is mutated to prevent picking up the BSP defconfig
+    PKG_KERNEL_PRECONFIG=kerneldefconfig
+fi
+for CFG in "$PLATFORM_PATH/${PKG_KERNEL_PRECONFIG}.dev" "$PLATFORM_PATH/$PKG_KERNEL_PRECONFIG"
+do
+   if [ -f $CFG ]
+   then
+       CFG_PATH=$CFG
+       break
+   fi
+done
+if [ -z "$CFG_PATH" ]
+then
+    for DIR in "arch/$GNUTARCH/configs/" "arch/$LINTARCH/configs/"
+    do
+       if [ -d $DIR ]
+       then
+           CFG="`find $DIR -name $PKG_KERNEL_PRECONFIG`"
+           if [ -n "$CFG" ]
+           then
+               CFG_PATH=$CFG
+               break
+           fi
+       fi
+    done
+fi
+
+# PPC_MERGE used to be the primary way of detecting whether
+# arch should be powerpc instead of ppc.  Starting in 2.6.28
+# this symbol has gone from arch/powerpc/Kconfig and so we
+# can't use this as the written back .config file has this
+# symbol removed.  Hence the extra checks
+if [ $LINTARCH = ppc -a -f arch/powerpc/Kconfig ]
+then
+    if ! grep -q PPC_MERGE arch/powerpc/Kconfig
+    then
+        LINTARCH=powerpc
+    else
+        if [ -n "$CFG_PATH" ]
+        then
+            if grep -q 'CONFIG_PPC_MERGE=y' $CFG_PATH
+            then
+                LINTARCH=powerpc
+            fi
+        else
+            LINTARCH=powerpc
+        fi
+    fi
+fi
+
+#
+# Check for ltib full rebuilds (e.g. change of toolchain) if so
+# force a build from scratch
+#
+if [ -n "$LTIB_FULL_REBUILD" ]
+then
+    make ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" mrproper
+fi
+
+if [ -n "$CFG_PATH" ]
+then
+   cp -f $CFG_PATH $KBOUT/.config
+else
+   echo "Warning: cannot find a config file for the kernel"
+fi
+
+#
+# configure
+#
+if [ -z "$LTIB_BATCH" -a -n "$PKG_KERNEL_WANT_CF" -o -n "$SCB_WANT_CF" ]
+then
+    make ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" menuconfig
+else
+    if [ -n "$CFG_PATH" ]
+    then
+        cp -f $CFG_PATH $KBOUT/.config
+        yes "" | make ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" oldconfig
+    else
+        if [ "$PKG_KERNEL_PRECONFIG" = "kerneldefconfig" ]
+        then
+            PKG_KERNEL_PRECONFIG=defconfig
+        fi
+        yes "" | make ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" $PKG_KERNEL_PRECONFIG
+    fi
+fi
+
+# copy back if there was a config file and it changed
+if [ -f "$CFG_PATH"  ] && ! diff -q $KBOUT/.config $CFG_PATH
+then
+    cp -f $KBOUT/.config $PLATFORM_PATH/${PKG_KERNEL_PRECONFIG}.dev
+fi
+
+# The first time conf builds, a spurious .config gets made in
+# the source directory, this gets rid of it otherwise the kernel
+# will not build complaining that the source tree is not clean
+if [ -n "$KBUILD_OUTPUT" ]
+then
+    rm -f .config
+fi
+
+#
+# Have to specify LOCALVERSION= in the 'make image' command if we
+# are setting localversion.  For >= 2.6.35
+#
+if grep -q 'VERSION = 2' Makefile && \
+   grep -q 'PATCHLEVEL = 6' Makefile && \
+   grep -q 'CONFIG_LOCALVERSION_AUTO is not' $KBOUT/.config
+then
+   sublevel="$(grep 'SUBLEVEL =' Makefile | cut -d' ' -f3)"
+   if [ "$sublevel" -gt 34 ]; then
+     echo "Manually setting LOCALVERSION"
+     LOCV='LOCALVERSION='
+   fi
+fi
+
+#
+# Make dep only needs to be done for 2.4 kernels
+#
+if [ "%{kernel_series}" = "2.4" ]
+then
+    make ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="${BUILDCC}" dep
+fi
+#
+# build the kernel and optionally the modules
+#
+make -j$(nproc) $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" $SYSCFG_KTARG
+if grep -q '^CONFIG_MODULES=' $KBOUT/.config
+then
+    make -j$(nproc) $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" modules
+fi
+
+# cscope index
+if [ -n "$PKG_KERNEL_WANT_CSCOPE" ]
+then
+    make ARCH=$LINTARCH cscope
+fi
+
+%Install
+%define __os_install_post %{nil}
+
+# Allow variables to be expanded
+PKG_KERNEL_PATH_PRECONFIG=$(eval echo $PKG_KERNEL_PATH_PRECONFIG)
+PKG_KERNEL_KBUILD_PRECONFIG=$(eval echo $PKG_KERNEL_KBUILD_PRECONFIG)
+DTC_NAMES=$(eval echo $SYSCFG_DTC_NAME)
+SYSCFG_DTC_PATH=$(eval echo $SYSCFG_DTC_PATH)
+
+DTC_PAD=${SYSCFG_DTC_PAD:-%dtc_pad}
+if [ "$DTC_PAD" = "%%dtc_pad" ]
+then
+    DTC_PAD=1024
+fi
+
+KSRC_DIR=${PKG_KERNEL_PATH_PRECONFIG:-%{_builddir}/%{buildsubdir}}
+
+# From now on it won't matter if KBOUT is relative or absolute; if it's relative it must be relative
+# to KSRC_DIR
+cd $KSRC_DIR
+
+KBOUT=$PKG_KERNEL_KBUILD_PRECONFIG
+if [ -n "$KBOUT" ]
+then
+    # this is to work with symlinked kernel souce trees
+    test -d $KBOUT || mkdir -p $KBOUT
+    export KBUILD_OUTPUT=$KBOUT
+else
+    KBOUT="."
+fi
+
+if [ $LINTARCH = ppc -a -f arch/powerpc/Kconfig ]
+then
+    if ! grep -q PPC_MERGE arch/powerpc/Kconfig
+    then
+        LINTARCH=powerpc
+    elif grep -q 'CONFIG_PPC_MERGE=y' $KBOUT/.config
+    then
+        LINTARCH=powerpc
+    fi
+fi
+
+case $LINTARCH in
+    m68k*)
+        BOOT_KERNEL=arch/$LINTARCH/boot/uImage
+        ;;
+    ppc)
+        BOOT_KERNEL=arch/$LINTARCH/boot/images/uImage
+        ;;
+    powerpc)
+        BOOT_KERNEL=arch/$LINTARCH/boot/uImage
+        ;;
+    *)
+        if grep -q 'CONFIG_XIP_KERNEL=y' $KBOUT/.config
+        then
+            BOOT_KERNEL=arch/$LINTARCH/boot/xipImage
+        else
+            BOOT_KERNEL=arch/$LINTARCH/boot/zImage
+        fi
+        ;;
+esac
+
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/%{pfx}/boot
+
+if grep -q '^CONFIG_MODULES=' $KBOUT/.config
+then
+    mkdir -p $RPM_BUILD_ROOT/%{pfx}/lib/firmware
+    make $LOCV ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" DEPMOD=/bin/true INSTALL_MOD_PATH=$RPM_BUILD_ROOT/%{pfx} modules_install
+    KERNEL_VER=`ls $RPM_BUILD_ROOT/%{pfx}/lib/modules`
+    for i in build source
+    do
+        rm -f $RPM_BUILD_ROOT/%{pfx}/lib/modules/$KERNEL_VER/$i
+        ln -s /usr/src/linux $RPM_BUILD_ROOT/%{pfx}/lib/modules/$KERNEL_VER/$i
+    done
+fi
+
+SYSCFG_BOOT_KERNEL=${SYSCFG_BOOT_KERNEL:-$BOOT_KERNEL}
+if [ -n "$PKG_KERNEL_WANT_OBJCOPY" ]
+then
+    objcopy -O binary $KBOUT/$SYSCFG_BOOT_KERNEL $KBOUT/${SYSCFG_BOOT_KERNEL}.bin
+    SYSCFG_BOOT_KERNEL=${SYSCFG_BOOT_KERNEL}.bin
+fi
+
+if [ -n "$PKG_KERNEL_WANT_VMLINUX_STRIPPED" ]
+then
+    strip $KBOUT/vmlinux -o $KBOUT/vmlinux.stripped
+    cp $KBOUT/vmlinux.stripped $RPM_BUILD_ROOT/%{pfx}/boot
+fi
+for i in vmlinux System.map $SYSCFG_BOOT_KERNEL
+do
+    cp $KBOUT/$i $RPM_BUILD_ROOT/%{pfx}/boot
+done
+ln -s `basename $SYSCFG_BOOT_KERNEL` $RPM_BUILD_ROOT/%{pfx}/boot/bootable_kernel
+cp $KBOUT/.config $RPM_BUILD_ROOT/%{pfx}/boot/linux.config
+
+# handle the Flat Device Tree build
+DTC_PATH=${SYSCFG_DTC_PATH:-arch/$LINTARCH/boot/dts}
+if [ "$LINTARCH" = "powerpc" -a -d "$DTC_PATH" ]
+then
+    DTC_LOAD_ADDR=${SYSCFG_DTU_LOAD_ADDR:-0x300000}
+    DTC_NAMES=${DTC_NAMES:-%dtc_name}
+    if [ "$DTC_NAMES" = "%%dtc_name" ]
+    then
+        echo "warning no value has been set for dtc_name, guessing"
+        DTC_NAMES=$PLATFORM
+    fi
+    for DTC_NAME in $DTC_NAMES
+    do
+        dtc -f -b 0 -I dts -O dtb -p $DTC_PAD -o $RPM_BUILD_ROOT/%{pfx}/boot/$(basename ${DTC_NAME}.dtb) $DTC_PATH/${DTC_NAME}.dts
+        if [ -f "$RPM_BUILD_ROOT/%{pfx}/boot/uImage" ]
+        then
+            mkimage -A ppc -O Linux -T flat_dt -C none -a $DTC_LOAD_ADDR -e 0 -d $RPM_BUILD_ROOT/%{pfx}/boot/$(basename ${DTC_NAME}.dtb) $RPM_BUILD_ROOT/%{pfx}/boot/$(basename ${DTC_NAME}.dtu)
+        fi
+    done
+fi
+if [ -n "$PKG_KERNEL_WANT_HEADERS" ]
+then
+    KERNEL_HDR_PATH=$RPM_BUILD_ROOT/%{pfx}/usr/src/linux
+    install -d ${KERNEL_HDR_PATH}/include
+    if ! make ARCH=$LINTARCH CROSS_COMPILE= HOSTCC="$BUILDCC" INSTALL_HDR_PATH=${KERNEL_HDR_PATH} headers_install
+    then
+        for i in asm-${LINTARCH} asm-generic config linux math-emu media mtd net pcmcia rxrpc scsi sound video
+        do
+            if [ -d include/$i ]
+            then
+                cp -a include/$i ${KERNEL_HDR_PATH}/include
+            fi
+        done
+
+        for i in asm config linux
+        do
+            if [ -d $KBOUT/include/$i ]
+            then
+                cp -a $KBOUT/include/$i ${KERNEL_HDR_PATH}/include
+            fi
+        done
+    fi
+fi
+
+
+%Clean
+rm -rf $RPM_BUILD_ROOT
+if [ -z "$PKG_KERNEL_LEAVESRC" ]
+then
+    rm -f $RPM_BUILD_DIR/linux
+fi
+
+
+%Files
+%defattr(-,root,root)
+%{pfx}/*
+
+%Files rfs
+%defattr(-,root,root)
+%{pfx}/%{_lib}/firmware/mts_cdma.fw
+%{pfx}/%{_lib}/firmware/edgeport/boot.fw
+%{pfx}/%{_lib}/firmware/edgeport/down3.bin
+%{pfx}/%{_lib}/firmware/edgeport/down2.fw
+%{pfx}/%{_lib}/firmware/edgeport/down.fw
+%{pfx}/%{_lib}/firmware/edgeport/boot2.fw
+%{pfx}/%{_lib}/firmware/mts_gsm.fw
+%{pfx}/%{_lib}/firmware/whiteheat_loader.fw
+%{pfx}/%{_lib}/firmware/ti_3410.fw
+%{pfx}/%{_lib}/firmware/ti_5052.fw
+%{pfx}/%{_lib}/firmware/whiteheat.fw
+%{pfx}/%{_lib}/firmware/mts_edge.fw
+%{pfx}/%{_lib}/firmware/keyspan_pda/xircom_pgs.fw
+%{pfx}/%{_lib}/firmware/keyspan_pda/keyspan_pda.fw
+%{pfx}/%{_lib}/modules/2.6.35.3/source
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/xenomai/serial/xeno_imx_mxs_auart.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/input/misc/uinput.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/mmc/card/mmc_block.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/mmc/host/mxs-mmc.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/mmc/core/mmc_core.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/scsi/scsi_wait_scan.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/scsi/scsi_transport_spi.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/scsi/scsi_transport_fc.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/scsi/scsi_transport_iscsi.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/vivopay-serial.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/ti_usb_3410_5052.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/whiteheat.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/usb_debug.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/belkin_sa.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/keyspan_pda.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/pl2303.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/ipw.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/cypress_m8.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/usb_wwan.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/cp210x.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/option.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/safe_serial.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/keyspan.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/mos7840.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/usbserial.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/hp4x.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/navman.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/cyberjack.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/ch341.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/funsoft.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/ir-usb.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/zio.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/ark3116.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/mos7720.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/garmin_gps.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/empeg.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/aircable.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/mct_u232.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/io_ti.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/ipaq.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/siemens_mpi.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/oti6858.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/opticon.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/sierra.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/kl5kusb105.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/qcserial.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/kobil_sct.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/qcaux.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/spcp8x5.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/omninet.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/ftdi_sio.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/symbolserial.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/iuu_phoenix.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/io_edgeport.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/moto_modem.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/visor.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/serial/digi_acceleport.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/gadget/gadgetfs.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/usb/gadget/g_file_storage.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/serial/mxs-auart.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/misc/eeprom/eeprom_93cx6.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/net/ppp_generic.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/net/ppp_async.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/net/pppox.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/net/slhc.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/net/pppoe.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/net/bsd_comp.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/net/can/flexcan/flexcan.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/net/ppp_synctty.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/net/ppp_mppe.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/net/tun.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/net/ppp_deflate.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/drivers/ssb/ssb.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/crypto/crc32c.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/crypto/arc4.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/crypto/sha1_generic.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/net/wireless/cfg80211.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/net/netfilter/xt_tcpudp.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/net/netfilter/x_tables.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/net/mac80211/mac80211.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/net/ipv4/netfilter/ipt_REJECT.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/net/ipv4/netfilter/iptable_filter.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/net/ipv4/netfilter/ip_tables.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/lib/crc-itu-t.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/lib/libcrc32c.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/lib/crc-ccitt.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/fs/cifs/cifs.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/kernel/fs/nls/nls_utf8.ko
+%{pfx}/%{_lib}/modules/2.6.35.3/build
+%{pfx}/%{_lib}/modules/2.6.35.3/modules.builtin
+%{pfx}/%{_lib}/modules/2.6.35.3/modules.order
+
+%Files rfs-usbserial
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/usbserial.ko
+
+%Files rfs-usbserial-aircable
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/aircable.ko
+
+%Files rfs-usbserial-ark3116
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ark3116.ko
+
+%Files rfs-usbserial-belkin_sa
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/belkin_sa.ko
+
+%Files rfs-usbserial-ch341
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ch341.ko
+
+%Files rfs-usbserial-cp210x
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/cp210x.ko
+
+%Files rfs-usbserial-cyberjack
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/cyberjack.ko
+
+%Files rfs-usbserial-cypress_m8
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/cypress_m8.ko
+
+%Files rfs-usbserial-digi_acceleport
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/digi_acceleport.ko
+
+%Files rfs-usbserial-empeg
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/empeg.ko
+
+%Files rfs-usbserial-ftdi_sio
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ftdi_sio.ko
+
+%Files rfs-usbserial-funsoft
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/funsoft.ko
+
+%Files rfs-usbserial-garmin_gps
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/garmin_gps.ko
+
+%Files rfs-usbserial-hp4x
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/hp4x.ko
+
+%Files rfs-usbserial-io_edgeport
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/io_edgeport.ko
+
+%Files rfs-usbserial-io_ti
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/io_ti.ko
+
+%Files rfs-usbserial-ipaq
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ipaq.ko
+
+%Files rfs-usbserial-ipw
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ipw.ko
+
+%Files rfs-usbserial-ir
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ir-usb.ko
+
+%Files rfs-usbserial-iuu_phoenix
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/iuu_phoenix.ko
+
+%Files rfs-usbserial-keyspan
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/keyspan.ko
+
+%Files rfs-usbserial-keyspan_pda
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/keyspan_pda.ko
+
+%Files rfs-usbserial-kl5kusb105
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/kl5kusb105.ko
+
+%Files rfs-usbserial-kobil_sct
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/kobil_sct.ko
+
+%Files rfs-usbserial-mct_u232
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/mct_u232.ko
+
+%Files rfs-usbserial-mos7720
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/mos7720.ko
+
+%Files rfs-usbserial-mos7840
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/mos7840.ko
+
+%Files rfs-usbserial-moto_modem
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/moto_modem.ko
+
+%Files rfs-usbserial-navman
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/navman.ko
+
+%Files rfs-usbserial-omninet
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/omninet.ko
+
+%Files rfs-usbserial-opticon
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/opticon.ko
+
+%Files rfs-usbserial-option
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/option.ko
+
+%Files rfs-usbserial-oti6858
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/oti6858.ko
+
+%Files rfs-usbserial-pl2303
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/pl2303.ko
+
+%Files rfs-usbserial-qcaux
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/qcaux.ko
+
+%Files rfs-usbserial-qcserial
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/qcserial.ko
+
+%Files rfs-usbserial-safe_serial
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/safe_serial.ko
+
+%Files rfs-usbserial-siemens_mpi
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/siemens_mpi.ko
+
+%Files rfs-usbserial-sierra
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/sierra.ko
+
+%Files rfs-usbserial-spcp8x5
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/spcp8x5.ko
+
+%Files rfs-usbserial-symbolserial
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/symbolserial.ko
+
+%Files rfs-usbserial-ti_3410_5052
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/ti_usb_3410_5052.ko
+
+%Files rfs-usbserial-debug
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/usb_debug.ko
+
+%Files rfs-usbserial-wwan
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/usb_wwan.ko
+
+%Files rfs-usbserial-visor
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/visor.ko
+
+%Files rfs-usbserial-vivopay-serial
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/vivopay-serial.ko
+
+%Files rfs-usbserial-whiteheat
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/whiteheat.ko
+
+%Files rfs-usbserial-zio
+%defattr(-,root,root)
+%{pfx}/%{_lib}/modules/%{version}/kernel/drivers/usb/serial/zio.ko

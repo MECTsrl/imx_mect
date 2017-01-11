@@ -1,0 +1,12 @@
+--- arch/arm/mach-mx3/clock-imx31.c	2010-08-20 20:55:55.000000000 +0200
++++ arch/arm/mach-mx3/clock-imx31.c	2012-05-12 14:26:04.667670059 +0200
+@@ -623,8 +623,7 @@
+ 	}
+ 
+ 	mxc_timer_init(&ipg_clk, MX31_IO_ADDRESS(MX31_GPT1_BASE_ADDR),
+-			MX31_INT_GPT);
++		       MX31_GPT1_BASE_ADDR, MX31_INT_GPT);
+ 
+ 	return 0;
+ }
+-

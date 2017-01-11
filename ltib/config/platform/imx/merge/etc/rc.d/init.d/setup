@@ -1,0 +1,75 @@
+#!/bin/sh
+
+start() {
+        # Touchscreen variables
+        export TSLIB_CONFFILE=/usr/etc/ts.conf
+        export TSLIB_PLUGINDIR=/usr/lib/ts
+        export TSLIB_TSDEVICE=/dev/input/ts0
+        export TSLIB_CONSOLEDEVICE=none
+        export TSLIB_CALIBFILE=/etc/pointercal
+
+        # Qt variables
+        export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
+        export QT_QWS_FONTDIR=/usr/lib/fonts
+        export POINTERCAL_FILE=$TSLIB_CALIBFILE
+
+        # Set display brightness
+        brctrl="/sys/devices/platform/mxs-bl.0/backlight/mxs-bl/brightness"
+        if test -r /local/etc/sysconfig/brightness; then
+                source /local/etc/sysconfig/brightness
+        else
+                echo 70 > "$brctrl"
+        fi
+        echo "Brightness set to `cat \"$brctrl\"`"
+
+        # Calibrate touchscreen, if needed
+        if test ! -e $TSLIB_CALIBFILE; then
+                if test -x /usr/bin/ts_calibrate; then
+                        echo -n "Starting touch screen calibration. "
+			
+			mount -orw,remount /
+                        /usr/bin/ts_calibrate
+                        sync
+			mount -oro,remount /
+
+                        echo "Calbration completed."
+                else
+                        echo "Touchscreen calibration program not found."
+                fi
+        fi
+
+        if [ ! -e /etc/mac.conf -o ! "`grep -c MAC0 /etc/mac.conf > /dev/null 2>&1`" -eq 0 -o ! -e /etc/serial.conf ]
+        then
+            # Ask for MAC address and for serial number
+            /usr/bin/mac_sn -qws
+        fi
+}
+
+stop() {
+	:
+}
+
+restart() {
+        stop
+        start
+}
+
+case "$1" in
+        start)
+                start
+        ;;
+
+        stop)
+                stop
+        ;;
+
+        restart)
+                restart
+        ;;
+
+        *)
+                echo $"Usage: $0 {start|stop|restart}"
+                        exit 1
+        ;;
+esac
+

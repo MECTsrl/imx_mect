@@ -1,0 +1,80 @@
+This is Info file termcap.info, produced by Makeinfo-1.63 from the
+input file termcap.texi.
+
+   This file documents the termcap library of the GNU system.
+
+   Copyright (C) 1988 Free Software Foundation, Inc.
+
+   Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+   Permission is granted to copy and distribute modified versions of
+this manual under the conditions for verbatim copying, provided that
+the entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+
+   Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that this permission notice may be stated in a
+translation approved by the Foundation.
+
+
+Indirect:
+termcap.info-1: 870
+termcap.info-2: 47407
+termcap.info-3: 90386
+termcap.info-4: 138823
+
+Tag Table:
+(Indirect)
+Node: Top870
+Node: Introduction4101
+Node: Library5828
+Node: Preparation6847
+Node: Find8030
+Node: Interrogate11488
+Node: Initialize16796
+Node: Padding18436
+Node: Why Pad19142
+Node: Not Enough20764
+Node: Describe Padding23332
+Node: Output Padding24822
+Node: Parameters28437
+Node: Encode Parameters30097
+Node: Using Parameters36181
+Node: tparam36776
+Node: tgoto38802
+Node: Data Base41357
+Node: Format42253
+Node: Capability Format44342
+Node: Naming47407
+Node: Inheriting51976
+Node: Changing54220
+Node: Capabilities55384
+Node: Basic58123
+Node: Screen Size62176
+Node: Cursor Motion63916
+Node: Wrapping74058
+Node: Scrolling77087
+Node: Windows82976
+Node: Clearing83710
+Node: Insdel Line85474
+Node: Insdel Char90386
+Node: Standout100371
+Node: Underlining109429
+Node: Cursor Visibility111848
+Node: Bell112596
+Node: Keypad113145
+Node: Meta Key117860
+Node: Initialization118814
+Node: Pad Specs121365
+Node: Status Line123418
+Node: Half-Line125302
+Node: Printer126104
+Node: Summary127783
+Node: Var Index138110
+Node: Cap Index138823
+Node: Index145353
+
+End Tag Table

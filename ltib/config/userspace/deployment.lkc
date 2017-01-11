@@ -1,0 +1,334 @@
+comment 'Target Image Generation'
+
+menu "Options"
+
+comment 'Choose your root filesystem image type'
+choice 
+    prompt "Target image:"
+    default DEPLOYMENT_NFS
+    help
+        By default just the NFS staging area (rootfs) will be left.  This
+        area is always available
+
+    config DEPLOYMENT_JFFS2
+        bool "jffs2"
+        help
+            build a jffs2 flash filesystem image
+
+    config DEPLOYMENT_UBIFS
+        bool "ubifs"
+        select PKG_MTD_UTILS
+        help
+            build a ubi flash filesystem image
+
+    config DEPLOYMENT_RAMDISK
+        bool "ext2.gz ramdisk"
+        help
+            build a compress ext2 filesystem that can be used as a ramdisk
+
+    config DEPLOYMENT_CRAMFS
+        bool "cramfs"
+        select SYSCFG_READONLY_FS
+        help
+            This is a read-only compressed root filesystem, see:
+            http://sourceforge.net/projects/cramfs/
+
+    config DEPLOYMENT_INITRAMFS
+        bool "initramfs"
+        help
+            Build a compressed cpio archive that can be used with initramfs.
+            This can be attached to the kernel or used in place of an initrd
+            image.
+
+    config DEPLOYMENT_ROMFS
+        depends CAP_DEPLOYMENT_ROMFS
+        select SYSCFG_READONLY_FS
+        bool "romfs (uClinux)"
+        help
+            This option creates a rom filesystem that is appended to the
+            kernel.  This type of system is common in the uClinux environment
+
+    config DEPLOYMENT_NFS
+        bool "NFS only"
+        help
+        By default just the NFS staging area (rootfs) will be left.  This
+        area is always available
+endchoice
+
+config SYSCFG_DEPLOYMENT_STYLE
+    string
+    default JFFS2      if DEPLOYMENT_JFFS2
+    default UBIFS      if DEPLOYMENT_UBIFS
+    default RAMDISK    if DEPLOYMENT_RAMDISK
+    default CRAMFS     if DEPLOYMENT_CRAMFS
+    default ROMFS      if DEPLOYMENT_ROMFS 
+    default INITRAMFS  if DEPLOYMENT_INITRAMFS 
+    default NFS        if DEPLOYMENT_NFS
+
+source ../../userspace/post_build_script.lkc
+
+config DEPLOYMENT_ERASE_BLOCK_SIZE
+    depends DEPLOYMENT_JFFS2
+    string "jffs2 erase block size in KB"
+    default ERASE_BLOCK_SIZE
+    help
+        This sets the erase block size.  This should be in kilo bytes.
+
+config DEPLOYMENT_PEB_SIZE
+    depends DEPLOYMENT_UBIFS
+    string "ubifs physical erase block(PEB) size"
+    default 512KiB
+    help
+        This set the UBIFS Physical erase block(PEB) size of your Chip,
+        should be same size as your Chip.
+
+config DEPLOYMENT_LEB_SIZE
+    depends DEPLOYMENT_UBIFS
+    string  "ubifs logical erase block(LEB) size in Bytes"
+    default 516096
+    help
+        This set the UBIFS Logical Erase Block(LEB) size in bytes.
+
+config DEPLOYMENT_MAX_LEB_COUNT
+    depends DEPLOYMENT_UBIFS
+    string  "ubifs maximum logical erase block(LEB) count"
+    default 4096
+    help
+        This set maximum LEB count, the logical maximum size of
+        image = (LEB_COUNT * LEB_SIZE)
+
+config DEPLOYMENT_MIN_I0_UNIT_SIZE
+    depends DEPLOYMENT_UBIFS
+    string  "ubifs minimum I/O unit size"
+    default 4096
+    help
+        This set the UBIFS minimum I/O unit size in Byte
+
+choice
+    prompt "ubifs compression type (not support favor lzo)"
+    depends DEPLOYMENT_UBIFS
+    default DEPLOYMENT_UBIFS_NONE
+    help
+        Default UBIFS build without compression.
+
+    config DEPLOYMENT_UBIFS_NONE
+        bool "ubifs compress none"
+        help
+            Choose to build ubifs image without compression.
+
+    config DEPLOYMENT_UBIFS_LZO
+        bool "ubifs LZO compression"
+        help
+            choose lzo compression ubifs image, lzo compressor is
+            generally faster than zlib but compresses worse.
+
+    config DEPLOYMENT_UBIFS_ZLIB
+        bool "ubifs zlib compression"
+        help
+            zlib compresses better than LZO but it is slower.
+
+endchoice
+
+config DEPLOYMENT_UBIFS_COMPR_TYPE
+    string
+    default none      if DEPLOYMENT_UBIFS_NONE
+    default lzo       if DEPLOYMENT_UBIFS_LZO
+    default zlib      if DEPLOYMENT_UBIFS_ZLIB
+
+config DEPLOYMENT_ZIP
+    depends DEPLOYMENT_ROMFS
+    bool "Create a compressed image of the kernel/romfs image"
+    default y
+    help
+        This reduces the size of the target image.  Recent versions of 
+        the dBUG bootloader can handle compressed images.
+
+config DEPLOYMENT_SREC
+    depends DEPLOYMENT_ROMFS
+    bool "Create an S-Record of the ROMFS images."
+    default n
+    help
+        Binary images need to be converted to an ascii srec files for serial
+        downloads.
+
+config DEPLOYMENT_UIMAGE
+    depends DEPLOYMENT_ZIP
+    bool "Create a uImage of the ROMFS image."
+    default n
+    help
+        Binary images converted to uImage for use with the u-boot bootloader.  If you
+        aren't using the u-boot bootloader say no here.
+
+config SYSCFG_READONLY_FS
+    bool "read-only root filesystem"
+    default n
+
+config SYSCFG_TMPFS_SIZE
+    depends SYSCFG_READONLY_FS || DEPLOYMENT_JFFS2
+    string "tmpfs size"
+    default "512k"
+    help
+       When deploying some directories will be moved to RAM based tmpfs
+       this helps avoid wearing out Flash sectors etc.  The default
+       has been carefully chosen as 512k, but if you really need to change
+       this you may do so here, be aware any space allocated is removed
+       from the total available RAM to the system.
+
+config SYSCFG_RAM_DIRS
+    depends SYSCFG_READONLY_FS || DEPLOYMENT_JFFS2
+    string "Place these dirs in writable RAM"
+    default "/tmp /var" if SYSCFG_READONLY_FS
+    default "/tmp /var" if DEPLOYMENT_JFFS2
+    help
+       Flash may only be erased a finite number of times (of the order
+       of 100000 times for a NOR device).  If you deploy to Flash,
+       frequently written files should be written to RAM to avoid
+       exhausting Flash.  List here a space separated list of directories
+       to be put in tmpfs (RAM).  Changes to these directories will 
+       be lost on reboot.  You may also want to use this option if
+       you choose to deploy a read-only root filesystem.  Note that
+       if you have chosen a read-only root filesystem, the default
+       startup scripts from the skell package will automatically place
+       /tmp, /etc, and /var in tmpfs in addition to any directories
+       specified here (it's ok to have /tmp, etc. here too).
+
+config DEPLOYMENT_RAMDISK_U_BOOT
+    depends DEPLOYMENT_RAMDISK || DEPLOYMENT_INITRAMFS
+    bool "create a ramdisk or initramfs image that can be used by u-boot"
+    default n
+
+config DEPLOYMENT_ROOTFS_DIR
+    depends ! DEPLOYMENT_NFS
+    default ""
+    string "rootfs target directory"
+    help
+        Set this to the directory where you want your disk image
+        file to be placed (for intance /tftpboot/<user>).
+        Note by default it will be placed in the current ltib diretory
+
+config DEPLOYMENT_ROOTFS_KEEPSTAGE
+    depends ! DEPLOYMENT_NFS
+    bool "Keep temporary staging directory"
+    help
+       The root filesytem is constructed by copying the NFS deploy
+       area and removing/stripping parts.  This is normally done in
+       a directory rootfs.tmp.  Normally this is removed after the
+       output image has been produced.  If you'd like to keep this around
+       (for debugging purposes) please select this option
+
+config DEPLOYMENT_HL2SL
+    depends ! DEPLOYMENT_NFS
+    bool "Convert hard links to symbolic links"
+    default n
+    help
+       Turn this on if your output type can't support hard-links
+
+config DEPLOYMENT_RM_DOCS
+    depends ! DEPLOYMENT_NFS
+    bool "remove man pages etc from the target image"
+    default y
+    help
+        This helps reduce the size of the target image
+
+config DEPLOYMENT_RM_BOOT
+    depends ! DEPLOYMENT_NFS
+    bool "remove the /boot directory"
+    default y
+    help
+        This removes the boot directory from the target image
+
+config DEPLOYMENT_RM_USR_SRC
+    depends ! DEPLOYMENT_NFS
+    bool "remove the /usr/src/ directory"
+    default y
+    help
+        This removes the /usr/src directory from the target image
+
+config DEPLOYMENT_RM_USR_INCLUDE
+    depends ! DEPLOYMENT_NFS
+    bool "remove the /usr/include directory"
+    default y
+    help
+        This removes the /usr/include directory from the target image
+
+config DEPLOYMENT_RM_LOCALES
+    depends ! DEPLOYMENT_NFS
+    bool "remove the /usr/share/locale directory"
+    default y
+    help
+        This removes the /usr/share/locale from the target image
+
+config DEPLOYMENT_RM_USER_DIRS
+    depends ! DEPLOYMENT_NFS
+    string "remove these directories"
+    default ""
+    help
+        Enter a space separated list of directories you want to remove
+        from the target image
+
+config DEPLOYMENT_RM_USER_FILES
+    depends ! DEPLOYMENT_NFS
+    string "remove these files"
+    default ""
+    help
+        Enter a space separated list of file paths you want to remove
+        from the target image e.g:
+        lib/libstdc++.so  lib/libstdc++.so.5  lib/libstdc++.so.5.0.5
+
+config DEPLOYMENT_RM_STATIC_LIBS
+    depends ! DEPLOYMENT_NFS
+    bool "remove the static libraries"
+    default y
+    help
+        This removes static (.a) libraries from the target image
+
+config DEPLOYMENT_RM_RPMDB
+    depends ! DEPLOYMENT_NFS
+    string "remove target rpm database"
+    default "/var/lib/rpm" if ! PKG_RPM
+    default ""             if   PKG_RPM
+
+config DEPLOYMENT_STRIP
+    depends ! DEPLOYMENT_NFS
+    bool "strip any remaining binaries or libraries in the target image"
+    default y
+    help
+        This helps reduce the size of the target image
+
+config DEPLOYMENT_STRIP_MORE
+    depends DEPLOYMENT_STRIP
+    bool "strip binaries more aggressively"
+    default n
+    help
+        By default only debug information is stripped when the strip
+        option is used.  This will attempt to strip symbol tables too. 
+        Some kinds of files, like kernel modules, are broken by this
+        processes.  So, only files that don't end in .a, .o, so, and
+        .ko are stripped like this.
+
+config DEPLOYMENT_PADDING_EN
+    depends ! DEPLOYMENT_NFS
+    default y
+    bool "Allocate extra space"
+    help
+        Enable if you want to allocate some extra free space on
+        your target root filesystem.  This enables the -p option
+        of mkfs.jffs2.
+
+config DEPLOYMENT_PADDING_KB
+    depends DEPLOYMENT_PADDING_EN && ! DEPLOYMENT_NFS
+    default "0"
+    string "Amount to allocate (Kbytes)"
+    help
+        Set this value (decimal) if you want to allocate some extra
+        free space on your target root filesystem.  The value is in
+        Kilo bytes.
+
+config DEPLOYMENT_PAGESIZE_KB
+    depends DEPLOYMENT_JFFS2
+    default "4"
+    string "Page size (max data node size) (Kbytes)"
+    help
+        This corresponds to the -s option of mkfs.jffs2.
+
+endmenu

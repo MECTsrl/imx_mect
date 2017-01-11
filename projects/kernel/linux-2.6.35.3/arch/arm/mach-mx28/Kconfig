@@ -1,0 +1,148 @@
+choice
+	prompt "Select i.MXS board type"
+
+config MACH_MX28EVK
+	bool "Freescale MX28 EVK board"
+	depends on ARCH_MX28
+	select USB_ARCH_HAS_EHCI
+
+endchoice
+
+config VECTORS_PHY_ADDR
+	int "vectors address"
+	default 0
+	help
+	  This config set vectors table is located which physical address
+
+config MXS_TIMER_WITH_MACH
+	bool "System Timer support Compare Match interrupt"
+	default y
+
+config MEM_mDDR
+	bool "Memory type is mDDR"
+	depends on ARCH_MX28
+	help
+	  Say Y to select mDDR memory
+
+config MECT_CUSTOMIZATION
+	bool "Mect customization for i.mx28 evk board"
+	depends on MACH_MX28EVK
+	default y
+	select MXS_AUART1_DEVICE_ENABLE
+	select MXS_AUART2_DEVICE_ENABLE
+	select MXS_AUART3_DEVICE_ENABLE
+	help
+	  Say Y to select the Mect modification (can, rs485) 
+
+choice
+	prompt "Select MECT board type"
+
+config MECT_TPAC1006_320x240
+	bool "MECT TPAC1006/TP1057 320x240 panel"
+	depends on MECT_CUSTOMIZATION
+	select FB_MXS_LCD_HH057
+	select LOGO_MECT_320x240
+	select RTC_DRV_DS1390
+	select SPI_MXS
+	help
+	  Say Y to select the Mect panel TPAC1006_320x240 (modification: display, logo...) 
+
+config MECT_TPAC1006_640x480
+	bool "MECT TPAC1006/TP1057HR 640x480 panel"
+	depends on MECT_CUSTOMIZATION
+	select FB_MXS_LCD_HH057_640x480
+	select LOGO_MECT_640x480
+	select RTC_DRV_DS1390
+	select SPI_MXS
+	help
+	  Say Y to select the Mect panel TPAC1006_640x480 (modification: display, logo...) 
+
+config MECT_TPAC1007_480x272
+	bool "MECT TPAC1007 480x272 panel"
+	depends on MECT_CUSTOMIZATION
+	select FB_MXS_LCD_TM043
+	select LOGO_MECT_480x272
+	select RTC_DRV_DS1390
+	select SPI_MXS
+	help
+	  Say Y to select the Mect panel TPAC1006_480x272 (modification: display, logo...) 
+
+config MECT_TPAC1008_800x480
+	bool "MECT TPAC1008/TP1070 800x480 panel"
+	depends on MECT_CUSTOMIZATION
+	select FB_MXS_LCD_FRMK7
+	select LOGO_MECT_800x480
+	select RTC_DRV_DS1390
+	select SPI_MXS
+	help
+	  Say Y to select the Mect panel TPAC1006_800x480 (modification: ethernet, logo...) 
+
+config MECT_VAL01
+	bool "MECT VAL01 480x272 panel"
+	depends on MECT_CUSTOMIZATION
+	select FB_MXS_LCD_TM043
+	select LOGO_VAL01_480x272
+	select RTC_DRV_RS5C372
+	select I2C_CHARDEV
+	select I2C_ALGOBIT
+	select KEYBOARD_GPIO
+	select I2C_GPIO
+	help
+	  Say Y to select the Mect panel VAL01 (modification: display, ethernet, logo...) 
+
+config MECT_ATN01
+	bool "MECT ATN01/P04 480x272 panel"
+	depends on MECT_CUSTOMIZATION
+	select FB_MXS_LCD_TM043
+	select LOGO_ATN01_480x272
+	select RTC_DRV_DS1390
+	select SPI_MXS
+	help
+	  Say Y to select the Mect panel ATN01 (modification: display, logo...) 
+
+config MECT_ACQUATI
+	bool "MECT ACQUATI 320x240 panel"
+	depends on MECT_CUSTOMIZATION
+	select FB_MXS_LCD_HH057
+	select LOGO_ACQUATI_320x240
+	select RTC_DRV_DS1390
+	select SPI_MXS
+	help
+	  Say Y to select the Mect panel ACQUATI (modification: display, logo...) 
+
+config MECT_ELE01
+	bool "MECT ELE01 480x272 panel"
+	depends on MECT_CUSTOMIZATION
+	select FB_MXS_LCD_TM043
+	select LOGO_ELE01_480x272
+	select RTC_DRV_DS1390
+	select SPI_MXS
+	help
+	  Say Y to select the Mect panel  ELE01 (modification: display, wifi, logo...) 
+
+endchoice
+
+config MECT_PRODUCT
+	string
+	default "MECT TPAC1006/TP1057 320x240 panel" 	if MECT_TPAC1006_320x240
+	default "MECT TPAC1006/TP1057HR 640x480 panel" 	if MECT_TPAC1006_640x480
+	default "MECT TPAC1007 480x272 panel"		if MECT_TPAC1007_480x272
+	default "MECT TPAC1008/TP1070 800x480 panel"	if MECT_TPAC1008_800x480
+	default "MECT ATN01/P04 480x272 panel"		if MECT_ATN01
+	default "MECT ELE01 480x272 panel"		if MECT_ELE01
+	default "MECT VAL01 480x272 panel"		if MECT_VAL01
+	default "MECT ACQUATI 320x240 panel"		if MECT_ACQUATI
+	default "MECT Unknown product"
+
+config MECT_GPIO_POWERFAIL
+	bool "MECT powerfail management gpio"
+	depends on GENERIC_GPIO
+	depends on ! KEYBOARD_GPIO
+	help
+	  MECT powerfail input management (incomatible with keyboard gpio input).
+
+config MECT_RAISING_PWRFAIL
+	bool "MECT powerfail interrupt is raising edge"
+	default n if MECT_ATN01 || MECT_TPAC1007_480x272 || MECT_VAL01 || MECT_ELE01
+	default y if MECT_TPAC1006_320x240 || MECT_TPAC1006_640x480 || MECT_TPAC1008_800x480  || MECT_ACQUATI
+

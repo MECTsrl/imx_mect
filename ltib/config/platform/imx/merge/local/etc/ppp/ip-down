@@ -1,0 +1,6 @@
+#!/bin/sh
+
+statd=/var/pppd
+test -d $statd || mkdir -p $statd
+
+env > $statd/down.stat

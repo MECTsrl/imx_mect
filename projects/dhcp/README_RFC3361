@@ -1,0 +1,10 @@
+The README specifies the new functionality added to the dhclient
+1)The default configuration file(dhclient.conf)  resides in tests/config_script/dhclient.conf necessary changes such as default ip address,dns server address and lease time required should be added here before running MAKE install.
+
+3) option SIP code 120=string; in dhclient.conf  will enable the sip server option.
+
+2) On system startup dhclient will query for SIP servers and returned data will be placed in $new_SIP environmental variable.
+
+4) /bin/parse will parse the $new_SIP data and write to the file passed as an argument to it.
+
+5) /bin/parse will be called in the /etc/dhclient-exit-hooks and dhclient-exit-hooks will be called on successful IP renewal.

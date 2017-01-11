@@ -1,0 +1,11 @@
+D/ex_access////
+D/ex_btrec////
+D/ex_dbclient////
+D/ex_env////
+D/ex_mpool////
+D/ex_tpcb////
+/BerkeleyDB.wpj/1.1.1.2.2.1/Mon Jan  7 22:29:52 2002//Trpm-4_0
+/BerkeleyDB.wsp/1.1.1.1.2.1/Mon Jan  7 22:29:52 2002//Trpm-4_0
+/db.h/1.1.1.2.2.2/Mon Jan  7 22:47:35 2002/-ko/Trpm-4_0
+/db_config.h/1.1.1.2.2.2/Tue Jan  8 03:05:05 2002/-ko/Trpm-4_0
+/db_int.h/1.1.1.2.2.2/Mon Jan  7 22:49:19 2002/-ko/Trpm-4_0

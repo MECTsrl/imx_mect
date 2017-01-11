@@ -1,0 +1,68 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define dversion 2.6.20
+%define pkg_name linux
+
+Summary         : Linux kernel (core of the Linux operating system)
+Name            : kernel
+Version         : 2.6.20
+Release         : 0
+License         : GPL
+Vendor          : kernel.org + freescale patches
+Packager        : Olivia Yin
+Group           : System Environment/Kernel
+Source          : %{pkg_name}-%{dversion}.tar.bz2
+Patch0          : linux-2.6.20-MPC8313ERDB-REVA1-2-INIT.patch
+Patch1          : linux-2.6.20-MPC8313ERDB-phylib-modification.patch
+Patch2          : linux-2.6.20-MPC8313ERDB-SGMII.patch
+Patch3          : linux-2.6.20-MPC8313ERDB-SKBUFF-recycling.patch
+Patch4          : linux-2.6.20-MPC8313ERDB-USB.patch
+Patch5          : linux-2.6.20-MPC8313ERDB-oprofile.patch
+Patch6          : linux-2.6.20-MPC8313ERDB-Power-Management.patch
+Patch7          : linux-2.6.20-MPC8313ERDB-IEEE-1588.patch
+Patch8          : linux-2.6.20-MPC8313ERDB-OCF-framework.patch
+Patch9          : linux-2.6.20-MPC8313ERDB-OCF-SEC2.patch
+Patch10         : linux-2.6.20-MPC8313ERDB-Openswan-IPsec-1.patch
+Patch11         : linux-2.6.20-MPC8313ERDB-USB-OTG.patch
+Patch12         : linux-2.6.20-MPC8313ERDB-DTS.patch
+Patch13         : linux-2.6.20-MPC8313ERDB-defconfig.patch
+Patch14         : linux-2.6.20-gianfar-coalescing-fixes.patch
+Patch15         : linux-2.6.20-gianfar-tweaks.patch
+Patch16         : linux-2.6.20-mpc8313-etsec27-errata-workaround.patch
+Patch17         : linux-2.6.20-MPC8313ERDB-IEEE-1588-update.patch
+Patch18         : linux-2.6.20-MPC8313ERDB-Power-Management-update.patch
+Patch19         : linux-2.6.20-mpc8313-rtc-fixup-20070629.patch
+Patch20         : linux-2.6.20-MPC8313ERDB-Marvell.patch
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+
+%Description
+%{summary}
+
+From kernel.org
+All patches from Freescale
+
+%Prep
+%setup -n %{pkg_name}-%{dversion}
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1

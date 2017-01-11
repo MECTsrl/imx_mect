@@ -1,0 +1,617 @@
+# Makefile.in generated automatically by automake 1.4-p5 from Makefile.am
+
+# Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+# Makefile for rpm library.
+
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+DESTDIR =
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+transform = @program_transform_name@
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+build_alias = @build_alias@
+build_triplet = @build@
+host_alias = @host_alias@
+host_triplet = @host@
+target_alias = @target_alias@
+target_triplet = @target@
+AR = @AR@
+AS = @AS@
+AWK = @AWK@
+BUILD_INCLUDED_LIBINTL = @BUILD_INCLUDED_LIBINTL@
+BUILD_RPMNLSTOOLS = @BUILD_RPMNLSTOOLS@
+BZIP2BIN = @BZIP2BIN@
+CATALOGS = @CATALOGS@
+CATOBJEXT = @CATOBJEXT@
+CC = @CC@
+CPP = @CPP@
+CSCOPE = @CSCOPE@
+CTAGS = @CTAGS@
+CXX = @CXX@
+DATADIRNAME = @DATADIRNAME@
+DBLIBOBJS = @DBLIBOBJS@
+DBLIBSRCS = @DBLIBSRCS@
+DLLTOOL = @DLLTOOL@
+ECHO = @ECHO@
+EXEEXT = @EXEEXT@
+FINDPROVIDES = @FINDPROVIDES@
+FINDREQUIRES = @FINDREQUIRES@
+FIXPERMS = @FIXPERMS@
+GENCAT = @GENCAT@
+GLIBC21 = @GLIBC21@
+GMOFILES = @GMOFILES@
+GMSGFMT = @GMSGFMT@
+GZIPBIN = @GZIPBIN@
+INCPATH = @INCPATH@
+INSTOBJEXT = @INSTOBJEXT@
+INTLBISON = @INTLBISON@
+INTLLIBS = @INTLLIBS@
+INTLOBJS = @INTLOBJS@
+INTL_LIBTOOL_SUFFIX_PREFIX = @INTL_LIBTOOL_SUFFIX_PREFIX@
+LDFLAGS_STATIC = @LDFLAGS_STATIC@
+LIBDIR = @LIBDIR@
+LIBICONV = @LIBICONV@
+LIBMISC = @LIBMISC@
+LIBOBJS = @LIBOBJS@
+LIBRPMALIAS_FILENAME = @LIBRPMALIAS_FILENAME@
+LIBRPMRC_FILENAME = @LIBRPMRC_FILENAME@
+LIBTOOL = @LIBTOOL@
+LN_S = @LN_S@
+LOCALEDIR = @LOCALEDIR@
+MACROFILES = @MACROFILES@
+MAKEINFO = @MAKEINFO@
+MKDIR = @MKDIR@
+MKDIR_P = @MKDIR_P@
+MKINSTALLDIRS = @MKINSTALLDIRS@
+MSGFMT = @MSGFMT@
+OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
+PACKAGE = @PACKAGE@
+PGPBIN = @PGPBIN@
+POFILES = @POFILES@
+POSUB = @POSUB@
+RANLIB = @RANLIB@
+ROOT_GROUP = @ROOT_GROUP@
+RPM = @RPM@
+RPMCANONARCH = @RPMCANONARCH@
+RPMCANONOS = @RPMCANONOS@
+RPMCANONVENDOR = @RPMCANONVENDOR@
+RPMCONFIGDIR = @RPMCONFIGDIR@
+RPMGID = @RPMGID@
+RPMGROUP = @RPMGROUP@
+RPMUID = @RPMUID@
+RPMUSER = @RPMUSER@
+STRIP = @STRIP@
+SYSCONFIGDIR = @SYSCONFIGDIR@
+U = @U@
+UNZIPBIN = @UNZIPBIN@
+USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
+USE_NLS = @USE_NLS@
+VERSION = @VERSION@
+WITH_APIDOCS = @WITH_APIDOCS@
+WITH_APIDOCS_TARGET = @WITH_APIDOCS_TARGET@
+WITH_BZIP2 = @WITH_BZIP2@
+WITH_DB_SUBDIR = @WITH_DB_SUBDIR@
+WITH_INTERNAL_DB = @WITH_INTERNAL_DB@
+WITH_PYTHON_SUBDIR = @WITH_PYTHON_SUBDIR@
+WITH_PYTHON_SUBPACKAGE = @WITH_PYTHON_SUBPACKAGE@
+WITH_PYTHON_VERSION = @WITH_PYTHON_VERSION@
+WITH_ZLIB_INCLUDE = @WITH_ZLIB_INCLUDE@
+WITH_ZLIB_LIB = @WITH_ZLIB_LIB@
+WITH_ZLIB_SUBDIR = @WITH_ZLIB_SUBDIR@
+__CAT = @__CAT@
+__CHGRP = @__CHGRP@
+__CHGRP_RHF = @__CHGRP_RHF@
+__CHMOD = @__CHMOD@
+__CHOWN = @__CHOWN@
+__CHOWN_RHF = @__CHOWN_RHF@
+__CP = @__CP@
+__CPIO = @__CPIO@
+__DOXYGEN = @__DOXYGEN@
+__FILE = @__FILE@
+__GPG = @__GPG@
+__GREP = @__GREP@
+__ID = @__ID@
+__ID_U = @__ID_U@
+__INSTALL = @__INSTALL@
+__LD = @__LD@
+__MAKE = @__MAKE@
+__MKDIR = @__MKDIR@
+__MV = @__MV@
+__NM = @__NM@
+__OBJCOPY = @__OBJCOPY@
+__OBJDUMP = @__OBJDUMP@
+__PATCH = @__PATCH@
+__PERL = @__PERL@
+__PYTHON = @__PYTHON@
+__RM = @__RM@
+__RSH = @__RSH@
+__SED = @__SED@
+__SSH = @__SSH@
+__STRIP = @__STRIP@
+__TAR = @__TAR@
+libdb3 = @libdb3@
+libdb3a = @libdb3a@
+testdir = @testdir@
+tmpdir = @tmpdir@
+varprefix = @varprefix@
+
+AUTOMAKE_OPTIONS = 1.4 foreign
+
+EXTRA_DIST = tdigest.c tficl.c tkey.c trpmio.c
+
+EXTRA_PROGRAMS = tdigest tkey tring trpmio dumpasn1
+
+INCLUDES = \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/build \
+	-I$(top_srcdir)/lib \
+	-I$(top_srcdir)/beecrypt \
+	-I$(top_srcdir)/popt \
+	@WITH_ZLIB_INCLUDE@ \
+	@INCPATH@
+
+
+pkgincdir = $(pkgincludedir)
+pkginc_HEADERS = \
+	rpmio.h rpmurl.h rpmmacro.h rpmlog.h rpmmessages.h rpmerr.h \
+	ugid.h
+
+noinst_HEADERS = rpmio_internal.h rpmpgp.h
+
+LIBS = @LIBS@ @WITH_ZLIB_LIB@ -lrt -lpthread
+
+BEECRYPTLOBJS = $(shell cat $(top_builddir)/beecrypt/listobjs)
+
+lib_LTLIBRARIES = librpmio.la
+librpmio_la_SOURCES = digest.c macro.c rpmio.c rpmlog.c rpmmalloc.c \
+	rpmpgp.c rpmrpc.c strcasecmp.c stubs.c url.c ugid.c
+
+librpmio_la_LDFLAGS = -release @VERSION@
+librpmio_la_LIBADD = $(BEECRYPTLOBJS)
+librpmio_la_DEPENDENCIES = .created
+
+tdigest_SOURCES = tdigest.c
+tdigest_LDADD = librpmio.la $(top_builddir)/popt/libpopt.la
+
+trpmio_SOURCES = trpmio.c
+trpmio_LDADD = librpmio.la $(top_builddir)/popt/libpopt.la
+
+tkey_SOURCES = tkey.c
+tkey_LDFLAGS = -all-static
+tkey_LDADD = librpmio.la $(top_builddir)/popt/libpopt.la
+
+tring_SOURCES = tring.c
+tring_LDFLAGS = -all-static
+tring_LDADD = librpmio.la $(top_builddir)/popt/libpopt.la
+
+dumpasn1_SOURCES = dumpasn1.c
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_HEADER = ../config.h
+CONFIG_CLEAN_FILES = 
+LTLIBRARIES =  $(lib_LTLIBRARIES)
+
+
+DEFS = @DEFS@ -I. -I$(srcdir) -I..
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+librpmio_la_OBJECTS =  digest.lo macro.lo rpmio.lo rpmlog.lo \
+rpmmalloc.lo rpmpgp.lo rpmrpc.lo strcasecmp.lo stubs.lo url.lo ugid.lo
+tdigest_OBJECTS =  tdigest.$(OBJEXT)
+tdigest_DEPENDENCIES =  librpmio.la $(top_builddir)/popt/libpopt.la
+tdigest_LDFLAGS = 
+tkey_OBJECTS =  tkey.$(OBJEXT)
+tkey_DEPENDENCIES =  librpmio.la $(top_builddir)/popt/libpopt.la
+tring_OBJECTS =  tring.$(OBJEXT)
+tring_DEPENDENCIES =  librpmio.la $(top_builddir)/popt/libpopt.la
+trpmio_OBJECTS =  trpmio.$(OBJEXT)
+trpmio_DEPENDENCIES =  librpmio.la $(top_builddir)/popt/libpopt.la
+trpmio_LDFLAGS = 
+dumpasn1_OBJECTS =  dumpasn1.$(OBJEXT)
+dumpasn1_LDADD = $(LDADD)
+dumpasn1_DEPENDENCIES = 
+dumpasn1_LDFLAGS = 
+CFLAGS = @CFLAGS@
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+HEADERS =  $(noinst_HEADERS) $(pkginc_HEADERS)
+
+DIST_COMMON =  Makefile.am Makefile.in
+
+
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+
+TAR = gtar
+GZIP_ENV = --best
+SOURCES = $(librpmio_la_SOURCES) $(tdigest_SOURCES) $(tkey_SOURCES) $(tring_SOURCES) $(trpmio_SOURCES) $(dumpasn1_SOURCES)
+OBJECTS = $(librpmio_la_OBJECTS) $(tdigest_OBJECTS) $(tkey_OBJECTS) $(tring_OBJECTS) $(trpmio_OBJECTS) $(dumpasn1_OBJECTS)
+
+all: all-redirect
+.SUFFIXES:
+.SUFFIXES: .S .c .lo .o .obj .s
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --foreign --include-deps rpmio/Makefile
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+
+mostlyclean-libLTLIBRARIES:
+
+clean-libLTLIBRARIES:
+	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
+
+distclean-libLTLIBRARIES:
+
+maintainer-clean-libLTLIBRARIES:
+
+install-libLTLIBRARIES: $(lib_LTLIBRARIES)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo "$(LIBTOOL)  --mode=install $(INSTALL) $$p $(DESTDIR)$(libdir)/$$p"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL) $$p $(DESTDIR)$(libdir)/$$p; \
+	  else :; fi; \
+	done
+
+uninstall-libLTLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p; \
+	done
+
+.c.o:
+	$(COMPILE) -c $<
+
+# FIXME: We should only use cygpath when building on Windows,
+# and only if it is available.
+.c.obj:
+	$(COMPILE) -c `cygpath -w $<`
+
+.s.o:
+	$(COMPILE) -c $<
+
+.S.o:
+	$(COMPILE) -c $<
+
+mostlyclean-compile:
+	-rm -f *.o core *.core
+	-rm -f *.$(OBJEXT)
+
+clean-compile:
+
+distclean-compile:
+	-rm -f *.tab.c
+
+maintainer-clean-compile:
+
+.c.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.s.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.S.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+
+maintainer-clean-libtool:
+
+librpmio.la: $(librpmio_la_OBJECTS) $(librpmio_la_DEPENDENCIES)
+	$(LINK) -rpath $(libdir) $(librpmio_la_LDFLAGS) $(librpmio_la_OBJECTS) $(librpmio_la_LIBADD) $(LIBS)
+
+tdigest$(EXEEXT): $(tdigest_OBJECTS) $(tdigest_DEPENDENCIES)
+	@rm -f tdigest$(EXEEXT)
+	$(LINK) $(tdigest_LDFLAGS) $(tdigest_OBJECTS) $(tdigest_LDADD) $(LIBS)
+
+tkey$(EXEEXT): $(tkey_OBJECTS) $(tkey_DEPENDENCIES)
+	@rm -f tkey$(EXEEXT)
+	$(LINK) $(tkey_LDFLAGS) $(tkey_OBJECTS) $(tkey_LDADD) $(LIBS)
+
+tring$(EXEEXT): $(tring_OBJECTS) $(tring_DEPENDENCIES)
+	@rm -f tring$(EXEEXT)
+	$(LINK) $(tring_LDFLAGS) $(tring_OBJECTS) $(tring_LDADD) $(LIBS)
+
+trpmio$(EXEEXT): $(trpmio_OBJECTS) $(trpmio_DEPENDENCIES)
+	@rm -f trpmio$(EXEEXT)
+	$(LINK) $(trpmio_LDFLAGS) $(trpmio_OBJECTS) $(trpmio_LDADD) $(LIBS)
+
+dumpasn1$(EXEEXT): $(dumpasn1_OBJECTS) $(dumpasn1_DEPENDENCIES)
+	@rm -f dumpasn1$(EXEEXT)
+	$(LINK) $(dumpasn1_LDFLAGS) $(dumpasn1_OBJECTS) $(dumpasn1_LDADD) $(LIBS)
+
+install-pkgincHEADERS: $(pkginc_HEADERS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(pkgincdir)
+	@list='$(pkginc_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d= ; else d="$(srcdir)/"; fi; \
+	  echo " $(INSTALL_DATA) $$d$$p $(DESTDIR)$(pkgincdir)/$$p"; \
+	  $(INSTALL_DATA) $$d$$p $(DESTDIR)$(pkgincdir)/$$p; \
+	done
+
+uninstall-pkgincHEADERS:
+	@$(NORMAL_UNINSTALL)
+	list='$(pkginc_HEADERS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(pkgincdir)/$$p; \
+	done
+
+tags: TAGS
+
+ID: $(HEADERS) $(SOURCES) $(LISP)
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	here=`pwd` && cd $(srcdir) \
+	  && mkid -f$$here/ID $$unique $(LISP)
+
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
+
+mostlyclean-tags:
+
+clean-tags:
+
+distclean-tags:
+	-rm -f TAGS ID
+
+maintainer-clean-tags:
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = rpmio
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
+	done
+digest.lo digest.o : digest.c ../system.h ../config.h rpmio_internal.h \
+	rpmio.h rpmurl.h rpmpgp.h ../beecrypt/base64.h \
+	../beecrypt/beecrypt.h ../beecrypt/config.h \
+	../beecrypt/config.gnu.h ../beecrypt/memchunk.h \
+	../beecrypt/mp32number.h ../beecrypt/dsa.h \
+	../beecrypt/mp32barrett.h ../beecrypt/endianness.h \
+	../beecrypt/mp32.h ../beecrypt/mp32opt.h ../beecrypt/rsa.h \
+	../beecrypt/rsakp.h ../beecrypt/rsapk.h ../beecrypt/md5.h \
+	../beecrypt/fips180.h ../beecrypt/fips180opt.h ../debug.h
+macro.lo macro.o : macro.c ../system.h ../config.h rpmio_internal.h \
+	rpmio.h rpmurl.h rpmpgp.h ../beecrypt/base64.h \
+	../beecrypt/beecrypt.h ../beecrypt/config.h \
+	../beecrypt/config.gnu.h ../beecrypt/memchunk.h \
+	../beecrypt/mp32number.h ../beecrypt/dsa.h \
+	../beecrypt/mp32barrett.h ../beecrypt/endianness.h \
+	../beecrypt/mp32.h ../beecrypt/mp32opt.h ../beecrypt/rsa.h \
+	../beecrypt/rsakp.h ../beecrypt/rsapk.h rpmmessages.h rpmlog.h \
+	rpmerr.h rpmmacro.h ../debug.h
+rpmio.lo rpmio.o : rpmio.c ../system.h ../config.h rpmio_internal.h \
+	rpmio.h rpmurl.h rpmpgp.h ../beecrypt/base64.h \
+	../beecrypt/beecrypt.h ../beecrypt/config.h \
+	../beecrypt/config.gnu.h ../beecrypt/memchunk.h \
+	../beecrypt/mp32number.h ../beecrypt/dsa.h \
+	../beecrypt/mp32barrett.h ../beecrypt/endianness.h \
+	../beecrypt/mp32.h ../beecrypt/mp32opt.h ../beecrypt/rsa.h \
+	../beecrypt/rsakp.h ../beecrypt/rsapk.h ugid.h rpmmessages.h \
+	rpmlog.h ../debug.h
+rpmlog.lo rpmlog.o : rpmlog.c ../system.h ../config.h rpmlog.h \
+	../debug.h
+rpmmalloc.lo rpmmalloc.o : rpmmalloc.c ../system.h ../config.h \
+	../debug.h
+rpmpgp.lo rpmpgp.o : rpmpgp.c ../system.h ../config.h rpmio_internal.h \
+	rpmio.h rpmurl.h rpmpgp.h ../beecrypt/base64.h \
+	../beecrypt/beecrypt.h ../beecrypt/config.h \
+	../beecrypt/config.gnu.h ../beecrypt/memchunk.h \
+	../beecrypt/mp32number.h ../beecrypt/dsa.h \
+	../beecrypt/mp32barrett.h ../beecrypt/endianness.h \
+	../beecrypt/mp32.h ../beecrypt/mp32opt.h ../beecrypt/rsa.h \
+	../beecrypt/rsakp.h ../beecrypt/rsapk.h ../debug.h
+rpmrpc.lo rpmrpc.o : rpmrpc.c ../system.h ../config.h rpmio_internal.h \
+	rpmio.h rpmurl.h rpmpgp.h ../beecrypt/base64.h \
+	../beecrypt/beecrypt.h ../beecrypt/config.h \
+	../beecrypt/config.gnu.h ../beecrypt/memchunk.h \
+	../beecrypt/mp32number.h ../beecrypt/dsa.h \
+	../beecrypt/mp32barrett.h ../beecrypt/endianness.h \
+	../beecrypt/mp32.h ../beecrypt/mp32opt.h ../beecrypt/rsa.h \
+	../beecrypt/rsakp.h ../beecrypt/rsapk.h ../popt/popt.h ugid.h \
+	../debug.h
+strcasecmp.lo strcasecmp.o : strcasecmp.c ../system.h ../config.h \
+	rpmio.h ../debug.h
+stubs.lo stubs.o : stubs.c ../system.h ../config.h
+ugid.lo ugid.o : ugid.c ../system.h ../config.h ugid.h ../debug.h
+url.lo url.o : url.c ../system.h ../config.h rpmmacro.h rpmmessages.h \
+	rpmlog.h rpmio_internal.h rpmio.h rpmurl.h rpmpgp.h \
+	../beecrypt/base64.h ../beecrypt/beecrypt.h \
+	../beecrypt/config.h ../beecrypt/config.gnu.h \
+	../beecrypt/memchunk.h ../beecrypt/mp32number.h \
+	../beecrypt/dsa.h ../beecrypt/mp32barrett.h \
+	../beecrypt/endianness.h ../beecrypt/mp32.h \
+	../beecrypt/mp32opt.h ../beecrypt/rsa.h ../beecrypt/rsakp.h \
+	../beecrypt/rsapk.h ../debug.h
+
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am: install-libLTLIBRARIES
+install-exec: install-exec-am
+
+install-data-am: install-pkgincHEADERS install-data-local
+install-data: install-data-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am: uninstall-libLTLIBRARIES uninstall-pkgincHEADERS
+uninstall: uninstall-am
+all-am: Makefile $(LTLIBRARIES) $(HEADERS)
+all-redirect: all-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
+installdirs:
+	$(mkinstalldirs)  $(DESTDIR)$(libdir) $(DESTDIR)$(pkgincdir)
+
+
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+mostlyclean-am:  mostlyclean-libLTLIBRARIES mostlyclean-compile \
+		mostlyclean-libtool mostlyclean-tags \
+		mostlyclean-generic
+
+mostlyclean: mostlyclean-am
+
+clean-am:  clean-libLTLIBRARIES clean-compile clean-libtool clean-tags \
+		clean-generic mostlyclean-am clean-local
+
+clean: clean-am
+
+distclean-am:  distclean-libLTLIBRARIES distclean-compile \
+		distclean-libtool distclean-tags distclean-generic \
+		clean-am
+	-rm -f libtool
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-libLTLIBRARIES \
+		maintainer-clean-compile maintainer-clean-libtool \
+		maintainer-clean-tags maintainer-clean-generic \
+		distclean-am
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+maintainer-clean: maintainer-clean-am
+
+.PHONY: mostlyclean-libLTLIBRARIES distclean-libLTLIBRARIES \
+clean-libLTLIBRARIES maintainer-clean-libLTLIBRARIES \
+uninstall-libLTLIBRARIES install-libLTLIBRARIES mostlyclean-compile \
+distclean-compile clean-compile maintainer-clean-compile \
+mostlyclean-libtool distclean-libtool clean-libtool \
+maintainer-clean-libtool uninstall-pkgincHEADERS install-pkgincHEADERS \
+tags mostlyclean-tags distclean-tags clean-tags maintainer-clean-tags \
+distdir info-am info dvi-am dvi check check-am installcheck-am \
+installcheck install-exec-am install-exec install-data-local \
+install-data-am install-data install-am install uninstall-am uninstall \
+all-redirect all-am all installdirs mostlyclean-generic \
+distclean-generic clean-generic maintainer-clean-generic clean \
+mostlyclean distclean maintainer-clean
+
+
+# XXX Add internal libtool dependence
+install-data-local:
+	@cd $(DESTDIR)/$(libdir) && \
+	sed -e "s|^dependency_libs='|& -lpopt|" < librpmio.la > .librpmio.la && \
+	mv .librpmio.la librpmio.la
+
+$(top_builddir)/beecrypt/listobjs:
+	make -C $(top_builddir)/beecrypt listobjs
+
+.created: $(top_builddir)/beecrypt/listobjs
+	for lo in $(BEECRYPTLOBJS); do \
+	  [ -f $$lo ] || $(LN_S) $(top_builddir)/beecrypt/$$lo $$lo ; \
+	done
+	touch $@
+
+clean-local:
+	rm -f $(BEECRYPTLOBJS) *.o .created
+
+.PHONY:	sources
+sources:
+	@echo $(librpmio_la_SOURCES:%=rpmio/%)
+
+.PHONY:	lclint
+lclint:
+	lclint $(DEFS) $(INCLUDES) $(librpmio_la_SOURCES)
+
+tficl.o: tficl.c
+	$(COMPILE) -I/usr/include/ficl -o $@ -c tficl.c 
+
+tficl: tficl.o
+	$(LINK) -o $@ tficl.o -lficl
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

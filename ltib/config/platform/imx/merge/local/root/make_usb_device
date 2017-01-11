@@ -1,0 +1,11 @@
+#!/bin/sh
+
+BACKING_FILE=/local/root/backing_file
+
+if [ ! -e $BACKING_FILE ]; then
+	echo -n "Cannot use usb as device, missing backing file, you need to create it first"
+	return 1
+else
+	modprobe g_file_storage file=/local/root/backing_file
+	return $?
+fi

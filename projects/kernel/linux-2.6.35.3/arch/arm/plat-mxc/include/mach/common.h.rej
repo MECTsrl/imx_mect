@@ -1,0 +1,11 @@
+--- arch/arm/plat-mxc/include/mach/common.h	2010-08-20 20:55:55.000000000 +0200
++++ arch/arm/plat-mxc/include/mach/common.h	2012-05-12 14:26:04.683670058 +0200
+@@ -32,7 +32,7 @@
+ extern void mx35_init_irq(void);
+ extern void mx51_init_irq(void);
+ extern void mxc91231_init_irq(void);
+-extern void mxc_timer_init(struct clk *timer_clk, void __iomem *, int);
++extern void mxc_timer_init(struct clk *timer_clk, void __iomem *, unsigned long, int);
+ extern int mx1_clocks_init(unsigned long fref);
+ extern int mx21_clocks_init(unsigned long lref, unsigned long fref);
+ extern int mx25_clocks_init(void);

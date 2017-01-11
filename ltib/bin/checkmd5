@@ -1,0 +1,9 @@
+#!/usr/bin/perl -w
+eval 'LANG=C exec perl -w -S $0 ${1+"$@"}'
+    if $running_under_some_shell;
+$running_under_some_shell = 0;
+
+open(MD5, "md5sum -c MD5SUMS 2>&1|") or die;
+while(<MD5>) {
+    print if m,FAILED\s*$,;
+}

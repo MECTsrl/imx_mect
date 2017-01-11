@@ -1,0 +1,14 @@
+/os_abs.c/1.1.1.2.2.2/Tue Jan  8 02:31:33 2002/-ko/Trpm-4_0
+/os_clock.c/1.1.2.1/Mon Jan  7 22:30:56 2002//Trpm-4_0
+/os_dir.c/1.1.1.2.2.2/Tue Jan  8 01:34:04 2002/-ko/Trpm-4_0
+/os_errno.c/1.1.1.2.2.2/Tue Jan  8 01:34:10 2002/-ko/Trpm-4_0
+/os_fid.c/1.1.1.2.2.2/Tue Jan  8 02:30:59 2002/-ko/Trpm-4_0
+/os_finit.c/1.1.1.2.2.2/Tue Jan  8 01:34:17 2002/-ko/Trpm-4_0
+/os_map.c/1.1.1.2.2.2/Tue Jan  8 01:34:23 2002/-ko/Trpm-4_0
+/os_open.c/1.1.1.2.2.2/Tue Jan  8 02:30:41 2002/-ko/Trpm-4_0
+/os_rename.c/1.1.1.2.2.2/Tue Jan  8 02:30:28 2002/-ko/Trpm-4_0
+/os_seek.c/1.1.1.2.2.2/Tue Jan  8 02:30:17 2002/-ko/Trpm-4_0
+/os_sleep.c/1.1.1.2.2.2/Tue Jan  8 02:30:02 2002/-ko/Trpm-4_0
+/os_spin.c/1.1.1.2.2.2/Tue Jan  8 01:34:36 2002/-ko/Trpm-4_0
+/os_type.c/1.1.1.2.2.2/Tue Jan  8 02:29:48 2002/-ko/Trpm-4_0
+D

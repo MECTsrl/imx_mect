@@ -1,0 +1,76 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define dversion 2.6.26
+%define pkg_name linux
+
+Summary         : Linux kernel (core of the Linux operating system)
+Name            : kernel
+Version         : 2.6.26
+Release         : 1
+License         : GPL
+Vendor          : Kernel.org + freescale patches
+Packager        : Olivia Yin
+Group           : System Environment/Kernel
+Source          : %{pkg_name}-%{dversion}.tar.bz2
+Patch0          : linux-2.6.26-mpc8536ds-platform-support.patch
+Patch1          : linux-2.6.26-USB-EHCI-Reconciling-USB-register.patch
+Patch2          : linux-2.6.26-mpc8536ds-RTC-Preliminary-support-for-DS3232.patch
+Patch3          : linux-2.6.26-mpc8536ds-SPI.patch
+Patch4          : linux-2.6.26-mpc8536ds-eSPI.patch
+Patch5          : linux-2.6.26-mpc8536ds-EEPROM-based-on-SPI-interface.patch
+Patch6          : linux-2.6.26-MSI-support.patch
+Patch7          : linux-fsl-2.6.23-ATI_X700_X800.patch
+Patch8          : linux-2.6.26-Misc-fix-for-gianfar-driver.patch
+patch9          : linux-2.6.26-SKB-recycling-version-1.1.1.patch
+patch10         : linux-2.6.26-mpc85xx-DOZE-NAP-support-for-e500-core.patch
+Patch11         : linux-2.6.26-mpc8536ds-WOL-magic-packet-to-gianfar.patch
+Patch12         : linux-2.6.26-mpc8536ds-PM-dts.patch
+Patch13         : linux-2.6.26-mpc8536ds-PM-sleep-and-deep-sleep-support.patch
+patch14         : linux-2.6.26-mpc8536ds-Wake-up-on-GPIO.patch
+Patch15         : linux-2.6.26-mpc8536ds-MPIC-timer.patch
+patch16         : linux-2.6.26-mpc8536ds-cpufreq-support.patch
+Patch17         : linux-2.6.26-mpc8536ds-WOL-user-defined-packet.patch
+Patch18         : linux-2.6.26-mpc8536ds-PM-support-for-SATA.patch
+Patch19         : linux-fsl-2.6.2x-E500V2_IEEE754_Interface.patch
+Patch20         : linux-fsl-2.6.2x-E500V2_IEEE754_Math_Emulation.patch
+Patch21         : linux-fsl-2.6.2x-E500V2_IEEE754_Trap.patch
+Patch22         : linux-2.6.26-mpc85xx-E500V2-IEEE754-Fix-Bug.patch
+Patch23         : linux-2.6.26-mpc8536ds-default-config-file.patch
+Patch24         : linux-2.6.26-mpc8536ds-myri10ge-probe-fix.patch
+
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+
+%Description
+%{summary}
+
+From kernel.org plus Freescale patches
+
+%Prep
+%setup -n %{pkg_name}-%{dversion}
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1
+%patch23 -p1
+%patch24 -p1

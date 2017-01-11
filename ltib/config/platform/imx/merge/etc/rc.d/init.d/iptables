@@ -1,0 +1,75 @@
+#!/bin/sh
+
+ipt=/usr/sbin/iptables
+iptr=/usr/sbin/iptables-restore
+ipts=/usr/sbin/iptables-save
+iptcf=/etc/iptables
+iptnam=/proc/net/ip_tables_names
+
+flush_del() {
+    # iptables not active
+    test -e $iptnam || return 0
+
+    # Any tables?
+    tables="$(cat $iptnam)"
+    test -z "$tables" && return 0
+
+    echo "Flushing iptables rules."
+    for t in $tables; do
+        $ipt -t $t -F   # Flush firewall rules.
+        $ipt -t $t -X   # Delete firewall chains.
+        $ipt -t $t -Z   # Zero the counter.
+    done
+    echo "Done."
+}
+
+start() {
+    flush_del
+
+    test -r $iptcf || return 1
+
+    echo "Iptabes enabled."
+    $iptr $iptcf
+    echo "Done."
+}
+
+stop() {
+    flush_del
+
+    modprobe -r iptable_filter
+
+    echo "Iptabes removed."
+}
+
+save() {
+    # iptables not active
+    test -e $iptnam || return 1
+
+    # No tables?
+    test -z "$(cat $iptnam)" && return 1
+
+    $ipts > $iptcf
+}
+
+case "$1" in
+    start)
+        start
+    ;;
+
+    stop)
+        stop
+    ;;
+
+    reload)
+        stop
+        start
+    ;;
+
+    save)
+        save
+    ;;
+
+    *)
+        echo $"Usage: iptables {start|stop|reload|save}"
+    ;;
+esac

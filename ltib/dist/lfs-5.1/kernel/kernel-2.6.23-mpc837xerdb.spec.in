@@ -1,0 +1,66 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define pkg_name linux
+
+Summary         : Linux kernel (core of the Linux operating system)
+Name            : kernel
+Version         : 2.6.23
+Release         : 1
+License         : GPL
+Vendor          : kernel.org
+Packager        : Joe D'Abbraccio
+Group           : System Environment/Kernel
+Source          : %{pkg_name}-%{version}.tar.bz2
+Patch1          : kernel-2.6.23-Fix-frame-VLAN-accel.patch
+Patch2          : kernel-2.6.23-Gianfar-NAPI-TX-interrupt-mitigation.patch
+Patch3          : kernel-2.6.23-Gianfar-SKB-recycling-support.patch
+Patch4          : kernel-2.6.23-Fix-a-race-in-gfar_free_recycle_queue.patch
+Patch5          : kernel-2.6.23-gianfar-default-txfifo.patch
+Patch6          : kernel-2.6.23-gianfar-coalescing-fixes-and-cleanup.patch
+Patch7          : kernel-2.6.23-e300c4-cpu.patch
+Patch8          : kernel-2.6.23-mpc837x-IPIC.patch
+Patch9          : kernel-2.6.23-fsl-serdes-phy.patch
+Patch10         : kernel-2.6.23-mpc83xx-sata-II.patch
+Patch11         : kernel-2.6.23-mpc837x-sata-hd-detect-fix.patch
+Patch12         : kernel-2.6.23-mpc837x-rdb-platform-4.patch
+Patch13         : kernel-2.6.23-mpc837x-rdb-rtk8211-phy-1.patch
+Patch14         : kernel-2.6.23-mpc837x-rdb-vsc7385-phy-1.patch
+Patch15         : kernel-2.6.23-mpc837x-rdb-elbc-1.patch
+Patch16         : kernel-2.6.23-mpc837x-rdb-mtd-1.patch
+Patch17         : kernel-2.6.23-mpc837x-rdb-usb-1.patch
+Patch18         : kernel-2.6.23-mpc837x-rdb-pci-pcie-1.patch
+Patch19         : kernel-2.6.2x-mpc83xx-MCU-s08qg8-1.patch
+Patch20         : kernel-2.6.23-mpc8377-rdb-dts-pci-fix.patch
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+
+
+%Description
+%{summary}
+
+From kernel.org
+All patches from Freescale
+
+%Prep
+%setup -n %{pkg_name}-%{version}
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1

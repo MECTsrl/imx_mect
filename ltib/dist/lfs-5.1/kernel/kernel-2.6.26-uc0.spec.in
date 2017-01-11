@@ -1,0 +1,180 @@
+# Template = kernel-common.tmpl
+
+%define pfx /opt/freescale/rootfs/%{_target_cpu}
+%define dversion 2.6.26
+%define kernel vmlinux
+%define binary vmlinux.bin
+%define pkg_name linux
+
+Summary         : Linux kernel (core of the Linux operating system)
+Name            : kernel
+Version         : 2.6.26
+Release         : 1
+License         : GPL
+Vendor          : Kernel.org + freescale patches
+Packager        : Matt Waddel
+Group           : System Environment/Kernel
+Source          : %{pkg_name}-%{dversion}.tar.bz2
+Patch0          :0001-linux-2.6.26-uc0.patch.patch
+Patch1          :0002-uClinux-fixes.patch
+Patch2          :0003-M5301x-core-support.patch
+Patch3          :0004-M5301x-uart-support.patch
+Patch4          :0005-M5301x-timers.patch
+Patch5          :0006-I2C-device-driver.patch
+Patch6          :0007-M5301x-FEC-code.patch
+Patch7          :0008-Register-mistakes.patch
+Patch8          :0009-MCF5227xEVB-support.patch
+Patch9          :0010-m5227xevb-config.patch
+Patch10         :0011--added-textunlikely-section-required-for-new-toolcha.patch
+Patch11         :0012-Zero-length-file-copy-fix.patch
+Patch12         :0013-Internal-audio-codec-support.patch
+Patch13         :0014-M53017EVB-NOR-Flash.patch
+Patch14         :0015-M532x-support-fixes.patch
+Patch15         :0016-SRAM-cache.patch
+Patch16         :0017-DSPI-support.patch
+Patch17         :0018-eDMA-support.patch
+Patch18         :0019-5301x-fixes.patch
+Patch19         :0020-DSPI-registers.patch
+Patch20         :0021-M537x-support-and-fixes.patch
+Patch21         :0022-CF-touchscreen-support.patch
+Patch22         :0023-CF-framebuffer-support.patch
+Patch23         :0024-M5227x-ADC-support.patch
+Patch24         :0025-FEC-ifdef-typo.patch
+Patch25         :0026-dma_sram-allocate-adjusted-sized-chunks.patch
+Patch26         :0027-M532x-Add-BCR-bit-definitions.patch
+Patch27         :0028-generic-pool-allocator-allow-all-chunks-to-be-alloc.patch
+Patch28         :0029-Default-SRAM_SIZE-depends-on-the-chip.patch
+Patch29         :0030-USB-free-the-amount-allocated-for-the-periodic-tabl.patch
+Patch30         :0031-M5301x-Setup-code-for-DMA-coherent-memory-from-on-c.patch
+Patch31         :0032-ColdFire-USB-host-changes.patch
+Patch32         :0033-ColdFire-USB-gadget-changes.patch
+Patch33         :0034-ColdFire-USB-OTG-support.patch
+Patch34         :0035-ColdFire-USB-platform-changes.patch
+Patch35         :0036-M5227x-USB-platform-files.patch
+Patch36         :0037-M532x-USB-platform-files.patch
+Patch37         :0038-M537x-qspi-support.patch
+Patch38         :0039-Config-fixes-eDMA-fix.patch
+Patch39         :0040-M5227xEVB-SD-MMC-SDIO-spi-support.patch
+Patch40         :0041-Add-QSPI-support-on-M5329EVB.patch
+Patch41         :0042-Audio-support-for-Coldfire-TLV320AIC.patch
+Patch42         :0043-I2C-bug-fix.patch
+Patch43         :0044-RTC-support-for-Coldfire.patch
+Patch44         :0045-NAND-flash-support.patch
+Patch45         :0046-Coldfire-CAN-support.patch
+Patch46         :0047-M5329-LCD-bug-fix.patch
+Patch47         :0048-Add-M52277EVB-NOR-Flsh-support.patch
+Patch48         :0049-RTC-support-for-M5373.patch
+Patch49         :0050-Add-Audio-support-to-M5373.patch
+Patch50         :0051-U_boot-build-fix.patch
+Patch51         :0052-NAND-flash-bug.patch
+Patch52         :0053-eDMA-init-bug-fix.patch
+Patch53         :0054-MMC-read-timeout-bug.patch
+Patch54         :0055-ColdFire-USB-host-changes-Add-OTG-support.patch
+Patch55         :0056-Fix-cantest-bug.patch
+Patch56         :0057-Remove-debug-reference.patch 
+Patch57         :0058-537x-add-BCR-bit-definitions.patch
+Patch58         :0059-ColdFire-USB-host-changes-Don-t-support-host-mode-o.patch
+Patch59         :0060-M537x-USB-platform-files.patch
+Patch60         :0061-M5329-Frambuffer-fixes.patch
+Patch61         :0062-Fix-Coldfire-CAN-Message-and-Mask-IDs.patch
+Patch62         :0063-RTC-interrupt-fixes.patch
+Patch63         :0064-Fix-can-bugs.patch
+Patch64         :0065-NAND-USB-Logic-reg-fix1.patch
+Patch65         :0066-BDM-FEC-Phy-Max-Executable-fixes.patch
+Patch66         :0067-Fix-CAN-ifconfig-bug-and-improve-performance.patch
+Patch67         :0068-Detect-FEC-cable-status.patch
+Patch68         :0069-Add-MMC-SD-via-eSDHC-to-M5301xEVB.patch
+Patch69         :0070-5301x-eDMA-UART.patch
+Patch70         :0071-M5301x-USB-platform-files.patch
+Patch71         :0072-M5301x-USB-max3353-OTG-driver.patch
+Patch72         :0073-M5301x-Miscellaneous-USB-mods.patch
+Patch73         :0074-TLV320-external-audio-support.patch
+Patch74         :0075-Serial-console-bug-fix.patch
+
+
+
+BuildRoot       : %{_tmppath}/%{name}
+Prefix          : %{pfx}
+
+%Description
+%{summary}
+
+From kernel.org plus Freescale patches
+
+%Prep
+%setup -n %{pkg_name}-%{dversion}
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1
+%patch23 -p1
+%patch24 -p1
+%patch25 -p1
+%patch26 -p1
+%patch27 -p1
+%patch28 -p1
+%patch29 -p1
+%patch30 -p1
+%patch31 -p1
+%patch32 -p1
+%patch33 -p1
+%patch34 -p1
+%patch35 -p1
+%patch36 -p1
+%patch37 -p1
+%patch38 -p1
+%patch39 -p1
+%patch40 -p1
+%patch41 -p1
+%patch42 -p1
+%patch43 -p1
+%patch44 -p1
+%patch45 -p1
+%patch46 -p1
+%patch47 -p1
+%patch48 -p1
+%patch49 -p1
+%patch50 -p1
+%patch51 -p1
+%patch52 -p1
+%patch53 -p1
+%patch54 -p1
+%patch55 -p1
+%patch56 -p1
+%patch57 -p1
+%patch58 -p1
+%patch59 -p1
+%patch60 -p1
+%patch61 -p1
+%patch62 -p1
+%patch63 -p1
+%patch64 -p1
+%patch65 -p1
+%patch66 -p1
+%patch67 -p1
+%patch68 -p1
+%patch69 -p1
+%patch70 -p1
+%patch71 -p1
+%patch72 -p1
+%patch73 -p1
+%patch74 -p1

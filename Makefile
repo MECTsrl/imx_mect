@@ -398,6 +398,9 @@ ltib_git_save:
 .PHONY: ltib_git_restore
 ltib_git_restore:
 	if test -d $(MECT_LTIBDIR).git; then rsync -av --inplace $(MECT_LTIBDIR).git/ $(MECT_LTIBDIR)/; rm -rf $(MECT_LTIBDIR).git; fi
+	if ! grep -q '^$(MECT_LTIBDIR)/src$$' $(MECT_LTIBDIR)/.ltibrc; then \
+		sed -i 's|^%ldirs$$|%ldirs\n$(MECT_LTIBDIR)/src|' $(MECT_LTIBDIR)/.ltibrc; \
+	fi
 
 .PHONY: ltib_inst
 ltib_inst: $(MECT_TMPDIR) downloads
@@ -435,6 +438,7 @@ build: ltib_build projects_build
 ltib_build: hosttools
 	sudo rm -rf $(MECT_FSDIR)/rootfs
 	sudo rm -rf $(MECT_FSDIR)/rpm/BUILD
+	sudo install -d -o $(USER) -g $(shell groups | awk '{print $$1}') -m 755 $(MECT_FSDIR)
 	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') $(MECT_FSDIR)
 	mkdir -p $(MECT_FSDIR)/rootfs
 	mkdir -p $(MECT_FSDIR)/rpm/BUILD

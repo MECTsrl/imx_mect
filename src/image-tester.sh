@@ -177,7 +177,7 @@ if test -s $tmpfile; then
 						/opt/CodeSourcery/bin/arm-none-linux-gnueabi-objdump -d test/"$f" | tail -n +3 > ${tmpfile}.test
 						/opt/CodeSourcery/bin/arm-none-linux-gnueabi-objdump -d gold/"$f" | tail -n +3 > ${tmpfile}.gold
 						echo ""
-						diff -u ${tmpfile}.gold ${tmpfile}.test # | head --lines=50
+						diff -u ${tmpfile}.gold ${tmpfile}.test
 					fi
 				) | sed 's/^/\t/'
 				echo "==============="

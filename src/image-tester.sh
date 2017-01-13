@@ -103,8 +103,8 @@ if test -s $tmpfile; then
 			echo -n '[ ]'
 
 			(
-				ls -l gold/"$f" 2>&1
-				md5sum gold/"$f" 2>&1
+				ls -ld gold/"$f" 2>&1
+				test -f gold/"$f" && md5sum gold/"$f" 2>&1
 			) | sed 's/^/\t/'
 			echo "==============="
 		done
@@ -121,8 +121,8 @@ if test -s $tmpfile; then
 		echo "==============="
 		sed -n '/^deleting / { s/^deleting //; p; }' $tmpfile | while read f; do
 			(
-				ls -l test/"$f" 2>&1
-				md5sum test/"$f" 2>&1
+				ls -ld test/"$f" 2>&1
+				test -f test/"$f" && md5sum test/"$f" 2>&1
 			) | sed 's/^/\t/'
 			echo "==============="
 		done

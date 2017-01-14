@@ -99,7 +99,7 @@
 #undef CONFIG_PKG_KERNEL_WANT_CF
 #define CONFIG_PKG_KERNEL_LEAVESRC 1
 #undef CONFIG_PKG_KERNEL_UPDATER
-#define CONFIG_PKG_KERNEL_PRECONFIG "kernel-2.6.35-imx28-tpac.config"
+#define CONFIG_PKG_KERNEL_PRECONFIG "kernel-2.6.35.3-imx28-tpac.config"
 #define CONFIG_DISTRO "dist/lfs-5.1"
 
 /*

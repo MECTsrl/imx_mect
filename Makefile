@@ -99,7 +99,7 @@ MECT_TMPRPMDIR = /tmp/rpm-$(USER)
 # Expand to the name of the kernel RPM built by LTIB.
 MECT_LTIB_KERNEL_RPM = $(MECT_RPMDIR)/$(shell if test -x $(MECT_RPMBIN); then $(MECT_RPMBIN) --root $(MECT_LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides kernel; else echo 'no-package'; fi).$(MECT_TARGET_ARCH).rpm
 # Kernel configuration file.
-MECT_KERNEL_CONF := $(MECT_LTIBDIR)/config/platform/imx/kernel-2.6.35-imx28-tpac.config
+MECT_KERNEL_CONF := $(MECT_LTIBDIR)/config/platform/imx/kernel-2.6.35.3-imx28-tpac.config
 # Script to update target file systems
 MECT_SYSUPD_TMPL := $(MECT_FTPDIR)/sysupdate_imx28.sh
 MECT_SYSUPD_TMPLALL := $(MECT_FTPDIR)/sysupdate_imx28_all.sh
@@ -596,6 +596,12 @@ images_do: $(MECT_IMAGES)
 .PHONY: build_kernel
 build_kernel: clean_kernel_build
 	$(MAKE) $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
+
+# Build the kernel for a specific configuration.
+
+	#kernel-2.6.35.3-imx28-tpac1006_320x240.config
+	#kernel-2.6.35.3-imx28-tpac1007_480x272.config
+	#kernel-2.6.35.3-imx28-tpac1008_800x480.config
 
 # Build the target-specific kernel.
 $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM)):

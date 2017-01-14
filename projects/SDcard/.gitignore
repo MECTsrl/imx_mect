@@ -1,0 +1,7 @@
+Makefile
+SDcard
+main.o
+moc_sdcard.cpp
+moc_sdcard.o
+sdcard.o
+ui_sdcard.h

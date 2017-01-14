@@ -1,0 +1,7 @@
+.depend
+libtermcap.a
+libtermcap.so.2.0.8
+pic/
+termcap.o
+tparam.o
+version.o

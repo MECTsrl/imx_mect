@@ -1,0 +1,7 @@
+Makefile
+mac_sn
+mac_sn.o
+main.o
+moc_mac_sn.cpp
+moc_mac_sn.o
+ui_mac_sn.h

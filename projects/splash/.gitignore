@@ -1,0 +1,7 @@
+Makefile
+main.o
+moc_splash.cpp
+moc_splash.o
+splash
+splash.o
+ui_splash.h

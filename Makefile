@@ -98,8 +98,10 @@ MECT_TESTNAME := MectSuite_
 MECT_TMPRPMDIR = /tmp/rpm-$(USER)
 # Expand to the name of the kernel RPM built by LTIB.
 MECT_LTIB_KERNEL_RPM = $(MECT_RPMDIR)/$(shell if test -x $(MECT_RPMBIN); then $(MECT_RPMBIN) --root $(MECT_LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides kernel; else echo 'no-package'; fi).$(MECT_TARGET_ARCH).rpm
+# Kernel version
+MECT_KERNEL_VER := 2.6.35.3
 # Kernel configuration file.
-MECT_KERNEL_CONF := $(MECT_LTIBDIR)/config/platform/imx/kernel-2.6.35.3-imx28-tpac.config
+MECT_KERNEL_CONF := $(MECT_LTIBDIR)/config/platform/imx/kernel-$(MECT_KERNEL_VER)-imx28-tpac.config
 # Script to update target file systems
 MECT_SYSUPD_TMPL := $(MECT_FTPDIR)/sysupdate_imx28.sh
 MECT_SYSUPD_TMPLALL := $(MECT_FTPDIR)/sysupdate_imx28_all.sh
@@ -117,54 +119,54 @@ MECT_MD5EXT := md5
 # Packages for USB serial kernel modules.
 #
 
-MECT_RFSPKG_USBSERIAL_USBSERIAL := kernel-rfs-usbserial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_AIRCABLE := kernel-rfs-usbserial-aircable-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_ARK3116 := kernel-rfs-usbserial-ark3116-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_BELKIN := kernel-rfs-usbserial-belkin_sa-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_CH341 := kernel-rfs-usbserial-ch341-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_CP210X := kernel-rfs-usbserial-cp210x-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_CYBERJACK := kernel-rfs-usbserial-cyberjack-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_CYPRESS_M8 := kernel-rfs-usbserial-cypress_m8-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_DEBUG := kernel-rfs-usbserial-debug-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_DIGI_ACCELEPORT := kernel-rfs-usbserial-digi_acceleport-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_EMPEG := kernel-rfs-usbserial-empeg-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_FTDI_SIO := kernel-rfs-usbserial-ftdi_sio-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_FUNSOFT := kernel-rfs-usbserial-funsoft-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_GARMIN_GPS := kernel-rfs-usbserial-garmin_gps-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_HP4X := kernel-rfs-usbserial-hp4x-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IO_EDGEPORT := kernel-rfs-usbserial-io_edgeport-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IO_TI := kernel-rfs-usbserial-io_ti-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IPAQ := kernel-rfs-usbserial-ipaq-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IPW := kernel-rfs-usbserial-ipw-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IR := kernel-rfs-usbserial-ir-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_IUU_PHOENIX := kernel-rfs-usbserial-iuu_phoenix-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_KEYSPAN := kernel-rfs-usbserial-keyspan-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_KEYSPAN_PDA := kernel-rfs-usbserial-keyspan_pda-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_KL5KUSB105 := kernel-rfs-usbserial-kl5kusb105-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_KOBIL_SCT := kernel-rfs-usbserial-kobil_sct-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_MCT_U232 := kernel-rfs-usbserial-mct_u232-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_MOS7720 := kernel-rfs-usbserial-mos7720-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_MOS7840 := kernel-rfs-usbserial-mos7840-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_MOTO_MODEM := kernel-rfs-usbserial-moto_modem-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_NAVMAN := kernel-rfs-usbserial-navman-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_OMNINET := kernel-rfs-usbserial-omninet-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_OPTICON := kernel-rfs-usbserial-opticon-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_OPTION := kernel-rfs-usbserial-option-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_OTI6858 := kernel-rfs-usbserial-oti6858-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_PL2303 := kernel-rfs-usbserial-pl2303-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_QCAUX := kernel-rfs-usbserial-qcaux-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_QCSERIAL := kernel-rfs-usbserial-qcserial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SAFE_SERIAL := kernel-rfs-usbserial-safe_serial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SIEMENS_MPI := kernel-rfs-usbserial-siemens_mpi-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SIERRA := kernel-rfs-usbserial-sierra-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SPCP8X5 := kernel-rfs-usbserial-spcp8x5-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_SYMBOLSERIAL := kernel-rfs-usbserial-symbolserial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_TI_03410_5052 := kernel-rfs-usbserial-ti_03410_5052-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_VISOR := kernel-rfs-usbserial-visor-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_VIVOPAY := kernel-rfs-usbserial-vivopay-serial-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_WHITEHEAT := kernel-rfs-usbserial-whiteheat-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_WWAN := kernel-rfs-usbserial-wwan-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
-MECT_RFSPKG_USBSERIAL_ZIO := kernel-rfs-usbserial-zio-2.6.35.3-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_USBSERIAL := kernel-rfs-usbserial-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_AIRCABLE := kernel-rfs-usbserial-aircable-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_ARK3116 := kernel-rfs-usbserial-ark3116-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_BELKIN := kernel-rfs-usbserial-belkin_sa-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_CH341 := kernel-rfs-usbserial-ch341-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_CP210X := kernel-rfs-usbserial-cp210x-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_CYBERJACK := kernel-rfs-usbserial-cyberjack-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_CYPRESS_M8 := kernel-rfs-usbserial-cypress_m8-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_DEBUG := kernel-rfs-usbserial-debug-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_DIGI_ACCELEPORT := kernel-rfs-usbserial-digi_acceleport-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_EMPEG := kernel-rfs-usbserial-empeg-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_FTDI_SIO := kernel-rfs-usbserial-ftdi_sio-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_FUNSOFT := kernel-rfs-usbserial-funsoft-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_GARMIN_GPS := kernel-rfs-usbserial-garmin_gps-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_HP4X := kernel-rfs-usbserial-hp4x-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IO_EDGEPORT := kernel-rfs-usbserial-io_edgeport-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IO_TI := kernel-rfs-usbserial-io_ti-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IPAQ := kernel-rfs-usbserial-ipaq-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IPW := kernel-rfs-usbserial-ipw-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IR := kernel-rfs-usbserial-ir-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_IUU_PHOENIX := kernel-rfs-usbserial-iuu_phoenix-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_KEYSPAN := kernel-rfs-usbserial-keyspan-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_KEYSPAN_PDA := kernel-rfs-usbserial-keyspan_pda-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_KL5KUSB105 := kernel-rfs-usbserial-kl5kusb105-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_KOBIL_SCT := kernel-rfs-usbserial-kobil_sct-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_MCT_U232 := kernel-rfs-usbserial-mct_u232-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_MOS7720 := kernel-rfs-usbserial-mos7720-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_MOS7840 := kernel-rfs-usbserial-mos7840-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_MOTO_MODEM := kernel-rfs-usbserial-moto_modem-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_NAVMAN := kernel-rfs-usbserial-navman-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_OMNINET := kernel-rfs-usbserial-omninet-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_OPTICON := kernel-rfs-usbserial-opticon-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_OPTION := kernel-rfs-usbserial-option-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_OTI6858 := kernel-rfs-usbserial-oti6858-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_PL2303 := kernel-rfs-usbserial-pl2303-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_QCAUX := kernel-rfs-usbserial-qcaux-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_QCSERIAL := kernel-rfs-usbserial-qcserial-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SAFE_SERIAL := kernel-rfs-usbserial-safe_serial-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SIEMENS_MPI := kernel-rfs-usbserial-siemens_mpi-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SIERRA := kernel-rfs-usbserial-sierra-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SPCP8X5 := kernel-rfs-usbserial-spcp8x5-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_SYMBOLSERIAL := kernel-rfs-usbserial-symbolserial-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_TI_03410_5052 := kernel-rfs-usbserial-ti_03410_5052-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_VISOR := kernel-rfs-usbserial-visor-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_VIVOPAY := kernel-rfs-usbserial-vivopay-serial-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_WHITEHEAT := kernel-rfs-usbserial-whiteheat-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_WWAN := kernel-rfs-usbserial-wwan-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
+MECT_RFSPKG_USBSERIAL_ZIO := kernel-rfs-usbserial-zio-$(MECT_KERNEL_VER)-imx_1.1.0.$(MECT_TARGET_ARCH).rpm
 
 # Package list for creating the root file system for various targets.
 #
@@ -236,7 +238,7 @@ MECT_TARGET_LFSPKG_ATCMCONTROL_RUNTIMESYSTEM := $(MECT_RPMDIR)/ATCMcontrol_RunTi
 MECT_TARGET_LFSPKG_4C_RUNTIME := $(MECT_RPMDIR)/4c_runtime-lfs-$(MECT_BUILD_ATCMCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm
 
 MECT_TARGET_RFSPKGS := \
-	kernel-rfs-2.6.35.3-imx_1.1.0.arm.rpm \
+	kernel-rfs-$(MECT_KERNEL_VER)-imx_1.1.0.arm.rpm \
 	$(MECT_RFSPKG_USBSERIAL_PL2303) \
 	$(MECT_RFSPKG_USBSERIAL_USBSERIAL) \
 
@@ -419,6 +421,7 @@ ltib_inst: $(MECT_TMPDIR) downloads
 	chmod 0775 $(MECT_LTIBDIR)
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 	test -d $(MECT_LTIBDIR)
+	ln -s kernel-$(MECT_KERNEL_VER)-imx28-tpac1007_480x272.config $(MECT_KERNEL_CONF)
 
 $(MECT_TMPDIR):
 	rm -rf $(MECT_TMPDIR)
@@ -522,15 +525,15 @@ projects: projects_setup projects_build
 spec_setup: MECT_LTIBSPECDIR := $(MECT_LTIBDIR)/dist/lfs-5.1
 spec_setup:
 	for s in ATCMcontrol_RunTimeSystem/ATCMcontrol_RunTimeSystem.spec 4c_runtime/4c_runtime.spec; do \
-		test -w $(MECT_LTIBSPECDIR)/$$s; \
+		test -w $(MECT_LTIBSPECDIR)/$$s || continue; \
 		sed -i 's|^\s*\(Version\s*:\).*|\1 $(MECT_BUILD_ATCMCRT_TAG)|I' $(MECT_LTIBSPECDIR)/$$s; \
 	done
 	for s in mect_plugins/mect_plugins.spec; do \
-		test -w $(MECT_LTIBSPECDIR)/$$s; \
+		test -w $(MECT_LTIBSPECDIR)/$$s || continue; \
 		sed -i 's|^\s*\(Version\s*:\).*|\1 $(MECT_BUILD_PLUGINSCRT_TAG)|I' $(MECT_LTIBSPECDIR)/$$s; \
 	done
 	for s in mect_apps/mect_apps.spec; do \
-		test -w $(MECT_LTIBSPECDIR)/$$s; \
+		test -w $(MECT_LTIBSPECDIR)/$$s || continue; \
 		sed -i 's|^\s*\(Version\s*:\).*|\1 $(MECT_BUILD_APPSCRT_TAG)|I' $(MECT_LTIBSPECDIR)/$$s; \
 	done
 
@@ -599,9 +602,9 @@ build_kernel: clean_kernel_build
 
 # Build the kernel for a specific configuration.
 
-	#kernel-2.6.35.3-imx28-tpac1006_320x240.config
-	#kernel-2.6.35.3-imx28-tpac1007_480x272.config
-	#kernel-2.6.35.3-imx28-tpac1008_800x480.config
+	#kernel-$(MECT_KERNEL_CONF)-imx28-tpac1006_320x240.config
+	#kernel-$(MECT_KERNEL_CONF)-imx28-tpac1007_480x272.config
+	#kernel-$(MECT_KERNEL_CONF)-imx28-tpac1008_800x480.config
 
 # Build the target-specific kernel.
 $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM)):
@@ -627,7 +630,7 @@ target_boot: $(MECT_COMMON_RFSPKGS) build_kernel
 	test -n '$(MECT_BUILD_TARGET)' -a -n '$(MECT_KERNEL_TARGET_CONF)'
 	sudo rm -rf $(MECT_BOOTDIR)
 	mkdir -p $(MECT_BOOTDIR)/var/lib/rpm
-	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_RPMDIR)/imx-bootlets-src-mfg-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-2.6.35.3-1.1.0.$(MECT_TARGET_ARCH).rpm
+	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_RPMDIR)/imx-bootlets-src-mfg-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-$(MECT_KERNEL_VER)-1.1.0.$(MECT_TARGET_ARCH).rpm
 	sudo rm -f $(MECT_BOOTDIR)/var/lib/rpm/*
 	sudo rmdir $(MECT_BOOTDIR)/var/lib/rpm
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_BOOTDIR)/var/lib
@@ -806,7 +809,7 @@ clean_projects:
 
 .PHONY: clean
 clean: clean_projects
-	sudo rm -rf $(MECT_TMPDIR) $(MECT_LTIBDIR)/rpm $(MECT_LTIBDIR)/tmp $(MECT_LTIBDIR)/host_config.log $(MECT_CSXCUNPACK) $(MECT_FSDIR)/rootfs $(MECT_TMPRPMDIR)
+	sudo rm -rf $(MECT_TMPDIR) $(MECT_LTIBDIR)/rpm $(MECT_LTIBDIR)/tmp $(MECT_LTIBDIR)/host_config.log $(MECT_CSXCUNPACK) $(MECT_FSDIR)/rootfs $(MECT_TMPRPMDIR) $(MECT_LTIBDIR).git
 	if test -d $(MECT_FSDIR); then sudo rmdir --ignore-fail-on-non-empty $(MECT_FSDIR); fi
 
 .PHONY: distclean

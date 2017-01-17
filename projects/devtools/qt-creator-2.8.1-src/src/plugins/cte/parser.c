@@ -23,7 +23,7 @@
 uint16_t lastAlarmEvent = 0;
 
 const char *fieldbusName[] = {"PLC", "RTU", "TCP", "TCPRTU", "CANOPEN", "MECT", "RTU_SRV", "TCP_SRV", "TCPRTU_SRV" };
-const char *varTypeName[] = {"BIT", "BYTE_BIT", "WORD_BIT", "DWORD_BIT", "UINT16", "UINT16BA", "INT16", "INT16BA", "REAL", "REALDCBA", "REALCDAB", "REALBADC", "UDINT", "UDINTDCBA", "UDINTCDAB", "UDINTBADC", "DINT", "DINTDCBA", "DINTCDAB", "DINTBADC", "UNKNOWN" };
+const char *varTypeName[] = {"BIT", "BYTE_BIT", "WORD_BIT", "DWORD_BIT", "BYTE", "UINT16", "UINT16BA", "INT16", "INT16BA", "REAL", "REALDCBA", "REALCDAB", "REALBADC", "UDINT", "UDINTDCBA", "UDINTCDAB", "UDINTBADC", "DINT", "DINTDCBA", "DINTCDAB", "DINTBADC", "UNKNOWN" };
 const char *updateTypeName[] = {"H", "P", "S", "F", "V", "X" };
 
 char *strtok_csv(char *string, const char *separators, char **savedptr)

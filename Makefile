@@ -520,6 +520,13 @@ projects_build:
 .PHONY: projects
 projects: projects_setup projects_build
 
+# Build the development tools.
+.PHONY: devtools
+devtools:
+	test -d projects/devtools
+	test -r projects/devtools/Makefile
+	$(MAKE) -C projects/devtools all-linux
+
 
 .PHONY: spec_setup
 spec_setup: MECT_LTIBSPECDIR := $(MECT_LTIBDIR)/dist/lfs-5.1

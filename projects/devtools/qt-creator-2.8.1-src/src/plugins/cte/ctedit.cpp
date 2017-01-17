@@ -122,6 +122,7 @@ ctedit::ctedit(QWidget *parent) :
             << trUtf8("BYTE_BIT")
             << trUtf8("WORD_BIT")
             << trUtf8("DWORD_BIT")
+            << trUtf8("BYTE")
             << trUtf8("UINT16")
             << trUtf8("UINT16BA")
             << trUtf8("INT16")

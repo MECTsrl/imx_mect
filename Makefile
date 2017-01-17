@@ -95,7 +95,7 @@ MECT_TESTSHARE := /media/sf_share
 # Prefix of staging image directory
 MECT_TESTNAME := MectSuite_
 # Draft directory for rpmbuild
-MECT_TMPRPMDIR = /tmp/rpm-$(USER)
+MECT_TMPRPMDIR = /tmp/rpm-$(LOGNAME)
 # Expand to the name of the kernel RPM built by LTIB.
 MECT_LTIB_KERNEL_RPM = $(MECT_RPMDIR)/$(shell if test -x $(MECT_RPMBIN); then $(MECT_RPMBIN) --root $(MECT_LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides kernel; else echo 'no-package'; fi).$(MECT_TARGET_ARCH).rpm
 # Kernel version
@@ -439,10 +439,11 @@ build: ltib_build projects_build
 
 .PHONY: ltib_build
 ltib_build: hosttools
+	test -n "$(LOGNAME)"
 	sudo rm -rf $(MECT_FSDIR)/rootfs
 	sudo rm -rf $(MECT_FSDIR)/rpm/BUILD
-	sudo install -d -o $(USER) -g $(shell groups | awk '{print $$1}') -m 755 $(MECT_FSDIR)
-	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') $(MECT_FSDIR)
+	sudo install -d -o $(LOGNAME) -g $(shell groups | awk '{print $$1}') -m 755 $(MECT_FSDIR)
+	sudo chown -R $(LOGNAME).$(shell groups | awk '{print $$1}') $(MECT_FSDIR)
 	mkdir -p $(MECT_FSDIR)/rootfs
 	mkdir -p $(MECT_FSDIR)/rpm/BUILD
 	cd $(MECT_LTIBDIR); PATH=/usr/lib/ccache:$$PATH GIT_AUTHOR_NAME=$(MECT_USER_NAME) GIT_AUTHOR_EMAIL=$(MECT_TARGET_UNIX_NAME)@$(MECT_HOST_NAME) GIT_COMMITTER_NAME=$(MECT_USER_NAME) GIT_COMMITTER_EMAIL=$(MECT_TARGET_UNIX_NAME)@$(MECT_HOST_NAME) ./ltib
@@ -465,12 +466,13 @@ toolchain:
 # Set up host Qt.
 .PHONY: qt
 qt:
+	test -n "$(LOGNAME)"
 	mkdir -p $(MECT_TMPRPMDIR) $(MECT_LTIBDIR)/rpm/SOURCES
 	for f in $(MECT_FSPKG); do cp $$f $(MECT_LTIBDIR)/rpm/SOURCES; done
 	PATH=/usr/lib/ccache:$(PATH) rpmbuild --define 'toolchain 1' --define 'toolchain_install_dir $(MECT_QT_INSTALL_DIR)' --define '_topdir $(MECT_LTIBDIR)/rpm' --dbpath $(MECT_TMPRPMDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_prefix /opt' --define '_rpmdir $(MECT_TMPRPMDIR)/RPMS' -bb --clean --rmsource $(MECT_LTIBDIR)/dist/lfs-5.1/qt/qt-embedded.spec
 	-sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb -e --allmatches --nodeps --define '_tmppath $(MECT_LTIBDIR)/tmp' qt-embedded 2>/dev/null
 	sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb --ignorearch -ivh --force --nodeps --excludedocs --define '_tmppath $(MECT_LTIBDIR)/tmp' $(MECT_TMPRPMDIR)/RPMS/$(MECT_TARGET_ARCH)/qt-embedded-$(MECT_BUILD_QTVERSION)-*.$(MECT_TARGET_ARCH).rpm
-	sudo chown -R $(USER).$(shell groups | awk '{print $$1}') $(MECT_TMPRPMDIR)
+	sudo chown -R $(LOGNAME).$(shell groups | awk '{print $$1}') $(MECT_TMPRPMDIR)
 
 
 # Setup the local projects: ATCMcontrol_RunTimeSystem.

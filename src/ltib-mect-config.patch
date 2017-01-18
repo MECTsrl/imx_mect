@@ -18237,7 +18237,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
-@@ -0,0 +1,146 @@
+@@ -0,0 +1,151 @@
 +#!/bin/sh
 +
 +start() {
@@ -18255,6 +18255,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +	# Make sure / is mounted R/O
 +	mount -oro,remount /
++
++	# Fix for RK43 (Rocktech) clock phase
++	if grep -q TPAC1007 /proc/cpuinfo && test `cat /etc/serial.conf` -ge 2017000000; then
++		/sbin/devmem 0x80030074 32 0x02000000
++	fi
 +
 +	if test -x /local/root/systool -a ! -x /local/root/factory_test; then
 +		echo "Starting systool application."

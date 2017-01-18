@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Written on mer 1. lug 14:50:37 2015 by Qt Creator 2.7.84-->
+<externaltool id="linguist">
+    <description>interface to edit the translations file</description>
+    <displayname>Qt Linguist</displayname>
+    <category>Linguist</category>
+    <executable output="showinpane" error="showinpane" modifiesdocument="no">
+        <path>C:/Qt485/desktop/bin/linguist.exe</path>
+        <workingdirectory>%{CurrentProject:Path}</workingdirectory>
+    </executable>
+</externaltool>

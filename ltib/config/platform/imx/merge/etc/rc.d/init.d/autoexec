@@ -16,6 +16,11 @@ start() {
 	# Make sure / is mounted R/O
 	mount -oro,remount /
 
+	# Fix for RK43 (Rocktech) clock phase
+	if grep -q TPAC1007 /proc/cpuinfo && test `cat /etc/serial.conf` -ge 2017000000; then
+		/sbin/devmem 0x80030074 32 0x02000000
+	fi
+
 	if test -x /local/root/systool -a ! -x /local/root/factory_test; then
 		echo "Starting systool application."
 

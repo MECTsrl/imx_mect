@@ -2514,7 +2514,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  # CONFIG_BEEP is not set
  CONFIG_FEATURE_BEEP_FREQ=0
  CONFIG_FEATURE_BEEP_LENGTH_MS=0
-@@ -664,12 +570,12 @@
+@@ -664,23 +570,22 @@
  # CONFIG_FEATURE_CHAT_VAR_ABORT_LEN is not set
  # CONFIG_FEATURE_CHAT_CLR_ABORT is not set
  # CONFIG_CHRT is not set
@@ -2530,7 +2530,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  # CONFIG_FEATURE_DC_LIBM is not set
  # CONFIG_DEVFSD is not set
  # CONFIG_DEVFSD_MODLOAD is not set
-@@ -680,7 +586,6 @@
+ # CONFIG_DEVFSD_FG_NP is not set
+ # CONFIG_DEVFSD_VERBOSE is not set
+ # CONFIG_FEATURE_DEVFS is not set
+-# CONFIG_DEVMEM is not set
++CONFIG_DEVMEM=y
  # CONFIG_EJECT is not set
  # CONFIG_FEATURE_EJECT_SCSI is not set
  # CONFIG_FBSPLASH is not set

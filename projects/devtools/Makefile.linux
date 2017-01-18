@@ -1,6 +1,7 @@
 # TODO set the proper version.
 ATCM_VERSION := 1.2.3-dummy
 
+export PATH := /usr/lib/ccache:$(PATH)
 export LC_ALL := en_US.UTF-8
 
 FTP_DIRECTORY := $(CURDIR)/../../src
@@ -76,7 +77,7 @@ $(LC_LIB_A):
 .PHONY: qt
 qt:
 	test -d $(CURDIR)/$(QT_DIRECTORY)
-	cd $(CURDIR)/$(QT_DIRECTORY); ./configure \
+	cd $(CURDIR)/$(QT_DIRECTORY); MAKEFLAGS=-j$(nproc) ./configure \
 	    --prefix=$(QT_INST_DIR) \
 	    -xplatform linux-g++ \
 	    -confirm-license \

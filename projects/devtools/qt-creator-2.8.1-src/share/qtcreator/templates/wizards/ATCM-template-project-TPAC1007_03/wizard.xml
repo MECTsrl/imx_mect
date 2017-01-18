@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/****************************************************************************
+ **
+ ** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+ ** Contact: http://www.qt-project.org/legal
+ **
+ ** This file is part of Qt Creator.
+ **
+ ** Commercial License Usage
+ ** Licensees holding valid commercial Qt licenses may use this file in
+ ** accordance with the commercial license agreement provided with the
+ ** Software or, alternatively, in accordance with the terms contained in
+ ** a written agreement between you and Digia.  For licensing terms and
+ ** conditions see http://qt.digia.com/licensing.  For further information
+ ** use the contact form at http://qt.digia.com/contact-us.
+ **
+ ** GNU Lesser General Public License Usage
+ ** Alternatively, this file may be used under the terms of the GNU Lesser
+ ** General Public License version 2.1 as published by the Free Software
+ ** Foundation and appearing in the file LICENSE.LGPL included in the
+ ** packaging of this file.  Please review the following information to
+ ** ensure the GNU Lesser General Public License version 2.1 requirements
+ ** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+ **
+ ** In addition, as a special exception, Digia gives you certain additional
+ ** rights.  These rights are described in the Digia Qt LGPL Exception
+ ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+ **
+ ****************************************************************************/
+
+Custom project wizard configuration example file. Note that by convention,
+	   the project file goes last.
+	   The "class" and "firstpage" attributes specify that it is a Qt 4 wizard and
+	   leave room for the Qt 4 target page.
+	   -->
+	   <wizard version="1" kind="project"
+	   class="qt4project" firstpage="10"
+	   id="A.customqtproject" category="B.CustomProjects">
+	   <icon>console.png</icon>
+	   <description>Creates an empty Qt project for TPAC1007_03 with the template used by ATCM Applications and by QATCMplugin.</description>
+	   <displayname>TPAC1007_03</displayname>;
+	   <displaycategory>Mect Projects</displaycategory>
+	   <files>
+	   <file source="../ATCM-template-project/pages.cpp" target="pages.cpp" openeditor="false"/>
+	   <file source="../ATCM-template-project/pages.h" target="pages.h" openeditor="false"/>
+	   <file source="../ATCM-template-project/page100.cpp"  target="page100.cpp" openeditor="false"/>
+	   <file source="../ATCM-template-project/page100.h"  target="page100.h" openeditor="false"/>
+	   <file source="../ATCM-template-project/page100.ui"  target="page100.ui" openeditor="true"/>
+	   <file source="../ATCM-template-project/style.h" target="style.h" openproject="false"/>
+	   <file source="../ATCM-template-project/automation.cpp" target="automation.cpp" openeditor="false"/>
+	   <file source="../ATCM-template-project/automation.h" target="automation.h" openeditor="false"/>
+	   <file source="../ATCM-template-project/resources.qrc" target="resources.qrc" openproject="false"/>
+	   <file source="../ATCM-template-project/languages.qrc" target="languages.qrc" openproject="false"/>
+	   <file source="../ATCM-template-project/config/splash.png" target="config/splash.png" openproject="false" binary="true"/>
+	   <file source="config/Crosstable.csv" target="config/Crosstable.csv" openproject="false" binary="false"/>
+	   <file source="config/crosstable.cpp" target="config/crosstable.cpp" openproject="false" binary="false"/>
+	   <file source="config/crosstable.h" target="config/crosstable.h" openproject="false" binary="false"/>
+	   <file source="config/system.ini" target="config/system.ini" openproject="false" binary="false"/>
+	   <file source="config/trend1.csv" target="config/trend1.csv" openproject="false" binary="false"/>
+	   <!-- 
+	   <file source="../ATCM-template-project/project.pro.user" target="%ProjectName%.pro.shared" openproject="false"/>
+	   -->
+	   <file source="../ATCM-template-project/project.pro" target="%ProjectName%.pro" openproject="true"/>
+	   <file source="template.pri" target="template.pri" openproject="false"/>
+	   <file source="../ATCM-template-project/common.pri" target="common.pri" openproject="false"/>
+	   <file source="../ATCM-template-project/languages.pri" target="languages.pri" openproject="false"/>
+	   <file source="../ATCM-template-project/systemicons.qrc" target="systemicons.qrc" openproject="false"/>
+	   </files>
+	    <!-- Create a 2nd wizard page with parameters -->
+	    <fieldpagetitle>Add extra funtionality</fieldpagetitle>
+		<fields>
+			<field name="Model">
+				<fieldcontrol class="QComboBox" defaultindex="2">
+					<comboentries>
+						<comboentry value="&lt;width&gt;480&lt;&#47;width&gt;&lt;height&gt;272&lt;&#47;height&gt;">
+							<comboentrytext>Horizontal</comboentrytext>
+						</comboentry>
+						<comboentry value="&lt;width&gt;272&lt;&#47;width&gt;&lt;height&gt;480&lt;&#47;height&gt;">
+							<comboentrytext>Vertical</comboentrytext>
+						</comboentry>
+				</comboentries>
+				</fieldcontrol>
+				<fielddescription>Choose the panel orientation:</fielddescription>
+			</field>
+		</fields>
+	</wizard>

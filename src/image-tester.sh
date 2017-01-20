@@ -120,6 +120,8 @@ if test -s $tmpfile; then
 		echo "*** ERROR: NEW files in \"$testimg\":"
 		echo "==============="
 		sed -n '/^deleting / { s/^deleting //; p; }' $tmpfile | while read f; do
+			echo -n '[ ]'
+
 			(
 				ls -ld test/"$f" 2>&1
 				test -f test/"$f" && md5sum test/"$f" 2>&1
@@ -164,6 +166,7 @@ if test -s $tmpfile; then
 			# Report details about the differenes.
 			if test -f gold/"$f" -a -f test/"$f"; then
 				echo -n '[ ]'
+
 				(
 					ls -l gold/"$f" test/"$f"
 

@@ -93,7 +93,7 @@ MECT_TESTSHARE := /media/sf_share
 # Prefix of staging image directory
 MECT_TESTAME := MectSuite_
 # Draft directory for rpmbuild
-MECT_TMPRPMDIR = /tmp/rpm-$(LOGNAME)
+export MECT_TMPRPMDIR = /tmp/rpm-$(LOGNAME)
 # Expand to the name of the kernel RPM built by LTIB.
 MECT_LTIB_KERNEL_RPM = $(MECT_RPMDIR)/$(shell if test -x $(MECT_RPMBIN); then $(MECT_RPMBIN) --root $(MECT_LTIB_RFSDIR) --dbpath /var/lib/rpm -q --whatprovides kernel; else echo 'no-package'; fi).$(MECT_TARGET_ARCH).rpm
 # Expand to the name of the timestamp when the kernel RPM was built by LTIB.

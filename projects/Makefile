@@ -83,22 +83,23 @@ localfs_rpm: localfs_rpm_clean localfs_rpm_build localfs_rpm_install
 .PHONY: localfs_rpm_build
 localfs_rpm_build: MECT_PRJDIR := $(CURDIR)
 localfs_rpm_build:
-	test -n $(MECT_PRJDIR)
+	test -n "$(MECT_PRJDIR)"
 
 .PHONY: localfs_rpm_install
 localfs_rpm_install: MECT_PRJDIR := $(CURDIR)
 localfs_rpm_install:
-	test -n $(MECT_PRJDIR)
+	test -n "$(MECT_PRJDIR)"
+	test -n "$(MECT_TMPRPMDIR)"
 	tar cjvf $(MECT_RPMBASEDIR)/SOURCES/local.tar.bz2 --exclude=.svn -C $(MECT_LDIR) .
-	rm -rf $(MECT_RPMTMPDIR)/{*,.??*}
+	rm -rf $(MECT_TMPRPMDIR)/{*,.??*}
 	for s in $(MECT_LOCAL_SPECS); do \
-		rpmbuild --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_RPMTMPDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean $$s; \
+		rpmbuild --define '_topdir $(MECT_RPMBASEDIR)' --dbpath $(MECT_TMPRPMDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_arch arm' --define '_prefix /' --define '_rpmdir $(MECT_RPMBASEDIR)/RPMS' -bb --clean $$s; \
 	done
 
 .PHONY: localfs_rpm_clean
 localfs_rpm_clean: MECT_PRJDIR := $(CURDIR)
 localfs_rpm_clean:
-	test -n $(MECT_PRJDIR)
+	test -n "$(MECT_PRJDIR)"
 
 
 

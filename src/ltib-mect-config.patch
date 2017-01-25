@@ -18237,7 +18237,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
-@@ -0,0 +1,151 @@
+@@ -0,0 +1,161 @@
 +#!/bin/sh
 +
 +start() {
@@ -18259,6 +18259,16 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	# Fix for RK43 (Rocktech) clock phase
 +	if grep -q TPAC1007 /proc/cpuinfo && test `cat /etc/serial.conf` -ge 2017000000; then
 +		/sbin/devmem 0x80030074 32 0x02000000
++	fi
++
++	# Fix missing Wi-Fi initialization at boot time.
++	if grep -q 'Hardware[ 	]*: .*TPAC100[68].* panel' /proc/cpuinfo && ! grep -q ^cfg80211 /proc/modules; then
++		if test -r /proc/bus/usb/001/002; then
++			if hexdump /proc/bus/usb/001/002 | head -1 | grep -q '0000000 .... .... .... .... 0cf3 9271 '; then
++				echo -n "1-1" > /sys/bus/usb/drivers/usb/unbind
++				echo -n "1-1" > /sys/bus/usb/drivers/usb/bind
++			fi
++		fi
 +	fi
 +
 +	if test -x /local/root/systool -a ! -x /local/root/factory_test; then

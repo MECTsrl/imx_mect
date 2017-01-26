@@ -524,7 +524,7 @@ projects: projects_setup projects_build
 
 # Build the development tools.
 .PHONY: devtools
-devtools:
+devtools: projects_setup_mect_plugins
 	test -d projects/devtools
 	test -r projects/devtools/Makefile
 	$(MAKE) -C projects/devtools all-linux

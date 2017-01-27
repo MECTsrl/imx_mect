@@ -239,7 +239,42 @@ clean-wine:
 
 .PHONY: clean-qt
 clean-qt:
-	-if test -d $(QT_DIRECTORY); then $(MAKE) -C $(QT_DIRECTORY) clean; fi
+	-if test -d $(QT_DIRECTORY); then \
+	    $(MAKE) -C $(QT_DIRECTORY) clean; \
+	    find $(QT_DIRECTORY)/qmake -name \*.o -print0 | xargs -0 rm -f; \
+	fi
+	stty sane
+
+.PHONY: distclean-qt
+distclean-qt:
+	-if test -d $(QT_DIRECTORY); then \
+	    $(MAKE) -C $(QT_DIRECTORY) distclean; \
+	    find $(QT_DIRECTORY)/qmake -name \*.o -print0 | xargs -0 rm -f; \
+	    find $(QT_DIRECTORY)/lib -name \*.prl -print0 | xargs -0 rm -f; \
+	    find $(QT_DIRECTORY)/bin \( -name \*.dll -o -name \*.exe \) -print0 | xargs -0 rm -f; \
+	    rm -f $(QT_DIRECTORY)/{.qmake,configure}.cache; \
+	    find $(QT_DIRECTORY) \( \
+		   -path $(QT_DIRECTORY)/src/3rdparty/freetype/Makefile \
+		-o -path $(QT_DIRECTORY)/src/3rdparty/freetype/src/tools/ftrandom/Makefile \
+		-o -path $(QT_DIRECTORY)/src/3rdparty/Makefile \
+		-o -path $(QT_DIRECTORY)/src/3rdparty/ptmalloc/Makefile \
+	    \) -prune -o -name Makefile -print0 | xargs -0 rm -f; \
+	    find $(QT_DIRECTORY) \( \
+		   -name \*.Release \
+		-o -name \*.Debug \
+		-o -name \*_resource.rc \
+	    \) -print0 | xargs -0 rm -f; \
+	    rm -rf $(QT_DIRECTORY)/imports/Qt; \
+	    rm -rf $(QT_DIRECTORY)/lib/pkgconfig; \
+	    rm -rf $(QT_DIRECTORY)/mkspecs/default; \
+	    rm -f  $(QT_DIRECTORY)/mkspecs/qconfig.pri; \
+	    rm -f  $(QT_DIRECTORY)/qmake/qmake.exe; \
+	    rm -f  $(QT_DIRECTORY)/src/corelib/global/qconfig.cpp; \
+	    rm -f  $(QT_DIRECTORY)/src/corelib/global/qconfig.h; \
+	    rm -rf $(QT_DIRECTORY)/src/script/tmp; \
+	    rm -rf $(QT_DIRECTORY)/src/tools/bootstrap/debug; \
+	    rm -rf $(QT_DIRECTORY)/src/tools/bootstrap/release; \
+	fi
 	stty sane
 
 .PHONY: clean-qtc
@@ -264,10 +299,6 @@ distclean: clean distclean-wine distclean-qt distclean-qtc distclean-qwt
 .PHONY: distclean-wine
 distclean-wine:
 	rm -rf $(WINEPREFIX)
-
-.PHONY: distclean-qt
-distclean-qt:
-	rm -rf $(QT_INST_DIR_H) $(QT_DIRECTORY)
 
 .PHONY: distclean-qtc
 distclean-qtc:

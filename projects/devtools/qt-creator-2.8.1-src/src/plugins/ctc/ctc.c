@@ -44,6 +44,7 @@ enum type_e {
     TYPE_BYTE_BIT,
     TYPE_WORD_BIT,
     TYPE_DWORD_BIT,
+    TYPE_BYTE,
     TYPE_UINT,
     TYPE_UINTBA,
     TYPE_INT,
@@ -229,6 +230,8 @@ type_get(char *type)
         return TYPE_WORD_BIT;
     else if (strcmp(type, "DWORD_BIT") == 0)
         return TYPE_DWORD_BIT;
+    else if (strcmp(type, "BYTE") == 0)
+        return TYPE_BYTE;
     else if (strcmp(type, "UINT") == 0)
         return TYPE_UINT;
     else if (strcmp(type, "UINTBA") == 0)
@@ -276,6 +279,11 @@ cpp_type_get(struct row_s *row)
         case TYPE_WORD_BIT:
         case TYPE_DWORD_BIT:
             type = "int";
+
+            break;
+
+        case TYPE_BYTE:
+            type = "u_int8_t";
 
             break;
 
@@ -679,6 +687,12 @@ gvl_gen(void)
                 plc_type = "X";
                 st_type = "BOOL";
                 decimal = 1;
+
+                break;
+
+            case TYPE_BYTE:
+                plc_type = "W";
+                st_type = "BYTE";
 
                 break;
 

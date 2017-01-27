@@ -1,5 +1,5 @@
 .PHONY: all
-all: all-linux clean all-windows
+all: all-windows buildclean-windows all-linux buildclean-linux
 
 .PHONY: all-windows all-linux
 all-windows all-linux:
@@ -15,9 +15,9 @@ clean-windows clean-linux:
 	-if test -r Makefile.$(@:clean-%=%); then $(MAKE) -f Makefile.$(@:clean-%=%) clean; fi
 
 
-.PHONY: distclean
-distclean: distclean-windows distclean-linux
+.PHONY: buildclean
+buildclean: buildclean-windows buildclean-linux
 
-.PHONY: distclean-windows distclean-linux
-distclean-windows distclean-linux:
-	-if test -r Makefile.$(@:distclean-%=%); then $(MAKE) -f Makefile.$(@:distclean-%=%) distclean; fi
+.PHONY: buildclean-windows buildclean-linux
+buildclean-windows buildclean-linux:
+	-if test -r Makefile.$(@:buildclean-%=%); then $(MAKE) -f Makefile.$(@:buildclean-%=%) buildclean; fi

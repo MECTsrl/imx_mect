@@ -148,32 +148,34 @@ clean: clean-qt clean-qtc clean-qwt clean-mp
 
 .PHONY: clean-qt
 clean-qt:
-	-if test -d $(QT_DIRECTORY); then make -C $(QT_DIRECTORY) clean; fi
+	-if test -d $(QT_DIRECTORY); then $(MAKE) -C $(QT_DIRECTORY) clean; fi
 
 .PHONY: clean-qtc
 clean-qtc:
-	-if test -d $(QTC_BUILD_DIR); then make -C $(QTC_BUILD_DIR) clean; fi
+	-if test -d $(QTC_BUILD_DIR); then $(MAKE) -C $(QTC_BUILD_DIR) clean; fi
 
 .PHONY: clean-qwt
 clean-qwt:
-	-if test -d $(QWT_BUILD_DIR); then make -C $(QWT_BUILD_DIR) clean; fi
+	-if test -d $(QWT_BUILD_DIR); then $(MAKE) -C $(QWT_BUILD_DIR) clean; fi
 
 .PHONY: clean-mp
 clean-mp:
-	-if test -d $(MP_DIRECTORY); then make -C $(MP_DIRECTORY) clean; fi
+	-if test -d $(MP_DIRECTORY); then $(MAKE) -C $(MP_DIRECTORY) clean; fi
 
 
-.PHONY: distclean
-distclean: clean distclean-qt distclean-qtc distclean-qwt
+.PHONY: buildclean
+buildclean: buildclean-qt buildclean-qtc buildclean-qwt clean-mp
 
-.PHONY: distclean-qt
-distclean-qt:
-	rm -rf $(QT_INST_DIR) $(QT_DIRECTORY)
+.PHONY: buildclean-qt
+buildclean-qt:
+	-if test -r $(QT_DIRECTORY)/Makefile; then $(MAKE) -C $(QT_DIRECTORY) distclean; fi
 
-.PHONY: distclean-qtc
-distclean-qtc:
-	rm -rf $(QTC_BUILD_DIR) $(QTC_INST_DIR) $(QTC_DIRECTORY)
+.PHONY: buildclean-qtc
+buildclean-qtc:
+	-if test -r $(QTC_BUILD_DIR)/Makefile; then $(MAKE) -C $(QTC_BUILD_DIR) distclean; fi
+	rm -rf $(QTC_BUILD_DIR)
 
-.PHONY: distclean-qwt
-distclean-qwt:
-	rm -rf $(QWT_BUILD_DIR) $(QWT_DIRECTORY)
+.PHONY: buildclean-qwt
+buildclean-qwt:
+	-if test -r $(QWT_BUILD_DIR)/Makefile; then $(MAKE) -C $(QWT_BUILD_DIR) distclean; fi
+	rm -rf $(QWT_BUILD_DIR)

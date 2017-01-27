@@ -1,5 +1,5 @@
 .PHONY: all
-all: all-windows buildclean-windows all-linux buildclean-linux
+all: buildclean-windows buildclean-linux all-windows buildclean-windows all-linux buildclean-linux
 
 .PHONY: all-windows all-linux
 all-windows all-linux:

@@ -33,7 +33,6 @@ QT_VER := 4.8.5
 QT_DIRECTORY := qt-everywhere-opensource-src-$(QT_VER)
 QT_INST_DIR_H = $(DRIVE_C)/MECT/Qt-$(QT_VER)
 export QT_INST_DIR := C:/MECT/Qt-$(QT_VER)
-QT_DESIGNER_PLUGIN_DIR = $(QT_INST_DIR_H)/plugins/designer
 QT_BIN_DIR = $(QT_INST_DIR)/bin
 QT_BIN_DIR := $(subst /,\\\\,$(QT_BIN_DIR))
 
@@ -90,7 +89,7 @@ NPROCS := $(shell expr $(NPROCS) + 1)
 
 
 .PHONY: all
-all: wine tools libs qt qtc qwt mp
+all: wine tools libs qt install-qt qtc qwt mp
 
 .PHONY: wine
 wine: $(WINEPREFIX)
@@ -128,9 +127,9 @@ $(LC_DLL):
 qt: rebase do_qt rebase
 
 .PHONY: do_qt
-do_qt: qt-dir
-	test -d $(QT_INST_DIR_H)
-	cd $(QT_INST_DIR_H); wine configure \
+do_qt:
+	test -d $(QT_DIRECTORY)
+	cd $(QT_DIRECTORY); wine configure \
 	    -platform win32-g++-4.6 \
 	    -confirm-license \
 	    -declarative \
@@ -158,13 +157,26 @@ do_qt: qt-dir
 	    -script \
 	    -shared \
 	    -no-libtiff
-	$(MAKE) -j $(NPROCS) -C $(QT_INST_DIR_H); stty sane
+	$(MAKE) -j $(NPROCS) -C $(QT_DIRECTORY); stty sane
 
-.PHONY: qt-dir
-qt-dir:
-	rm -rf $(QT_INST_DIR_H)
-	mkdir -p $(shell dirname $(QT_INST_DIR_H))
-	ln -s ../../../$(QT_DIRECTORY) $(QT_INST_DIR_H)
+.PHONY: install-qt
+install-qt: clean-qt
+	rsync -a --inplace --delete $(QT_DIRECTORY)/ $(QT_INST_DIR_H)/
+	echo '[Paths]' > '$(QT_INST_DIR_H)/bin/qt.conf'
+	echo 'Prefix = $(QT_INST_DIR)' >> '$(QT_INST_DIR_H)/bin/qt.conf'
+	echo 'Documentation = doc' >> '$(QT_INST_DIR_H)/bin/qt.conf'
+	echo 'Headers = include' >> '$(QT_INST_DIR_H)/bin/qt.conf'
+	echo 'Libraries = lib' >> '$(QT_INST_DIR_H)/bin/qt.conf'
+	echo 'Binaries = bin' >> '$(QT_INST_DIR_H)/bin/qt.conf'
+	echo 'Plugins = plugins' >> '$(QT_INST_DIR_H)/bin/qt.conf'
+	echo 'Imports = imports' >> '$(QT_INST_DIR_H)/bin/qt.conf'
+	echo 'Data = .' >> '$(QT_INST_DIR_H)/bin/qt.conf'
+	echo 'Translations = translations' >> '$(QT_INST_DIR_H)/bin/qt.conf'
+	echo 'Settings = .' >> '$(QT_INST_DIR_H)/bin/qt.conf'
+	echo 'Examples = examples' >> '$(QT_INST_DIR_H)/bin/qt.conf'
+	echo 'Demos = demos' >> '$(QT_INST_DIR_H)/bin/qt.conf'
+	for m in `find $(QT_INST_DIR_H)/mkspecs -name qmake.conf -print`; do echo 'QMAKE_INCDIR += "."' >> $$m; done
+	for m in `find $(QT_INST_DIR_H)/lib -name \*.prl -print`; do sed -i 's|[Zz]:$(CURDIR)/$(QT_DIRECTORY)|$(QT_INST_DIR)|' $$m; done
 
 .PHONY: qtc
 qtc: rebase do_qtc rebase
@@ -207,6 +219,7 @@ do_mp:
 cmd: export WINEDEBUG := 
 cmd: export DISPLAY := $(DISPLAY_SAVED)
 cmd:
+	#winecfg
 	wine $(QTC_INST_DIR)/bin/qtcreator.exe
 
 # msys-1.0.dll rebase is a workaround for a bug in Cygwin use of persistent memory
@@ -226,19 +239,23 @@ clean-wine:
 
 .PHONY: clean-qt
 clean-qt:
-	-if test -d $(QT_DIRECTORY); then make -C $(QT_DIRECTORY) clean; fi
+	-if test -d $(QT_DIRECTORY); then $(MAKE) -C $(QT_DIRECTORY) clean; fi
+	stty sane
 
 .PHONY: clean-qtc
 clean-qtc:
-	-if test -d $(QTC_BUILD_DIR); then make -C $(QTC_BUILD_DIR) clean; fi
+	-if test -d $(QTC_BUILD_DIR); then $(MAKE) -C $(QTC_BUILD_DIR) clean; fi
+	stty sane
 
 .PHONY: clean-qwt
 clean-qwt:
-	-if test -d $(QWT_BUILD_DIR); then make -C $(QWT_BUILD_DIR) clean; fi
+	-if test -d $(QWT_BUILD_DIR); then $(MAKE) -C $(QWT_BUILD_DIR) clean; fi
+	stty sane
 
 .PHONY: clean-mp
 clean-mp:
-	-if test -d $(MP_DIRECTORY); then make -C $(MP_DIRECTORY) clean; fi
+	-if test -d $(MP_DIRECTORY); then $(MAKE) -C $(MP_DIRECTORY) clean; fi
+	stty sane
 
 
 .PHONY: distclean

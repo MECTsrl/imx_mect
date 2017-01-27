@@ -160,7 +160,7 @@ clean-qwt:
 
 .PHONY: clean-mp
 clean-mp:
-	-if test -d $(MP_DIRECTORY); then $(MAKE) -C $(MP_DIRECTORY) clean; fi
+	-if test -d $(MP_DIRECTORY)/qt_plugins; then $(MAKE) -C $(MP_DIRECTORY)/qt_plugins clean; fi
 
 
 .PHONY: buildclean

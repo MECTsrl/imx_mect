@@ -1,5 +1,11 @@
 .PHONY: all
-all: buildclean-windows buildclean-linux all-windows buildclean-windows all-linux buildclean-linux
+all:
+	$(MAKE) buildclean-windows
+	$(MAKE) buildclean-linux
+	$(MAKE) all-windows
+	$(MAKE) buildclean-windows
+	$(MAKE) all-linux
+	$(MAKE) buildclean-linux
 
 .PHONY: all-windows all-linux
 all-windows all-linux:

@@ -210,7 +210,7 @@ do_mp:
 	-patch -d $(MP_DIRECTORY) -p1 -N -i $(MP_PATCH_PATHS)
 	-patch -d $(MP_DIRECTORY) -p1 -N -i $(MP_PATCH_QRC_INSTPATH)
 	cd $(MP_DIRECTORY)/qt_plugins; $(QMAKE) qt_designer_plugins.pro -r -config store -config trend -config recipe -config alarms CONFIG+=release DEFINES+=ATCM_VERSION=$(ATCM_VERSION)
-	if grep -rIq 'c:$$(INSTALL_ROOT)' mect_plugins; then sed -i '/c:$$(INSTALL_ROOT)/ s/c:$$(INSTALL_ROOT)/$$(INSTALL_ROOT)/g;' `grep -rIl 'c:$$(INSTALL_ROOT)' mect_plugins`; fi # Old wines are broken. :-)
+	if grep -rIq 'c:$$(INSTALL_ROOT)' $(MP_DIRECTORY); then sed -i '/c:$$(INSTALL_ROOT)/ s/c:$$(INSTALL_ROOT)/$$(INSTALL_ROOT)/g;' `grep -rIl 'c:$$(INSTALL_ROOT)' $(MP_DIRECTORY)`; fi # Old wines are broken. :-)
 	$(MAKE) -j $(NPROCS) -C $(MP_DIRECTORY)/qt_plugins; stty sane
 	$(MAKE) -C $(MP_DIRECTORY)/qt_plugins INSTALL_ROOT=$(MP_INST_DIR) install; stty sane
 
@@ -256,7 +256,7 @@ clean-qwt:
 
 .PHONY: clean-mp
 clean-mp:
-	-if test -d $(MP_DIRECTORY); then $(MAKE) -C $(MP_DIRECTORY) clean; stty sane; fi
+	-if test -d $(MP_DIRECTORY)/qt_plugins; then $(MAKE) -C $(MP_DIRECTORY)/qt_plugins clean; stty sane; fi
 
 
 .PHONY: buildclean

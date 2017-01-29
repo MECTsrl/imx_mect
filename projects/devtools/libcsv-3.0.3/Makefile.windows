@@ -25,8 +25,8 @@ install_shared: install_headers install_shared_lib
 install_static: install_headers install_static_lib
 
 .PHONY: install_man
-install_man: csv.3.gz
-	cp -f $^ $(DESTDIR)/$(MANDIR)
+install_man:
+	gzip -9c csv.3 > $(DESTDIR)/$(MANDIR)/csv.3.gz
 
 .PHONY: install_headers
 install_headers: csv.h
@@ -49,9 +49,6 @@ libcsv.o: libcsv.c csv.h
 %_static.a: %.o
 	$(AR) -rc $@ $^
 	$(AR) -s $@
-
-%.gz: %
-	gzip -9 $<
 
 
 .PHONY: clean

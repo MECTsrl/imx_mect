@@ -60,7 +60,6 @@ QMAKE := $(CURDIR)/$(QT_DIRECTORY)/bin/qmake
 # Parallel build
 NPROCS := $(shell nproc)
 NPROCS := $(shell expr $(NPROCS) + 1)
-NPROCS := 1
 
 
 .PHONY: all
@@ -77,7 +76,7 @@ $(LC_LIB_A):
 .PHONY: qt
 qt:
 	test -d $(CURDIR)/$(QT_DIRECTORY)
-	cd $(CURDIR)/$(QT_DIRECTORY); MAKEFLAGS=-j$(nproc) ./configure \
+	cd $(CURDIR)/$(QT_DIRECTORY); MAKEFLAGS=-j$(NPROC) ./configure \
 	    --prefix=$(QT_INST_DIR) \
 	    -xplatform linux-g++ \
 	    -confirm-license \
@@ -160,7 +159,7 @@ clean-qwt:
 
 .PHONY: clean-mp
 clean-mp:
-	-if test -d $(MP_DIRECTORY); then $(MAKE) -C $(MP_DIRECTORY) clean; fi
+	-if test -d $(MP_DIRECTORY)/qt_plugins; then $(MAKE) -C $(MP_DIRECTORY)/qt_plugins clean; fi
 
 
 .PHONY: buildclean

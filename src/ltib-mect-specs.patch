@@ -6,7 +6,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : 0.0
++Version         : v1.028
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -105,7 +105,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : 0.0
++Version         : v1.028
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -636,7 +636,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
 --- ltib.reference/dist/lfs-5.1/boot_stream/boot_stream.spec
 +++ ltib/dist/lfs-5.1/boot_stream/boot_stream.spec
-@@ -8,39 +8,92 @@
+@@ -8,39 +8,100 @@
  Vendor          : Freescale
  Packager        : Terry Lv
  Group           : Tools
@@ -715,9 +715,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/%{pfx}/boot
 +
 +
-+cd %{_builddir}/%{name}-11.01.00
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+
  %Clean
 +export LC_ALL
 +LC_ALL=C
@@ -725,14 +722,24 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  make clean
  
--%Files
 +
-+%Files -f all_files.lst
-+%defattr(-,root,root)
-+
-+%Files mfg
+ %Files
  %defattr(-,root,root)
 -%{pfx}/*
++%{pfx}/boot/boot_prep
++%{pfx}/boot/create_updater.sh
++%{pfx}/boot/imx28_ivt_linux.sb
++%{pfx}/boot/imx28_ivt_uboot.sb
++%{pfx}/boot/imx28_linux.sb
++%{pfx}/boot/imx28_uboot.sb
++%{pfx}/boot/linux_prep
++%{pfx}/boot/power_prep
++%{pfx}/boot/updater.bd
++%{pfx}/boot/updater_ivt.bd
++%{pfx}/boot/updater_ivt.sb
++
++%Files mfg
++%defattr(-,root,root)
 +%{pfx}/boot/imx28_ivt_linux.sb
 +%{pfx}/boot/updater_ivt.sb
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/busybox/busybox.spec ltib/dist/lfs-5.1/busybox/busybox.spec
@@ -3303,7 +3310,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v2.0.11rc5
++Version         : v2.0.12rc4
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -4546,7 +4553,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v7.044
++Version: v2.0.12rc4
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

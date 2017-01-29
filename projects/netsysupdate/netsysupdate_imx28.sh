@@ -91,10 +91,12 @@ rm -rf rootfs
 mkdir -p rootfs
 test -d rootfs
 tar xf "$rfs_arch" -C rootfs
+sshpass -p "$passwd" rsync -axh --inplace --delete --info=progress2 rootfs/ "$user"@"$ip":/
 sshpass -p "$passwd" rsync -axh --delete --info=progress2 rootfs/ "$user"@"$ip":/
 
 rm -rf localfs
 mkdir -p localfs
 test -d localfs
 tar xf "$lfs_arch" -C localfs
-sshpass -p "$passwd" rsync -axh --info=progress2 localfs/ "$user"@"$ip":/local/
+sshpass -p "$passwd" rsync -axh --inplace --info=progress2 localfs/local/ "$user"@"$ip":/local/
+sshpass -p "$passwd" rsync -axh --info=progress2 localfs/local/ "$user"@"$ip":/local/

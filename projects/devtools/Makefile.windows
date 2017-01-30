@@ -216,12 +216,18 @@ do_mp:
 
 
 # Utils
+.PHONY: run-qtc
+run-qtc: export WINEDEBUG := 
+run-qtc: export DISPLAY := $(DISPLAY_SAVED)
+run-qtc:
+	wine $(QTC_INST_DIR)/bin/qtcreator.exe
+
 .PHONY: cmd
 cmd: export WINEDEBUG := 
 cmd: export DISPLAY := $(DISPLAY_SAVED)
 cmd:
 	#winecfg
-	wine $(QTC_INST_DIR)/bin/qtcreator.exe
+	#wine $(QTC_INST_DIR)/bin/qtcreator.exe
 
 # msys-1.0.dll rebase is a workaround for a bug in Cygwin use of persistent memory
 .PHONY: rebase

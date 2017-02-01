@@ -3,16 +3,16 @@
 set -e
 #set -x
 
-function cleanup
+cleanup ()
 {
     test -d "$unpackdir" && rm -rf "$unpackdir"
 }
 trap cleanup EXIT
 
-function checkdep
+checkdep ()
 {
     while test -n "$1"; do
-        type -p "$1" > /dev/null || { echo "Missing dependency $1." >&2; exit 1; }
+        type "$1" > /dev/null || { echo "Missing dependency $1." >&2; exit 1; }
 
         shift
     done
@@ -32,7 +32,7 @@ lfs_arch_name="localfs.tar"
 prog="$(basename $0)"
 test -z "$prog" && { echo "$0: cannot determine program name." >&2; exit 1; }
 
-function usage
+usage ()
 {
     echo "Usage: $prog <image archive> <target IP address>" >&2
 }

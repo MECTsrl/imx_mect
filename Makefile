@@ -330,9 +330,11 @@ MECT_PACKAGES = \
 	perl \
 	pigz \
 	qemu \
+	realpath \
 	rpm \
 	sed \
 	sharutils \
+	sshpass \
 	tar \
 	tcl \
 	texinfo \

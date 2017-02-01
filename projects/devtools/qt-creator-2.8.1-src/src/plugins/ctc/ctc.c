@@ -691,7 +691,7 @@ gvl_gen(void)
                 break;
 
             case TYPE_BYTE:
-                plc_type = "W";
+                plc_type = "B";
                 st_type = "BYTE";
 
                 break;

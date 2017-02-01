@@ -144,6 +144,7 @@ PKG_PIDENTD                      = pidentd
 PKG_FREETYPE                     = freetype
 PKG_FONTCONFIG                   = fontconfig
 PKG_LIBPNG                       = libpng
+PKG_LIBQRENCODE                  = libqrencode
 PKG_XFREE86                      = XFree86
 PKG_PYTHON                       = python
 PKG_PKGCONFIG                    = pkgconfig

@@ -1867,6 +1867,13 @@ config PKG_LIBPNG
     help
       This library contains functions for PNG graphics.
 
+config PKG_LIBQRENCODE
+    select PKG_LIBPNG
+    bool "libqrencode"
+    default y
+    help
+      Generate QR 2D barcodes.
+
 config PKG_LIBOIL
     depends CAP_HAS_MMU
     select PKG_GLIB2

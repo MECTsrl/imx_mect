@@ -756,6 +756,7 @@ target_mfg_upd:
 # Build the archive for target-specific development.
 .PHONY: target_dev
 target_dev:
+	test -n '$(MECT_IMGDIR)'
 	sudo rm -rf $(MECT_IMGDIR)/dev $(MECT_IMGDIR)/rootfs_dev.zip
 	-for d in /usr/include /usr/lib /lib /usr/src/linux/include; do \
 		mkdir -p $(MECT_IMGDIR)/dev/rootfs$$d; \
@@ -790,7 +791,7 @@ images_check:
 		echo "ERROR: no image reference directory ($(MECT_REF_IMG))."; \
 		exit 1; \
 	fi
-	test -s $(MECT_IMG_TESTER)
+	test -s '$(MECT_IMG_TESTER)'
 	for i in "" $(MECT_IMGDIR)/*$(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; do \
 		test -z "$$i" -o ! -s "$$i" && continue; \
 		echo ""; \

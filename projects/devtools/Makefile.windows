@@ -226,8 +226,16 @@ run-qtc:
 cmd: export WINEDEBUG := 
 cmd: export DISPLAY := $(DISPLAY_SAVED)
 cmd:
+	#wineconsole cmd
 	#winecfg
 	#wine $(QTC_INST_DIR)/bin/qtcreator.exe
+	#
+	#winetricks dlls list
+	#winetricks mfc42
+	#
+	#wine mingw-get install msys-unzip
+	#wine unzip -o -d c:/ c:/4c.zip
+	wine c:/ATCMControl/Engineering/bin/4ceng.exe; stty sane
 
 # msys-1.0.dll rebase is a workaround for a bug in Cygwin use of persistent memory
 .PHONY: rebase

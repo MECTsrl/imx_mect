@@ -475,7 +475,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config
 +++ ltib/config/platform/imx/.config
-@@ -0,0 +1,668 @@
+@@ -0,0 +1,669 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -788,7 +788,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_PKG_LIBNET is not set
 +# CONFIG_PKG_LIBOGG is not set
 +# CONFIG_PKG_LIBPCAP is not set
-+# CONFIG_PKG_LIBPNG is not set
++CONFIG_PKG_LIBPNG=y
++CONFIG_PKG_LIBQRENCODE=y
 +# CONFIG_PKG_LIBOIL is not set
 +# CONFIG_PKG_LIBRSVG is not set
 +# CONFIG_PKG_LIBSOUP is not set
@@ -1173,7 +1174,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h
 +++ ltib/config/platform/imx/.tmpconfig.h
-@@ -0,0 +1,669 @@
+@@ -0,0 +1,670 @@
 +/*
 + * Automatically generated C config: don't edit
 + * LTIB version: 8.1.2
@@ -1487,7 +1488,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#undef CONFIG_PKG_LIBNET
 +#undef CONFIG_PKG_LIBOGG
 +#undef CONFIG_PKG_LIBPCAP
-+#undef CONFIG_PKG_LIBPNG
++#define CONFIG_PKG_LIBPNG 1
++#define CONFIG_PKG_LIBQRENCODE 1
 +#undef CONFIG_PKG_LIBOIL
 +#undef CONFIG_PKG_LIBRSVG
 +#undef CONFIG_PKG_LIBSOUP
@@ -2857,7 +2859,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev
 +++ ltib/config/platform/imx/defconfig.dev
-@@ -0,0 +1,668 @@
+@@ -0,0 +1,669 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -3170,7 +3172,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_PKG_LIBNET is not set
 +# CONFIG_PKG_LIBOGG is not set
 +# CONFIG_PKG_LIBPCAP is not set
-+# CONFIG_PKG_LIBPNG is not set
++CONFIG_PKG_LIBPNG=y
++CONFIG_PKG_LIBQRENCODE=y
 +# CONFIG_PKG_LIBOIL is not set
 +# CONFIG_PKG_LIBRSVG is not set
 +# CONFIG_PKG_LIBSOUP is not set
@@ -20833,7 +20836,21 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_LIBMPEG2
      depends CAP_HAS_MMU
      bool "libmpeg2"
-@@ -1904,6 +1932,13 @@
+@@ -1839,6 +1867,13 @@
+     help
+       This library contains functions for PNG graphics.
+ 
++config PKG_LIBQRENCODE
++    select PKG_LIBPNG
++    bool "libqrencode"
++    default y
++    help
++      Generate QR 2D barcodes.
++
+ config PKG_LIBOIL
+     depends CAP_HAS_MMU
+     select PKG_GLIB2
+@@ -1904,6 +1939,13 @@
      help
        This package provides a way for applications to access USB devices.
  
@@ -20847,7 +20864,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_LIBXML2
      depends CAP_HAS_MMU
      bool "libxml2"
-@@ -2146,6 +2181,12 @@
+@@ -2146,6 +2188,12 @@
      help
        Build the module dependency file modules.dep
  
@@ -20860,7 +20877,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  choice
      prompt "module loading"
      default MODUTILS_NONE
-@@ -2207,6 +2248,13 @@
+@@ -2207,6 +2255,13 @@
        client/server implementation consisting of a server daemon (mysqld)
        and many different client programs and libraries
  
@@ -20874,7 +20891,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_NAUTILUS
      bool "nautilus"
      select PKG_EEL
-@@ -2320,6 +2368,17 @@
+@@ -2320,6 +2375,17 @@
        This is the full blown openssh package.  Normally dropbear is sufficient
        and smaller.
  
@@ -20892,7 +20909,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_OPENSSH_WANT_HACKABLE_KEYS
      depends CAP_HAS_MMU
      depends PKG_OPENSSH
-@@ -2673,6 +2732,27 @@
+@@ -2673,6 +2739,27 @@
      default n
      help
         Enable Phonon library.
@@ -20920,7 +20937,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  endmenu
  
  menu "Qtopia"
-@@ -2711,7 +2791,7 @@
+@@ -2711,7 +2798,7 @@
      default n
      help
         Select y here if you want Qtopia to use USB mouse by default.
@@ -20929,7 +20946,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_QTOPIA_WANT_TSLIB
      depends CAP_HAS_MMU
      depends PKG_QTOPIA || PKG_QTOPIA_4
-@@ -2767,6 +2847,88 @@
+@@ -2767,6 +2854,88 @@
         Some host tools are not used when building Qtopia within ltib.
         Not building these tools saves time when building.  Select y here
         to enable designer, linguist, and assistant GUI tools.
@@ -21018,7 +21035,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  menu "Applications"
  config PKG_QTOPIA_WANT_APP_CALCULATOR
-@@ -3346,7 +3508,7 @@
+@@ -3346,7 +3515,7 @@
      bool "totem-pl-parser"
      select PKG_EVOLUTION_DATA_SERVER
      select PKG_GTK2
@@ -21027,7 +21044,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3487,11 +3649,21 @@
+@@ -3487,11 +3656,21 @@
      depends CAP_HAS_MMU
      bool "wireless-tools"
      help
@@ -21050,7 +21067,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_XFSPROGS
      bool "xfsprogs"
      help
-@@ -3862,6 +4034,11 @@
+@@ -3862,6 +4041,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  
@@ -21105,7 +21122,15 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_MTD_UTILS                    = mtd-utils
  PKG_RPM                          = rpm
  PKG_RSYNC                        = rsync
-@@ -407,6 +411,26 @@
+@@ -140,6 +144,7 @@
+ PKG_FREETYPE                     = freetype
+ PKG_FONTCONFIG                   = fontconfig
+ PKG_LIBPNG                       = libpng
++PKG_LIBQRENCODE                  = libqrencode
+ PKG_XFREE86                      = XFree86
+ PKG_PYTHON                       = python
+ PKG_PKGCONFIG                    = pkgconfig
+@@ -407,6 +412,26 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded

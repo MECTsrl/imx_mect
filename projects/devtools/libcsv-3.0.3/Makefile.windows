@@ -26,6 +26,7 @@ install_static: install_headers install_static_lib
 
 .PHONY: install_man
 install_man:
+	mkdir -p $(DESTDIR)/$(MANDIR)
 	gzip -9c csv.3 > $(DESTDIR)/$(MANDIR)/csv.3.gz
 
 .PHONY: install_headers

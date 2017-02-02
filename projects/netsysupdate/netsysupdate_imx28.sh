@@ -5,7 +5,7 @@ set -e
 
 cleanup ()
 {
-    test -d "$unpackdir" && rm -rf "$unpackdir"
+    test -d "$unpackdir" && sudo rm -rf "$unpackdir"
 }
 trap cleanup EXIT
 
@@ -42,7 +42,8 @@ arch="$1"
 test -z "$arch" && { usage; exit 1; }
 arch="$(realpath -L $arch)"
 test -r "$arch" || { echo "$prog: cannot read image archive $arch." >&2; exit 1; }
-unzip -t "$arch" || { echo "$prog: archive $arch integrity test failed." >&2; exit 1; }
+echo "* Test the image archive."
+unzip -qt "$arch" || { echo "$prog: archive $arch integrity test failed." >&2; exit 1; }
 
 ip="$2"
 test -z "$ip" && { usage; exit 1; }
@@ -59,8 +60,9 @@ test -x "$kupd" || { echo "$prog: cannot kernel updater program $kupd_name." >&2
 unpackdir="$(mktemp -p $(pwd) -d $(basename $0).XXXXXXXXXX)"
 test -d "$unpackdir" || { echo "$prog: cannot create working directory $unpackdir." >&2; exit 1; }
 
+echo "* Unpack the image archive."
 cd "$unpackdir"
-unzip "$arch"
+unzip -q "$arch"
 
 k_arch="$(find . -type f -name $k_arch_name -print)"
 test -z "$k_arch" && { echo "$prog: kernel archive $k_arch_name not found." >&2; exit 1; }
@@ -80,23 +82,36 @@ tar tf "$lfs_arch" > /dev/null || { echo "$prog: cannot unpack local file system
 
 set +e
 
+echo "* Upload the kernel."
 sshpass -p "$passwd" scp "$kupd" "$k_arch" "$user"@"$ip":/tmp
+
+echo "* Program the kernel."
 sshpass -p "$passwd" ssh root@"$ip" \
     flash_eraseall /dev/mtd0\; \
     /tmp/$kupd_name init /tmp/$k_arch_name\; \
     rm -f /tmp/$kupd_name /tmp/$k_arch_name\; \
     mount -orw,remount /
 
+echo "* Extract the root file system contents."
 rm -rf rootfs
 mkdir -p rootfs
 test -d rootfs
-tar xf "$rfs_arch" -C rootfs
-sshpass -p "$passwd" rsync -axh --inplace --delete --info=progress2 rootfs/ "$user"@"$ip":/
-sshpass -p "$passwd" rsync -axh --delete --info=progress2 rootfs/ "$user"@"$ip":/
+sudo tar xf "$rfs_arch" -C rootfs
 
-rm -rf localfs
-mkdir -p localfs
-test -d localfs
-tar xf "$lfs_arch" -C localfs
-sshpass -p "$passwd" rsync -axh --inplace --info=progress2 localfs/local/ "$user"@"$ip":/local/
-sshpass -p "$passwd" rsync -axh --info=progress2 localfs/local/ "$user"@"$ip":/local/
+echo "* Extract the local file system contents."
+test -d rootfs/local
+# FIXME Hack!  Should not be needed.
+sudo rm -rf rootfs/local/data
+sudo tar xf "$lfs_arch" -C rootfs/local
+
+echo "* Update the root file system"
+sudo sshpass -p "$passwd" rsync -axh --inplace --delete --info=progress2 rootfs/ "$user"@"$ip":/
+
+echo "* Update the local file system"
+sudo sshpass -p "$passwd" rsync -axh --delete --info=progress2 rootfs/ "$user"@"$ip":/
+
+echo "* Closing..."
+sshpass -p "$passwd" ssh root@"$ip" \
+    mount -oro,remount /
+
+echo "* Done."

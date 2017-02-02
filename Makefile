@@ -186,6 +186,8 @@ MECT_COMMON_RFSPKGS := \
 	iproute-rfs-2.6.37-1.$(MECT_TARGET_ARCH).rpm \
 	iptables-rfs-1.4.2-1.$(MECT_TARGET_ARCH).rpm \
 	libmodbus-rfs-3.0.6-1.$(MECT_TARGET_ARCH).rpm \
+	libpng-rfs-1.2.8-1.$(MECT_TARGET_ARCH).rpm \
+	libqrencode-rfs-3.4.2-1.$(MECT_TARGET_ARCH).rpm \
 	libsocketcan-rfs-0.0.8-0.$(MECT_TARGET_ARCH).rpm \
 	libtermcap-rfs-2.0.8-31_1.$(MECT_TARGET_ARCH).rpm \
 	libusb1-rfs-1.0.20-1.$(MECT_TARGET_ARCH).rpm \

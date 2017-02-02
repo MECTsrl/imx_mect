@@ -2741,7 +2741,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/libqrencode/libqrencode.spec ltib/dist/lfs-5.1/libqrencode/libqrencode.spec
 --- ltib.reference/dist/lfs-5.1/libqrencode/libqrencode.spec
 +++ ltib/dist/lfs-5.1/libqrencode/libqrencode.spec
-@@ -0,0 +1,74 @@
+@@ -0,0 +1,73 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Generate QR 2D barcodes
@@ -2780,12 +2780,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +%setup
 +
-+./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
-+
 +%Build
 +export LC_ALL
 +LC_ALL=C
 +
++./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
 +make
 +
 +

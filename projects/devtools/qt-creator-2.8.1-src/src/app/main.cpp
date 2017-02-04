@@ -248,6 +248,22 @@ static inline QSettings *userSettings()
     if (!destDir.exists())
         destDir.mkpath(pathFi.absolutePath());
 
+    // Pre-populate MECT configuration.
+    if (destDir.entryList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files).count() == 0) {
+        // FIXME: MTL: Replace with the proper template path.
+        QDir tmplDir = QDir(QString::fromUtf8("/home/imx28/QtProject.linux"));
+        if (tmplDir.exists())
+            foreach (const QString &file, tmplDir.entryList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files)) {
+                QFileInfo fi(QString(QString::fromUtf8("%1/%2")).arg(tmplDir.path()).arg(file));
+                if (fi.isFile())        // Copy top-level files.
+                    QFile::copy(tmplDir.absoluteFilePath(file), destDir.absoluteFilePath(file));
+                else if (fi.isDir())    // Recursively copy directories.
+                    copyRecursively(tmplDir.absoluteFilePath(file), destDir.absoluteFilePath(file));
+                else                    // Ignore everything else.
+                    continue;
+            }
+    }
+
     QDir srcDir = destDir;
     srcDir.cdUp();
     if (!srcDir.cd(fromVariant))

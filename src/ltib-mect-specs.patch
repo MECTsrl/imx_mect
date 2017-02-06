@@ -5533,7 +5533,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
         ;;
  esac
 -./Configure $OSSL_ARCH --prefix=%{_prefix} --install_prefix=$RPM_BUILD_ROOT/%{pfx} shared no-asm $XTRA_OPTS
--make -j1
 +
 +export TARGETMACH
 +export TARGETMACH=$CFGHOST
@@ -5541,7 +5540,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export BUILDMACH=%{_build}
 +
 +./Configure $OSSL_ARCH --prefix=%{_prefix} shared no-asm $XTRA_OPTS
-+make -j`grep -c ^processor /proc/cpuinfo`
+ make -j1
  
  %Install
 +export LC_ALL

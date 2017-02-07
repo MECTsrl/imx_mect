@@ -58,9 +58,7 @@ Custom project wizard configuration example file. Note that by convention,
 	   <file source="config/crosstable.h" target="config/crosstable.h" openproject="false" binary="false"/>
 	   <file source="config/system.ini" target="config/system.ini" openproject="false" binary="false"/>
 	   <file source="config/trend1.csv" target="config/trend1.csv" openproject="false" binary="false"/>
-	   <!-- 
-	   <file source="../ATCM-template-project/project.pro.user" target="%ProjectName%.pro.shared" openproject="false"/>
-	   -->
+	   <file source="../ATCM-template-project/project.pro.shared" target="%ProjectName%.pro.shared" openproject="false"/>
 	   <file source="../ATCM-template-project/project.pro" target="%ProjectName%.pro" openproject="true"/>
 	   <file source="template.pri" target="template.pri" openproject="false"/>
 	   <file source="../ATCM-template-project/common.pri" target="common.pri" openproject="false"/>

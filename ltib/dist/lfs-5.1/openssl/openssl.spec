@@ -71,7 +71,7 @@ export BUILDMACH
 export BUILDMACH=%{_build}
 
 ./Configure $OSSL_ARCH --prefix=%{_prefix} shared no-asm $XTRA_OPTS
-make -j$(nproc)
+make -j1
 
 
 %Install

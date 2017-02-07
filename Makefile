@@ -531,7 +531,7 @@ projects: projects_setup projects_build
 devtools: projects_setup_mect_plugins
 	test -d $(MECT_PRJDIR)/devtools
 	test -r $(MECT_PRJDIR)/devtools/Makefile
-	$(MAKE) -C $(MECT_PRJDIR)/devtools all-linux
+	$(MAKE) -C $(MECT_PRJDIR)/devtools
 
 
 .PHONY: spec_setup

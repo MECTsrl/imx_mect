@@ -735,6 +735,7 @@ target_mfg_upd: MECT_SYSUPDIR = $(shell readlink -m $(MECT_MFGDIR)/../../$(MECT_
 target_mfg_upd: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 target_mfg_upd: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 target_mfg_upd: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
+target_mfg_upd: MECT_BUILD_VER_MAJ_MIN := $(shell echo $(MECT_BUILD_RELEASE) | sed 's/^\([0-9]\+\.[0-9]\+\).*/\1/; s/\./\\\\\\\\./g')
 target_mfg_upd:
 	test -n '$(MECT_BUILD_TARGET)'
 	sudo rm -rf $(MECT_MFGDIR)
@@ -749,7 +750,8 @@ target_mfg_upd:
 	rm -f $(MECT_MFGZIP); cd $(MECT_MFGDIR); zip -0r $(MECT_MFGZIP) *
 	rm -rf $(MECT_SYSUPD) $(MECT_SYSUPDIR)
 	install -m 755 $(MECT_SYSUPD_TMPL) $(MECT_SYSUPD)
-	sed -i "s/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/" $(MECT_SYSUPD)
+	sed -i 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/' $(MECT_SYSUPD)
+	sed -i 's/@@THIS_VERSION_MAJ_MIN@@/$(MECT_BUILD_VER_MAJ_MIN)/' $(MECT_SYSUPD)
 	mkdir -p $(MECT_SYSUPDIR)
 	install -m 755 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/..
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_SYSUPDIR)

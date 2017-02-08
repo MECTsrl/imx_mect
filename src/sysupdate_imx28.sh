@@ -53,7 +53,7 @@ if test -z "$TARGET"; then
 fi
 
 # Check the compatibility of the update with the installed version.
-if ! expr "$RELEASE" : 2\\.0 > /dev/null; then
+if ! expr "$RELEASE" : @@THIS_VERSION_MAJ_MIN@@ > /dev/null; then
 	do_exit "cannot update installed version ${RELEASE}."
 fi
 

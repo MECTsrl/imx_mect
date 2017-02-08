@@ -10,7 +10,7 @@ Vendor          : Freescale
 Packager        : Rogerio Pimentel
 Group           : System Environment/Libraries
 URL             : http://get.qt.nokia.com/qt/source/%{archivename}-%{version}.tar.gz
-%if %{?toolchain:1}%{!?toolchain:0}
+%if 0%{?toolchain:1}
 Source          : %{archivename}-%{version}.tar.gz
 Patch1          : %{archivename}-%{version}-1394522957.patch
 Patch2          : %{archivename}-%{version}-1420823826.patch
@@ -21,7 +21,7 @@ Prefix          : %{pfx}
 AutoReqProv     : no
 
 
-%if %{?toolchain:0}%{!?toolchain:1}
+%if 0%{!?toolchain:1}
 
 %Package rfs
 Summary         : Trimmed qt-embedded for root file system requirements.
@@ -45,7 +45,7 @@ are needed at run time on the target.
 export LC_ALL
 LC_ALL=C
 
-%if %{?toolchain:0}%{!?toolchain:1}
+%if 0%{!?toolchain:1}
 
 %setup -T -c -n %{name}
 cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
@@ -69,7 +69,7 @@ LC_ALL=C
 export XTRA_OPTS=""
 export XTRA_OPTS_CONFIG=""
 
-mkdir mkspecs/qws/linux-g++-mx
+mkdir -p mkspecs/qws/linux-g++-mx
 initscript=mkspecs/qws/linux-g++-mx/qmake.conf
 cat > $initscript << EOF
 include(../..//common/gcc-base-unix.conf)
@@ -92,8 +92,6 @@ QMAKE_CFLAGS_SHLIB            += -fPIC
 QMAKE_CFLAGS_STATIC_LIB       += -fPIC
 QMAKE_CFLAGS_YACC             += -Wno-unused -Wno-parentheses
 QMAKE_CFLAGS_HIDESYMS         += -fvisibility=hidden
-#QMAKE_CFLAGS_PRECOMPILE       += -x c-header -c \${QMAKE_PCH_INPUT} -o \${QMAKE_PCH_OUTPUT}
-#QMAKE_CFLAGS_USE_PRECOMPILE   += -include \${QMAKE_PCH_OUTPUT_BASE}
 
 QMAKE_CXX                      = /opt/CodeSourcery/bin/arm-none-linux-gnueabi-g++
 QMAKE_CXXFLAGS                += \$\$QMAKE_CFLAGS
@@ -106,8 +104,6 @@ QMAKE_CXXFLAGS_SHLIB          += \$\$QMAKE_CFLAGS_SHLIB
 QMAKE_CXXFLAGS_STATIC_LIB     += \$\$QMAKE_CFLAGS_STATIC_LIB
 QMAKE_CXXFLAGS_YACC           += \$\$QMAKE_CFLAGS_YACC
 QMAKE_CXXFLAGS_HIDESYMS       += \$\$QMAKE_CFLAGS_HIDESYMS -fvisibility-inlines-hidden
-#QMAKE_CXXFLAGS_PRECOMPILE     += -x c++-header -c \${QMAKE_PCH_INPUT} -o \${QMAKE_PCH_OUTPUT}
-#QMAKE_CXXFLAGS_USE_PRECOMPILE  = \$\$QMAKE_CFLAGS_USE_PRECOMPILE
 
 QMAKE_LINK                     = /opt/CodeSourcery/bin/arm-none-linux-gnueabi-g++
 QMAKE_LINK_SHLIB               = /opt/CodeSourcery/bin/arm-none-linux-gnueabi-g++
@@ -133,13 +129,13 @@ QMAKE_LFLAGS_DYNAMIC_LIST      = -Wl,--dynamic-list,
 QMAKE_CFLAGS_THREAD           += -D_REENTRANT
 QMAKE_CXXFLAGS_THREAD         += \$\$QMAKE_CFLAGS_THREAD
 
-%if %{?toolchain:1}%{!?toolchain:0}
+%if 0%{?toolchain:1}
 QMAKE_INCDIR                   = %{toolchain_install_dir}/include %{toolchain_install_dir}/include/glib-2.0 %{toolchain_install_dir}/lib/glib-2.0/include/
 QMAKE_LIBDIR                   = %{toolchain_install_dir}/lib
 QMAKE_LIBS                     =
 %else
-QMAKE_INCDIR                   = $RPM_BUILD_DIR/../../rootfs/usr/include $RPM_BUILD_DIR/../../rootfs/usr/include/glib-2.0 $RPM_BUILD_DIR/../../rootfs/usr/lib/glib-2.0/include/
-QMAKE_LIBDIR                   = $RPM_BUILD_DIR/../../rootfs/usr/lib
+QMAKE_INCDIR                   = ${DEV_IMAGE}/usr/include ${DEV_IMAGE}/usr/include/glib-2.0 ${DEV_IMAGE}/usr/lib/glib-2.0/include/
+QMAKE_LIBDIR                   = ${DEV_IMAGE}/usr/lib
 QMAKE_LIBS                     = -lglib-2.0 -lgthread-2.0 -lz -lgmodule-2.0 -lgobject-2.0 -lts -lfreetype
 %endif
 QMAKE_INCDIR_X11               =
@@ -175,7 +171,7 @@ QMAKE_INSTALL_PROGRAM          = install -m 755 -p
 
 MAKEFILE_GENERATOR             = UNIX
 TEMPLATE                       = app
-CONFIG                        += qt warn_on release incremental link_prl
+CONFIG                        += qt warn_on release incremental link_prl static_and_shared
 QT                            += core gui
 QMAKE_INCREMENTAL_STYLE        = sublib
 
@@ -206,10 +202,10 @@ for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am 
 	find . -name $f -exec touch {} \;
 done
 MAKEFLAGS=j$(nproc) ./configure \
-%if %{?toolchain:1}%{!?toolchain:0}
+%if 0%{?toolchain:1}
 	--prefix=%{toolchain_install_dir} \
 %else
-	--prefix=$RPM_BUILD_DIR/../../rootfs/usr/local/Trolltech \
+	--prefix=${DEV_IMAGE}/usr/local/Trolltech \
 	-plugin-sql-mysql \
 	-qt-mouse-tslib \
 %endif
@@ -229,6 +225,7 @@ MAKEFLAGS=j$(nproc) ./configure \
 	-nomake examples \
 	-no-mmx \
 	-no-multimedia \
+	-no-pch \
 	-no-phonon \
 	-no-phonon-backend \
 	-no-qt3support \
@@ -254,16 +251,18 @@ MAKEFLAGS=j$(nproc) ./configure \
 	-v \
 	$XTRA_OPTS
 
-make -j$(nproc)
+make -j$(nproc) all
 
 
 %Install
 export LC_ALL
 LC_ALL=C
 
+rm -rf $RPM_BUILD_ROOT
+
 test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
 
-%if %{?toolchain:1}%{!?toolchain:0}
+%if 0%{?toolchain:1}
 
 make INSTALL_ROOT=%{buildroot} install
 
@@ -271,7 +270,10 @@ make INSTALL_ROOT=%{buildroot} install
 
 install -d $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
 cp -a lib/* $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
-$TOOLCHAIN_PATH/bin/${TOOLCHAIN_PREFIX}strip --strip-unneeded $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libQt*.so.%{version}
+for l in "" $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libQt*.a $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libQt*.so.%{version}; do
+    test -z "$l" && continue
+    test -r "$l" && $TOOLCHAIN_PATH/bin/${TOOLCHAIN_PREFIX}strip --strip-unneeded "$l"
+done
 test -x plugins/sqldrivers/libqsqlite.so && install -m 644 plugins/sqldrivers/libqsqlite.so $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
 test -x plugins/sqldrivers/libqsqlmysql.so && install -m 644 plugins/sqldrivers/libqsqlmysql.so $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
 
@@ -285,7 +287,7 @@ LC_ALL=C
 rm -rf $RPM_BUILD_ROOT
 
 
-%if %{?toolchain:1}%{!?toolchain:0}
+%if 0%{?toolchain:1}
 
 %Files
 %defattr(-,root,root)

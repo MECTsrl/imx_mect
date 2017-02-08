@@ -96,7 +96,7 @@ MECT_IMG_TESTER = $(MECT_FTPDIR)/image-tester.sh
 # Staging directory for image test
 MECT_TESTSHARE := /media/sf_share
 # Prefix of staging image directory
-MECT_TESTAME := MectSuite_
+MECT_TESTNAME := MectSuite_
 # Draft directory for rpmbuild
 export MECT_TMPRPMDIR = /tmp/rpm-$(LOGNAME)
 # Expand to the name of the kernel RPM built by LTIB.
@@ -259,8 +259,8 @@ MECT_CSXCPREFIX = arm-2011.03
 MECT_CSXCARCH = $(MECT_CSXCPREFIX)-41-arm-none-linux-gnueabi-i686-pc-linux-gnu.tar.bz2
 MECT_CSXCUNPACK = $(CURDIR)/$(MECT_CSXCPREFIX)
 # Keep this in sync with LTIB config
-export MECT_CSXCDIR = /opt/CodeSourcery
-export MECT_CC_DIRECTORY := $(MECT_CSXCDIR)
+export MECT_CSXCDIR := /opt/CodeSourcery
+export MECT_CC_DIRECTORY = $(MECT_CSXCDIR)
 export MECT_CC_VERSION := 
 export MECT_CC_RADIX := arm-none-linux-gnueabi
 
@@ -369,7 +369,7 @@ MECT_PACKAGES = \
 	zip \
 	zlib1g \
 	zlib1g-dev \
-	zlibc
+	zlibc \
 
 ifeq ($(shell lsb_release -r | cut -f2 | cut -d. -f1),14)
 MECT_PACKAGES += \
@@ -408,8 +408,8 @@ $(MECT_FTPDIR):
 .PHONY: downloads_fc
 downloads_fc:
 	for f in "" $(MECT_DOWNLOADS); do \
-	    test -z "$$f" && continue; \
-	    rm -f $$f.$(MECT_MD5EXT); \
+		test -z "$$f" && continue; \
+		rm -f $$f.$(MECT_MD5EXT); \
 	done; exit 0		# Don't break the build if the download list is empty.
 
 # Set up LTIB and projects
@@ -558,15 +558,15 @@ projects: projects_setup projects_build
 spec_setup: MECT_LTIBSPECDIR := $(MECT_LTIBDIR)/dist/lfs-5.1
 spec_setup:
 	for s in ATCMcontrol_RunTimeSystem/ATCMcontrol_RunTimeSystem.spec 4c_runtime/4c_runtime.spec; do \
-		test -w $(MECT_LTIBSPECDIR)/$$s; \
+		test -w $(MECT_LTIBSPECDIR)/$$s || continue; \
 		sed -i 's|^\s*\(Version\s*:\).*|\1 $(MECT_BUILD_ATCMCRT_TAG)|I' $(MECT_LTIBSPECDIR)/$$s; \
 	done
 	for s in mect_plugins/mect_plugins.spec; do \
-		test -w $(MECT_LTIBSPECDIR)/$$s; \
+		test -w $(MECT_LTIBSPECDIR)/$$s || continue; \
 		sed -i 's|^\s*\(Version\s*:\).*|\1 $(MECT_BUILD_PLUGINSCRT_TAG)|I' $(MECT_LTIBSPECDIR)/$$s; \
 	done
 	for s in mect_apps/mect_apps.spec; do \
-		test -w $(MECT_LTIBSPECDIR)/$$s; \
+		test -w $(MECT_LTIBSPECDIR)/$$s || continue; \
 		sed -i 's|^\s*\(Version\s*:\).*|\1 $(MECT_BUILD_APPSCRT_TAG)|I' $(MECT_LTIBSPECDIR)/$$s; \
 	done
 
@@ -863,7 +863,7 @@ images_check:
 stage_images:
 	test -d $(MECT_TESTSHARE) -a -w $(MECT_TESTSHARE)
 	mount | grep -q ' $(MECT_TESTSHARE) '
-	rsync -ahP $(MECT_IMGDIR)/ $(MECT_TESTSHARE)/$(MECT_TESTAME)$(MECT_BUILD_RELEASE)/
+	rsync -ahP $(MECT_IMGDIR)/ $(MECT_TESTSHARE)/$(MECT_TESTNAME)$(MECT_BUILD_RELEASE)/
 
 
 # Utilities
@@ -880,7 +880,7 @@ clean: clean_projects
 
 .PHONY: distclean
 distclean: clean
-	if which ccache; then ccache -C; fi
+	if which ccache > /dev/null; then ccache -C; fi
 	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIBDIR_REF)
 
 

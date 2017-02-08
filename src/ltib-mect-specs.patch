@@ -1201,6 +1201,83 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/usr/share/www/updatetime.cgi
 +%{pfx}/usr/share/www/upgrade.cgi
 +%{pfx}/usr/share/www/upload.cgi
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cloner/cloner.spec ltib/dist/lfs-5.1/cloner/cloner.spec
+--- ltib.reference/dist/lfs-5.1/cloner/cloner.spec
++++ ltib/dist/lfs-5.1/cloner/cloner.spec
+@@ -0,0 +1,73 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++
++Summary         : Clone/restore MECT TPAC software
++Name            : cloner
++Version         : 1.0.0
++Release         : 1
++License         : GPL
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System/Tools
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed %{name} for root file system requirements.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System/Tools
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents limited to just the files
++needed at run time on the target.
++
++
++%Description
++Graphical stand-alone tool that allow to clone and restore
++all software and configuration of an i.MX28-based TPAC device.
++
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++%setup -T -c -n %{name}
++rsync -av --inplace --exclude .git ../../../../projects/%{name}/ ./
++
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++export VERSION='%{version}'
++ls -l
++/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx
++make
++./make_sysupdate.sh
++ls -l
++
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++
++%Files
++%defattr(-,root,root)
++%{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec
@@ -6069,8 +6146,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +QMAKE_LIBDIR                   = %{toolchain_install_dir}/lib
 +QMAKE_LIBS                     =
 +%else
-+QMAKE_INCDIR                   = $RPM_BUILD_DIR/../../rootfs/usr/include $RPM_BUILD_DIR/../../rootfs/usr/include/glib-2.0 $RPM_BUILD_DIR/../../rootfs/usr/lib/glib-2.0/include/
-+QMAKE_LIBDIR                   = $RPM_BUILD_DIR/../../rootfs/usr/lib
++QMAKE_INCDIR                   = $DEV_IMAGE/usr/include $DEV_IMAGE/usr/include/glib-2.0 $DEV_IMAGE/usr/lib/glib-2.0/include/
++QMAKE_LIBDIR                   = $DEV_IMAGE/usr/lib
 +QMAKE_LIBS                     = -lglib-2.0 -lgthread-2.0 -lz -lgmodule-2.0 -lgobject-2.0 -lts -lfreetype
 +%endif
 +QMAKE_INCDIR_X11               =
@@ -6106,7 +6183,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +MAKEFILE_GENERATOR             = UNIX
 +TEMPLATE                       = app
-+CONFIG                        += qt warn_on release incremental link_prl
++CONFIG                        += qt warn_on release incremental link_prl static_and_shared
 +QT                            += core gui
 +QMAKE_INCREMENTAL_STYLE        = sublib
  
@@ -6129,21 +6206,23 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  # Unset compiler to prevent gcc being used when the cross
  # tools should be used. (Trolltech issue# 138807)
-@@ -185,32 +188,111 @@
+@@ -185,32 +188,116 @@
  # Unset PLATFORM because this is used as host machine.
  unset PLATFORM
  
 -#if PKG_AMD_GPU_BIN_MX51 is already installed, uncomment the following line to add OpenGLES 2 support
 -#export XTRA_OPTS="$XTRA_OPTS -opengl es2"
+-
+-#if PKG_MBX_BIN is already installed, uncomment the following line to add OpenGLES 1.1 support
+-#export XTRA_OPTS="$XTRA_OPTS -opengl es1"
 +./configure \
 +%if %{?toolchain:1}%{!?toolchain:0}
 +	--prefix=%{toolchain_install_dir} \
 +%else
-+	--prefix=$RPM_BUILD_DIR/../../rootfs/usr/local/Trolltech \
++	--prefix=${DEV_IMAGE}/usr/local/Trolltech \
 +	-plugin-sql-mysql \
 +	-qt-mouse-tslib \
 +%endif
-+	-xplatform qws/linux-g++-mx \
 +	-confirm-license \
 +	-embedded arm \
 +	-fast \
@@ -6159,6 +6238,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	-nomake examples \
 +	-no-mmx \
 +	-no-multimedia \
++        -no-pch \
 +	-no-phonon \
 +	-no-phonon-backend \
 +	-no-qt3support \
@@ -6182,23 +6262,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	-shared \
 +	-sm \
 +	-v \
++	-xplatform qws/linux-g++-mx \
 +	$XTRA_OPTS
- 
--#if PKG_MBX_BIN is already installed, uncomment the following line to add OpenGLES 1.1 support
--#export XTRA_OPTS="$XTRA_OPTS -opengl es1"
-+make -j`grep -c ^processor /proc/cpuinfo`
  
 -./configure --prefix=$RPM_BUILD_DIR/../../rootfs/usr/local/Trolltech -embedded arm -xplatform qws/linux-g++-mx -release \
 -	-qt-gfx-linuxfb -qt-kbd-tty -qt-mouse-tslib -little-endian -host-little-endian -fontconfig -sm -v -opensource -confirm-license $XTRA_OPTS
-+%Install
-+export LC_ALL
-+LC_ALL=C
++make -j$(nproc) all
  
 -make
-+test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
  
--%Install
-+%if %{?toolchain:1}%{!?toolchain:0}
+ %Install
++export LC_ALL
++LC_ALL=C
  
 -export PATH=$UNSPOOF_PATH
 -install -d $RPM_BUILD_ROOT/%{pfx}/usr/local/Trolltech
@@ -6207,14 +6282,21 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -cp -a demos $RPM_BUILD_ROOT/%{pfx}/usr/local/Trolltech
 -cp -a examples $RPM_BUILD_ROOT/%{pfx}/usr/local/Trolltech
 -cp -a lib/* $RPM_BUILD_ROOT/%{pfx}/usr/lib
-+make INSTALL_ROOT=%{buildroot} install
++test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
  
 -export PATH=$SPOOF_PATH
++%if %{?toolchain:1}%{!?toolchain:0}
++
++make INSTALL_ROOT=%{buildroot} install
++
 +%else
 +
 +install -d $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
 +cp -a lib/* $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
-+$TOOLCHAIN_PATH/bin/${TOOLCHAIN_PREFIX}strip --strip-unneeded $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libQt*.so.%{version}
++for l in "" $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libQt*.a $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libQt*.so.%{version}; do
++    test -z "$l" && continue
++    test -r "$l" && $TOOLCHAIN_PATH/bin/${TOOLCHAIN_PREFIX}strip --strip-unneeded "$l"
++done
 +test -x plugins/sqldrivers/libqsqlite.so && install -m 644 plugins/sqldrivers/libqsqlite.so $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
 +test -x plugins/sqldrivers/libqsqlmysql.so && install -m 644 plugins/sqldrivers/libqsqlmysql.so $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
 +

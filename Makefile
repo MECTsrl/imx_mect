@@ -29,6 +29,11 @@ MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
 export MECT_BUILD_APPSCRT_TAG := v2.0.12rc4
 
+# git branch and tag for the cloner project
+MECT_BUILD_CLONERCRT_BRANCH := master
+# Set to 0.0 to checkout HEAD
+export MECT_BUILD_CLONERCRT_TAG := 0.0
+
 # Mandatory prefix for all target device names
 MECT_TARGET_PREFIX := MECT_
 # Release prefix for image files
@@ -492,7 +497,7 @@ qt:
 	sudo chown -R $(LOGNAME).$(shell groups | awk '{print $$1}') $(MECT_TMPRPMDIR)
 
 
-# Setup the local projects: ATCMcontrol_RunTimeSystem.
+# Set up the local projects: ATCMcontrol_RunTimeSystem.
 .PHONY: projects_setup_ATCMcontrol_RunTimeSystem
 projects_setup_ATCMcontrol_RunTimeSystem:
 	test -d $(MECT_PRJDIR)
@@ -507,7 +512,7 @@ projects_setup_ATCMcontrol_RunTimeSystem:
 	svn info $(MECT_BUILD_ATCMCRT_CAN_URL)/$(MECT_BUILD_ATCMCRT_CAN_BRANCH) || exit 0; \
 		cd $(MECT_PRJDIR); rm -rf 4c_runtime; svn checkout --revision $(MECT_BUILD_ATCMCRT_CAN_REV) $(MECT_BUILD_ATCMCRT_CAN_URL)/$(MECT_BUILD_ATCMCRT_CAN_BRANCH) 4c_runtime
 
-# Setup the local projects: mect_plugins.
+# Set up the local projects: mect_plugins.
 .PHONY: projects_setup_mect_plugins
 projects_setup_mect_plugins:
 	test -d $(MECT_PRJDIR)
@@ -516,7 +521,7 @@ projects_setup_mect_plugins:
 	cd $(MECT_PRJDIR); if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'; then cd mect_plugins; git checkout -f origin/$(MECT_BUILD_PLUGINSCRT_BRANCH); fi
 	cd $(MECT_PRJDIR); if test -d mect_plugins -a -n '$(MECT_BUILD_PLUGINSCRT_TAG)' -a '$(MECT_BUILD_PLUGINSCRT_TAG)' != '0.0'; then cd mect_plugins; git checkout -f tags/$(MECT_BUILD_PLUGINSCRT_TAG); fi
 
-# Setup the local projects: mect_apps.
+# Set up the local projects: mect_apps.
 .PHONY: projects_setup_mect_apps
 projects_setup_mect_apps:
 	test -d projects
@@ -525,9 +530,18 @@ projects_setup_mect_apps:
 	cd projects; if test -d mect_apps -a -n '$(MECT_BUILD_APPSCRT_BRANCH)'; then cd mect_apps; git checkout -f origin/$(MECT_BUILD_APPSCRT_BRANCH); fi
 	cd projects; if test -d mect_apps -a -n '$(MECT_BUILD_APPSCRT_TAG)' -a '$(MECT_BUILD_APPSCRT_TAG)' != '0.0'; then cd mect_apps; git checkout -f tags/$(MECT_BUILD_APPSCRT_TAG); fi
 
-# Setup the local projects.
+# Set up the local projects: cloner.
+.PHONY: projects_setup_cloner
+projects_setup_cloner:
+	test -d $(MECT_PRJDIR)
+	test -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'
+	cd $(MECT_PRJDIR); if test -d cloner; then cd cloner; git reset --hard origin/master; git fetch; else git clone https://github.com/MECTsrl/cloner.git cloner; fi
+	cd $(MECT_PRJDIR); if test -d cloner -a -n '$(MECT_BUILD_CLONERCRT_BRANCH)'; then cd cloner; git checkout -f origin/$(MECT_BUILD_CLONERCRT_BRANCH); fi
+	cd $(MECT_PRJDIR); if test -d cloner -a -n '$(MECT_BUILD_CLONERCRT_TAG)' -a '$(MECT_BUILD_CLONERCRT_TAG)' != '0.0'; then cd cloner; git checkout -f tags/$(MECT_BUILD_CLONERCRT_TAG); fi
+
+# Set up the local projects.
 .PHONY: projects_setup
-projects_setup: projects_setup_ATCMcontrol_RunTimeSystem projects_setup_mect_plugins projects_setup_mect_apps
+projects_setup: projects_setup_ATCMcontrol_RunTimeSystem projects_setup_mect_plugins projects_setup_mect_apps projects_setup_cloner
 
 # Build the local projects.
 .PHONY: projects_build
@@ -535,7 +549,7 @@ projects_build:
 	test -d $(MECT_PRJDIR)
 	$(MAKE) -C projects clean all
 
-# Setup and build the local projects.
+# Set up and build the local projects.
 .PHONY: projects
 projects: projects_setup projects_build
 

@@ -1204,7 +1204,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cloner/cloner.spec ltib/dist/lfs-5.1/cloner/cloner.spec
 --- ltib.reference/dist/lfs-5.1/cloner/cloner.spec
 +++ ltib/dist/lfs-5.1/cloner/cloner.spec
-@@ -0,0 +1,73 @@
+@@ -0,0 +1,76 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +
@@ -1254,7 +1254,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +ls -l
 +/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx
 +make
-+./make_sysupdate.sh
++#./make_sysupdate.sh
 +ls -l
 +
 +
@@ -1263,6 +1263,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +rm -rf $RPM_BUILD_ROOT
++
++install -m 755 -D cloner $RPM_BUILD_ROOT%{pfx}/sbin/cloner
 +
 +
 +%Clean
@@ -1278,6 +1280,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +%Files rfs
 +%defattr(-,root,root)
++%{pfx}/sbin/cloner
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec

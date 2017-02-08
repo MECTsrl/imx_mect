@@ -475,7 +475,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config
 +++ ltib/config/platform/imx/.config
-@@ -0,0 +1,669 @@
+@@ -0,0 +1,670 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -909,6 +909,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_PKG_SDCARD=y
 +CONFIG_PKG_SPLASH=y
 +CONFIG_PKG_MAC_SN=y
++CONFIG_PKG_CLONER=y
 +
 +#
 +# Applications
@@ -1174,7 +1175,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.tmpconfig.h ltib/config/platform/imx/.tmpconfig.h
 --- ltib.reference/config/platform/imx/.tmpconfig.h
 +++ ltib/config/platform/imx/.tmpconfig.h
-@@ -0,0 +1,670 @@
+@@ -0,0 +1,671 @@
 +/*
 + * Automatically generated C config: don't edit
 + * LTIB version: 8.1.2
@@ -1609,6 +1610,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#define CONFIG_PKG_SDCARD 1
 +#define CONFIG_PKG_SPLASH 1
 +#define CONFIG_PKG_MAC_SN 1
++#define CONFIG_PKG_CLONER 1
 +
 +/*
 + * Applications
@@ -2859,7 +2861,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev
 +++ ltib/config/platform/imx/defconfig.dev
-@@ -0,0 +1,669 @@
+@@ -0,0 +1,670 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -3293,6 +3295,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_PKG_SDCARD=y
 +CONFIG_PKG_SPLASH=y
 +CONFIG_PKG_MAC_SN=y
++CONFIG_PKG_CLONER=y
 +
 +#
 +# Applications
@@ -20946,7 +20949,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_QTOPIA_WANT_TSLIB
      depends CAP_HAS_MMU
      depends PKG_QTOPIA || PKG_QTOPIA_4
-@@ -2767,6 +2854,88 @@
+@@ -2767,6 +2854,96 @@
         Some host tools are not used when building Qtopia within ltib.
         Not building these tools saves time when building.  Select y here
         to enable designer, linguist, and assistant GUI tools.
@@ -21031,11 +21034,19 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +    default y
 +    help
 +        GUI to set up MAC address of Ethernet cards.
++
++config PKG_CLONER
++    bool "MECT TPAC save/restore utility"
++    depends PKG_QT_EMBEDDED
++    default y
++    help
++        Graohical utility to save/restore MECT TPAC device
++        configuration.
 +endmenu
  
  menu "Applications"
  config PKG_QTOPIA_WANT_APP_CALCULATOR
-@@ -3346,7 +3515,7 @@
+@@ -3346,7 +3523,7 @@
      bool "totem-pl-parser"
      select PKG_EVOLUTION_DATA_SERVER
      select PKG_GTK2
@@ -21044,7 +21055,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3487,11 +3656,21 @@
+@@ -3487,11 +3664,21 @@
      depends CAP_HAS_MMU
      bool "wireless-tools"
      help
@@ -21067,7 +21078,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_XFSPROGS
      bool "xfsprogs"
      help
-@@ -3862,6 +4041,11 @@
+@@ -3862,6 +4049,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  
@@ -21130,7 +21141,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_XFREE86                      = XFree86
  PKG_PYTHON                       = python
  PKG_PKGCONFIG                    = pkgconfig
-@@ -407,6 +412,26 @@
+@@ -407,6 +412,27 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
@@ -21151,6 +21162,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +PKG_SDCARD                       = SDcard
 +PKG_SPLASH                       = splash
 +PKG_MAC_SN                       = mac_sn
++PKG_CLONER                       = cloner
 +PKG_MODBUS_LIB                   = libmodbus
 +PKG_NAGIOS_PLUGINS               = nagios-plugins
 +PKG_NRPE                         = nrpe

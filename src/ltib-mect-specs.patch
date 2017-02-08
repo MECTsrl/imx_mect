@@ -6183,7 +6183,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +MAKEFILE_GENERATOR             = UNIX
 +TEMPLATE                       = app
-+CONFIG                        += qt warn_on release incremental link_prl static_and_shared
++CONFIG                        += qt warn_on release incremental link_prl
 +QT                            += core gui
 +QMAKE_INCREMENTAL_STYLE        = sublib
  
@@ -6206,7 +6206,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  # Unset compiler to prevent gcc being used when the cross
  # tools should be used. (Trolltech issue# 138807)
-@@ -185,32 +188,116 @@
+@@ -185,32 +188,115 @@
  # Unset PLATFORM because this is used as host machine.
  unset PLATFORM
  
@@ -6223,6 +6223,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	-plugin-sql-mysql \
 +	-qt-mouse-tslib \
 +%endif
++	-xplatform qws/linux-g++-mx \
 +	-confirm-license \
 +	-embedded arm \
 +	-fast \
@@ -6238,7 +6239,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	-nomake examples \
 +	-no-mmx \
 +	-no-multimedia \
-+        -no-pch \
 +	-no-phonon \
 +	-no-phonon-backend \
 +	-no-qt3support \
@@ -6262,12 +6262,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	-shared \
 +	-sm \
 +	-v \
-+	-xplatform qws/linux-g++-mx \
 +	$XTRA_OPTS
  
 -./configure --prefix=$RPM_BUILD_DIR/../../rootfs/usr/local/Trolltech -embedded arm -xplatform qws/linux-g++-mx -release \
 -	-qt-gfx-linuxfb -qt-kbd-tty -qt-mouse-tslib -little-endian -host-little-endian -fontconfig -sm -v -opensource -confirm-license $XTRA_OPTS
-+make -j$(nproc) all
++make -j$(nproc)
  
 -make
  

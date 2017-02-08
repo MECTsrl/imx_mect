@@ -171,7 +171,7 @@ QMAKE_INSTALL_PROGRAM          = install -m 755 -p
 
 MAKEFILE_GENERATOR             = UNIX
 TEMPLATE                       = app
-CONFIG                        += qt warn_on release incremental link_prl static_and_shared
+CONFIG                        += qt warn_on release incremental link_prl
 QT                            += core gui
 QMAKE_INCREMENTAL_STYLE        = sublib
 
@@ -225,7 +225,6 @@ MAKEFLAGS=j$(nproc) ./configure \
 	-nomake examples \
 	-no-mmx \
 	-no-multimedia \
-	-no-pch \
 	-no-phonon \
 	-no-phonon-backend \
 	-no-qt3support \
@@ -251,7 +250,7 @@ MAKEFLAGS=j$(nproc) ./configure \
 	-v \
 	$XTRA_OPTS
 
-make -j$(nproc) all
+make -j$(nproc)
 
 
 %Install

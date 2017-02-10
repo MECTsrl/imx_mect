@@ -87,6 +87,9 @@ QMAKE = wine $(QT_INST_DIR_H)/bin/qmake.exe
 NPROCS := $(shell nproc)
 NPROCS := $(shell expr $(NPROCS) + 1)
 
+# Sanitize terminal configuration.
+SANE := if test -t 1; then stty sane; fi
+
 
 .PHONY: all
 all: wine tools libs qt install-qt qtc qwt mp
@@ -121,7 +124,7 @@ libs: $(LC_DLL)
 
 $(LC_DLL):
 	test -d $(LC_DIRECTORY)
-	$(MAKE) -C $(LC_DIRECTORY) -f Makefile.windows all install; stty sane
+	$(MAKE) -C $(LC_DIRECTORY) -f Makefile.windows all install; $(SANE)
 
 .PHONY: qt
 qt: rebase do_qt rebase
@@ -157,7 +160,7 @@ do_qt:
 	    -script \
 	    -shared \
 	    -no-libtiff
-	$(MAKE) -j $(NPROCS) -C $(QT_DIRECTORY); stty sane
+	$(MAKE) -j $(NPROCS) -C $(QT_DIRECTORY); $(SANE)
 
 .PHONY: install-qt
 install-qt: clean-qt
@@ -186,8 +189,8 @@ qtc: rebase do_qtc rebase
 do_qtc:
 	mkdir -p $(QTC_BUILD_DIR)
 	cd $(QTC_BUILD_DIR); $(QMAKE) -r ../$(QTC_DIRECTORY)/qtcreator.pro
-	$(MAKE) -j $(NPROCS) -C $(QTC_BUILD_DIR); stty sane
-	$(MAKE) -C $(QTC_BUILD_DIR) INSTALL_ROOT=$(QTC_INST_DIR) install; stty sane
+	$(MAKE) -j $(NPROCS) -C $(QTC_BUILD_DIR); $(SANE)
+	$(MAKE) -C $(QTC_BUILD_DIR) INSTALL_ROOT=$(QTC_INST_DIR) install; $(SANE)
 
 .PHONY: qwt
 qwt: rebase do_qwt rebase
@@ -197,8 +200,8 @@ do_qwt:
 	mkdir -p $(QWT_BUILD_DIR)
 	cd $(QWT_BUILD_DIR); $(QMAKE) -r ../$(QWT_DIRECTORY)/qwt.pro
 	patch -d $(QWT_BUILD_DIR) -p1 < $(QWT_PATCH_NODEBUG)
-	$(MAKE) -j $(NPROCS) -C $(QWT_BUILD_DIR); stty sane
-	$(MAKE) -C $(QWT_BUILD_DIR) INSTALL_ROOT= install; stty sane
+	$(MAKE) -j $(NPROCS) -C $(QWT_BUILD_DIR); $(SANE)
+	$(MAKE) -C $(QWT_BUILD_DIR) INSTALL_ROOT= install; $(SANE)
 
 .PHONY: mp
 mp: rebase do_mp rebase
@@ -211,8 +214,8 @@ do_mp:
 	-patch -d $(MP_DIRECTORY) -p1 -N -i $(MP_PATCH_QRC_INSTPATH)
 	cd $(MP_DIRECTORY)/qt_plugins; $(QMAKE) qt_designer_plugins.pro -r -config store -config trend -config recipe -config alarms CONFIG+=release DEFINES+=ATCM_VERSION=$(ATCM_VERSION)
 	if grep -rIq 'c:$$(INSTALL_ROOT)' $(MP_DIRECTORY); then sed -i '/c:$$(INSTALL_ROOT)/ s/c:$$(INSTALL_ROOT)/$$(INSTALL_ROOT)/g;' `grep -rIl 'c:$$(INSTALL_ROOT)' $(MP_DIRECTORY)`; fi # Old wines are broken. :-)
-	$(MAKE) -j $(NPROCS) -C $(MP_DIRECTORY)/qt_plugins; stty sane
-	$(MAKE) -C $(MP_DIRECTORY)/qt_plugins INSTALL_ROOT=$(MP_INST_DIR) install; stty sane
+	$(MAKE) -j $(NPROCS) -C $(MP_DIRECTORY)/qt_plugins; $(SANE)
+	$(MAKE) -C $(MP_DIRECTORY)/qt_plugins INSTALL_ROOT=$(MP_INST_DIR) install; $(SANE)
 
 
 # Utils
@@ -235,7 +238,7 @@ cmd:
 	#
 	#wine mingw-get install msys-unzip
 	#wine unzip -o -d c:/ c:/4c.zip
-	wine c:/ATCMControl/Engineering/bin/4ceng.exe; stty sane
+	wine c:/ATCMControl/Engineering/bin/4ceng.exe; $(SANE)
 
 # msys-1.0.dll rebase is a workaround for a bug in Cygwin use of persistent memory
 .PHONY: rebase
@@ -256,21 +259,21 @@ clean-wine:
 clean-qt:
 	-if test -d $(QT_DIRECTORY); then \
 	    $(MAKE) -C $(QT_DIRECTORY) clean; \
-	    stty sane; \
+	    $(SANE); \
 	    find $(QT_DIRECTORY)/qmake -name \*.o -print0 | xargs -0 rm -f; \
 	fi
 
 .PHONY: clean-qtc
 clean-qtc:
-	-if test -d $(QTC_BUILD_DIR); then $(MAKE) -C $(QTC_BUILD_DIR) clean; stty sane; fi
+	-if test -d $(QTC_BUILD_DIR); then $(MAKE) -C $(QTC_BUILD_DIR) clean; $(SANE); fi
 
 .PHONY: clean-qwt
 clean-qwt:
-	-if test -d $(QWT_BUILD_DIR); then $(MAKE) -C $(QWT_BUILD_DIR) clean; stty sane; fi
+	-if test -d $(QWT_BUILD_DIR); then $(MAKE) -C $(QWT_BUILD_DIR) clean; $(SANE); fi
 
 .PHONY: clean-mp
 clean-mp:
-	-if test -d $(MP_DIRECTORY)/qt_plugins; then $(MAKE) -C $(MP_DIRECTORY)/qt_plugins clean; stty sane; fi
+	-if test -d $(MP_DIRECTORY)/qt_plugins; then $(MAKE) -C $(MP_DIRECTORY)/qt_plugins clean; $(SANE); fi
 
 
 .PHONY: buildclean
@@ -282,7 +285,7 @@ buildclean-wine:
 
 .PHONY: buildclean-qt
 buildclean-qt:
-	-if test -r $(QT_DIRECTORY)/Makefile; then $(MAKE) -C $(QT_DIRECTORY) distclean; stty sane; fi
+	-if test -r $(QT_DIRECTORY)/Makefile; then $(MAKE) -C $(QT_DIRECTORY) distclean; $(SANE); fi
 	if test -d $(QT_DIRECTORY); then \
 	    find $(QT_DIRECTORY)/qmake -name \*.o -print0 | xargs -0 rm -f; \
 	    find $(QT_DIRECTORY)/lib -name \*.prl -print0 | xargs -0 rm -f; \
@@ -313,10 +316,10 @@ buildclean-qt:
 
 .PHONY: buildclean-qtc
 buildclean-qtc:
-	-if test -r $(QTC_BUILD_DIR)/Makefile; then $(MAKE) -C $(QTC_BUILD_DIR) distclean; stty sane; fi
+	-if test -r $(QTC_BUILD_DIR)/Makefile; then $(MAKE) -C $(QTC_BUILD_DIR) distclean; $(SANE); fi
 	rm -rf $(QTC_BUILD_DIR)
 
 .PHONY: buildclean-qwt
 buildclean-qwt:
-	-if test -r $(QWT_BUILD_DIR)/Makefile; then $(MAKE) -C $(QWT_BUILD_DIR) distclean; stty sane; fi
+	-if test -r $(QWT_BUILD_DIR)/Makefile; then $(MAKE) -C $(QWT_BUILD_DIR) distclean; $(SANE); fi
 	rm -rf $(QWT_BUILD_DIR)

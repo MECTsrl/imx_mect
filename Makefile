@@ -117,7 +117,7 @@ MECT_SYSUPD_DIRALL = $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL
 MECT_SYSCLONE_PRE_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_pre.sh
 MECT_SYSCLONE_POST_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_post.sh
 MECT_SYSCLONE_SHAR = $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).sh
-MECT_SYSCLONE_DIR = $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE)
+MECT_SYSCLONE_DIR = $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE)/bin
 # Program to update target kernel
 MECT_KOBS_TMPL := $(MECT_FTPDIR)/kobs-ng
 # Full path to write the update archive on target
@@ -626,7 +626,7 @@ images:
 
 images_do: $(MECT_IMAGES)
 
-# Build the cloner shell archive
+# Build the cloner shell archive.
 .PHONY: cloner_shar
 cloner_shar: CLONER_COMPONENTS := \
     /lib/ld-linux.so.3 \
@@ -652,7 +652,8 @@ cloner_shar: CLONER_COMPONENTS := \
     /usr/lib/libQtNetwork.so \
     /usr/lib/libts-1.0.so.0 \
     /usr/lib/libz.so.1 \
-    /usr/lib/ts
+    /usr/lib/ts \
+
 cloner_shar: CLONER_COMPONENTS := $(CLONER_COMPONENTS:%=$(MECT_LTIB_RFSDIR)%)
 cloner_shar:
 	test -n '$(CLONER_COMPONENTS)'
@@ -660,7 +661,7 @@ cloner_shar:
 	mkdir -p $(MECT_SYSCLONE_DIR)
 	rsync -aLv $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)/
 	cp $(MECT_SYSCLONE_PRE_TMPL) $(MECT_SYSCLONE_SHAR)
-	cd $(MECT_SYSCLONE_DIR); shar -M -x * >> $(MECT_SYSCLONE_SHAR)
+	cd $(MECT_SYSCLONE_DIR)/..; shar -M -x $(shell basename $(MECT_SYSCLONE_DIR))/* >> $(MECT_SYSCLONE_SHAR)
 	tail -1 $(MECT_SYSCLONE_SHAR) | grep -q '^exit 0$$'
 	sed -i '$$ d' $(MECT_SYSCLONE_SHAR)
 	cat $(MECT_SYSCLONE_POST_TMPL) >> $(MECT_SYSCLONE_SHAR)

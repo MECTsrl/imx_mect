@@ -100,7 +100,7 @@ sudo tar xf "$rfs_arch" -C rootfs
 
 echo "* Extract the local file system contents."
 test -d rootfs/local
-# FIXME Hack!  Should not be needed.
+# FIXME Hack!  Directory local/data should not be there.
 sudo rm -rf rootfs/local/data
 sudo tar xf "$lfs_arch" -C rootfs/local
 

@@ -653,6 +653,8 @@ cloner_shar: CLONER_COMPONENTS := \
     /usr/lib/libts-1.0.so.0 \
     /usr/lib/libz.so.1 \
     /usr/lib/ts \
+    /usr/share/cloner/excludes_localfs.lst \
+    /usr/share/cloner/excludes_rootfs.lst \
 
 cloner_shar: CLONER_COMPONENTS := $(CLONER_COMPONENTS:%=$(MECT_LTIB_RFSDIR)%)
 cloner_shar:

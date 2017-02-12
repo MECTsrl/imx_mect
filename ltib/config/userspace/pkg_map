@@ -428,6 +428,7 @@ PKG_CGIC_WORK                    = cgic_work
 PKG_SDCARD                       = SDcard
 PKG_SPLASH                       = splash
 PKG_MAC_SN                       = mac_sn
+PKG_CLONER                       = cloner
 PKG_MODBUS_LIB                   = libmodbus
 PKG_NAGIOS_PLUGINS               = nagios-plugins
 PKG_NRPE                         = nrpe

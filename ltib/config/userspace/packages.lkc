@@ -2929,6 +2929,14 @@ config PKG_MAC_SN
     default y
     help
         GUI to set up MAC address of Ethernet cards.
+
+config PKG_CLONER
+    bool "MECT TPAC save/restore utility"
+    depends PKG_QT_EMBEDDED
+    default y
+    help
+        Graohical utility to save/restore MECT TPAC device
+        configuration.
 endmenu
 
 menu "Applications"

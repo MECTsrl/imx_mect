@@ -661,7 +661,7 @@ cloner_shar:
 	test -n '$(CLONER_COMPONENTS)'
 	rm -rf $(MECT_SYSCLONE_SHAR) $(MECT_SYSCLONE_DIR)
 	mkdir -p $(MECT_SYSCLONE_DIR)
-	rsync -aLv $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)/
+	rsync -aLv $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)/ --exclude \*.la
 	cp $(MECT_SYSCLONE_PRE_TMPL) $(MECT_SYSCLONE_SHAR)
 	cd $(MECT_SYSCLONE_DIR)/..; shar -M -x $(shell basename $(MECT_SYSCLONE_DIR))/* >> $(MECT_SYSCLONE_SHAR)
 	tail -1 $(MECT_SYSCLONE_SHAR) | grep -q '^exit 0$$'

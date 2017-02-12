@@ -1204,13 +1204,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cloner/cloner.spec ltib/dist/lfs-5.1/cloner/cloner.spec
 --- ltib.reference/dist/lfs-5.1/cloner/cloner.spec
 +++ ltib/dist/lfs-5.1/cloner/cloner.spec
-@@ -0,0 +1,76 @@
+@@ -0,0 +1,77 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 1.0.0
++Version         : 6.4
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -1251,11 +1251,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +LC_ALL=C
 +
 +export VERSION='%{version}'
-+ls -l
 +/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx
 +make
-+#./make_sysupdate.sh
-+ls -l
 +
 +
 +%Install
@@ -1265,6 +1262,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +
 +install -m 755 -D cloner $RPM_BUILD_ROOT%{pfx}/sbin/cloner
++install -m 644 -D excludes_localfs.lst $RPM_BUILD_ROOT%{pfx}/usr/share/cloner/excludes_localfs.lst
++install -m 644 -D excludes_rootfs.lst $RPM_BUILD_ROOT%{pfx}/usr/share/cloner/excludes_rootfs.lst
 +
 +
 +%Clean
@@ -1281,6 +1280,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Files rfs
 +%defattr(-,root,root)
 +%{pfx}/sbin/cloner
++%{pfx}/usr/share/cloner/excludes_localfs.lst
++%{pfx}/usr/share/cloner/excludes_rootfs.lst
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec

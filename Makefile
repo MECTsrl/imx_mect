@@ -112,6 +112,11 @@ MECT_SYSUPD_TMPLALL := $(MECT_FTPDIR)/sysupdate_imx28_all.sh
 # System update archives for all targets
 MECT_SYSUPD_SHARALL = $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL.sh
 MECT_SYSUPD_DIRALL = $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL
+# System cloner for all targets
+MECT_SYSCLONE_PRE_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_pre.sh
+MECT_SYSCLONE_POST_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_post.sh
+MECT_SYSCLONE_SHAR = $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).sh
+MECT_SYSCLONE_DIR = $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE)/bin
 # Program to update target kernel
 MECT_KOBS_TMPL := $(MECT_FTPDIR)/kobs-ng
 # Full path to write the update archive on target
@@ -623,8 +628,51 @@ images:
 	install -m 644 $(MECT_KOBS_TMPL) $(MECT_SYSUPD_DIRALL)
 	$(MAKE) $@_do
 	sed "s/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/" $(MECT_SYSUPD_TMPLALL) > $(MECT_SYSUPD_DIRALL)/$(shell basename $(MECT_SYSUPD_SHARALL))
+	$(MAKE) cloner_shar
 
 images_do: $(MECT_IMAGES)
+
+# Build the cloner shell archive.
+.PHONY: cloner_shar
+cloner_shar: CLONER_COMPONENTS := \
+    /lib/ld-linux.so.3 \
+    /lib/libc.so.6 \
+    /lib/libdl.so.2 \
+    /lib/libgcc_s.so.1 \
+    /lib/libm.so.6 \
+    /lib/libpthread.so.0 \
+    /lib/librt.so.1 \
+    /lib/libstdc++.so.6 \
+    /sbin/cloner \
+    /usr/bin/flash_eraseall \
+    /usr/lib/fonts \
+    /usr/lib/libATCMinputdialog.so \
+    /usr/lib/libfreetype.so.6 \
+    /usr/lib/libglib-2.0.so.0 \
+    /usr/lib/libgmodule-2.0.so.0 \
+    /usr/lib/libgobject-2.0.so.0 \
+    /usr/lib/libgthread-2.0.so.0 \
+    /usr/lib/libpng.so.3 \
+    /usr/lib/libQtCore.so \
+    /usr/lib/libQtGui.so \
+    /usr/lib/libQtNetwork.so \
+    /usr/lib/libts-1.0.so.0 \
+    /usr/lib/libz.so.1 \
+    /usr/lib/ts \
+    /usr/share/cloner/excludes_localfs.lst \
+    /usr/share/cloner/excludes_rootfs.lst \
+
+cloner_shar: CLONER_COMPONENTS := $(CLONER_COMPONENTS:%=$(MECT_LTIB_RFSDIR)%)
+cloner_shar:
+	test -n '$(CLONER_COMPONENTS)'
+	rm -rf $(MECT_SYSCLONE_SHAR) $(MECT_SYSCLONE_DIR)
+	mkdir -p $(MECT_SYSCLONE_DIR)
+	rsync -aLv $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)/ --exclude \*.la
+	cp $(MECT_SYSCLONE_PRE_TMPL) $(MECT_SYSCLONE_SHAR)
+	cd $(MECT_SYSCLONE_DIR)/..; shar -M -x $(shell basename $(MECT_SYSCLONE_DIR))/* >> $(MECT_SYSCLONE_SHAR)
+	tail -1 $(MECT_SYSCLONE_SHAR) | grep -q '^exit 0$$'
+	sed -i '$$ d' $(MECT_SYSCLONE_SHAR)
+	cat $(MECT_SYSCLONE_POST_TMPL) >> $(MECT_SYSCLONE_SHAR)
 
 # Common target rules
 #

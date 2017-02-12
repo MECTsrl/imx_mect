@@ -670,6 +670,7 @@ cloner_shar:
 	rsync -aLv $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)/ --exclude \*.la
 	cp $(MECT_SYSCLONE_PRE_TMPL) $(MECT_SYSCLONE_SHAR)
 	cd $(MECT_SYSCLONE_DIR)/..; shar -M -x $(shell basename $(MECT_SYSCLONE_DIR))/* >> $(MECT_SYSCLONE_SHAR)
+	rm -rf $(shell dirname $(MECT_SYSCLONE_DIR))
 	tail -1 $(MECT_SYSCLONE_SHAR) | grep -q '^exit 0$$'
 	sed -i '$$ d' $(MECT_SYSCLONE_SHAR)
 	cat $(MECT_SYSCLONE_POST_TMPL) >> $(MECT_SYSCLONE_SHAR)

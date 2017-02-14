@@ -83,7 +83,7 @@ include(../../common/qws.conf)
 # qmake configuration for building with arm-none-linux-gnueabi-g++
 #
 
-QMAKE_CC                       = "${TOOL_CHAIN_DIR}"/bin/arm-none-linux-gnueabi-gcc
+QMAKE_CC                       = ${TOOL_CHAIN_DIR}/bin/arm-none-linux-gnueabi-gcc
 QMAKE_CFLAGS                  += -pipe
 QMAKE_CFLAGS_DEPS             += -M
 QMAKE_CFLAGS_WARN_ON          += -Wall -W
@@ -95,7 +95,7 @@ QMAKE_CFLAGS_STATIC_LIB       += -fPIC
 QMAKE_CFLAGS_YACC             += -Wno-unused -Wno-parentheses
 QMAKE_CFLAGS_HIDESYMS         += -fvisibility=hidden
 
-QMAKE_CXX                      = "${TOOL_CHAIN_DIR}"/bin/arm-none-linux-gnueabi-g++
+QMAKE_CXX                      = ${TOOL_CHAIN_DIR}/bin/arm-none-linux-gnueabi-g++
 QMAKE_CXXFLAGS                += \$\$QMAKE_CFLAGS
 QMAKE_CXXFLAGS_DEPS           += \$\$QMAKE_CFLAGS_DEPS
 QMAKE_CXXFLAGS_WARN_ON        += \$\$QMAKE_CFLAGS_WARN_ON
@@ -107,10 +107,10 @@ QMAKE_CXXFLAGS_STATIC_LIB     += \$\$QMAKE_CFLAGS_STATIC_LIB
 QMAKE_CXXFLAGS_YACC           += \$\$QMAKE_CFLAGS_YACC
 QMAKE_CXXFLAGS_HIDESYMS       += \$\$QMAKE_CFLAGS_HIDESYMS -fvisibility-inlines-hidden
 
-QMAKE_LINK                     = "${TOOL_CHAIN_DIR}"/bin/arm-none-linux-gnueabi-g++
-QMAKE_LINK_SHLIB               = "${TOOL_CHAIN_DIR}"/bin/arm-none-linux-gnueabi-g++
-QMAKE_LINK_C                   = "${TOOL_CHAIN_DIR}"/bin/arm-none-linux-gnueabi-gcc
-QMAKE_LINK_C_SHLIB             = "${TOOL_CHAIN_DIR}"/bin/arm-none-linux-gnueabi-gcc
+QMAKE_LINK                     = ${TOOL_CHAIN_DIR}/bin/arm-none-linux-gnueabi-g++
+QMAKE_LINK_SHLIB               = ${TOOL_CHAIN_DIR}/bin/arm-none-linux-gnueabi-g++
+QMAKE_LINK_C                   = ${TOOL_CHAIN_DIR}/bin/arm-none-linux-gnueabi-gcc
+QMAKE_LINK_C_SHLIB             = ${TOOL_CHAIN_DIR}/bin/arm-none-linux-gnueabi-gcc
 QMAKE_LFLAGS                  +=
 QMAKE_LFLAGS_RELEASE          += -Wl,-O1
 QMAKE_LFLAGS_DEBUG            +=
@@ -152,9 +152,9 @@ QMAKE_LIBS_THREAD              = -lpthread
 QMAKE_MOC                      = \$\$[QT_INSTALL_BINS]/moc
 QMAKE_UIC                      = \$\$[QT_INSTALL_BINS]/uic
 
-QMAKE_AR                       = "${TOOL_CHAIN_DIR}"/bin/arm-none-linux-gnueabi-ar cqs
-QMAKE_OBJCOPY                  = "${TOOL_CHAIN_DIR}"/bin/arm-none-linux-gnueabi-objcopy
-QMAKE_RANLIB                   = "${TOOL_CHAIN_DIR}"/bin/arm-none-linux-gnueabi-ranlib
+QMAKE_AR                       = ${TOOL_CHAIN_DIR}/bin/arm-none-linux-gnueabi-ar cqs
+QMAKE_OBJCOPY                  = ${TOOL_CHAIN_DIR}/bin/arm-none-linux-gnueabi-objcopy
+QMAKE_RANLIB                   = ${TOOL_CHAIN_DIR}/bin/arm-none-linux-gnueabi-ranlib
 
 QMAKE_TAR                      = tar -cf
 QMAKE_GZIP                     = gzip -9f
@@ -165,7 +165,7 @@ QMAKE_COPY_DIR                 = \$(COPY) -r
 QMAKE_MOVE                     = mv -f
 QMAKE_DEL_FILE                 = rm -f
 QMAKE_DEL_DIR                  = rmdir
-QMAKE_STRIP                    = "${TOOL_CHAIN_DIR}"/bin/arm-none-linux-gnueabi-strip
+QMAKE_STRIP                    = ${TOOL_CHAIN_DIR}/bin/arm-none-linux-gnueabi-strip
 QMAKE_CHK_DIR_EXISTS           = test -d
 QMAKE_MKDIR                    = mkdir -p
 QMAKE_INSTALL_FILE             = install -m 644 -p

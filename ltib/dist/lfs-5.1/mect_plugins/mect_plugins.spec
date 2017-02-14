@@ -46,7 +46,7 @@ export MECT_RFSDIR
 MECT_RFSDIR=$DEV_IMAGE
 
 test -r Makefile && make clean
-/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx qt_atcm.pro
+../../../../host_tools/Trolltech/bin/qmake -spec qws/linux-g++-mx qt_atcm.pro
 make -j1
 
 

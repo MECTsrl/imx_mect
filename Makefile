@@ -1,5 +1,8 @@
 export LC_ALL := C
 
+# NOTE: do NOT include Makefiles before this line.
+IMX_MECT_DIR := $(shell readlink -m $(dir $(lastword $(MAKEFILE_LIST))))
+
 # ---------------------------
 
 # MECT Suite version -- start with a digit.
@@ -265,7 +268,7 @@ MECT_CSXCPREFIX = arm-2011.03
 MECT_CSXCARCH = $(MECT_CSXCPREFIX)-41-arm-none-linux-gnueabi-i686-pc-linux-gnu.tar.bz2
 MECT_CSXCUNPACK = $(CURDIR)/$(MECT_CSXCPREFIX)
 # Keep this in sync with LTIB config
-export MECT_CSXCDIR := /opt/CodeSourcery
+export MECT_CSXCDIR := $(IMX_MECT_DIR)/host_tools/CodeSourcery
 export MECT_CC_DIRECTORY = $(MECT_CSXCDIR)
 export MECT_CC_VERSION := 
 export MECT_CC_RADIX := arm-none-linux-gnueabi
@@ -278,7 +281,7 @@ MECT_LTIB_EVKDIR = $(MECT_LTIB_EVKARCH:%.tar.gz=%)
 MECT_LTIBINST_TARGETDIR_PATHCH = ltib-install-preset-target-dir.patch
 
 # LTIB qt spec file (MECT patch)
-export MECT_QT_INSTALL_DIR = /opt/Trolltech
+export MECT_QT_INSTALL_DIR := $(IMX_MECT_DIR)/host_tools/Trolltech
 MECT_LTIB_QT_ARCH = qt-everywhere-opensource-src-4.8.5.tar.gz
 MECT_LTIB_QT_PATCH1 = qt-everywhere-opensource-src-4.8.5-1394522957.patch
 MECT_LTIB_QT_PATCH2 = qt-everywhere-opensource-src-4.8.5-1420823826.patch
@@ -436,6 +439,12 @@ ltib_inst: $(MECT_TMPDIR) downloads
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 	test -d $(MECT_LTIBDIR)
 	ln -s kernel-$(MECT_KERNEL_VER)-imx28-tpac1007_480x272.config $(MECT_KERNEL_CONF)
+	sed -i '/\bCONFIG_TOOLCHAIN_PATH\b/ s/.*/CONFIG_TOOLCHAIN_PATH="$(MECT_CSXCDIR)"/' ltib/config/platform/imx/.config
+	sed -i '/\bCONFIG_TOOLCHAIN_PATH\b/ s/.*/#define CONFIG_TOOLCHAIN_PATH "$(MECT_CSXCDIR)"/' ltib/config/platform/imx/.tmpconfig.h
+	rm -f ltib/config/platform/imx/defconfig.dev
+	ln -sf ltib/config/platform/imx/defconfig.dev .config
+	echo "MECT_CC_DIRECTORY := $(MECT_CSXCDIR)" > projects/ATCMcontrol_RunTimeSystem/tool_chain_base_dir.inc
+	echo "MECT_CC_DIRECTORY := $(MECT_CSXCDIR)" > projects/cgic_work/tool_chain_base_dir.inc
 
 $(MECT_TMPDIR):
 	rm -rf $(MECT_TMPDIR)
@@ -471,7 +480,8 @@ hosttools: downloads toolchain qt
 toolchain:
 	sudo rm -rf $(MECT_CSXCUNPACK) $(MECT_CSXCDIR)
 	tar xjvf $(MECT_FTPDIR)/$(MECT_CSXCARCH)
-	sudo mv $(MECT_CSXCUNPACK) $(MECT_CSXCDIR)
+	mkdir -p $(shell dirname $(MECT_CSXCDIR))
+	mv $(MECT_CSXCUNPACK) $(MECT_CSXCDIR)
 	test -d /usr/lib/ccache
 	for f in arm-none-linux-gnueabi-gcc arm-none-linux-gnueabi-c++ arm-none-linux-gnueabi-g++; do \
 	       	sudo ln -sf $(MECT_CSXCDIR)/bin/$$f /usr/lib/ccache/; \

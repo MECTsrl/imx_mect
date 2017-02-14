@@ -43,7 +43,7 @@ cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 export LC_ALL
 LC_ALL=C
 
-/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx
+../../../../host_tools/Trolltech/bin/qmake -spec qws/linux-g++-mx
 
 make \
     sub-src-all-ordered \

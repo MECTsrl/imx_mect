@@ -42,7 +42,7 @@ export LC_ALL
 LC_ALL=C
 
 test -r Makefile && make clean
-/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx
+../../../../host_tools/Trolltech/bin/qmake -spec qws/linux-g++-mx
 make -j1
 
 

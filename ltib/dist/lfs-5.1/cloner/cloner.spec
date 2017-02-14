@@ -44,7 +44,7 @@ export LC_ALL
 LC_ALL=C
 
 export VERSION='%{version}'
-../../../../host_tools/Trolltech/bin/qmake -spec qws/linux-g++-mx
+../../host_tools/Trolltech/bin/qmake -spec qws/linux-g++-mx
 make
 
 

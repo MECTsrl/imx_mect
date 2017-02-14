@@ -374,8 +374,7 @@ endif
 
 
 .PHONY: all
-all: env downloads setup
-### MTL: all: env downloads setup build image target_dev
+all: env downloads setup build image target_dev
 
 # Set up the build environment.
 .PHONY: env
@@ -405,13 +404,11 @@ downloads_fc:
 
 # Set up LTIB and projects
 .PHONY: setup
-setup: ltib_setup
-### MTL: setup: ltib_setup projects_setup spec_setup
+setup: ltib_setup projects_setup spec_setup
 
 # Install and build LTIB.
 .PHONY: ltib_setup
-ltib_setup: ltib_inst
-### MTL: ltib_setup: ltib_inst ltib_patch
+ltib_setup: ltib_inst ltib_patch
 	if ! grep -q '^$(MECT_LTIBDIR)/../src$$' $(MECT_LTIBDIR)/.ltibrc; then \
 		sed -i '/\/ltib\/..\/src$$/ d; s|^%ldirs$$|%ldirs\n$(MECT_LTIBDIR)/../src|' $(MECT_LTIBDIR)/.ltibrc; \
 	fi
@@ -427,11 +424,10 @@ ltib_inst: $(MECT_TMPDIR) downloads
 	if test -n "$(MECT_FSPKG)"; then \
 	    cp -pv $(MECT_FSPKG) $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)/pkgs; \
 	fi
-	### MTL: cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); (echo -e "qy\nyes" ) | ./install
-	### MTL: chmod 0775 $(MECT_LTIBDIR)
-	### MTL: rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
+	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); (echo -e "qy\nyes" ) | ./install
+	chmod 0775 $(MECT_LTIBDIR)
+	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 	test -d $(MECT_LTIBDIR)
-	exit 1	### MTL: debug
 
 $(MECT_TMPDIR):
 	rm -rf $(MECT_TMPDIR)
@@ -475,17 +471,19 @@ toolchain:
 	tar xjvf $(MECT_FTPDIR)/$(MECT_CSXCARCH)
 	mkdir -p $(shell dirname $(MECT_CSXCDIR))
 	mv $(MECT_CSXCUNPACK) $(MECT_CSXCDIR)
-	test -d /usr/lib/ccache
-	for f in arm-none-linux-gnueabi-gcc arm-none-linux-gnueabi-c++ arm-none-linux-gnueabi-g++; do \
-	       	sudo ln -sf $(MECT_CSXCDIR)/bin/$$f /usr/lib/ccache/; \
-	done
+	#test -d /usr/lib/ccache
+	#for f in arm-none-linux-gnueabi-gcc arm-none-linux-gnueabi-c++ arm-none-linux-gnueabi-g++; do \
+	#       	sudo ln -sf $(MECT_CSXCDIR)/bin/$$f /usr/lib/ccache/; \
+	#done
 
 # Set up host Qt.
 .PHONY: qt
 qt:
 	test -n "$(LOGNAME)"
 	mkdir -p $(MECT_TMPRPMDIR) $(MECT_LTIBDIR)/rpm/SOURCES
-	for f in $(MECT_FSPKG); do cp $$f $(MECT_LTIBDIR)/rpm/SOURCES; done
+	for f in $(MECT_FSPKG); do \
+	    cp $$f $(MECT_LTIBDIR)/rpm/SOURCES; \
+	done
 	PATH=/usr/lib/ccache:$(PATH) rpmbuild --define 'toolchain 1' --define 'toolchain_install_dir $(MECT_QT_INSTALL_DIR)' --define '_topdir $(MECT_LTIBDIR)/rpm' --dbpath $(MECT_TMPRPMDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_prefix /opt' --define '_rpmdir $(MECT_TMPRPMDIR)/RPMS' -bb --clean --rmsource $(MECT_LTIBDIR)/dist/lfs-5.1/qt/qt-embedded.spec
 	-sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb -e --allmatches --nodeps --define '_tmppath $(MECT_LTIBDIR)/tmp' qt-embedded 2>/dev/null
 	sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb --ignorearch -ivh --force --nodeps --excludedocs --define '_tmppath $(MECT_LTIBDIR)/tmp' $(MECT_TMPRPMDIR)/RPMS/$(MECT_TARGET_ARCH)/qt-embedded-$(MECT_BUILD_QTVERSION)-*.$(MECT_TARGET_ARCH).rpm

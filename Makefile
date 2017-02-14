@@ -439,8 +439,8 @@ ltib_inst: $(MECT_TMPDIR) downloads
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 	test -d $(MECT_LTIBDIR)
 	ln -s kernel-$(MECT_KERNEL_VER)-imx28-tpac1007_480x272.config $(MECT_KERNEL_CONF)
-	sed -i '/\bCONFIG_TOOLCHAIN_PATH\b/ s/.*/CONFIG_TOOLCHAIN_PATH="$(MECT_CSXCDIR)"/' ltib/config/platform/imx/.config
-	sed -i '/\bCONFIG_TOOLCHAIN_PATH\b/ s/.*/#define CONFIG_TOOLCHAIN_PATH "$(MECT_CSXCDIR)"/' ltib/config/platform/imx/.tmpconfig.h
+	sed -i '/\bCONFIG_TOOLCHAIN_PATH\b/ s|.*|CONFIG_TOOLCHAIN_PATH="$(MECT_CSXCDIR)"|' ltib/config/platform/imx/.config
+	sed -i '/\bCONFIG_TOOLCHAIN_PATH\b/ s|.*|#define CONFIG_TOOLCHAIN_PATH "$(MECT_CSXCDIR)"|' ltib/config/platform/imx/.tmpconfig.h
 	rm -f ltib/config/platform/imx/defconfig.dev
 	ln -sf ltib/config/platform/imx/defconfig.dev .config
 	echo "MECT_CC_DIRECTORY := $(MECT_CSXCDIR)" > projects/ATCMcontrol_RunTimeSystem/tool_chain_base_dir.inc

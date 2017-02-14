@@ -278,7 +278,7 @@ MECT_LTIB_EVKARCH = L2.6.35_1.1.0_130130_source.tar.gz
 MECT_LTIB_EVKDIR = $(MECT_LTIB_EVKARCH:%.tar.gz=%)
 
 # LTIB pre-configuration for install (MECT patch)
-MECT_LTIBINST_TARGETDIR_PATHCH = ltib-install-preset-target-dir.patch
+MECT_LTIBINST_TARGETDIR_PATHCH = ltib-install-merge.patch
 
 # LTIB qt spec file (MECT patch)
 export MECT_QT_INSTALL_DIR := $(IMX_MECT_DIR)/host_tools/Trolltech
@@ -374,7 +374,8 @@ endif
 
 
 .PHONY: all
-all: env downloads setup build image target_dev
+all: env downloads setup
+### MTL: all: env downloads setup build image target_dev
 
 # Set up the build environment.
 .PHONY: env
@@ -404,47 +405,33 @@ downloads_fc:
 
 # Set up LTIB and projects
 .PHONY: setup
-setup: ltib_setup projects_setup spec_setup
+setup: ltib_setup
+### MTL: setup: ltib_setup projects_setup spec_setup
 
 # Install and build LTIB.
 .PHONY: ltib_setup
-ltib_setup: ltib_git_save ltib_inst ltib_patch ltib_git_restore
-
-.PHONY: ltib_git_save
-ltib_git_save:
-	if test -d $(MECT_LTIBDIR); then mv $(MECT_LTIBDIR) $(MECT_LTIBDIR).git; fi
-
-.PHONY: ltib_git_restore
-ltib_git_restore:
-	if test -d $(MECT_LTIBDIR).git; then rsync -av --inplace $(MECT_LTIBDIR).git/ $(MECT_LTIBDIR)/; rm -rf $(MECT_LTIBDIR).git; fi
+ltib_setup: ltib_inst
+### MTL: ltib_setup: ltib_inst ltib_patch
 	if ! grep -q '^$(MECT_LTIBDIR)/../src$$' $(MECT_LTIBDIR)/.ltibrc; then \
 		sed -i '/\/ltib\/..\/src$$/ d; s|^%ldirs$$|%ldirs\n$(MECT_LTIBDIR)/../src|' $(MECT_LTIBDIR)/.ltibrc; \
+	fi
+	if ! grep -q '^$(MECT_LTIBDIR)/../host_tools/CodeSourcery/arm-none-linux-gnueabi/libc/usr/bin$$' $(MECT_LTIBDIR)/.ltibrc; then \
+		sed -i '/\/ltib\/..\/host_tools\/CodeSourcery\/arm-none-linux-gnueabi\/libc\/usr\/bin$$/ d; s|^%ldirs$$|%ldirs\n$(MECT_LTIBDIR)/../host_tools/CodeSourcery/arm-none-linux-gnueabi/libc/usr/bin|' $(MECT_LTIBDIR)/.ltibrc; \
 	fi
 
 .PHONY: ltib_inst
 ltib_inst: $(MECT_TMPDIR) downloads
-	if test -d $(MECT_LTIBDIR); then \
-		echo "*** Error: Destination directory $(MECT_LTIBDIR) exists, will not overwrite."; \
-		echo "Hint: To continue an interupted installation try running LTIB directly:"; \
-		echo "          cd $(MECT_LTIBDIR); ./ltib"; \
-		echo "Aborting."; \
-		exit 1; \
-	fi
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 	tar xzvf $(MECT_FTPDIR)/$(MECT_LTIB_EVKARCH) -C $(MECT_TMPDIR)
 	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); patch -p1 < $(MECT_FTPDIR)/$(MECT_LTIBINST_TARGETDIR_PATHCH)
-	if test -n "$(MECT_FSPKG)"; then cp -pv $(MECT_FSPKG) $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)/pkgs; fi
-	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); (echo -e "qy\nyes" ) | ./install
-	chmod 0775 $(MECT_LTIBDIR)
-	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
+	if test -n "$(MECT_FSPKG)"; then \
+	    cp -pv $(MECT_FSPKG) $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)/pkgs; \
+	fi
+	### MTL: cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); (echo -e "qy\nyes" ) | ./install
+	### MTL: chmod 0775 $(MECT_LTIBDIR)
+	### MTL: rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 	test -d $(MECT_LTIBDIR)
-	ln -s kernel-$(MECT_KERNEL_VER)-imx28-tpac1007_480x272.config $(MECT_KERNEL_CONF)
-	sed -i '/\bCONFIG_TOOLCHAIN_PATH\b/ s|.*|CONFIG_TOOLCHAIN_PATH="$(MECT_CSXCDIR)"|' ltib/config/platform/imx/.config
-	sed -i '/\bCONFIG_TOOLCHAIN_PATH\b/ s|.*|#define CONFIG_TOOLCHAIN_PATH "$(MECT_CSXCDIR)"|' ltib/config/platform/imx/.tmpconfig.h
-	rm -f ltib/config/platform/imx/defconfig.dev
-	ln -sf ltib/config/platform/imx/defconfig.dev .config
-	echo "MECT_CC_DIRECTORY := $(MECT_CSXCDIR)" > projects/ATCMcontrol_RunTimeSystem/tool_chain_base_dir.inc
-	echo "MECT_CC_DIRECTORY := $(MECT_CSXCDIR)" > projects/cgic_work/tool_chain_base_dir.inc
+	exit 1	### MTL: debug
 
 $(MECT_TMPDIR):
 	rm -rf $(MECT_TMPDIR)
@@ -469,6 +456,12 @@ ltib_build: hosttools
 	sudo chown -R $(LOGNAME).$(shell groups | awk '{print $$1}') $(MECT_FSDIR)
 	mkdir -p $(MECT_FSDIR)/rootfs
 	mkdir -p $(MECT_FSDIR)/rpm/BUILD
+	sed -i '/\bCONFIG_TOOLCHAIN_PATH\b/ s|.*|CONFIG_TOOLCHAIN_PATH="$(MECT_CSXCDIR)"|' ltib/config/platform/imx/.config
+	sed -i '/\bCONFIG_TOOLCHAIN_PATH\b/ s|.*|#define CONFIG_TOOLCHAIN_PATH "$(MECT_CSXCDIR)"|' ltib/config/platform/imx/.tmpconfig.h
+	ln -sf .config ltib/config/platform/imx/defconfig.dev
+	ln -sf kernel-$(MECT_KERNEL_VER)-imx28-tpac1007_480x272.config $(MECT_KERNEL_CONF)
+	echo "MECT_CC_DIRECTORY := $(MECT_CSXCDIR)" > projects/ATCMcontrol_RunTimeSystem/tool_chain_base_dir.inc
+	echo "MECT_CC_DIRECTORY := $(MECT_CSXCDIR)" > projects/cgic_work/tool_chain_base_dir.inc
 	cd $(MECT_LTIBDIR); PATH=/usr/lib/ccache:$$PATH GIT_AUTHOR_NAME=$(MECT_USER_NAME) GIT_AUTHOR_EMAIL=$(MECT_TARGET_UNIX_NAME)@$(MECT_HOST_NAME) GIT_COMMITTER_NAME=$(MECT_USER_NAME) GIT_COMMITTER_EMAIL=$(MECT_TARGET_UNIX_NAME)@$(MECT_HOST_NAME) ./ltib
 
 # Set up the host tools.
@@ -921,3 +914,5 @@ $(MECT_FTPDIR)/%.$(MECT_MD5EXT):
 	wget -O $@ "$(MECT_FTPURL)/$(shell basename $@)"
 	touch -c $@			# Force the re-check of the downloaded file, if any.
 	$(MAKE) $(@:%.$(MECT_MD5EXT)=%)	# Re-check the downloaded file, if any.
+
+# vim: set noexpandtab:

@@ -69,7 +69,11 @@ LC_ALL=C
 export XTRA_OPTS=""
 export XTRA_OPTS_CONFIG=""
 
+%if 0%{?toolchain:1}
 TOOL_CHAIN_DIR="$(readlink -m ../../../../host_tools/CodeSourcery)"
+%else
+TOOL_CHAIN_DIR="$(readlink -m ../../host_tools/CodeSourcery)"
+%endif
 
 mkdir -p mkspecs/qws/linux-g++-mx
 initscript=mkspecs/qws/linux-g++-mx/qmake.conf

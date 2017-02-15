@@ -470,7 +470,7 @@ hosttools: downloads toolchain qt
 toolchain:
 	sudo rm -rf $(MECT_CSXCUNPACK) $(MECT_CSXCDIR)
 	tar xjvf $(MECT_FTPDIR)/$(MECT_CSXCARCH)
-	mkdir -p $(dir $(MECT_CSXCDIR))
+	sudo install -m 755 -o $(shell id -nu) -g $(shell id -ng) -d $(MECT_HOST_TOOLS_DIR)
 	mv $(MECT_CSXCUNPACK) $(MECT_CSXCDIR)
 	test -d /usr/lib/ccache
 	for f in arm-none-linux-gnueabi-gcc arm-none-linux-gnueabi-c++ arm-none-linux-gnueabi-g++; do \

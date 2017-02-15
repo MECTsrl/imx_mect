@@ -260,15 +260,16 @@ MECT_TARGET_RFSPKGS := \
 MECT_TARGET_RFSPKGS := $(MECT_TARGET_RFSPKGS:%=$(MECT_RPMDIR)/%)
 
 
-# Set archive sources
-#
+# Host tools root
+# NOTE: keep in sync with spec and project configs.
+export MECT_HOST_TOOLS_DIR := /opt/MECT
 
 # Toolchain archive
 MECT_CSXCPREFIX = arm-2011.03
 MECT_CSXCARCH = $(MECT_CSXCPREFIX)-41-arm-none-linux-gnueabi-i686-pc-linux-gnu.tar.bz2
 MECT_CSXCUNPACK = $(CURDIR)/$(MECT_CSXCPREFIX)
 # Keep this in sync with LTIB config
-export MECT_CSXCDIR := $(IMX_MECT_DIR)/host_tools/CodeSourcery
+export MECT_CSXCDIR := $(MECT_HOST_TOOLS_DIR)/CodeSourcery
 export MECT_CC_DIRECTORY = $(MECT_CSXCDIR)
 export MECT_CC_VERSION := 
 export MECT_CC_RADIX := arm-none-linux-gnueabi
@@ -281,7 +282,7 @@ MECT_LTIB_EVKDIR = $(MECT_LTIB_EVKARCH:%.tar.gz=%)
 MECT_LTIBINST_TARGETDIR_PATHCH = ltib-install-merge.patch
 
 # LTIB qt spec file (MECT patch)
-export MECT_QT_INSTALL_DIR := $(IMX_MECT_DIR)/host_tools/Trolltech
+export MECT_QT_INSTALL_DIR := $(MECT_HOST_TOOLS_DIR)/Trolltech
 MECT_LTIB_QT_ARCH = qt-everywhere-opensource-src-4.8.5.tar.gz
 MECT_LTIB_QT_PATCH1 = qt-everywhere-opensource-src-4.8.5-1394522957.patch
 MECT_LTIB_QT_PATCH2 = qt-everywhere-opensource-src-4.8.5-1420823826.patch
@@ -410,10 +411,10 @@ setup: ltib_setup projects_setup spec_setup
 .PHONY: ltib_setup
 ltib_setup: ltib_inst ltib_patch
 	if ! grep -q '^$(MECT_LTIBDIR)/../src$$' $(MECT_LTIBDIR)/.ltibrc; then \
-		sed -i '/\/ltib\/..\/src$$/ d; s|^%ldirs$$|%ldirs\n$(MECT_LTIBDIR)/../src|' $(MECT_LTIBDIR)/.ltibrc; \
+		sed -i '/\/..\/src$$/ d; s|^%ldirs$$|%ldirs\n$(MECT_LTIBDIR)/../src|' $(MECT_LTIBDIR)/.ltibrc; \
 	fi
-	if ! grep -q '^$(MECT_LTIBDIR)/../host_tools/CodeSourcery/arm-none-linux-gnueabi/libc/usr/bin$$' $(MECT_LTIBDIR)/.ltibrc; then \
-		sed -i '/\/ltib\/..\/host_tools\/CodeSourcery\/arm-none-linux-gnueabi\/libc\/usr\/bin$$/ d; s|^%ldirs$$|%ldirs\n$(MECT_LTIBDIR)/../host_tools/CodeSourcery/arm-none-linux-gnueabi/libc/usr/bin|' $(MECT_LTIBDIR)/.ltibrc; \
+	if ! grep -q '^$(MECT_HOST_TOOLS_DIR)/CodeSourcery/arm-none-linux-gnueabi/libc/usr/bin$$' $(MECT_LTIBDIR)/.ltibrc; then \
+		sed -i '/\/CodeSourcery\/arm-none-linux-gnueabi\/libc\/usr\/bin$$/ d; s|^%ldirs$$|%ldirs\n$(MECT_HOST_TOOLS_DIR)/CodeSourcery/arm-none-linux-gnueabi/libc/usr/bin|' $(MECT_LTIBDIR)/.ltibrc; \
 	fi
 
 .PHONY: ltib_inst
@@ -896,7 +897,7 @@ clean: clean_projects
 distclean: clean
 	if which ccache > /dev/null; then ccache -C; fi
 	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIB_RFSDIR) $(MECT_CSXCDIR) $(MECT_QT_INSTALL_DIR) $(MECT_FSDIR)
-	cd $(MECT_LTIBDIR); rm -f .config.old host_config.log .host_wait_warning* lib .lock_file man RELEASE_INFO .root_cf rootfs.ext2.* rootfs.ext2.gz rootfs_image rootfs.jffs2 rootfs.tmp rpm rpmdb .rpmdb_nfs_warning .rpm_warning .sudo_warning .tc_test_* tmp .tmpconfig.h /tmp/ltib vmlinux.* .wget_warning
+	cd $(MECT_LTIBDIR); rm -f .config.old host_config.log .host_wait_warning* lib .lock_file man RELEASE_INFO .root_cf rootfs.ext2.* rootfs.ext2.gz rootfs_image rootfs.jffs2 rootfs.tmp rpm rpmdb .rpmdb_nfs_warning .rpm_warning .sudo_warning .tc_test_* tmp /tmp/ltib vmlinux.* .wget_warning
 	find $(MECT_LTIBDIR)/config/platform \( -name *.dev -o -name *.bak \) -exec rm {} \;
 	cd $(MECT_LTIBDIR); for i in faked fakeroot mkimage gdb tmake .gdbinit mpc.init netperf netserver; do \
 	    rm -rf $(MECT_LTIBDIR)/bin/$$i; \

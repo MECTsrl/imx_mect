@@ -61,7 +61,7 @@
 #undef CONFIG_TOOLCHAIN_ARMEABI_GLIBC1
 #define CONFIG_TOOLCHAIN_ARMEABI_CUSTOM 1
 #define CONFIG_CUSTOM_TOOLCHAIN 1
-#define CONFIG_TOOLCHAIN_PATH "@@CROSS_COMPILER_INSTALL_ROOT@@"
+#define CONFIG_TOOLCHAIN_PATH "/opt/MECT/CodeSourcery"
 #define CONFIG_CUSTOM_TOOLCHAIN_PREFIX "arm-none-linux-gnueabi-"
 #define CONFIG_TOOLCHAIN_PREFIX "arm-none-linux-gnueabi-"
 #define CONFIG_TOOLCHAIN_CFLAGS "-O2 -msoft-float -fsigned-char"

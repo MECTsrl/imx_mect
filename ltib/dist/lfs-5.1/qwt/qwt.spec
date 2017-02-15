@@ -46,7 +46,7 @@ awk '{if ($0 ~ /QwtDesigner/ || $0 ~ /QwtExamples/) {getline; getline;} else {pr
 cp qwtconfig.pri qwtconfig.pri.orig
 awk '{if ($0 ~ /\/usr\/local\//) {print "    QWT_INSTALL_PREFIX    = /usr/";} else{print $0;}}' qwtconfig.pri.orig > qwtconfig.pri
 
-../../../../host_tools/Trolltech/bin/qmake -spec qws/linux-g++-mx
+/opt/MECT/Trolltech/bin/qmake -spec qws/linux-g++-mx
 
 make \
     sub-src-all-ordered \

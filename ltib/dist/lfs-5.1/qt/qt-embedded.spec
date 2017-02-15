@@ -70,9 +70,9 @@ export XTRA_OPTS=""
 export XTRA_OPTS_CONFIG=""
 
 %if 0%{?toolchain:1}
-TOOL_CHAIN_DIR="$(readlink -m ../../../../host_tools/CodeSourcery)"
+TOOL_CHAIN_DIR="$(readlink -m /opt/MECT/CodeSourcery)"
 %else
-TOOL_CHAIN_DIR="$(readlink -m ../../host_tools/CodeSourcery)"
+TOOL_CHAIN_DIR="$(readlink -m /opt/MECT/CodeSourcery)"
 %endif
 
 mkdir -p mkspecs/qws/linux-g++-mx

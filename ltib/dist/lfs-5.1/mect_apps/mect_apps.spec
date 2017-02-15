@@ -329,7 +329,7 @@ LC_ALL=C
 export MECT_RFSDIR
 MECT_RFSDIR=$DEV_IMAGE
 export MECT_QT_INSTALL_DIR
-MECT_QT_INSTALL_DIR="$(readlink -m ../../host_tools/Trolltech)"
+MECT_QT_INSTALL_DIR="$(readlink -m /opt/MECT/Trolltech)"
 
 # Target (or placeholder) names
 for t in \

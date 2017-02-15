@@ -779,7 +779,7 @@ target_lfs_flash:
 .PHONY: target_mfg_upd
 target_mfg_upd: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
 target_mfg_upd: MECT_TGTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)
-target_mfg_upd: MECT_MFGDIR = $(MECT_TGTDIR)/$(notdir $(MECT_TGTDIR) | sed 's/\./_/g')
+target_mfg_upd: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
 target_mfg_upd: MECT_MFGZIP = $(shell readlink -m $(MECT_MFGDIR)/../../$(notdir $(MECT_MFGDIR)).zip)
 target_mfg_upd: MECT_SYSUPD = $(shell readlink -m $(MECT_MFGDIR)/../../sysupdate_$(MECT_BUILD_RELEASE)_$(MECT_BUILD_TARGET).sh)
 target_mfg_upd: MECT_SYSUPDIR = $(shell readlink -m $(MECT_MFGDIR)/../../$(MECT_BUILD_TARGET))

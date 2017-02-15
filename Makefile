@@ -469,12 +469,12 @@ hosttools: downloads toolchain qt
 toolchain:
 	sudo rm -rf $(MECT_CSXCUNPACK) $(MECT_CSXCDIR)
 	tar xjvf $(MECT_FTPDIR)/$(MECT_CSXCARCH)
-	mkdir -p $(shell dirname $(MECT_CSXCDIR))
+	mkdir -p $(dir $(MECT_CSXCDIR))
 	mv $(MECT_CSXCUNPACK) $(MECT_CSXCDIR)
-	#test -d /usr/lib/ccache
-	#for f in arm-none-linux-gnueabi-gcc arm-none-linux-gnueabi-c++ arm-none-linux-gnueabi-g++; do \
-	#       	sudo ln -sf $(MECT_CSXCDIR)/bin/$$f /usr/lib/ccache/; \
-	#done
+	test -d /usr/lib/ccache
+	for f in arm-none-linux-gnueabi-gcc arm-none-linux-gnueabi-c++ arm-none-linux-gnueabi-g++; do \
+	       	sudo ln -sf $(MECT_CSXCDIR)/bin/$$f /usr/lib/ccache/; \
+	done
 
 # Set up host Qt.
 .PHONY: qt
@@ -622,7 +622,7 @@ images:
 	mkdir -p $(MECT_SYSUPD_DIRALL)
 	install -m 644 $(MECT_KOBS_TMPL) $(MECT_SYSUPD_DIRALL)
 	$(MAKE) $@_do
-	sed "s/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/" $(MECT_SYSUPD_TMPLALL) > $(MECT_SYSUPD_DIRALL)/$(shell basename $(MECT_SYSUPD_SHARALL))
+	sed "s/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/" $(MECT_SYSUPD_TMPLALL) > $(MECT_SYSUPD_DIRALL)/$(notdir $(MECT_SYSUPD_SHARALL))
 	$(MAKE) cloner_shar
 
 images_do: $(MECT_IMAGES)
@@ -664,10 +664,11 @@ cloner_shar:
 	mkdir -p $(MECT_SYSCLONE_DIR)
 	rsync -aLv $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)/ --exclude \*.la
 	cp $(MECT_SYSCLONE_PRE_TMPL) $(MECT_SYSCLONE_SHAR)
-	cd $(MECT_SYSCLONE_DIR)/..; shar -M -x $(shell basename $(MECT_SYSCLONE_DIR))/* >> $(MECT_SYSCLONE_SHAR)
+	cd $(MECT_SYSCLONE_DIR)/..; shar -M -x $(notdir $(MECT_SYSCLONE_DIR))/* >> $(MECT_SYSCLONE_SHAR)
 	tail -1 $(MECT_SYSCLONE_SHAR) | grep -q '^exit 0$$'
 	sed -i '$$ d' $(MECT_SYSCLONE_SHAR)
 	cat $(MECT_SYSCLONE_POST_TMPL) >> $(MECT_SYSCLONE_SHAR)
+	rm -rf $(dir $(MECT_SYSCLONE_DIR))
 
 # Common target rules
 #
@@ -777,8 +778,8 @@ target_lfs_flash:
 .PHONY: target_mfg_upd
 target_mfg_upd: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
 target_mfg_upd: MECT_TGTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)
-target_mfg_upd: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
-target_mfg_upd: MECT_MFGZIP = $(shell readlink -m $(MECT_MFGDIR)/../../$(shell basename $(MECT_MFGDIR)).zip)
+target_mfg_upd: MECT_MFGDIR = $(MECT_TGTDIR)/$(notdir $(MECT_TGTDIR) | sed 's/\./_/g')
+target_mfg_upd: MECT_MFGZIP = $(shell readlink -m $(MECT_MFGDIR)/../../$(notdir $(MECT_MFGDIR)).zip)
 target_mfg_upd: MECT_SYSUPD = $(shell readlink -m $(MECT_MFGDIR)/../../sysupdate_$(MECT_BUILD_RELEASE)_$(MECT_BUILD_TARGET).sh)
 target_mfg_upd: MECT_SYSUPDIR = $(shell readlink -m $(MECT_MFGDIR)/../../$(MECT_BUILD_TARGET))
 target_mfg_upd: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
@@ -789,7 +790,7 @@ target_mfg_upd:
 	test -n '$(MECT_BUILD_TARGET)'
 	sudo rm -rf $(MECT_MFGDIR)
 	mkdir -p $(MECT_MFGDIR)/'OS firmware'/img $(MECT_MFGDIR)/'OS firmware'/sys $(MECT_TGTDIR)
-	sed "s/@@PLAYER@@/$(shell basename $(MECT_MFGDIR))/" $(MECT_FTPDIR)/player.ini > $(MECT_MFGDIR)/player.ini
+	sed "s/@@PLAYER@@/$(notdir $(MECT_MFGDIR))/" $(MECT_FTPDIR)/player.ini > $(MECT_MFGDIR)/player.ini
 	install -m 644 $(MECT_FTPDIR)/fdisk-u.input $(MECT_MFGDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(MECT_FTPDIR)/ucl.xml $(MECT_MFGDIR)/'OS firmware'/ucl.xml
 	sudo tar cf $(MECT_MFGDIR)/'OS firmware'/img/rootfs.tar -C $(MECT_RFSDIR) .
@@ -815,12 +816,12 @@ target_mfg_upd:
 		flash/etc/ppp/chat-usb3g \
 		flash/etc/icinga/nrpe.cfg
 	tar cf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_LFSDIR) .
-	GZIP=-9 tar cf - -I pigz -C $(MECT_SYSUPDIR)/.. $(MECT_BUILD_TARGET) $(shell basename $(MECT_KOBS_TMPL)) | uuencode $(MECT_UPDATE_ARCH) >> $(MECT_SYSUPD)
+	GZIP=-9 tar cf - -I pigz -C $(MECT_SYSUPDIR)/.. $(MECT_BUILD_TARGET) $(notdir $(MECT_KOBS_TMPL)) | uuencode $(MECT_UPDATE_ARCH) >> $(MECT_SYSUPD)
 	if test -n '$(MECT_SYSUPD_DIRALL)' -a -d '$(MECT_SYSUPD_DIRALL)'; then \
 		sudo rm -rf $(MECT_SYSUPD_DIRALL)/$(MECT_BUILD_TARGET); \
 		mv $(MECT_SYSUPDIR)/../$(MECT_BUILD_TARGET) $(MECT_SYSUPD_DIRALL); \
 	fi
-	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_SYSUPDIR) $(shell readlink -m $(MECT_SYSUPDIR)/../$(shell basename $(MECT_KOBS_TMPL))) $(MECT_TGTDIR)
+	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_SYSUPDIR) $(shell readlink -m $(MECT_SYSUPDIR)/../$(notdir $(MECT_KOBS_TMPL))) $(MECT_TGTDIR)
 
 # Build the archive for target-specific development.
 .PHONY: target_dev
@@ -894,7 +895,12 @@ clean: clean_projects
 .PHONY: distclean
 distclean: clean
 	if which ccache > /dev/null; then ccache -C; fi
-	sudo rm -rf $(MECT_IMGDIR) $(MECT_CSXCDIR) $(MECT_FSDIR)/ltib $(MECT_FSDIR)/pkgs $(MECT_QT_INSTALL_DIR)
+	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIB_RFSDIR) $(MECT_CSXCDIR) $(MECT_QT_INSTALL_DIR) $(MECT_FSDIR)
+	cd $(MECT_LTIBDIR); rm -f .config.old host_config.log .host_wait_warning* lib .lock_file man RELEASE_INFO .root_cf rootfs.ext2.* rootfs.ext2.gz rootfs_image rootfs.jffs2 rootfs.tmp rpm rpmdb .rpmdb_nfs_warning .rpm_warning .sudo_warning .tc_test_* tmp .tmpconfig.h /tmp/ltib vmlinux.* .wget_warning
+	find $(MECT_LTIBDIR)/config/platform \( -name *.dev -o -name *.bak \) -exec rm {} \;
+	cd $(MECT_LTIBDIR); for i in faked fakeroot mkimage gdb tmake .gdbinit mpc.init netperf netserver; do \
+	    rm -rf $(MECT_LTIBDIR)/bin/$$i; \
+	done
 
 
 # Downloads
@@ -905,11 +911,11 @@ distclean: clean
 
 # Generic download rule for MECT site
 $(MECT_FTPDIR)/%: $(MECT_FTPDIR)/%.$(MECT_MD5EXT)
-	dir=$(shell dirname $@); mkdir -p $$dir; cd $$dir; md5sum -c $@.$(MECT_MD5EXT) 2>/dev/null || { rm -f $@; wget -O $@ --progress=dot:mega "$(MECT_FTPURL)/$(shell basename $@)"; md5sum -c $@.$(MECT_MD5EXT); }
+	dir=$(dir $@); mkdir -p $$dir; cd $$dir; md5sum -c $@.$(MECT_MD5EXT) 2>/dev/null || { rm -f $@; wget -O $@ --progress=dot:mega "$(MECT_FTPURL)/$(notdir $@)"; md5sum -c $@.$(MECT_MD5EXT); }
 
 $(MECT_FTPDIR)/%.$(MECT_MD5EXT):
-	mkdir -p $(shell dirname $@)
-	wget -O $@ "$(MECT_FTPURL)/$(shell basename $@)"
+	mkdir -p $(dir $@)
+	wget -O $@ "$(MECT_FTPURL)/$(notdir $@)"
 	touch -c $@			# Force the re-check of the downloaded file, if any.
 	$(MAKE) $(@:%.$(MECT_MD5EXT)=%)	# Re-check the downloaded file, if any.
 

@@ -896,7 +896,7 @@ clean: clean_projects
 .PHONY: distclean
 distclean: clean
 	if which ccache > /dev/null; then ccache -C; fi
-	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIB_RFSDIR) $(MECT_CSXCDIR) $(MECT_QT_INSTALL_DIR) $(MECT_FSDIR)
+	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIB_RFSDIR) $(MECT_CSXCDIR) $(MECT_QT_INSTALL_DIR) $(MECT_FSDIR) $(MECT_HOST_TOOLS_DIR)
 	cd $(MECT_LTIBDIR); rm -f .config.old host_config.log .host_wait_warning* lib .lock_file man RELEASE_INFO .root_cf rootfs.ext2.* rootfs.ext2.gz rootfs_image rootfs.jffs2 rootfs.tmp rpm rpmdb .rpmdb_nfs_warning .rpm_warning .sudo_warning .tc_test_* tmp /tmp/ltib vmlinux.* .wget_warning
 	find $(MECT_LTIBDIR)/config/platform \( -name *.dev -o -name *.bak \) -exec rm {} \;
 	cd $(MECT_LTIBDIR); for i in faked fakeroot mkimage gdb tmake .gdbinit mpc.init netperf netserver; do \

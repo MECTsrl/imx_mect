@@ -457,8 +457,6 @@ ltib_build: hosttools
 	sed -i '/\bCONFIG_TOOLCHAIN_PATH\b/ s|.*|#define CONFIG_TOOLCHAIN_PATH "$(MECT_CSXCDIR)"|' ltib/config/platform/imx/.tmpconfig.h
 	ln -sf .config ltib/config/platform/imx/defconfig.dev
 	ln -sf kernel-$(MECT_KERNEL_VER)-imx28-tpac1007_480x272.config $(MECT_KERNEL_CONF)
-	echo "MECT_CC_DIRECTORY := $(MECT_CSXCDIR)" > projects/ATCMcontrol_RunTimeSystem/tool_chain_base_dir.inc
-	echo "MECT_CC_DIRECTORY := $(MECT_CSXCDIR)" > projects/cgic_work/tool_chain_base_dir.inc
 	cd $(MECT_LTIBDIR); PATH=/usr/lib/ccache:$$PATH GIT_AUTHOR_NAME=$(MECT_USER_NAME) GIT_AUTHOR_EMAIL=$(MECT_TARGET_UNIX_NAME)@$(MECT_HOST_NAME) GIT_COMMITTER_NAME=$(MECT_USER_NAME) GIT_COMMITTER_EMAIL=$(MECT_TARGET_UNIX_NAME)@$(MECT_HOST_NAME) ./ltib
 
 # Set up the host tools.

@@ -4,7 +4,7 @@
 QMAKE             =  qmake -spec qws/linux-g++-mx
 
 # Define MECT_CC_DIRECTORY in the include.
-include tool_chain_base_dir.inc
+MECT_CC_DIRECTORY := /opt/MECT/CodeSourcery
 MECT_CC_BINDIR    =  $(MECT_CC_DIRECTORY)/bin/
 MECT_CC_RADIX     =  arm-none-linux-gnueabi
 ifdef MECT_CC_RADIX

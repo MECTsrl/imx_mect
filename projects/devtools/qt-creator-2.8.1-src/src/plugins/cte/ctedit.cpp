@@ -78,11 +78,13 @@ ctedit::ctedit(QWidget *parent) :
     int     nValMin = 0;
     int     nValMax = 9999;
     int     nValMaxInt16 = 65535;
+    QString szToolTip;
 
     ui->setupUi(this);
     // Header Colonne
     lstHeadCols.clear();
     lstValues.clear();
+    lstPriority.clear();
     lstPLC.clear();
     lstBusType.clear();
     lstBehavior.clear();
@@ -107,6 +109,13 @@ ctedit::ctedit(QWidget *parent) :
     lstHeadCols[colBlockSize] = trUtf8("Blk Size");
     lstHeadCols[colComment] = trUtf8("Comment");
     lstHeadCols[colBehavior] = trUtf8("Behavior");
+    // Lista Priorità
+    lstPriority
+            << trUtf8("0")
+            << trUtf8("1")
+            << trUtf8("2")
+            << trUtf8("3")
+        ;
     // Lista PLC
     lstPLC
             << trUtf8("H")
@@ -160,25 +169,84 @@ ctedit::ctedit(QWidget *parent) :
         ;
     // Caricamento delle varie Combos
     // Combo Priority
+    szToolTip.clear();
+    szToolTip.append(tr("Enabling the exchange of data with remote devices:\n"));
+    szToolTip.append(tr("0 - Disabled\n"));
+    szToolTip.append(tr("1 - Enabled High Priority\n"));
+    szToolTip.append(tr("2 - Enabled Medium Priority\n"));
+    szToolTip.append(tr("3 - Enabled Low Priority"));
     for  (nCol=0; nCol<4; nCol++)   {
-        ui->cboPriority->addItem(QString::number(nCol), QString::number(nCol));
+        ui->cboPriority->addItem(lstPriority[nCol], QString::number(nCol));
     }
+    ui->cboPriority->setToolTip(szToolTip);
     // Combo Update
+    szToolTip.clear();
+    szToolTip.append(tr("PLC Refresh Rate:\n"));
+    szToolTip.append(tr("H - Only in current page\n"));
+    szToolTip.append(tr("P - Permanent\n"));
+    szToolTip.append(tr("S - Permanent Slow Logging\n"));
+    szToolTip.append(tr("F - Permanent Fast Logging\n"));
+    szToolTip.append(tr("V - Permanent Logging if Changed"));
     for  (nCol=0; nCol<lstPLC.count(); nCol++)   {
         ui->cboUpdate->addItem(lstPLC[nCol], lstPLC[nCol]);
     }
+    ui->cboUpdate->setToolTip(szToolTip);
+    // ToolTip nome variabile
+    szToolTip.clear();
+    szToolTip.append(tr("Name of the variable to be used in HMI:\n"));
+    szToolTip.append(tr("Must follow C++ variable naming conventions"));
+    ui->txtName->setToolTip(szToolTip);
     // Combo TipoCrossTable
+    szToolTip.clear();
+    szToolTip.append(tr("Variable Data Type"));
     for  (nCol=0; nCol<lstTipi.count(); nCol++)   {
         ui->cboType->addItem(lstTipi[nCol], lstTipi[nCol]);
     }
+    ui->cboType->setToolTip(szToolTip);
+    // Decimals
+    szToolTip.clear();
+    szToolTip.append(tr("Number of decimal places to display data if from 0 to 4,\n"));
+    szToolTip.append(tr("otherwise is the position of the variable that contains the number of decimal places\n"));
+    szToolTip.append(tr("In the case of BIT variables, it is the position of the bit as low as 1"));
+    ui->txtDecimal->setToolTip(szToolTip);
     // Combo Tipo Bus
+    szToolTip.clear();
+    szToolTip.append(tr("Protocol with the remote device"));
     for  (nCol=0; nCol<lstBusType.count(); nCol++)   {
         ui->cboProtocol->addItem(lstBusType[nCol], lstBusType[nCol]);
     }
+    ui->cboProtocol->setToolTip(szToolTip);
+    // Indirizzo IP
+    szToolTip.clear();
+    szToolTip.append(tr("IP address for TCP, TCP_RTU, TCP_SRV, TCPRTU SRV like 192.168.0.42"));
+    ui->txtIP->setToolTip(szToolTip);
+    // Porta di comunicazione
+    szToolTip.clear();
+    szToolTip.append(tr("Communication Port, e.g. 502"));
+    ui->txtPort->setToolTip(szToolTip);
+    // Indirizzo nodo remoto
+    szToolTip.clear();
+    szToolTip.append(tr("Remode Node Address, 0 for broadcast"));
+    ui->txtNode->setToolTip(szToolTip);
+    // Register
+    szToolTip.clear();
+    szToolTip.append(tr("Modbus address of the Register to be used"));
+    ui->txtRegister->setToolTip(szToolTip);
+    // Block
+    szToolTip.clear();
+    szToolTip.append(tr("Address of the first register of the block"));
+    ui->txtBlock->setToolTip(szToolTip);
+    // Block size
+    szToolTip.clear();
+    szToolTip.append(tr("Number of registers in the block"));
+    ui->txtBlockSize->setToolTip(szToolTip);
     // Combo Behavior
+    szToolTip.clear();
+    szToolTip.append(tr("Variable behavior: Reading, Reading and Writing, Alarm, Event"));
     for  (nCol=0; nCol<lstBehavior.count(); nCol++)   {
         ui->cboBehavior->addItem(lstBehavior[nCol], lstBehavior[nCol]);
     }
+    ui->cboBehavior->setToolTip(szToolTip);
     // Init Valori
     m_szCurrentCTFile.clear();
     m_szCurrentProjectPath.clear();
@@ -214,6 +282,17 @@ ctedit::ctedit(QWidget *parent) :
     // Stringhe generiche per Default campi
     szEMPTY.clear();
     szZERO.fromAscii("0");
+    // Costanti per i colori di sfondo
+    colorNonRetentive = QColor(255,255,220,255);        // Giallino
+    colorRetentive = QColor(185,255,172,255);           // Verdino
+    colorSystem = QColor(255,227,215,255);              // Rosa
+    // Style per Table Widget
+    // ui->tblCT->setAlternatingRowColors(true);
+    // ui->tblCT->setStyleSheet(QString::fromAscii("alternate-background-color: yellow;background-color: red;"));
+
+    // Variabili di stato globale dell'editor
+    ctModified = false;
+    ui->cmdSave->setEnabled(ctModified);
 }
 
 ctedit::~ctedit()
@@ -264,7 +343,7 @@ bool    ctedit::loadCTFile()
         for (nCur = 1; nCur <= DimCrossTable; ++nCur)  {
             lstCTRecords.append(CrossTable[nCur]);
         }
-        fRes = ctable2Iface();
+        fRes = ctable2Grid();
         // Show All Elements
         if (fRes)  {
             on_cmdHideShow_clicked(true);
@@ -272,7 +351,8 @@ bool    ctedit::loadCTFile()
     }
     return fRes;
 }
-bool    ctedit::ctable2Iface()
+bool    ctedit::ctable2Grid()
+// Lettura di tutta la CT in Grid
 {
     bool        fRes = true;
     int         nCur = 0;
@@ -303,13 +383,20 @@ bool    ctedit::ctable2Iface()
                     tItem->setTextAlignment(Qt::AlignCenter);
                 // Rende il valore non Editabile
                 tItem->setFlags(tItem->flags() ^ Qt::ItemIsEditable);
-                // Aggiunta al Grid
-                ui->tblCT->setItem(nRowCount, nCol, tItem);
                 // Flag Marcatore della riga
                 if (CrossTable[nCur].UsedEntry > 0)
                     ui->tblCT->showRow(nRowCount);
                 else
                     ui->tblCT->hideRow(nRowCount);
+                // Impostazione del Backgound color in funzione della zona
+                if (nCur >= 0 && nCur < MAX_RETENTIVE)
+                    tItem->setBackgroundColor(colorRetentive);
+                else if (nCur >= MIN_NONRETENTIVE - 1 && nCur <= MAX_NONRETENTIVE -1)
+                    tItem->setBackgroundColor(colorNonRetentive);
+                else if (nCur >= MIN_SYSTEM - 1)
+                    tItem->setBackgroundColor(colorSystem);
+                // Aggiunta al Grid
+                ui->tblCT->setItem(nRowCount, nCol, tItem);
             }
             nRowCount++;
         }
@@ -323,7 +410,8 @@ bool    ctedit::ctable2Iface()
     return fRes;
 }
 bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
-// Conversione da CT Record a Lista Stringhe per Interfaccia (Grid)
+// Conversione da CT Record a record come Lista Stringhe per Interfaccia (Grid)
+// Da Record C a QStringList di valori per caricamento griglia
 {
     int     nCol = 0;
     QString szTemp;
@@ -339,7 +427,8 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
     // Abilitazione riga
     if (lstCTRecords[nRow].UsedEntry > 0)  {
         // Priority
-        lstRecValues[colPriority] = QString::number(lstCTRecords[nRow].Enable);
+        if (lstCTRecords[nRow].Enable >= 0 && lstCTRecords[nRow].Enable < lstPriority.count())
+            lstRecValues[colPriority] = lstPriority[lstCTRecords[nRow].Enable];
         // Campo Update
         if (lstCTRecords[nRow].Plc >= 0 && lstCTRecords[nRow].Plc < lstPLC.count())
             lstRecValues[colUpdate] = lstPLC[lstCTRecords[nRow].Plc];
@@ -432,6 +521,7 @@ void ctedit::on_cmdHideShow_clicked(bool checked)
 }
 bool ctedit::values2Iface(QStringList &lstRecValues)
 // Copia Lista Stringhe convertite da CT Record a Zona di Editing
+// Caricamento Lista valori stringa su area editing
 {
     QString szTemp;
     int     nPos = 0;
@@ -514,6 +604,11 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
     }
     enableFields();
     return true;
+}
+bool ctedit::iface2values(QStringList &lstRecValues)
+// Copia da Zona Editing a Lista Stringhe per Grid e Record CT
+{
+
 }
 
 void ctedit::on_cmdBlocchi_clicked()
@@ -615,7 +710,7 @@ bool    ctedit::riassegnaBlocchi()
         lstCTRecords[j].BlockSize = curBSize;
     }
     // Return value as reload CT
-    fRes = ctable2Iface();
+    fRes = ctable2Grid();
     qDebug() << "Reload finished";
     ui->cmdBlocchi->setEnabled(true);
     this->setCursor(Qt::ArrowCursor);
@@ -644,7 +739,7 @@ bool ctedit::saveCTFile()
     // Return Value
     return nRes == 0;
 }
-bool ctedit::iface2Ctable()
+bool ctedit::grid2CTable()
 // Dump di tutto il Grid in lista di CT Records
 {
     bool        fRes = true;
@@ -670,7 +765,7 @@ bool ctedit::iface2Ctable()
     // Return Value
     return fRes;
 }
-void ctedit::clearCTrec(int nRow)
+void ctedit::freeCTrec(int nRow)
 // Marca il Record della CT come inutilizzato
 {
     if (nRow < 0 || nRow >= lstCTRecords.count())
@@ -698,6 +793,8 @@ void ctedit::clearCTrec(int nRow)
 }
 
 bool ctedit::list2CTrec(QStringList &lstRecValues, int nRow)
+// Conversione da Lista Valori di Interfaccia a CT Record (Form -> REC)
+// Scrive un Record letto da interfaccia direttamente in lista di Record C
 {
     bool        fRes = true;
     bool        fOk = false;
@@ -706,13 +803,13 @@ bool ctedit::list2CTrec(QStringList &lstRecValues, int nRow)
 
     // Abilitazione riga (Nome Vuoto => Riga disabilitata)
     if (lstRecValues[colName].isEmpty())  {
-        clearCTrec(nRow);
+        freeCTrec(nRow);
     }
     else  {
         // Priority
-        nPos = lstRecValues[colPriority].toInt(&fOk);
-        nPos = fOk ? nPos : 0;
-        lstCTRecords[nRow].Enable = nPos;
+        nPos = lstPriority.indexOf(lstRecValues[colPriority]);
+        nPos = (nPos >= 0 && nPos < lstPriority.count()) ? nPos : 0;
+        lstCTRecords[nRow].Enable = (int16_t) nPos;
         // Update
         nPos = lstPLC.indexOf(lstRecValues[colUpdate]);
         nPos = (nPos >= 0 && nPos < lstPLC.count()) ? nPos : 0;
@@ -962,9 +1059,16 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
     // Se la riga corrente è stata modificata, salva il contenuto
     if (nRow >= 0 && nRow < lstCTRecords.count())  {
         if (isLineModified())  {
+            // Primo controllo di coerenza sulla riga corrente
             fRes = checkFields();
             if (fRes)  {
 
+                // Marca la Cross Table da salvare
+                ctModified = true;
+            }
+            else  {
+                ui->tblCT->selectRow(nRow);
+                return;
             }
         }
     }
@@ -984,7 +1088,8 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
     else  {
         clearEntryForm();
     }
-
+    // Bottone di Salvataggio
+    ui->cmdSave->setEnabled(ctModified);
 }
 void ctedit::clearEntryForm()
 // Svutamento elementi Form Data Entry

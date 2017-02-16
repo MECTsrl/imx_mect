@@ -43,8 +43,11 @@
           <height>96</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string>Show or Hide unused rows</string>
+        </property>
         <property name="text">
-         <string>Hide</string>
+         <string>Nasc.i</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -95,6 +98,9 @@
           <width>96</width>
           <height>96</height>
          </size>
+        </property>
+        <property name="toolTip">
+         <string>Save changes</string>
         </property>
         <property name="text">
          <string>Save</string>

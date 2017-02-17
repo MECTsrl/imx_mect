@@ -29,7 +29,7 @@ MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_PLUGINSCRT_TAG := 0.0
+export MECT_BUILD_PLUGINSCRT_TAG := v2.0.12rc7
 
 # git branch and tag for the mect_apps project
 MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0
@@ -282,7 +282,6 @@ MECT_LTIB_EVKDIR = $(MECT_LTIB_EVKARCH:%.tar.gz=%)
 MECT_LTIBINST_TARGETDIR_PATHCH = ltib-install-merge.patch
 
 # LTIB qt spec file (MECT patch)
-export MECT_QT_INSTALL_DIR := $(MECT_HOST_TOOLS_DIR)/Trolltech
 MECT_LTIB_QT_ARCH = qt-everywhere-opensource-src-4.8.5.tar.gz
 MECT_LTIB_QT_PATCH1 = qt-everywhere-opensource-src-4.8.5-1394522957.patch
 MECT_LTIB_QT_PATCH2 = qt-everywhere-opensource-src-4.8.5-1420823826.patch
@@ -461,7 +460,7 @@ ltib_build: hosttools
 
 # Set up the host tools.
 .PHONY: hosttools
-hosttools: downloads toolchain qt
+hosttools: downloads toolchain
 
 # Set up the toolchain.
 .PHONY: toolchain
@@ -474,19 +473,6 @@ toolchain:
 	for f in arm-none-linux-gnueabi-gcc arm-none-linux-gnueabi-c++ arm-none-linux-gnueabi-g++; do \
 	       	sudo ln -sf $(MECT_CSXCDIR)/bin/$$f /usr/lib/ccache/; \
 	done
-
-# Set up host Qt.
-.PHONY: qt
-qt:
-	test -n "$(LOGNAME)"
-	mkdir -p $(MECT_TMPRPMDIR) $(MECT_LTIBDIR)/rpm/SOURCES
-	for f in $(MECT_FSPKG); do \
-	    cp $$f $(MECT_LTIBDIR)/rpm/SOURCES; \
-	done
-	PATH=/usr/lib/ccache:$(PATH) rpmbuild --define 'toolchain 1' --define 'toolchain_install_dir $(MECT_QT_INSTALL_DIR)' --define '_topdir $(MECT_LTIBDIR)/rpm' --dbpath $(MECT_TMPRPMDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_prefix /opt' --define '_rpmdir $(MECT_TMPRPMDIR)/RPMS' -bb --clean --rmsource $(MECT_LTIBDIR)/dist/lfs-5.1/qt/qt-embedded.spec
-	-sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb -e --allmatches --nodeps --define '_tmppath $(MECT_LTIBDIR)/tmp' qt-embedded 2>/dev/null
-	sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb --ignorearch -ivh --force --nodeps --excludedocs --define '_tmppath $(MECT_LTIBDIR)/tmp' $(MECT_TMPRPMDIR)/RPMS/$(MECT_TARGET_ARCH)/qt-embedded-$(MECT_BUILD_QTVERSION)-*.$(MECT_TARGET_ARCH).rpm
-	sudo chown -R $(LOGNAME).$(shell groups | awk '{print $$1}') $(MECT_TMPRPMDIR)
 
 
 # Set up the local projects: ATCMcontrol_RunTimeSystem.
@@ -894,7 +880,7 @@ clean: clean_projects
 .PHONY: distclean
 distclean: clean
 	if which ccache > /dev/null; then ccache -C; fi
-	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIB_RFSDIR) $(MECT_CSXCDIR) $(MECT_QT_INSTALL_DIR) $(MECT_FSDIR) $(MECT_HOST_TOOLS_DIR)
+	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIB_RFSDIR) $(MECT_CSXCDIR) $(MECT_FSDIR) $(MECT_HOST_TOOLS_DIR)
 	cd $(MECT_LTIBDIR); rm -f .config.old host_config.log .host_wait_warning* lib .lock_file man RELEASE_INFO .root_cf rootfs.ext2.* rootfs.ext2.gz rootfs_image rootfs.jffs2 rootfs.tmp rpm rpmdb .rpmdb_nfs_warning .rpm_warning .sudo_warning .tc_test_* tmp /tmp/ltib vmlinux.* .wget_warning
 	find $(MECT_LTIBDIR)/config/platform \( -name *.dev -o -name *.bak \) -exec rm {} \;
 	cd $(MECT_LTIBDIR); for i in faked fakeroot mkimage gdb tmake .gdbinit mpc.init netperf netserver; do \

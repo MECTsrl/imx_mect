@@ -10,18 +10,10 @@ Vendor          : Freescale
 Packager        : Rogerio Pimentel
 Group           : System Environment/Libraries
 URL             : http://get.qt.nokia.com/qt/source/%{archivename}-%{version}.tar.gz
-%if 0%{?toolchain:1}
-Source          : %{archivename}-%{version}.tar.gz
-Patch1          : %{archivename}-%{version}-1394522957.patch
-Patch2          : %{archivename}-%{version}-1420823826.patch
-Patch3          : %{archivename}-%{version}-1420823825.patch
-%endif
 BuildRoot       : %{_tmppath}/%{name}-%{version}
 Prefix          : %{pfx}
 AutoReqProv     : no
 
-
-%if 0%{!?toolchain:1}
 
 %Package rfs
 Summary         : Trimmed qt-embedded for root file system requirements.
@@ -34,8 +26,6 @@ AutoReqProv     : no
 qt-embedded package contents restricted to just the files that
 are needed at run time on the target.
 
-%endif
-
 
 %Description
 %{summary}
@@ -45,19 +35,8 @@ are needed at run time on the target.
 export LC_ALL
 LC_ALL=C
 
-%if 0%{!?toolchain:1}
-
 %setup -T -c -n %{name}
 cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
-
-%else
-
-%setup -n %{archivename}-%{version}
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-
-%endif
 
 
 %Build
@@ -66,20 +45,14 @@ LC_ALL=C
 
 # Set configuration.
 #
-export XTRA_OPTS=""
-export XTRA_OPTS_CONFIG=""
 
-%if 0%{?toolchain:1}
 TOOL_CHAIN_DIR="$(readlink -m /opt/MECT/CodeSourcery)"
-%else
-TOOL_CHAIN_DIR="$(readlink -m /opt/MECT/CodeSourcery)"
-%endif
 
 mkdir -p mkspecs/qws/linux-g++-mx
 initscript=mkspecs/qws/linux-g++-mx/qmake.conf
 cat > $initscript << EOF
-include(../..//common/gcc-base-unix.conf)
-include(../..//common/g++-unix.conf)
+include(../../common/gcc-base-unix.conf)
+include(../../common/g++-unix.conf)
 include(../../common/linux.conf)
 include(../../common/qws.conf)
 
@@ -135,15 +108,9 @@ QMAKE_LFLAGS_DYNAMIC_LIST      = -Wl,--dynamic-list,
 QMAKE_CFLAGS_THREAD           += -D_REENTRANT
 QMAKE_CXXFLAGS_THREAD         += \$\$QMAKE_CFLAGS_THREAD
 
-%if 0%{?toolchain:1}
-QMAKE_INCDIR                   = %{toolchain_install_dir}/include %{toolchain_install_dir}/include/glib-2.0 %{toolchain_install_dir}/lib/glib-2.0/include/
-QMAKE_LIBDIR                   = %{toolchain_install_dir}/lib
-QMAKE_LIBS                     =
-%else
 QMAKE_INCDIR                   = ${DEV_IMAGE}/usr/include ${DEV_IMAGE}/usr/include/glib-2.0 ${DEV_IMAGE}/usr/lib/glib-2.0/include/
 QMAKE_LIBDIR                   = ${DEV_IMAGE}/usr/lib
 QMAKE_LIBS                     = -lglib-2.0 -lgthread-2.0 -lz -lgmodule-2.0 -lgobject-2.0 -lts -lfreetype
-%endif
 QMAKE_INCDIR_X11               =
 QMAKE_LIBDIR_X11               =
 QMAKE_LIBS_DYNLOAD             = -ldl
@@ -184,7 +151,7 @@ QMAKE_INCREMENTAL_STYLE        = sublib
 load(qt_config)
 EOF
 
-chmod 744 $initscript
+chmod 644 $initscript
 
 initscript=mkspecs/qws/linux-g++-mx/qplatformdefs.h
 cat > $initscript << EOF
@@ -192,7 +159,7 @@ cat > $initscript << EOF
 #include "../../linux-g++/qplatformdefs.h"
 
 EOF
-chmod 744 $initscript
+chmod 644 $initscript
 
 test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
 
@@ -208,13 +175,9 @@ for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am 
 	find . -name $f -exec touch {} \;
 done
 MAKEFLAGS=j$(nproc) ./configure \
-%if 0%{?toolchain:1}
-	--prefix=%{toolchain_install_dir} \
-%else
-	--prefix=${DEV_IMAGE}/usr/local/Trolltech \
+	--prefix=/usr \
 	-plugin-sql-mysql \
 	-qt-mouse-tslib \
-%endif
 	-xplatform qws/linux-g++-mx \
 	-confirm-license \
 	-embedded arm \
@@ -254,7 +217,6 @@ MAKEFLAGS=j$(nproc) ./configure \
 	-shared \
 	-sm \
 	-v \
-	$XTRA_OPTS
 
 make -j$(nproc)
 
@@ -267,22 +229,7 @@ rm -rf $RPM_BUILD_ROOT
 
 test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
 
-%if 0%{?toolchain:1}
-
-make INSTALL_ROOT=%{buildroot} install
-
-%else
-
-install -d $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
-cp -a lib/* $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
-for l in "" $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libQt*.a $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib/libQt*.so.%{version}; do
-    test -z "$l" && continue
-    test -r "$l" && $TOOLCHAIN_PATH/bin/${TOOLCHAIN_PREFIX}strip --strip-unneeded "$l"
-done
-test -x plugins/sqldrivers/libqsqlite.so && install -m 644 plugins/sqldrivers/libqsqlite.so $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
-test -x plugins/sqldrivers/libqsqlmysql.so && install -m 644 plugins/sqldrivers/libqsqlmysql.so $RPM_BUILD_ROOT/%{pfx}%{_prefix}/lib
-
-%endif
+make INSTALL_ROOT=$RPM_BUILD_ROOT%{pfx} install
 
 
 %Clean
@@ -292,48 +239,12 @@ LC_ALL=C
 rm -rf $RPM_BUILD_ROOT
 
 
-%if 0%{?toolchain:1}
-
-%Files
-%defattr(-,root,root)
-%{toolchain_install_dir}/*
-
-%else
-
 %Files
 %defattr(-,root,root)
 %{pfx}/*
 
 %Files rfs
 %defattr(-,root,root)
-%{pfx}/usr/lib/README
-%{pfx}/usr/lib/fonts/DejaVuSans-Bold.ttf
-%{pfx}/usr/lib/fonts/DejaVuSans-BoldOblique.ttf
-%{pfx}/usr/lib/fonts/DejaVuSans-Oblique.ttf
-%{pfx}/usr/lib/fonts/DejaVuSans.ttf
-%{pfx}/usr/lib/fonts/DejaVuSansMono-Bold.ttf
-%{pfx}/usr/lib/fonts/DejaVuSansMono-BoldOblique.ttf
-%{pfx}/usr/lib/fonts/DejaVuSansMono-Oblique.ttf
-%{pfx}/usr/lib/fonts/DejaVuSansMono.ttf
-%{pfx}/usr/lib/fonts/DejaVuSerif-Bold.ttf
-%{pfx}/usr/lib/fonts/DejaVuSerif-BoldOblique.ttf
-%{pfx}/usr/lib/fonts/DejaVuSerif-Oblique.ttf
-%{pfx}/usr/lib/fonts/DejaVuSerif.ttf
-%{pfx}/usr/lib/fonts/README
-%{pfx}/usr/lib/fonts/UTBI____.pfa
-%{pfx}/usr/lib/fonts/UTB_____.pfa
-%{pfx}/usr/lib/fonts/UTI_____.pfa
-%{pfx}/usr/lib/fonts/UTRG____.pfa
-%{pfx}/usr/lib/fonts/Vera.ttf
-%{pfx}/usr/lib/fonts/VeraBI.ttf
-%{pfx}/usr/lib/fonts/VeraBd.ttf
-%{pfx}/usr/lib/fonts/VeraIt.ttf
-%{pfx}/usr/lib/fonts/VeraMoBI.ttf
-%{pfx}/usr/lib/fonts/VeraMoBd.ttf
-%{pfx}/usr/lib/fonts/VeraMoIt.ttf
-%{pfx}/usr/lib/fonts/VeraMono.ttf
-%{pfx}/usr/lib/fonts/VeraSe.ttf
-%{pfx}/usr/lib/fonts/VeraSeBd.ttf
 %{pfx}/usr/lib/fonts/c0419bt_.pfb
 %{pfx}/usr/lib/fonts/c0582bt_.pfb
 %{pfx}/usr/lib/fonts/c0583bt_.pfb
@@ -342,38 +253,50 @@ rm -rf $RPM_BUILD_ROOT
 %{pfx}/usr/lib/fonts/c0633bt_.pfb
 %{pfx}/usr/lib/fonts/c0648bt_.pfb
 %{pfx}/usr/lib/fonts/c0649bt_.pfb
-%{pfx}/usr/lib/fonts/cour.pfa
-%{pfx}/usr/lib/fonts/courb.pfa
 %{pfx}/usr/lib/fonts/courbi.pfa
+%{pfx}/usr/lib/fonts/courb.pfa
 %{pfx}/usr/lib/fonts/couri.pfa
+%{pfx}/usr/lib/fonts/cour.pfa
 %{pfx}/usr/lib/fonts/cursor.pfa
 %{pfx}/usr/lib/fonts/dejavu_sans_11_50.qpf2
+%{pfx}/usr/lib/fonts/DejaVuSans-BoldOblique.ttf
+%{pfx}/usr/lib/fonts/DejaVuSans-Bold.ttf
+%{pfx}/usr/lib/fonts/DejaVuSansMono-BoldOblique.ttf
+%{pfx}/usr/lib/fonts/DejaVuSansMono-Bold.ttf
+%{pfx}/usr/lib/fonts/DejaVuSansMono-Oblique.ttf
+%{pfx}/usr/lib/fonts/DejaVuSansMono.ttf
+%{pfx}/usr/lib/fonts/DejaVuSans-Oblique.ttf
+%{pfx}/usr/lib/fonts/DejaVuSans.ttf
+%{pfx}/usr/lib/fonts/DejaVuSerif-BoldOblique.ttf
+%{pfx}/usr/lib/fonts/DejaVuSerif-Bold.ttf
+%{pfx}/usr/lib/fonts/DejaVuSerif-Oblique.ttf
+%{pfx}/usr/lib/fonts/DejaVuSerif.ttf
 %{pfx}/usr/lib/fonts/fixed_120_50.qpf
 %{pfx}/usr/lib/fonts/fixed_70_50.qpf
-%{pfx}/usr/lib/fonts/helvetica_100_50.qpf
 %{pfx}/usr/lib/fonts/helvetica_100_50i.qpf
-%{pfx}/usr/lib/fonts/helvetica_100_75.qpf
+%{pfx}/usr/lib/fonts/helvetica_100_50.qpf
 %{pfx}/usr/lib/fonts/helvetica_100_75i.qpf
-%{pfx}/usr/lib/fonts/helvetica_120_50.qpf
+%{pfx}/usr/lib/fonts/helvetica_100_75.qpf
 %{pfx}/usr/lib/fonts/helvetica_120_50i.qpf
-%{pfx}/usr/lib/fonts/helvetica_120_75.qpf
+%{pfx}/usr/lib/fonts/helvetica_120_50.qpf
 %{pfx}/usr/lib/fonts/helvetica_120_75i.qpf
-%{pfx}/usr/lib/fonts/helvetica_140_50.qpf
+%{pfx}/usr/lib/fonts/helvetica_120_75.qpf
 %{pfx}/usr/lib/fonts/helvetica_140_50i.qpf
-%{pfx}/usr/lib/fonts/helvetica_140_75.qpf
+%{pfx}/usr/lib/fonts/helvetica_140_50.qpf
 %{pfx}/usr/lib/fonts/helvetica_140_75i.qpf
-%{pfx}/usr/lib/fonts/helvetica_180_50.qpf
+%{pfx}/usr/lib/fonts/helvetica_140_75.qpf
 %{pfx}/usr/lib/fonts/helvetica_180_50i.qpf
-%{pfx}/usr/lib/fonts/helvetica_180_75.qpf
+%{pfx}/usr/lib/fonts/helvetica_180_50.qpf
 %{pfx}/usr/lib/fonts/helvetica_180_75i.qpf
-%{pfx}/usr/lib/fonts/helvetica_240_50.qpf
+%{pfx}/usr/lib/fonts/helvetica_180_75.qpf
 %{pfx}/usr/lib/fonts/helvetica_240_50i.qpf
-%{pfx}/usr/lib/fonts/helvetica_240_75.qpf
+%{pfx}/usr/lib/fonts/helvetica_240_50.qpf
 %{pfx}/usr/lib/fonts/helvetica_240_75i.qpf
-%{pfx}/usr/lib/fonts/helvetica_80_50.qpf
+%{pfx}/usr/lib/fonts/helvetica_240_75.qpf
 %{pfx}/usr/lib/fonts/helvetica_80_50i.qpf
-%{pfx}/usr/lib/fonts/helvetica_80_75.qpf
+%{pfx}/usr/lib/fonts/helvetica_80_50.qpf
 %{pfx}/usr/lib/fonts/helvetica_80_75i.qpf
+%{pfx}/usr/lib/fonts/helvetica_80_75.qpf
 %{pfx}/usr/lib/fonts/japanese_230_50.qpf
 %{pfx}/usr/lib/fonts/l047013t.pfa
 %{pfx}/usr/lib/fonts/l047016t.pfa
@@ -388,7 +311,22 @@ rm -rf $RPM_BUILD_ROOT
 %{pfx}/usr/lib/fonts/l049033t.pfa
 %{pfx}/usr/lib/fonts/l049036t.pfa
 %{pfx}/usr/lib/fonts/micro_40_50.qpf
+%{pfx}/usr/lib/fonts/README
 %{pfx}/usr/lib/fonts/unifont_160_50.qpf
+%{pfx}/usr/lib/fonts/UTBI____.pfa
+%{pfx}/usr/lib/fonts/UTB_____.pfa
+%{pfx}/usr/lib/fonts/UTI_____.pfa
+%{pfx}/usr/lib/fonts/UTRG____.pfa
+%{pfx}/usr/lib/fonts/VeraBd.ttf
+%{pfx}/usr/lib/fonts/VeraBI.ttf
+%{pfx}/usr/lib/fonts/VeraIt.ttf
+%{pfx}/usr/lib/fonts/VeraMoBd.ttf
+%{pfx}/usr/lib/fonts/VeraMoBI.ttf
+%{pfx}/usr/lib/fonts/VeraMoIt.ttf
+%{pfx}/usr/lib/fonts/VeraMono.ttf
+%{pfx}/usr/lib/fonts/VeraSeBd.ttf
+%{pfx}/usr/lib/fonts/VeraSe.ttf
+%{pfx}/usr/lib/fonts/Vera.ttf
 %{pfx}/usr/lib/libQtCore.so
 %{pfx}/usr/lib/libQtCore.so.4
 %{pfx}/usr/lib/libQtCore.so.4.8
@@ -405,11 +343,20 @@ rm -rf $RPM_BUILD_ROOT
 %{pfx}/usr/lib/libQtSql.so.4
 %{pfx}/usr/lib/libQtSql.so.4.8
 %{pfx}/usr/lib/libQtSql.so.4.8.5
+%{pfx}/usr/lib/libQtTest.so
+%{pfx}/usr/lib/libQtTest.so.4
+%{pfx}/usr/lib/libQtTest.so.4.8
+%{pfx}/usr/lib/libQtTest.so.4.8.5
 %{pfx}/usr/lib/libQtXml.so
 %{pfx}/usr/lib/libQtXml.so.4
 %{pfx}/usr/lib/libQtXml.so.4.8
 %{pfx}/usr/lib/libQtXml.so.4.8.5
-%{pfx}/usr/lib/libqsqlite.so
-%{pfx}/usr/lib/libqsqlmysql.so
-
-%endif
+%{pfx}/usr/plugins/bearer/libqgenericbearer.so
+%{pfx}/usr/plugins/imageformats/libqgif.so
+%{pfx}/usr/plugins/imageformats/libqico.so
+%{pfx}/usr/plugins/imageformats/libqjpeg.so
+%{pfx}/usr/plugins/imageformats/libqmng.so
+%{pfx}/usr/plugins/imageformats/libqtga.so
+%{pfx}/usr/plugins/imageformats/libqtiff.so
+%{pfx}/usr/plugins/sqldrivers/libqsqlite.so
+%{pfx}/usr/plugins/sqldrivers/libqsqlmysql.so

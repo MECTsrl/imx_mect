@@ -2,7 +2,7 @@
 
 Summary         : Custom Qt plugins for HMI development.
 Name            : mect_plugins
-Version: 0.0
+Version: v2.0.12rc7
 Release         : 1
 License         : GPL
 Vendor          : MECT s.r.l.
@@ -46,7 +46,7 @@ export MECT_RFSDIR
 MECT_RFSDIR=$DEV_IMAGE
 
 test -r Makefile && make clean
-/opt/MECT/Trolltech/bin/qmake -spec qws/linux-g++-mx qt_atcm.pro
+${DEV_IMAGE}/usr/bin/qmake -spec qws/linux-g++-mx qt_atcm.pro
 make -j1
 
 

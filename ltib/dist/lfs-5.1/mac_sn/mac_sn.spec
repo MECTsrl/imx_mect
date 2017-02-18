@@ -42,7 +42,7 @@ export LC_ALL
 LC_ALL=C
 
 test -r Makefile && make clean
-/opt/MECT/Trolltech/bin/qmake \
+${DEV_IMAGE}/usr/bin/qmake \
 	-spec qws/linux-g++-mx \
 	"INCLUDEPATH+=$RPM_BUILD_DIR/../../rootfs/usr/include $RPM_BUILD_DIR/../../rootfs/usr/src/linux/include" \
 	"DEFINES+=TARGET_ARM" \

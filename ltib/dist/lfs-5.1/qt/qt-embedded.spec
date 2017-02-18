@@ -108,7 +108,7 @@ QMAKE_LFLAGS_DYNAMIC_LIST      = -Wl,--dynamic-list,
 QMAKE_CFLAGS_THREAD           += -D_REENTRANT
 QMAKE_CXXFLAGS_THREAD         += \$\$QMAKE_CFLAGS_THREAD
 
-QMAKE_INCDIR                   = ${DEV_IMAGE}/usr/include ${DEV_IMAGE}/usr/include/glib-2.0 ${DEV_IMAGE}/usr/lib/glib-2.0/include/
+QMAKE_INCDIR                   = ${DEV_IMAGE}/usr/include ${DEV_IMAGE}/usr/include/glib-2.0 ${DEV_IMAGE}/usr/lib/glib-2.0/include
 QMAKE_LIBDIR                   = ${DEV_IMAGE}/usr/lib
 QMAKE_LIBS                     = -lglib-2.0 -lgthread-2.0 -lz -lgmodule-2.0 -lgobject-2.0 -lts -lfreetype
 QMAKE_INCDIR_X11               =
@@ -127,7 +127,7 @@ QMAKE_AR                       = ${TOOL_CHAIN_DIR}/bin/arm-none-linux-gnueabi-ar
 QMAKE_OBJCOPY                  = ${TOOL_CHAIN_DIR}/bin/arm-none-linux-gnueabi-objcopy
 QMAKE_RANLIB                   = ${TOOL_CHAIN_DIR}/bin/arm-none-linux-gnueabi-ranlib
 
-QMAKE_TAR                      = tar -cf
+QMAKE_TAR                      = tar cf
 QMAKE_GZIP                     = gzip -9f
 
 QMAKE_COPY                     = cp -f
@@ -175,7 +175,7 @@ for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am 
 	find . -name $f -exec touch {} \;
 done
 MAKEFLAGS=j$(nproc) ./configure \
-	--prefix=/usr \
+	--prefix=${DEV_IMAGE}/usr \
 	-plugin-sql-mysql \
 	-qt-mouse-tslib \
 	-xplatform qws/linux-g++-mx \
@@ -230,6 +230,10 @@ rm -rf $RPM_BUILD_ROOT
 test -n "$UNSPOOF_PATH" && export PATH=$UNSPOOF_PATH
 
 make INSTALL_ROOT=$RPM_BUILD_ROOT%{pfx} install
+
+# Discard $DEV_IMAGE from install path.
+mv $RPM_BUILD_ROOT%{pfx}/* $RPM_BUILD_ROOT
+mv $RPM_BUILD_ROOT$DEV_IMAGE/* $RPM_BUILD_ROOT%{pfx}
 
 
 %Clean

@@ -44,7 +44,7 @@ export LC_ALL
 LC_ALL=C
 
 export VERSION='%{version}'
-/opt/MECT/Trolltech/bin/qmake -spec qws/linux-g++-mx
+${DEV_IMAGE}/usr/bin/qmake -spec qws/linux-g++-mx
 make
 
 

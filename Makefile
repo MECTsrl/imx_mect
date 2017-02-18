@@ -34,7 +34,7 @@ export MECT_BUILD_PLUGINSCRT_TAG := v2.0.12rc7
 # git branch and tag for the mect_apps project
 MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_APPSCRT_TAG := 0.0
+export MECT_BUILD_APPSCRT_TAG := v2.0.12rc7
 
 # git branch and tag for the cloner project
 MECT_BUILD_CLONERCRT_BRANCH := master
@@ -282,6 +282,7 @@ MECT_LTIB_EVKDIR = $(MECT_LTIB_EVKARCH:%.tar.gz=%)
 MECT_LTIBINST_TARGETDIR_PATHCH = ltib-install-merge.patch
 
 # LTIB qt spec file (MECT patch)
+export MECT_QT_INSTALL_DIR := $(IMX_MECT_DIR)/host_tools/Trolltech
 MECT_LTIB_QT_ARCH = qt-everywhere-opensource-src-4.8.5.tar.gz
 MECT_LTIB_QT_PATCH1 = qt-everywhere-opensource-src-4.8.5-1394522957.patch
 MECT_LTIB_QT_PATCH2 = qt-everywhere-opensource-src-4.8.5-1420823826.patch

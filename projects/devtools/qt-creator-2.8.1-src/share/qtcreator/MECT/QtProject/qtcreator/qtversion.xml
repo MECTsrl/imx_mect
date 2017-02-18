@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QtCreatorQtVersions>
+<!-- Mihai Lazarescu <mlazarescu@mect.it>, 2017-02-18. -->
+<qtcreator>
+ <data>
+  <variable>QtVersion.0</variable>
+  <valuemap type="QVariantMap">
+   <value type="int" key="Id">3</value>
+   <value type="QString" key="Name">Qt 4.8.5 (x86)</value>
+   <value type="QString" key="QMakePath">@@MECT_BASE_BUILD_DIR@@/projects/devtools/qt/bin/qmake</value>
+   <value type="QString" key="QtVersion.Type">Qt4ProjectManager.QtVersion.Desktop</value>
+   <value type="bool" key="isAutodetected">false</value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>QtVersion.1</variable>
+  <valuemap type="QVariantMap">
+   <value type="int" key="Id">4</value>
+   <value type="QString" key="Name">Qt 4.8.5 (ARM)</value>
+   <value type="QString" key="QMakePath">@@MECT_BASE_BUILD_DIR@@/ltib/rootfs/usr/bin/qmake</value>
+   <value type="QString" key="QtVersion.Type">RemoteLinux.EmbeddedLinuxQt</value>
+   <value type="bool" key="isAutodetected">false</value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>Version</variable>
+  <value type="int">1</value>
+ </data>
+</qtcreator>

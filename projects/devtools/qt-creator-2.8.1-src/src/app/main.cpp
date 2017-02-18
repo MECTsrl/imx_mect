@@ -58,6 +58,8 @@
 #include <qtsystemexceptionhandler.h>
 #endif
 
+#include <qtextcodec.h>
+
 using namespace ExtensionSystem;
 
 enum { OptionIndent = 4, DescriptionIndent = 34 };
@@ -84,6 +86,8 @@ static const char CLIENT_OPTION[] = "-client";
 static const char SETTINGS_OPTION[] = "-settingspath";
 static const char PID_OPTION[] = "-pid";
 static const char BLOCK_OPTION[] = "-block";
+
+static const char MECT_TOPDIR_PLACEHOLDER[] = "@@MECT_BASE_BUILD_DIR@@";
 
 typedef QList<PluginSpec *> PluginSpecSet;
 
@@ -128,7 +132,7 @@ static void printVersion(const PluginSpec *coreplugin)
 {
     QString version;
     QTextStream str(&version);
-    str << '\n' << appNameC << ' ' << coreplugin->version()<< " based on Qt " << qVersion() << "\n\n";
+    str << '\n' << appNameC << ' ' << coreplugin->version() << " based on Qt " << qVersion() << "\n\n";
     PluginManager::formatPluginVersions(str);
     str << '\n' << coreplugin->copyright() << '\n';
     displayHelpText(version);
@@ -158,9 +162,49 @@ static inline int askMsgSendFailed()
                                  QMessageBox::Retry);
 }
 
+/**
+ * Copy the "src" file to "dest" (which should not exist)
+ * globally changing the "from" string into "to".
+ */
+static bool
+filteredCopy(const QString &src, const QString &dest, const QString &from, const QString &to)
+{
+    if (QFile::exists(dest))
+        return false;
+
+    QFile source(src);
+    if (!source.open(QIODevice::ReadOnly | QIODevice::Text))
+        return false;
+
+    QTextCodec *codec = QTextCodec::codecForLocale();
+    QString contents = codec->toUnicode(source.readAll());
+
+    source.close();
+
+    // Plain copy
+    if (from.isNull() || to.isNull() || !contents.contains(from))
+        return QFile::copy(src, dest);
+
+    QFile destination(dest);
+    if (!destination.open(QFile::WriteOnly | QIODevice::Text))
+        return false;
+
+    contents.replace(from,to);
+
+    if (destination.write(codec->fromUnicode(contents)) < 0) {
+        destination.close();
+
+        return false;
+    }
+
+    destination.close();
+
+    return true;
+}
+
 // taken from utils/fileutils.cpp. We can not use utils here since that depends app_version.h.
 static bool copyRecursively(const QString &srcFilePath,
-                            const QString &tgtFilePath)
+                            const QString &tgtFilePath, const QString &from = QString(), const QString &to = QString())
 {
     QFileInfo srcFileInfo(srcFilePath);
     if (srcFileInfo.isDir()) {
@@ -168,20 +212,20 @@ static bool copyRecursively(const QString &srcFilePath,
         targetDir.cdUp();
         if (!targetDir.mkdir(QFileInfo(tgtFilePath).fileName()))
             return false;
+
         QDir sourceDir(srcFilePath);
         QStringList fileNames = sourceDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System);
         foreach (const QString &fileName, fileNames) {
-            const QString newSrcFilePath
-                    = srcFilePath + QLatin1Char('/') + fileName;
-            const QString newTgtFilePath
-                    = tgtFilePath + QLatin1Char('/') + fileName;
-            if (!copyRecursively(newSrcFilePath, newTgtFilePath))
+            const QString newSrcFilePath = srcFilePath + QLatin1Char('/') + fileName;
+            const QString newTgtFilePath = tgtFilePath + QLatin1Char('/') + fileName;
+            if (!copyRecursively(newSrcFilePath, newTgtFilePath, from, to))
                 return false;
         }
     } else {
-        if (!QFile::copy(srcFilePath, tgtFilePath))
+        if (!filteredCopy(srcFilePath, tgtFilePath, from, to))
             return false;
     }
+
     return true;
 }
 
@@ -232,6 +276,12 @@ static QSettings *createUserSettings()
                          QLatin1String("QtCreator"));
 }
 
+#ifdef Q_OS_MAC
+#  define SHARE_PATH "/../Resources"
+#else
+#  define SHARE_PATH "/../share/qtcreator"
+#endif
+
 static inline QSettings *userSettings()
 {
     QSettings *settings = createUserSettings();
@@ -248,17 +298,22 @@ static inline QSettings *userSettings()
     if (!destDir.exists())
         destDir.mkpath(pathFi.absolutePath());
 
-    // Pre-populate MECT configuration.
+    // Pre-populate for MECT TPAC development configuration.
     if (destDir.entryList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files).count() == 0) {
-        // FIXME: MTL: Replace with the proper template path.
-        QDir tmplDir = QDir(QString::fromUtf8("/home/imx28/QtProject.linux"));
-        if (tmplDir.exists())
-            foreach (const QString &file, tmplDir.entryList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files)) {
-                QFileInfo fi(QString(QString::fromUtf8("%1/%2")).arg(tmplDir.path()).arg(file));
+        // TODO: Define string constants in the proper place.
+        QDir mectBuildDir = QDir(QCoreApplication::applicationDirPath());
+        mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
+        mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
+        mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
+        mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
+        QDir mectQTPconfDir = QDir(QDir(QCoreApplication::applicationDirPath() + QDir::separator() + QLatin1String(SHARE_PATH) + QDir::separator() + QLatin1String("MECT") + QDir::separator() + QLatin1String("QtProject")).absolutePath());
+        if (mectQTPconfDir.exists())
+            foreach (const QString &file, mectQTPconfDir.entryList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files)) {
+                QFileInfo fi(QString(QString::fromUtf8("%1/%2")).arg(mectQTPconfDir.path()).arg(file));
                 if (fi.isFile())        // Copy top-level files.
-                    QFile::copy(tmplDir.absoluteFilePath(file), destDir.absoluteFilePath(file));
+                    filteredCopy(mectQTPconfDir.absoluteFilePath(file), destDir.absoluteFilePath(file), QLatin1String(MECT_TOPDIR_PLACEHOLDER), mectBuildDir.absolutePath());
                 else if (fi.isDir())    // Recursively copy directories.
-                    copyRecursively(tmplDir.absoluteFilePath(file), destDir.absoluteFilePath(file));
+                    copyRecursively(mectQTPconfDir.absoluteFilePath(file), destDir.absoluteFilePath(file), QLatin1String(MECT_TOPDIR_PLACEHOLDER), mectBuildDir.absolutePath());
                 else                    // Ignore everything else.
                     continue;
             }
@@ -289,12 +344,6 @@ static inline QSettings *userSettings()
     delete settings;
     return createUserSettings();
 }
-
-#ifdef Q_OS_MAC
-#  define SHARE_PATH "/../Resources"
-#else
-#  define SHARE_PATH "/../share/qtcreator"
-#endif
 
 int main(int argc, char **argv)
 {

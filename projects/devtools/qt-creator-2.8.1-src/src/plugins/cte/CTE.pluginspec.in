@@ -1,4 +1,4 @@
-<plugin name=\"CTE\" version=\"0.0.1\" compatVersion=\"$$QTCREATOR_VERSION\" experimental=\"true\">
+<plugin name=\"CTE\" version=\"0.0.1\" compatVersion=\"$$QTCREATOR_VERSION\">
     <vendor>MECT srl</vendor>
     <copyright>(C) 2016 MECT srl</copyright>
     <license>

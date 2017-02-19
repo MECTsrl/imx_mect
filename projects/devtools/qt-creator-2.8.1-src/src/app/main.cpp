@@ -87,7 +87,30 @@ static const char SETTINGS_OPTION[] = "-settingspath";
 static const char PID_OPTION[] = "-pid";
 static const char BLOCK_OPTION[] = "-block";
 
-static const char MECT_TOPDIR_PLACEHOLDER[] = "@@MECT_BASE_BUILD_DIR@@";
+enum mect_config_search_replace_e {
+    MECT_CSR_BASE_BUILD_DIR,
+    MECT_CSR_APPS_DIR,
+    MECT_CSR_END
+};
+
+struct mect_config_search_replace_s {
+    QString search;
+    QString replace;
+};
+static struct mect_config_search_replace_s mect_config_search_replace[] = {
+    [MECT_CSR_BASE_BUILD_DIR] = {
+        .search = QLatin1String("@@MECT_BASE_BUILD_DIR@@"),
+        .replace = QString()
+    },
+    [MECT_CSR_APPS_DIR] = {
+        .search = QLatin1String("@@MECT_APPS_DIR@@"),
+        .replace = QString()
+    },
+    [MECT_CSR_END] = {
+        .search = QString(),
+        .replace = QString()
+    }
+};
 
 typedef QList<PluginSpec *> PluginSpecSet;
 
@@ -167,7 +190,7 @@ static inline int askMsgSendFailed()
  * globally changing the "from" string into "to".
  */
 static bool
-filteredCopy(const QString &src, const QString &dest, const QString &from, const QString &to)
+filteredCopy(const QString &src, const QString &dest, const struct mect_config_search_replace_s from_to[])
 {
     if (QFile::exists(dest))
         return false;
@@ -181,15 +204,23 @@ filteredCopy(const QString &src, const QString &dest, const QString &from, const
 
     source.close();
 
-    // Plain copy
-    if (from.isNull() || to.isNull() || !contents.contains(from))
+    // Plain copy?
+    bool did_replace = false;
+    if (from_to != NULL)
+        for (int i = 0; i < MECT_CSR_END; i++)
+            if (!from_to[i].search.isNull() && !from_to[i].replace.isNull() && contents.contains(from_to[i].search)) {
+                did_replace = true;
+
+                qDebug() << "MTL: Replacing:" << from_to[i].search << "with" << from_to[i].replace << "in" << src;
+                contents.replace(from_to[i].search, from_to[i].replace);
+            }
+
+    if (!did_replace)
         return QFile::copy(src, dest);
 
     QFile destination(dest);
     if (!destination.open(QFile::WriteOnly | QIODevice::Text))
         return false;
-
-    contents.replace(from,to);
 
     if (destination.write(codec->fromUnicode(contents)) < 0) {
         destination.close();
@@ -204,7 +235,7 @@ filteredCopy(const QString &src, const QString &dest, const QString &from, const
 
 // taken from utils/fileutils.cpp. We can not use utils here since that depends app_version.h.
 static bool copyRecursively(const QString &srcFilePath,
-                            const QString &tgtFilePath, const QString &from = QString(), const QString &to = QString())
+                            const QString &tgtFilePath, const struct mect_config_search_replace_s from_to[] = NULL)
 {
     QFileInfo srcFileInfo(srcFilePath);
     if (srcFileInfo.isDir()) {
@@ -218,11 +249,11 @@ static bool copyRecursively(const QString &srcFilePath,
         foreach (const QString &fileName, fileNames) {
             const QString newSrcFilePath = srcFilePath + QLatin1Char('/') + fileName;
             const QString newTgtFilePath = tgtFilePath + QLatin1Char('/') + fileName;
-            if (!copyRecursively(newSrcFilePath, newTgtFilePath, from, to))
+            if (!copyRecursively(newSrcFilePath, newTgtFilePath, from_to))
                 return false;
         }
     } else {
-        if (!filteredCopy(srcFilePath, tgtFilePath, from, to))
+        if (!filteredCopy(srcFilePath, tgtFilePath, from_to))
             return false;
     }
 
@@ -300,20 +331,23 @@ static inline QSettings *userSettings()
 
     // Pre-populate for MECT TPAC development configuration.
     if (destDir.entryList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files).count() == 0) {
-        // TODO: Define string constants in the proper place.
         QDir mectBuildDir = QDir(QCoreApplication::applicationDirPath());
         mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
         mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
         mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
+        mect_config_search_replace[MECT_CSR_APPS_DIR].replace = mectBuildDir.absolutePath() + QDir::separator() + QLatin1String("mect_apps");
+
         mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
+        mect_config_search_replace[MECT_CSR_BASE_BUILD_DIR].replace = mectBuildDir.absolutePath();
+
         QDir mectQTPconfDir = QDir(QDir(QCoreApplication::applicationDirPath() + QDir::separator() + QLatin1String(SHARE_PATH) + QDir::separator() + QLatin1String("MECT") + QDir::separator() + QLatin1String("QtProject")).absolutePath());
         if (mectQTPconfDir.exists())
             foreach (const QString &file, mectQTPconfDir.entryList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files)) {
                 QFileInfo fi(QString(QString::fromUtf8("%1/%2")).arg(mectQTPconfDir.path()).arg(file));
                 if (fi.isFile())        // Copy top-level files.
-                    filteredCopy(mectQTPconfDir.absoluteFilePath(file), destDir.absoluteFilePath(file), QLatin1String(MECT_TOPDIR_PLACEHOLDER), mectBuildDir.absolutePath());
+                    filteredCopy(mectQTPconfDir.absoluteFilePath(file), destDir.absoluteFilePath(file), mect_config_search_replace);
                 else if (fi.isDir())    // Recursively copy directories.
-                    copyRecursively(mectQTPconfDir.absoluteFilePath(file), destDir.absoluteFilePath(file), QLatin1String(MECT_TOPDIR_PLACEHOLDER), mectBuildDir.absolutePath());
+                    copyRecursively(mectQTPconfDir.absoluteFilePath(file), destDir.absoluteFilePath(file), mect_config_search_replace);
                 else                    // Ignore everything else.
                     continue;
             }

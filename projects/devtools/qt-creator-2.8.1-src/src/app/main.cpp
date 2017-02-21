@@ -315,32 +315,48 @@ static QSettings *createUserSettings()
 
 static inline QSettings *userSettings()
 {
-    QSettings *settings = createUserSettings();
     const QString fromVariant = QLatin1String(Core::Constants::IDE_COPY_SETTINGS_FROM_VARIANT_STR);
     if (fromVariant.isEmpty())
-        return settings;
+        return createUserSettings();
 
-    // Copy old settings to new ones:
-    QFileInfo pathFi = QFileInfo(settings->fileName());
+    // Copy the old settings to the new ones for known OSs.
+#if defined Q_OS_LINUX
+    QFileInfo pathFi = QFileInfo(
+        QDir::homePath()
+        + QLatin1String("/.config/")
+        + QLatin1String(Core::Constants::IDE_SETTINGSVARIANT_STR)
+        + QLatin1String("/QtCreator.ini")
+    );
+#elif defined Q_OS_WIN
+    QFileInfo pathFi = QFileInfo(
+        QDir::homePath()
+        + QLatin1String("/Application Data/")
+        + QLatin1String(Core::Constants::IDE_SETTINGSVARIANT_STR)
+        + QLatin1String("/QtCreator.ini")
+    );
+#else
+    // Unhandled OS
+    return createUserSettings();
+#endif
     if (pathFi.exists()) // already copied.
-        return settings;
+        return createUserSettings();
 
     QDir destDir = pathFi.absolutePath();
     if (!destDir.exists())
         destDir.mkpath(pathFi.absolutePath());
 
-    // Pre-populate for MECT TPAC development configuration.
+    // Pre-populate using the MECT TPAC development configuration.
     if (destDir.entryList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files).count() == 0) {
         QDir mectBuildDir = QDir(QCoreApplication::applicationDirPath());
         mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
         mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
         mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
-        mect_config_search_replace[MECT_CSR_APPS_DIR].replace = mectBuildDir.absolutePath() + QDir::separator() + QLatin1String("mect_apps");
+        mect_config_search_replace[MECT_CSR_APPS_DIR].replace = mectBuildDir.absolutePath() + QLatin1String("/mect_apps");
 
         mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
         mect_config_search_replace[MECT_CSR_BASE_BUILD_DIR].replace = mectBuildDir.absolutePath();
 
-        QDir mectQTPconfDir = QDir(QDir(QCoreApplication::applicationDirPath() + QDir::separator() + QLatin1String(SHARE_PATH) + QDir::separator() + QLatin1String("MECT") + QDir::separator() + QLatin1String("QtProject")).absolutePath());
+        QDir mectQTPconfDir = QDir(QDir(QCoreApplication::applicationDirPath() + QLatin1String("/" SHARE_PATH "/MECT/QtProject")).absolutePath());
         if (mectQTPconfDir.exists())
             foreach (const QString &file, mectQTPconfDir.entryList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files)) {
                 QFileInfo fi(QString(QString::fromUtf8("%1/%2")).arg(mectQTPconfDir.path()).arg(file));
@@ -356,10 +372,10 @@ static inline QSettings *userSettings()
     QDir srcDir = destDir;
     srcDir.cdUp();
     if (!srcDir.cd(fromVariant))
-        return settings;
+        return createUserSettings();
 
     if (srcDir == destDir) // Nothing to copy and no settings yet
-        return settings;
+        return createUserSettings();
 
     QStringList entries = srcDir.entryList();
     foreach (const QString &file, entries) {
@@ -375,7 +391,6 @@ static inline QSettings *userSettings()
     }
 
     // Make sure to use the copied settings:
-    delete settings;
     return createUserSettings();
 }
 

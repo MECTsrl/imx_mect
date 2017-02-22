@@ -66,4 +66,4 @@ rm -rf $RPM_BUILD_ROOT
 
 %Files rfs
 %defattr(-,root,root)
-/opt/freescale/rootfs/arm/usr/bin/zip
+%{pfx}/usr/bin/zip

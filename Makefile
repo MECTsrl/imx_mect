@@ -1,5 +1,8 @@
 export LC_ALL := C
 
+# NOTE: do NOT include Makefiles before this line.
+IMX_MECT_DIR := $(shell readlink -m $(dir $(lastword $(MAKEFILE_LIST))))
+
 # ---------------------------
 
 # MECT Suite version -- start with a digit.
@@ -26,12 +29,12 @@ MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_PLUGINSCRT_TAG := 0.0
+export MECT_BUILD_PLUGINSCRT_TAG := v2.0.12rc7
 
 # git branch and tag for the mect_apps project
 MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_APPSCRT_TAG := 0.0
+export MECT_BUILD_APPSCRT_TAG := v2.0.12rc7
 
 # git branch and tag for the cloner project
 MECT_BUILD_CLONERCRT_BRANCH := master
@@ -114,10 +117,15 @@ MECT_SYSUPD_TMPLALL := $(MECT_FTPDIR)/sysupdate_imx28_all.sh
 MECT_SYSUPD_SHARALL = $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL.sh
 MECT_SYSUPD_DIRALL = $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL
 # System cloner for all targets
+MECT_SYSCLONE_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_cloner.sh
 MECT_SYSCLONE_PRE_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_pre.sh
 MECT_SYSCLONE_POST_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_post.sh
 MECT_SYSCLONE_SHAR = $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).sh
-MECT_SYSCLONE_DIR = $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE)/bin
+MECT_SYSCLONE_SHDIR = $(MECT_IMGDIR)/cloner
+MECT_SYSCLONE_SH = $(MECT_SYSCLONE_SHDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).sh
+MECT_SYSCLONE_IMG = $(MECT_SYSCLONE_SHDIR)/cloner_$(MECT_BUILD_RELEASE).ext2
+MECT_SYSCLONE_LOOP = $(MECT_SYSCLONE_SHDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).loop
+MECT_SYSCLONE_DIR = $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE)/temp
 # Program to update target kernel
 MECT_KOBS_TMPL := $(MECT_FTPDIR)/kobs-ng
 # Full path to write the update archive on target
@@ -257,15 +265,16 @@ MECT_TARGET_RFSPKGS := \
 MECT_TARGET_RFSPKGS := $(MECT_TARGET_RFSPKGS:%=$(MECT_RPMDIR)/%)
 
 
-# Set archive sources
-#
+# Host tools root
+# NOTE: keep in sync with spec and project configs.
+export MECT_HOST_TOOLS_DIR := /opt/MECT
 
 # Toolchain archive
 MECT_CSXCPREFIX = arm-2011.03
 MECT_CSXCARCH = $(MECT_CSXCPREFIX)-41-arm-none-linux-gnueabi-i686-pc-linux-gnu.tar.bz2
 MECT_CSXCUNPACK = $(CURDIR)/$(MECT_CSXCPREFIX)
 # Keep this in sync with LTIB config
-export MECT_CSXCDIR := /opt/CodeSourcery
+export MECT_CSXCDIR := $(MECT_HOST_TOOLS_DIR)/CodeSourcery
 export MECT_CC_DIRECTORY = $(MECT_CSXCDIR)
 export MECT_CC_VERSION := 
 export MECT_CC_RADIX := arm-none-linux-gnueabi
@@ -275,10 +284,10 @@ MECT_LTIB_EVKARCH = L2.6.35_1.1.0_130130_source.tar.gz
 MECT_LTIB_EVKDIR = $(MECT_LTIB_EVKARCH:%.tar.gz=%)
 
 # LTIB pre-configuration for install (MECT patch)
-MECT_LTIBINST_TARGETDIR_PATHCH = ltib-install-preset-target-dir.patch
+MECT_LTIBINST_TARGETDIR_PATHCH = ltib-install-merge.patch
 
 # LTIB qt spec file (MECT patch)
-export MECT_QT_INSTALL_DIR = /opt/Trolltech
+export MECT_QT_INSTALL_DIR := $(IMX_MECT_DIR)/host_tools/Trolltech
 MECT_LTIB_QT_ARCH = qt-everywhere-opensource-src-4.8.5.tar.gz
 MECT_LTIB_QT_PATCH1 = qt-everywhere-opensource-src-4.8.5-1394522957.patch
 MECT_LTIB_QT_PATCH2 = qt-everywhere-opensource-src-4.8.5-1420823826.patch
@@ -383,6 +392,16 @@ env:
 		sudo apt-get install libc6:i386; \
 	fi
 	sudo apt-get install $(MECT_PACKAGES)
+	for d in 0 1 2 3; do \
+	    if ! test -b /dev/loop$$d; then \
+		sudo rm -f /dev/loop$$d; \
+		sudo mknod -m 666 /dev/loop$$d b 7 $$d; \
+	    fi; \
+	done
+	if ! test -c /dev/loop-control; then \
+	    sudo rm -f /dev/loop-control; \
+	    sudo mknod -m 666 /dev/loop-control c 10 237; \
+	fi
 
 # Initial downloads (toolchain, LTIB, LTIB patches, spec files patches, ...)
 .PHONY: downloads
@@ -405,37 +424,26 @@ setup: ltib_setup projects_setup spec_setup
 
 # Install and build LTIB.
 .PHONY: ltib_setup
-ltib_setup: ltib_git_save ltib_inst ltib_patch ltib_git_restore
-
-.PHONY: ltib_git_save
-ltib_git_save:
-	if test -d $(MECT_LTIBDIR); then mv $(MECT_LTIBDIR) $(MECT_LTIBDIR).git; fi
-
-.PHONY: ltib_git_restore
-ltib_git_restore:
-	if test -d $(MECT_LTIBDIR).git; then rsync -av --inplace $(MECT_LTIBDIR).git/ $(MECT_LTIBDIR)/; rm -rf $(MECT_LTIBDIR).git; fi
+ltib_setup: ltib_inst ltib_patch
 	if ! grep -q '^$(MECT_LTIBDIR)/../src$$' $(MECT_LTIBDIR)/.ltibrc; then \
-		sed -i '/\/ltib\/..\/src$$/ d; s|^%ldirs$$|%ldirs\n$(MECT_LTIBDIR)/../src|' $(MECT_LTIBDIR)/.ltibrc; \
+		sed -i '/\/..\/src$$/ d; s|^%ldirs$$|%ldirs\n$(MECT_LTIBDIR)/../src|' $(MECT_LTIBDIR)/.ltibrc; \
+	fi
+	if ! grep -q '^$(MECT_HOST_TOOLS_DIR)/CodeSourcery/arm-none-linux-gnueabi/libc/usr/bin$$' $(MECT_LTIBDIR)/.ltibrc; then \
+		sed -i '/\/CodeSourcery\/arm-none-linux-gnueabi\/libc\/usr\/bin$$/ d; s|^%ldirs$$|%ldirs\n$(MECT_HOST_TOOLS_DIR)/CodeSourcery/arm-none-linux-gnueabi/libc/usr/bin|' $(MECT_LTIBDIR)/.ltibrc; \
 	fi
 
 .PHONY: ltib_inst
 ltib_inst: $(MECT_TMPDIR) downloads
-	if test -d $(MECT_LTIBDIR); then \
-		echo "*** Error: Destination directory $(MECT_LTIBDIR) exists, will not overwrite."; \
-		echo "Hint: To continue an interupted installation try running LTIB directly:"; \
-		echo "          cd $(MECT_LTIBDIR); ./ltib"; \
-		echo "Aborting."; \
-		exit 1; \
-	fi
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 	tar xzvf $(MECT_FTPDIR)/$(MECT_LTIB_EVKARCH) -C $(MECT_TMPDIR)
 	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); patch -p1 < $(MECT_FTPDIR)/$(MECT_LTIBINST_TARGETDIR_PATHCH)
-	if test -n "$(MECT_FSPKG)"; then cp -pv $(MECT_FSPKG) $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)/pkgs; fi
+	if test -n "$(MECT_FSPKG)"; then \
+	    cp -pv $(MECT_FSPKG) $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)/pkgs; \
+	fi
 	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); (echo -e "qy\nyes" ) | ./install
 	chmod 0775 $(MECT_LTIBDIR)
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 	test -d $(MECT_LTIBDIR)
-	ln -s kernel-$(MECT_KERNEL_VER)-imx28-tpac1007_480x272.config $(MECT_KERNEL_CONF)
 
 $(MECT_TMPDIR):
 	rm -rf $(MECT_TMPDIR)
@@ -460,33 +468,27 @@ ltib_build: hosttools
 	sudo chown -R $(LOGNAME).$(shell groups | awk '{print $$1}') $(MECT_FSDIR)
 	mkdir -p $(MECT_FSDIR)/rootfs
 	mkdir -p $(MECT_FSDIR)/rpm/BUILD
+	sed -i '/\bCONFIG_TOOLCHAIN_PATH\b/ s|.*|CONFIG_TOOLCHAIN_PATH="$(MECT_CSXCDIR)"|' ltib/config/platform/imx/.config
+	sed -i '/\bCONFIG_TOOLCHAIN_PATH\b/ s|.*|#define CONFIG_TOOLCHAIN_PATH "$(MECT_CSXCDIR)"|' ltib/config/platform/imx/.tmpconfig.h
+	ln -sf .config ltib/config/platform/imx/defconfig.dev
+	ln -sf kernel-$(MECT_KERNEL_VER)-imx28-tpac1007_480x272.config $(MECT_KERNEL_CONF)
 	cd $(MECT_LTIBDIR); PATH=/usr/lib/ccache:$$PATH GIT_AUTHOR_NAME=$(MECT_USER_NAME) GIT_AUTHOR_EMAIL=$(MECT_TARGET_UNIX_NAME)@$(MECT_HOST_NAME) GIT_COMMITTER_NAME=$(MECT_USER_NAME) GIT_COMMITTER_EMAIL=$(MECT_TARGET_UNIX_NAME)@$(MECT_HOST_NAME) ./ltib
 
 # Set up the host tools.
 .PHONY: hosttools
-hosttools: downloads toolchain qt
+hosttools: downloads toolchain
 
 # Set up the toolchain.
 .PHONY: toolchain
 toolchain:
 	sudo rm -rf $(MECT_CSXCUNPACK) $(MECT_CSXCDIR)
 	tar xjvf $(MECT_FTPDIR)/$(MECT_CSXCARCH)
-	sudo mv $(MECT_CSXCUNPACK) $(MECT_CSXCDIR)
+	sudo install -m 755 -o $(shell id -nu) -g $(shell id -ng) -d $(MECT_HOST_TOOLS_DIR)
+	mv $(MECT_CSXCUNPACK) $(MECT_CSXCDIR)
 	test -d /usr/lib/ccache
 	for f in arm-none-linux-gnueabi-gcc arm-none-linux-gnueabi-c++ arm-none-linux-gnueabi-g++; do \
 	       	sudo ln -sf $(MECT_CSXCDIR)/bin/$$f /usr/lib/ccache/; \
 	done
-
-# Set up host Qt.
-.PHONY: qt
-qt:
-	test -n "$(LOGNAME)"
-	mkdir -p $(MECT_TMPRPMDIR) $(MECT_LTIBDIR)/rpm/SOURCES
-	for f in $(MECT_FSPKG); do cp $$f $(MECT_LTIBDIR)/rpm/SOURCES; done
-	PATH=/usr/lib/ccache:$(PATH) rpmbuild --define 'toolchain 1' --define 'toolchain_install_dir $(MECT_QT_INSTALL_DIR)' --define '_topdir $(MECT_LTIBDIR)/rpm' --dbpath $(MECT_TMPRPMDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_prefix /opt' --define '_rpmdir $(MECT_TMPRPMDIR)/RPMS' -bb --clean --rmsource $(MECT_LTIBDIR)/dist/lfs-5.1/qt/qt-embedded.spec
-	-sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb -e --allmatches --nodeps --define '_tmppath $(MECT_LTIBDIR)/tmp' qt-embedded 2>/dev/null
-	sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb --ignorearch -ivh --force --nodeps --excludedocs --define '_tmppath $(MECT_LTIBDIR)/tmp' $(MECT_TMPRPMDIR)/RPMS/$(MECT_TARGET_ARCH)/qt-embedded-$(MECT_BUILD_QTVERSION)-*.$(MECT_TARGET_ARCH).rpm
-	sudo chown -R $(LOGNAME).$(shell groups | awk '{print $$1}') $(MECT_TMPRPMDIR)
 
 
 # Set up the local projects: ATCMcontrol_RunTimeSystem.
@@ -568,6 +570,10 @@ spec_setup:
 		test -w $(MECT_LTIBSPECDIR)/$$s || continue; \
 		sed -i 's|^\s*\(Version\s*:\).*|\1 $(MECT_BUILD_APPSCRT_TAG)|I' $(MECT_LTIBSPECDIR)/$$s; \
 	done
+	for s in cloner/cloner.spec; do \
+		test -w $(MECT_LTIBSPECDIR)/$$s || continue; \
+		sed -i 's|^\s*\(Version\s*:\).*|\1 $(MECT_BUILD_RELEASE)|I' $(MECT_LTIBSPECDIR)/$$s; \
+	done
 
 
 # Rules to build target root file systems
@@ -621,7 +627,7 @@ images:
 	mkdir -p $(MECT_SYSUPD_DIRALL)
 	install -m 644 $(MECT_KOBS_TMPL) $(MECT_SYSUPD_DIRALL)
 	$(MAKE) $@_do
-	sed "s/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/" $(MECT_SYSUPD_TMPLALL) > $(MECT_SYSUPD_DIRALL)/$(shell basename $(MECT_SYSUPD_SHARALL))
+	sed "s/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/" $(MECT_SYSUPD_TMPLALL) > $(MECT_SYSUPD_DIRALL)/$(notdir $(MECT_SYSUPD_SHARALL))
 	$(MAKE) cloner_shar
 
 images_do: $(MECT_IMAGES)
@@ -659,14 +665,30 @@ cloner_shar: CLONER_COMPONENTS := \
 cloner_shar: CLONER_COMPONENTS := $(CLONER_COMPONENTS:%=$(MECT_LTIB_RFSDIR)%)
 cloner_shar:
 	test -n '$(CLONER_COMPONENTS)'
-	rm -rf $(MECT_SYSCLONE_SHAR) $(MECT_SYSCLONE_DIR)
+	rm -rf $(MECT_SYSCLONE_SHAR) $(MECT_SYSCLONE_DIR) $(MECT_SYSCLONE_SHDIR)
 	mkdir -p $(MECT_SYSCLONE_DIR)
 	rsync -aLv $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)/ --exclude \*.la
 	cp $(MECT_SYSCLONE_PRE_TMPL) $(MECT_SYSCLONE_SHAR)
-	cd $(MECT_SYSCLONE_DIR)/..; shar -M -x $(shell basename $(MECT_SYSCLONE_DIR))/* >> $(MECT_SYSCLONE_SHAR)
+	cd $(MECT_SYSCLONE_DIR)/..; shar -M -x $(notdir $(MECT_SYSCLONE_DIR))/* >> $(MECT_SYSCLONE_SHAR)
 	tail -1 $(MECT_SYSCLONE_SHAR) | grep -q '^exit 0$$'
 	sed -i '$$ d' $(MECT_SYSCLONE_SHAR)
 	cat $(MECT_SYSCLONE_POST_TMPL) >> $(MECT_SYSCLONE_SHAR)
+	mkdir -p $(MECT_SYSCLONE_SHDIR)
+	test -d "$(MECT_SYSCLONE_SHDIR)"
+	if losetup -l | grep -q $(MECT_SYSCLONE_IMG); then \
+	    dev=`losetup -l | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
+	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
+	fi
+	truncate -s `du -s $(MECT_SYSCLONE_DIR) | awk '{ print int($$1 * 1024 * 1.25); }'` $(MECT_SYSCLONE_IMG)
+	mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L cloner $(MECT_SYSCLONE_IMG)
+	rm -rf $(MECT_SYSCLONE_LOOP); mkdir -p $(MECT_SYSCLONE_LOOP)
+	sudo mount -o loop -t ext2 $(MECT_SYSCLONE_IMG) $(MECT_SYSCLONE_LOOP)
+	sudo rsync -av --delete $(MECT_SYSCLONE_DIR)/ $(MECT_SYSCLONE_LOOP)/
+	sudo umount $(MECT_SYSCLONE_LOOP)
+	rmdir $(MECT_SYSCLONE_LOOP)
+	install -m 755 $(MECT_SYSCLONE_TMPL) $(MECT_SYSCLONE_SH)
+	sed -i 's/@@CLONER_VERSION@@/$(MECT_BUILD_RELEASE)/' $(MECT_SYSCLONE_SH)
+	rm -rf $(dir $(MECT_SYSCLONE_DIR))
 
 # Common target rules
 #
@@ -777,7 +799,7 @@ target_lfs_flash:
 target_mfg_upd: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
 target_mfg_upd: MECT_TGTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)
 target_mfg_upd: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
-target_mfg_upd: MECT_MFGZIP = $(shell readlink -m $(MECT_MFGDIR)/../../$(shell basename $(MECT_MFGDIR)).zip)
+target_mfg_upd: MECT_MFGZIP = $(shell readlink -m $(MECT_MFGDIR)/../../$(notdir $(MECT_MFGDIR)).zip)
 target_mfg_upd: MECT_SYSUPD = $(shell readlink -m $(MECT_MFGDIR)/../../sysupdate_$(MECT_BUILD_RELEASE)_$(MECT_BUILD_TARGET).sh)
 target_mfg_upd: MECT_SYSUPDIR = $(shell readlink -m $(MECT_MFGDIR)/../../$(MECT_BUILD_TARGET))
 target_mfg_upd: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
@@ -788,7 +810,7 @@ target_mfg_upd:
 	test -n '$(MECT_BUILD_TARGET)'
 	sudo rm -rf $(MECT_MFGDIR)
 	mkdir -p $(MECT_MFGDIR)/'OS firmware'/img $(MECT_MFGDIR)/'OS firmware'/sys $(MECT_TGTDIR)
-	sed "s/@@PLAYER@@/$(shell basename $(MECT_MFGDIR))/" $(MECT_FTPDIR)/player.ini > $(MECT_MFGDIR)/player.ini
+	sed "s/@@PLAYER@@/$(notdir $(MECT_MFGDIR))/" $(MECT_FTPDIR)/player.ini > $(MECT_MFGDIR)/player.ini
 	install -m 644 $(MECT_FTPDIR)/fdisk-u.input $(MECT_MFGDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(MECT_FTPDIR)/ucl.xml $(MECT_MFGDIR)/'OS firmware'/ucl.xml
 	sudo tar cf $(MECT_MFGDIR)/'OS firmware'/img/rootfs.tar -C $(MECT_RFSDIR) .
@@ -814,12 +836,12 @@ target_mfg_upd:
 		flash/etc/ppp/chat-usb3g \
 		flash/etc/icinga/nrpe.cfg
 	tar cf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_LFSDIR) .
-	GZIP=-9 tar cf - -I pigz -C $(MECT_SYSUPDIR)/.. $(MECT_BUILD_TARGET) $(shell basename $(MECT_KOBS_TMPL)) | uuencode $(MECT_UPDATE_ARCH) >> $(MECT_SYSUPD)
+	GZIP=-9 tar cf - -I pigz -C $(MECT_SYSUPDIR)/.. $(MECT_BUILD_TARGET) $(notdir $(MECT_KOBS_TMPL)) | uuencode $(MECT_UPDATE_ARCH) >> $(MECT_SYSUPD)
 	if test -n '$(MECT_SYSUPD_DIRALL)' -a -d '$(MECT_SYSUPD_DIRALL)'; then \
 		sudo rm -rf $(MECT_SYSUPD_DIRALL)/$(MECT_BUILD_TARGET); \
 		mv $(MECT_SYSUPDIR)/../$(MECT_BUILD_TARGET) $(MECT_SYSUPD_DIRALL); \
 	fi
-	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_SYSUPDIR) $(shell readlink -m $(MECT_SYSUPDIR)/../$(shell basename $(MECT_KOBS_TMPL))) $(MECT_TGTDIR)
+	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_SYSUPDIR) $(shell readlink -m $(MECT_SYSUPDIR)/../$(notdir $(MECT_KOBS_TMPL))) $(MECT_TGTDIR)
 
 # Build the archive for target-specific development.
 .PHONY: target_dev
@@ -893,7 +915,12 @@ clean: clean_projects
 .PHONY: distclean
 distclean: clean
 	if which ccache > /dev/null; then ccache -C; fi
-	sudo rm -rf $(MECT_IMGDIR) $(MECT_CSXCDIR) $(MECT_FSDIR)/ltib $(MECT_FSDIR)/pkgs $(MECT_QT_INSTALL_DIR)
+	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIB_RFSDIR) $(MECT_CSXCDIR) $(MECT_FSDIR) $(MECT_HOST_TOOLS_DIR)
+	cd $(MECT_LTIBDIR); rm -f .config.old host_config.log .host_wait_warning* lib .lock_file man RELEASE_INFO .root_cf rootfs.ext2.* rootfs.ext2.gz rootfs_image rootfs.jffs2 rootfs.tmp rpm rpmdb .rpmdb_nfs_warning .rpm_warning .sudo_warning .tc_test_* tmp /tmp/ltib vmlinux.* .wget_warning
+	find $(MECT_LTIBDIR)/config/platform \( -name *.dev -o -name *.bak \) -exec rm {} \;
+	cd $(MECT_LTIBDIR); for i in faked fakeroot mkimage gdb tmake .gdbinit mpc.init netperf netserver; do \
+	    rm -rf $(MECT_LTIBDIR)/bin/$$i; \
+	done
 
 
 # Downloads
@@ -904,10 +931,12 @@ distclean: clean
 
 # Generic download rule for MECT site
 $(MECT_FTPDIR)/%: $(MECT_FTPDIR)/%.$(MECT_MD5EXT)
-	dir=$(shell dirname $@); mkdir -p $$dir; cd $$dir; md5sum -c $@.$(MECT_MD5EXT) 2>/dev/null || { rm -f $@; wget -O $@ --progress=dot:mega "$(MECT_FTPURL)/$(shell basename $@)"; md5sum -c $@.$(MECT_MD5EXT); }
+	dir=$(dir $@); mkdir -p $$dir; cd $$dir; md5sum -c $@.$(MECT_MD5EXT) 2>/dev/null || { rm -f $@; wget -O $@ --progress=dot:mega "$(MECT_FTPURL)/$(notdir $@)"; md5sum -c $@.$(MECT_MD5EXT); }
 
 $(MECT_FTPDIR)/%.$(MECT_MD5EXT):
-	mkdir -p $(shell dirname $@)
-	wget -O $@ "$(MECT_FTPURL)/$(shell basename $@)"
+	mkdir -p $(dir $@)
+	wget -O $@ "$(MECT_FTPURL)/$(notdir $@)"
 	touch -c $@			# Force the re-check of the downloaded file, if any.
 	$(MAKE) $(@:%.$(MECT_MD5EXT)=%)	# Re-check the downloaded file, if any.
+
+# vim: set noexpandtab:

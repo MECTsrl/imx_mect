@@ -3,7 +3,8 @@
 
 QMAKE             =  qmake -spec qws/linux-g++-mx
 
-MECT_CC_DIRECTORY =  /opt/CodeSourcery
+# Define MECT_CC_DIRECTORY in the include.
+MECT_CC_DIRECTORY := /opt/MECT/CodeSourcery
 MECT_CC_BINDIR    =  $(MECT_CC_DIRECTORY)/bin/
 MECT_CC_RADIX     =  arm-none-linux-gnueabi
 ifdef MECT_CC_RADIX

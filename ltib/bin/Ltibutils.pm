@@ -234,7 +234,7 @@ sub interp_vars
     my ($defs, $hr, @list) = @_;
     local ($_, $1);
     foreach (@list) {
-        while( $hr->{$_} =~ m,(%{?([^}]+)}?),g ) {
+        while( $hr->{$_} =~ m,(%\{?([^}]+)\}?),g ) {
             my $rep = '';
             if( defined $defs->{$2} ) {
                 $rep = $defs->{$2};

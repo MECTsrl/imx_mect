@@ -1,0 +1,31 @@
+--- a/install	2013-01-30 10:22:46.000000000 +0000
++++ b/install	2017-02-14 17:37:16.887255096 +0000
+@@ -98,19 +98,16 @@
+ $tdir/$tag
+ TXT
+ 
+-while(1){
+-    print "\nWhere do you want to install LTIB ? ($tdir)\n";
+-    chomp($line = <STDIN>);
+-    $tdir = $line if $line;
+-    warn("Cannot install into $isodir\n"), next if $tdir eq $isodir;
+-    warn("Directory $tdir/$tag already exists\n"), next if -d "$tdir/$tag";
+-    print "Making target directory $tdir/$tag\n";
+-    system("$echo mkdir -p $tdir/$tag") == 0 or next;
+-    last;
+-}
++    $tdir = "../..";
++    warn("Cannot install into $isodir\n") if $tdir eq $isodir;
++    if (! -d "$tdir/$tag") {
++        print "Making target directory $tdir/$tag\n";
++        system("$echo mkdir -p $tdir/$tag") == 0 or die;
++    }
++
++print "Merging LTIB into $tdir/$tag\n";
++system("$echo tar xzvf $isodir/ltib.tar.gz -C $tdir --exclude=ltib/bin --exclude=ltib/config --exclude=ltib/dist --exclude=ltib/ltib --exclude=ltib/.gitignore --exclude=ltib/.ltibrc") == 0 or die;
+ 
+-print "Installing LTIB to $tdir/$tag\n";
+-system("$echo tar -C $tdir -zxvf $isodir/ltib.tar.gz") == 0 or die;
+ 
+ print "Copying packages to $tdir/$tag/pkgs\n";
+ system("$echo cp -dR $isodir/pkgs $tdir/$tag") == 0 or die;

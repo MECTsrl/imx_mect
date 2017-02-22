@@ -327,9 +327,12 @@ export LC_ALL
 LC_ALL=C
 
 export MECT_RFSDIR
-MECT_RFSDIR=$DEV_IMAGE
+MECT_RFSDIR=${DEV_IMAGE}
 export MECT_QT_INSTALL_DIR
-MECT_QT_INSTALL_DIR=/opt/Trolltech
+MECT_QT_INSTALL_DIR=${DEV_IMAGE}/usr
+
+echo "MECT_RFSDIR:         $MECT_RFSDIR"
+echo "MECT_QT_INSTALL_DIR: $MECT_QT_INSTALL_DIR"
 
 # Target (or placeholder) names
 for t in \
@@ -370,8 +373,8 @@ for t in \
 
 	cd $d
 
-	$MECT_QT_INSTALL_DIR/bin/lrelease $p
-	$MECT_QT_INSTALL_DIR/bin/qmake \
+        ${MECT_QT_INSTALL_DIR}/bin/lrelease $p
+	${MECT_QT_INSTALL_DIR}/bin/qmake \
 		-spec qws/linux-g++-mx \
 		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
 		"DEFINES+=TARGET_ARM" \

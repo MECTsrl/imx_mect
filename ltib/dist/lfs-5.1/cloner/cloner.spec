@@ -3,7 +3,7 @@
 
 Summary         : Clone/restore MECT TPAC software
 Name            : cloner
-Version         : 6.4
+Version         : 2.1.0
 Release         : 1
 License         : GPL
 Vendor          : MECT s.r.l.
@@ -43,7 +43,8 @@ cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 export LC_ALL
 LC_ALL=C
 
-export VERSION='%{version}'
+#export VERSION='%{version}'
+export VERSION='\"%{version}\"'
 ${DEV_IMAGE}/usr/bin/qmake -spec qws/linux-g++-mx
 make
 

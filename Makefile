@@ -113,10 +113,15 @@ MECT_SYSUPD_TMPLALL := $(MECT_FTPDIR)/sysupdate_imx28_all.sh
 MECT_SYSUPD_SHARALL = $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL.sh
 MECT_SYSUPD_DIRALL = $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL
 # System cloner for all targets
+MECT_SYSCLONE_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_cloner.sh
 MECT_SYSCLONE_PRE_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_pre.sh
 MECT_SYSCLONE_POST_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_post.sh
 MECT_SYSCLONE_SHAR = $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).sh
-MECT_SYSCLONE_DIR = $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE)/bin
+MECT_SYSCLONE_SHDIR = $(MECT_IMGDIR)/cloner
+MECT_SYSCLONE_SH = $(MECT_SYSCLONE_SHDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).sh
+MECT_SYSCLONE_IMG = $(MECT_SYSCLONE_SHDIR)/cloner_$(MECT_BUILD_RELEASE).ext2
+MECT_SYSCLONE_LOOP = $(MECT_SYSCLONE_SHDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).loop
+MECT_SYSCLONE_DIR = $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE)/temp
 # Program to update target kernel
 MECT_KOBS_TMPL := $(MECT_FTPDIR)/kobs-ng
 # Full path to write the update archive on target
@@ -401,6 +406,16 @@ env:
 		exit 1; \
 	fi
 	sudo apt-get install $(MECT_PACKAGES)
+	for d in 0 1 2 3; do \
+	    if ! test -b /dev/loop$$d; then \
+		sudo rm -f /dev/loop$$d; \
+		sudo mknod -m 666 /dev/loop$$d b 7 $$d; \
+	    fi; \
+	done
+	if ! test -c /dev/loop-control; then \
+	    sudo rm -f /dev/loop-control; \
+	    sudo mknod -m 666 /dev/loop-control c 10 237; \
+	fi
 
 # Initial downloads (toolchain, LTIB, LTIB patches, spec files patches, ...)
 .PHONY: downloads
@@ -574,6 +589,10 @@ spec_setup:
 		test -w $(MECT_LTIBSPECDIR)/$$s || continue; \
 		sed -i 's|^\s*\(Version\s*:\).*|\1 $(MECT_BUILD_APPSCRT_TAG)|I' $(MECT_LTIBSPECDIR)/$$s; \
 	done
+	for s in cloner/cloner.spec; do \
+		test -w $(MECT_LTIBSPECDIR)/$$s || continue; \
+		sed -i 's|^\s*\(Version\s*:\).*|\1 $(MECT_BUILD_RELEASE)|I' $(MECT_LTIBSPECDIR)/$$s; \
+	done
 
 
 # Rules to build target root file systems
@@ -665,15 +684,30 @@ cloner_shar: CLONER_COMPONENTS := \
 cloner_shar: CLONER_COMPONENTS := $(CLONER_COMPONENTS:%=$(MECT_LTIB_RFSDIR)%)
 cloner_shar:
 	test -n '$(CLONER_COMPONENTS)'
-	rm -rf $(MECT_SYSCLONE_SHAR) $(MECT_SYSCLONE_DIR)
+	rm -rf $(MECT_SYSCLONE_SHAR) $(MECT_SYSCLONE_DIR) $(MECT_SYSCLONE_SHDIR)
 	mkdir -p $(MECT_SYSCLONE_DIR)
 	rsync -aLv $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)/ --exclude \*.la
 	cp $(MECT_SYSCLONE_PRE_TMPL) $(MECT_SYSCLONE_SHAR)
-	cd $(MECT_SYSCLONE_DIR)/..; shar -M -x $(shell basename $(MECT_SYSCLONE_DIR))/* >> $(MECT_SYSCLONE_SHAR)
-	rm -rf $(shell dirname $(MECT_SYSCLONE_DIR))
+	cd $(MECT_SYSCLONE_DIR)/..; shar -M -x $(notdir $(MECT_SYSCLONE_DIR))/* >> $(MECT_SYSCLONE_SHAR)
 	tail -1 $(MECT_SYSCLONE_SHAR) | grep -q '^exit 0$$'
 	sed -i '$$ d' $(MECT_SYSCLONE_SHAR)
 	cat $(MECT_SYSCLONE_POST_TMPL) >> $(MECT_SYSCLONE_SHAR)
+	mkdir -p $(MECT_SYSCLONE_SHDIR)
+	test -d "$(MECT_SYSCLONE_SHDIR)"
+	if losetup -l | grep -q $(MECT_SYSCLONE_IMG); then \
+	    dev=`losetup -l | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
+	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
+	fi
+	truncate -s `du -s $(MECT_SYSCLONE_DIR) | awk '{ print int($$1 * 1024 * 1.25); }'` $(MECT_SYSCLONE_IMG)
+	mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L cloner $(MECT_SYSCLONE_IMG)
+	rm -rf $(MECT_SYSCLONE_LOOP); mkdir -p $(MECT_SYSCLONE_LOOP)
+	sudo mount -o loop -t ext2 $(MECT_SYSCLONE_IMG) $(MECT_SYSCLONE_LOOP)
+	sudo rsync -av --delete $(MECT_SYSCLONE_DIR)/ $(MECT_SYSCLONE_LOOP)/
+	sudo umount $(MECT_SYSCLONE_LOOP)
+	rmdir $(MECT_SYSCLONE_LOOP)
+	install -m 755 $(MECT_SYSCLONE_TMPL) $(MECT_SYSCLONE_SH)
+	sed -i 's/@@CLONER_VERSION@@/$(MECT_BUILD_RELEASE)/' $(MECT_SYSCLONE_SH)
+	rm -rf $(dir $(MECT_SYSCLONE_DIR))
 
 # Common target rules
 #

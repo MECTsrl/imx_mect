@@ -4,6 +4,7 @@ images
 ltib.reference
 ltib
 tmp
+projects/cloner
 projects/mect_plugins
 projects/mect_apps
 projects/ATCMcontrol_RunTimeSystem

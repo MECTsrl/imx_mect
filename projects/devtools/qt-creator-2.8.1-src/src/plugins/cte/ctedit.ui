@@ -47,13 +47,41 @@
          <string>Show or Hide unused rows</string>
         </property>
         <property name="text">
-         <string>Nasc.i</string>
+         <string>Hide</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="cmdImport">
+        <property name="minimumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>96</width>
+          <height>96</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Import User Data from another Cross Table File</string>
+        </property>
+        <property name="text">
+         <string>Import</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
         <property name="autoDefault">
          <bool>false</bool>
@@ -87,6 +115,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="cmdSave">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>48</width>
@@ -340,6 +371,9 @@
               <pointsize>10</pointsize>
              </font>
             </property>
+            <property name="maxLength">
+             <number>6</number>
+            </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
@@ -388,6 +422,9 @@
               <pointsize>10</pointsize>
              </font>
             </property>
+            <property name="maxLength">
+             <number>6</number>
+            </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
@@ -418,6 +455,9 @@
               <pointsize>10</pointsize>
              </font>
             </property>
+            <property name="maxLength">
+             <number>6</number>
+            </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
@@ -436,6 +476,9 @@
               <pointsize>10</pointsize>
              </font>
             </property>
+            <property name="maxLength">
+             <number>16</number>
+            </property>
            </widget>
           </item>
           <item row="7" column="12">
@@ -450,6 +493,9 @@
              <font>
               <pointsize>10</pointsize>
              </font>
+            </property>
+            <property name="maxLength">
+             <number>6</number>
             </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -498,6 +544,9 @@
              <font>
               <pointsize>10</pointsize>
              </font>
+            </property>
+            <property name="maxLength">
+             <number>6</number>
             </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -562,6 +611,9 @@
               <pointsize>10</pointsize>
              </font>
             </property>
+            <property name="maxLength">
+             <number>6</number>
+            </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
@@ -579,6 +631,9 @@
              <font>
               <pointsize>10</pointsize>
              </font>
+            </property>
+            <property name="maxLength">
+             <number>6</number>
             </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -618,6 +673,9 @@
            <font>
             <pointsize>10</pointsize>
            </font>
+          </property>
+          <property name="maxLength">
+           <number>128</number>
           </property>
          </widget>
         </item>

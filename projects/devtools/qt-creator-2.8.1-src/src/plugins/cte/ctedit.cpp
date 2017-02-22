@@ -1,6 +1,7 @@
 #include "ctedit.h"
 #include "ui_ctedit.h"
 #include "parser.h"
+#include "utils.h"
 
 
 #include <QFileDialog>
@@ -21,6 +22,7 @@
 #include <QTime>
 #include <QMenu>
 #include <QAction>
+#include <QVariant>
 
 /* ----  Local Defines:   ----------------------------------------------------- */
 #define _TRUE  1
@@ -83,7 +85,6 @@ ctedit::ctedit(QWidget *parent) :
     ui->setupUi(this);
     // Header Colonne
     lstHeadCols.clear();
-    lstValues.clear();
     lstPriority.clear();
     lstPLC.clear();
     lstBusType.clear();
@@ -91,7 +92,6 @@ ctedit::ctedit(QWidget *parent) :
     szEMPTY.clear();
     for (nCol = 0; nCol < colTotals; nCol++)  {
         lstHeadCols.append(szEMPTY);
-        lstValues.append(szEMPTY);
     }
     // Riempimento liste
     // Titoli colonne
@@ -271,6 +271,10 @@ ctedit::ctedit(QWidget *parent) :
     QString szExp = QString::fromAscii("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}");
     QRegExp regExprIP(szExp);
     ui->txtIP->setValidator(new QRegExpValidator(regExprIP, this));
+    // Validator per Nome variabile
+    QString szNameExp = QString::fromAscii("\w+");
+    QRegExp regExprName(szNameExp);
+    ui->txtName->setValidator(new QRegExpValidator(regExprName, this));
     // Campi sempre locked
     ui->txtRow->setEnabled(false);
     ui->fraOptions->setEnabled(false);
@@ -307,10 +311,9 @@ void    ctedit::setProjectPath(QString szProjectPath)
 bool    ctedit::selectCTFile(QString szFileCT)
 // Select a current CT File
 {
-    QFileInfo   ctFileInfo(szFileCT);
     QString     szFile;
 
-    if (ctFileInfo.exists() && ctFileInfo.isFile()) {
+    if (fileExists(szFileCT)) {
         szFile = szFileCT;
     }
     else {
@@ -346,59 +349,87 @@ bool    ctedit::loadCTFile()
         fRes = ctable2Grid();
         // Show All Elements
         if (fRes)  {
-            on_cmdHideShow_clicked(true);
+            on_cmdHideShow_clicked(false);
         }
     }
     return fRes;
 }
+bool    ctedit::list2GridRow(QStringList &lstRecValues, int nRow)
+// Inserimento o modifica elemento in Grid (valori -> GRID)
+{
+    int                 nCol = 0;
+    QString             szTemp;
+    QTableWidgetItem    *tItem;
+    bool                fAdd = false;
+
+    // Insert Items at Row, Col
+    for (nCol = 0; nCol < colTotals; nCol++)  {
+        szTemp = lstRecValues[nCol];
+        tItem = ui->tblCT->item(nRow, nCol);
+        // Allocazione Elemento se non già definito
+        if (tItem == NULL)  {
+            fAdd = true;
+            tItem = new QTableWidgetItem(szTemp);
+        }
+        else  {
+            tItem->setText(szTemp);
+        }
+        // Allineamento
+        if (nCol == colName || nCol == colComment)
+            // Item Allineato a Sx
+            tItem->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        else
+            // Item Centrato in Cella
+            tItem->setTextAlignment(Qt::AlignCenter);
+        // Rende il valore non Editabile
+        tItem->setFlags(tItem->flags() ^ Qt::ItemIsEditable);
+        // Flag Marcatore della riga
+        if (CrossTable[nRow].UsedEntry > 0)
+            ui->tblCT->showRow(nRow);
+        else
+            ui->tblCT->hideRow(nRow);
+        // Impostazione del Backgound color in funzione della zona
+        if (nRow >= 0 && nRow < MAX_RETENTIVE)
+            tItem->setBackgroundColor(colorRetentive);
+        else if (nRow >= MIN_NONRETENTIVE - 1 && nRow <= MAX_NONRETENTIVE -1)
+            tItem->setBackgroundColor(colorNonRetentive);
+        else if (nRow >= MIN_SYSTEM - 1)
+            tItem->setBackgroundColor(colorSystem);
+        // Aggiunta al Grid
+        if (fAdd)  {
+            ui->tblCT->setItem(nRow, nCol, tItem);
+        }
+    }
+    return true;
+}
+
 bool    ctedit::ctable2Grid()
 // Lettura di tutta la CT in Grid
 {
     bool        fRes = true;
     int         nCur = 0;
-    int         nCol = 0;
-    int         nRowCount = 0;
-    QString     szTemp;
-    QTableWidgetItem    *tItem;
+    int         nFirstEnabled = -1;
+    QStringList lstFields;
 
+    lstFields.clear();
+    // Preparazione tabella
     ui->tblCT->setEnabled(false);
     ui->tblCT->clearSelection();
     ui->tblCT->setRowCount(0);
     ui->tblCT->setColumnCount(colTotals);
+    // Caricamento elementi
     for (nCur = 0; nCur < lstCTRecords.count(); ++nCur)  {
         // Covert CT Record 2 User Values
-        fRes = recCT2List(lstValues, nCur);
+        fRes = recCT2List(lstFields, nCur);
         // If Ok add row to Table View
         if (fRes)  {
-            ui->tblCT->insertRow(nRowCount);
-            // Insert Items at Row, Col
-            for (nCol = 0; nCol < colTotals; nCol++)  {
-                szTemp = lstValues[nCol];
-                tItem = new QTableWidgetItem(szTemp);
-                if (nCol == colName || nCol == colComment)
-                    // Item Allineato a Sx
-                    tItem->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-                else
-                    // Item Centrato in Cella
-                    tItem->setTextAlignment(Qt::AlignCenter);
-                // Rende il valore non Editabile
-                tItem->setFlags(tItem->flags() ^ Qt::ItemIsEditable);
-                // Flag Marcatore della riga
-                if (CrossTable[nCur].UsedEntry > 0)
-                    ui->tblCT->showRow(nRowCount);
-                else
-                    ui->tblCT->hideRow(nRowCount);
-                // Impostazione del Backgound color in funzione della zona
-                if (nCur >= 0 && nCur < MAX_RETENTIVE)
-                    tItem->setBackgroundColor(colorRetentive);
-                else if (nCur >= MIN_NONRETENTIVE - 1 && nCur <= MAX_NONRETENTIVE -1)
-                    tItem->setBackgroundColor(colorNonRetentive);
-                else if (nCur >= MIN_SYSTEM - 1)
-                    tItem->setBackgroundColor(colorSystem);
-                // Aggiunta al Grid
-                ui->tblCT->setItem(nRowCount, nCol, tItem);
-            }
-            nRowCount++;
+            ui->tblCT->insertRow(nCur);
+            fRes = list2GridRow(lstFields, nCur);
+        }
+        // Ricerca della prima riga abilitata
+        if (nFirstEnabled < 0)  {
+            if (lstCTRecords[nCur].Enable)
+                nFirstEnabled = nCur;
         }
     }
     // Impostazione parametri TableView
@@ -406,6 +437,15 @@ bool    ctedit::ctable2Grid()
     ui->tblCT->setHorizontalHeaderLabels(lstHeadCols);
     // ui->tblCT->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblCT->setEnabled(true);
+    // Abilitazione Prima riga utile
+    if (nFirstEnabled >= 0)  {
+        ui->tblCT->selectRow(nFirstEnabled);
+        m_nGridRow = nFirstEnabled;
+    }
+    else  {
+        ui->tblCT->selectRow(0);
+        m_nGridRow = 0;
+    }
     // Return value
     return fRes;
 }
@@ -413,16 +453,14 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
 // Conversione da CT Record a record come Lista Stringhe per Interfaccia (Grid)
 // Da Record C a QStringList di valori per caricamento griglia
 {
-    int     nCol = 0;
     QString szTemp;
     char ip[MAX_IPADDR_LEN];
 
     if (nRow < 0 || nRow >= lstCTRecords.count())
         return false;
+    // Pulizia Buffers
     szTemp.clear();
-    for (nCol = 0; nCol < lstRecValues.count(); nCol++)  {
-        lstRecValues[nCol] = szTemp;
-    }
+    listClear(lstRecValues);
     // Recupero informazioni da Record CT
     // Abilitazione riga
     if (lstCTRecords[nRow].UsedEntry > 0)  {
@@ -481,7 +519,6 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
 void ctedit::on_cmdHideShow_clicked(bool checked)
 {
     int         nCur = 0;
-    bool        fVisible = false;
     int         nFirstVisible = -1;
 
     // Titolo del Bottone
@@ -500,23 +537,26 @@ void ctedit::on_cmdHideShow_clicked(bool checked)
         // Nascondi i non abilitati
         else  {
             // Mostra o nascondi le righe se sono abilitate
-            if (lstCTRecords[nCur].UsedEntry > 0)
+            if (lstCTRecords[nCur].UsedEntry > 0)  {
                 ui->tblCT->showRow(nCur);
-            else
+                // Ricerca il primo Item visibile
+                if (nFirstVisible < 0)
+                    nFirstVisible = nCur;
+            }
+            else  {
                 ui->tblCT->hideRow(nCur);
+            }
         }
-        // Ricerca della prima riga visibile
-        if (nFirstVisible < 0)
-            if (lstCTRecords[nCur].UsedEntry > 0)
-                nFirstVisible = nCur;
-        // Verifica dello stato della riga corrente
-        if (nCur == m_nGridRow)
-            fVisible = CrossTable[nCur].UsedEntry > 0;
     }
-    if (! fVisible)
-        m_nGridRow = nFirstVisible;
-    // Cambia selezione corrente
-    ui->tblCT->setCurrentCell(m_nGridRow, 0, QItemSelectionModel::SelectCurrent);
+    // Riga corrente non definita
+    if (m_nGridRow < 0 || m_nGridRow >= ui->tblCT->rowCount())  {
+        m_nGridRow = nFirstVisible >= 0 ? nFirstVisible : 0;
+    }
+    else  {
+        // Riga corrente piena ?
+        if (lstCTRecords[m_nGridRow].UsedEntry == 0)
+            m_nGridRow = nFirstVisible;
+    }
     ui->tblCT->selectRow(m_nGridRow);
 }
 bool ctedit::values2Iface(QStringList &lstRecValues)
@@ -608,7 +648,76 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
 bool ctedit::iface2values(QStringList &lstRecValues)
 // Copia da Zona Editing a Lista Stringhe per Grid e Record CT
 {
+    QString szTemp;
+    int     nPos = 0;
 
+    // Pulizia Buffers
+    szTemp.clear();
+    listClear(lstRecValues);
+    // Priority
+    nPos = ui->cboPriority->currentIndex();
+    if (nPos>= 0 && nPos < lstPriority.count())
+        szTemp = ui->cboPriority->itemData(nPos).toString();
+    else
+        szTemp = szEMPTY;
+    lstRecValues[colPriority] = szTemp.trimmed();
+    // Update colUpdate
+    nPos = ui->cboUpdate->currentIndex();
+    if (nPos >= 0 && nPos < lstPLC.count())
+        szTemp = ui->cboUpdate->itemData(nPos).toString();
+    else
+        szTemp = szEMPTY;
+    lstRecValues[colUpdate] = szTemp;
+    // Name
+    szTemp = ui->txtName->text().trimmed();
+    lstRecValues[colName] = szTemp;
+    // Type colType
+    nPos = ui->cboType->currentIndex();
+    if (nPos >= 0 && nPos < lstTipi.count())
+        szTemp = ui->cboType->itemData(nPos).toString();
+    else
+        szTemp = szEMPTY;
+    lstRecValues[colType] = szTemp.trimmed();
+    // Decimal
+    szTemp = ui->txtDecimal->text();
+    lstRecValues[colDecimal] = szTemp.trimmed();
+    // Protocol lstBusType
+    nPos = ui->cboProtocol->currentIndex();
+    if (nPos >= 0 && nPos < lstBusType.count())
+        szTemp = ui->cboProtocol->itemData(nPos).toString();
+    else
+        szTemp = szEMPTY;
+    lstRecValues[colProtocol] = szTemp.trimmed();
+    // IP
+    szTemp = ui->txtIP->text();
+    lstRecValues[colIP] = szTemp.trimmed();
+    // Port
+    szTemp = ui->txtPort->text();
+    lstRecValues[colPort] = szTemp.trimmed();
+    // Node ID
+    szTemp = ui->txtNode->text();
+    lstRecValues[colNodeID]  = szTemp.trimmed();
+    // Register
+    szTemp = ui->txtRegister->text();
+    lstRecValues[colRegister] = szTemp.trimmed();
+    // Block
+    szTemp = ui->txtBlock->text();
+    lstRecValues[colBlock] = szTemp.trimmed();
+    // N° Registro
+    szTemp = ui->txtBlockSize->text();
+    lstRecValues[colBlockSize] = szTemp.trimmed();
+    // Comment
+    szTemp = ui->txtComment->text();
+    lstRecValues[colComment] = szTemp.trimmed();
+    // Behavior
+    nPos = ui->cboBehavior->currentIndex();
+    if (nPos >= 0 && nPos < lstBehavior.count())
+        szTemp = ui->cboBehavior->itemData(nPos).toString();
+    else
+        szTemp = szEMPTY;
+    lstRecValues[colBehavior] = szTemp.trimmed();
+    // Return value
+    return true;
 }
 
 void ctedit::on_cmdBlocchi_clicked()
@@ -623,6 +732,9 @@ void ctedit::on_cmdSave_clicked()
     bool fRes = false;
 
     fRes = saveCTFile();
+    if (!fRes)  {
+
+    }
 
 }
 int ctedit::searchCombo(QComboBox *Combo, QString szValue)
@@ -745,22 +857,22 @@ bool ctedit::grid2CTable()
     bool        fRes = true;
     int         nCur = 0;
     int         nCol = 0;
-    int         nRowCount = 0;
     QString     szTemp;
     QTableWidgetItem    *tItem;
+    QStringList lstFields;
 
     // Ciclo sugli elementi di Grid
     for (nCur = 1; nCur <= ui->tblCT->rowCount(); ++nCur)  {
-        lstValues.clear();
+        lstFields.clear();
         // Insert Items at Row, Col
         for (nCol = 1; nCol < colTotals; nCol++)  {
             tItem = ui->tblCT->item(nCur, nCol);
             szTemp = tItem->text();
             // Aggiunta alla Lista
-            lstValues.append(szTemp);
+            lstFields.append(szTemp);
         }
         // Covert back User Values 2 CT Record
-        fRes = list2CTrec(lstValues, nCur);
+        fRes = list2CTrec(lstFields, nCur);
     }
     // Return Value
     return fRes;
@@ -791,9 +903,18 @@ void ctedit::freeCTrec(int nRow)
     lstCTRecords[nRow].device = 0;
     strcpy(lstCTRecords[nRow].Comment, "");
 }
+void ctedit::listClear(QStringList &lstRecValues)
+// Svuotamento e pulizia Lista Stringhe per passaggio dati Interfaccia <---> Record CT
+{
+    int nCol = 0;
+    lstRecValues.clear();
+    for (nCol = 0; nCol < colTotals; nCol++)  {
+        lstRecValues.append(szEMPTY);
+    }
+}
 
 bool ctedit::list2CTrec(QStringList &lstRecValues, int nRow)
-// Conversione da Lista Valori di Interfaccia a CT Record (Form -> REC)
+// Conversione da Lista Valori di Interfaccia a CT Record (Form -> REC SINGOLO)
 // Scrive un Record letto da interfaccia direttamente in lista di Record C
 {
     bool        fRes = true;
@@ -816,6 +937,11 @@ bool ctedit::list2CTrec(QStringList &lstRecValues, int nRow)
         lstCTRecords[nRow].Plc = (UpdateType) nPos;
         // Campo Name
         strcpy(lstCTRecords[nRow].Tag, lstRecValues[colName].trimmed().toAscii().data());
+        // Campo Abilitazione record
+        if (strlen(lstCTRecords[nRow].Tag) > 0)
+            lstCTRecords[nRow].UsedEntry = 1;
+        else
+            lstCTRecords[nRow].UsedEntry = 0;
         // Campo Type
         nPos = lstTipi.indexOf(lstRecValues[colType]);
         nPos = (nPos >= 0 && nPos < lstTipi.count()) ? nPos : 0;
@@ -948,7 +1074,7 @@ void ctedit::enableFields()
     }
 }
 void ctedit::setGroupVars(int nRow)
-// Imposta il gruppo di appartenenza di una variabile
+// Imposta il gruppo di appartenenza di una variabile (Ritentivo, NR, System)
 {
     // Variabile Ritentiva
     if (nRow >= 0 && nRow < MAX_RETENTIVE)  {
@@ -1048,7 +1174,8 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
 // Slot attivato ad ogni cambio di riga in
 {
     int     nRow = -1;
-    bool    fRes = false;
+    bool    fRes = true;
+    QStringList lstFields;
 
     if (! deselected.isEmpty())  {
         // Considera sempre la prima riga della lista
@@ -1062,27 +1189,37 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
             // Primo controllo di coerenza sulla riga corrente
             fRes = checkFields();
             if (fRes)  {
-
-                // Marca la Cross Table da salvare
-                ctModified = true;
-            }
-            else  {
-                ui->tblCT->selectRow(nRow);
-                return;
+                fRes = iface2values(lstFields);
+                if (fRes)  {
+                    // Salva Record e marca la Cross Table da salvare
+                    ctModified = list2CTrec(lstFields, nRow);
+                    // Aggiorna Grid Utente
+                    if (ctModified)  {
+                        fRes = list2GridRow(lstFields, nRow);
+                    }
+                    qDebug() << "Row changed:" << nRow;
+                }
             }
         }
     }
+    // Cambio riga Ko
+    if (! fRes)    {
+        ui->tblCT->selectRow(nRow);
+        return;
+    }
+    // Si può cambiare riga, legge contenuto
     if (! selected.isEmpty())  {
-        // Estrae il numero di riga del modello
+        clearEntryForm();
+        // Estrae il numero di riga del modello lavorando sulla prima riga selezionata
         nRow = selected.indexes().at(0).row();
         qDebug() << "New Row: " << nRow;
         if (nRow >= 0)  {
             // Cambia riga corrente
             m_nGridRow = nRow;
             // Covert CT Record 2 User Values
-            fRes = recCT2List(lstValues, nRow);
+            fRes = recCT2List(lstFields, nRow);
             if (fRes)
-                fRes = values2Iface(lstValues);
+                fRes = values2Iface(lstFields);
         }
     }
     else  {
@@ -1094,7 +1231,6 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
 void ctedit::clearEntryForm()
 // Svutamento elementi Form Data Entry
 {
-
     ui->cboPriority->setCurrentIndex(-1);
     ui->cboUpdate->setCurrentIndex(-1);
     ui->txtName->setText(szEMPTY);
@@ -1230,6 +1366,7 @@ bool ctedit::isLineModified()
     bool    fRes = false;
     int     nModif = 0;
 
+    // Confronto tra Interfaccia e Grid video
     if(m_nGridRow >= 0 && m_nGridRow < lstCTRecords.count())  {
         nModif += (ui->cboPriority->currentText().trimmed() != ui->tblCT->item(m_nGridRow, colPriority)->text().trimmed());
         nModif += (ui->cboUpdate->currentText().trimmed() != ui->tblCT->item(m_nGridRow, colUpdate)->text().trimmed());
@@ -1247,6 +1384,17 @@ bool ctedit::isLineModified()
         nModif += (ui->cboBehavior->currentText().trimmed() != ui->tblCT->item(m_nGridRow, colBehavior)->text().trimmed());
         fRes = (nModif > 0);
     }
-    qDebug() << "Modified()" << fRes << nModif;
+    qDebug() << "Modified():" << fRes << "N.Row:" << m_nGridRow << "Numero Modifiche:" << nModif;
     return fRes;
+}
+
+void ctedit::on_cmdImport_clicked()
+// Import another Cross Table File
+{
+    QString szSourceFile;
+
+    szSourceFile = QFileDialog::getOpenFileName(this, tr("Import From Cross Table File"), m_szCurrentCTFile, tr("Cross Table File (*.csv)"));
+    if (! szSourceFile.isEmpty())  {
+
+    }
 }

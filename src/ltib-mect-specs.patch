@@ -1210,7 +1210,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 6.4
++Version         : 2.0.12rc8
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -1250,7 +1250,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+export VERSION='%{version}'
++export VERSION='\"%{version}\"'
 +/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx
 +make
 +
@@ -3536,7 +3536,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v2.0.12rc4
++Version         : v2.0.12rc8
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -4779,7 +4779,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v2.0.12rc4
++Version: v2.0.12rc8
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

@@ -350,6 +350,7 @@ MECT_PACKAGES = \
 	bison \
 	ccache \
 	coreutils \
+	e2fsprogs \
 	g++ \
 	gcc \
 	gzip \
@@ -683,12 +684,12 @@ cloner_shar:
 	cat $(MECT_SYSCLONE_POST_TMPL) >> $(MECT_SYSCLONE_SHAR)
 	mkdir -p $(MECT_SYSCLONE_SHDIR)
 	test -d "$(MECT_SYSCLONE_SHDIR)"
-	if losetup -l | grep -q $(MECT_SYSCLONE_IMG); then \
+	if /sbin/losetup -l | grep -q $(MECT_SYSCLONE_IMG); then \
 	    dev=`losetup -l | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
 	dd if=/dev/zero of=$(MECT_SYSCLONE_IMG) bs=1k count=`du -s $(MECT_SYSCLONE_DIR) | awk '{ print int($$1 * 1.25); }'` 
-	mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L cloner $(MECT_SYSCLONE_IMG)
+	/sbin/mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L cloner $(MECT_SYSCLONE_IMG)
 	rm -rf $(MECT_SYSCLONE_LOOP); mkdir -p $(MECT_SYSCLONE_LOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSCLONE_IMG) $(MECT_SYSCLONE_LOOP)
 	sudo rsync -av --delete --inplace $(MECT_SYSCLONE_DIR)/ $(MECT_SYSCLONE_LOOP)/

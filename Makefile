@@ -668,11 +668,11 @@ cloner_shar:
 	    dev=`losetup -l | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
-	truncate -s `du -s $(MECT_SYSCLONE_DIR) | awk '{ print int($$1 * 1024 * 1.25); }'` $(MECT_SYSCLONE_IMG)
+	dd if=/dev/zero of=$(MECT_SYSCLONE_IMG) bs=1k count=`du -s $(MECT_SYSCLONE_DIR) | awk '{ print int($$1 * 1.25); }'`
 	mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L cloner $(MECT_SYSCLONE_IMG)
 	rm -rf $(MECT_SYSCLONE_LOOP); mkdir -p $(MECT_SYSCLONE_LOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSCLONE_IMG) $(MECT_SYSCLONE_LOOP)
-	sudo rsync -av --delete $(MECT_SYSCLONE_DIR)/ $(MECT_SYSCLONE_LOOP)/
+	sudo rsync -av --delete --inplace $(MECT_SYSCLONE_DIR)/ $(MECT_SYSCLONE_LOOP)/
 	sudo umount $(MECT_SYSCLONE_LOOP)
 	rmdir $(MECT_SYSCLONE_LOOP)
 	install -m 755 $(MECT_SYSCLONE_TMPL) $(MECT_SYSCLONE_SH)
@@ -849,11 +849,11 @@ target_mfg_upd:
 	    dev=`losetup -l | grep $(MECT_SYSUPD_ALL_TGTIMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
-	truncate -s `du -s $(MECT_SYSUPD_ALL_TGTFS) | awk '{ print int($$1 * 1024 * 1.25); }'` $(MECT_SYSUPD_ALL_TGTIMG)
+	dd if=/dev/zero of=$(MECT_SYSUPD_ALL_TGTIMG) bs=1k counte=`du -s $(MECT_SYSUPD_ALL_TGTFS) | awk '{ print int($$1 * 1.25); }'`
 	mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L sysupdate_$(MECT_BUILD_TARGET) $(MECT_SYSUPD_ALL_TGTIMG)
 	rm -rf $(MECT_SYSUPD_ALL_TGTLOOP); mkdir -p $(MECT_SYSUPD_ALL_TGTLOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSUPD_ALL_TGTIMG) $(MECT_SYSUPD_ALL_TGTLOOP)
-	sudo rsync -av --delete $(MECT_SYSUPD_ALL_TGTFS)/ $(MECT_SYSUPD_ALL_TGTLOOP)/
+	sudo rsync -av --delete --inplace $(MECT_SYSUPD_ALL_TGTFS)/ $(MECT_SYSUPD_ALL_TGTLOOP)/
 	sudo umount $(MECT_SYSUPD_ALL_TGTLOOP)
 	rmdir $(MECT_SYSUPD_ALL_TGTLOOP)
 	rm -rf $(MECT_SYSUPD_ALL_TGTFS)
@@ -870,11 +870,11 @@ target_mfg_upd:
 	    dev=`losetup -l | grep $(MECT_SYSUPD_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
-	truncate -s `du -s $(MECT_SYSUPDIR)/fs | awk '{ print int($$1 * 1024 * 1.25); }'` $(MECT_SYSUPD_IMG)
+	dd if=/dev/zero of=$(MECT_SYSUPD_IMG) bs=1k count=`du -s $(MECT_SYSUPDIR)/fs | awk '{ print int($$1 * 1.25); }'`
 	mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L sysupdate_$(MECT_BUILD_TARGET) $(MECT_SYSUPD_IMG)
 	rm -rf $(MECT_SYSUPD_LOOP); mkdir -p $(MECT_SYSUPD_LOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSUPD_IMG) $(MECT_SYSUPD_LOOP)
-	sudo rsync -av --delete $(MECT_SYSUPDIR)/fs/ $(MECT_SYSUPD_LOOP)/
+	sudo rsync -av --delete --inplace $(MECT_SYSUPDIR)/fs/ $(MECT_SYSUPD_LOOP)/
 	sudo umount $(MECT_SYSUPD_LOOP)
 	rmdir $(MECT_SYSUPD_LOOP)
 	rm -rf $(MECT_SYSUPDIR)/fs

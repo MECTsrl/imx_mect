@@ -805,9 +805,6 @@ target_mfg_upd: MECT_MFGZIP = $(shell readlink -m $(MECT_MFGDIR)/../../$(notdir 
 target_mfg_upd: MECT_SYSUPD_SH = $(shell readlink -m $(MECT_MFGDIR)/../../sysupdate_$(MECT_BUILD_RELEASE)_$(MECT_BUILD_TARGET).sh)
 target_mfg_upd: MECT_SYSUPD_IMG = $(shell readlink -m $(MECT_MFGDIR)/../../img_sysupdate-$(MECT_BUILD_RELEASE)-$(MECT_BUILD_TARGET).ext2)
 target_mfg_upd: MECT_SYSUPD_LOOP = $(shell readlink -m $(MECT_MFGDIR)/../../sysupdate_$(MECT_BUILD_RELEASE)_$(MECT_BUILD_TARGET).loop)
-target_mfg_upd: MECT_SYSUPD_ALL_TGTFS = $(MECT_SYSUPD_DIRALL_IMG)/img_sysupdate-$(MECT_BUILD_RELEASE)-$(MECT_BUILD_TARGET)
-target_mfg_upd: MECT_SYSUPD_ALL_TGTIMG = $(MECT_SYSUPD_DIRALL_IMG)/img_sysupdate-$(MECT_BUILD_RELEASE)-$(MECT_BUILD_TARGET).ext2
-target_mfg_upd: MECT_SYSUPD_ALL_TGTLOOP = $(MECT_SYSUPD_DIRALL_IMG)/img_sysupdate-$(MECT_BUILD_RELEASE)-$(MECT_BUILD_TARGET).loop
 target_mfg_upd: MECT_SYSUPDIR = $(shell readlink -m $(MECT_MFGDIR)/../../$(MECT_BUILD_TARGET))
 target_mfg_upd: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
 target_mfg_upd: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
@@ -849,28 +846,6 @@ target_mfg_upd:
 	rsync -a $(MECT_SYSUPDIR) $(MECT_SYSUPD_DIRALL)/
 	install -m 644 $(MECT_KOBS_TMPL) $(MECT_SYSUPD_DIRALL)
 	sed "s/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/" $(MECT_SYSUPD_TMPLALL) > $(MECT_SYSUPD_DIRALL)/$(notdir $(MECT_SYSUPD_SHARALL))
-	mkdir -p $(MECT_SYSUPD_ALL_TGTFS)
-	test -d $(MECT_SYSUPD_ALL_TGTFS)
-	tar xf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_SYSUPD_ALL_TGTFS)
-	tar xf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_SYSUPD_ALL_TGTFS)/local
-	test ! -d $(MECT_SYSUPD_ALL_TGTFS)/sysupdate
-	mkdir -p $(MECT_SYSUPD_ALL_TGTFS)/sysupdate
-	test -d $(MECT_SYSUPD_ALL_TGTFS)/sysupdate
-	install -m 644 $(MECT_SYSUPDIR)/imx28_ivt_linux.sb $(MECT_SYSUPD_ALL_TGTFS)/sysupdate
-	install -m 755 $(MECT_KOBS_TMPL) $(MECT_SYSUPD_ALL_TGTFS)/sysupdate
-	if losetup -l | grep -q $(MECT_SYSUPD_ALL_TGTIMG); then \
-	    dev=`losetup -l | grep $(MECT_SYSUPD_ALL_TGTIMG)\$$ | awk '{ print $$1; }'`; \
-	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
-	fi
-	dd if=/dev/zero of=$(MECT_SYSUPD_ALL_TGTIMG) bs=1k count=`du -s $(MECT_SYSUPD_ALL_TGTFS) | awk '{ print int($$1 * 1.25); }'`
-	mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L sysupdate_$(MECT_BUILD_TARGET) $(MECT_SYSUPD_ALL_TGTIMG)
-	rm -rf $(MECT_SYSUPD_ALL_TGTLOOP); mkdir -p $(MECT_SYSUPD_ALL_TGTLOOP)
-	sudo mount -o loop -t ext2 $(MECT_SYSUPD_ALL_TGTIMG) $(MECT_SYSUPD_ALL_TGTLOOP)
-	sudo rsync -av --delete --inplace $(MECT_SYSUPD_ALL_TGTFS)/ $(MECT_SYSUPD_ALL_TGTLOOP)/
-	sudo umount $(MECT_SYSUPD_ALL_TGTLOOP)
-	rmdir $(MECT_SYSUPD_ALL_TGTLOOP)
-	rm -rf $(MECT_SYSUPD_ALL_TGTFS)
-	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/; s/@@THIS_VERSION_MAJ_MIN@@/$(MECT_BUILD_VER_MAJ_MIN)/' $(MECT_SYSUPD_IMG_TMPL) > $(MECT_SYSUPD_DIRALL_IMG)/$(notdir $(MECT_SYSUPD_IMG_TMPL))
 	mkdir -p $(MECT_SYSUPDIR)/fs
 	tar xf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_SYSUPDIR)/fs
 	tar xf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_SYSUPDIR)/fs/local

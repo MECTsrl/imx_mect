@@ -9,7 +9,7 @@
 #include <QList>
 #include <QComboBox>
 #include <QPoint>
-
+#include <QColor>
 
 namespace Ui {
 class ctedit;
@@ -24,9 +24,7 @@ public:
     ~ctedit();
     bool    selectCTFile(QString szFileCT);
     bool    loadCTFile();
-    bool    ctable2Iface();
     bool    saveCTFile();
-    bool    iface2Ctable();                         // Dump di tutto il Grid in lista di CT Records
 
 
 signals:
@@ -51,38 +49,56 @@ private slots:
 
     void on_cboType_currentIndexChanged(int index);
 
+    void on_cmdImport_clicked();
+
 private:
     //---------------------------------------------------------------------
     // Funzioni locali al modulo
     //---------------------------------------------------------------------
-    void    setGroupVars(int nRow);                 // Imposta in interfaccia il gruppo di appartenenza di una variabile
+    // Lettura e scrittura dati da e per strutture di appoggio
+    bool    ctable2Grid();                          // Lettura di tutta la CT in Grid
+    bool    grid2CTable();                          // Dump di tutto il Grid in lista di CT Records
+    bool    list2GridRow(QStringList &lstRecValues, int nRow);  // Inserimento o modifica elemento in Grid (valori -> GRID)
+    bool    list2CTrec(QStringList &lstRecValues, int nRow);// Conversione da Lista Stringhe a CT Record (Grid -> REC SINGOLO)
+    bool    recCT2List(QStringList &lstRecValues, int nRow);// Conversione da CT Record a Lista Stringhe per Interfaccia (REC -> Grid)
+    void    listClear(QStringList &lstRecValues);   // Svuotamento e pulizia Lista Stringhe per passaggio dati Interfaccia <---> Record CT
+    bool    values2Iface(QStringList &lstRecValues);// Copia Lista Stringhe convertite da CT Record a Zona di Editing
+    bool    iface2values(QStringList &lstRecValues);// Copia da Zona Editing a Lista Stringhe per Grid e Record CT
+    void    freeCTrec(int nRow);                    // Marca il Record della CT come inutilizzato
+    // Gestione interfaccia
+    void    setGroupVars(int nRow);                 // Imposta in interfaccia il gruppo di appartenenza di una variabile (Ritentivo, NR, System)
     void    enableFields();                         // Abilitazione dei campi form in funzione di Protocollo
     bool    checkFields();                          // Primi controlli formali sulla riga a termine editing
     bool    isLineModified();                       // Check su modifica record corrente
-    void    clearCTrec(int nRow);                   // Marca il Record della CT come inutilizzato
-    bool    recCT2List(QStringList &lstRecValues, int nRow);// Conversione da CT Record a Lista Stringhe per Interfaccia (REC -> Grid)
-    bool    list2CTrec(QStringList &lstRecValues, int nRow);// Conversione da Lista Stringhe a CT Record (Grid -> REC)
-    bool    values2Iface(QStringList &lstRecValues);// Copia Lista Stringhe convertite da CT Record a Zona di Editing
-    bool    iface2values(QStringList &lstRecValues);
+    bool    riassegnaBlocchi();                     // Riassegnazione blocchi variabili
+    // Utilità
     int     searchCombo(QComboBox *Combo, QString szValue);
-    bool    riassegnaBlocchi();                       // Riassegnazione blocchi variabili
     //---------------------------------------------------------------------
     // Variabili varie
     //---------------------------------------------------------------------
     Ui::ctedit *ui;
-    int         m_nGridRow;
-    QString     m_szCurrentCTFile;
-    QString     m_szCurrentProjectPath;
-    QString     m_szFormatDate;
+    int         m_nGridRow;                         // Riga corrente sul Grid
+    QString     m_szCurrentCTFile;                  // File Cross Table corrente (completo di Path)
+    QString     m_szCurrentProjectPath;             // Project Path corrente
+    QString     m_szFormatDate;                     // Format Masks per Date e tempo
     QString     m_szFormatTime;
+    // Liste varie per prompt colonne e valori Combo Box (per traduzioni)
     QStringList lstHeadCols;
+    QStringList lstPriority;
     QStringList lstPLC;
     QStringList lstTipi;
     QStringList lstBusType;
     QStringList lstBehavior;
-    QStringList lstValues;
+
+    // Valori per stringa vuota e Zero (creati così per problemi di classe QString in compilazione sotto Qt
     QString     szEMPTY;
     QString     szZERO;
+    // Colori per sfondi grid
+    QColor      colorRetentive;
+    QColor      colorNonRetentive;
+    QColor      colorSystem;
+    // Variabili di stato ad uso globale
+    bool        ctModified;
 
 };
 

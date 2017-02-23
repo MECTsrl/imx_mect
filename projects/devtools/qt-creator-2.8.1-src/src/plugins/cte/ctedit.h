@@ -71,6 +71,7 @@ private:
     bool    checkFields();                          // Primi controlli formali sulla riga a termine editing
     bool    isLineModified();                       // Check su modifica record corrente
     bool    riassegnaBlocchi();                     // Riassegnazione blocchi variabili
+    void    setRowColor(int nRow, int nAlternate);  // Imposta il colore di sfondo di una riga
     // Utilità
     int     searchCombo(QComboBox *Combo, QString szValue);
     //---------------------------------------------------------------------
@@ -89,14 +90,15 @@ private:
     QStringList lstTipi;
     QStringList lstBusType;
     QStringList lstBehavior;
+    QStringList lstCondition;
 
     // Valori per stringa vuota e Zero (creati così per problemi di classe QString in compilazione sotto Qt
     QString     szEMPTY;
     QString     szZERO;
     // Colori per sfondi grid
-    QColor      colorRetentive;
-    QColor      colorNonRetentive;
-    QColor      colorSystem;
+    QColor      colorRetentive[2];
+    QColor      colorNonRetentive[2];
+    QColor      colorSystem[2];
     // Variabili di stato ad uso globale
     bool        ctModified;
 

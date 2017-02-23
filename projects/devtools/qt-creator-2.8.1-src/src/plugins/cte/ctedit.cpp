@@ -33,6 +33,12 @@
 #define MIN_NONRETENTIVE 193
 #define MAX_NONRETENTIVE 4999
 #define MIN_SYSTEM 5000
+#define MAX_DIAG 5171
+#define MIN_NODE 5172
+#define MAX_NODE 5299
+#define MIN_LOCALIO 5300
+#define MAX_LOCALIO 5389
+
 #define EMPTY_IP "0.0.0.0"
 #define DEF_IP_PORT "502"
 
@@ -55,6 +61,7 @@ enum colonne_e
     colBlockSize,
     colComment,
     colBehavior,
+    colCondition,
     colTotals
 };
 
@@ -89,6 +96,7 @@ ctedit::ctedit(QWidget *parent) :
     lstPLC.clear();
     lstBusType.clear();
     lstBehavior.clear();
+    lstCondition.clear();
     szEMPTY.clear();
     for (nCol = 0; nCol < colTotals; nCol++)  {
         lstHeadCols.append(szEMPTY);
@@ -109,64 +117,77 @@ ctedit::ctedit(QWidget *parent) :
     lstHeadCols[colBlockSize] = trUtf8("Blk Size");
     lstHeadCols[colComment] = trUtf8("Comment");
     lstHeadCols[colBehavior] = trUtf8("Behavior");
+    lstHeadCols[colCondition] = trUtf8("Condition");
     // Lista Priorità
     lstPriority
-            << trUtf8("0")
-            << trUtf8("1")
-            << trUtf8("2")
-            << trUtf8("3")
+            << QString::fromLatin1("0")
+            << QString::fromLatin1("1")
+            << QString::fromLatin1("2")
+            << QString::fromLatin1("3")
         ;
     // Lista PLC
     lstPLC
-            << trUtf8("H")
-            << trUtf8("P")
-            << trUtf8("S")
-            << trUtf8("F")
-            << trUtf8("V")
-            << trUtf8("X")
+            << QString::fromLatin1("H")
+            << QString::fromLatin1("P")
+            << QString::fromLatin1("S")
+            << QString::fromLatin1("F")
+            << QString::fromLatin1("V")
+            << QString::fromLatin1("X")
         ;
-
+    // Lista TIPI
     lstTipi
-            << trUtf8("BIT")
-            << trUtf8("BYTE_BIT")
-            << trUtf8("WORD_BIT")
-            << trUtf8("DWORD_BIT")
-            << trUtf8("BYTE")
-            << trUtf8("UINT16")
-            << trUtf8("UINT16BA")
-            << trUtf8("INT16")
-            << trUtf8("INT16BA")
-            << trUtf8("REAL")
-            << trUtf8("REALDCBA")
-            << trUtf8("REALCDAB")
-            << trUtf8("REALBADC")
-            << trUtf8("UDINT")
-            << trUtf8("UDINTDCBA")
-            << trUtf8("UDINTCDAB")
-            << trUtf8("UDINTBADC")
-            << trUtf8("DINT")
-            << trUtf8("DINTDCBA")
-            << trUtf8("DINTCDAB")
-            << trUtf8("DINTBADC")
-            << trUtf8("UNKNOWN")
+            << QString::fromLatin1("BIT")
+            << QString::fromLatin1("BYTE_BIT")
+            << QString::fromLatin1("WORD_BIT")
+            << QString::fromLatin1("DWORD_BIT")
+            << QString::fromLatin1("BYTE")
+            << QString::fromLatin1("UINT16")
+            << QString::fromLatin1("UINT16BA")
+            << QString::fromLatin1("INT16")
+            << QString::fromLatin1("INT16BA")
+            << QString::fromLatin1("REAL")
+            << QString::fromLatin1("REALDCBA")
+            << QString::fromLatin1("REALCDAB")
+            << QString::fromLatin1("REALBADC")
+            << QString::fromLatin1("UDINT")
+            << QString::fromLatin1("UDINTDCBA")
+            << QString::fromLatin1("UDINTCDAB")
+            << QString::fromLatin1("UDINTBADC")
+            << QString::fromLatin1("DINT")
+            << QString::fromLatin1("DINTDCBA")
+            << QString::fromLatin1("DINTCDAB")
+            << QString::fromLatin1("DINTBADC")
+            << QString::fromLatin1("UNKNOWN")
         ;
+    // Lista Protocolli
     lstBusType
-            << trUtf8("PLC")
-            << trUtf8("RTU")
-            << trUtf8("TCP")
-            << trUtf8("TCP_RTU")
-            << trUtf8("CANOPEN")
-            << trUtf8("MECT")
-            << trUtf8("RTU_SRV")
-            << trUtf8("TCP_SRV")
-            << trUtf8("TCPRTU SRV")
+            << QString::fromLatin1("PLC")
+            << QString::fromLatin1("RTU")
+            << QString::fromLatin1("TCP")
+            << QString::fromLatin1("TCP_RTU")
+            << QString::fromLatin1("CANOPEN")
+            << QString::fromLatin1("MECT")
+            << QString::fromLatin1("RTU_SRV")
+            << QString::fromLatin1("TCP_SRV")
+            << QString::fromLatin1("TCPRTU SRV")
         ;
+    // Lista Significati
     lstBehavior
-            << trUtf8("READ")
-            << trUtf8("READ/WRITE")
-            << trUtf8("ALARM")
-            << trUtf8("EVENT")
+            << QString::fromLatin1("READ")
+            << QString::fromLatin1("READ/WRITE")
+            << QString::fromLatin1("ALARM")
+            << QString::fromLatin1("EVENT")
         ;
+    // Lista condizioni di Allarme / Eventi
+    lstCondition.clear();
+    lstCondition.append(QString::fromLatin1(">"));
+    lstCondition.append(QString::fromLatin1(">="));
+    lstCondition.append(QString::fromLatin1("<"));
+    lstCondition.append(QString::fromLatin1("<="));
+    lstCondition.append(QString::fromLatin1("=="));
+    lstCondition.append(QString::fromLatin1("!="));
+    lstCondition.append(QString::fromLatin1("RISING EDGE"));
+    lstCondition.append(QString::fromLatin1("FALLING EDGE"));
     // Caricamento delle varie Combos
     // Combo Priority
     szToolTip.clear();
@@ -217,7 +238,7 @@ ctedit::ctedit(QWidget *parent) :
     }
     ui->cboProtocol->setToolTip(szToolTip);
     // Indirizzo IP
-    szToolTip.clear();
+    szToolTip.clear();    // Lista Priorità
     szToolTip.append(tr("IP address for TCP, TCP_RTU, TCP_SRV, TCPRTU SRV like 192.168.0.42"));
     ui->txtIP->setToolTip(szToolTip);
     // Porta di comunicazione
@@ -247,6 +268,25 @@ ctedit::ctedit(QWidget *parent) :
         ui->cboBehavior->addItem(lstBehavior[nCol], lstBehavior[nCol]);
     }
     ui->cboBehavior->setToolTip(szToolTip);
+    // Combo Condition
+    szToolTip.clear();
+    szToolTip.append(trUtf8("Alarm Event Condition:\n"));
+    szToolTip.append(trUtf8("GREATER\n"));
+    szToolTip.append(trUtf8("GREATER OR EQL\n"));
+    szToolTip.append(trUtf8("LESS\n"));
+    szToolTip.append(trUtf8("LESS OR EQL\n"));
+    szToolTip.append(trUtf8("EQUAL\n"));
+    szToolTip.append(trUtf8("RISING EDGE\n"));
+    szToolTip.append(trUtf8("FALLING EDGE"));
+    ui->cboCondition->setEditable(true);
+    // ui->cboCondition->lineEdit()->setReadOnly(true);
+    ui->cboCondition->lineEdit()->setAlignment(Qt::AlignCenter);
+    for  (nCol=0; nCol<lstCondition.count(); nCol++)   {
+        ui->cboCondition->addItem(lstCondition[nCol], lstCondition[nCol]);
+        ui->cboCondition->setItemData(nCol, Qt::AlignCenter, Qt::TextAlignmentRole);
+    }
+    ui->cboCondition->lineEdit()->setReadOnly(true);
+    ui->cboCondition->setToolTip(szToolTip);
     // Init Valori
     m_szCurrentCTFile.clear();
     m_szCurrentProjectPath.clear();
@@ -272,7 +312,7 @@ ctedit::ctedit(QWidget *parent) :
     QRegExp regExprIP(szExp);
     ui->txtIP->setValidator(new QRegExpValidator(regExprIP, this));
     // Validator per Nome variabile
-    QString szNameExp = QString::fromAscii("\w+");
+    QString szNameExp = QString::fromAscii("\\w+");
     QRegExp regExprName(szNameExp);
     ui->txtName->setValidator(new QRegExpValidator(regExprName, this));
     // Campi sempre locked
@@ -287,9 +327,12 @@ ctedit::ctedit(QWidget *parent) :
     szEMPTY.clear();
     szZERO.fromAscii("0");
     // Costanti per i colori di sfondo
-    colorNonRetentive = QColor(255,255,220,255);        // Giallino
-    colorRetentive = QColor(185,255,172,255);           // Verdino
-    colorSystem = QColor(255,227,215,255);              // Rosa
+    colorNonRetentive[0] = QColor(255,255,190,255);        // Giallino Dark
+    colorNonRetentive[1] = QColor(255,255,220,255);        // Giallino
+    colorRetentive[0] = QColor(170,255,255,255);           // Azzurro Dark
+    colorRetentive[1] = QColor(210,255,255,255);           // Azzurro
+    colorSystem[0] = QColor(255,227,215,255);              // Rosa
+    colorSystem[1] = QColor(255,240,233,255);              // Rosa
     // Style per Table Widget
     // ui->tblCT->setAlternatingRowColors(true);
     // ui->tblCT->setStyleSheet(QString::fromAscii("alternate-background-color: yellow;background-color: red;"));
@@ -388,13 +431,6 @@ bool    ctedit::list2GridRow(QStringList &lstRecValues, int nRow)
             ui->tblCT->showRow(nRow);
         else
             ui->tblCT->hideRow(nRow);
-        // Impostazione del Backgound color in funzione della zona
-        if (nRow >= 0 && nRow < MAX_RETENTIVE)
-            tItem->setBackgroundColor(colorRetentive);
-        else if (nRow >= MIN_NONRETENTIVE - 1 && nRow <= MAX_NONRETENTIVE -1)
-            tItem->setBackgroundColor(colorNonRetentive);
-        else if (nRow >= MIN_SYSTEM - 1)
-            tItem->setBackgroundColor(colorSystem);
         // Aggiunta al Grid
         if (fAdd)  {
             ui->tblCT->setItem(nRow, nCol, tItem);
@@ -437,6 +473,10 @@ bool    ctedit::ctable2Grid()
     ui->tblCT->setHorizontalHeaderLabels(lstHeadCols);
     // ui->tblCT->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblCT->setEnabled(true);
+    // Impostazione colori di sfondo
+    for (nCur = 0; nCur < lstCTRecords.count(); ++nCur)  {
+        setRowColor(nCur, 0);
+    }
     // Abilitazione Prima riga utile
     if (nFirstEnabled >= 0)  {
         ui->tblCT->selectRow(nFirstEnabled);
@@ -779,7 +819,7 @@ bool    ctedit::riassegnaBlocchi()
 
     ui->cmdBlocchi->setEnabled(false);
     this->setCursor(Qt::WaitCursor);
-    for (nRow = 0; nRow < lstCTRecords.count(); nRow++)  {
+    for (nRow = 0; nRow < MIN_SYSTEM; nRow++)  {
         // Ignora le righe con Priority == 0
         if (lstCTRecords[nRow].Enable > 0)  {
             // Salto riga o condizione di inizio nuovo blocco
@@ -1396,5 +1436,35 @@ void ctedit::on_cmdImport_clicked()
     szSourceFile = QFileDialog::getOpenFileName(this, tr("Import From Cross Table File"), m_szCurrentCTFile, tr("Cross Table File (*.csv)"));
     if (! szSourceFile.isEmpty())  {
 
+    }
+}
+void ctedit::setRowColor(int nRow, int nAlternate)
+// Imposta il colore di sfondo di una riga
+{
+    int         nCol = 0;
+    QColor      cSfondo;
+    QTableWidgetItem    *tItem;
+
+    // Impostazione del Backgound color in funzione della zona
+    if (nRow >= 0 && nRow < MAX_RETENTIVE)  {
+        cSfondo = colorRetentive[nAlternate];
+    }
+    else if (nRow >= MIN_NONRETENTIVE - 1 && nRow <= MAX_NONRETENTIVE -1) {
+        cSfondo = colorNonRetentive[nAlternate];
+    }
+    else if (nRow >= MIN_SYSTEM - 1)  {
+        if (nRow < MAX_DIAG-1)
+            cSfondo = colorSystem[0];
+        else if (nRow >= MIN_NODE - 1 && nRow < MAX_NODE - 1)
+            cSfondo = colorSystem[1];
+        else if (nRow >= MIN_LOCALIO - 1  && nRow < MAX_LOCALIO - 1)
+            cSfondo = colorSystem[0];
+        else
+            cSfondo = colorSystem[1];
+    }
+    // Impostazione del colore di sfondo
+    for (nCol = 0; nCol < colTotals; nCol++)  {
+        tItem = ui->tblCT->item(nRow, nCol);
+        tItem->setBackgroundColor(cSfondo);
     }
 }

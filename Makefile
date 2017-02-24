@@ -479,7 +479,7 @@ toolchain:
 	mv $(MECT_CSXCUNPACK) $(MECT_CSXCDIR)
 	test -d /usr/lib/ccache
 	for f in arm-none-linux-gnueabi-gcc arm-none-linux-gnueabi-c++ arm-none-linux-gnueabi-g++; do \
-	       	sudo ln -sf $(MECT_CSXCDIR)/bin/$$f /usr/lib/ccache/; \
+	       	sudo ln -sf ../../bin/ccache /usr/lib/ccache/$$f; \
 	done
 
 

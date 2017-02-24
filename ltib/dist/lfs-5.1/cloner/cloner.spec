@@ -43,7 +43,6 @@ cd ..; rmdir %{name}; ln -s ../../../projects/%{name} %{name}
 export LC_ALL
 LC_ALL=C
 
-#export VERSION='%{version}'
 export VERSION='\"%{version}\"'
 ${DEV_IMAGE}/usr/bin/qmake -spec qws/linux-g++-mx
 make

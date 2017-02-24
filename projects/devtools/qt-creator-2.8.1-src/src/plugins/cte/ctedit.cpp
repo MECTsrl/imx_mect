@@ -23,6 +23,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QVariant>
+#include <QInputDialog>
 
 /* ----  Local Defines:   ----------------------------------------------------- */
 #define _TRUE  1
@@ -97,6 +98,7 @@ ctedit::ctedit(QWidget *parent) :
     lstBusType.clear();
     lstBehavior.clear();
     lstCondition.clear();
+    lstUsedVarNames.clear();
     szEMPTY.clear();
     for (nCol = 0; nCol < colTotals; nCol++)  {
         lstHeadCols.append(szEMPTY);
@@ -333,13 +335,9 @@ ctedit::ctedit(QWidget *parent) :
     colorRetentive[1] = QColor(210,255,255,255);           // Azzurro
     colorSystem[0] = QColor(255,227,215,255);              // Rosa
     colorSystem[1] = QColor(255,240,233,255);              // Rosa
-    // Style per Table Widget
-    // ui->tblCT->setAlternatingRowColors(true);
-    // ui->tblCT->setStyleSheet(QString::fromAscii("alternate-background-color: yellow;background-color: red;"));
-
     // Variabili di stato globale dell'editor
-    ctModified = false;
-    ui->cmdSave->setEnabled(ctModified);
+    m_isCtModified = false;
+    m_fShowAllRows = false;
 }
 
 ctedit::~ctedit()
@@ -392,7 +390,11 @@ bool    ctedit::loadCTFile()
         fRes = ctable2Grid();
         // Show All Elements
         if (fRes)  {
-            on_cmdHideShow_clicked(false);
+            m_fShowAllRows = false;
+            m_isCtModified = false;
+            ui->cmdHideShow->setChecked(m_fShowAllRows);
+            ui->cmdSave->setEnabled(m_isCtModified);
+            showAllRows(m_fShowAllRows);
         }
     }
     return fRes;
@@ -444,10 +446,10 @@ bool    ctedit::ctable2Grid()
 {
     bool        fRes = true;
     int         nCur = 0;
-    int         nFirstEnabled = -1;
     QStringList lstFields;
 
     lstFields.clear();
+    lstUsedVarNames.clear();
     // Preparazione tabella
     ui->tblCT->setEnabled(false);
     ui->tblCT->clearSelection();
@@ -457,35 +459,22 @@ bool    ctedit::ctable2Grid()
     for (nCur = 0; nCur < lstCTRecords.count(); ++nCur)  {
         // Covert CT Record 2 User Values
         fRes = recCT2List(lstFields, nCur);
+        // Add Var Name to Variable List
+        if (! lstFields[colName].isEmpty())
+            lstUsedVarNames.append(lstFields[colName].trimmed());
         // If Ok add row to Table View
         if (fRes)  {
             ui->tblCT->insertRow(nCur);
             fRes = list2GridRow(lstFields, nCur);
         }
-        // Ricerca della prima riga abilitata
-        if (nFirstEnabled < 0)  {
-            if (lstCTRecords[nCur].Enable)
-                nFirstEnabled = nCur;
-        }
     }
+    // Ordinamento Lista Variabili
+    lstUsedVarNames.sort();
     // Impostazione parametri TableView
     ui->tblCT->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tblCT->setHorizontalHeaderLabels(lstHeadCols);
     // ui->tblCT->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblCT->setEnabled(true);
-    // Impostazione colori di sfondo
-    for (nCur = 0; nCur < lstCTRecords.count(); ++nCur)  {
-        setRowColor(nCur, 0);
-    }
-    // Abilitazione Prima riga utile
-    if (nFirstEnabled >= 0)  {
-        ui->tblCT->selectRow(nFirstEnabled);
-        m_nGridRow = nFirstEnabled;
-    }
-    else  {
-        ui->tblCT->selectRow(0);
-        m_nGridRow = 0;
-    }
     // Return value
     return fRes;
 }
@@ -558,46 +547,18 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
 
 void ctedit::on_cmdHideShow_clicked(bool checked)
 {
-    int         nCur = 0;
-    int         nFirstVisible = -1;
 
     // Titolo del Bottone
     if (checked)  {
-        ui->cmdHideShow->setText(tr("Hide"));
+        m_fShowAllRows = true;
+        ui->cmdHideShow->setText(tr("Hide Unused"));
     }
     else  {
-        ui->cmdHideShow->setText(tr("Show"));
+        m_fShowAllRows = false;
+        ui->cmdHideShow->setText(tr("Show All"));
     }
-    // Items del Grid
-    for (nCur = 0; nCur < ui->tblCT->rowCount(); nCur++)  {
-        // Mostra tutti
-        if (checked)  {
-            ui->tblCT->showRow(nCur);
-        }
-        // Nascondi i non abilitati
-        else  {
-            // Mostra o nascondi le righe se sono abilitate
-            if (lstCTRecords[nCur].UsedEntry > 0)  {
-                ui->tblCT->showRow(nCur);
-                // Ricerca il primo Item visibile
-                if (nFirstVisible < 0)
-                    nFirstVisible = nCur;
-            }
-            else  {
-                ui->tblCT->hideRow(nCur);
-            }
-        }
-    }
-    // Riga corrente non definita
-    if (m_nGridRow < 0 || m_nGridRow >= ui->tblCT->rowCount())  {
-        m_nGridRow = nFirstVisible >= 0 ? nFirstVisible : 0;
-    }
-    else  {
-        // Riga corrente piena ?
-        if (lstCTRecords[m_nGridRow].UsedEntry == 0)
-            m_nGridRow = nFirstVisible;
-    }
-    ui->tblCT->selectRow(m_nGridRow);
+    // Show-Hide Rows
+    showAllRows(m_fShowAllRows);
 }
 bool ctedit::values2Iface(QStringList &lstRecValues)
 // Copia Lista Stringhe convertite da CT Record a Zona di Editing
@@ -1037,7 +998,7 @@ void ctedit::enableFields()
 // Abilitazione dei campi form in funzione del Protocollo
 {
     // Frame tipo Vars
-    setGroupVars(m_nGridRow);
+    showGroupVars(m_nGridRow);
     // Disabilita tutti i campi
     ui->cboPriority->setEnabled(false);
     ui->cboUpdate->setEnabled(false);
@@ -1113,7 +1074,7 @@ void ctedit::enableFields()
         }
     }
 }
-void ctedit::setGroupVars(int nRow)
+void ctedit::showGroupVars(int nRow)
 // Imposta il gruppo di appartenenza di una variabile (Ritentivo, NR, System)
 {
     // Variabile Ritentiva
@@ -1232,9 +1193,9 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
                 fRes = iface2values(lstFields);
                 if (fRes)  {
                     // Salva Record e marca la Cross Table da salvare
-                    ctModified = list2CTrec(lstFields, nRow);
+                    m_isCtModified = list2CTrec(lstFields, nRow);
                     // Aggiorna Grid Utente
-                    if (ctModified)  {
+                    if (m_isCtModified)  {
                         fRes = list2GridRow(lstFields, nRow);
                     }
                     qDebug() << "Row changed:" << nRow;
@@ -1266,7 +1227,7 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
         clearEntryForm();
     }
     // Bottone di Salvataggio
-    ui->cmdSave->setEnabled(ctModified);
+    ui->cmdSave->setEnabled(m_isCtModified);
 }
 void ctedit::clearEntryForm()
 // Svutamento elementi Form Data Entry
@@ -1291,6 +1252,10 @@ bool ctedit::checkFields()
 {
     bool    fRes = true;
 
+    // Nessun Controllo su riga vuota
+    if (lstCTRecords[m_nGridRow].UsedEntry == 0)  {
+        return true;
+    }
     // Return Value
     return fRes;
 }
@@ -1467,4 +1432,115 @@ void ctedit::setRowColor(int nRow, int nAlternate)
         tItem = ui->tblCT->item(nRow, nCol);
         tItem->setBackgroundColor(cSfondo);
     }
+}
+
+void ctedit::showAllRows(bool fShowAll)
+// Visualizza o nascondi tutte le righe
+{
+    int         nAlternate = 0;
+    int         nFirstVisible = -1;
+    int         nRow = 0;
+    int16_t     nPrevBlock = -1;
+
+    // Items del Grid
+    for (nRow = 0; nRow < ui->tblCT->rowCount(); nRow++)  {
+        // Determina se il blocco corrente è cambiato dal precedente
+        if (lstCTRecords[nRow].UsedEntry > 0)  {
+            if (nPrevBlock != lstCTRecords[nRow].Block)
+                nAlternate = ((nAlternate + 1) % 2);
+            nPrevBlock = lstCTRecords[nRow].Block;
+        }
+        else
+            nPrevBlock = -1;
+        // Impostazione colore riga
+        setRowColor(nRow, nAlternate);
+        // Mostra tutti
+        if (fShowAll)  {
+            ui->tblCT->showRow(nRow);
+        }
+        // Nascondi i non abilitati
+        else  {
+            // Mostra o nascondi le righe se sono abilitate
+            if (lstCTRecords[nRow].UsedEntry > 0)  {
+                ui->tblCT->showRow(nRow);
+                // Ricerca il primo Item visibile
+                if (nFirstVisible < 0)
+                    nFirstVisible = nRow ;
+            }
+            else  {
+                ui->tblCT->hideRow(nRow);
+            }
+        }
+    }
+    // Riga corrente non definita
+    if (m_nGridRow < 0 || m_nGridRow >= ui->tblCT->rowCount())  {
+        m_nGridRow = nFirstVisible >= 0 ? nFirstVisible : 0;
+    }
+    else  {
+        // Riga corrente piena ?
+        if (lstCTRecords[m_nGridRow].UsedEntry == 0)
+            m_nGridRow = nFirstVisible;
+    }
+    ui->tblCT->selectRow(m_nGridRow);
+    ui->tblCT->scrollToItem(ui->tblCT->currentItem(), QAbstractItemView::PositionAtCenter);
+    ui->tblCT->setFocus();
+}
+void ctedit::on_cmdGotoRow_clicked()
+// Goto Row n
+{
+
+    bool fOk;
+
+    if (! checkFields())
+        return;
+    // Input Dialog per Numero riga
+    int nRow = QInputDialog::getInt(this, tr("Row to Jump To"),
+                                 tr("Enter Row Number to Jump to:"), m_nGridRow + 1, 1, DimCrossTable, 1, &fOk);
+    if (fOk)  {
+        nRow--;
+        jumpToGridRow(nRow);
+    }
+}
+void ctedit::on_cmdSearch_clicked()
+// Search Variable by Name
+{
+    bool fOk;
+    int  nRow = 0;
+
+    if (! checkFields())
+        return;
+    // Input Dialog per Nome Variabile
+    QString szText;
+
+    szText.clear();
+    szText = QInputDialog::getItem(this, tr("Variable Name"),
+                                            tr("Enter Variable Name:"), lstUsedVarNames, 0, true, &fOk);
+    if (fOk)  {
+        // Ricerca sequenziale della stringa
+        for (nRow = 0; nRow < lstCTRecords.count(); nRow++)    {
+            QString szVarName = QString::fromLatin1(lstCTRecords[nRow].Tag);
+            if (QString::compare(szText, szVarName, Qt::CaseSensitive) == 0)  {
+                break;
+            }
+        }
+        // Item Found
+        if (nRow < lstCTRecords.count()) {
+            jumpToGridRow(nRow);
+        }
+    }
+}
+void ctedit::jumpToGridRow(int nRow)
+// Salto alla riga nRow del Grid
+{
+    // Controlla se la riga selezionata è abilitata
+    ui->tblCT->selectRow(nRow);
+    if (lstCTRecords[nRow].UsedEntry == 0)  {
+        on_cmdHideShow_clicked(true);
+    }
+    else  {
+        ui->tblCT->scrollToItem(ui->tblCT->currentItem(), QAbstractItemView::PositionAtCenter);
+        ui->tblCT->setFocus();
+    }
+    m_nGridRow = nRow;
+
 }

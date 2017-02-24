@@ -47,12 +47,68 @@
          <string>Show or Hide unused rows</string>
         </property>
         <property name="text">
-         <string>Hide</string>
+         <string>Show</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
         </property>
         <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="cmdGotoRow">
+        <property name="minimumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>96</width>
+          <height>96</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Import User Data from another Cross Table File</string>
+        </property>
+        <property name="text">
+         <string>Go To Row</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="cmdSearch">
+        <property name="minimumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>96</width>
+          <height>96</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Import User Data from another Cross Table File</string>
+        </property>
+        <property name="text">
+         <string>Search</string>
+        </property>
+        <property name="checkable">
          <bool>false</bool>
         </property>
         <property name="autoDefault">

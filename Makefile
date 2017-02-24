@@ -387,7 +387,7 @@ all: env downloads setup build image target_dev
 # Set up the build environment.
 .PHONY: env
 env:
-	@for p in $(MECT_UTILS); do which $$p; done
+	set -e; for p in $(MECT_UTILS); do which $$p; done
 	if test "`uname -m`" = x86_64; then \
 		sudo dpkg --add-architecture i386; \
 		sudo apt-get update; \

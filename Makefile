@@ -400,7 +400,7 @@ all: env downloads setup build image target_dev
 # Set up the build environment.
 .PHONY: env
 env:
-	@for p in $(MECT_UTILS); do which $$p; done
+	set -e; for p in $(MECT_UTILS); do which $$p; done
 	if test -d $(MECT_LTIBDIR); then \
 		echo "*** Error: Destination directory $(MECT_LTIBDIR) exists, will not overwrite."; \
 		echo "Hint: To continue an interupted installation try running LTIB directly:"; \

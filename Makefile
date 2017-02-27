@@ -333,6 +333,7 @@ MECT_PACKAGES = \
 	bison \
 	ccache \
 	coreutils \
+	e2fsprogs \
 	g++ \
 	gcc \
 	gzip \
@@ -348,6 +349,7 @@ MECT_PACKAGES = \
 	libx11-dev \
 	m4 \
 	make \
+	mount \
 	openssl \
 	patch \
 	perl \

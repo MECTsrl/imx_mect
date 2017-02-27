@@ -689,13 +689,15 @@ cloner_shar:
 	    dev=`/sbin/losetup -l | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
-	dd if=/dev/zero of=$(MECT_SYSCLONE_IMG) bs=1k count=`du -s $(MECT_SYSCLONE_DIR) | awk '{ print int($$1 * 1.25); }'` 
+	dd if=/dev/zero of=$(MECT_SYSCLONE_IMG) bs=1k count=`du -s $(MECT_SYSCLONE_DIR) | awk '{ print int($$1 * 1.5); }'`
 	/sbin/mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L cloner $(MECT_SYSCLONE_IMG)
 	rm -rf $(MECT_SYSCLONE_LOOP); mkdir -p $(MECT_SYSCLONE_LOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSCLONE_IMG) $(MECT_SYSCLONE_LOOP)
-	sudo rsync -av --delete --inplace $(MECT_SYSCLONE_DIR)/ $(MECT_SYSCLONE_LOOP)/
+	sudo rsync -av --delete --inplace --exclude lost+found $(MECT_SYSCLONE_DIR)/ $(MECT_SYSCLONE_LOOP)/
 	sudo umount $(MECT_SYSCLONE_LOOP)
 	rmdir $(MECT_SYSCLONE_LOOP)
+	e2fsck -fy $(MECT_SYSCLONE_IMG)
+	resize2fs -Mp $(MECT_SYSCLONE_IMG)
 	install -m 644 $(MECT_SYSCLONE_TMPL) $(MECT_SYSCLONE_SH)
 	sed -i 's/@@CLONER_VERSION@@/$(MECT_BUILD_RELEASE)/' $(MECT_SYSCLONE_SH)
 	rm -rf $(dir $(MECT_SYSCLONE_DIR))
@@ -860,13 +862,15 @@ target_mfg_upd:
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
 	sync
-	dd if=/dev/zero of=$(MECT_SYSUPD_IMG) bs=1k count=`du -s $(MECT_SYSUPDIR)/fs | awk '{ print int($$1 * 1.25); }'`
+	dd if=/dev/zero of=$(MECT_SYSUPD_IMG) bs=1k count=`du -s $(MECT_SYSUPDIR)/fs | awk '{ print int($$1 * 1.5); }'`
 	/sbin/mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L sysupdate_$(MECT_BUILD_TARGET) $(MECT_SYSUPD_IMG)
 	rm -rf $(MECT_SYSUPD_LOOP); mkdir -p $(MECT_SYSUPD_LOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSUPD_IMG) $(MECT_SYSUPD_LOOP)
-	sudo rsync -av --delete --inplace $(MECT_SYSUPDIR)/fs/ $(MECT_SYSUPD_LOOP)/
+	sudo rsync -av --delete --inplace --exclude lost+found $(MECT_SYSUPDIR)/fs/ $(MECT_SYSUPD_LOOP)/
 	sudo umount $(MECT_SYSUPD_LOOP)
 	rmdir $(MECT_SYSUPD_LOOP)
+	e2fsck -fy $(MECT_SYSUPD_IMG)
+	resize2fs -Mp $(MECT_SYSUPD_IMG)
 	rm -rf $(MECT_SYSUPDIR)/fs
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/; s/@@THIS_VERSION_MAJ_MIN@@/$(MECT_BUILD_VER_MAJ_MIN)/' $(MECT_SYSUPD_IMG_TMPL) > $(MECT_IMGDIR)/$(MECT_SYSUPD_IMG_SH)
 	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_SYSUPDIR) $(shell readlink -m $(MECT_SYSUPDIR)/../$(notdir $(MECT_KOBS_TMPL))) $(MECT_TGTDIR)

@@ -659,7 +659,8 @@ cloner_shar:
 	test -n '$(CLONER_COMPONENTS)'
 	rm -rf $(MECT_SYSCLONE_SHAR) $(MECT_SYSCLONE_DIR) $(MECT_SYSCLONE_SHDIR)
 	mkdir -p $(MECT_SYSCLONE_DIR)
-	rsync -aLv $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)/ --exclude \*.la
+	cp -aLv --reflink=auto $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)
+	find $(MECT_SYSCLONE_DIR) -name \*.la -print0 | xargs -0 rm -f
 	cp $(MECT_SYSCLONE_PRE_TMPL) $(MECT_SYSCLONE_SHAR)
 	cd $(MECT_SYSCLONE_DIR)/..; shar -M -x $(notdir $(MECT_SYSCLONE_DIR))/* >> $(MECT_SYSCLONE_SHAR)
 	tail -1 $(MECT_SYSCLONE_SHAR) | grep -q '^exit 0$$'
@@ -675,7 +676,7 @@ cloner_shar:
 	/sbin/mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L cloner $(MECT_SYSCLONE_IMG)
 	rm -rf $(MECT_SYSCLONE_LOOP); mkdir -p $(MECT_SYSCLONE_LOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSCLONE_IMG) $(MECT_SYSCLONE_LOOP)
-	sudo rsync -av --delete --inplace --exclude lost+found $(MECT_SYSCLONE_DIR)/ $(MECT_SYSCLONE_LOOP)/
+	sudo cp -av --reflink=auto $(MECT_SYSCLONE_DIR)/* $(MECT_SYSCLONE_LOOP)
 	sudo umount $(MECT_SYSCLONE_LOOP)
 	rmdir $(MECT_SYSCLONE_LOOP)
 	e2fsck -fy $(MECT_SYSCLONE_IMG)
@@ -835,7 +836,7 @@ target_mfg_upd:
 	GZIP=-9 tar cf - -I pigz -C $(MECT_SYSUPDIR)/.. $(MECT_BUILD_TARGET) $(notdir $(MECT_KOBS_TMPL)) | uuencode $(MECT_UPDATE_ARCH) >> $(MECT_SYSUPD_SH)
 	mkdir -p $(MECT_SYSUPD_DIRALL)
 	sudo rm -rf $(MECT_SYSUPD_DIRALL)/$(MECT_BUILD_TARGET)
-	rsync -a $(MECT_SYSUPDIR) $(MECT_SYSUPD_DIRALL)/
+	cp -a --reflink=auto $(MECT_SYSUPDIR) $(MECT_SYSUPD_DIRALL)
 	install -m 644 $(MECT_KOBS_TMPL) $(MECT_SYSUPD_DIRALL)
 	sed "s/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/" $(MECT_SYSUPD_TMPLALL) > $(MECT_SYSUPD_DIRALL)/$(notdir $(MECT_SYSUPD_SHARALL))
 	mkdir -p $(MECT_SYSUPDIR)/fs
@@ -845,7 +846,7 @@ target_mfg_upd:
 	mkdir -p $(MECT_SYSUPDIR)/fs/sysupdate
 	test -d $(MECT_SYSUPDIR)/fs/sysupdate
 	install -m 644 $(MECT_SYSUPDIR)/imx28_ivt_linux.sb $(MECT_SYSUPDIR)/fs/sysupdate
-	install -m 644 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/fs/sysupdate
+	install -m 755 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/fs/sysupdate
 	if /sbin/losetup -l | grep -q $(MECT_SYSUPD_IMG); then \
 	    dev=`/sbin/losetup -l | grep $(MECT_SYSUPD_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
@@ -855,7 +856,7 @@ target_mfg_upd:
 	/sbin/mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L sysupdate_$(MECT_BUILD_TARGET) $(MECT_SYSUPD_IMG)
 	rm -rf $(MECT_SYSUPD_LOOP); mkdir -p $(MECT_SYSUPD_LOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSUPD_IMG) $(MECT_SYSUPD_LOOP)
-	sudo rsync -av --delete --inplace --exclude lost+found $(MECT_SYSUPDIR)/fs/ $(MECT_SYSUPD_LOOP)/
+	sudo cp -av --reflink=auto $(MECT_SYSUPDIR)/fs/* $(MECT_SYSUPD_LOOP)
 	sudo umount $(MECT_SYSUPD_LOOP)
 	rmdir $(MECT_SYSUPD_LOOP)
 	e2fsck -fy $(MECT_SYSUPD_IMG)
@@ -871,7 +872,7 @@ target_dev:
 	sudo rm -rf $(MECT_IMGDIR)/dev $(MECT_IMGDIR)/rootfs_dev.zip
 	-for d in /usr/include /usr/lib /lib /usr/src/linux/include; do \
 		mkdir -p $(MECT_IMGDIR)/dev/rootfs$$d; \
-		sudo rsync -avL $(MECT_LTIB_RFSDIR)$$d/ $(MECT_IMGDIR)/dev/rootfs$$d/; \
+		sudo cp -avL --reflink=auto $(MECT_LTIB_RFSDIR)$$d/* $(MECT_IMGDIR)/dev/rootfs$$d; \
 	done
 	cd $(MECT_IMGDIR)/dev; sudo zip -1r $(MECT_IMGDIR)/rootfs_dev.zip rootfs
 	sudo rm -rf $(MECT_IMGDIR)/dev

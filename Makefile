@@ -329,6 +329,7 @@ MECT_PACKAGES = \
 	g++ \
 	gcc \
 	gzip \
+	hardlink \
 	intltool \
 	libcsv-dev \
 	libdbus-glib-1-dev \
@@ -600,7 +601,7 @@ $(foreach img,$(MECT_IMAGES),$(eval include $(MECT_MKIMGDIR)/Makefile-$(img).in)
 
 # Build the default target image.
 .PHONY: image
-image: cloner_shar $(MECT_DEFAULT_IMAGE)
+image: cloner $(MECT_DEFAULT_IMAGE)
 
 
 # Generate all manufacturing images.
@@ -608,14 +609,14 @@ image: cloner_shar $(MECT_DEFAULT_IMAGE)
 
 # Recurse to properly evaluate the targets.
 .PHONY: images
-images: cloner_shar
+images: cloner
 	$(MAKE) $@_do
 
 images_do: $(MECT_IMAGES)
 
 # Build the cloner shell archive.
-.PHONY: cloner_shar
-cloner_shar: CLONER_COMPONENTS := \
+.PHONY: cloner
+cloner: CLONER_COMPONENTS := \
     /lib/ld-linux.so.3 \
     /lib/libc.so.6 \
     /lib/libdl.so.2 \
@@ -643,13 +644,14 @@ cloner_shar: CLONER_COMPONENTS := \
     /usr/share/cloner/excludes_localfs.lst \
     /usr/share/cloner/excludes_rootfs.lst \
 
-cloner_shar: CLONER_COMPONENTS := $(CLONER_COMPONENTS:%=$(MECT_LTIB_RFSDIR)%)
-cloner_shar:
+cloner: CLONER_COMPONENTS := $(CLONER_COMPONENTS:%=$(MECT_LTIB_RFSDIR)%)
+cloner:
 	test -n '$(CLONER_COMPONENTS)'
 	rm -rf $(MECT_SYSCLONE_DIR)
 	mkdir -p $(MECT_SYSCLONE_DIR) $(MECT_SYSCLONE_SHDIR)
-	cp -av --reflink=auto $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)
+	cp -aLv --reflink=auto $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)
 	find $(MECT_SYSCLONE_DIR) -name \*.la -print0 | xargs -0 rm -f
+	sudo hardlink -cvv $(MECT_SYSCLONE_DIR)
 	if /sbin/losetup -l | grep -q $(MECT_SYSCLONE_IMG); then \
 	    dev=`/sbin/losetup -l | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
@@ -658,7 +660,8 @@ cloner_shar:
 	/sbin/mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L cloner $(MECT_SYSCLONE_IMG)
 	rm -rf $(MECT_SYSCLONE_LOOP); mkdir -p $(MECT_SYSCLONE_LOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSCLONE_IMG) $(MECT_SYSCLONE_LOOP)
-	sudo cp -av --reflink=auto $(MECT_SYSCLONE_DIR)/* $(MECT_SYSCLONE_LOOP)
+	sudo cp -aLv --reflink=auto $(MECT_SYSCLONE_DIR)/* $(MECT_SYSCLONE_LOOP)
+	sudo hardlink -cvv $(MECT_SYSCLONE_LOOP)
 	sudo umount $(MECT_SYSCLONE_LOOP)
 	rmdir $(MECT_SYSCLONE_LOOP)
 	e2fsck -fy $(MECT_SYSCLONE_IMG)
@@ -817,6 +820,7 @@ target_mfg_upd:
 	test -d $(MECT_SYSUPDIR)/fs/sysupdate
 	install -m 644 $(MECT_SYSUPDIR)/imx28_ivt_linux.sb $(MECT_SYSUPDIR)/fs/sysupdate
 	install -m 755 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/fs/sysupdate
+	sudo hardlink -cvv $(MECT_SYSUPDIR)
 	if /sbin/losetup -l | grep -q $(MECT_SYSUPD_IMG); then \
 	    dev=`/sbin/losetup -l | grep $(MECT_SYSUPD_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
@@ -827,6 +831,7 @@ target_mfg_upd:
 	rm -rf $(MECT_SYSUPD_LOOP); mkdir -p $(MECT_SYSUPD_LOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSUPD_IMG) $(MECT_SYSUPD_LOOP)
 	sudo cp -av --reflink=auto $(MECT_SYSUPDIR)/fs/* $(MECT_SYSUPD_LOOP)
+	sudo hardlink -cvv $(MECT_SYSUPD_LOOP)
 	sudo umount $(MECT_SYSUPD_LOOP)
 	rmdir $(MECT_SYSUPD_LOOP)
 	e2fsck -fy $(MECT_SYSUPD_IMG)

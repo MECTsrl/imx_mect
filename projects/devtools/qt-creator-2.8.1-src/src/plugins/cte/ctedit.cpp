@@ -1,6 +1,6 @@
 #include "ctedit.h"
 #include "ui_ctedit.h"
-#include "parser.h"
+//#include "parser.h"
 #include "utils.h"
 
 
@@ -43,8 +43,8 @@
 #define EMPTY_IP "0.0.0.0"
 #define DEF_IP_PORT "502"
 
-QList<CrossTableRecord>  lstCopiedRecords;
-QList<CrossTableRecord>  lstCTRecords;
+const QString szTitle = QString::fromLatin1("Mect Cross Table Editor");
+
 
 enum colonne_e
 {
@@ -75,10 +75,10 @@ enum behavior_e
     bevTotals
 };
 
-extern int LoadXTable(char *crossTableFile);
-extern int SaveXTable(char *crossTableFile);
-extern char *ipaddr2str(uint32_t ipaddr, char *buffer);
-extern uint32_t str2ipaddr(char *str);
+//extern int LoadXTable(char *crossTableFile);
+//extern int SaveXTable(char *crossTableFile);
+//extern char *ipaddr2str(uint32_t ipaddr, char *buffer);
+//extern uint32_t str2ipaddr(char *str);
 
 ctedit::ctedit(QWidget *parent) :
     QDialog(parent),
@@ -363,40 +363,43 @@ bool    ctedit::selectCTFile(QString szFileCT)
     // Tries to Open CT File
     if (! szFile.isEmpty())   {
         m_szCurrentCTFile = szFile;
-        return loadCTFile();
+        return loadCTFile(m_szCurrentCTFile, lstCTRecords, true);
     }
     else  {
         m_szCurrentCTFile.clear();
         return false;
     }
 }
-bool    ctedit::loadCTFile()
-// Load the current CT File
+bool    ctedit::loadCTFile(QString szFileCT, QList<CrossTableRecord> &lstCtRecs, bool fLoadGrid)
+// Load the current CT File. If fShowGrid then load data to user Grid
 {
     int nRes = 0;
     int nCur = 0;
     bool fRes = false;
 
-    if (m_szCurrentCTFile.isEmpty())
+    if (szFileCT.isEmpty())
         return false;
+    // Clear Data
+    lstCtRecs.clear();
+    this->setCursor(Qt::WaitCursor);
     // Opening File
-    nRes = LoadXTable(m_szCurrentCTFile.toAscii().data());
+    nRes = LoadXTable(szFileCT.toAscii().data(), &CrossTable[0]);
     // Return value is the result of Parsing C structure to C++ Objects
     if (nRes == 0)  {
-        lstCTRecords.clear();
         for (nCur = 1; nCur <= DimCrossTable; ++nCur)  {
-            lstCTRecords.append(CrossTable[nCur]);
+            lstCtRecs.append(CrossTable[nCur]);
         }
-        fRes = ctable2Grid();
-        // Show All Elements
-        if (fRes)  {
-            m_fShowAllRows = false;
-            m_isCtModified = false;
-            ui->cmdHideShow->setChecked(m_fShowAllRows);
-            ui->cmdSave->setEnabled(m_isCtModified);
-            showAllRows(m_fShowAllRows);
+        if (fLoadGrid)  {
+            fRes = ctable2Grid();
         }
+        else
+            fRes = true;
     }
+    else  {
+        m_szMsg = tr("Error Loading CrossTable file: %1") .arg(szFileCT);
+        warnUser(this, szTitle, m_szMsg);
+    }
+    this->setCursor(Qt::ArrowCursor);
     return fRes;
 }
 bool    ctedit::list2GridRow(QStringList &lstRecValues, int nRow)
@@ -429,7 +432,7 @@ bool    ctedit::list2GridRow(QStringList &lstRecValues, int nRow)
         // Rende il valore non Editabile
         tItem->setFlags(tItem->flags() ^ Qt::ItemIsEditable);
         // Flag Marcatore della riga
-        if (CrossTable[nRow].UsedEntry > 0)
+        if (lstCTRecords[nRow].UsedEntry)
             ui->tblCT->showRow(nRow);
         else
             ui->tblCT->hideRow(nRow);
@@ -451,9 +454,11 @@ bool    ctedit::ctable2Grid()
     lstFields.clear();
     lstUsedVarNames.clear();
     // Preparazione tabella
+    this->setCursor(Qt::WaitCursor);
     ui->tblCT->setEnabled(false);
     ui->tblCT->clearSelection();
     ui->tblCT->setRowCount(0);
+    ui->tblCT->clear();
     ui->tblCT->setColumnCount(colTotals);
     // Caricamento elementi
     for (nCur = 0; nCur < lstCTRecords.count(); ++nCur)  {
@@ -468,6 +473,7 @@ bool    ctedit::ctable2Grid()
             fRes = list2GridRow(lstFields, nCur);
         }
     }
+    qDebug() << tr("Loaded Rows: %1") .arg(nCur);
     // Ordinamento Lista Variabili
     lstUsedVarNames.sort();
     // Impostazione parametri TableView
@@ -475,7 +481,18 @@ bool    ctedit::ctable2Grid()
     ui->tblCT->setHorizontalHeaderLabels(lstHeadCols);
     // ui->tblCT->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblCT->setEnabled(true);
+    // Show All Elements
+    if (fRes)  {
+        m_fShowAllRows = false;
+        m_isCtModified = false;
+        ui->cmdHideShow->setChecked(m_fShowAllRows);
+        ui->cmdSave->setEnabled(m_isCtModified);
+        showAllRows(m_fShowAllRows);
+    }
+    else
+        qDebug() << "Error Loading Rows";
     // Return value
+    this->setCursor(Qt::ArrowCursor);
     return fRes;
 }
 bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
@@ -492,7 +509,7 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
     listClear(lstRecValues);
     // Recupero informazioni da Record CT
     // Abilitazione riga
-    if (lstCTRecords[nRow].UsedEntry > 0)  {
+    if (lstCTRecords[nRow].UsedEntry)  {
         // Priority
         if (lstCTRecords[nRow].Enable >= 0 && lstCTRecords[nRow].Enable < lstPriority.count())
             lstRecValues[colPriority] = lstPriority[lstCTRecords[nRow].Enable];
@@ -848,7 +865,7 @@ bool ctedit::saveCTFile()
             CrossTable[nCur + 1] = lstCTRecords[nCur];
     }
     // Saving File
-    nRes = SaveXTable(szCtFile.toAscii().data());
+    nRes = SaveXTable(szCtFile.toAscii().data(), CrossTable);
     // Return Value
     return nRes == 0;
 }
@@ -1113,7 +1130,6 @@ void ctedit::on_cboProtocol_currentIndexChanged(int index)
 {
     QString     szTemp;
 
-    // qDebug() << "Protocol Index changed to:" << index;
     szTemp.clear();
     // No Index
     if (index == -1)  {
@@ -1182,7 +1198,6 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
         // Considera sempre la prima riga della lista
         nRow = deselected.indexes().at(0).row();
         qDebug() << "Previous Row: " << nRow;
-        // szPrevID = modelSearch->index(nRow, 0).data().toString().trimmed();
     }
     // Se la riga corrente è stata modificata, salva il contenuto
     if (nRow >= 0 && nRow < lstCTRecords.count())  {
@@ -1397,27 +1412,59 @@ void ctedit::on_cmdImport_clicked()
 // Import another Cross Table File
 {
     QString szSourceFile;
+    QString szMsg;
+    QList<CrossTableRecord>  lstNewRecs, lstSourceRecs;
+    int     nRow = 0;
+    bool    fRes = false;
 
     szSourceFile = QFileDialog::getOpenFileName(this, tr("Import From Cross Table File"), m_szCurrentCTFile, tr("Cross Table File (*.csv)"));
     if (! szSourceFile.isEmpty())  {
-
+        szMsg = tr("Rows from %1 to %2 will be overwritten !!\nDo you want to continue?") .arg(MIN_RETENTIVE) .arg(MAX_NONRETENTIVE);
+        if (queryUser(this, szTitle, szMsg))  {
+            lstNewRecs.clear();
+            lstSourceRecs.clear();
+            if (loadCTFile(szSourceFile, lstNewRecs, false))  {
+                for (nRow = 0; nRow < MAX_NONRETENTIVE; nRow++)  {
+                    lstSourceRecs.append(lstCTRecords[nRow]);
+                    lstCTRecords[nRow] = lstNewRecs[nRow];
+                }
+                // Ricarica la lista dei dati CT in Grid
+                fRes = ctable2Grid();
+                if (fRes)  {
+                    szMsg = tr("Loaded Cross Table from file:\n%1") .arg(szSourceFile);
+                    notifyUser(this, szTitle, szMsg);
+                }
+                else {
+                    szMsg = tr("Error Loading Cross Table from file:\n%1") .arg(szSourceFile);
+                    szMsg.append(tr("\nOriginal Content Reloaded"));
+                    warnUser(this, szTitle, szMsg);
+                    for (nRow = 0; nRow < lstSourceRecs.count(); nRow++)  {
+                        lstCTRecords[nRow] = lstSourceRecs[nRow];
+                    }
+                    fRes = ctable2Grid();
+                }
+            }
+        }
     }
 }
 void ctedit::setRowColor(int nRow, int nAlternate)
 // Imposta il colore di sfondo di una riga
 {
     int         nCol = 0;
-    QColor      cSfondo;
+    QColor      cSfondo = colorRetentive[0];
     QTableWidgetItem    *tItem;
 
     // Impostazione del Backgound color in funzione della zona
     if (nRow >= 0 && nRow < MAX_RETENTIVE)  {
         cSfondo = colorRetentive[nAlternate];
+        qDebug() << tr("Row: %1 Alt: %2 - Retentive Row") .arg(nRow) .arg(nAlternate);
     }
     else if (nRow >= MIN_NONRETENTIVE - 1 && nRow <= MAX_NONRETENTIVE -1) {
         cSfondo = colorNonRetentive[nAlternate];
+        qDebug() << tr("Row: %1 Alt: %2 - NON Retentive Row") .arg(nRow) .arg(nAlternate);
     }
     else if (nRow >= MIN_SYSTEM - 1)  {
+        qDebug() << tr("Row: %1 Alt: %2 - SYSTEM Row") .arg(nRow) .arg(nAlternate);
         if (nRow < MAX_DIAG-1)
             cSfondo = colorSystem[0];
         else if (nRow >= MIN_NODE - 1 && nRow < MAX_NODE - 1)
@@ -1443,9 +1490,9 @@ void ctedit::showAllRows(bool fShowAll)
     int16_t     nPrevBlock = -1;
 
     // Items del Grid
-    for (nRow = 0; nRow < ui->tblCT->rowCount(); nRow++)  {
+    for (nRow = 0; nRow < lstCTRecords.count(); nRow++)  {
         // Determina se il blocco corrente è cambiato dal precedente
-        if (lstCTRecords[nRow].UsedEntry > 0)  {
+        if (lstCTRecords[nRow].UsedEntry)  {
             if (nPrevBlock != lstCTRecords[nRow].Block)
                 nAlternate = ((nAlternate + 1) % 2);
             nPrevBlock = lstCTRecords[nRow].Block;
@@ -1461,7 +1508,7 @@ void ctedit::showAllRows(bool fShowAll)
         // Nascondi i non abilitati
         else  {
             // Mostra o nascondi le righe se sono abilitate
-            if (lstCTRecords[nRow].UsedEntry > 0)  {
+            if (lstCTRecords[nRow].UsedEntry)  {
                 ui->tblCT->showRow(nRow);
                 // Ricerca il primo Item visibile
                 if (nFirstVisible < 0)
@@ -1532,15 +1579,13 @@ void ctedit::on_cmdSearch_clicked()
 void ctedit::jumpToGridRow(int nRow)
 // Salto alla riga nRow del Grid
 {
-    // Controlla se la riga selezionata è abilitata
+    // Controlla se la riga selezionata è abilitata. In caso contrario deve abilitare visualizzazione di tutte le righe
     ui->tblCT->selectRow(nRow);
     if (lstCTRecords[nRow].UsedEntry == 0)  {
         on_cmdHideShow_clicked(true);
     }
-    else  {
-        ui->tblCT->scrollToItem(ui->tblCT->currentItem(), QAbstractItemView::PositionAtCenter);
-        ui->tblCT->setFocus();
-    }
+    // In entrambi i casi cerca di centrare la riga nel grid
+    ui->tblCT->scrollToItem(ui->tblCT->currentItem(), QAbstractItemView::PositionAtCenter);
+    ui->tblCT->setFocus();
     m_nGridRow = nRow;
-
 }

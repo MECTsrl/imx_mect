@@ -107,8 +107,8 @@ struct  Alarms {
 /******************************************************************************
  ***************************** PROTOTYPES SECTION *****************************
  ******************************************************************************/
-int     LoadXTable(char *crossTableFile);
-int     SaveXTable(char *crossTableFile);
+int     LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable);
+int     SaveXTable(char *crossTableFile, struct CrossTableRecord *CrossTable);
 char    *ipaddr2str(uint32_t ipaddr, char *buffer);
 uint32_t str2ipaddr(char *str);
 
@@ -117,8 +117,7 @@ uint32_t str2ipaddr(char *str);
  ******************************************************************************/
 extern const char *fieldbusName[];
 
-struct CrossTableRecord CrossTable[1 + DimCrossTable];	 // campi sono riempiti a partire dall'indice 1
-struct Alarms ALCrossTable[1 + DimAlarmsCT]; // campi sono riempiti a partire dall'indice 1
+//struct CrossTableRecord CrossTable[1 + DimCrossTable];	 // campi sono riempiti a partire dall'indice 1
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,7 @@
 #ifndef CTEDIT_H
 #define CTEDIT_H
 
+#include "parser.h"
 #include <QTableView>
 #include <QModelIndex>
 #include <QModelIndexList>
@@ -23,7 +24,6 @@ public:
     explicit ctedit(QWidget *parent = 0);
     ~ctedit();
     bool    selectCTFile(QString szFileCT);
-    bool    loadCTFile();
     bool    saveCTFile();
 
 
@@ -64,6 +64,7 @@ private:
     bool    values2Iface(QStringList &lstRecValues);// Copia Lista Stringhe convertite da CT Record a Zona di Editing
     bool    iface2values(QStringList &lstRecValues);// Copia da Zona Editing a Lista Stringhe per Grid e Record CT
     void    freeCTrec(int nRow);                    // Marca il Record della CT come inutilizzato
+    bool    loadCTFile(QString szFileCT, QList<CrossTableRecord> &lstCtRecs, bool fLoadGrid);
     // Gestione interfaccia
     void    showGroupVars(int nRow);                 // Imposta in interfaccia il gruppo di appartenenza di una variabile (Ritentivo, NR, System)
     void    enableFields();                         // Abilitazione dei campi form in funzione di Protocollo
@@ -84,6 +85,7 @@ private:
     QString     m_szCurrentProjectPath;             // Project Path corrente
     QString     m_szFormatDate;                     // Format Masks per Date e tempo
     QString     m_szFormatTime;
+    QString     m_szMsg;                            // Variabile di servizio per Messaggi
     // Liste varie per prompt colonne e valori Combo Box (per traduzioni)
     QStringList lstHeadCols;
     QStringList lstPriority;
@@ -101,10 +103,13 @@ private:
     QColor      colorRetentive[2];
     QColor      colorNonRetentive[2];
     QColor      colorSystem[2];
+    // Record CrossTable
+    QList<CrossTableRecord> lstCopiedRecords;       // Lista di Record per copia/incolla
+    QList<CrossTableRecord> lstCTRecords;           // Lista completa di record per tabella
+    CrossTableRecord        CrossTable[1 + DimCrossTable];	 // campi sono riempiti a partire dall'indice 1
     // Variabili di stato ad uso globale
     bool        m_isCtModified;
     bool        m_fShowAllRows;                     // Vero se sono visualizzate tutte le righe
-
 };
 
 #endif // CTEDIT_H

@@ -21,6 +21,7 @@
 #include "parser.h"
 
 uint16_t lastAlarmEvent = 0;
+struct Alarms ALCrossTable[1 + DimAlarmsCT]; // campi sono riempiti a partire dall'indice 1
 
 const char *fieldbusName[] = {"PLC", "RTU", "TCP", "TCPRTU", "CANOPEN", "MECT", "RTU_SRV", "TCP_SRV", "TCPRTU_SRV" };
 const char *varTypeName[] = {"BIT", "BYTE_BIT", "WORD_BIT", "DWORD_BIT", "BYTE", "UINT16", "UINT16BA", "INT16", "INT16BA", "REAL", "REALDCBA", "REALCDAB", "REALBADC", "UDINT", "UDINTDCBA", "UDINTCDAB", "UDINTBADC", "DINT", "DINTDCBA", "DINTCDAB", "DINTBADC", "UNKNOWN" };
@@ -198,7 +199,7 @@ exit_error:
     return -1;
 }
 
-static uint16_t tagAddr(char *tag)
+static uint16_t tagAddr(char *tag, struct CrossTableRecord *CrossTable)
 {
     uint16_t addr;
 
@@ -211,7 +212,7 @@ static uint16_t tagAddr(char *tag)
 }
 
 
-int LoadXTable(char *crossTableFile)
+int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
 {
     uint32_t addr, indx;
     int ERR = FALSE;
@@ -235,7 +236,6 @@ int LoadXTable(char *crossTableFile)
         CrossTable[addr].BlockSize = 0;
         CrossTable[addr].Output = FALSE;
         CrossTable[addr].OldVal = 0;
-        CrossTable[addr].Error = 0;
         CrossTable[addr].device = 0xffff;
         CrossTable[addr].node = 0xffff;
     }
@@ -536,7 +536,7 @@ int LoadXTable(char *crossTableFile)
     // check alarms and events
     for (indx = 1; indx <= lastAlarmEvent; ++indx) {
         // retrieve the source variable address
-        addr = tagAddr(ALCrossTable[indx].ALSource);
+        addr = tagAddr(ALCrossTable[indx].ALSource, CrossTable);
         if (addr == 0) {
             ERR = TRUE;
             break;
@@ -546,7 +546,7 @@ int LoadXTable(char *crossTableFile)
         // if the comparison is with a variable
         if (ALCrossTable[indx].ALCompareVar[0] != 0) {
             // then retrieve the compare variable address
-            addr = tagAddr(ALCrossTable[indx].ALCompareVar);
+            addr = tagAddr(ALCrossTable[indx].ALCompareVar, CrossTable);
             if (addr == 0) {
                 ERR = TRUE;
                 break;
@@ -554,7 +554,7 @@ int LoadXTable(char *crossTableFile)
             ALCrossTable[indx].CompareAddr = addr;
             CrossTable[addr].usedInAlarmsEvents = TRUE;
         } else {
-            // the comparison is with a fixed value, now check for the vartype
+            // the comparison CrossTableis with a fixed value, now check for the vartype
             // since we saved the value as float before and we wish to check
             // directly afterwards using uint32_t values
             float fvalue = *(float *)&ALCrossTable[indx].ALCompareVal;
@@ -622,7 +622,7 @@ exit_function:
     return ERR;
 }
 
-int SaveXTable(char *crossTableFile)
+int SaveXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
 {
     uint32_t addr, nCol;
     int ERR = FALSE;

@@ -1250,7 +1250,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+export VERSION='%{version}'
++export VERSION='\"%{version}\"'
 +/opt/Trolltech/bin/qmake -spec qws/linux-g++-mx
 +make
 +

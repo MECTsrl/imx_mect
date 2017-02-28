@@ -45,6 +45,27 @@ MP_PATCH_QRC_INSTPATH = $(FTP_DIRECTORY)/mect_plugins-qrc_inst_paths.patch
 #
 CTE_DIRECTORY = $(QTC_DIRECTORY)/src/plugins/cte
 
+# DEB packages
+#
+MECT_INST_ROOT := /opt/MECT/MSversion
+DEB_ROOT := deb
+# Qt
+DEB_QT_PKGVER := 1
+DEB_QT_NAME = mect-qt
+DEB_QT_DIR_NAME = mect_qt
+DEB_QT_PKG_ROOT = $(DEB_ROOT)/$(DEB_QT_DIR_NAME)_$(QT_VER)-$(DEB_QT_PKGVER)
+DEB_QT_ROOT = $(DEB_QT_PKG_ROOT)/$(MECT_INST_ROOT)
+DEB_QT_MD_DIR = $(DEB_QT_PKG_ROOT)/DEBIAN
+DEB_QT_MD_CTRL = $(DEB_QT_MD_DIR)/control
+# Qt Creator
+DEB_QTC_PKGVER := 1
+DEB_QTC_NAME = mect-qt-creator
+DEB_QTC_DIR_NAME = mect_qt_creator
+DEB_QTC_PKG_ROOT = $(DEB_ROOT)/$(DEB_QTC_DIR_NAME)_$(QTC_VER)-$(DEB_QTC_PKGVER)
+DEB_QTC_ROOT = $(DEB_QTC_PKG_ROOT)/$(MECT_INST_ROOT)
+DEB_QTC_MD_DIR = $(DEB_QTC_PKG_ROOT)/DEBIAN
+DEB_QTC_MD_CTRL = $(DEB_QTC_MD_DIR)/control
+
 
 # TODO Use for embeded targets
 #
@@ -142,8 +163,40 @@ mp:
 	$(MAKE) -C $(MP_DIRECTORY)/qt_plugins INSTALL_ROOT= install
 
 
+.PHONY: deb
+deb: clean-deb
+	# Qt Creator
+	mkdir -p $(DEB_QTC_ROOT)
+	cp -a --reflink=auto $(QTC_INST_DIR)/* $(DEB_QTC_ROOT)
+	mkdir -p $(DEB_QTC_MD_DIR)
+	echo "Package: $(DEB_QTC_NAME)" >> $(DEB_QTC_MD_CTRL)
+	echo "Version: $(QTC_VER)-$(DEB_QTC_PKGVER)" >> $(DEB_QTC_MD_CTRL)
+	echo "Section: base" >> $(DEB_QTC_MD_CTRL)
+	echo "Priority: optional" >> $(DEB_QTC_MD_CTRL)
+	echo "Architecture: i386" >> $(DEB_QTC_MD_CTRL)
+	echo "Depends: libc6" >> $(DEB_QTC_MD_CTRL)
+	echo "Maintainer: Mihai Lazarescu <mlazarescu@mect.it>" >> $(DEB_QTC_MD_CTRL)
+	echo "Description: Qt Creator for development for MECT TPAC devices." >> $(DEB_QTC_MD_CTRL)
+	dpkg-deb --build $(DEB_QTC_PKG_ROOT)
+	rm -rf $(DEB_QTC_PKG_ROOT) $(DEB_QTC_MD_DIR)
+	# Qt
+	mkdir -p $(DEB_QT_ROOT)
+	cp -a --reflink=auto $(QT_INST_DIR)/* $(DEB_QT_ROOT)
+	mkdir -p $(DEB_QT_MD_DIR)
+	echo "Package: $(DEB_QT_NAME)" >> $(DEB_QT_MD_CTRL)
+	echo "Version: $(QT_VER)-$(DEB_QT_PKGVER)" >> $(DEB_QT_MD_CTRL)
+	echo "Section: base" >> $(DEB_QT_MD_CTRL)
+	echo "Priority: optional" >> $(DEB_QT_MD_CTRL)
+	echo "Architecture: i386" >> $(DEB_QT_MD_CTRL)
+	echo "Depends: libc6" >> $(DEB_QT_MD_CTRL)
+	echo "Maintainer: Mihai Lazarescu <mlazarescu@mect.it>" >> $(DEB_QT_MD_CTRL)
+	echo "Description: Qt for development for MECT TPAC devices." >> $(DEB_QT_MD_CTRL)
+	dpkg-deb --build $(DEB_QT_PKG_ROOT)
+	rm -rf $(DEB_QT_PKG_ROOT) $(DEB_QT_MD_DIR)
+
+
 .PHONY: clean
-clean: clean-qt clean-qtc clean-qwt clean-mp
+clean: clean-qt clean-qtc clean-qwt clean-mp clean-deb
 
 .PHONY: clean-qt
 clean-qt:
@@ -160,6 +213,10 @@ clean-qwt:
 .PHONY: clean-mp
 clean-mp:
 	-if test -d $(MP_DIRECTORY)/qt_plugins; then $(MAKE) -C $(MP_DIRECTORY)/qt_plugins clean; fi
+
+.PHONY: clean-deb
+clean-deb:
+	rm -rf $(DEB_ROOT)
 
 
 .PHONY: buildclean
@@ -178,3 +235,5 @@ buildclean-qtc:
 buildclean-qwt:
 	-if test -r $(QWT_BUILD_DIR)/Makefile; then $(MAKE) -C $(QWT_BUILD_DIR) distclean; fi
 	rm -rf $(QWT_BUILD_DIR)
+
+# vim: set noexpandtab:

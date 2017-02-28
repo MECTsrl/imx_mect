@@ -856,7 +856,7 @@ target_mfg_upd:
 	mkdir -p $(MECT_SYSUPDIR)/fs/sysupdate
 	test -d $(MECT_SYSUPDIR)/fs/sysupdate
 	install -m 644 $(MECT_SYSUPDIR)/imx28_ivt_linux.sb $(MECT_SYSUPDIR)/fs/sysupdate
-	install -m 644 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/fs/sysupdate
+	install -m 755 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/fs/sysupdate
 	if /sbin/losetup -l | grep -q $(MECT_SYSUPD_IMG); then \
 	    dev=`/sbin/losetup -l | grep $(MECT_SYSUPD_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \

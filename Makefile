@@ -111,19 +111,10 @@ MECT_KERNEL_VER := 2.6.35.3
 # Kernel configuration file.
 MECT_KERNEL_CONF := $(MECT_LTIBDIR)/config/platform/imx/kernel-$(MECT_KERNEL_VER)-imx28-tpac.config
 # Script to update target file systems
-MECT_SYSUPD_TMPL := $(MECT_FTPDIR)/sysupdate_imx28.sh
 MECT_SYSUPD_IMG_TMPL := $(MECT_FTPDIR)/sysupdate_imx28_img.sh
 MECT_SYSUPD_IMG_SH := sysupdate_img_$(MECT_BUILD_RELEASE).sh
-# System update archives for all targets
-MECT_SYSUPD_TMPLALL := $(MECT_FTPDIR)/sysupdate_imx28_all.sh
-MECT_SYSUPD_SHARALL := $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL.sh
-MECT_SYSUPD_DIRALL := $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL
-MECT_SYSUPD_DIRALL_IMG := $(MECT_IMGDIR)/sysupdate_$(MECT_BUILD_RELEASE)_ALL_img
 # System cloner for all targets
 MECT_SYSCLONE_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_cloner.sh
-MECT_SYSCLONE_PRE_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_pre.sh
-MECT_SYSCLONE_POST_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_post.sh
-MECT_SYSCLONE_SHAR := $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).sh
 MECT_SYSCLONE_SHDIR := $(MECT_IMGDIR)/cloner_$(MECT_BUILD_RELEASE)
 MECT_SYSCLONE_SH = $(MECT_SYSCLONE_SHDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).sh
 MECT_SYSCLONE_IMG = $(MECT_SYSCLONE_SHDIR)/img_cloner_$(MECT_BUILD_RELEASE).ext2
@@ -338,6 +329,7 @@ MECT_PACKAGES = \
 	g++ \
 	gcc \
 	gzip \
+	hardlink \
 	intltool \
 	libcsv-dev \
 	libdbus-glib-1-dev \
@@ -609,7 +601,7 @@ $(foreach img,$(MECT_IMAGES),$(eval include $(MECT_MKIMGDIR)/Makefile-$(img).in)
 
 # Build the default target image.
 .PHONY: image
-image: cloner_shar $(MECT_DEFAULT_IMAGE)
+image: cloner $(MECT_DEFAULT_IMAGE)
 
 
 # Generate all manufacturing images.
@@ -617,16 +609,14 @@ image: cloner_shar $(MECT_DEFAULT_IMAGE)
 
 # Recurse to properly evaluate the targets.
 .PHONY: images
-images: cloner_shar
-	rm -rf $(MECT_SYSUPD_SHARALL) $(MECT_SYSUPD_DIRALL)
-	mkdir -p $(MECT_SYSUPD_DIRALL)
+images: cloner
 	$(MAKE) $@_do
 
 images_do: $(MECT_IMAGES)
 
 # Build the cloner shell archive.
-.PHONY: cloner_shar
-cloner_shar: CLONER_COMPONENTS := \
+.PHONY: cloner
+cloner: CLONER_COMPONENTS := \
     /lib/ld-linux.so.3 \
     /lib/libc.so.6 \
     /lib/libdl.so.2 \
@@ -654,20 +644,14 @@ cloner_shar: CLONER_COMPONENTS := \
     /usr/share/cloner/excludes_localfs.lst \
     /usr/share/cloner/excludes_rootfs.lst \
 
-cloner_shar: CLONER_COMPONENTS := $(CLONER_COMPONENTS:%=$(MECT_LTIB_RFSDIR)%)
-cloner_shar:
+cloner: CLONER_COMPONENTS := $(CLONER_COMPONENTS:%=$(MECT_LTIB_RFSDIR)%)
+cloner:
 	test -n '$(CLONER_COMPONENTS)'
-	rm -rf $(MECT_SYSCLONE_SHAR) $(MECT_SYSCLONE_DIR) $(MECT_SYSCLONE_SHDIR)
-	mkdir -p $(MECT_SYSCLONE_DIR)
+	rm -rf $(MECT_SYSCLONE_DIR)
+	mkdir -p $(MECT_SYSCLONE_DIR) $(MECT_SYSCLONE_SHDIR)
 	cp -aLv --reflink=auto $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)
 	find $(MECT_SYSCLONE_DIR) -name \*.la -print0 | xargs -0 rm -f
-	cp $(MECT_SYSCLONE_PRE_TMPL) $(MECT_SYSCLONE_SHAR)
-	cd $(MECT_SYSCLONE_DIR)/..; shar -M -x $(notdir $(MECT_SYSCLONE_DIR))/* >> $(MECT_SYSCLONE_SHAR)
-	tail -1 $(MECT_SYSCLONE_SHAR) | grep -q '^exit 0$$'
-	sed -i '$$ d' $(MECT_SYSCLONE_SHAR)
-	cat $(MECT_SYSCLONE_POST_TMPL) >> $(MECT_SYSCLONE_SHAR)
-	mkdir -p $(MECT_SYSCLONE_SHDIR)
-	test -d "$(MECT_SYSCLONE_SHDIR)"
+	sudo hardlink -cvv $(MECT_SYSCLONE_DIR)
 	if /sbin/losetup -l | grep -q $(MECT_SYSCLONE_IMG); then \
 	    dev=`/sbin/losetup -l | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
@@ -676,7 +660,8 @@ cloner_shar:
 	/sbin/mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L cloner $(MECT_SYSCLONE_IMG)
 	rm -rf $(MECT_SYSCLONE_LOOP); mkdir -p $(MECT_SYSCLONE_LOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSCLONE_IMG) $(MECT_SYSCLONE_LOOP)
-	sudo cp -av --reflink=auto $(MECT_SYSCLONE_DIR)/* $(MECT_SYSCLONE_LOOP)
+	sudo cp -aLv --reflink=auto $(MECT_SYSCLONE_DIR)/* $(MECT_SYSCLONE_LOOP)
+	sudo hardlink -cvv $(MECT_SYSCLONE_LOOP)
 	sudo umount $(MECT_SYSCLONE_LOOP)
 	rmdir $(MECT_SYSCLONE_LOOP)
 	/sbin/e2fsck -fy $(MECT_SYSCLONE_IMG)
@@ -810,20 +795,15 @@ target_mfg_upd:
 	sed "s/@@PLAYER@@/$(notdir $(MECT_MFGDIR))/" $(MECT_FTPDIR)/player.ini > $(MECT_MFGDIR)/player.ini
 	install -m 644 $(MECT_FTPDIR)/fdisk-u.input $(MECT_MFGDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(MECT_FTPDIR)/ucl.xml $(MECT_MFGDIR)/'OS firmware'/ucl.xml
+	sudo rm -rf $(MECT_RFSDIR)/local/*
 	sudo tar cf $(MECT_MFGDIR)/'OS firmware'/img/rootfs.tar -C $(MECT_RFSDIR) .
 	tar cf $(MECT_MFGDIR)/'OS firmware'/img/localfs.tar -C $(MECT_LFSDIR) .
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_MFGDIR)/'OS firmware'/img
 	install -m 644 $(MECT_BOOTDIR)/boot/updater_ivt.sb $(MECT_MFGDIR)/'OS firmware'/sys
 	rm -f $(MECT_MFGZIP); cd $(MECT_MFGDIR); zip -0r $(MECT_MFGZIP) *
-	rm -rf $(MECT_SYSUPD_SH) $(MECT_SYSUPDIR)
-	install -m 644 $(MECT_SYSUPD_TMPL) $(MECT_SYSUPD_SH)
-	sed -i 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/' $(MECT_SYSUPD_SH)
-	sed -i 's/@@THIS_VERSION_MAJ_MIN@@/$(MECT_BUILD_VER_MAJ_MIN)/' $(MECT_SYSUPD_SH)
 	mkdir -p $(MECT_SYSUPDIR)
 	install -m 644 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/..
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_SYSUPDIR)
-	sudo rm -rf $(MECT_RFSDIR)/local/*
-	sudo tar cf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_RFSDIR) .
 	cd $(MECT_LFSDIR); sudo rm -rf flash/etc/sysconfig \
 		flash/root/hmi \
 		flash/control \
@@ -832,21 +812,15 @@ target_mfg_upd:
 		var/spool/cron/crontabs/root \
 		flash/etc/ppp/chat-usb3g \
 		flash/etc/icinga/nrpe.cfg
-	tar cf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_LFSDIR) .
-	GZIP=-9 tar cf - -I pigz -C $(MECT_SYSUPDIR)/.. $(MECT_BUILD_TARGET) $(notdir $(MECT_KOBS_TMPL)) | uuencode $(MECT_UPDATE_ARCH) >> $(MECT_SYSUPD_SH)
-	mkdir -p $(MECT_SYSUPD_DIRALL)
-	sudo rm -rf $(MECT_SYSUPD_DIRALL)/$(MECT_BUILD_TARGET)
-	cp -a --reflink=auto $(MECT_SYSUPDIR) $(MECT_SYSUPD_DIRALL)
-	install -m 644 $(MECT_KOBS_TMPL) $(MECT_SYSUPD_DIRALL)
-	sed "s/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/" $(MECT_SYSUPD_TMPLALL) > $(MECT_SYSUPD_DIRALL)/$(notdir $(MECT_SYSUPD_SHARALL))
 	mkdir -p $(MECT_SYSUPDIR)/fs
-	tar xf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_SYSUPDIR)/fs
-	tar xf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_SYSUPDIR)/fs/local
+	sudo cp -av --reflink=auto $(MECT_RFSDIR)/* $(MECT_SYSUPDIR)/fs
+	sudo cp -av --reflink=auto $(MECT_LFSDIR)/* $(MECT_SYSUPDIR)/fs/local
 	test ! -d $(MECT_SYSUPDIR)/fs/sysupdate
 	mkdir -p $(MECT_SYSUPDIR)/fs/sysupdate
 	test -d $(MECT_SYSUPDIR)/fs/sysupdate
 	install -m 644 $(MECT_SYSUPDIR)/imx28_ivt_linux.sb $(MECT_SYSUPDIR)/fs/sysupdate
 	install -m 755 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/fs/sysupdate
+	sudo hardlink -cvv $(MECT_SYSUPDIR)
 	if /sbin/losetup -l | grep -q $(MECT_SYSUPD_IMG); then \
 	    dev=`/sbin/losetup -l | grep $(MECT_SYSUPD_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
@@ -857,11 +831,12 @@ target_mfg_upd:
 	rm -rf $(MECT_SYSUPD_LOOP); mkdir -p $(MECT_SYSUPD_LOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSUPD_IMG) $(MECT_SYSUPD_LOOP)
 	sudo cp -av --reflink=auto $(MECT_SYSUPDIR)/fs/* $(MECT_SYSUPD_LOOP)
+	sudo hardlink -cvv $(MECT_SYSUPD_LOOP)
 	sudo umount $(MECT_SYSUPD_LOOP)
 	rmdir $(MECT_SYSUPD_LOOP)
 	/sbin/e2fsck -fy $(MECT_SYSUPD_IMG)
 	/sbin/resize2fs -Mp $(MECT_SYSUPD_IMG)
-	rm -rf $(MECT_SYSUPDIR)/fs
+	sudo rm -rf $(MECT_SYSUPDIR)/fs
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/; s/@@THIS_VERSION_MAJ_MIN@@/$(MECT_BUILD_VER_MAJ_MIN)/' $(MECT_SYSUPD_IMG_TMPL) > $(MECT_IMGDIR)/$(MECT_SYSUPD_IMG_SH)
 	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_SYSUPDIR) $(shell readlink -m $(MECT_SYSUPDIR)/../$(notdir $(MECT_KOBS_TMPL))) $(MECT_TGTDIR)
 

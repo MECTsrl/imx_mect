@@ -664,7 +664,7 @@ cloner:
 	sudo hardlink -cvv $(MECT_SYSCLONE_LOOP)
 	sudo umount $(MECT_SYSCLONE_LOOP)
 	rmdir $(MECT_SYSCLONE_LOOP)
-	/sbin/e2fsck -fy $(MECT_SYSCLONE_IMG)
+	/sbin/e2fsck -fy $(MECT_SYSCLONE_IMG); rv=$?; test $$rv -eq 0 -o $$rv -eq 1 -o $$rv -eq 2
 	/sbin/resize2fs -Mp $(MECT_SYSCLONE_IMG)
 	install -m 644 $(MECT_SYSCLONE_TMPL) $(MECT_SYSCLONE_SH)
 	sed -i 's/@@CLONER_VERSION@@/$(MECT_BUILD_RELEASE)/' $(MECT_SYSCLONE_SH)
@@ -834,7 +834,7 @@ target_mfg_upd:
 	sudo hardlink -cvv $(MECT_SYSUPD_LOOP)
 	sudo umount $(MECT_SYSUPD_LOOP)
 	rmdir $(MECT_SYSUPD_LOOP)
-	/sbin/e2fsck -fy $(MECT_SYSUPD_IMG)
+	/sbin/e2fsck -fy $(MECT_SYSUPD_IMG); rv=$?; test $$rv -eq 0 -o $$rv -eq 1 -o $$rv -eq 2
 	/sbin/resize2fs -Mp $(MECT_SYSUPD_IMG)
 	sudo rm -rf $(MECT_SYSUPDIR)/fs
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/; s/@@THIS_VERSION_MAJ_MIN@@/$(MECT_BUILD_VER_MAJ_MIN)/' $(MECT_SYSUPD_IMG_TMPL) > $(MECT_IMGDIR)/$(MECT_SYSUPD_IMG_SH)

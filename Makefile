@@ -409,7 +409,7 @@ env:
 		echo "Aborting."; \
 		exit 1; \
 	fi
-	sudo apt-get -y install $(MECT_PACKAGES)
+	sudo apt-get install $(MECT_PACKAGES)
 
 # Initial downloads (toolchain, LTIB, LTIB patches, spec files patches, ...)
 .PHONY: downloads

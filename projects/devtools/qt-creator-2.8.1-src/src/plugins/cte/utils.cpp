@@ -20,6 +20,9 @@
 #include <QUrl>
 #include <QChar>
 #include <QLatin1Char>
+#include <QAbstractItemModel>
+#include <QModelIndex>
+#include <QBrush>
 #include <math.h>
 #include "utils.h"
 
@@ -388,4 +391,17 @@ bool showFile(QString szFileName)
     fRes = QDesktopServices::openUrl(urlObj);
     // Return Value
     return fRes;
+}
+void setRowBackground(const QBrush& brush, QAbstractItemModel* model, int row, const QModelIndex& parent)
+{
+    if(!model || row<0)
+        return;
+    if(row>=model->rowCount(parent))
+        return;
+    if(parent.isValid()){
+        if(parent.model() != model)
+            return;
+    }
+    for(int i=0; i < model->columnCount(parent); ++i)
+        model->setData(model->index(row,i,parent),brush,Qt::BackgroundRole);
 }

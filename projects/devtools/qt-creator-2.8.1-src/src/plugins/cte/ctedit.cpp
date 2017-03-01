@@ -40,9 +40,9 @@
 #define MIN_LOCALIO 5300
 #define MAX_LOCALIO 5389
 
-#define EMPTY_IP "0.0.0.0"
-#define DEF_IP_PORT "502"
-
+// String Costants
+const QString szDEF_IP_PORT = QString::fromLatin1("502");
+const QString szEMPTY_IP = QString::fromLatin1("0.0.0.0");
 const QString szTitle = QString::fromLatin1("Mect Cross Table Editor");
 
 
@@ -329,12 +329,18 @@ ctedit::ctedit(QWidget *parent) :
     szEMPTY.clear();
     szZERO.fromAscii("0");
     // Costanti per i colori di sfondo
-    colorNonRetentive[0] = QColor(255,255,190,255);        // Giallino Dark
-    colorNonRetentive[1] = QColor(255,255,220,255);        // Giallino
     colorRetentive[0] = QColor(170,255,255,255);           // Azzurro Dark
     colorRetentive[1] = QColor(210,255,255,255);           // Azzurro
-    colorSystem[0] = QColor(255,227,215,255);              // Rosa
+    colorNonRetentive[0] = QColor(255,255,190,255);        // Giallino Dark
+    colorNonRetentive[1] = QColor(255,255,220,255);        // Giallino
+    colorSystem[0] = QColor(255,227,215,255);              // Rosa Dark
     colorSystem[1] = QColor(255,240,233,255);              // Rosa
+    szColorRet[0] = QString::fromLatin1("color: #AAFFFF");
+    szColorRet[1] = QString::fromLatin1("color: #D2FFFF");
+    szColorNonRet[0] = QString::fromLatin1("color: #FFFFBE");
+    szColorNonRet[1] = QString::fromLatin1("color: #FFFFDC");
+    szColorSystem[0] = QString::fromLatin1("color: #FFE3D7");
+    szColorSystem[1] = QString::fromLatin1("color: #FFF0E9");
     // Variabili di stato globale dell'editor
     m_isCtModified = false;
     m_fShowAllRows = false;
@@ -353,6 +359,7 @@ bool    ctedit::selectCTFile(QString szFileCT)
 // Select a current CT File
 {
     QString     szFile;
+    bool        fRes = false;
 
     if (fileExists(szFileCT)) {
         szFile = szFileCT;
@@ -363,12 +370,15 @@ bool    ctedit::selectCTFile(QString szFileCT)
     // Tries to Open CT File
     if (! szFile.isEmpty())   {
         m_szCurrentCTFile = szFile;
-        return loadCTFile(m_szCurrentCTFile, lstCTRecords, true);
+        fRes = loadCTFile(m_szCurrentCTFile, lstCTRecords, true);
+        qDebug() << tr("Loaded CT File: %1 Result: %2") .arg(szFile) .arg(fRes);
     }
     else  {
         m_szCurrentCTFile.clear();
-        return false;
+        fRes = false;
+        qDebug() << tr("CT File: %1 Not loaded") .arg(szFile);
     }
+    return fRes;
 }
 bool    ctedit::loadCTFile(QString szFileCT, QList<CrossTableRecord> &lstCtRecs, bool fLoadGrid)
 // Load the current CT File. If fShowGrid then load data to user Grid
@@ -384,7 +394,8 @@ bool    ctedit::loadCTFile(QString szFileCT, QList<CrossTableRecord> &lstCtRecs,
     this->setCursor(Qt::WaitCursor);
     // Opening File
     nRes = LoadXTable(szFileCT.toAscii().data(), &CrossTable[0]);
-    // Return value is the result of Parsing C structure to C++ Objects
+    // Return value is the result of Parsing C structure to C++ Objects.
+    // Data in Array starts from element #1, in list from 0...
     if (nRes == 0)  {
         for (nCur = 1; nCur <= DimCrossTable; ++nCur)  {
             lstCtRecs.append(CrossTable[nCur]);
@@ -486,7 +497,8 @@ bool    ctedit::ctable2Grid()
         m_fShowAllRows = false;
         m_isCtModified = false;
         ui->cmdHideShow->setChecked(m_fShowAllRows);
-        ui->cmdSave->setEnabled(m_isCtModified);
+        ui->cmdSave->setEnabled(true);
+        // ui->cmdSave->setEnabled(m_isCtModified);
         showAllRows(m_fShowAllRows);
     }
     else
@@ -784,7 +796,7 @@ bool    ctedit::riassegnaBlocchi()
     int             nRow = 0;
     bool            fRes = false;
     int             nPrevRow = -2;
-    int             nBlockStart = 0;
+    int             nBlockStart = -1;
     int             j = 0;
     FieldbusType    prevProtocol = (FieldbusType) 0;
     uint32_t        prevIpAdr = 0;
@@ -805,7 +817,7 @@ bool    ctedit::riassegnaBlocchi()
             if (nPrevRow != nRow - 1 || prevPriority != lstCTRecords[nRow].Enable || prevType != lstCTRecords[nRow].Types || prevProtocol !=  lstCTRecords[nRow].Protocol
                     || prevIpAdr != lstCTRecords[nRow].IPAddress || prevPort != lstCTRecords[nRow].Port || prevNodeId != lstCTRecords[nRow].NodeId
                     || curBSize >= MAXBLOCKSIZE)  {
-                // Rinumera block start
+                // Rinumera block start del Blocco precedente
                 if (nRow - nBlockStart > 1)  {
                     for (j = nBlockStart; j < nRow; j++)  {
                         lstCTRecords[j].BlockSize = curBSize;
@@ -819,7 +831,7 @@ bool    ctedit::riassegnaBlocchi()
                 prevPort = lstCTRecords[nRow].Port;
                 prevType = lstCTRecords[nRow].Types;
                 prevNodeId = lstCTRecords[nRow].NodeId;
-                curBlock = (int16_t) nRow;
+                curBlock = (int16_t) nBlockStart + 1;
                 curBSize = 1;
             }
             // Prosecuzione Blocco corrente
@@ -1158,14 +1170,14 @@ void ctedit::on_cboProtocol_currentIndexChanged(int index)
     }
     // TCP, TCPRTU,
     else if (index == TCP || index == TCPRTU)  {
-        szTemp = QString::fromAscii(DEF_IP_PORT);
+        szTemp = szDEF_IP_PORT;
         ui->txtPort->setText(szTemp);
     }
     // TCP_SRV, TCPRTU_SRV
     else if (index == TCP_SRV || index == TCPRTU_SRV)  {
-        szTemp = QString::fromAscii(DEF_IP_PORT);
+        szTemp = szDEF_IP_PORT;
         ui->txtPort->setText(szTemp);
-        szTemp = QString::fromAscii(EMPTY_IP);
+        szTemp = szEMPTY_IP;
         ui->txtIP->setText(szTemp);
     }
     // CANOPEN
@@ -1242,7 +1254,8 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
         clearEntryForm();
     }
     // Bottone di Salvataggio
-    ui->cmdSave->setEnabled(m_isCtModified);
+    ui->cmdSave->setEnabled(true);
+    // ui->cmdSave->setEnabled(m_isCtModified);
 }
 void ctedit::clearEntryForm()
 // Svutamento elementi Form Data Entry
@@ -1465,20 +1478,27 @@ void ctedit::setRowColor(int nRow, int nAlternate)
     }
     else if (nRow >= MIN_SYSTEM - 1)  {
         qDebug() << tr("Row: %1 Alt: %2 - SYSTEM Row") .arg(nRow) .arg(nAlternate);
-        if (nRow < MAX_DIAG-1)
+        if (nRow < MAX_DIAG-1)  {
             cSfondo = colorSystem[0];
-        else if (nRow >= MIN_NODE - 1 && nRow < MAX_NODE - 1)
+        }
+        else if (nRow >= MIN_NODE - 1 && nRow < MAX_NODE - 1)  {
             cSfondo = colorSystem[1];
-        else if (nRow >= MIN_LOCALIO - 1  && nRow < MAX_LOCALIO - 1)
+        }
+        else if (nRow >= MIN_LOCALIO - 1  && nRow < MAX_LOCALIO - 1)  {
             cSfondo = colorSystem[0];
-        else
+        }
+        else  {
             cSfondo = colorSystem[1];
+        }
     }
     // Impostazione del colore di sfondo
-    for (nCol = 0; nCol < colTotals; nCol++)  {
+    QBrush bCell(cSfondo, Qt::SolidPattern);
+    setRowBackground(bCell, ui->tblCT->model(), nRow);
+    /*for (nCol = 0; nCol < colTotals; nCol++)  {
         tItem = ui->tblCT->item(nRow, nCol);
-        tItem->setBackgroundColor(cSfondo);
-    }
+        tItem->setData(Qt::BackgroundRole, bCell);
+        // tItem->setBackground(bCell);
+    } */
 }
 
 void ctedit::showAllRows(bool fShowAll)

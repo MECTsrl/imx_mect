@@ -27,5 +27,5 @@
     void        setTableRowEnabled(QTableWidget * tTable, int nRow, bool fEnabled);              // Blocca/Sblocca completamente la Riga della Tabella
     void        setTableColEnabled(QTableWidget * tTable, int nCol, bool fEnabled);              // Blocca/Sblocca completamente la Colonna della Tabella
     bool        showFile(QString szFileName);                               // Utilizza i DeskTop Sevices per mostrare un File (es. PDF)
-
+    void        setRowBackground(const QBrush& brush, QAbstractItemModel* model, int row, const QModelIndex& parent = QModelIndex());
 #endif // UTILS_H

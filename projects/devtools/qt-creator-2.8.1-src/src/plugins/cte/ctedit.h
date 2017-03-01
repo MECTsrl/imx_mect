@@ -103,6 +103,10 @@ private:
     QColor      colorRetentive[2];
     QColor      colorNonRetentive[2];
     QColor      colorSystem[2];
+    QString     szColorRet[2];
+    QString     szColorNonRet[2];
+    QString     szColorSystem[2];
+
     // Record CrossTable
     QList<CrossTableRecord> lstCopiedRecords;       // Lista di Record per copia/incolla
     QList<CrossTableRecord> lstCTRecords;           // Lista completa di record per tabella

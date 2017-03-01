@@ -170,6 +170,31 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="cmdCompile">
+        <property name="minimumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>96</width>
+          <height>96</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Compile</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="cmdSave">
         <property name="enabled">
          <bool>false</bool>
@@ -910,8 +935,11 @@
  </widget>
  <tabstops>
   <tabstop>cmdHideShow</tabstop>
+  <tabstop>cmdGotoRow</tabstop>
+  <tabstop>cmdSearch</tabstop>
   <tabstop>cmdImport</tabstop>
   <tabstop>cmdBlocchi</tabstop>
+  <tabstop>cmdCompile</tabstop>
   <tabstop>cmdSave</tabstop>
   <tabstop>optRetentive</tabstop>
   <tabstop>optNonRetentive</tabstop>

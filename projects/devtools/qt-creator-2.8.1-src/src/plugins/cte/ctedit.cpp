@@ -24,6 +24,7 @@
 #include <QAction>
 #include <QVariant>
 #include <QInputDialog>
+#include <QCoreApplication>
 
 /* ----  Local Defines:   ----------------------------------------------------- */
 #define _TRUE  1
@@ -41,10 +42,11 @@
 #define MAX_LOCALIO 5389
 
 // String Costants
-const QString szDEF_IP_PORT = QString::fromLatin1("502");
-const QString szEMPTY_IP = QString::fromLatin1("0.0.0.0");
-const QString szTitle = QString::fromLatin1("Mect Cross Table Editor");
-
+const QString szDEF_IP_PORT = QString::fromAscii("502");
+const QString szEMPTY_IP = QString::fromAscii("0.0.0.0");
+const QString szTitle = QString::fromAscii("Mect Cross Table Editor");
+const QString szSlash = QString::fromAscii("/");
+const QString szCrossCompier = QString::fromAscii("ctc");
 
 enum colonne_e
 {
@@ -122,74 +124,74 @@ ctedit::ctedit(QWidget *parent) :
     lstHeadCols[colCondition] = trUtf8("Condition");
     // Lista Priorità
     lstPriority
-            << QString::fromLatin1("0")
-            << QString::fromLatin1("1")
-            << QString::fromLatin1("2")
-            << QString::fromLatin1("3")
+            << QString::fromAscii("0")
+            << QString::fromAscii("1")
+            << QString::fromAscii("2")
+            << QString::fromAscii("3")
         ;
     // Lista PLC
     lstPLC
-            << QString::fromLatin1("H")
-            << QString::fromLatin1("P")
-            << QString::fromLatin1("S")
-            << QString::fromLatin1("F")
-            << QString::fromLatin1("V")
-            << QString::fromLatin1("X")
+            << QString::fromAscii("H")
+            << QString::fromAscii("P")
+            << QString::fromAscii("S")
+            << QString::fromAscii("F")
+            << QString::fromAscii("V")
+            << QString::fromAscii("X")
         ;
     // Lista TIPI
     lstTipi
-            << QString::fromLatin1("BIT")
-            << QString::fromLatin1("BYTE_BIT")
-            << QString::fromLatin1("WORD_BIT")
-            << QString::fromLatin1("DWORD_BIT")
-            << QString::fromLatin1("BYTE")
-            << QString::fromLatin1("UINT16")
-            << QString::fromLatin1("UINT16BA")
-            << QString::fromLatin1("INT16")
-            << QString::fromLatin1("INT16BA")
-            << QString::fromLatin1("REAL")
-            << QString::fromLatin1("REALDCBA")
-            << QString::fromLatin1("REALCDAB")
-            << QString::fromLatin1("REALBADC")
-            << QString::fromLatin1("UDINT")
-            << QString::fromLatin1("UDINTDCBA")
-            << QString::fromLatin1("UDINTCDAB")
-            << QString::fromLatin1("UDINTBADC")
-            << QString::fromLatin1("DINT")
-            << QString::fromLatin1("DINTDCBA")
-            << QString::fromLatin1("DINTCDAB")
-            << QString::fromLatin1("DINTBADC")
-            << QString::fromLatin1("UNKNOWN")
+            << QString::fromAscii("BIT")
+            << QString::fromAscii("BYTE_BIT")
+            << QString::fromAscii("WORD_BIT")
+            << QString::fromAscii("DWORD_BIT")
+            << QString::fromAscii("BYTE")
+            << QString::fromAscii("UINT16")
+            << QString::fromAscii("UINT16BA")
+            << QString::fromAscii("INT16")
+            << QString::fromAscii("INT16BA")
+            << QString::fromAscii("REAL")
+            << QString::fromAscii("REALDCBA")
+            << QString::fromAscii("REALCDAB")
+            << QString::fromAscii("REALBADC")
+            << QString::fromAscii("UDINT")
+            << QString::fromAscii("UDINTDCBA")
+            << QString::fromAscii("UDINTCDAB")
+            << QString::fromAscii("UDINTBADC")
+            << QString::fromAscii("DINT")
+            << QString::fromAscii("DINTDCBA")
+            << QString::fromAscii("DINTCDAB")
+            << QString::fromAscii("DINTBADC")
+            << QString::fromAscii("UNKNOWN")
         ;
     // Lista Protocolli
     lstBusType
-            << QString::fromLatin1("PLC")
-            << QString::fromLatin1("RTU")
-            << QString::fromLatin1("TCP")
-            << QString::fromLatin1("TCP_RTU")
-            << QString::fromLatin1("CANOPEN")
-            << QString::fromLatin1("MECT")
-            << QString::fromLatin1("RTU_SRV")
-            << QString::fromLatin1("TCP_SRV")
-            << QString::fromLatin1("TCPRTU SRV")
+            << QString::fromAscii("PLC")
+            << QString::fromAscii("RTU")
+            << QString::fromAscii("TCP")
+            << QString::fromAscii("TCP_RTU")
+            << QString::fromAscii("CANOPEN")
+            << QString::fromAscii("MECT")
+            << QString::fromAscii("RTU_SRV")
+            << QString::fromAscii("TCP_SRV")
+            << QString::fromAscii("TCPRTU SRV")
         ;
     // Lista Significati
     lstBehavior
-            << QString::fromLatin1("READ")
-            << QString::fromLatin1("READ/WRITE")
-            << QString::fromLatin1("ALARM")
-            << QString::fromLatin1("EVENT")
+            << QString::fromAscii("READ")
+            << QString::fromAscii("READ/WRITE")
+            << QString::fromAscii("ALARM")
+            << QString::fromAscii("EVENT")
         ;
     // Lista condizioni di Allarme / Eventi
     lstCondition.clear();
-    lstCondition.append(QString::fromLatin1(">"));
-    lstCondition.append(QString::fromLatin1(">="));
-    lstCondition.append(QString::fromLatin1("<"));
-    lstCondition.append(QString::fromLatin1("<="));
-    lstCondition.append(QString::fromLatin1("=="));
-    lstCondition.append(QString::fromLatin1("!="));
-    lstCondition.append(QString::fromLatin1("RISING EDGE"));
-    lstCondition.append(QString::fromLatin1("FALLING EDGE"));
+    lstCondition.append(QString::fromAscii(">"));
+    lstCondition.append(QString::fromAscii(">="));
+    lstCondition.append(QString::fromAscii("<"));
+    lstCondition.append(QString::fromAscii("<="));
+    lstCondition.append(QString::fromAscii("=="));
+    lstCondition.append(QString::fromAscii("!="));
+    lstCondition.append(QString::fromAscii("RISING EDGE"));
+    lstCondition.append(QString::fromAscii("FALLING EDGE"));
     // Caricamento delle varie Combos
     // Combo Priority
     szToolTip.clear();
@@ -291,6 +293,8 @@ ctedit::ctedit(QWidget *parent) :
     ui->cboCondition->setToolTip(szToolTip);
     // Init Valori
     m_szCurrentCTFile.clear();
+    m_szCurrentCTPath.clear();
+    m_szCurrentCTName.clear();
     m_szCurrentProjectPath.clear();
     m_nGridRow = 0;
     lstCopiedRecords.clear();
@@ -335,12 +339,12 @@ ctedit::ctedit(QWidget *parent) :
     colorNonRetentive[1] = QColor(255,255,220,255);        // Giallino
     colorSystem[0] = QColor(255,227,215,255);              // Rosa Dark
     colorSystem[1] = QColor(255,240,233,255);              // Rosa
-    szColorRet[0] = QString::fromLatin1("color: #AAFFFF");
-    szColorRet[1] = QString::fromLatin1("color: #D2FFFF");
-    szColorNonRet[0] = QString::fromLatin1("color: #FFFFBE");
-    szColorNonRet[1] = QString::fromLatin1("color: #FFFFDC");
-    szColorSystem[0] = QString::fromLatin1("color: #FFE3D7");
-    szColorSystem[1] = QString::fromLatin1("color: #FFF0E9");
+    szColorRet[0] = QString::fromAscii("color: #AAFFFF");
+    szColorRet[1] = QString::fromAscii("color: #D2FFFF");
+    szColorNonRet[0] = QString::fromAscii("color: #FFFFBE");
+    szColorNonRet[1] = QString::fromAscii("color: #FFFFDC");
+    szColorSystem[0] = QString::fromAscii("color: #FFE3D7");
+    szColorSystem[1] = QString::fromAscii("color: #FFF0E9");
     // Variabili di stato globale dell'editor
     m_isCtModified = false;
     m_fShowAllRows = false;
@@ -377,6 +381,12 @@ bool    ctedit::selectCTFile(QString szFileCT)
         m_szCurrentCTFile.clear();
         fRes = false;
         qDebug() << tr("CT File: %1 Not loaded") .arg(szFile);
+    }
+    // Retrieving Path and Name of Cross Table file
+    if (fRes)  {
+        QFileInfo fInfo(m_szCurrentCTFile);
+        m_szCurrentCTPath = fInfo.absolutePath();
+        m_szCurrentCTName = fInfo.baseName();
     }
     return fRes;
 }
@@ -1585,7 +1595,7 @@ void ctedit::on_cmdSearch_clicked()
     if (fOk)  {
         // Ricerca sequenziale della stringa
         for (nRow = 0; nRow < lstCTRecords.count(); nRow++)    {
-            QString szVarName = QString::fromLatin1(lstCTRecords[nRow].Tag);
+            QString szVarName = QString::fromAscii(lstCTRecords[nRow].Tag);
             if (QString::compare(szText, szVarName, Qt::CaseSensitive) == 0)  {
                 break;
             }
@@ -1608,4 +1618,29 @@ void ctedit::jumpToGridRow(int nRow)
     ui->tblCT->scrollToItem(ui->tblCT->currentItem(), QAbstractItemView::PositionAtCenter);
     ui->tblCT->setFocus();
     m_nGridRow = nRow;
+}
+
+void ctedit::on_cmdCompile_clicked()
+// Generate Compiled Files
+{
+    QString szCommand = QCoreApplication::applicationDirPath();
+    QString szTemp;
+
+    szCommand.append(szSlash);
+    szCommand.append(szCrossCompier);
+    // Parametro 1: -c Nome del File sorgente CrossTable
+    szTemp = QString::fromAscii(" -c %1") .arg(m_szCurrentCTFile);
+    szCommand.append(szTemp);
+    // Parametro 2: -g Nome del file GVL
+    szTemp = QString::fromAscii(" -g %1%2%3.gvl") .arg(m_szCurrentCTPath) .arg(szSlash) .arg(m_szCurrentCTName) ;
+    szCommand.append(szTemp);
+    // Parametro 3: -i Nome del file .h
+    szTemp = QString::fromAscii(" -i %1%2%3.h") .arg(m_szCurrentCTPath) .arg(szSlash) .arg(m_szCurrentCTName) ;
+    szCommand.append(szTemp);
+    // Parametro 4: -s Nome del file .h
+    szTemp = QString::fromAscii(" -s %1%2%3.cpp") .arg(m_szCurrentCTPath) .arg(szSlash) .arg(m_szCurrentCTName) ;
+    szCommand.append(szTemp);
+    // Esecuzione Comando
+    qDebug() << szCommand;
+
 }

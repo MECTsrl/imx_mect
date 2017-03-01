@@ -49,6 +49,7 @@ private slots:
     void on_cmdImport_clicked();                    // Import Rows from Another CT File
     void on_cmdGotoRow_clicked();                   // Goto Row n
     void on_cmdSearch_clicked();                    // Search Variable by Name
+    void on_cmdCompile_clicked();                   // Generate Compiled Files
 
 private:
     //---------------------------------------------------------------------
@@ -82,6 +83,8 @@ private:
     Ui::ctedit *ui;
     int         m_nGridRow;                         // Riga corrente sul Grid
     QString     m_szCurrentCTFile;                  // File Cross Table corrente (completo di Path)
+    QString     m_szCurrentCTPath;                  // Path del file Cross Table corrente
+    QString     m_szCurrentCTName;                  // Nome del file Cross Table (senza Path)
     QString     m_szCurrentProjectPath;             // Project Path corrente
     QString     m_szFormatDate;                     // Format Masks per Date e tempo
     QString     m_szFormatTime;

@@ -353,6 +353,7 @@ cpp_leading_comments_write(FILE *file)
     fprintf(file, "/* BYTE_BIT   ->  int       */\n");
     fprintf(file, "/* WORD_BIT   ->  int       */\n");
     fprintf(file, "/* DWORD_BIT  ->  int       */\n");
+    fprintf(file, "/* BYTE       ->  u_int8_t  */\n");
     fprintf(file, "/* UINT       ->  u_int16_t */\n");
     fprintf(file, "/* UINTBA     ->  UINTBA    */\n");
     fprintf(file, "/* INT        ->  int16_t   */\n");

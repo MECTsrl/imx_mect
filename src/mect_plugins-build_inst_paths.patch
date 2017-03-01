@@ -1,7 +1,8 @@
-diff -ruN a/qt_designer_environment.pri b/qt_designer_environment.pri
---- a/qt_designer_environment.pri	2016-10-18 22:26:47.395179002 +0200
-+++ b/qt_designer_environment.pri	2016-10-18 23:50:04.085987210 +0200
-@@ -1,17 +1,16 @@
+diff --git a/qt_designer_environment.pri b/qt_designer_environment.pri
+index 908f7f5..1c96239 100644
+--- a/qt_designer_environment.pri
++++ b/qt_designer_environment.pri
+@@ -1,17 +1,17 @@
  win32 {
 -	ATCM_QWT_LIB = C:/Qt485/desktop/lib
 -	ATCM_QWT_INCL = C:/Qt485/desktop/include/Qwt
@@ -28,7 +29,7 @@ diff -ruN a/qt_designer_environment.pri b/qt_designer_environment.pri
 +        ATCM_INSTALL_WIZARD = "$$(QTC_INST_DIR)/share/qtcreator/templates/wizards/"
 +        MECT_INSTALL_PLUGINS = "$$(QT_INST_DIR)/plugins"
  }
--
+ 
 diff -ruN a/qt_plugins/qt_designer_plugins.pro b/qt_plugins/qt_designer_plugins.pro
 --- a/qt_plugins/qt_designer_plugins.pro	2016-09-05 04:26:23.000000000 +0200
 +++ b/qt_plugins/qt_designer_plugins.pro	2016-09-16 00:26:48.655876439 +0200

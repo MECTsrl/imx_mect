@@ -409,7 +409,7 @@ env:
 		echo "Aborting."; \
 		exit 1; \
 	fi
-	sudo apt-get install $(MECT_PACKAGES)
+	sudo apt-get -y install $(MECT_PACKAGES)
 
 # Initial downloads (toolchain, LTIB, LTIB patches, spec files patches, ...)
 .PHONY: downloads
@@ -696,8 +696,8 @@ cloner_shar:
 	sudo rsync -av --delete --inplace --exclude lost+found $(MECT_SYSCLONE_DIR)/ $(MECT_SYSCLONE_LOOP)/
 	sudo umount $(MECT_SYSCLONE_LOOP)
 	rmdir $(MECT_SYSCLONE_LOOP)
-	e2fsck -fy $(MECT_SYSCLONE_IMG)
-	resize2fs -Mp $(MECT_SYSCLONE_IMG)
+	/sbin/e2fsck -fy $(MECT_SYSCLONE_IMG)
+	/sbin/resize2fs -Mp $(MECT_SYSCLONE_IMG)
 	install -m 644 $(MECT_SYSCLONE_TMPL) $(MECT_SYSCLONE_SH)
 	sed -i 's/@@CLONER_VERSION@@/$(MECT_BUILD_RELEASE)/' $(MECT_SYSCLONE_SH)
 	rm -rf $(dir $(MECT_SYSCLONE_DIR))
@@ -869,8 +869,8 @@ target_mfg_upd:
 	sudo rsync -av --delete --inplace --exclude lost+found $(MECT_SYSUPDIR)/fs/ $(MECT_SYSUPD_LOOP)/
 	sudo umount $(MECT_SYSUPD_LOOP)
 	rmdir $(MECT_SYSUPD_LOOP)
-	e2fsck -fy $(MECT_SYSUPD_IMG)
-	resize2fs -Mp $(MECT_SYSUPD_IMG)
+	/sbin/e2fsck -fy $(MECT_SYSUPD_IMG)
+	/sbin/resize2fs -Mp $(MECT_SYSUPD_IMG)
 	rm -rf $(MECT_SYSUPDIR)/fs
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/; s/@@THIS_VERSION_MAJ_MIN@@/$(MECT_BUILD_VER_MAJ_MIN)/' $(MECT_SYSUPD_IMG_TMPL) > $(MECT_IMGDIR)/$(MECT_SYSUPD_IMG_SH)
 	sudo rm -rf $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_SYSUPDIR) $(shell readlink -m $(MECT_SYSUPDIR)/../$(notdir $(MECT_KOBS_TMPL))) $(MECT_TGTDIR)

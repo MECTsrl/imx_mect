@@ -685,8 +685,8 @@ cloner_shar:
 	cat $(MECT_SYSCLONE_POST_TMPL) >> $(MECT_SYSCLONE_SHAR)
 	mkdir -p $(MECT_SYSCLONE_SHDIR)
 	test -d "$(MECT_SYSCLONE_SHDIR)"
-	if /sbin/losetup -l | grep -q $(MECT_SYSCLONE_IMG); then \
-	    dev=`/sbin/losetup -l | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
+	if /sbin/losetup | grep -q $(MECT_SYSCLONE_IMG); then \
+	    dev=`/sbin/losetup | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
 	dd if=/dev/zero of=$(MECT_SYSCLONE_IMG) bs=1k count=`du -s $(MECT_SYSCLONE_DIR) | awk '{ print int($$1 * 1.5); }'`
@@ -857,8 +857,8 @@ target_mfg_upd:
 	test -d $(MECT_SYSUPDIR)/fs/sysupdate
 	install -m 644 $(MECT_SYSUPDIR)/imx28_ivt_linux.sb $(MECT_SYSUPDIR)/fs/sysupdate
 	install -m 755 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/fs/sysupdate
-	if /sbin/losetup -l | grep -q $(MECT_SYSUPD_IMG); then \
-	    dev=`/sbin/losetup -l | grep $(MECT_SYSUPD_IMG)\$$ | awk '{ print $$1; }'`; \
+	if /sbin/losetup | grep -q $(MECT_SYSUPD_IMG); then \
+	    dev=`/sbin/losetup | grep $(MECT_SYSUPD_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
 	sync

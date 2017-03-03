@@ -186,8 +186,8 @@ CTEPlugin::enableIfCT()
     fFileExists = ctFile.exists() && ctFile.isFile();
     // Opening file
     if (fFileExists)  {
-        fFileExists = ctEditor->selectCTFile(szFileCT);
         ctEditor->setProjectPath(pd);
+        fFileExists = ctEditor->selectCTFile(szFileCT);
     }
     // Enabling CTEditor
     m_cteMode->setEnabled(fFileExists);

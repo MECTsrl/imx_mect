@@ -24,6 +24,7 @@
 #include <QModelIndex>
 #include <QBrush>
 #include <math.h>
+#include <QCoreApplication>
 #include "utils.h"
 
 const  char         cDoubleQuote = 34;      // Carattere "
@@ -77,9 +78,9 @@ QString getPathFromFileName(const QString &fileName)
     }
     return szReturn;
 }
-bool fileExists(const QString &szPath)
+bool fileExists(const QString &szFile)
 {
-    QFileInfo checkFile(szPath);
+    QFileInfo checkFile(szFile);
     // check if file exists and if yes: Is it really a file and no directory?
     if (checkFile.exists() && checkFile.isFile()) {
         return true;
@@ -87,6 +88,21 @@ bool fileExists(const QString &szPath)
         return false;
     }
 }
+bool fileBackUp(const QString &szFile)
+// Crea una copia di BackUp di un file
+{
+    QFile   sourceFile(szFile);
+    QString szFileDest(szFile);
+    bool    fRes = false;
+
+    if (fileExists(szFile))  {
+        szFileDest.append(QString::fromAscii(".bak"));
+        fRes = sourceFile.copy(szFileDest);
+    }
+    // Return Value
+    return fRes;
+}
+
 bool queryUser(QWidget * parent, const QString &szTitle, const QString &szQueryMessage, bool fDefault)
 // Domanda all'Utente se procedere, return True se Ok
 {
@@ -404,4 +420,31 @@ void setRowBackground(const QBrush& brush, QAbstractItemModel* model, int row, c
     }
     for(int i=0; i < model->columnCount(parent); ++i)
         model->setData(model->index(row,i,parent),brush,Qt::BackgroundRole);
+}
+void doEvents()
+{
+    QCoreApplication::processEvents();
+}
+int searchCombo(QComboBox *Combo, QString szValue)
+// Ricerca del Valore aint16_tll'interno di una Combo scorrendo la parte Qt::UserRole
+{
+    int         nItem = 0;
+    QString     szCurValue;
+    int         retValue = -1;
+    QVariant    val;
+
+    if (Combo->count() == 0 || szValue.length() == 0)
+        return retValue;
+    szCurValue.clear();
+    for (nItem = 0; nItem < Combo->count(); nItem++)  {
+        val = Combo->itemData (nItem,  Qt::UserRole);
+        if (val.canConvert<QString>())  {
+            szCurValue = val.toString();
+            if (szCurValue.contains(szValue, Qt::CaseSensitive))  {
+                retValue =  nItem;
+                break;
+            }
+        }
+    }
+    return retValue;
 }

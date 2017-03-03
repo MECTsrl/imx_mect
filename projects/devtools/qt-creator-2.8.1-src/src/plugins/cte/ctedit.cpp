@@ -3,10 +3,11 @@
 //#include "parser.h"
 #include "utils.h"
 
-
+#include <QFile>
 #include <QFileDialog>
 #include <QTableWidget>
 #include <QTableWidgetItem>
+#include <QModelIndexList>
 #include <QString>
 #include <QRect>
 #include <QMessageBox>
@@ -20,15 +21,19 @@
 #include <QLocale>
 #include <QDate>
 #include <QTime>
+#include <QTimer>
 #include <QMenu>
 #include <QAction>
 #include <QVariant>
 #include <QInputDialog>
 #include <QCoreApplication>
+#include <QProcess>
+#include <QTextStream>
 
 /* ----  Local Defines:   ----------------------------------------------------- */
 #define _TRUE  1
 #define _FALSE 0
+#define MAX_DISPLAY_TIME 30
 #define MAXBLOCKSIZE 64
 #define MIN_RETENTIVE 1
 #define MAX_RETENTIVE 192
@@ -40,6 +45,9 @@
 #define MAX_NODE 5299
 #define MIN_LOCALIO 5300
 #define MAX_LOCALIO 5389
+// Tabs in TabWidget
+#define TAB_CT 0
+#define TAB_SYSTEM 1
 
 // String Costants
 const QString szDEF_IP_PORT = QString::fromAscii("502");
@@ -47,6 +55,7 @@ const QString szEMPTY_IP = QString::fromAscii("0.0.0.0");
 const QString szTitle = QString::fromAscii("Mect Cross Table Editor");
 const QString szSlash = QString::fromAscii("/");
 const QString szCrossCompier = QString::fromAscii("ctc");
+const QString szTemplateFile = QString::fromAscii("template.pri");
 
 enum colonne_e
 {
@@ -101,7 +110,10 @@ ctedit::ctedit(QWidget *parent) :
     lstBehavior.clear();
     lstCondition.clear();
     lstUsedVarNames.clear();
+    lstUndo.clear();
+    // Stringhe generiche per Default campi
     szEMPTY.clear();
+    szZERO.fromAscii("0");
     for (nCol = 0; nCol < colTotals; nCol++)  {
         lstHeadCols.append(szEMPTY);
     }
@@ -295,16 +307,11 @@ ctedit::ctedit(QWidget *parent) :
     m_szCurrentCTFile.clear();
     m_szCurrentCTPath.clear();
     m_szCurrentCTName.clear();
+    m_szCurrentModel.clear();
     m_szCurrentProjectPath.clear();
     m_nGridRow = 0;
     lstCopiedRecords.clear();
     lstCTRecords.clear();
-    // Connessione Segnali - Slot
-    ui->tblCT->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->tblCT, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(displayUserMenu(const QPoint &)));
-    // connect(ui->tblCT, SIGNAL(clicked(QModelIndex)), this, SLOT(itemClicked(QModelIndex)));
-    connect(ui->tblCT->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-            SLOT(tableItemChanged(const QItemSelection &, const QItemSelection & ) ));
     // Validator per Interi
     ui->txtDecimal->setValidator(new QIntValidator(nValMin, DimCrossTable, this));
     ui->txtPort->setValidator(new QIntValidator(nValMin, nValMaxInt16, this));
@@ -326,12 +333,11 @@ ctedit::ctedit(QWidget *parent) :
     ui->fraOptions->setEnabled(false);
     ui->txtBlock->setEnabled(false);
     ui->txtBlockSize->setEnabled(false);
+    // Model Name
+    ui->lblModel->setText(szEMPTY);
     // Stringhe generiche per gestione dei formati di Data e ora
     m_szFormatDate = QString::fromAscii("yyyy.MM.dd");
     m_szFormatTime = QString::fromAscii("hh:mm:ss");
-    // Stringhe generiche per Default campi
-    szEMPTY.clear();
-    szZERO.fromAscii("0");
     // Costanti per i colori di sfondo
     colorRetentive[0] = QColor(170,255,255,255);           // Azzurro Dark
     colorRetentive[1] = QColor(210,255,255,255);           // Azzurro
@@ -348,6 +354,17 @@ ctedit::ctedit(QWidget *parent) :
     // Variabili di stato globale dell'editor
     m_isCtModified = false;
     m_fShowAllRows = false;
+    m_nCurTab = 0;
+    // Seleziona il primo Tab
+    ui->tabWidget->setCurrentIndex(m_nCurTab);
+    ui->tabWidget->setTabEnabled(TAB_SYSTEM, false);
+    // Connessione Segnali - Slot
+    ui->tblCT->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tblCT, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(displayUserMenu(const QPoint &)));
+    // connect(ui->tblCT, SIGNAL(clicked(QModelIndex)), this, SLOT(itemClicked(QModelIndex)));
+    connect(ui->tblCT->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+            SLOT(tableItemChanged(const QItemSelection &, const QItemSelection & ) ));
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(tabSelected(int)));
 }
 
 ctedit::~ctedit()
@@ -383,10 +400,17 @@ bool    ctedit::selectCTFile(QString szFileCT)
         qDebug() << tr("CT File: %1 Not loaded") .arg(szFile);
     }
     // Retrieving Path and Name of Cross Table file
+    m_szCurrentModel.clear();
+    m_szCurrentCTPath.clear();
+    m_szCurrentCTName.clear();
     if (fRes)  {
         QFileInfo fInfo(m_szCurrentCTFile);
         m_szCurrentCTPath = fInfo.absolutePath();
+        m_szCurrentCTPath.append(szSlash);
         m_szCurrentCTName = fInfo.baseName();
+        // Reading Model from template.pri
+        m_szCurrentModel = getModelName();
+        ui->lblModel->setText(m_szCurrentModel);
     }
     return fRes;
 }
@@ -512,7 +536,7 @@ bool    ctedit::ctable2Grid()
         showAllRows(m_fShowAllRows);
     }
     else
-        qDebug() << "Error Loading Rows";
+        qDebug() << tr("Error Loading Rows");
     // Return value
     this->setCursor(Qt::ArrowCursor);
     return fRes;
@@ -762,9 +786,8 @@ bool ctedit::iface2values(QStringList &lstRecValues)
 
 void ctedit::on_cmdBlocchi_clicked()
 {
-    bool fRes = false;
 
-    fRes = riassegnaBlocchi();
+    riassegnaBlocchi();
 }
 
 void ctedit::on_cmdSave_clicked()
@@ -773,32 +796,14 @@ void ctedit::on_cmdSave_clicked()
 
     fRes = saveCTFile();
     if (!fRes)  {
-
+        m_szMsg = tr("Error Saving Cross Table File: %1\n").arg(m_szCurrentCTFile);
+        warnUser(this, szTitle, m_szMsg);
     }
-
-}
-int ctedit::searchCombo(QComboBox *Combo, QString szValue)
-// Ricerca del Valore aint16_tll'interno di una Combo scorrendo la parte Qt::UserRole
-{
-    int         nItem = 0;
-    QString     szCurValue;
-    int         retValue = -1;
-    QVariant    val;
-
-    if (Combo->count() == 0 || szValue.length() == 0)
-        return retValue;
-    szCurValue.clear();
-    for (nItem = 0; nItem < Combo->count(); nItem++)  {
-        val = Combo->itemData (nItem,  Qt::UserRole);
-        if (val.canConvert<QString>())  {
-            szCurValue = val.toString();
-            if (szCurValue.contains(szValue, Qt::CaseSensitive))  {
-                retValue =  nItem;
-                break;
-            }
-        }
+    else {
+        m_isCtModified = true;
     }
-    return retValue;
+    // Refresh abilitazioni interfaccia
+    enableInterface();
 }
 // Riassegnazione blocchi variabili
 bool    ctedit::riassegnaBlocchi()
@@ -874,6 +879,8 @@ bool ctedit::saveCTFile()
     int nCur = 0;
     QString szCtFile;
 
+    // Back-Up Copy of CT File
+    fileBackUp(m_szCurrentCTFile);
     // Trigo per ora per preparare un File name differente per non perdere l'originale
     // Al momento riscrive (forse) una fotocopia della stuttura C di partenza
     szCtFile = QString(QDate::currentDate().toString(m_szFormatDate));
@@ -886,8 +893,10 @@ bool ctedit::saveCTFile()
         if (nCur < DimCrossTable)
             CrossTable[nCur + 1] = lstCTRecords[nCur];
     }
-    // Saving File
+    // Saving File to Juornaled Copy
     nRes = SaveXTable(szCtFile.toAscii().data(), CrossTable);
+    // Saving File to Source Copy
+    nRes = SaveXTable(m_szCurrentCTFile.toAscii().data(), CrossTable);
     // Return Value
     return nRes == 0;
 }
@@ -1227,11 +1236,14 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
             // Primo controllo di coerenza sulla riga corrente
             fRes = checkFields();
             if (fRes)  {
+                // Copia l'attuale CT nella lista Undo
+                lstUndo.append(lstCTRecords);
+                // Valori da interfaccia a CT
                 fRes = iface2values(lstFields);
                 if (fRes)  {
                     // Salva Record e marca la Cross Table da salvare
                     m_isCtModified = list2CTrec(lstFields, nRow);
-                    // Aggiorna Grid Utente
+                    // Aggiorna Grid Utente per riga corrente
                     if (m_isCtModified)  {
                         fRes = list2GridRow(lstFields, nRow);
                     }
@@ -1263,7 +1275,9 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
     else  {
         clearEntryForm();
     }
-    // Bottone di Salvataggio
+    // Refresh abilitazioni interfaccia
+    enableInterface();
+    // DEBUG Bottone di Salvataggio sempre abilitato
     ui->cmdSave->setEnabled(true);
     // ui->cmdSave->setEnabled(m_isCtModified);
 }
@@ -1301,7 +1315,8 @@ bool ctedit::checkFields()
 void ctedit::displayUserMenu(const QPoint &pos)
 // Menu contestuale Grid
 {
-    int         nRow = ui->tblCT->rowAt(pos.y());
+    int             nRow = ui->tblCT->rowAt(pos.y());
+    QModelIndexList selection = ui->tblCT->selectionModel()->selectedRows();
 
     // Aggiornamento numero riga
     if (nRow >= 0)  {
@@ -1310,15 +1325,26 @@ void ctedit::displayUserMenu(const QPoint &pos)
     // Oggetto menu contestuale
     QMenu gridMenu(this);
     // Items del Menu contestuale
+    // Inserisci righe
     QAction *insRows = gridMenu.addAction(trUtf8("Inserisci righe"));
+    insRows->setEnabled(selection.count() > 0);
+    // Elimina righe
     QAction *remRows = gridMenu.addAction(trUtf8("Elimina righe"));
+    remRows->setEnabled(selection.count() > 0);
+    // Sep1
     QAction *sep1 = gridMenu.addSeparator();
+    // Copia righe
     QAction *copyRows = gridMenu.addAction(trUtf8("Copia righe"));
+    copyRows->setEnabled(selection.count() > 0);
+    // Taglia righe
     QAction *cutRows = gridMenu.addAction(trUtf8("Taglia righe"));
+    cutRows->setEnabled(selection.count() > 0);
+    // Sep 2
     QAction *sep2 = gridMenu.addSeparator();
+    // Paste Rows
     QAction *pasteRows = gridMenu.addAction(trUtf8("Incolla righe"));
-    // Abilitazione delle voci di Menu
     pasteRows->setEnabled(lstCopiedRecords.count() > 0 && m_nGridRow < MIN_SYSTEM);
+    // Abilitazione delle voci di Menu
     // Esecuzione del Menu
     QAction *actMenu = gridMenu.exec(ui->tblCT->viewport()->mapToGlobal(pos));
     // Controllo dell'Azione selezionata
@@ -1347,61 +1373,123 @@ void ctedit::displayUserMenu(const QPoint &pos)
 void ctedit::copySelected()
 // Copia delle righe selezionate in Buffer di Copiatura
 {
-    QTableWidgetItem    *tItem;
-    int                 nRow = 0;
+    // Recupera righe selezionate
+    QModelIndexList selection = ui->tblCT->selectionModel()->selectedRows();
+    int             nRow = 0;
+    int             nCur = 0;
 
     // Clear Copied Items Rows
     lstCopiedRecords.clear();
     // Compile Selected Row List
-    for (nRow = 0; nRow < MAX_NONRETENTIVE - 1; nRow++)  {
-        // Si utilizza la colonna 0 per capire se l'item è selezionato
-        tItem = ui->tblCT->item(nRow, 0);
-        if (tItem->isSelected())  {
+    for (nCur = 0; nCur < selection.count(); nCur++)  {
+        // Reperisce l'Item Row Number dall'elenco degli elementi selezionati
+        QModelIndex index = selection.at(nCur);
+        nRow = index.row();
+        if (nRow < MAX_NONRETENTIVE)  {
             lstCopiedRecords.append(lstCTRecords[nRow]);
         }
     }
-    qDebug() << "Copied: " << lstCopiedRecords.count();
+    m_szMsg = tr("Rows Copied: ") .arg(lstCopiedRecords.count());
+    displayStatusMessage(m_szMsg);
+    qDebug() << m_szMsg;
 }
 void ctedit::pasteSelected()
 // Incolla righe da Buffer di copiatura a Riga corrente
 {
-    QTableWidgetItem    *tItem;
-    int                 nRow = ui->tblCT->currentRow();
-    int                 nCur = 0;
-    CrossTableRecord    ctElement;
-    int                 nSourceElement = 0;
+    int     nRow = ui->tblCT->currentRow();
+    int     nCur = 0;
 
     // Paste Rows
     if (nRow >= 0 && nRow < MAX_NONRETENTIVE - 1 && lstCopiedRecords.count() > 0)  {
-        // Compile Selected Row List
-        for (nCur = 0; nCur < lstCopiedRecords.count(); nCur ++)  {
-            // Retrieve element
-            ctElement = lstCopiedRecords[nCur];
-            // check if Dest Element is in User Area
-            if (nRow < MAX_NONRETENTIVE - 1)  {
-                // if ()
+        if (nRow + lstCopiedRecords.count() < MAX_NONRETENTIVE)  {
+            // Append to Undo List
+            lstUndo.append(lstCTRecords);
+            // Compile Selected Row List
+            for (nCur = 0; nCur < lstCopiedRecords.count(); nCur ++)  {
+                // Retrieve element
+                lstCTRecords[nRow++] = lstCopiedRecords[nCur];
             }
+            // Restore Grid
+            ctable2Grid();
+            m_isCtModified = true;
         }
-
+        else  {
+            m_szMsg = tr("The Copy Buffer Excedes System Variables Limit. Rows not copied");
+            warnUser(this, szTitle, m_szMsg);
+        }
     }
-    qDebug() << "Pasted: " << lstCopiedRecords.count();
+    m_szMsg = tr("Rows Pasted: ") .arg(lstCopiedRecords.count());
+    displayStatusMessage(m_szMsg);
+    qDebug() << m_szMsg;
     lstCopiedRecords.clear();
+    enableInterface();
 }
 
 void ctedit::insertRows()
 // Aggiunta righe in posizione cursore
 {
+    // Recupera righe selezionate
+    QModelIndexList selection = ui->tblCT->selectionModel()->selectedRows();
 
+    // Controllo di restare nei Bounding delle variabili utente
+    if (m_nGridRow + selection.count() < MAX_NONRETENTIVE)  {
+        // Append to Undo List
+        lstUndo.append(lstCTRecords);
+        //
+        m_isCtModified = true;
+    }
+    m_szMsg = tr("Rows Inserted: ") .arg(selection.count());
+    displayStatusMessage(m_szMsg);
+    qDebug() << m_szMsg;
+    enableInterface();
 }
 void ctedit::removeSelected()
 // Rimozione delle righe correntemente selezionate
 {
+    // Recupera righe selezionate
+    QModelIndexList selection = ui->tblCT->selectionModel()->selectedRows();
+    int             nRow = 0;
+    int             nCur = 0;
+    int             nRemoved = 0;
 
+    // Check Modif. and append data to Undo List
+    if (selection.isEmpty())
+        return;
+    else
+        lstUndo.append(lstCTRecords);
+    // Compile Selected Row List
+    for (nCur = 0; nCur < selection.count(); nCur++)  {
+        // Reperisce l'Item Row Number dall'elenco degli elementi selezionati
+        QModelIndex index = selection.at(nCur);
+        nRow = index.row();
+        if (nRow < MAX_NONRETENTIVE)  {
+            freeCTrec(nRow);
+            nRemoved++;
+        }
+    }
+    // Refresh Grid
+    if (nRemoved)  {
+        ctable2Grid();
+        m_isCtModified = true;
+    }
+    m_szMsg = tr("Rows Removed: ") .arg(lstCopiedRecords.count());
+    displayStatusMessage(m_szMsg);
+    qDebug() << m_szMsg;
+    // Update Iface
+    enableInterface();
 }
 void ctedit::cutSelected()
 // Taglia righe in Buffer di copiatura
 {
-
+    // Copia Righe
+    copySelected();
+    // Elimina Righe
+    if(lstCopiedRecords.count() > 0)
+        removeSelected();
+    // Result
+    m_szMsg = tr("Rows Cutted: ") .arg(lstCopiedRecords.count());
+    displayStatusMessage(m_szMsg);
+    qDebug() << m_szMsg;
 }
 bool ctedit::isLineModified()
 // Check su modifica record corrente
@@ -1473,21 +1561,19 @@ void ctedit::on_cmdImport_clicked()
 void ctedit::setRowColor(int nRow, int nAlternate)
 // Imposta il colore di sfondo di una riga
 {
-    int         nCol = 0;
     QColor      cSfondo = colorRetentive[0];
-    QTableWidgetItem    *tItem;
 
     // Impostazione del Backgound color in funzione della zona
     if (nRow >= 0 && nRow < MAX_RETENTIVE)  {
         cSfondo = colorRetentive[nAlternate];
-        qDebug() << tr("Row: %1 Alt: %2 - Retentive Row") .arg(nRow) .arg(nAlternate);
+        // qDebug() << tr("Row: %1 Alt: %2 - Retentive Row") .arg(nRow) .arg(nAlternate);
     }
     else if (nRow >= MIN_NONRETENTIVE - 1 && nRow <= MAX_NONRETENTIVE -1) {
         cSfondo = colorNonRetentive[nAlternate];
-        qDebug() << tr("Row: %1 Alt: %2 - NON Retentive Row") .arg(nRow) .arg(nAlternate);
+        // qDebug() << tr("Row: %1 Alt: %2 - NON Retentive Row") .arg(nRow) .arg(nAlternate);
     }
     else if (nRow >= MIN_SYSTEM - 1)  {
-        qDebug() << tr("Row: %1 Alt: %2 - SYSTEM Row") .arg(nRow) .arg(nAlternate);
+        // qDebug() << tr("Row: %1 Alt: %2 - SYSTEM Row") .arg(nRow) .arg(nAlternate);
         if (nRow < MAX_DIAG-1)  {
             cSfondo = colorSystem[0];
         }
@@ -1623,24 +1709,158 @@ void ctedit::jumpToGridRow(int nRow)
 void ctedit::on_cmdCompile_clicked()
 // Generate Compiled Files
 {
-    QString szCommand = QCoreApplication::applicationDirPath();
-    QString szTemp;
+    QString     szCommand = QCoreApplication::applicationDirPath();     // QT Creator Bin Directory
+    QStringList lstArguments;
+    QString     szTemp;
+    QString     szFileName;
+    QProcess    procCompile;
+    int         nExitCode = 0;
 
+    // CT Compiler Full Path
     szCommand.append(szSlash);
     szCommand.append(szCrossCompier);
     // Parametro 1: -c Nome del File sorgente CrossTable
-    szTemp = QString::fromAscii(" -c %1") .arg(m_szCurrentCTFile);
-    szCommand.append(szTemp);
-    // Parametro 2: -g Nome del file GVL
-    szTemp = QString::fromAscii(" -g %1%2%3.gvl") .arg(m_szCurrentCTPath) .arg(szSlash) .arg(m_szCurrentCTName) ;
-    szCommand.append(szTemp);
-    // Parametro 3: -i Nome del file .h
-    szTemp = QString::fromAscii(" -i %1%2%3.h") .arg(m_szCurrentCTPath) .arg(szSlash) .arg(m_szCurrentCTName) ;
-    szCommand.append(szTemp);
-    // Parametro 4: -s Nome del file .h
-    szTemp = QString::fromAscii(" -s %1%2%3.cpp") .arg(m_szCurrentCTPath) .arg(szSlash) .arg(m_szCurrentCTName) ;
-    szCommand.append(szTemp);
+    szTemp = QString::fromAscii("-c%1.csv") .arg(m_szCurrentCTName);
+    lstArguments.append(szTemp);
+    // Parametro 2: -g Nome del file GVL (Case preserved)
+    szFileName = QString::fromAscii("%1.gvl") .arg(m_szCurrentCTName);
+    szTemp = szFileName;
+    szTemp.prepend(QString::fromAscii("-g"));
+    lstArguments.append(szTemp);
+    szFileName.prepend(m_szCurrentCTPath);
+    fileBackUp(szFileName);
+    // Parametro 3: -i Nome del file .h (Forced LowerCase)
+    szFileName = QString::fromAscii("%1.h") .arg(m_szCurrentCTName.toLower());
+    szTemp = szFileName;
+    szTemp.prepend(QString::fromAscii("-i"));
+    lstArguments.append(szTemp);
+    szFileName.prepend(m_szCurrentCTPath);
+    fileBackUp(szFileName);
+    // Parametro 4: -s Nome del file .h (Forced LowerCase)
+    szFileName = QString::fromAscii("%1.cpp") .arg(m_szCurrentCTName.toLower());
+    szTemp = szFileName;
+    szTemp.prepend(QString::fromAscii("-s"));
+    lstArguments.append(szTemp);
+    szFileName.prepend(m_szCurrentCTPath);
+    fileBackUp(szFileName);
+    // Imposta come Directory corrente di esecuzione la directory del File CT
+    procCompile.setWorkingDirectory(m_szCurrentCTPath);
     // Esecuzione Comando
-    qDebug() << szCommand;
+    qDebug() << szCommand << lstArguments;
+    procCompile.start(szCommand, lstArguments);
+    if (!procCompile.waitForStarted())  {
+        m_szMsg = tr("Error Starting Cross Table Compiler!\n");
+        m_szMsg.append(szCommand);
+        warnUser(this, szTitle, m_szMsg);
+        goto exit_compile;
+    }
+    // Attesa termine comando
+    if (!procCompile.waitForFinished())  {
+        m_szMsg = tr("Error Running Cross Table Compiler!\n");
+        m_szMsg.append(szCommand);
+        warnUser(this, szTitle, m_szMsg);
+        goto exit_compile;
+    }
+    // Esito comando
+    nExitCode = procCompile.exitCode();
+    if (nExitCode != 0)  {
+        m_szMsg = tr("Exit Code of Cross Table Compiler: %1") .arg(nExitCode);
+        warnUser(this, szTitle, m_szMsg);
+    }
+    else {
+        m_szMsg = tr("Cross Table Correctly Compiled");
+        notifyUser(this, szTitle, m_szMsg);
+    }
 
+exit_compile:
+    return;
+}
+QString ctedit::getModelName()
+// Lettura del file template.pri per determinare il modello di TPAC
+{
+    QString     szModel;
+    QString     szFileTemplate;
+    QFile       fileTemplate;
+    QString     szLine;
+    int         nPos = -1;
+
+    szModel.clear();
+    // Costruzione del nome del file Template
+    szFileTemplate = m_szCurrentProjectPath;
+    szFileTemplate.append(szSlash);
+    szFileTemplate.append(szTemplateFile);
+    fileTemplate.setFileName(szFileTemplate);
+    // Verifica esistenza filedisplayMessage
+    if (fileTemplate.exists())   {
+        fileTemplate.open(QIODevice::ReadOnly | QIODevice::Text);
+        QTextStream templateFile(&fileTemplate);
+        // Text reading line by line
+        while (! templateFile.atEnd()) {
+            szLine = templateFile.readLine();
+            szLine = szLine.trimmed();
+            // Search TYPE string in Line
+            if (szLine.startsWith(QString::fromAscii("TYPE"), Qt::CaseSensitive))  {
+                qDebug() << tr("Model Line: %1") .arg(szLine);
+                nPos = szLine.indexOf(QString::fromAscii("="));
+                if (nPos > 0)  {
+                    szModel = szLine.mid(nPos + 1).trimmed();
+                    szModel.remove(QString::fromAscii("\""));
+                    break;
+                }
+            }
+        }
+        // Close file
+        fileTemplate.close();
+    }
+    else {
+        qDebug() << tr("Template File: %1 not found") .arg(szFileTemplate);
+    }
+    qDebug() << tr("Curent Model: %1") .arg(szModel);
+    // return value
+    return szModel;
+}
+void ctedit::displayStatusMessage(QString szMessage, int nSeconds)
+// Show message in ui->lblMessage
+{
+    // Time Out in display time
+    if (nSeconds == 0)
+        nSeconds = MAX_DISPLAY_TIME;
+    ui->lblMessage->setText(szMessage);
+    // Timer per Clear Text
+    if (nSeconds > 0)  {
+        QTimer::singleShot(nSeconds * 1000, this, SLOT(clearStatusMessage()));
+    }
+}
+void ctedit::clearStatusMessage()
+// Clear message in ui->lblMessage
+{
+    ui->lblMessage->setText(szEMPTY);
+}
+
+void ctedit::on_cmdUndo_clicked()
+// Retrieve a CT Block from Undo List
+{
+    if (! lstUndo.isEmpty())  {
+        lstCTRecords.clear();
+        lstCTRecords = lstUndo[lstUndo.count()-1];
+        lstUndo.removeLast();
+        // Refresh List
+        ctable2Grid();
+    }
+}
+void ctedit::tabSelected(int nTab)
+// Change current Tab
+{
+    m_nCurTab = nTab;
+}
+void ctedit::enableInterface()
+// Abilita l'interfaccia in funzione dello stato del sistema
+{
+    // Abilitazioni elementi di interfaccia ancora da decidere
+    ui->cmdUndo->setEnabled(lstUndo.count() > 0);
+    ui->cmdBlocchi->setEnabled(true);
+    ui->cmdCompile->setEnabled(! m_isCtModified);
+    ui->cmdSave->setEnabled(m_isCtModified);
+    ui->fraCondition->setEnabled(true);
+    ui->tblCT->setEnabled(true);
 }

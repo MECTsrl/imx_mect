@@ -4,11 +4,13 @@
 #include <QWidget>
 #include <QTableWidget>
 #include <QTableWidgetItem>
+#include <QComboBox>
 
     QString     getPathFromFileName(const QString &fileName);               // Estrae il Path assoluto dal File Name ricevuto come parametro
     void        splitFileName(const QString &fileName, QString &szPath,
                        QString &szFile, QString &szSuffisso);               // Spezza un file name nelle sue componenti Path, Nome File, Suffisso
-    bool        fileExists(const QString &szPath);                          // Controlla l'esistenza di un file
+    bool        fileExists(const QString &szFile);                          // Controlla l'esistenza di un file
+    bool        fileBackUp(const QString &szFile);                          // Crea una copia di BackUp di un file
     bool        queryUser(QWidget * parent, const QString &szTitle, const QString &szQueryMessage, bool fDefault = false);     // Domanda all'Utente se procedere, return True se Ok
     void        notifyUser(QWidget * parent, const QString &szTitle, const QString &szMessage);         // Notifica all'Utente il messaggio con solo il tasto Ok
     void        warnUser(QWidget * parent, const QString &szTitle, const QString &szMessage);           // Notifica all'Utente il messaggio con solo il tasto Ok e Icona Warning
@@ -28,4 +30,6 @@
     void        setTableColEnabled(QTableWidget * tTable, int nCol, bool fEnabled);              // Blocca/Sblocca completamente la Colonna della Tabella
     bool        showFile(QString szFileName);                               // Utilizza i DeskTop Sevices per mostrare un File (es. PDF)
     void        setRowBackground(const QBrush& brush, QAbstractItemModel* model, int row, const QModelIndex& parent = QModelIndex());
+    void        doEvents();
+    int         searchCombo(QComboBox *Combo, QString szValue);
 #endif // UTILS_H

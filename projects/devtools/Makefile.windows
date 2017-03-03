@@ -92,7 +92,8 @@ SANE := if test -t 1; then stty sane; fi
 
 
 .PHONY: all
-all: wine tools libs qt install-qt qtc qwt mp
+all: wine tools qt libs install-qt qtc qwt mp
+	stty sane
 
 .PHONY: wine
 wine: $(WINEPREFIX)
@@ -106,7 +107,9 @@ tools: wine
 	mkdir -p $(MGW_INST_DIR)
 	cd $(MGW_INST_DIR); unzip $(MGW_ARCHIVE)
 	install -m 644 -D $(MGW_PROF_DEF) $(MGW_INST_DIR)/var/lib/mingw-get/data/profile.xml
+	sed -i 's|  <repository uri="http://prdownloads.sourceforge.net/mingw/%F.xml.lzma?download">|  <repository uri="http://www.mect.it/archive/mingw/%F.xml.lzma">|' $(MGW_INST_DIR)/var/lib/mingw-get/data/profile.xml
 	install -m 644 -D $(MGW_PROF_DEF) $(MGW_INST_DIR)/var/lib/mingw-get/data/defaults.xml
+	sed -i 's|  <repository uri="http://prdownloads.sourceforge.net/mingw/%F.xml.lzma?download">|  <repository uri="http://www.mect.it/archive/mingw/%F.xml.lzma">|' $(MGW_INST_DIR)/var/lib/mingw-get/data/defaults.xml
 	-wineserver -k		# Sync the registry
 	sed -i '/^"PATH"=/ s/C:\\\\MinGW\\\\bin;//g' $(WINEPREFIX)/system.reg
 	sed -i '/^"PATH"=/ s/"C:/"C:\\\\MinGW\\\\bin;C:/' $(WINEPREFIX)/system.reg
@@ -118,13 +121,6 @@ tools: wine
 	sed -i '/^"PATH"=/ s/"$$/;$(QT_BIN_DIR)"/' $(WINEPREFIX)/system.reg
 	sed -i '/^"PATH"=/ s/;$(QTC_BIN_DIR)//g' $(WINEPREFIX)/system.reg
 	sed -i '/^"PATH"=/ s/"$$/;$(QTC_BIN_DIR)"/' $(WINEPREFIX)/system.reg
-
-.PHONY: libs
-libs: $(LC_DLL)
-
-$(LC_DLL):
-	test -d $(LC_DIRECTORY)
-	$(MAKE) -C $(LC_DIRECTORY) -f Makefile.windows all install; $(SANE)
 
 .PHONY: qt
 qt: rebase do_qt rebase
@@ -182,13 +178,20 @@ install-qt: clean-qt
 	for m in `find $(QT_INST_DIR_H)/mkspecs -name qmake.conf -print`; do echo 'QMAKE_INCDIR += "."' >> $$m; done
 	for m in `find $(QT_INST_DIR_H)/lib -name \*.prl -print`; do sed -i 's|[Zz]:$(CURDIR)/$(QT_DIRECTORY)|$(QT_INST_DIR)|' $$m; done
 
+.PHONY: libs
+libs: $(LC_DLL)
+
+$(LC_DLL):
+	test -d $(LC_DIRECTORY)
+	$(MAKE) -C $(LC_DIRECTORY) -f Makefile.windows all install; $(SANE)
+
 .PHONY: qtc
 qtc: rebase do_qtc rebase
 
 .PHONY: do_qtc
 do_qtc:
 	mkdir -p $(QTC_BUILD_DIR)
-	cd $(QTC_BUILD_DIR); $(QMAKE) -r ../$(QTC_DIRECTORY)/qtcreator.pro
+	#cd $(QTC_BUILD_DIR); $(QMAKE) -r ../$(QTC_DIRECTORY)/qtcreator.pro
 	$(MAKE) -j $(NPROCS) -C $(QTC_BUILD_DIR); $(SANE)
 	$(MAKE) -C $(QTC_BUILD_DIR) INSTALL_ROOT=$(QTC_INST_DIR) install; $(SANE)
 
@@ -238,7 +241,9 @@ cmd:
 	#
 	#wine mingw-get install msys-unzip
 	#wine unzip -o -d c:/ c:/4c.zip
-	wine c:/ATCMControl/Engineering/bin/4ceng.exe; $(SANE)
+	#wine c:/ATCMControl/Engineering/bin/4ceng.exe; $(SANE)
+	#wine qt-creator-2.8.1-src-build/bin/ctc.exe
+	wine mingw-get --help
 
 # msys-1.0.dll rebase is a workaround for a bug in Cygwin use of persistent memory
 .PHONY: rebase

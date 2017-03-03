@@ -652,8 +652,8 @@ cloner:
 	cp -aLv --reflink=auto $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)
 	find $(MECT_SYSCLONE_DIR) -name \*.la -print0 | xargs -0 rm -f
 	sudo hardlink -cvv $(MECT_SYSCLONE_DIR)
-	if /sbin/losetup -l | grep -q $(MECT_SYSCLONE_IMG); then \
-	    dev=`/sbin/losetup -l | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
+	if /sbin/losetup | grep -q $(MECT_SYSCLONE_IMG); then \
+	    dev=`/sbin/losetup | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
 	dd if=/dev/zero of=$(MECT_SYSCLONE_IMG) bs=1k count=`du -s $(MECT_SYSCLONE_DIR) | awk '{ print int($$1 * 1.5); }'`
@@ -664,7 +664,7 @@ cloner:
 	sudo hardlink -cvv $(MECT_SYSCLONE_LOOP)
 	sudo umount $(MECT_SYSCLONE_LOOP)
 	rmdir $(MECT_SYSCLONE_LOOP)
-	/sbin/e2fsck -fy $(MECT_SYSCLONE_IMG); rv=$?; test \( $$rv -eq 0 \) -o \( $$rv -eq 1 \) -o \( $$rv -eq 2 \)
+	/sbin/e2fsck -fy $(MECT_SYSCLONE_IMG); test $$? -le 3
 	/sbin/resize2fs -Mp $(MECT_SYSCLONE_IMG)
 	install -m 644 $(MECT_SYSCLONE_TMPL) $(MECT_SYSCLONE_SH)
 	sed -i 's/@@CLONER_VERSION@@/$(MECT_BUILD_RELEASE)/' $(MECT_SYSCLONE_SH)
@@ -821,8 +821,8 @@ target_mfg_upd:
 	install -m 644 $(MECT_SYSUPDIR)/imx28_ivt_linux.sb $(MECT_SYSUPDIR)/fs/sysupdate
 	install -m 755 $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/fs/sysupdate
 	sudo hardlink -cvv $(MECT_SYSUPDIR)
-	if /sbin/losetup -l | grep -q $(MECT_SYSUPD_IMG); then \
-	    dev=`/sbin/losetup -l | grep $(MECT_SYSUPD_IMG)\$$ | awk '{ print $$1; }'`; \
+	if /sbin/losetup | grep -q $(MECT_SYSUPD_IMG); then \
+	    dev=`/sbin/losetup | grep $(MECT_SYSUPD_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
 	sync
@@ -834,7 +834,7 @@ target_mfg_upd:
 	sudo hardlink -cvv $(MECT_SYSUPD_LOOP)
 	sudo umount $(MECT_SYSUPD_LOOP)
 	rmdir $(MECT_SYSUPD_LOOP)
-	/sbin/e2fsck -fy $(MECT_SYSUPD_IMG); rv=$?; test \( $$rv -eq 0 \) -o \( $$rv -eq 1 \) -o \( $$rv -eq 2 \)
+	/sbin/e2fsck -fy $(MECT_SYSUPD_IMG); test $$? -le 3
 	/sbin/resize2fs -Mp $(MECT_SYSUPD_IMG)
 	sudo rm -rf $(MECT_SYSUPDIR)/fs
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/; s/@@THIS_VERSION_MAJ_MIN@@/$(MECT_BUILD_VER_MAJ_MIN)/' $(MECT_SYSUPD_IMG_TMPL) > $(MECT_IMGDIR)/$(MECT_SYSUPD_IMG_SH)

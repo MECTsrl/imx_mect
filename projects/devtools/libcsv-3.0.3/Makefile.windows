@@ -35,7 +35,7 @@ install_headers: csv.h
 
 .PHONY: install_shared_lib
 install_shared_lib: libcsv.dll
-	cp -f $< $(DESTDIR)/$(BINDIR)/$<
+	cp -f $< $(QT_INST_DIR)/$(LIBDIR)/$<
 
 .PHONY: install_static_lib
 install_static_lib: libcsv_static.a

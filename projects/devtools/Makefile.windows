@@ -1,13 +1,18 @@
 # TODO set the proper version.
 ATCM_VERSION := 1.2.3-dummy
 
-export LC_ALL := en_US.UTF-8
+MAKEFILE_NAME := $(lastword $(MAKEFILE_LIST))
+
+export LC_ALL := C
+
 export WINEARCH := win32
 export WINEPREFIX := $(CURDIR)/wine
 export WINEDEBUG := -all
+
+DRIVE_C = $(WINEPREFIX)/drive_c
+
 DISPLAY_SAVED := $(DISPLAY)
 export DISPLAY := 
-DRIVE_C = $(WINEPREFIX)/drive_c
 
 
 SRC_DIRECTORY := $(CURDIR)/../../src
@@ -92,8 +97,15 @@ SANE := if test -t 1; then stty sane; fi
 
 
 .PHONY: all
-all: wine tools qt libs install-qt qtc qwt mp
-	stty sane
+all:
+	make -f $(MAKEFILE_NAME) wine
+	make -f $(MAKEFILE_NAME) tools
+	make -f $(MAKEFILE_NAME) qt
+	make -f $(MAKEFILE_NAME) install-qt
+	make -f $(MAKEFILE_NAME) qwt
+	make -f $(MAKEFILE_NAME) libs
+	make -f $(MAKEFILE_NAME) qtc
+	make -f $(MAKEFILE_NAME) mp
 
 .PHONY: wine
 wine: $(WINEPREFIX)
@@ -191,7 +203,7 @@ qtc: rebase do_qtc rebase
 .PHONY: do_qtc
 do_qtc:
 	mkdir -p $(QTC_BUILD_DIR)
-	#cd $(QTC_BUILD_DIR); $(QMAKE) -r ../$(QTC_DIRECTORY)/qtcreator.pro
+	cd $(QTC_BUILD_DIR); $(QMAKE) -r ../$(QTC_DIRECTORY)/qtcreator.pro
 	$(MAKE) -j $(NPROCS) -C $(QTC_BUILD_DIR); $(SANE)
 	$(MAKE) -C $(QTC_BUILD_DIR) INSTALL_ROOT=$(QTC_INST_DIR) install; $(SANE)
 
@@ -228,23 +240,6 @@ run-qtc: export DISPLAY := $(DISPLAY_SAVED)
 run-qtc:
 	wine $(QTC_INST_DIR)/bin/qtcreator.exe
 
-.PHONY: cmd
-cmd: export WINEDEBUG := 
-cmd: export DISPLAY := $(DISPLAY_SAVED)
-cmd:
-	#wineconsole cmd
-	#winecfg
-	#wine $(QTC_INST_DIR)/bin/qtcreator.exe
-	#
-	#winetricks dlls list
-	#winetricks mfc42
-	#
-	#wine mingw-get install msys-unzip
-	#wine unzip -o -d c:/ c:/4c.zip
-	#wine c:/ATCMControl/Engineering/bin/4ceng.exe; $(SANE)
-	#wine qt-creator-2.8.1-src-build/bin/ctc.exe
-	wine mingw-get --help
-
 # msys-1.0.dll rebase is a workaround for a bug in Cygwin use of persistent memory
 .PHONY: rebase
 rebase:
@@ -252,6 +247,7 @@ rebase:
 	cp $(DRIVE_C)/MinGW/msys/1.0/bin/msys-1.0.dll $(DRIVE_C)/msys-1.0.dll
 	wine rebase.exe -b 0x50000000 C:/msys-1.0.dll
 	cp $(DRIVE_C)/msys-1.0.dll $(DRIVE_C)/MinGW/msys/1.0/bin/msys-1.0.dll
+	$(SANE)
 
 
 .PHONY: clean
@@ -328,3 +324,25 @@ buildclean-qtc:
 buildclean-qwt:
 	-if test -r $(QWT_BUILD_DIR)/Makefile; then $(MAKE) -C $(QWT_BUILD_DIR) distclean; $(SANE); fi
 	rm -rf $(QWT_BUILD_DIR)
+
+
+.PHONY: cmd
+cmd: export WINEDEBUG := 
+cmd: export DISPLAY := $(DISPLAY_SAVED)
+cmd:
+	#wineconsole cmd
+	#winecfg
+	#wine $(QTC_INST_DIR)/bin/qtcreator.exe
+	#
+	#winetricks dlls list
+	#winetricks mfc42
+	#
+	#wine mingw-get install msys-unzip
+	#wine unzip -o -d c:/ c:/4c.zip
+	wine c:/ATCMControl/Engineering/bin/4ceng.exe; $(SANE)
+
+.PHONY: ctc
+ctc: export WINEDEBUG := 
+ctc: export DISPLAY := $(DISPLAY_SAVED)
+ctc:
+	wine qt-creator-2.8.1-src-build/bin/ctc.exe

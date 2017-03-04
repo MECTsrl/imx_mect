@@ -93,7 +93,7 @@ NPROCS := $(shell nproc)
 NPROCS := $(shell expr $(NPROCS) + 1)
 
 # Sanitize terminal configuration.
-SANE := if test -t 1; then stty sane; fi
+SANE := if tty > /dev/null 2>&1; then stty sane; fi
 
 
 .PHONY: all
@@ -168,7 +168,7 @@ do_qt:
 	    -script \
 	    -shared \
 	    -no-libtiff
-	$(MAKE) -j $(NPROCS) -C $(QT_DIRECTORY); $(SANE)
+	$(MAKE) -j$(NPROCS) -C $(QT_DIRECTORY); $(SANE)
 
 .PHONY: install-qt
 install-qt: clean-qt

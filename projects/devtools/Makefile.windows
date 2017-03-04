@@ -140,7 +140,7 @@ qt: rebase do_qt rebase
 .PHONY: do_qt
 do_qt:
 	test -d $(QT_DIRECTORY)
-	cd $(QT_DIRECTORY); wine configure \
+	cd $(QT_DIRECTORY); MAKEFLAGS=-j$(NPROC) wine configure \
 	    -platform win32-g++-4.6 \
 	    -confirm-license \
 	    -declarative \

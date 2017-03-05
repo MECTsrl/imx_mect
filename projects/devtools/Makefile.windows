@@ -337,9 +337,9 @@ cmd:
 	#winetricks dlls list
 	#winetricks mfc42
 	#
-	#wine mingw-get install msys-unzip
+	#wine mingw-get install mingw-ccache
 	#wine unzip -o -d c:/ c:/4c.zip
-	wine c:/ATCMControl/Engineering/bin/4ceng.exe; $(SANE)
+	#wine c:/ATCMControl/Engineering/bin/4ceng.exe; $(SANE)
 
 .PHONY: ctc
 ctc: export WINEDEBUG := 

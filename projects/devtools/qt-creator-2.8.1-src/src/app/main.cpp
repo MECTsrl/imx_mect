@@ -88,7 +88,8 @@ static const char PID_OPTION[] = "-pid";
 static const char BLOCK_OPTION[] = "-block";
 
 enum mect_config_search_replace_e {
-    MECT_CSR_BASE_BUILD_DIR,
+    MECT_CSR_QTHOST_INST_DIR,
+    MECT_CSR_QTTARGET_INST_DIR,
     MECT_CSR_APPS_DIR,
     MECT_CSR_END
 };
@@ -98,8 +99,12 @@ struct mect_config_search_replace_s {
     QString replace;
 };
 static struct mect_config_search_replace_s mect_config_search_replace[] = {
-    [MECT_CSR_BASE_BUILD_DIR] = {
-        .search = QLatin1String("@@MECT_BASE_BUILD_DIR@@"),
+    [MECT_CSR_QTHOST_INST_DIR] = {
+        .search = QLatin1String("@@MECT_QTHOST_INSTALL_DIR@@"),
+        .replace = QString()
+    },
+    [MECT_CSR_QTTARGET_INST_DIR] = {
+        .search = QLatin1String("@@MECT_QTTARGET_INSTALL_DIR@@"),
         .replace = QString()
     },
     [MECT_CSR_APPS_DIR] = {
@@ -347,6 +352,7 @@ static inline QSettings *userSettings()
 
     // Pre-populate using the MECT TPAC development configuration.
     if (destDir.entryList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files).count() == 0) {
+#if defined Q_OS_LINUX
         QDir mectBuildDir = QDir(QCoreApplication::applicationDirPath());
         mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
         mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
@@ -354,7 +360,26 @@ static inline QSettings *userSettings()
         mect_config_search_replace[MECT_CSR_APPS_DIR].replace = mectBuildDir.absolutePath() + QLatin1String("/mect_apps");
 
         mectBuildDir = QFileInfo(mectBuildDir.path()).dir();    // cd ..
-        mect_config_search_replace[MECT_CSR_BASE_BUILD_DIR].replace = mectBuildDir.absolutePath();
+        // FIXME: TO BE DEFINED, replace.
+        mect_config_search_replace[MECT_CSR_QTHOST_INST_DIR].replace = mectBuildDir.absolutePath() + QLatin1String("/projects/devtools/qt");
+        // FIXME: TO BE DEFINED, replace.
+        mect_config_search_replace[MECT_CSR_QTTARGET_INST_DIR].replace = mectBuildDir.absolutePath() + QLatin1String("/ltib/rootfs/usr");
+#elif defined Q_OS_WIN
+        // FIXME: TO BE DEFINED, replace.
+        QDir mectBuildDir = QDir::homePath();
+        // FIXME: TO BE DEFINED, replace.
+        mect_config_search_replace[MECT_CSR_QTHOST_INST_DIR].replace = mectBuildDir.absolutePath() + QLatin1String("/MECT/Qt-4.8.5");;
+        // FIXME: TO BE DEFINED, replace.
+        mect_config_search_replace[MECT_CSR_QTTARGET_INST_DIR].replace = mectBuildDir.absolutePath() + QLatin1String("/MECT/somewhere");
+        // FIXME: TO BE DEFINED, replace.
+        mect_config_search_replace[MECT_CSR_APPS_DIR].replace = mectBuildDir.absolutePath() + QLatin1String("/My Documents");
+#else
+        // TODO: Better options?
+        QDir mectBuildDir = QDir::homePath();
+        mect_config_search_replace[MECT_CSR_QTHOST_INST_DIR].replace = mectBuildDir.absolutePath();
+        mect_config_search_replace[MECT_CSR_QTTARGET_INST_DIR].replace = mectBuildDir.absolutePath();
+        mect_config_search_replace[MECT_CSR_APPS_DIR].replace = mectBuildDir.absolutePath();
+#endif
 
         QDir mectQTPconfDir = QDir(QDir(QCoreApplication::applicationDirPath() + QLatin1String("/" SHARE_PATH "/MECT/QtProject")).absolutePath());
         if (mectQTPconfDir.exists())

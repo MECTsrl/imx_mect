@@ -1,8 +1,10 @@
 # TODO set the proper version.
 ATCM_VERSION := 1.2.3-dummy
 
+MAKEFILE_NAME := $(lastword $(MAKEFILE_LIST))
+
 export PATH := /usr/lib/ccache:/usr/lib64/ccache:$(PATH)
-export LC_ALL := en_US.UTF-8
+export LC_ALL := C
 
 FTP_DIRECTORY := $(CURDIR)/../../src
 
@@ -40,10 +42,6 @@ MP_DIRECTORY := ../mect_plugins
 
 MP_PATCH_PATHS = $(FTP_DIRECTORY)/mect_plugins-build_inst_paths.patch
 MP_PATCH_QRC_INSTPATH = $(FTP_DIRECTORY)/mect_plugins-qrc_inst_paths.patch
-
-# MECT Cross Table Editor
-#
-CTE_DIRECTORY = $(QTC_DIRECTORY)/src/plugins/cte
 
 # DEB packages
 #
@@ -84,7 +82,12 @@ NPROCS := $(shell expr $(NPROCS) + 1)
 
 
 .PHONY: all
-all: libs qt qtc qwt mp
+all:
+	$(MAKE) -f $(MAKEFILE_NAME) qt
+	$(MAKE) -f $(MAKEFILE_NAME) qwt
+	$(MAKE) -f $(MAKEFILE_NAME) libs
+	$(MAKE) -f $(MAKEFILE_NAME) qtc
+	$(MAKE) -f $(MAKEFILE_NAME) mp
 
 .PHONY: libs
 libs: $(LC_LIB_A)

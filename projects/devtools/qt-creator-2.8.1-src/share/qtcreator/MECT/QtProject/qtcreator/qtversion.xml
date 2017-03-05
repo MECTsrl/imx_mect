@@ -7,7 +7,7 @@
   <valuemap type="QVariantMap">
    <value type="int" key="Id">3</value>
    <value type="QString" key="Name">Qt 4.8.5 (x86)</value>
-   <value type="QString" key="QMakePath">@@MECT_BASE_BUILD_DIR@@/projects/devtools/qt/bin/qmake</value>
+   <value type="QString" key="QMakePath">@@MECT_QTHOST_INSTALL_DIR@@/bin/qmake</value>
    <value type="QString" key="QtVersion.Type">Qt4ProjectManager.QtVersion.Desktop</value>
    <value type="bool" key="isAutodetected">false</value>
   </valuemap>
@@ -17,7 +17,7 @@
   <valuemap type="QVariantMap">
    <value type="int" key="Id">4</value>
    <value type="QString" key="Name">Qt 4.8.5 (ARM)</value>
-   <value type="QString" key="QMakePath">@@MECT_BASE_BUILD_DIR@@/ltib/rootfs/usr/bin/qmake</value>
+   <value type="QString" key="QMakePath">@@MECT_QTTARGET_INSTALL_DIR@@/bin/qmake</value>
    <value type="QString" key="QtVersion.Type">RemoteLinux.EmbeddedLinuxQt</value>
    <value type="bool" key="isAutodetected">false</value>
   </valuemap>

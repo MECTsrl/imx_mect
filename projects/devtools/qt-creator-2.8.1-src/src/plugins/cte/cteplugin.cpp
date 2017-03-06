@@ -186,9 +186,12 @@ CTEPlugin::enableIfCT()
     fFileExists = ctFile.exists() && ctFile.isFile();
     // Opening file
     if (fFileExists)  {
+        qDebug()  << "File Found: " << szFileCT << "CTE Enabled";
         ctEditor->setProjectPath(pd);
         fFileExists = ctEditor->selectCTFile(szFileCT);
     }
+    else
+        qDebug()  << "File Not Found: " << szFileCT;
     // Enabling CTEditor
     m_cteMode->setEnabled(fFileExists);
 }

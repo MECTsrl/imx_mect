@@ -102,13 +102,7 @@ ctedit::ctedit(QWidget *parent) :
     QString szToolTip;
 
     ui->setupUi(this);
-    // Header Colonne
-    lstHeadCols.clear();
-    lstPriority.clear();
-    lstPLC.clear();
-    lstBusType.clear();
-    lstBehavior.clear();
-    lstCondition.clear();
+    // Liste di servizio
     lstUsedVarNames.clear();
     lstUndo.clear();
     // Stringhe generiche per Default campi
@@ -119,6 +113,7 @@ ctedit::ctedit(QWidget *parent) :
     }
     // Riempimento liste
     // Titoli colonne
+    lstHeadCols.clear();
     lstHeadCols[colPriority] = trUtf8("Priority");
     lstHeadCols[colUpdate] = trUtf8("Update");
     lstHeadCols[colName] = trUtf8("Name");
@@ -135,59 +130,37 @@ ctedit::ctedit(QWidget *parent) :
     lstHeadCols[colBehavior] = trUtf8("Behavior");
     lstHeadCols[colCondition] = trUtf8("Condition");
     // Lista Priorità
+    lstPriority.clear();
     lstPriority
             << QString::fromAscii("0")
             << QString::fromAscii("1")
             << QString::fromAscii("2")
             << QString::fromAscii("3")
         ;
-    // Lista PLC
-    lstPLC
-            << QString::fromAscii("H")
-            << QString::fromAscii("P")
-            << QString::fromAscii("S")
-            << QString::fromAscii("F")
-            << QString::fromAscii("V")
-            << QString::fromAscii("X")
-        ;
-    // Lista TIPI
-    lstTipi
-            << QString::fromAscii("BIT")
-            << QString::fromAscii("BYTE_BIT")
-            << QString::fromAscii("WORD_BIT")
-            << QString::fromAscii("DWORD_BIT")
-            << QString::fromAscii("BYTE")
-            << QString::fromAscii("UINT16")
-            << QString::fromAscii("UINT16BA")
-            << QString::fromAscii("INT16")
-            << QString::fromAscii("INT16BA")
-            << QString::fromAscii("REAL")
-            << QString::fromAscii("REALDCBA")
-            << QString::fromAscii("REALCDAB")
-            << QString::fromAscii("REALBADC")
-            << QString::fromAscii("UDINT")
-            << QString::fromAscii("UDINTDCBA")
-            << QString::fromAscii("UDINTCDAB")
-            << QString::fromAscii("UDINTBADC")
-            << QString::fromAscii("DINT")
-            << QString::fromAscii("DINTDCBA")
-            << QString::fromAscii("DINTCDAB")
-            << QString::fromAscii("DINTBADC")
-            << QString::fromAscii("UNKNOWN")
-        ;
-    // Lista Protocolli
-    lstBusType
-            << QString::fromAscii("PLC")
-            << QString::fromAscii("RTU")
-            << QString::fromAscii("TCP")
-            << QString::fromAscii("TCP_RTU")
-            << QString::fromAscii("CANOPEN")
-            << QString::fromAscii("MECT")
-            << QString::fromAscii("RTU_SRV")
-            << QString::fromAscii("TCP_SRV")
-            << QString::fromAscii("TCPRTU SRV")
-        ;
+    // Lista PLC (Frequenza Aggiornamento
+    lstPLC.clear();
+    for (nCol = Htype; nCol <= Xtype; nCol++)  {
+        lstPLC.append(QString::fromAscii(updateTypeName[nCol]));
+    }
+    // Lista TIPI Variabili
+    lstTipi.clear();
+    for (nCol = BIT; nCol <= UNKNOWN; nCol++)  {
+        lstTipi.append(QString::fromAscii(varTypeName[nCol]));
+    }
+    // Lista Protocolli (tipi di Bus)
+    lstBusType.clear();
+    lstBusEnabler.clear();
+    for (nCol = PLC; nCol <= TCPRTU_SRV; nCol++)  {
+        lstBusType.append(QString::fromAscii(fieldbusName[nCol]));
+        lstBusEnabler.append(true);         // Di default tutti i tipi di Bus sono abilitati
+    }
+    // Lista Prodotti
+    lstProductName.clear();
+    for (nCol = AnyTPAC; nCol <= TPAC1008_02_AF; nCol++)  {
+        lstProductName.append(QString::fromAscii(product_name[nCol]));
+    }
     // Lista Significati
+    lstBehavior.clear();
     lstBehavior
             << QString::fromAscii("READ")
             << QString::fromAscii("READ/WRITE")
@@ -392,17 +365,21 @@ bool    ctedit::selectCTFile(QString szFileCT)
     if (! szFile.isEmpty())   {
         m_szCurrentCTFile = szFile;
         fRes = loadCTFile(m_szCurrentCTFile, lstCTRecords, true);
-        qDebug() << tr("Loaded CT File: %1 Result: %2") .arg(szFile) .arg(fRes);
+        if (fRes)
+            qDebug() << tr("Loaded CT File: %1 Result: OK") .arg(szFile);
+        else
+            qDebug() << tr("Loaded CT File: %1 Result: ERROR") .arg(szFile);
     }
     else  {
         m_szCurrentCTFile.clear();
         fRes = false;
-        qDebug() << tr("CT File: %1 Not loaded") .arg(szFile);
+        qDebug() << tr("CT File: %1 Not Found or not Selected") .arg(szFile);
     }
     // Retrieving Path and Name of Cross Table file
     m_szCurrentModel.clear();
     m_szCurrentCTPath.clear();
     m_szCurrentCTName.clear();
+    // Load Ok, init default values
     if (fRes)  {
         QFileInfo fInfo(m_szCurrentCTFile);
         m_szCurrentCTPath = fInfo.absolutePath();
@@ -411,6 +388,8 @@ bool    ctedit::selectCTFile(QString szFileCT)
         // Reading Model from template.pri
         m_szCurrentModel = getModelName();
         ui->lblModel->setText(m_szCurrentModel);
+        m_isCtModified = false;
+        enableInterface();
     }
     return fRes;
 }
@@ -786,8 +765,11 @@ bool ctedit::iface2values(QStringList &lstRecValues)
 
 void ctedit::on_cmdBlocchi_clicked()
 {
-
-    riassegnaBlocchi();
+    if (riassegnaBlocchi())  {
+        m_isCtModified = true;
+    }
+    // Refresh abilitazioni interfaccia
+    enableInterface();
 }
 
 void ctedit::on_cmdSave_clicked()
@@ -800,7 +782,7 @@ void ctedit::on_cmdSave_clicked()
         warnUser(this, szTitle, m_szMsg);
     }
     else {
-        m_isCtModified = true;
+        m_isCtModified = false;
     }
     // Refresh abilitazioni interfaccia
     enableInterface();
@@ -824,6 +806,8 @@ bool    ctedit::riassegnaBlocchi()
 
     ui->cmdBlocchi->setEnabled(false);
     this->setCursor(Qt::WaitCursor);
+    // Copia l'attuale CT nella lista Undo
+    lstUndo.append(lstCTRecords);
     for (nRow = 0; nRow < MIN_SYSTEM; nRow++)  {
         // Ignora le righe con Priority == 0
         if (lstCTRecords[nRow].Enable > 0)  {
@@ -832,8 +816,8 @@ bool    ctedit::riassegnaBlocchi()
             if (nPrevRow != nRow - 1 || prevPriority != lstCTRecords[nRow].Enable || prevType != lstCTRecords[nRow].Types || prevProtocol !=  lstCTRecords[nRow].Protocol
                     || prevIpAdr != lstCTRecords[nRow].IPAddress || prevPort != lstCTRecords[nRow].Port || prevNodeId != lstCTRecords[nRow].NodeId
                     || curBSize >= MAXBLOCKSIZE)  {
-                // Rinumera block start del Blocco precedente
-                if (nRow - nBlockStart > 1)  {
+                // Rinumera block start del Blocco precedente se esiste
+                if ((nBlockStart > 0) && (nRow - nBlockStart > 1))  {
                     for (j = nBlockStart; j < nRow; j++)  {
                         lstCTRecords[j].BlockSize = curBSize;
                     }
@@ -862,9 +846,11 @@ bool    ctedit::riassegnaBlocchi()
         else
             lstCTRecords[nRow].Block = 0;
     }
-    // Rinumera ultimo blocco trattato
-    for (j = nBlockStart; j < nRow; j++)  {
-        lstCTRecords[j].BlockSize = curBSize;
+    // Rinumera ultimo blocco trattato (se esiste)
+    if (nBlockStart > 0)  {
+        for (j = nBlockStart; j < nRow; j++)  {
+            lstCTRecords[j].BlockSize = curBSize;
+        }
     }
     // Return value as reload CT
     fRes = ctable2Grid();
@@ -877,10 +863,16 @@ bool ctedit::saveCTFile()
 {
     int nRes = 0;
     int nCur = 0;
-    QString szCtFile;
 
     // Back-Up Copy of CT File
     fileBackUp(m_szCurrentCTFile);
+    // Copy CT Record List to C Array
+    for (nCur = 0; nCur < lstCTRecords.count(); ++nCur)  {
+        if (nCur < DimCrossTable)
+            CrossTable[nCur + 1] = lstCTRecords[nCur];
+    }
+    /*
+    QString szCtFile;
     // Trigo per ora per preparare un File name differente per non perdere l'originale
     // Al momento riscrive (forse) una fotocopia della stuttura C di partenza
     szCtFile = QString(QDate::currentDate().toString(m_szFormatDate));
@@ -888,14 +880,10 @@ bool ctedit::saveCTFile()
     szCtFile.append(QString::fromAscii("_"));
     szCtFile.append(QString(QTime::currentTime().toString(m_szFormatTime)));
     szCtFile.prepend(m_szCurrentCTFile);
-    // Copy CT Record List to C Array
-    for (nCur = 0; nCur < lstCTRecords.count(); ++nCur)  {
-        if (nCur < DimCrossTable)
-            CrossTable[nCur + 1] = lstCTRecords[nCur];
-    }
+    */
     // Saving File to Juornaled Copy
-    nRes = SaveXTable(szCtFile.toAscii().data(), CrossTable);
-    // Saving File to Source Copy
+    // nRes = SaveXTable(szCtFile.toAscii().data(), CrossTable);
+    // Saving Source Array to file
     nRes = SaveXTable(m_szCurrentCTFile.toAscii().data(), CrossTable);
     // Return Value
     return nRes == 0;
@@ -1111,7 +1099,7 @@ void ctedit::enableFields()
             ui->txtRegister->setEnabled(true);
         }
         // MECT
-        else if (ui->cboProtocol->currentIndex() == MECT)  {
+        else if (ui->cboProtocol->currentIndex() == MECT_PTC)  {
             ui->txtNode->setEnabled(true);
             ui->txtRegister->setEnabled(true);
         }
@@ -1153,8 +1141,12 @@ void ctedit::on_cboType_currentIndexChanged(int index)
         ui->txtDecimal->setText(szZERO);
         ui->txtDecimal->setEnabled(false);
     }
-    else
+    else  {
         ui->txtDecimal->setEnabled(true);
+        // Default 1 decimale se non specificato o presente valore
+        if (ui->txtDecimal->text().isEmpty())
+            ui->txtDecimal->setText(QString::fromAscii("1"));
+    }
 }
 void ctedit::on_cboProtocol_currentIndexChanged(int index)
 // Cambio di Protocollo della Variabile
@@ -1179,7 +1171,9 @@ void ctedit::on_cboProtocol_currentIndexChanged(int index)
     }
     // RTU
     else if (index == RTU)  {
+        // Ip Vuoto
         ui->txtIP->setText(szEMPTY);
+        // Port in funzione del modello e non editabile
         szTemp = ui->txtPort->text();
         if (szTemp.isEmpty())  {
             szTemp = QString::fromAscii("1");
@@ -1206,7 +1200,7 @@ void ctedit::on_cboProtocol_currentIndexChanged(int index)
         ui->txtPort->setText(szTemp);
     }
     // MECT
-    else if (index == MECT)  {
+    else if (index == MECT_PTC)  {
         ui->txtIP->setText(szEMPTY);
         ui->txtPort->setText(szZERO);
     }
@@ -1224,6 +1218,7 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
     int     nRow = -1;
     bool    fRes = true;
     QStringList lstFields;
+    bool    fIsModif = false;
 
     if (! deselected.isEmpty())  {
         // Considera sempre la prima riga della lista
@@ -1241,10 +1236,10 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
                 // Valori da interfaccia a CT
                 fRes = iface2values(lstFields);
                 if (fRes)  {
-                    // Salva Record e marca la Cross Table da salvare
-                    m_isCtModified = list2CTrec(lstFields, nRow);
+                    // Salva Record
+                    fIsModif = list2CTrec(lstFields, nRow);
                     // Aggiorna Grid Utente per riga corrente
-                    if (m_isCtModified)  {
+                    if (fIsModif)  {
                         fRes = list2GridRow(lstFields, nRow);
                     }
                     qDebug() << "Row changed:" << nRow;
@@ -1256,6 +1251,10 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
     if (! fRes)    {
         ui->tblCT->selectRow(nRow);
         return;
+    }
+    // Marca CT come modificata
+    if (! m_isCtModified && fIsModif)  {
+        m_isCtModified = true;
     }
     // Si può cambiare riga, legge contenuto
     if (! selected.isEmpty())  {
@@ -1277,9 +1276,6 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
     }
     // Refresh abilitazioni interfaccia
     enableInterface();
-    // DEBUG Bottone di Salvataggio sempre abilitato
-    ui->cmdSave->setEnabled(true);
-    // ui->cmdSave->setEnabled(m_isCtModified);
 }
 void ctedit::clearEntryForm()
 // Svutamento elementi Form Data Entry
@@ -1863,4 +1859,163 @@ void ctedit::enableInterface()
     ui->cmdSave->setEnabled(m_isCtModified);
     ui->fraCondition->setEnabled(true);
     ui->tblCT->setEnabled(true);
+}
+QStringList ctedit::getPortsFromModel(QString szModel, QString szProtocol)
+// Calocolo Porta in funzione di Modello e protocollo
+{
+    QStringList lstValues;
+    int nModel = lstProductName.indexOf(szModel);
+    int nProtocol = lstBusType.indexOf(szProtocol);
+
+    lstValues.clear();
+    // Valori generici in funzione del Protocollo con modello non specificato
+    if (szModel.isEmpty() || nModel == -1)  {
+        lstValues.append(QString::fromAscii("0"));
+        lstValues.append(QString::fromAscii("1"));
+        lstValues.append(QString::fromAscii("2"));
+        lstValues.append(QString::fromAscii("3"));
+    }
+    // Generic IP Port
+    else if (nProtocol == TCP || nProtocol == TCPRTU || nProtocol == TCP_SRV)  {
+        lstValues.append(QString::fromAscii("502"));
+    }
+    // Specific Ports by Model and Protocol
+    else {
+        // Combinazioni possibili tra Modello e Protocollo
+        if (nModel == TP1043_01_A && (nProtocol == RTU || nProtocol == RTU_SRV || nProtocol == MECT_PTC))
+            lstValues.append(QString::fromAscii("1"));
+        else if (nModel == TP1043_01_B && (nProtocol == CANOPEN))
+            lstValues.append(QString::fromAscii("1"));
+        else if (nModel == TP1057_01_A && (nProtocol == RTU || nProtocol == RTU_SRV || nProtocol == MECT_PTC))
+            lstValues.append(QString::fromAscii("3"));
+        else if (nModel == TP1057_01_B && (nProtocol == CANOPEN))
+            lstValues.append(QString::fromAscii("1"));
+        else if (nModel == TP1070_01_A && (nProtocol == RTU || nProtocol == RTU_SRV || nProtocol == MECT_PTC))
+            lstValues.append(QString::fromAscii("3"));
+        else if (nModel == TP1070_01_B && (nProtocol == CANOPEN))
+            lstValues.append(QString::fromAscii("1"));
+        else if (nModel == TP1070_01_B && (nProtocol == RTU || nProtocol == RTU_SRV || nProtocol == MECT_PTC))
+            lstValues.append(QString::fromAscii("3"));
+        else if (nModel == TP1070_01_C && (nProtocol == RTU || nProtocol == RTU_SRV || nProtocol == MECT_PTC))  {
+            lstValues.append(QString::fromAscii("0"));
+            lstValues.append(QString::fromAscii("3"));
+        }
+        else if (nModel == TPAC1006)  {
+            lstValues.append(QString::fromAscii("1"));
+            lstValues.append(QString::fromAscii("3"));
+        }
+        else if (nModel == TPAC1007_03 && (nProtocol == RTU || nProtocol == RTU_SRV || nProtocol == MECT_PTC))
+            lstValues.append(QString::fromAscii("0"));
+        else if (nModel == TPAC1007_04_AA && (nProtocol == RTU || nProtocol == RTU_SRV || nProtocol == MECT_PTC))
+            lstValues.append(QString::fromAscii("0"));
+        else if (nModel == TPAC1007_04_AC && (nProtocol == RTU || nProtocol == RTU_SRV || nProtocol == MECT_PTC))
+            lstValues.append(QString::fromAscii("0"));
+        else if (nModel == TPAC1008_02_AA && (nProtocol == CANOPEN))
+            lstValues.append(QString::fromAscii("1"));
+        else if (nModel == TPAC1008_02_AA && (nProtocol == RTU || nProtocol == RTU_SRV || nProtocol == MECT_PTC))
+            lstValues.append(QString::fromAscii("3"));
+        else if (nModel == TPAC1008_02_AB && (nProtocol == RTU || nProtocol == RTU_SRV || nProtocol == MECT_PTC))  {
+            lstValues.append(QString::fromAscii("0"));
+            lstValues.append(QString::fromAscii("3"));
+        }
+        else if (nModel == TPAC1008_02_AD && (nProtocol == RTU || nProtocol == RTU_SRV || nProtocol == MECT_PTC))
+            lstValues.append(QString::fromAscii("3"));
+        else if (nModel == TPAC1008_02_AE && (nProtocol == RTU || nProtocol == RTU_SRV || nProtocol == MECT_PTC))
+            lstValues.append(QString::fromAscii("3"));
+        else if (nModel == TPAC1008_02_AF && (nProtocol == RTU || nProtocol == RTU_SRV || nProtocol == MECT_PTC))
+            lstValues.append(QString::fromAscii("3"));
+    }
+    // Return value
+    return lstValues;
+}
+void    ctedit::enableProtocolsFromModel(QString szModel)
+// Abilita i Protocolli in funzione del Modello corrente
+{
+    int nCur = 0;
+    int nModel = lstProductName.indexOf(szModel);
+
+    lstBusEnabler.clear();
+    // Abilita di default tutti i Protocolli
+    for (nCur = 0; nCur < lstBusType.count(); nCur++)  {
+        lstBusEnabler.append(true);
+    }
+    // Abilitazione dei protocolli in funzione del modello
+    if (nModel == TP1043_01_A)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TP1043_01_B)  {
+        lstBusEnabler[RTU] = false;
+        lstBusEnabler[RTU_SRV] = false;
+        lstBusEnabler[MECT_PTC] = false;
+    }
+    else if (nModel == TP1043_01_C)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TP1057_01_A)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TP1057_01_B)  {
+        lstBusEnabler[RTU] = false;
+        lstBusEnabler[RTU_SRV] = false;
+        lstBusEnabler[MECT_PTC] = false;
+
+    }
+    else if (nModel == TP1070_01_A)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TP1070_01_B)  {
+        // Tutti i protocolli sono abilitiati
+    }
+    else if (nModel == TP1070_01_C)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TP1070_01_D)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TPAC1006)  {
+        // Tutti i protocolli sono abilitiati
+    }
+    else if (nModel == TPAC1007_03)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TPAC1007_04_AA)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TPAC1007_04_AB)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TPAC1007_04_AC)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TPAC1007_LV)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TPAC1008_01)  {
+        // Tutti i protocolli sono abilitiati
+    }
+    else if (nModel == TPAC1008_02_AA)  {
+        //  Tutti i protocolli sono abilitiati
+    }
+    else if (nModel == TPAC1008_02_AB)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TPAC1008_02_AC)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TPAC1008_02_AD)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TPAC1008_02_AE)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    else if (nModel == TPAC1008_02_AF)  {
+        lstBusEnabler[CANOPEN] = false;
+    }
+    // Spegne sulla Combo dei protocolli le voci non abilitate
+    for (nCur = 0; nCur < lstBusType.count(); nCur++)  {
+        if (lstBusEnabler[nCur])
+            enableComboItem(ui->cboProtocol, nCur);
+        else
+            disableComboItem(ui->cboProtocol, nCur);
+    }
 }

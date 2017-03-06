@@ -448,3 +448,15 @@ int searchCombo(QComboBox *Combo, QString szValue)
     }
     return retValue;
 }
+void enableComboItem(QComboBox *Combo, int nItemIndex)
+// Riabilita la voce nItemIndex della Combo
+{
+    if (nItemIndex >= 0 && nItemIndex < Combo->count())
+        Combo->setItemData(nItemIndex, 33, Qt::UserRole - 1);
+}
+void disableComboItem(QComboBox *Combo, int nItemIndex)
+// Disabilita la voce nItemIndex della Combo
+{
+    if (nItemIndex >= 0 && nItemIndex < Combo->count())
+        Combo->setItemData(nItemIndex, 0, Qt::UserRole - 1);
+}

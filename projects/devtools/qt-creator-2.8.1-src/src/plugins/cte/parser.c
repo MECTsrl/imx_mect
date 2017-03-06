@@ -23,9 +23,102 @@
 uint16_t lastAlarmEvent = 0;
 struct Alarms ALCrossTable[1 + DimAlarmsCT]; // campi sono riempiti a partire dall'indice 1
 
-const char *fieldbusName[] = {"PLC", "RTU", "TCP", "TCPRTU", "CANOPEN", "MECT", "RTU_SRV", "TCP_SRV", "TCPRTU_SRV" };
-const char *varTypeName[] = {"BIT", "BYTE_BIT", "WORD_BIT", "DWORD_BIT", "BYTE", "UINT16", "UINT16BA", "INT16", "INT16BA", "REAL", "REALDCBA", "REALCDAB", "REALBADC", "UDINT", "UDINTDCBA", "UDINTCDAB", "UDINTBADC", "DINT", "DINTDCBA", "DINTCDAB", "DINTBADC", "UNKNOWN" };
-const char *updateTypeName[] = {"H", "P", "S", "F", "V", "X" };
+const char *fieldbusName[] = {"PLC",
+                              "RTU",
+                              "TCP",
+                              "TCPRTU",
+                              "CANOPEN",
+                              "MECT",
+                              "RTU_SRV",
+                              "TCP_SRV",
+                              "TCPRTU_SRV" };
+
+const char *varTypeName[] = {	"BIT",
+                                "BYTE_BIT",
+                                "WORD_BIT",
+                                "DWORD_BIT",
+                                "BYTE",
+                                "UINT",
+                                "UINTBA",
+                                "INT",
+                                "INTBA",
+                                "REAL",
+                                "REALDCBA",
+                                "REALCDAB",
+                                "REALBADC",
+                                "UDINT",
+                                "UDINTDCBA",
+                                "UDINTCDAB",
+                                "UDINTBADC",
+                                "DINT",
+                                "DINTDCBA",
+                                "DINTCDAB",
+                                "DINTBADC",
+                                "UNKNOWN" 	};
+
+const char *updateTypeName[] = {"H",
+                                "P",
+                                "S",
+                                "F",
+                                "V",
+                                "X" };
+
+// PRODUCT_NAMES <-- PRODUCT_ID
+const char *product_name[] = {
+    /*00*/ "AnyTPAC",
+    /*01*/ "TP1043_01_A",
+    /*02*/ "TP1043_01_B",
+    /*03*/ "TP1043_01_C",
+    /*04*/ "TP1057_01_A",
+    /*05*/ "TP1057_01_B",
+    /*06*/ "TP1070_01_A",
+    /*07*/ "TP1070_01_B",
+    /*08*/ "TP1070_01_C",
+    /*09*/ "TP1070_01_D",
+    /*10*/ "TPAC1006",
+    /*11*/ "TPAC1007_03",
+    /*12*/ "TPAC1007_04_AA",
+    /*13*/ "TPAC1007_04_AB",
+    /*14*/ "TPAC1007_04_AC",
+    /*15*/ "TPAC1007_LV",
+    /*16*/ "TPAC1008_01",
+    /*17*/ "TPAC1008_02_AA",
+    /*18*/ "TPAC1008_02_AB",
+    /*19*/ "TPAC1008_02_AC",
+    /*20*/ "TPAC1008_02_AD",
+    /*21*/ "TPAC1008_02_AE",
+    /*22*/ "TPAC1008_02_AF"
+};
+
+/*      Mappatura tra Costanti di Tipo, valori Letti e scritti in file CSV
+        Const		Scrittura  		Lettura
+        BIT = 0,    "BIT", 	 		"BIT"
+        BYTE_BIT,   "BYTE_BIT",		"BYTE_BIT"
+        WORD_BIT,   "WORD_BIT",		"WORD_BIT"
+        DWORD_BIT,  "DWORD_BIT",    "DWORD_BIT"
+        UINT8,      "BYTE",         "BYTE"
+        UINT16,     "UINT",			"UINT", "UINTAB"
+        UINT16BA,   "UINTBA",		"UINTBA"
+        INT16,      "INT",			"INT", "INTAB"
+        INT16BA,    "INTBA",        "INTBA"
+        REAL,       "REAL",         "REAL", "FABCD"
+        REALDCBA,   "REALDCBA",     "REALDCBA", "FDCBA"
+        REALCDAB,   "REALCDAB",     "REALCDAB", "FCDAB"
+        REALBADC,   "REALBADC",     "REALBADC", "FBADC"
+        UDINT,      "UDINT", 		"UDINT", "UDINTABCD",
+        UDINTDCBA,  "UDINTDCBA",    "UDINTDCBA"
+        UDINTCDAB,  "UDINTCDAB",    "UDINTCDAB"
+        UDINTBADC,  "UDINTBADC",    "UDINTBADC"
+        DINT,       "DINT",         "DINT", "DINTABCD"
+        DINTDCBA,   "DINTDCBA",     "DINTDCBA"
+        DINTCDAB,   "DINTCDAB",		"DINTCDAB"
+        DINTBADC,   "DINTBADC",     "DINTBADC"
+        UNKNOWN     "UNKNOWN";		---------
+*/
+
+
+
+
 
 char *strtok_csv(char *string, const char *separators, char **savedptr)
 {
@@ -379,7 +472,7 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
             CrossTable[addr].Types = REALBADC;
 
         } else if (strcmp(p, "UINTAB") == 0) {
-            CrossTable[addr].Types = UINT16; // backward compatibility
+            CrossTable[addr].Types = UINT16; // bUINT16ackward compatibility
         } else if (strcmp(p, "INTAB") == 0) {
             CrossTable[addr].Types = INT16; // backward compatibility
         } else if (strcmp(p, "UDINTABCD") == 0) {
@@ -428,7 +521,7 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
         } else if (strcmp(p, "CANOPEN") == 0) {
             CrossTable[addr].Protocol = CANOPEN;
         } else if (strcmp(p, "MECT") == 0) {
-            CrossTable[addr].Protocol = MECT;
+            CrossTable[addr].Protocol = MECT_PTC;
         } else if (strcmp(p, "RTU_SRV") == 0) {
             CrossTable[addr].Protocol = RTU_SRV;
         } else if (strcmp(p, "TCP_SRV") == 0) {
@@ -620,7 +713,10 @@ exit_function:
     if (xtable) {
         fclose(xtable);
     }
-    fprintf(stderr, " %s\n", (ERR) ? "ERROR" : "OK");
+    if (ERR)
+        fprintf(stderr, "ERROR. Row: %d\n", addr);
+    else
+        fprintf(stderr, " OK\n");
     return ERR;
 }
 

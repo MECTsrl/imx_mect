@@ -34,11 +34,26 @@ extern "C" {
 /******************************************************************************
  ****************************** TYPEDEFS SECTION ******************************
  ******************************************************************************/
-enum FieldbusType {PLC = 0, RTU, TCP, TCPRTU, CANOPEN, MECT, RTU_SRV, TCP_SRV, TCPRTU_SRV};
+enum FieldbusType {PLC = 0,
+                   RTU,
+                   TCP,
+                   TCPRTU,
+                   CANOPEN,
+                   MECT_PTC,
+                   RTU_SRV,
+                   TCP_SRV,
+                   TCPRTU_SRV
+                  };
 
 enum EventAlarm { Event = 0, Alarm};
 
-enum UpdateType { Htype = 0, Ptype, Stype, Ftype, Vtype, Xtype};
+enum UpdateType { Htype = 0,
+                  Ptype,
+                  Stype,
+                  Ftype,
+                  Vtype,
+                  Xtype
+                };
 #undef WORD_BIT
 enum varTypes {BIT = 0,
                BYTE_BIT,
@@ -63,6 +78,32 @@ enum varTypes {BIT = 0,
                DINTBADC,
                UNKNOWN
               };
+
+enum productId {
+        /*00*/ AnyTPAC = 0,
+        /*01*/ TP1043_01_A,
+        /*02*/ TP1043_01_B,
+        /*03*/ TP1043_01_C,
+        /*04*/ TP1057_01_A,
+        /*05*/ TP1057_01_B,
+        /*06*/ TP1070_01_A,
+        /*07*/ TP1070_01_B,
+        /*08*/ TP1070_01_C,
+        /*09*/ TP1070_01_D,
+        /*10*/ TPAC1006,
+        /*11*/ TPAC1007_03,
+        /*12*/ TPAC1007_04_AA,
+        /*13*/ TPAC1007_04_AB,
+        /*14*/ TPAC1007_04_AC,
+        /*15*/ TPAC1007_LV,
+        /*16*/ TPAC1008_01,
+        /*17*/ TPAC1008_02_AA,
+        /*18*/ TPAC1008_02_AB,
+        /*19*/ TPAC1008_02_AC,
+        /*20*/ TPAC1008_02_AD,
+        /*21*/ TPAC1008_02_AE,
+        /*22*/ TPAC1008_02_AF
+};
 
 struct  CrossTableRecord {
     int16_t Enable;
@@ -116,7 +157,9 @@ uint32_t str2ipaddr(char *str);
  ***************************** VARIABLES SECTION *****************************
  ******************************************************************************/
 extern const char *fieldbusName[];
-
+extern const char *varTypeName[];
+extern const char *updateTypeName[];
+extern const char *product_name[];
 //struct CrossTableRecord CrossTable[1 + DimCrossTable];	 // campi sono riempiti a partire dall'indice 1
 
 #ifdef __cplusplus

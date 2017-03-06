@@ -32,4 +32,6 @@
     void        setRowBackground(const QBrush& brush, QAbstractItemModel* model, int row, const QModelIndex& parent = QModelIndex());
     void        doEvents();
     int         searchCombo(QComboBox *Combo, QString szValue);
+    void        enableComboItem(QComboBox *Combo, int nItemIndex);          // Riabilita la voce nItemIndex della Combo
+    void        disableComboItem(QComboBox *Combo, int nItemIndex);         // Disabilita la voce nItemIndex della Combo
 #endif // UTILS_H

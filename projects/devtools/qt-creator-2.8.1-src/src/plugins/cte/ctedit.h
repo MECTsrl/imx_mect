@@ -82,6 +82,9 @@ private:
     void    enableInterface();                      // Abilita l'interfaccia in funzione dello stato del sistema
     // Gestione Configurazione Progetto
     QString getModelName();                         // Lettura del file template.pri per determinare il modello di TPAC
+    // Calcolo valori in funzione del Modello e del Protocollo
+    QStringList getPortsFromModel(QString szModel, QString szProtocol);      // Calocolo Porte in funzione di Modello e protocollo
+    void    enableProtocolsFromModel(QString szModel);  // Abilita i Protocolli in funzione del Modello corrente
     //---------------------------------------------------------------------
     // Variabili varie
     //---------------------------------------------------------------------
@@ -98,8 +101,10 @@ private:
     QStringList lstPLC;
     QStringList lstTipi;
     QStringList lstBusType;
+    QList<bool> lstBusEnabler;
     QStringList lstBehavior;
     QStringList lstCondition;
+    QStringList lstProductName;
     QStringList lstUsedVarNames;                    // Lista contenente i nomi delle variabili
     // Variabili di servizio
     QString     m_szFormatDate;                     // Format Masks per Date e tempo

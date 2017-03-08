@@ -108,12 +108,12 @@ ctedit::ctedit(QWidget *parent) :
     // Stringhe generiche per Default campi
     szEMPTY.clear();
     szZERO.fromAscii("0");
+    lstHeadCols.clear();
     for (nCol = 0; nCol < colTotals; nCol++)  {
         lstHeadCols.append(szEMPTY);
     }
     // Riempimento liste
     // Titoli colonne
-    lstHeadCols.clear();
     lstHeadCols[colPriority] = trUtf8("Priority");
     lstHeadCols[colUpdate] = trUtf8("Update");
     lstHeadCols[colName] = trUtf8("Name");

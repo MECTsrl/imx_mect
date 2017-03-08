@@ -434,6 +434,30 @@ behav_get(char *behavior)
         return BEHAV_NONE;
 }
 
+/**
+ * Return the entry comment correspomding to the given behavior.
+ *
+ * @param behavior      behavior type.
+ *
+ * @return              comment or empty string.
+ */
+static char *
+comment_get(char *combo_behav_comment)
+{
+    char *comment = "";
+
+    if (combo_behav_comment != NULL) {
+        char *c = NULL;
+
+        c = strrchr(combo_behav_comment, ']');
+        /* Skip behavior terminator. */
+        if (c != NULL)
+            comment = c + 1;
+    }
+
+    return comment;
+}
+
 
 
 /**
@@ -526,14 +550,15 @@ cb_field(void *s, size_t len, void *data)
             break;
 
             case 11:
-                ((struct row_s *)data)->comment = strdup(buf);
-                dbg_printf("Comment %s\n", ((struct row_s *)data)->comment);
 
             break;
 
             case 12:
                 ((struct row_s *)data)->behavior = behav_get(buf);
                 dbg_printf("Behavior %d\n", ((struct row_s *)data)->behavior);
+
+                ((struct row_s *)data)->comment = strdup(comment_get(buf));
+                dbg_printf("Comment %s\n", ((struct row_s *)data)->comment);
 
             break;
 
@@ -752,7 +777,13 @@ gvl_gen(void)
 
         fprintf(gvl_file, ":%s", st_type);
 
-        fprintf(gvl_file, ";\n");
+        fprintf(gvl_file, ";");
+
+        /* Add the comment, if any. */
+        if ((crosstable.rows[i].comment != NULL) && (*(crosstable.rows[i].comment) != '\0'))
+            fprintf(gvl_file, "\t(* %s *)", crosstable.rows[i].comment);
+
+        fprintf(gvl_file, "\n");
     }
 
     /* Generate the footer. */
@@ -798,7 +829,10 @@ cpp_gen(void)
         char *type = cpp_type_get(&(crosstable.rows[i]));
 
         /* Start handling new variable. */
-        fprintf(cpp_file, "\n/*\n * Variable %s\n */\n", crosstable.rows[i].name);
+        fprintf(cpp_file, "\n/*\n * Variable %s", crosstable.rows[i].name);
+        if ((crosstable.rows[i].comment != NULL) && (*(crosstable.rows[i].comment) != '\0'))
+            fprintf(cpp_file, "\t[ %s ]", crosstable.rows[i].comment);
+        fprintf(cpp_file, "\n */\n");
 
         /* Generate variable declaration. */
         fprintf(cpp_file, "\n%s %s = 0;\n\n", type, crosstable.rows[i].name);
@@ -871,7 +905,10 @@ cpp_h_gen(void)
 
         fprintf(cpp_h_file, "\n#define ID_%s %d\n", crosstable.rows[i].name, crosstable.rows[i].number);
 
-        fprintf(cpp_h_file, "extern %s %s;\n", type, crosstable.rows[i].name);
+        fprintf(cpp_h_file, "extern %s %s;", type, crosstable.rows[i].name);
+        if ((crosstable.rows[i].comment != NULL) && (*(crosstable.rows[i].comment) != '\0'))
+            fprintf(cpp_h_file, "\t/* %s */", crosstable.rows[i].comment);
+        fprintf(cpp_h_file, "\n");
 
         fprintf(cpp_h_file, "int doWrite_%s(%s value);\n", crosstable.rows[i].name, type);
 

@@ -5,9 +5,6 @@ test -z "$ACTION" && exit 0
 if test "$DEVTYPE" = "usb_device"; then
     test -z "$DEVPATH" && exit 0
 
-    eval $(echo $PRODUCT | awk -F/ '{ print "ms_vendor=" $1; print "ms_product=" $2; }')
-    test -z "$ms_vendor" -o -z "$ms_product" && exit 1
-
     if test "$ACTION" = "add"; then
         ms_vendor="$(cat /sys${DEVPATH}/idVendor)"
         ms_product="$(cat /sys${DEVPATH}/idProduct)"

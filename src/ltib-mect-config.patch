@@ -18067,6 +18067,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +#-sda[0-9]           0:0  666 @/bin/mount $PWD/$DEVNAME /mnt/rwfs
 +#sda[0-9]            0:0  666 $/bin/umount              /mnt/rwfs
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/openvpn/.empty ltib/config/platform/imx/merge/etc/openvpn/.empty
+--- ltib.reference/config/platform/imx/merge/etc/openvpn/.empty
++++ ltib/config/platform/imx/merge/etc/openvpn/.empty
+@@ -0,0 +1 @@
++ 
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/passwd ltib/config/platform/imx/merge/etc/passwd
 --- ltib.reference/config/platform/imx/merge/etc/passwd
 +++ ltib/config/platform/imx/merge/etc/passwd

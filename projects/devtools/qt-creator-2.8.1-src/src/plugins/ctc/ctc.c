@@ -838,19 +838,19 @@ cpp_gen(void)
         fprintf(cpp_file, "\n%s %s = 0;\n\n", type, crosstable.rows[i].name);
 
         /* Generate doWrite() method. */
-        fprintf(cpp_file, "int\ndoWrite_%s(%s value)\n{\n\treturn ioComm->sendUdpWriteCmd(ID_%s, &value);\n}\n\n", crosstable.rows[i].name, type, crosstable.rows[i].name);
+        fprintf(cpp_file, "int\ndoWrite_%s(%s value)\n{\n\treturn doWrite(ID_%s, &value);\n}\n\n", crosstable.rows[i].name, type, crosstable.rows[i].name);
 
         /* Generate addWrite() method. */
-        fprintf(cpp_file, "int\naddWrite_%s(%s value)\n{\n\treturn ioComm->sendUdpWriteCmd(ID_%s, &value);\n}\n\n", crosstable.rows[i].name, type, crosstable.rows[i].name);
+        fprintf(cpp_file, "int\naddWrite_%s(%s value)\n{\n\treturn addWrite(ID_%s, &value);\n}\n\n", crosstable.rows[i].name, type, crosstable.rows[i].name);
 
         /* Generate getStatus() method. */
-        fprintf(cpp_file, "int\ngetStatus_%s(void)\n{\n\treturn ioComm->getStatusVar(ID_%s);\n}\n\n", crosstable.rows[i].name, crosstable.rows[i].name);
+        fprintf(cpp_file, "int\ngetStatus_%s(void)\n{\n\treturn getStatus(ID_%s);\n}\n\n", crosstable.rows[i].name, crosstable.rows[i].name);
     }
 
     /* Generate update_all() method. */
     fprintf(cpp_file, "\nint\nupdate_all(void)\n{\n\tint retval = 0;\n\n");
     for (i = 0; i <= crosstable.index_last; i++)
-        fprintf(cpp_file, "\tretval += ioComm->readUdpReply(ID_%s, &%s);\n", crosstable.rows[i].name, crosstable.rows[i].name);
+        fprintf(cpp_file, "\tretval += readFromDb(ID_%s, &%s);\n", crosstable.rows[i].name, crosstable.rows[i].name);
     fprintf(cpp_file, "\n\treturn retval;\n}\n");
 
     fclose(cpp_file);

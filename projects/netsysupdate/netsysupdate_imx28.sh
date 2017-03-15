@@ -105,7 +105,8 @@ sudo rm -rf rootfs/local/data
 sudo tar xf "$lfs_arch" -C rootfs/local
 
 echo "* Update the root file system"
-sudo sshpass -p "$passwd" rsync -axh --inplace --delete --info=progress2 rootfs/ "$user"@"$ip":/
+sudo sshpass -p "$passwd" rsync -axh --inplace --delete --info=progress2 rootfs/ "$user"@"$ip":/ 2>/dev/null
+sudo sshpass -p "$passwd" rsync -axh --delete rootfs/ "$user"@"$ip":/
 
 echo "* Update the local file system"
 sudo sshpass -p "$passwd" rsync -axh --delete --info=progress2 rootfs/ "$user"@"$ip":/

@@ -3,12 +3,13 @@
 test -z "$ACTION" && exit 0
 
 if test "$DEVTYPE" = "usb_device"; then
-    test -z "$PRODUCT" && exit 0
-
-    eval $(echo $PRODUCT | awk -F/ '{ print "ms_vendor=" $1; print "ms_product=" $2; }')
-    test -z "$ms_vendor" -o -z "$ms_product" && exit 1
+    test -z "$DEVPATH" && exit 0
 
     if test "$ACTION" = "add"; then
+        ms_vendor="$(cat /sys${DEVPATH}/idVendor)"
+        ms_product="$(cat /sys${DEVPATH}/idProduct)"
+        test \( -z "$ms_vendor" \) -o \( -z "$ms_product" \) && exit 1
+
         ms_data="$(tar Oxjf /usr/share/usb_modeswitch/configPack.tar.bz2 ${ms_vendor}:${ms_product} 2>/dev/null)"
         if test -n "$ms_data"; then
             usb_modeswitch -v $ms_vendor -p $ms_product -f "$ms_data"

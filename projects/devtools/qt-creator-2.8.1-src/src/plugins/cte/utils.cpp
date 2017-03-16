@@ -425,29 +425,6 @@ void doEvents()
 {
     QCoreApplication::processEvents();
 }
-int searchCombo(QComboBox *Combo, QString szValue)
-// Ricerca del Valore aint16_tll'interno di una Combo scorrendo la parte Qt::UserRole
-{
-    int         nItem = 0;
-    QString     szCurValue;
-    int         retValue = -1;
-    QVariant    val;
-
-    if (Combo->count() == 0 || szValue.length() == 0)
-        return retValue;
-    szCurValue.clear();
-    for (nItem = 0; nItem < Combo->count(); nItem++)  {
-        val = Combo->itemData (nItem,  Qt::UserRole);
-        if (val.canConvert<QString>())  {
-            szCurValue = val.toString();
-            if (szCurValue.contains(szValue, Qt::CaseSensitive))  {
-                retValue =  nItem;
-                break;
-            }
-        }
-    }
-    return retValue;
-}
 void enableComboItem(QComboBox *Combo, int nItemIndex)
 // Riabilita la voce nItemIndex della Combo
 {

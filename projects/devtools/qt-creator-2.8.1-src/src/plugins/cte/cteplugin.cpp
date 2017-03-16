@@ -50,7 +50,7 @@ public:
         ctEditor = new ctedit();
         setWidget(ctEditor);
         setContext(Core::Context("CTE.MainView"));
-        setDisplayName(tr("XTable"));
+        setDisplayName(tr("MectSuite"));
         setIcon(QIcon());
         setPriority(0);
         setId("CTE.CTEMode");
@@ -93,7 +93,7 @@ CTEPlugin::initialize(const QStringList &arguments, QString *errorMessage)
 
 
     // Create an action to be triggered by a menu entry
-    QAction *CTEAction = new QAction(tr("&XTable Editor"), this);
+    QAction *CTEAction = new QAction(tr("&MECT Editor"), this);
     connect(CTEAction, SIGNAL(triggered()), SLOT(enableIfCT()));
 
     // Register the action with the action manager
@@ -103,7 +103,7 @@ CTEPlugin::initialize(const QStringList &arguments, QString *errorMessage)
     // Create our own menu to place in the Tools menu
     Core::ActionContainer *CTEMenu = Core::ActionManager::createMenu("CTE.CTEMenu");
     QMenu *menu = CTEMenu->menu();
-    menu->setTitle(tr("&XTable Editor"));
+    menu->setTitle(tr("&MECT Editor"));
     menu->setEnabled(true);
 
     // Add the Cross Table Editor action command to the menu

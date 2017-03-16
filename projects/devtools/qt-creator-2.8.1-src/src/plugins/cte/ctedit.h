@@ -34,8 +34,9 @@ public slots:
 
 private slots:
     void insertRows();                              // Aggiunta righe in posizione cursore
+    void emptySelected();                           // Cancellazione delle righe correntemente selezionate
     void removeSelected();                          // Rimozione delle righe correntemente selezionate
-    void copySelected();                            // Copia delle righe selezionate in Buffer di Copiatura
+    void copySelected(bool fClearSelection);                            // Copia delle righe selezionate in Buffer di Copiatura
     void pasteSelected();                           // Incolla righe da Buffer di copiatura a Riga corrente
     void cutSelected();                             // Taglia righe in Buffer di copiatura
     void on_cmdHideShow_clicked(bool checked);      // Bottone Hide/Show righe vuote
@@ -130,6 +131,8 @@ private:
     int         m_nCurTab;                          // Tab corrente in interfaccia
     bool        m_isCtModified;
     bool        m_fShowAllRows;                     // Vero se sono visualizzate tutte le righe
+    bool        m_fCutOrPaste;                      // Vero se è in corso un Cut or Paste
+    bool        m_fEmptyForm;                       // Vero se il Form di Data Entry risulta vuoto
 };
 
 #endif // CTEDIT_H

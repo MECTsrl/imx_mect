@@ -33,7 +33,7 @@
 /* ----  Local Defines:   ----------------------------------------------------- */
 #define _TRUE  1
 #define _FALSE 0
-#define MAX_DISPLAY_TIME 30
+#define MAX_DISPLAY_TIME 15
 #define MAXBLOCKSIZE 64
 #define MIN_RETENTIVE 1
 #define MAX_RETENTIVE 192
@@ -327,7 +327,9 @@ ctedit::ctedit(QWidget *parent) :
     // Variabili di stato globale dell'editor
     m_isCtModified = false;
     m_fShowAllRows = false;
+    m_fCutOrPaste = false;
     m_nCurTab = 0;
+    m_fEmptyForm = true;
     // Seleziona il primo Tab
     ui->tabWidget->setCurrentIndex(m_nCurTab);
     ui->tabWidget->setTabEnabled(TAB_SYSTEM, false);
@@ -388,7 +390,12 @@ bool    ctedit::selectCTFile(QString szFileCT)
         // Reading Model from template.pri
         m_szCurrentModel = getModelName();
         ui->lblModel->setText(m_szCurrentModel);
+        // Abilitazione dei protocolli in funzione del Modello
+        if (! m_szCurrentModel.isEmpty())  {
+            enableProtocolsFromModel(m_szCurrentModel);
+        }
         m_isCtModified = false;
+        m_fCutOrPaste = false;
         enableInterface();
     }
     return fRes;
@@ -507,8 +514,8 @@ bool    ctedit::ctable2Grid()
     ui->tblCT->setEnabled(true);
     // Show All Elements
     if (fRes)  {
-        m_fShowAllRows = false;
         m_isCtModified = false;
+        m_fCutOrPaste = false;
         ui->cmdHideShow->setChecked(m_fShowAllRows);
         ui->cmdSave->setEnabled(true);
         // ui->cmdSave->setEnabled(m_isCtModified);
@@ -593,11 +600,11 @@ void ctedit::on_cmdHideShow_clicked(bool checked)
     // Titolo del Bottone
     if (checked)  {
         m_fShowAllRows = true;
-        ui->cmdHideShow->setText(tr("Hide Unused"));
+        ui->cmdHideShow->setText(tr("Hide"));
     }
     else  {
         m_fShowAllRows = false;
-        ui->cmdHideShow->setText(tr("Show All"));
+        ui->cmdHideShow->setText(tr("Show"));
     }
     // Show-Hide Rows
     showAllRows(m_fShowAllRows);
@@ -616,7 +623,7 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
     szTemp = lstRecValues[colPriority].trimmed();
     ui->cboPriority->setCurrentIndex(-1);
     if (! szTemp.isEmpty())  {
-        nPos = searchCombo(ui->cboPriority, szTemp);
+        nPos = ui->cboPriority->findText(szTemp, Qt::MatchFixedString);
         if (nPos >= 0 && nPos < ui->cboPriority->count())
             ui->cboPriority->setCurrentIndex(nPos);
     }       
@@ -624,18 +631,20 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
     szTemp = lstRecValues[colUpdate].trimmed();
     ui->cboUpdate->setCurrentIndex(-1);
     if (! szTemp.isEmpty())  {
-        nPos = searchCombo(ui->cboUpdate, szTemp);
+        nPos = ui->cboUpdate->findText(szTemp, Qt::MatchFixedString);
         if (nPos >= 0 && nPos < ui->cboUpdate->count())
             ui->cboUpdate->setCurrentIndex(nPos);
     }
     // Name
     szTemp = lstRecValues[colName].trimmed();
     ui->txtName->setText(szTemp);
+    // Flag di Form vuoto
+    m_fEmptyForm = szTemp.isEmpty();
     // Type
     szTemp = lstRecValues[colType].trimmed();
     ui->cboType->setCurrentIndex(-1);
     if (! szTemp.isEmpty())  {
-        nPos = searchCombo(ui->cboType, szTemp);
+        nPos = ui->cboType->findText(szTemp, Qt::MatchFixedString);
         if (nPos >= 0 && nPos < ui->cboType->count())
             ui->cboType->setCurrentIndex(nPos);
     }
@@ -652,7 +661,7 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
     szTemp = lstRecValues[colProtocol].trimmed();
     ui->cboProtocol->setCurrentIndex(-1);
     if (! szTemp.isEmpty())  {
-        nPos = searchCombo(ui->cboProtocol, szTemp);
+        nPos = ui->cboProtocol->findText(szTemp, Qt::MatchFixedString);
         if (nPos >= 0 && nPos < ui->cboProtocol->count())
             ui->cboProtocol->setCurrentIndex(nPos);
     }
@@ -681,7 +690,7 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
     szTemp = lstRecValues[colBehavior].trimmed();
     ui->cboBehavior->setCurrentIndex(-1);
     if (! szTemp.isEmpty())  {
-        nPos = searchCombo(ui->cboBehavior, szTemp);
+        nPos = ui->cboBehavior->findText(szTemp, Qt::MatchFixedString);
         if (nPos >= 0 && nPos < ui->cboBehavior->count())
             ui->cboBehavior->setCurrentIndex(nPos);
     }
@@ -808,7 +817,7 @@ bool    ctedit::riassegnaBlocchi()
     this->setCursor(Qt::WaitCursor);
     // Copia l'attuale CT nella lista Undo
     lstUndo.append(lstCTRecords);
-    for (nRow = 0; nRow < MIN_SYSTEM; nRow++)  {
+    for (nRow = 0; nRow < MIN_SYSTEM - 1; nRow++)  {
         // Ignora le righe con Priority == 0
         if (lstCTRecords[nRow].Enable > 0)  {
             // Salto riga o condizione di inizio nuovo blocco
@@ -848,7 +857,9 @@ bool    ctedit::riassegnaBlocchi()
     }
     // Rinumera ultimo blocco trattato (se esiste)
     if (nBlockStart > 0)  {
-        for (j = nBlockStart; j < nRow; j++)  {
+        for (j = nBlockStart; j < MIN_SYSTEM - 1; j++)  {
+            if (lstCTRecords[j].UsedEntry == 0)
+                break;
             lstCTRecords[j].BlockSize = curBSize;
         }
     }
@@ -1219,15 +1230,26 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
     bool    fRes = true;
     QStringList lstFields;
     bool    fIsModif = false;
+    // Recupera righe selezionate
+    QModelIndexList selection = ui->tblCT->selectionModel()->selectedRows();
 
-    if (! deselected.isEmpty())  {
+    // Il cambio riga corrente è dovuto a operazioni di tipo cut-paste.
+    // Per evitare duplicazioni accidentali di righe ripulisce il buffer di editing ed esce
+    if (m_fCutOrPaste || selection.count() > 1)  {
+        clearEntryForm();
+        return;
+    }
+    // Si sta uscendo dalla selezione di una riga sola
+    if (! deselected.isEmpty() &&  deselected.count() == 1)  {
         // Considera sempre la prima riga della lista
         nRow = deselected.indexes().at(0).row();
         qDebug() << "Previous Row: " << nRow;
     }
     // Se la riga corrente è stata modificata, salva il contenuto
     if (nRow >= 0 && nRow < lstCTRecords.count())  {
-        if (isLineModified())  {
+        // Il contenuto viene aggiornato solo se la linea risulta modificata, ma utilizzata e il form non è vuoto
+        if (isLineModified() && lstCTRecords[nRow].UsedEntry && ! m_fEmptyForm)  {
+            // il buffer è
             // Primo controllo di coerenza sulla riga corrente
             fRes = checkFields();
             if (fRes)  {
@@ -1257,7 +1279,7 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
         m_isCtModified = true;
     }
     // Si può cambiare riga, legge contenuto
-    if (! selected.isEmpty())  {
+    if (! selected.isEmpty() && selected.count() == 1)  {
         clearEntryForm();
         // Estrae il numero di riga del modello lavorando sulla prima riga selezionata
         nRow = selected.indexes().at(0).row();
@@ -1294,6 +1316,7 @@ void ctedit::clearEntryForm()
     ui->txtBlockSize->setText(szEMPTY);
     ui->txtComment->setText(szEMPTY);
     ui->cboBehavior->setCurrentIndex(-1);
+    m_fEmptyForm = true;
 }
 bool ctedit::checkFields()
 // Primi controlli formali sulla riga a termine editing
@@ -1323,23 +1346,26 @@ void ctedit::displayUserMenu(const QPoint &pos)
     // Items del Menu contestuale
     // Inserisci righe
     QAction *insRows = gridMenu.addAction(trUtf8("Inserisci righe"));
-    insRows->setEnabled(selection.count() > 0);
+    insRows->setEnabled(selection.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
+    // Cancella righe
+    QAction *emptyRows = gridMenu.addAction(trUtf8("Svuota righe"));
+    emptyRows->setEnabled(selection.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Elimina righe
     QAction *remRows = gridMenu.addAction(trUtf8("Elimina righe"));
-    remRows->setEnabled(selection.count() > 0);
+    remRows->setEnabled(selection.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Sep1
     QAction *sep1 = gridMenu.addSeparator();
-    // Copia righe
+    // Copia righe (Sempre permesso)
     QAction *copyRows = gridMenu.addAction(trUtf8("Copia righe"));
     copyRows->setEnabled(selection.count() > 0);
     // Taglia righe
     QAction *cutRows = gridMenu.addAction(trUtf8("Taglia righe"));
-    cutRows->setEnabled(selection.count() > 0);
+    cutRows->setEnabled(selection.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Sep 2
     QAction *sep2 = gridMenu.addSeparator();
     // Paste Rows
     QAction *pasteRows = gridMenu.addAction(trUtf8("Incolla righe"));
-    pasteRows->setEnabled(lstCopiedRecords.count() > 0 && m_nGridRow < MIN_SYSTEM);
+    pasteRows->setEnabled(lstCopiedRecords.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Abilitazione delle voci di Menu
     // Esecuzione del Menu
     QAction *actMenu = gridMenu.exec(ui->tblCT->viewport()->mapToGlobal(pos));
@@ -1348,13 +1374,17 @@ void ctedit::displayUserMenu(const QPoint &pos)
     if (actMenu == insRows)  {
         insertRows();
     }
+    // Cancella Righe
+    if (actMenu == emptyRows)  {
+        emptySelected();
+    }
     // Rimozione righe
     else if (actMenu == remRows)  {
         removeSelected();
     }
     // Copia
     else if (actMenu == copyRows)  {
-        copySelected();
+        copySelected(true);
     }
     // Taglia
     else if (actMenu == cutRows)  {
@@ -1366,57 +1396,100 @@ void ctedit::displayUserMenu(const QPoint &pos)
     }
 
 }
-void ctedit::copySelected()
+void ctedit::copySelected(bool fClearSelection)
 // Copia delle righe selezionate in Buffer di Copiatura
 {
     // Recupera righe selezionate
     QModelIndexList selection = ui->tblCT->selectionModel()->selectedRows();
     int             nRow = 0;
     int             nCur = 0;
+    int             nFirstRow = -1;
+    QStringList     lstFields;
 
+    // Check Selection
+    if (selection.count() <= 0)
+        return;
     // Clear Copied Items Rows
     lstCopiedRecords.clear();
+    m_fCutOrPaste = true;
     // Compile Selected Row List
     for (nCur = 0; nCur < selection.count(); nCur++)  {
         // Reperisce l'Item Row Number dall'elenco degli elementi selezionati
         QModelIndex index = selection.at(nCur);
         nRow = index.row();
-        if (nRow < MAX_NONRETENTIVE)  {
-            lstCopiedRecords.append(lstCTRecords[nRow]);
+        // Remember first row of selection
+        if (nFirstRow < 0)
+            nFirstRow = nRow;
+        // Add Row to buffer
+        lstCopiedRecords.append(lstCTRecords[nRow]);
+    }
+    // If only Copy, Set Current index Row to first of Selection
+    if (fClearSelection)  {
+        selection.clear();
+        if (nFirstRow >= 0)  {
+            jumpToGridRow(nFirstRow);
+            recCT2List(lstFields, nFirstRow);
+            values2Iface(lstFields);
         }
     }
-    m_szMsg = tr("Rows Copied: ") .arg(lstCopiedRecords.count());
+    m_szMsg = tr("Rows Copied: %1") .arg(lstCopiedRecords.count());
     displayStatusMessage(m_szMsg);
-    qDebug() << m_szMsg;
+    enableInterface();
 }
 void ctedit::pasteSelected()
 // Incolla righe da Buffer di copiatura a Riga corrente
 {
     int     nRow = ui->tblCT->currentRow();
     int     nCur = 0;
+    int     nPasted = 0;
+    bool    fUsed = false;
+    // Recupera righe selezionate
+    QModelIndexList selection = ui->tblCT->selectionModel()->selectedRows();
 
+    // No Records copied
+    if (lstCopiedRecords.count() == 0 || m_nGridRow >= MAX_NONRETENTIVE - 1)  {
+        m_szMsg = tr("Can't paste rows in System Area");
+        displayStatusMessage(m_szMsg);
+        selection.clear();
+        return;
+    }
+    m_fCutOrPaste = true;
     // Paste Rows
     if (nRow >= 0 && nRow < MAX_NONRETENTIVE - 1 && lstCopiedRecords.count() > 0)  {
         if (nRow + lstCopiedRecords.count() < MAX_NONRETENTIVE)  {
-            // Append to Undo List
-            lstUndo.append(lstCTRecords);
-            // Compile Selected Row List
-            for (nCur = 0; nCur < lstCopiedRecords.count(); nCur ++)  {
-                // Retrieve element
-                lstCTRecords[nRow++] = lstCopiedRecords[nCur];
+            // Verifica che la destinazione delle righe sia libera
+            for (nCur = nRow; nCur < nRow + lstCopiedRecords.count(); nCur++)  {
+                if (lstCTRecords[nCur].UsedEntry)  {
+                    fUsed = true;
+                    break;
+                }
             }
-            // Restore Grid
-            ctable2Grid();
-            m_isCtModified = true;
+            // Query confirm of used if any row is used
+            if (fUsed)  {
+                m_szMsg = tr("Some of destination rows may be used. Paste anyway ?");
+                fUsed = ! queryUser(this, szTitle, m_szMsg);
+            }
+            // No row used or overwrite confirmed
+            if (! fUsed)  {
+                // Append to Undo List
+                lstUndo.append(lstCTRecords);
+                // Compile Selected Row List
+                for (nPasted = 0; nPasted < lstCopiedRecords.count(); nPasted ++)  {
+                    // Paste element
+                    lstCTRecords[nRow++] = lstCopiedRecords[nPasted];
+                }
+                // Restore Grid
+                ctable2Grid();
+                m_isCtModified = true;
+            }
         }
         else  {
             m_szMsg = tr("The Copy Buffer Excedes System Variables Limit. Rows not copied");
             warnUser(this, szTitle, m_szMsg);
         }
     }
-    m_szMsg = tr("Rows Pasted: ") .arg(lstCopiedRecords.count());
+    m_szMsg = tr("Rows Pasted: %1") .arg(nPasted);
     displayStatusMessage(m_szMsg);
-    qDebug() << m_szMsg;
     lstCopiedRecords.clear();
     enableInterface();
 }
@@ -1426,64 +1499,194 @@ void ctedit::insertRows()
 {
     // Recupera righe selezionate
     QModelIndexList selection = ui->tblCT->selectionModel()->selectedRows();
+    CrossTableRecord emptyRecord;
+    int             nInserted = 0;
+    int             nFirstRow = -1;
+    int             nRow = 0;
+    int             nCur = 0;
+    int             nStart = 0;
 
+    if (selection.count() <= 0 )  {
+        return;
+    }
     // Controllo di restare nei Bounding delle variabili utente
-    if (m_nGridRow + selection.count() < MAX_NONRETENTIVE)  {
+    if (m_nGridRow + selection.count() < MAX_NONRETENTIVE - 1)  {
         // Append to Undo List
         lstUndo.append(lstCTRecords);
-        //
+        // Enter in Paste Mode
+        m_fCutOrPaste = true;
+        // Ricerca del Punto di Inserzione
+        for (nCur = 0; nCur < selection.count(); nCur++)  {
+            // Reperisce l'Item Row Number dall'elenco degli elementi selezionati
+            QModelIndex index = selection.at(nCur);
+            nRow = index.row();
+            // Remember first row of selection
+            if (nFirstRow < 0)  {
+                nFirstRow = nRow;
+                break;
+            }
+        }
+        // Insert New Recs
+        for (nCur = 0; nCur < selection.count(); nCur++)  {
+            lstCTRecords.insert(nFirstRow, emptyRecord);
+            freeCTrec(nFirstRow);
+            nInserted ++;
+        }
+        // Search the right place 2 remove extra records
+        if (nFirstRow >= 0 && nFirstRow < MAX_RETENTIVE - 1)
+            nStart = MAX_RETENTIVE - 1;
+        else if (nFirstRow >= MIN_NONRETENTIVE -1 && nFirstRow < MAX_NONRETENTIVE - 1)
+            nStart = MAX_NONRETENTIVE - 1;
+        else    // Should never happen....
+            nStart = 0;
+        // Remove extra Rec to readjust positions
+        for (nCur = 0; nCur < nInserted; nCur++)  {
+            lstCTRecords.removeAt(nStart);
+        }
+        // Refresh Grid
+        ctable2Grid();
         m_isCtModified = true;
     }
-    m_szMsg = tr("Rows Inserted: ") .arg(selection.count());
+    else  {
+        m_szMsg = tr("Too Many Rows selected, passed limit of User Variables!");
+        displayStatusMessage(m_szMsg);
+        selection.clear();
+        return;
+    }
+    m_szMsg = tr("Rows Inserted: %1") .arg(selection.count());
     displayStatusMessage(m_szMsg);
-    qDebug() << m_szMsg;
     enableInterface();
 }
-void ctedit::removeSelected()
-// Rimozione delle righe correntemente selezionate
+void ctedit::emptySelected()
+// Cancellazione delle righe correntemente selezionate
+// (solo svuotamento senza Shift in alto delle righe)
 {
     // Recupera righe selezionate
     QModelIndexList selection = ui->tblCT->selectionModel()->selectedRows();
     int             nRow = 0;
     int             nCur = 0;
     int             nRemoved = 0;
+    int             nFirstRow = -1;
 
     // Check Modif. and append data to Undo List
-    if (selection.isEmpty())
+    if (selection.isEmpty() || m_nGridRow >= MIN_SYSTEM - 1)  {
+        m_szMsg = tr("Can't remove rows in System Area");
+        displayStatusMessage(m_szMsg);
+        selection.clear();
         return;
-    else
-        lstUndo.append(lstCTRecords);
+    }
+    lstUndo.append(lstCTRecords);
     // Compile Selected Row List
+    m_fCutOrPaste = true;
     for (nCur = 0; nCur < selection.count(); nCur++)  {
         // Reperisce l'Item Row Number dall'elenco degli elementi selezionati
         QModelIndex index = selection.at(nCur);
         nRow = index.row();
+        // Remember first row of selection
+        if (nFirstRow < 0)
+            nFirstRow = nRow;
+        // Free Row
         if (nRow < MAX_NONRETENTIVE)  {
             freeCTrec(nRow);
             nRemoved++;
         }
     }
+    // Set Current index Row to first of Selection
+    selection.clear();
     // Refresh Grid
     if (nRemoved)  {
         ctable2Grid();
         m_isCtModified = true;
     }
-    m_szMsg = tr("Rows Removed: ") .arg(lstCopiedRecords.count());
+    // Riposiziona alla riga corrente
+    if (nRemoved > 0 && nFirstRow >= 0)  {
+        jumpToGridRow(nFirstRow);
+    }
+    m_szMsg = tr("Rows Removed: %1") .arg(nRemoved);
     displayStatusMessage(m_szMsg);
-    qDebug() << m_szMsg;
+    // Update Iface
+    enableInterface();
+}
+
+void ctedit::removeSelected()
+// Rimozione delle righe correntemente selezionate
+// (svuotamento con Shift in alto delle righe)
+{
+    // Recupera righe selezionate
+    QModelIndexList selection = ui->tblCT->selectionModel()->selectedRows();
+    int             nRow = 0;
+    int             nCur = 0;
+    int             nStart = 0;
+    int             nRemoved = 0;
+    int             nFirstRow = -1;
+    CrossTableRecord emptyRecord;
+
+    // Check Modif. and append data to Undo List
+    if (selection.isEmpty() || m_nGridRow >= MIN_SYSTEM - 1)  {
+        m_szMsg = tr("Can't remove rows in System Area");
+        displayStatusMessage(m_szMsg);
+        selection.clear();
+        return;
+    }
+    lstUndo.append(lstCTRecords);
+    // Compile Selected Row List
+    m_fCutOrPaste = true;
+    for (nCur = 0; nCur < selection.count(); nCur++)  {
+        // Reperisce l'Item Row Number dall'elenco degli elementi selezionati
+        QModelIndex index = selection.at(nCur);
+        nRow = index.row();
+        // Remember first row of selection
+        if (nFirstRow < 0)
+            nFirstRow = nRow;
+        // Removing Row from list
+        if (nRow < MAX_NONRETENTIVE)  {
+            lstCTRecords.removeAt(nRow - nRemoved);
+            nRemoved++;
+        }
+    }
+    // Refresh Grid
+    if (nRemoved)  {
+        // Search the right place 2 insert empty records
+        if (nFirstRow >= 0 && nFirstRow < MAX_RETENTIVE - 1)
+            nStart = MAX_RETENTIVE - nRemoved - 1;
+        else if (nFirstRow >= MIN_NONRETENTIVE -1 && nFirstRow < MAX_NONRETENTIVE - 1)
+            nStart = MAX_NONRETENTIVE - nRemoved - 1;
+        else    // Should never happen....
+            nStart = 0;
+        // Insert empty Rec to readjust positions
+        for (nCur = 0; nCur < nRemoved; nCur++)  {
+            lstCTRecords.insert(nStart, emptyRecord);
+            freeCTrec(nStart);
+        }
+        // Refresh Grid
+        ctable2Grid();
+        m_isCtModified = true;
+    }
+    m_szMsg = tr("Rows Removed: %1") .arg(nRemoved);
+    displayStatusMessage(m_szMsg);
     // Update Iface
     enableInterface();
 }
 void ctedit::cutSelected()
 // Taglia righe in Buffer di copiatura
 {
+    // Recupera righe selezionate
+    QModelIndexList selection = ui->tblCT->selectionModel()->selectedRows();
+
+    if (m_nGridRow >= MIN_SYSTEM - 1)  {
+        m_szMsg = tr("Can't remove rows in System Area");
+        selection.clear();
+        displayStatusMessage(m_szMsg);
+        return;
+    }
+    m_fCutOrPaste = true;
     // Copia Righe
-    copySelected();
+    copySelected(false);
     // Elimina Righe
     if(lstCopiedRecords.count() > 0)
-        removeSelected();
+        emptySelected();
     // Result
-    m_szMsg = tr("Rows Cutted: ") .arg(lstCopiedRecords.count());
+    m_szMsg = tr("Rows Cutted: %1") .arg(lstCopiedRecords.count());
     displayStatusMessage(m_szMsg);
     qDebug() << m_szMsg;
 }
@@ -1693,9 +1896,9 @@ void ctedit::jumpToGridRow(int nRow)
 {
     // Controlla se la riga selezionata è abilitata. In caso contrario deve abilitare visualizzazione di tutte le righe
     ui->tblCT->selectRow(nRow);
-    if (lstCTRecords[nRow].UsedEntry == 0)  {
-        on_cmdHideShow_clicked(true);
-    }
+    //if (lstCTRecords[nRow].UsedEntry == 0)  {
+        // on_cmdHideShow_clicked(true);
+    //}
     // In entrambi i casi cerca di centrare la riga nel grid
     ui->tblCT->scrollToItem(ui->tblCT->currentItem(), QAbstractItemView::PositionAtCenter);
     ui->tblCT->setFocus();
@@ -1709,6 +1912,8 @@ void ctedit::on_cmdCompile_clicked()
     QStringList lstArguments;
     QString     szTemp;
     QString     szFileName;
+    QByteArray  baCompErr;
+    QString     szCompErr;
     QProcess    procCompile;
     int         nExitCode = 0;
 
@@ -1758,10 +1963,14 @@ void ctedit::on_cmdCompile_clicked()
         goto exit_compile;
     }
     // Esito comando
+    baCompErr = procCompile.readAllStandardError();
     nExitCode = procCompile.exitCode();
     if (nExitCode != 0)  {
-        m_szMsg = tr("Exit Code of Cross Table Compiler: %1") .arg(nExitCode);
+        m_szMsg = tr("Exit Code of Cross Table Compiler: %1\n") .arg(nExitCode);
+        szCompErr = QString::fromAscii(baCompErr.data());
+        m_szMsg.append(szCompErr);
         warnUser(this, szTitle, m_szMsg);
+        // TODO: Analisi errore del Cross Compiler
     }
     else {
         m_szMsg = tr("Cross Table Correctly Compiled");
@@ -1859,9 +2068,10 @@ void ctedit::enableInterface()
     ui->cmdSave->setEnabled(m_isCtModified);
     ui->fraCondition->setEnabled(true);
     ui->tblCT->setEnabled(true);
+    m_fCutOrPaste = false;
 }
 QStringList ctedit::getPortsFromModel(QString szModel, QString szProtocol)
-// Calocolo Porta in funzione di Modello e protocollo
+// Calocolo Porte abilitate in funzione di Modello e protocollo
 {
     QStringList lstValues;
     int nModel = lstProductName.indexOf(szModel);

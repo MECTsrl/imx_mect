@@ -34,8 +34,12 @@
 
 #define REGISTER_SIZE           4
 
+#define MAX_ROWS                5472
 #define FIELD_MAX_LENGTH        4096
+#define ROW_FIELDS              13
 #define CROSSTABLE_DEF          10000
+#define ID_MAXLEN               16
+#define ADDR_MAXLEN             15
 
 /* All crosstable types */
 enum type_e {
@@ -90,17 +94,18 @@ enum behav_e {
 struct row_s {
     int priority;
     char update;
-    char name[17];
+    char name[ID_MAXLEN + 1];
     enum type_e type;
     int decimal;
     enum protocol_e protocol;
-    char address[16];
+    char address[ADDR_MAXLEN + 1];
     int port;
     int node_id;
     int reg;
     int block;
     char *comment;
     enum behav_e behavior;
+    char *alarm_event;
 
     int number;
 
@@ -149,9 +154,22 @@ static struct cpp_stat_s {
     .include = NULL
 };
 
+/* Symbol table */
+static struct st_id_s {
+    unsigned int index;
+    struct st_s {
+        char *id;
+        int rown;
+    } st[MAX_ROWS];
+} st_id;
+
 
 
 /* Local function prototypes */
+static void error_log(int line, char *msg);
+static void error_log_exit(int line, char *msg);
+static void perror_log_exit(int line, char *msg);
+static void cperror_log_exit(struct csv_parser *p, int line, char *msg);
 static void row_init(struct row_s *row);
 static int crosstable_row_add(struct row_s *row);
 static enum type_e type_get(char *type);
@@ -163,10 +181,106 @@ static void cb_field(void *s, size_t len, void *data);
 static void cb_row(int c, void *data);
 static int is_space(unsigned char c);
 static int is_term(unsigned char c);
+static int st_id_append(char *id, int rown);
+static void xtable_cc(void);
 static int gvl_gen(void);
 static int cpp_gen(void);
 static int cpp_h_gen(void);
 static void usage(char *pn);
+
+
+
+/**
+ * Create a gcc-style error using the given line number and
+ * message.
+ *
+ * @param line          line number
+ * @param msg           error message
+ */
+static void
+error_log(int line, char *msg)
+{
+    if (msg == NULL)
+        msg = "[no message]";
+
+    char *fn = crosstable.filename;
+    if (fn == NULL)
+        fn = "[no file]";
+
+    if (line < 0)
+        line = 0;
+
+    fprintf(stderr, "%s:%d:%d: error: %s\n", fn, line, 1, msg);
+
+    exit(EXIT_FAILURE);
+}
+
+/**
+ * Create a gcc-style error using the given line number and
+ * message, and abort execution.
+ *
+ * @param line          line number
+ * @param msg           error message
+ */
+static void
+error_log_exit(int line, char *msg)
+{
+    error_log(line, msg);
+
+    exit(EXIT_FAILURE);
+}
+
+/**
+ * Create a gcc-style error using the given line number and
+ * message, add perror()  and abort execution.
+ *
+ * @param line          line number
+ * @param msg           error message
+ */
+static void
+perror_log_exit(int line, char *msg)
+{
+    char *perr = strdup(strerror(errno));
+    /* Output the important error anyway. */
+    if (perr == NULL)
+        error_log_exit(line, msg);
+
+    char *fullmsg = (char *)malloc(strlen(msg) + strlen(perr) + 2 + 1);
+    /* Output the important error anyway. */
+    if (fullmsg == NULL)
+        error_log_exit(line, msg);
+
+    strncpy(fullmsg, msg, strlen(msg) + 1);
+    strncat(fullmsg, ": ", 3);
+    strncat(fullmsg, perr, strlen(perr) + 1);
+    error_log_exit(line, fullmsg);
+
+    /* NOTE: free heap if not aborting. */
+}
+
+/**
+ * Create a gcc-style error using the given line number and
+ * message, add parser error and abort execution.
+ *
+ * @param p             CSV parser handle
+ * @param line          line number
+ * @param msg           error message
+ */
+static void
+cperror_log_exit(struct csv_parser *p, int line, char *msg)
+{
+    char *fullmsg = (char *)malloc(strlen(msg) + strlen(csv_strerror(csv_error(p))) + 2 + 1);
+    /* Output the important error anyway. */
+    if (fullmsg == NULL)
+        error_log_exit(line, msg);
+
+    strncpy(fullmsg, msg, strlen(msg) + 1);
+    strncat(fullmsg, ": ", 3);
+    strncat(fullmsg, csv_strerror(csv_error(p)), strlen(csv_strerror(csv_error(p))) + 1);
+    error_log_exit(line, fullmsg);
+
+    /* NOTE: free heap if not aborting. */
+}
 
 
 
@@ -184,6 +298,7 @@ row_init(struct row_s *row)
     row->reg = -1;
     row->block = -1;
     row->behavior = BEHAV_NONE;
+    row->alarm_event = NULL;
 }
 
 /**
@@ -197,7 +312,7 @@ row_init(struct row_s *row)
 static int
 crosstable_row_add(struct row_s *row)
 {
-    if ((crosstable.index_last + 1) >= crosstable.size) {
+    if ((unsigned)(crosstable.index_last + 1) >= crosstable.size) {
         crosstable.rows = (struct row_s *)realloc(crosstable.rows, sizeof(struct row_s) * (crosstable.size + CROSSTABLE_DEF));
         assert(crosstable.rows != NULL);
 
@@ -410,7 +525,7 @@ protocol_get(char *protocol)
 }
 
 /**
- * Return the code correspomding to the given behavior.
+ * Return the code of the given behavior.
  *
  * @param behavior      behavior type.
  *
@@ -435,21 +550,34 @@ behav_get(char *behavior)
 }
 
 /**
- * Return the entry comment correspomding to the given behavior.
+ * Return the alarm/event expression for the given behavior.
  *
  * @param behavior      behavior type.
  *
  * @return              comment or empty string.
  */
 static char *
-comment_get(char *combo_behav_comment)
+alarm_event_get(char *behavior)
+{
+#error "TODO"
+}
+
+/**
+ * Return the comment for the given behavior.
+ *
+ * @param behavior      behavior type.
+ *
+ * @return              comment or empty string.
+ */
+static char *
+comment_get(char *behavior)
 {
     char *comment = "";
 
-    if (combo_behav_comment != NULL) {
+    if (behavior != NULL) {
         char *c = NULL;
 
-        c = strrchr(combo_behav_comment, ']');
+        c = strrchr(behavior, ']');
         /* Skip behavior terminator. */
         if (c != NULL)
             comment = c + 1;
@@ -557,15 +685,16 @@ cb_field(void *s, size_t len, void *data)
                 ((struct row_s *)data)->behavior = behav_get(buf);
                 dbg_printf("Behavior %d\n", ((struct row_s *)data)->behavior);
 
+                ((struct row_s *)data)->alarm_event = alarm_event_get(buf);
+                dbg_printf("Alarm/event %s\n", ((struct row_s *)data)->alarm_event);
+
                 ((struct row_s *)data)->comment = strdup(comment_get(buf));
                 dbg_printf("Comment %s\n", ((struct row_s *)data)->comment);
 
             break;
 
             default:
-                fprintf(stderr, "Unknown field index %d.\nAborting.\n", crosstable.field_crt);
-
-                exit(1);
+                error_log_exit(crosstable.row_crt, "too many fields in row.");
 
             break;
         }
@@ -584,6 +713,11 @@ static void
 cb_row(int c, void *data)
 {
     crosstable.row_crt++;       /* Count rows from 1. */
+
+    if ((c > ROW_FIELDS) || (crosstable.field_crt > ROW_FIELDS))
+        error_log_exit(crosstable.row_crt, "too many fields in the row");
+    else if ((c < ROW_FIELDS) || (crosstable.field_crt < ROW_FIELDS))
+        error_log_exit(crosstable.row_crt, "too few fields in the row");
 
     /* Non-empty row */
     if (((struct row_s *)data)->filled_fields > 0) {
@@ -634,6 +768,132 @@ is_term(unsigned char c)
         return 1;
 
     return 0;
+}
+
+
+
+/**
+ * Check the validity of the given ID.
+ *
+ * @param id            ID to check
+ *
+ * @return              0 for invalid ID
+ */
+static int
+xtable_ids_check(char *id)
+{
+    /* No ID */
+    if (id == NULL)
+        return 0;
+
+    /* Empty ID */
+    if (strlen(id) == 0)
+        return 0;
+
+    /* Start by '_' or letter. */
+    if (!isalpha(id[0]) && (id[0] != '_'))
+        return 0;
+
+    /* Include only letters and '_'. */
+    if (strspn(id, "ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz0123456789") != strlen(id))
+        return 0;
+
+    return 1;           /* ID OK */
+}
+
+/**
+ * Initialize the ID symbol table.
+ */
+static void
+st_id_init(void)
+{
+    bzero((void *)&st_id, sizeof(st_id));
+}
+
+/**
+ * Append the given ID and its row number in the cross table
+ * to the ID store (do not check for duplicates).
+ *
+ * @param id            ID to add
+ * @param rown          row number
+ *
+ * @return              0 for errors
+ */
+static int
+st_id_append(char *id, int rown)
+{
+    /* Overflow? */
+    if (st_id.index >= MAX_ROWS)
+        return 0;
+
+    st_id.st[st_id.index].id = id;
+    st_id.st[st_id.index].rown = rown;
+
+    ++st_id.index;
+
+    return 1;
+}
+
+/**
+ * Compare the two given ID symbol table entries.
+ *
+ * @param a             first entry
+ * @param b             second entry
+ *
+ * @return              -1, 0, +1 for less than, equal, greater than
+ */
+static int
+st_id_comp(const void *a, const void *b)
+{
+    if (((struct st_s *)a)->id == NULL)
+        return -1;
+    else if (((struct st_s *)b)->id == NULL)
+        return 1;
+    else if (((struct st_s *)a)->id == ((struct st_s *)b)->id)
+        return 0;
+
+    return strcmp(((struct st_s *)a)->id, ((struct st_s *)b)->id);
+}
+
+/**
+ * Check cross table data for errors and consistency.
+ */
+static void
+xtable_cc(void)
+{
+    int i = 0;
+
+    for (i = 0; i <= crosstable.index_last; i++) {
+        /* Skip empty rows. */
+        if (crosstable.rows[i].filled_fields == 0)
+            continue;
+
+        char *id = crosstable.rows[i].name;
+
+        /* ID length */
+        if (strlen(id) > ID_MAXLEN)
+            error_log_exit(crosstable.rows[i].number, "identifier too long.");
+
+        /* ID format */
+        if (!xtable_ids_check(id))
+            error_log_exit(crosstable.rows[i].number, "invalid identifier.");
+
+        /* Store a valid ID (even duplicates). */
+        if (!st_id_append(id, crosstable.rows[i].number))
+            error_log_exit(crosstable.rows[i].number, "cannot add ID to symbol table.");
+
+        /* Address length */
+        if (strlen(crosstable.rows[i].address) > ADDR_MAXLEN)
+            error_log_exit(crosstable.rows[i].number, "address too long.");
+    }
+
+    /* Sort the symbol table. */
+    qsort(st_id.st, st_id.index, sizeof(st_id.st[0]), st_id_comp);
+
+    /* Check for duplicate IDs (always adjacent). */
+    for (i = 0; i < MAX_ROWS - 1; i++)
+        if (!strcmp(st_id.st[i].id, st_id.st[i + 1].id))
+            error_log_exit(st_id.st[i].rown, "duplicate name.");
 }
 
 
@@ -941,7 +1201,6 @@ usage(char *pn)
     fprintf(stderr, "  -g <file name>   - output declaration file name (ST format)\n");
     fprintf(stderr, "  -i <file name>   - output header file name (C++ format)\n");
     fprintf(stderr, "  -s <file name>   - output source file name (C++ format)\n");
-    fprintf(stderr, "  -S               - strict CSV parse\n");
     fprintf(stderr, "  -h               - print usage\n");
 }
 
@@ -951,11 +1210,8 @@ main(int argc, char *argv[])
     struct csv_parser p;
 
     /* Initialize the parser. */
-    if (csv_init(&p, 0) != 0) {
-        fprintf(stderr, "Failed to initialize the CSV parser.\n");
-
-        exit(EXIT_FAILURE);
-    }
+    if (csv_init(&p, 0) != 0)
+        error_log_exit(0, "cannot initialize the CSV parser.");
 
     csv_set_delim(&p, ';');
     csv_set_space_func(&p, is_space);
@@ -963,6 +1219,7 @@ main(int argc, char *argv[])
 
     /* Parse command line arguments. */
     int o = 0;
+    unsigned char options = 0;
     while ((o = getopt(argc, argv, "c:g:hi:s:S")) != -1)
         switch (o) {
             case 'c':           /* CSV input file name */
@@ -985,11 +1242,6 @@ main(int argc, char *argv[])
 
                 break;
 
-            case 'S':           /* Strict CSV parse */
-                csv_set_opts(&p, CSV_STRICT);
-
-                break;
-
             case 'h':
             default:
                 usage(argv[0]);
@@ -1000,20 +1252,16 @@ main(int argc, char *argv[])
         }
 
     /* Sanity checks */
-    if (crosstable.filename == NULL) {
-        fprintf(stderr, "%s: cross table input file not specified.\n", argv[0]);
-
-        usage(argv[0]);
-
-        exit(EXIT_FAILURE);
-    }
+    if (crosstable.filename == NULL)
+        error_log_exit(0, "no cross table file name.");
 
     FILE *fp = fopen(crosstable.filename, "rb");
-    if (fp == NULL) {
-        fprintf(stderr, "Failed to open %s: %s\n", crosstable.filename, strerror(errno));
+    if (fp == NULL)
+        perror_log_exit(0, "cannot open cross table file.");
 
-        exit(EXIT_FAILURE);
-    }
+    /* Set parser options. */
+    options |= CSV_STRICT | CSV_STRICT_FINI | CSV_APPEND_NULL;
+    csv_set_opts(&p, options);
 
     row_init(&row);
 
@@ -1022,22 +1270,28 @@ main(int argc, char *argv[])
     size_t bytes_read;
     while ((bytes_read = fread(buf, 1, FIELD_MAX_LENGTH, fp)) > 0)
         if (csv_parse(&p, buf, bytes_read, cb_field, cb_row, &row) != bytes_read)
-            fprintf(stderr, "Error while parsing file: %s\n", csv_strerror(csv_error(&p)));
+            cperror_log_exit(&p, crosstable.row_crt + 1, "while parsing the cross table");
 
     csv_fini(&p, cb_field, cb_row, &row);
 
     if (ferror(fp))
-        fprintf(stderr, "Error while reading file %s\n", crosstable.filename);
+        perror_log_exit(crosstable.row_crt, "while reading cross table file");
 
     fclose(fp);
 
+    /* Check cross table for errors and consistency. */
+    st_id_init();
+    xtable_cc();
 
+    /* Generate structured text IEC 61131-3 declarations. */
     if (gvl_gen() != 0)
         exit(EXIT_FAILURE);
 
+    /* Generate C++ header file with declarations. */
     if (cpp_h_gen() != 0)
         exit(EXIT_FAILURE);
 
+    /* Generate C++ code and variable declarations. */
     if (cpp_gen() != 0)
         exit(EXIT_FAILURE);
 

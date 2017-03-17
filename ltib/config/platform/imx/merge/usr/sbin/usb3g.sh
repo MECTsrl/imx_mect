@@ -61,7 +61,7 @@ start()
         fi
 
         if test -n "$NAMESERVERP02"; then
-            /bin/grep "nameserver\s\+$NAMESERVERP02" $resolv_file || echo "nameserver $NAMESERVERW02" >> $resolv_file
+            /bin/grep "nameserver\s\+$NAMESERVERP02" $resolv_file || echo "nameserver $NAMESERVERP02" >> $resolv_file
         fi
     fi
 

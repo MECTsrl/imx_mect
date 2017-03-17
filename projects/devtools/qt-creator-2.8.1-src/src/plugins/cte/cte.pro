@@ -4,16 +4,20 @@ HEADERS += \
     cteplugin.h \
     parser.h \
     ctedit.h \
-    utils.h
+    utils.h \  
+    cteerrdef.h \
+    cteerrorlist.h
 
 SOURCES += \
     cteplugin.cpp \
     parser.c \
     ctedit.cpp \
-    utils.cpp
+    utils.cpp \  
+    cteerrorlist.cpp
 
 FORMS += \
-    ctedit.ui \
+    ctedit.ui \  
+    cteerrorlist.ui
 
 LIBS += \
     -L../projectexplorer -lProjectExplorer

@@ -1,7 +1,7 @@
 #include "ctedit.h"
 #include "ui_ctedit.h"
-//#include "parser.h"
 #include "utils.h"
+#include "cteerrorlist.h"
 
 #include <QFile>
 #include <QFileDialog>
@@ -105,15 +105,25 @@ ctedit::ctedit(QWidget *parent) :
     // Liste di servizio
     lstUsedVarNames.clear();
     lstUndo.clear();
+    lstCTErrors.clear();
     // Stringhe generiche per Default campi
     szEMPTY.clear();
     szZERO.fromAscii("0");
+    //------------------------
+    // Riempimento liste
+    //------------------------
+    // Lista Messaggi di Errore
+    lstErrorMessages.clear();
+    for (nCol = 0; nCol < errCTTotals; nCol++)  {
+        lstErrorMessages.append(szEMPTY);
+    }
+    lstErrorMessages[errCTNoError] = trUtf8("No Error");
+    lstErrorMessages[errCTDuplicateName] = trUtf8("Duplicate Variable Name");
+    // Titoli colonne
     lstHeadCols.clear();
     for (nCol = 0; nCol < colTotals; nCol++)  {
         lstHeadCols.append(szEMPTY);
     }
-    // Riempimento liste
-    // Titoli colonne
     lstHeadCols[colPriority] = trUtf8("Priority");
     lstHeadCols[colUpdate] = trUtf8("Update");
     lstHeadCols[colName] = trUtf8("Name");
@@ -155,9 +165,9 @@ ctedit::ctedit(QWidget *parent) :
         lstBusEnabler.append(true);         // Di default tutti i tipi di Bus sono abilitati
     }
     // Lista Prodotti
-    lstProductName.clear();
+    lstProductNames.clear();
     for (nCol = AnyTPAC; nCol <= TPAC1008_02_AF; nCol++)  {
-        lstProductName.append(QString::fromAscii(product_name[nCol]));
+        lstProductNames.append(QString::fromAscii(product_name[nCol]));
     }
     // Lista Significati
     lstBehavior.clear();
@@ -340,6 +350,7 @@ ctedit::ctedit(QWidget *parent) :
     connect(ui->tblCT->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
             SLOT(tableItemChanged(const QItemSelection &, const QItemSelection & ) ));
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(tabSelected(int)));
+
 }
 
 ctedit::~ctedit()
@@ -451,6 +462,7 @@ bool    ctedit::list2GridRow(QStringList &lstRecValues, int nRow)
             tItem = new QTableWidgetItem(szTemp);
         }
         else  {
+            fAdd = false;
             tItem->setText(szTemp);
         }
         // Allineamento
@@ -509,8 +521,8 @@ bool    ctedit::ctable2Grid()
     lstUsedVarNames.sort();
     // Impostazione parametri TableView
     ui->tblCT->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tblCT->setSelectionMode(QAbstractItemView::ExtendedSelection);
     ui->tblCT->setHorizontalHeaderLabels(lstHeadCols);
-    // ui->tblCT->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblCT->setEnabled(true);
     // Show All Elements
     if (fRes)  {
@@ -783,8 +795,15 @@ void ctedit::on_cmdBlocchi_clicked()
 
 void ctedit::on_cmdSave_clicked()
 {
-    bool fRes = false;
+    bool    fRes = false;
+    int     nErr = 0;
 
+    nErr = globalChecks();
+    if (nErr)  {
+        m_szMsg = tr("There are errors in Data. Save anyway?");
+        if (! queryUser(this, szTitle, m_szMsg, false))
+            return;
+    }
     fRes = saveCTFile();
     if (!fRes)  {
         m_szMsg = tr("Error Saving Cross Table File: %1\n").arg(m_szCurrentCTFile);
@@ -1227,9 +1246,10 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
 // Slot attivato ad ogni cambio di riga in
 {
     int     nRow = -1;
-    bool    fRes = true;
+    int     nErrors = 0;
     QStringList lstFields;
     bool    fIsModif = false;
+    bool    fRes = true;
     // Recupera righe selezionate
     QModelIndexList selection = ui->tblCT->selectionModel()->selectedRows();
 
@@ -1251,8 +1271,8 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
         if (isLineModified() && lstCTRecords[nRow].UsedEntry && ! m_fEmptyForm)  {
             // il buffer è
             // Primo controllo di coerenza sulla riga corrente
-            fRes = checkFields();
-            if (fRes)  {
+            nErrors = checkFields(nRow);
+            if (nErrors == 0)  {
                 // Copia l'attuale CT nella lista Undo
                 lstUndo.append(lstCTRecords);
                 // Valori da interfaccia a CT
@@ -1270,7 +1290,7 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
         }
     }
     // Cambio riga Ko
-    if (! fRes)    {
+    if (nErrors > 0 || ! fRes)    {
         ui->tblCT->selectRow(nRow);
         return;
     }
@@ -1318,17 +1338,18 @@ void ctedit::clearEntryForm()
     ui->cboBehavior->setCurrentIndex(-1);
     m_fEmptyForm = true;
 }
-bool ctedit::checkFields()
+int ctedit::checkFields(int nRow)
 // Primi controlli formali sulla riga a termine editing
 {
-    bool    fRes = true;
+    int     nErrors = 0;
 
     // Nessun Controllo su riga vuota
-    if (lstCTRecords[m_nGridRow].UsedEntry == 0)  {
-        return true;
+    if (lstCTRecords[nRow].UsedEntry == 0)  {
+        return nErrors;
     }
+    // Controllo
     // Return Value
-    return fRes;
+    return nErrors;
 }
 
 void ctedit::displayUserMenu(const QPoint &pos)
@@ -1354,7 +1375,7 @@ void ctedit::displayUserMenu(const QPoint &pos)
     QAction *remRows = gridMenu.addAction(trUtf8("Elimina righe"));
     remRows->setEnabled(selection.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Sep1
-    QAction *sep1 = gridMenu.addSeparator();
+    gridMenu.addSeparator();
     // Copia righe (Sempre permesso)
     QAction *copyRows = gridMenu.addAction(trUtf8("Copia righe"));
     copyRows->setEnabled(selection.count() > 0);
@@ -1362,13 +1383,14 @@ void ctedit::displayUserMenu(const QPoint &pos)
     QAction *cutRows = gridMenu.addAction(trUtf8("Taglia righe"));
     cutRows->setEnabled(selection.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Sep 2
-    QAction *sep2 = gridMenu.addSeparator();
+    gridMenu.addSeparator();
     // Paste Rows
     QAction *pasteRows = gridMenu.addAction(trUtf8("Incolla righe"));
     pasteRows->setEnabled(lstCopiedRecords.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Abilitazione delle voci di Menu
     // Esecuzione del Menu
     QAction *actMenu = gridMenu.exec(ui->tblCT->viewport()->mapToGlobal(pos));
+    this->setCursor(Qt::WaitCursor);
     // Controllo dell'Azione selezionata
     // Inserimento righe
     if (actMenu == insRows)  {
@@ -1394,6 +1416,7 @@ void ctedit::displayUserMenu(const QPoint &pos)
     else if (actMenu == pasteRows)  {
         pasteSelected();
     }
+    this->setCursor(Qt::ArrowCursor);
 
 }
 void ctedit::copySelected(bool fClearSelection)
@@ -1853,7 +1876,7 @@ void ctedit::on_cmdGotoRow_clicked()
 
     bool fOk;
 
-    if (! checkFields())
+    if (checkFields(m_nGridRow) > 0)
         return;
     // Input Dialog per Numero riga
     int nRow = QInputDialog::getInt(this, tr("Row to Jump To"),
@@ -1869,7 +1892,7 @@ void ctedit::on_cmdSearch_clicked()
     bool fOk;
     int  nRow = 0;
 
-    if (! checkFields())
+    if (checkFields(m_nGridRow) > 0)
         return;
     // Input Dialog per Nome Variabile
     QString szText;
@@ -1917,6 +1940,9 @@ void ctedit::on_cmdCompile_clicked()
     QProcess    procCompile;
     int         nExitCode = 0;
 
+    // Controllo presenza di Errori
+    if (globalChecks())
+        return;
     // CT Compiler Full Path
     szCommand.append(szSlash);
     szCommand.append(szCrossCompier);
@@ -2074,7 +2100,7 @@ QStringList ctedit::getPortsFromModel(QString szModel, QString szProtocol)
 // Calocolo Porte abilitate in funzione di Modello e protocollo
 {
     QStringList lstValues;
-    int nModel = lstProductName.indexOf(szModel);
+    int nModel = lstProductNames.indexOf(szModel);
     int nProtocol = lstBusType.indexOf(szProtocol);
 
     lstValues.clear();
@@ -2142,7 +2168,7 @@ void    ctedit::enableProtocolsFromModel(QString szModel)
 // Abilita i Protocolli in funzione del Modello corrente
 {
     int nCur = 0;
-    int nModel = lstProductName.indexOf(szModel);
+    int nModel = lstProductNames.indexOf(szModel);
 
     lstBusEnabler.clear();
     // Abilita di default tutti i Protocolli
@@ -2228,4 +2254,56 @@ void    ctedit::enableProtocolsFromModel(QString szModel)
         else
             disableComboItem(ui->cboProtocol, nCur);
     }
+}
+int ctedit::globalChecks()
+// Controlli complessivi su tutta la CT
+{
+    int         nRow = 0;
+    int         nErrors = 0;
+    QString     szTemp;
+    Err_CT      errCt;
+    // Form per Display Errori
+    cteErrorList    *errWindow;
+
+    lstCTErrors.clear();
+    lstUniqueVarNames.clear();
+    // Ciclo Globale su tutti gli Items di CT
+    for (nRow = 0; nRow < DimCrossTable; nRow++)  {
+        // Controlla solo righe utilizzate
+        if (lstCTRecords[nRow].Enable)  {
+            // Controllo univocità di nome
+            szTemp = QString::fromAscii(lstCTRecords[nRow].Tag).trimmed();
+            if (lstUniqueVarNames.indexOf(szTemp) > 0)  {
+                fillErrorMessage(nRow, colName, errCTDuplicateName, szSeverityError, &errCt);
+                lstCTErrors.append(errCt);
+                nErrors++;
+            }
+            else
+                lstUniqueVarNames.append(szTemp);
+        }
+        // Controlli specifici di Riga
+    }
+    // Display finestra errore
+    if(nErrors)  {
+        qDebug() << "Found Errors:" << nErrors;
+        errWindow = new cteErrorList(this);
+        errWindow->setModal(true);
+        errWindow->lstErrors2Grid(lstCTErrors);
+        if (errWindow->exec() == QDialog::Accepted)  {
+            nRow = errWindow->currentRow();
+            if (nRow >= 0 && nRow < DimCrossTable)
+                jumpToGridRow(nRow);
+        }
+        delete errWindow;
+    }
+    return nErrors;
+}
+void ctedit::fillErrorMessage(int nRow, int nCol, int nErrCode, QChar severity, Err_CT *errCt)
+{
+    errCt->cSeverity = severity;
+    errCt->nRow = nRow;
+    errCt->nCol = nCol;
+    errCt->nCodErr = nErrCode;
+    errCt->szErrMessage = lstErrorMessages[nErrCode];
+    errCt->szVarName = QString::fromAscii(lstCTRecords[nRow].Tag).trimmed();
 }

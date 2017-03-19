@@ -44,23 +44,27 @@
 /* All crosstable types */
 enum type_e {
     TYPE_NONE = 0,
+
     TYPE_BIT,
     TYPE_BYTE_BIT,
     TYPE_WORD_BIT,
     TYPE_DWORD_BIT,
-    TYPE_BYTE,
-    TYPE_UINT,
-    TYPE_UINTBA,
+
     TYPE_INT,
     TYPE_INTBA,
-    TYPE_UDINT,
-    TYPE_UDINTBADC,
-    TYPE_UDINTCDAB,
-    TYPE_UDINTDCBA,
     TYPE_DINT,
     TYPE_DINTBADC,
     TYPE_DINTCDAB,
     TYPE_DINTDCBA,
+
+    TYPE_BYTE,
+    TYPE_UINT,
+    TYPE_UINTBA,
+    TYPE_UDINT,
+    TYPE_UDINTBADC,
+    TYPE_UDINTCDAB,
+    TYPE_UDINTDCBA,
+
     TYPE_REAL,
     TYPE_REALBADC,
     TYPE_REALCDAB,
@@ -90,6 +94,18 @@ enum behav_e {
     BEHAV_EVENT
 };
 
+enum trigger_ops_e {
+    TO_NONE,
+    TO_EQ,
+    TO_NE,
+    TO_GT,
+    TO_GE,
+    TO_LT,
+    TO_LE,
+    TO_RISE,
+    TO_FALL
+};
+
 /* Full crosstable row */
 struct row_s {
     int priority;
@@ -105,7 +121,13 @@ struct row_s {
     int block;
     char *comment;
     enum behav_e behavior;
-    char *alarm_event;
+    struct alarm_event_s {
+        char *expr;
+        char *op1_id;
+        char *op2_id;
+        float op2_f;
+        int operator;
+    } alarm_event;
 
     int number;
 
@@ -119,7 +141,7 @@ struct row_s {
 static struct row_s row;
 
 static struct crosstable_s {
-    struct row_s *rows;         /* Cross table representation */
+    struct row_s *rows;         /* Cross table */
     unsigned int size;          /* Current cross table size */
     int index_last;             /* Index of last data filled in */
 
@@ -158,8 +180,9 @@ static struct cpp_stat_s {
 static struct st_id_s {
     unsigned int index;
     struct st_s {
-        char *id;
-        int rown;
+        char *id;               /* Symbol name */
+        int rown;               /* Cross table row */
+        int xref;               /* Reference to cross table entry */
     } st[MAX_ROWS];
 } st_id;
 
@@ -177,11 +200,16 @@ static char *cpp_type_get(struct row_s *row);
 static int cpp_leading_comments_write(FILE *file);
 static enum protocol_e protocol_get(char *protocol);
 static enum behav_e behav_get(char *behavior);
+static char *alarm_or_event_get(char *behavior, struct row_s *row);
+static char *comment_get(char *behavior);
 static void cb_field(void *s, size_t len, void *data);
 static void cb_row(int c, void *data);
 static int is_space(unsigned char c);
 static int is_term(unsigned char c);
-static int st_id_append(char *id, int rown);
+static int st_id_append(char *id, int rown, int xref);
+static int duplicate_ids(void);
+static int key_st_id_comp(const void *key, const void *st);
+static int alarms_and_events_check(void);
 static void xtable_cc(void);
 static int gvl_gen(void);
 static int cpp_gen(void);
@@ -298,7 +326,7 @@ row_init(struct row_s *row)
     row->reg = -1;
     row->block = -1;
     row->behavior = BEHAV_NONE;
-    row->alarm_event = NULL;
+    bzero(&(row->alarm_event), sizeof(row->alarm_event));
 }
 
 /**
@@ -504,30 +532,38 @@ protocol_get(char *protocol)
 
     if (strcmp(protocol, "PLC") == 0)
         return PROTO_PLC;
-    else if (strcmp(protocol, "RTU") == 0)
+
+    if (strcmp(protocol, "RTU") == 0)
         return PROTO_RTU;
-    else if (strcmp(protocol, "TCP") == 0)
+
+    if (strcmp(protocol, "TCP") == 0)
         return PROTO_TCP;
-    else if (strcmp(protocol, "TCPRTU") == 0)
+
+    if (strcmp(protocol, "TCPRTU") == 0)
         return PROTO_TCPRTU;
-    else if (strcmp(protocol, "CANOPEN") == 0)
+
+    if (strcmp(protocol, "CANOPEN") == 0)
         return PROTO_CANOPEN;
-    else if (strcmp(protocol, "RTU_SRV") == 0)
+
+    if (strcmp(protocol, "RTU_SRV") == 0)
         return PROTO_RTU_SRV;
-    else if (strcmp(protocol, "TCP_SRV") == 0)
+
+    if (strcmp(protocol, "TCP_SRV") == 0)
         return PROTO_TCP_SRV;
-    else if (strcmp(protocol, "TCPRTU_SRV") == 0)
+
+    if (strcmp(protocol, "TCPRTU_SRV") == 0)
         return PROTO_TCPRTU_SRV;
-    else if (strcmp(protocol, "MECT") == 0)
+
+    if (strcmp(protocol, "MECT") == 0)
         return PROTO_MECT;
-    else
-        return PROTO_NONE;
+
+    return PROTO_NONE;
 }
 
 /**
  * Return the code of the given behavior.
  *
- * @param behavior      behavior type.
+ * @param behavior      behavior expression
  *
  * @return              code associated to type.
  */
@@ -537,35 +573,68 @@ behav_get(char *behavior)
     if (behavior == NULL)
         return BEHAV_NONE;
 
-    if (strcmp(behavior, "[RO]") == 0)
+    if (strncmp(behavior, "[RO]", 4) == 0)
         return BEHAV_INPUT;
-    else if (strcmp(behavior, "[RW]") == 0)
+
+    if (strncmp(behavior, "[RW]", 4) == 0)
         return BEHAV_OUTPUT;
-    else if (strcmp(behavior, "[AL ") == 0)
+
+    if (strncmp(behavior, "[AL ", 3) == 0)
         return BEHAV_ALARM;
-    else if (strcmp(behavior, "[EV ") == 0)
+
+    if (strncmp(behavior, "[EV ", 3) == 0)
         return BEHAV_EVENT;
-    else
-        return BEHAV_NONE;
+
+    return BEHAV_NONE;
 }
 
 /**
- * Return the alarm/event expression for the given behavior.
+ * Return the alarm or event expression for the given behavior.
+ * Assume rigid format: [AL <expression] or [EV <expression]
  *
- * @param behavior      behavior type.
+ * @param behavior      behavior expression
+ * @param row           current row data
  *
- * @return              comment or empty string.
+ * @return              alarm/event expression or empty string.
  */
 static char *
-alarm_event_get(char *behavior)
+alarm_or_event_get(char *behavior, struct row_s *row)
 {
-#error "TODO"
+    if (behavior == NULL)
+        return "";
+
+    if ((row->behavior != BEHAV_ALARM) && (row->behavior != BEHAV_EVENT))
+        return "";
+
+    char *start = strchr(behavior, '[');
+    if (start == NULL)
+        return "";
+    start = strchr(start, ' ');
+    if (start == NULL)
+        return "";
+    ++start;
+
+    char *end = strchr(start, ']');
+    if (end == NULL)
+        return "";
+    --end;
+
+    if (start >= end)
+        return "";
+
+    char *alarm_or_event = (char *)malloc(end - start + 2);
+    if (alarm_or_event == NULL)
+        return "";
+
+    bzero(alarm_or_event, end - start + 2);
+
+    return strncpy(alarm_or_event, start, end - start + 1);
 }
 
 /**
  * Return the comment for the given behavior.
  *
- * @param behavior      behavior type.
+ * @param behavior      behavior expression
  *
  * @return              comment or empty string.
  */
@@ -685,8 +754,9 @@ cb_field(void *s, size_t len, void *data)
                 ((struct row_s *)data)->behavior = behav_get(buf);
                 dbg_printf("Behavior %d\n", ((struct row_s *)data)->behavior);
 
-                ((struct row_s *)data)->alarm_event = alarm_event_get(buf);
-                dbg_printf("Alarm/event %s\n", ((struct row_s *)data)->alarm_event);
+                /* NOTE: call AFTER behav_get(). */
+                ((struct row_s *)data)->alarm_event.expr = alarm_or_event_get(buf, (struct row_s *)data);
+                dbg_printf("Alarm/event %s\n", ((struct row_s *)data)->alarm_event.expr);
 
                 ((struct row_s *)data)->comment = strdup(comment_get(buf));
                 dbg_printf("Comment %s\n", ((struct row_s *)data)->comment);
@@ -694,7 +764,7 @@ cb_field(void *s, size_t len, void *data)
             break;
 
             default:
-                error_log_exit(crosstable.row_crt, "too many fields in row.");
+                error_log_exit(crosstable.row_crt, "too many fields in the row.");
 
             break;
         }
@@ -777,28 +847,28 @@ is_term(unsigned char c)
  *
  * @param id            ID to check
  *
- * @return              0 for invalid ID
+ * @return              0 for valid ID
  */
 static int
 xtable_ids_check(char *id)
 {
     /* No ID */
     if (id == NULL)
-        return 0;
+        return 1;
 
     /* Empty ID */
     if (strlen(id) == 0)
-        return 0;
+        return 1;
 
     /* Start by '_' or letter. */
     if (!isalpha(id[0]) && (id[0] != '_'))
-        return 0;
+        return 1;
 
     /* Include only letters and '_'. */
     if (strspn(id, "ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz0123456789") != strlen(id))
-        return 0;
+        return 1;
 
-    return 1;           /* ID OK */
+    return 0;
 }
 
 /**
@@ -815,12 +885,13 @@ st_id_init(void)
  * to the ID store (do not check for duplicates).
  *
  * @param id            ID to add
- * @param rown          row number
+ * @param rown          cross table row number
+ * @param xrefy         cross table entry
  *
  * @return              0 for errors
  */
 static int
-st_id_append(char *id, int rown)
+st_id_append(char *id, int rown, int xref)
 {
     /* Overflow? */
     if (st_id.index >= MAX_ROWS)
@@ -828,6 +899,7 @@ st_id_append(char *id, int rown)
 
     st_id.st[st_id.index].id = id;
     st_id.st[st_id.index].rown = rown;
+    st_id.st[st_id.index].xref = xref;
 
     ++st_id.index;
 
@@ -856,13 +928,210 @@ st_id_comp(const void *a, const void *b)
 }
 
 /**
+ * Check for duplicate IDs in the symbol table.
+ *
+ * @return              0 if no duplicates
+ */
+static int
+duplicate_ids(void)
+{
+    /* Sort the symbol table. */
+    qsort(st_id.st, st_id.index, sizeof(st_id.st[0]), st_id_comp);
+
+    /* Check for duplicate IDs, now always in adjacent entries. */
+    int i = 0;
+    for (i = 0; i < (int)st_id.index - 1; i++)
+        if (!strcmp(st_id.st[i].id, st_id.st[i + 1].id)) {
+            error_log_exit(st_id.st[i].rown, "duplicate name.");
+
+            return 1;           /* Never reached */
+        }
+
+    return 0;
+}
+
+/**
+ * Compare the the given key with the given ID symbol table entry.
+ *
+ * @param key           key string
+ * @param st            symbol table entry
+ *
+ * @return              -1, 0, +1 for less than, equal, greater than
+ */
+static int
+key_st_id_comp(const void *key, const void *st)
+{
+    if (key == NULL)
+        return -1;
+
+    if (((struct st_s *)st)->id == NULL)
+        return 1;
+
+    if (key == ((struct st_s *)st)->id)
+        return 0;
+
+    return strcmp(key, ((struct st_s *)st)->id);
+}
+
+/**
+ * Check for consistency all alarm and event expressions.
+ *
+ * @return              0 if all check fine
+ */
+static int
+alarms_and_events_check(void)
+{
+    int i = 0;
+    for (i = 0; i <= crosstable.index_last; i++) {
+        /* Skip empty rows. */
+        if (crosstable.rows[i].filled_fields == 0)
+            continue;
+
+        char *ae = crosstable.rows[i].alarm_event.expr;
+
+        /* No expression */
+        if ((ae == NULL) || (ae[0] == '\0'))
+            continue;
+
+        ae = strdup(ae);
+        if (ae == NULL)
+            error_log_exit(crosstable.rows[i].number, "error acquiring the trigger expression.");
+
+        char *token = NULL;
+
+        /*
+         * First trigger expression operand
+         */
+        token = strtok(ae, " ");
+        if (token == NULL)
+            error_log_exit(crosstable.rows[i].number, "no operand in the trigger expression.");
+
+        /* Operand 1 name too long */
+        if (strlen(token) > ID_MAXLEN)
+            error_log_exit(crosstable.rows[i].number, "the name of the trigger expression first operand is too long.");
+
+        if (xtable_ids_check(token) != 0)
+            error_log_exit(crosstable.rows[i].number, "invalid first operand name trigger expression.");
+
+        char **op1 = &(crosstable.rows[i].alarm_event.op1_id);
+
+        /* Store first trigger expression operand. */
+        *op1 = strndup(token, ID_MAXLEN);
+        if (*op1 == NULL)
+            error_log_exit(crosstable.rows[i].number, "error storing the trigger expression first operand.");
+
+        /* Is the operand defined? */
+        struct st_s *st_op1 = (struct st_s *)bsearch(*op1, st_id.st, st_id.index, sizeof(st_id.st[0]), key_st_id_comp);
+        if (st_op1 == NULL)
+            error_log_exit(crosstable.rows[i].number, "first trigger expression operand is not defined.");
+
+        /*
+         * Trigger expression operator
+         */
+        token = strtok(NULL, " ");
+        if (token == NULL)
+            error_log_exit(crosstable.rows[i].number, "incomplete trigger expression.");
+
+        /* Store trigger expression operator. */
+	int oplen = strlen(token);
+	if ((oplen == 2) && (strncmp(token, "==", 2) == 0))
+	    crosstable.rows[i].alarm_event.operator = TO_EQ;
+	else if ((oplen == 2) && (strncmp(token, "!=", 2) == 0))
+	    crosstable.rows[i].alarm_event.operator = TO_NE;
+	else if ((oplen == 1) && (strncmp(token, ">", 1) == 0))
+	    crosstable.rows[i].alarm_event.operator = TO_GT;
+	else if ((oplen == 2) && (strncmp(token, ">=", 2) == 0))
+	    crosstable.rows[i].alarm_event.operator = TO_GE;
+	else if ((oplen == 1) && (strncmp(token, "<", 1) == 0))
+	    crosstable.rows[i].alarm_event.operator = TO_LT;
+	else if ((oplen == 2) && (strncmp(token, "<=", 2) == 0))
+	    crosstable.rows[i].alarm_event.operator = TO_LE;
+	else if ((oplen == 6) && (strncmp(token, "RISING", 6) == 0))
+	    crosstable.rows[i].alarm_event.operator = TO_RISE;
+	else if ((oplen == 7) && (strncmp(token, "FALLING", 7) == 0))
+	    crosstable.rows[i].alarm_event.operator = TO_FALL;
+	else
+            error_log_exit(crosstable.rows[i].number, "unknown operator in trigger expression.");
+
+        /*
+         * Two operand expression
+         */
+        if ((crosstable.rows[i].alarm_event.operator != TO_RISE) && (crosstable.rows[i].alarm_event.operator != TO_FALL)) {
+            token = strtok(NULL, " ");
+            if (token == NULL)
+                error_log_exit(crosstable.rows[i].number, "missing second trigger expression operand.");
+
+            char *endptr = NULL;
+            crosstable.rows[i].alarm_event.op2_f = strtof(token, &endptr);
+
+            /* Two operand expression */
+            if (endptr == token) {
+                /* Operand 2 name too long */
+                if (strlen(token) > ID_MAXLEN)
+                    error_log_exit(crosstable.rows[i].number, "the name of the trigger expression second operand is too long.");
+
+                if (xtable_ids_check(token) != 0)
+                    error_log_exit(crosstable.rows[i].number, "invalid second operand name trigger expression.");
+
+                char **op2 = &(crosstable.rows[i].alarm_event.op2_id);
+
+                /* Store second trigger expression operand. */
+                *op2 = strndup(token, ID_MAXLEN);
+                if (*op2 == NULL)
+                    error_log_exit(crosstable.rows[i].number, "error storing the trigger expression second operand.");
+
+                /* Is the second operand defined? */
+                struct st_s *st_op2 = (struct st_s *)bsearch(*op2, st_id.st, st_id.index, sizeof(st_id.st[0]), key_st_id_comp);
+                if (st_op2 == NULL)
+                    error_log_exit(crosstable.rows[i].number, "second trigger expression operand is not defined.");
+
+
+                /* Check for operand type compatibility. */
+                int opsc = 0;
+                enum type_e op1_t = crosstable.rows[st_op1->xref].type;
+                enum type_e op2_t = crosstable.rows[st_op2->xref].type;
+                int opd_ok = (crosstable.rows[st_op1->xref].decimal == crosstable.rows[st_op2->xref].decimal);
+
+                if ((op1_t == TYPE_BIT) || (op1_t == TYPE_BYTE_BIT) || (op1_t == TYPE_WORD_BIT) || (op1_t == TYPE_DWORD_BIT))
+                    opsc = ((op2_t == TYPE_BIT) || (op2_t == TYPE_BYTE_BIT) || (op2_t == TYPE_WORD_BIT) || (op2_t == TYPE_DWORD_BIT));
+                else if ((op1_t == TYPE_INT) || (op1_t == TYPE_INTBA) || (op1_t == TYPE_DINT) || (op1_t == TYPE_DINTBADC) || (op1_t == TYPE_DINTCDAB) || (op1_t == TYPE_DINTDCBA))
+                    opsc = (
+                        opd_ok
+                        && ((op2_t == TYPE_INT) || (op2_t == TYPE_INTBA) || (op2_t == TYPE_DINT) || (op2_t == TYPE_DINTBADC) || (op2_t == TYPE_DINTCDAB) || (op2_t == TYPE_DINTDCBA))
+                    );
+                else if ((op1_t == TYPE_BYTE) || (op1_t == TYPE_UINT) || (op1_t == TYPE_UINTBA) || (op1_t == TYPE_UDINT) || (op1_t == TYPE_UDINTBADC) || (op1_t == TYPE_UDINTCDAB) || (op1_t == TYPE_UDINTDCBA))
+                    opsc = (
+                        opd_ok
+                        && ((op2_t == TYPE_BYTE) || (op2_t == TYPE_UINT) || (op2_t == TYPE_UINTBA) || (op2_t == TYPE_UDINT) || (op2_t == TYPE_UDINTBADC) || (op2_t == TYPE_UDINTCDAB) || (op2_t == TYPE_UDINTDCBA))
+                    );
+                else if ((op1_t == TYPE_REAL) || (op1_t == TYPE_REALBADC) || (op1_t == TYPE_REALCDAB) || (op1_t == TYPE_REALDCBA))
+                    opsc = ((op2_t == TYPE_REAL) || (op2_t == TYPE_REALBADC) || (op2_t == TYPE_REALCDAB) || (op2_t == TYPE_REALDCBA));
+                else
+                    error_log_exit(crosstable.rows[i].number, "unknown first operand type in trigger expression.");
+
+                /* Incompatible operand types. */
+                if (opsc == 0)
+                    error_log_exit(crosstable.rows[i].number, "incompatible operand types in trigger expression.");
+            }
+        }
+
+        /*
+         * Clean up.
+         */
+        if (ae != NULL)
+            free(ae);
+    }
+
+    return 0;
+}
+
+/**
  * Check cross table data for errors and consistency.
  */
 static void
 xtable_cc(void)
 {
     int i = 0;
-
     for (i = 0; i <= crosstable.index_last; i++) {
         /* Skip empty rows. */
         if (crosstable.rows[i].filled_fields == 0)
@@ -875,25 +1144,25 @@ xtable_cc(void)
             error_log_exit(crosstable.rows[i].number, "identifier too long.");
 
         /* ID format */
-        if (!xtable_ids_check(id))
+        if (xtable_ids_check(id) != 0)
             error_log_exit(crosstable.rows[i].number, "invalid identifier.");
 
         /* Store a valid ID (even duplicates). */
-        if (!st_id_append(id, crosstable.rows[i].number))
-            error_log_exit(crosstable.rows[i].number, "cannot add ID to symbol table.");
+        if (!st_id_append(id, crosstable.rows[i].number, i))
+            error_log_exit(crosstable.rows[i].number, "too many symbols.");
 
         /* Address length */
         if (strlen(crosstable.rows[i].address) > ADDR_MAXLEN)
             error_log_exit(crosstable.rows[i].number, "address too long.");
     }
 
-    /* Sort the symbol table. */
-    qsort(st_id.st, st_id.index, sizeof(st_id.st[0]), st_id_comp);
+    /* Check for duplicate IDs. */
+    if (duplicate_ids() != 0)
+        error_log_exit(0, "duplicate names.");          /* Not reached */
 
-    /* Check for duplicate IDs (always adjacent). */
-    for (i = 0; i < MAX_ROWS - 1; i++)
-        if (!strcmp(st_id.st[i].id, st_id.st[i + 1].id))
-            error_log_exit(st_id.st[i].rown, "duplicate name.");
+    /* Check alarm and event expressions. */
+    if (alarms_and_events_check() != 0)
+        error_log_exit(0, "illegal expression.");        /* Not reached */
 }
 
 

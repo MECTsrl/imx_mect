@@ -1016,7 +1016,7 @@ alarms_and_events_check(void)
         char **op1 = &(crosstable.rows[i].alarm_event.op1_id);
 
         /* Store first trigger expression operand. */
-        *op1 = strndup(token, ID_MAXLEN);
+        *op1 = strdup(token);
         if (*op1 == NULL)
             error_log_exit(crosstable.rows[i].number, "error storing the trigger expression first operand.");
 
@@ -1076,7 +1076,7 @@ alarms_and_events_check(void)
                 char **op2 = &(crosstable.rows[i].alarm_event.op2_id);
 
                 /* Store second trigger expression operand. */
-                *op2 = strndup(token, ID_MAXLEN);
+                *op2 = strdup(token);
                 if (*op2 == NULL)
                     error_log_exit(crosstable.rows[i].number, "error storing the trigger expression second operand.");
 

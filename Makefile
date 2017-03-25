@@ -664,7 +664,7 @@ cloner:
 	sudo hardlink -cvv $(MECT_SYSCLONE_LOOP)
 	sudo umount $(MECT_SYSCLONE_LOOP)
 	rmdir $(MECT_SYSCLONE_LOOP)
-	sudo touch /etc/mtab # for chroot builds
+	if ! test -e /etc/mtab; then sudo touch /etc/mtab; fi	# Fix for broken chroots https://wiki.debian.org/Debootstrap
 	/sbin/e2fsck -fy $(MECT_SYSCLONE_IMG); test $$? -le 3
 	/sbin/resize2fs -Mp $(MECT_SYSCLONE_IMG)
 	install -m 644 $(MECT_SYSCLONE_TMPL) $(MECT_SYSCLONE_SH)

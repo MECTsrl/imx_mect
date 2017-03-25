@@ -22,24 +22,24 @@ MECT_BUILD_ATCMCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
 export MECT_BUILD_ATCMCRT_TAG := 0.0
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
-MECT_BUILD_ATCMCRT_CAN_BRANCH := base_2
-MECT_BUILD_ATCMCRT_CAN_REV := 201
+MECT_BUILD_ATCMCRT_CAN_BRANCH := mect_suite_2.0
+MECT_BUILD_ATCMCRT_CAN_REV := 214
 MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_PLUGINSCRT_TAG := v2.0.12rc7
+export MECT_BUILD_PLUGINSCRT_TAG := v2.0.12.1
 
 # git branch and tag for the mect_apps project
 MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_APPSCRT_TAG := v2.0.12rc7
+export MECT_BUILD_APPSCRT_TAG := v2.0.12rc11
 
 # git branch and tag for the cloner project
 MECT_BUILD_CLONERCRT_BRANCH := master
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_CLONERCRT_TAG := 0.0
+export MECT_BUILD_CLONERCRT_TAG := v2.0.12rc11
 
 # ---------------------------
 
@@ -664,6 +664,7 @@ cloner:
 	sudo hardlink -cvv $(MECT_SYSCLONE_LOOP)
 	sudo umount $(MECT_SYSCLONE_LOOP)
 	rmdir $(MECT_SYSCLONE_LOOP)
+	sudo touch /etc/mtab # for chroot builds
 	/sbin/e2fsck -fy $(MECT_SYSCLONE_IMG); test $$? -le 3
 	/sbin/resize2fs -Mp $(MECT_SYSCLONE_IMG)
 	install -m 644 $(MECT_SYSCLONE_TMPL) $(MECT_SYSCLONE_SH)

@@ -119,6 +119,18 @@ ctedit::ctedit(QWidget *parent) :
     }
     lstErrorMessages[errCTNoError] = trUtf8("No Error");
     lstErrorMessages[errCTDuplicateName] = trUtf8("Duplicate Variable Name");
+    lstErrorMessages[errCTNoPriority] = trUtf8("No Priority Selected");
+    lstErrorMessages[errCTNoUpdate] = trUtf8("No PLC Refresh Selected");
+    lstErrorMessages[errCTNoName] = trUtf8("Invalid or Empty Variable Name");
+    lstErrorMessages[errCTNoType] = trUtf8("No Type Selected");
+    lstErrorMessages[errCTNoDecimals] = trUtf8("Invalid Decimals");
+    lstErrorMessages[errCTNoVarDecimals] = trUtf8("Empty or Invalid Decimal Variable");
+    lstErrorMessages[errCTNoProtocol] = trUtf8("No Protocol Selected");
+    lstErrorMessages[errCTNoIP] = trUtf8("No IP Address");
+    lstErrorMessages[errCTBadIP] = trUtf8("Invalid IP Address");
+    lstErrorMessages[errCTNoPort] = trUtf8("Empty or Invalid Port Value");
+    lstErrorMessages[errCTNoNode] = trUtf8("Empty or Invalid Node Address");
+    lstErrorMessages[errCTNoRegister] = trUtf8("Empty or Invalid Register Value");
     // Titoli colonne
     lstHeadCols.clear();
     for (nCol = 0; nCol < colTotals; nCol++)  {
@@ -339,7 +351,6 @@ ctedit::ctedit(QWidget *parent) :
     m_fShowAllRows = false;
     m_fCutOrPaste = false;
     m_nCurTab = 0;
-    m_fEmptyForm = true;
     // Seleziona il primo Tab
     ui->tabWidget->setCurrentIndex(m_nCurTab);
     ui->tabWidget->setTabEnabled(TAB_SYSTEM, false);
@@ -650,8 +661,6 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
     // Name
     szTemp = lstRecValues[colName].trimmed();
     ui->txtName->setText(szTemp);
-    // Flag di Form vuoto
-    m_fEmptyForm = szTemp.isEmpty();
     // Type
     szTemp = lstRecValues[colType].trimmed();
     ui->cboType->setCurrentIndex(-1);
@@ -1267,11 +1276,10 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
     }
     // Se la riga corrente è stata modificata, salva il contenuto
     if (nRow >= 0 && nRow < lstCTRecords.count())  {
-        // Il contenuto viene aggiornato solo se la linea risulta modificata, ma utilizzata e il form non è vuoto
-        if (isLineModified() && lstCTRecords[nRow].UsedEntry && ! m_fEmptyForm)  {
-            // il buffer è
+        // Il contenuto viene aggiornato solo se la linea risulta modificata e il form non è vuoto
+        if (isLineModified() && ! isFormEmpty())  {
             // Primo controllo di coerenza sulla riga corrente
-            nErrors = checkFields(nRow);
+            nErrors = checkFormFields(nRow);
             if (nErrors == 0)  {
                 // Copia l'attuale CT nella lista Undo
                 lstUndo.append(lstCTRecords);
@@ -1287,6 +1295,8 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
                     qDebug() << "Row changed:" << nRow;
                 }
             }
+            else
+                fRes = false;
         }
     }
     // Cambio riga Ko
@@ -1322,6 +1332,7 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
 void ctedit::clearEntryForm()
 // Svutamento elementi Form Data Entry
 {
+    ui->txtRow->setText(szEMPTY);
     ui->cboPriority->setCurrentIndex(-1);
     ui->cboUpdate->setCurrentIndex(-1);
     ui->txtName->setText(szEMPTY);
@@ -1336,20 +1347,6 @@ void ctedit::clearEntryForm()
     ui->txtBlockSize->setText(szEMPTY);
     ui->txtComment->setText(szEMPTY);
     ui->cboBehavior->setCurrentIndex(-1);
-    m_fEmptyForm = true;
-}
-int ctedit::checkFields(int nRow)
-// Primi controlli formali sulla riga a termine editing
-{
-    int     nErrors = 0;
-
-    // Nessun Controllo su riga vuota
-    if (lstCTRecords[nRow].UsedEntry == 0)  {
-        return nErrors;
-    }
-    // Controllo
-    // Return Value
-    return nErrors;
 }
 
 void ctedit::displayUserMenu(const QPoint &pos)
@@ -1366,26 +1363,26 @@ void ctedit::displayUserMenu(const QPoint &pos)
     QMenu gridMenu(this);
     // Items del Menu contestuale
     // Inserisci righe
-    QAction *insRows = gridMenu.addAction(trUtf8("Inserisci righe"));
+    QAction *insRows = gridMenu.addAction(trUtf8("Insert Rows"));
     insRows->setEnabled(selection.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Cancella righe
-    QAction *emptyRows = gridMenu.addAction(trUtf8("Svuota righe"));
+    QAction *emptyRows = gridMenu.addAction(trUtf8("Empty Rows"));
     emptyRows->setEnabled(selection.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Elimina righe
-    QAction *remRows = gridMenu.addAction(trUtf8("Elimina righe"));
+    QAction *remRows = gridMenu.addAction(trUtf8("Delete Rows"));
     remRows->setEnabled(selection.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Sep1
     gridMenu.addSeparator();
     // Copia righe (Sempre permesso)
-    QAction *copyRows = gridMenu.addAction(trUtf8("Copia righe"));
+    QAction *copyRows = gridMenu.addAction(trUtf8("Copy rows"));
     copyRows->setEnabled(selection.count() > 0);
     // Taglia righe
-    QAction *cutRows = gridMenu.addAction(trUtf8("Taglia righe"));
+    QAction *cutRows = gridMenu.addAction(trUtf8("Cut Rows"));
     cutRows->setEnabled(selection.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Sep 2
     gridMenu.addSeparator();
     // Paste Rows
-    QAction *pasteRows = gridMenu.addAction(trUtf8("Incolla righe"));
+    QAction *pasteRows = gridMenu.addAction(trUtf8("Paste Rows"));
     pasteRows->setEnabled(lstCopiedRecords.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Abilitazione delle voci di Menu
     // Esecuzione del Menu
@@ -1713,10 +1710,33 @@ void ctedit::cutSelected()
     displayStatusMessage(m_szMsg);
     qDebug() << m_szMsg;
 }
+bool ctedit::isFormEmpty()
+// Controllo Form Editing vuoto
+{
+    int nFilled = 0;
+
+    nFilled += (ui->cboPriority->currentIndex() >= 0);
+    nFilled += (ui->cboUpdate->currentIndex() >= 0);
+    nFilled += (! ui->txtName->text().trimmed().isEmpty());
+    nFilled += (ui->cboType->currentIndex() >= 0);
+    nFilled += (! ui->txtDecimal->text().trimmed().isEmpty());
+    nFilled += (ui->cboProtocol->currentIndex() >= 0);
+    nFilled += (! ui->txtIP->text().trimmed().isEmpty());
+    nFilled += (! ui->txtPort->text().trimmed().isEmpty());
+    nFilled += (! ui->txtNode->text().trimmed().isEmpty());
+    nFilled += (! ui->txtRegister->text().trimmed().isEmpty());
+    // nFilled += (ui->txtBlock->text().trimmed() != ui->tblCT->item(m_nGridRow, colBlock)->text().trimmed());
+    // nFilled += (ui->txtBlockSize->text().trimmed() != ui->tblCT->item(m_nGridRow, colBlockSize)->text().trimmed());
+    nFilled += (! ui->txtComment->text().trimmed().isEmpty());
+    nFilled += (ui->cboBehavior->currentIndex() >= 0);
+    // Return Value
+    qDebug() << "isFormEmpty(): N.Row:" << m_nGridRow << "Campi definiti:" << nFilled;
+    return (nFilled == 0);
+}
+
 bool ctedit::isLineModified()
 // Check su modifica record corrente
 {
-    bool    fRes = false;
     int     nModif = 0;
 
     // Confronto tra Interfaccia e Grid video
@@ -1735,10 +1755,9 @@ bool ctedit::isLineModified()
         // nModif += (ui->txtBlockSize->text().trimmed() != ui->tblCT->item(m_nGridRow, colBlockSize)->text().trimmed());
         nModif += (ui->txtComment->text().trimmed() != ui->tblCT->item(m_nGridRow, colComment)->text().trimmed());
         nModif += (ui->cboBehavior->currentText().trimmed() != ui->tblCT->item(m_nGridRow, colBehavior)->text().trimmed());
-        fRes = (nModif > 0);
     }
-    qDebug() << "Modified():" << fRes << "N.Row:" << m_nGridRow << "Numero Modifiche:" << nModif;
-    return fRes;
+    qDebug() << "Modified(): N.Row:" << m_nGridRow << "Numero Modifiche:" << nModif;
+    return (nModif > 0);
 }
 
 void ctedit::on_cmdImport_clicked()
@@ -1876,7 +1895,7 @@ void ctedit::on_cmdGotoRow_clicked()
 
     bool fOk;
 
-    if (checkFields(m_nGridRow) > 0)
+    if (checkFormFields(m_nGridRow) > 0)
         return;
     // Input Dialog per Numero riga
     int nRow = QInputDialog::getInt(this, tr("Row to Jump To"),
@@ -1892,7 +1911,7 @@ void ctedit::on_cmdSearch_clicked()
     bool fOk;
     int  nRow = 0;
 
-    if (checkFields(m_nGridRow) > 0)
+    if (checkFormFields(m_nGridRow) > 0)
         return;
     // Input Dialog per Nome Variabile
     QString szText;
@@ -2046,7 +2065,7 @@ QString ctedit::getModelName()
     else {
         qDebug() << tr("Template File: %1 not found") .arg(szFileTemplate);
     }
-    qDebug() << tr("Curent Model: %1") .arg(szModel);
+    qDebug() << tr("Current Model: %1") .arg(szModel);
     // return value
     return szModel;
 }
@@ -2255,11 +2274,21 @@ void    ctedit::enableProtocolsFromModel(QString szModel)
             disableComboItem(ui->cboProtocol, nCur);
     }
 }
+void ctedit::fillErrorMessage(int nRow, int nCol, int nErrCode, QChar severity, Err_CT *errCt)
+{
+    errCt->cSeverity = severity;
+    errCt->nRow = nRow;
+    errCt->nCol = nCol;
+    errCt->nCodErr = nErrCode;
+    errCt->szErrMessage = lstErrorMessages[nErrCode];
+    errCt->szVarName = QString::fromAscii(lstCTRecords[nRow].Tag).trimmed();
+}
 int ctedit::globalChecks()
 // Controlli complessivi su tutta la CT
 {
     int         nRow = 0;
     int         nErrors = 0;
+
     QString     szTemp;
     Err_CT      errCt;
     // Form per Display Errori
@@ -2278,10 +2307,12 @@ int ctedit::globalChecks()
                 lstCTErrors.append(errCt);
                 nErrors++;
             }
-            else
+            else  {
                 lstUniqueVarNames.append(szTemp);
+            }
         }
         // Controlli specifici di Riga
+        // nErrors += checkFormFields(nRow, false);
     }
     // Display finestra errore
     if(nErrors)  {
@@ -2298,12 +2329,85 @@ int ctedit::globalChecks()
     }
     return nErrors;
 }
-void ctedit::fillErrorMessage(int nRow, int nCol, int nErrCode, QChar severity, Err_CT *errCt)
+bool ctedit::isValidVarName(QString szName)
 {
-    errCt->cSeverity = severity;
-    errCt->nRow = nRow;
-    errCt->nCol = nCol;
-    errCt->nCodErr = nErrCode;
-    errCt->szErrMessage = lstErrorMessages[nErrCode];
-    errCt->szVarName = QString::fromAscii(lstCTRecords[nRow].Tag).trimmed();
+    bool    fRes = true;
+    char    anyCh;
+    int     i = 0;
+
+    if (!szName.isEmpty())  {
+        // Controllo che la variabile non cominci con un carattere numerico
+        for (i = 0; i < szName.length(); i++)  {
+            anyCh = szName.at(i).toAscii();
+            // First Ch is Number
+            if (i == 0 && (anyCh <= '9' && anyCh >= '0'))  {
+                fRes = false;
+                break;
+            }
+            // Others char must be Digit, Printable Chars or '_'
+            if (! ((anyCh >= '0' && anyCh <= '9') ||
+                   (anyCh >= 'A' && anyCh <= 'Z') ||
+                   (anyCh >= 'a' && anyCh <= 'z') ||
+                   (anyCh == '_')))  {
+                fRes = false;
+                break;
+            }
+        }
+    }
+    else  {
+        fRes = false;
+    }
+    // Return value
+    return fRes;
+}
+
+int ctedit::checkFormFields(int nRow)
+// Controlli formali sulla riga a termine editing
+{
+    int         nErrors = 0;
+    int         nJumpRow = 0;
+    Err_CT      errCt;
+    QString     szTemp;
+    // Form per Display Errori
+    cteErrorList    *errWindow;
+
+    // Clear Error List
+    lstCTErrors.clear();
+    // Controllo cboPriority
+    if (ui->cboPriority->currentIndex() < 0)  {
+        fillErrorMessage(nRow, colPriority, errCTNoPriority, szSeverityError, &errCt);
+        lstCTErrors.append(errCt);
+        nErrors++;
+    }
+    // Controllo Update
+    if (ui->cboUpdate->currentIndex() < 0)  {
+        fillErrorMessage(nRow, colUpdate, errCTNoUpdate, szSeverityError, &errCt);
+        lstCTErrors.append(errCt);
+        nErrors++;
+    }
+    // Controllo Variable Name
+    szTemp = ui->txtName->text().trimmed();
+    if (! isValidVarName(szTemp))  {
+        fillErrorMessage(nRow, colName, errCTNoName, szSeverityError, &errCt);
+        lstCTErrors.append(errCt);
+        nErrors++;
+    }
+    else  {
+        ui->txtName->setText(szTemp);
+    }
+    // Conteggio finale errori
+    if (nErrors)  {
+        qDebug() << "Found Errors:" << nErrors;
+        errWindow = new cteErrorList(this);
+        errWindow->setModal(true);
+        errWindow->lstErrors2Grid(lstCTErrors);
+        if (errWindow->exec() == QDialog::Accepted)  {
+            nJumpRow = errWindow->currentRow();
+            if (nJumpRow >= 0 && nJumpRow < DimCrossTable)
+                jumpToGridRow(nJumpRow);
+        }
+        delete errWindow;
+    }
+    // Return Value
+    return nErrors;
 }

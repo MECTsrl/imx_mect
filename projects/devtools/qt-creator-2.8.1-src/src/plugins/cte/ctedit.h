@@ -84,8 +84,10 @@ private:
     void    displayStatusMessage(QString szMessage, int nSeconds = 0);// Show message in ui->lblMessage
     void    enableInterface();                      // Abilita l'interfaccia in funzione dello stato del sistema
     // Gestione Controlli
-    int     checkFields(int nRow);                  // Controlli formali sulla riga a termine editing
-    int     globalChecks();                         // Controlli complessivi su tutta la CT
+    int     checkFormFields(int nRow);   // Controlli formali sulla riga a termine editing
+    int     globalChecks();                                 // Controlli complessivi su tutta la CT
+    bool    isFormEmpty();                          // Controllo Form Editing vuoto
+    bool    isValidVarName(QString szName);         // Controllo del Nome Variabile
     void    fillErrorMessage(int nRow, int nCol, int nErrCode, QChar severity, Err_CT *errCt);
     // Gestione Configurazione Progetto
     QString getModelName();                         // Lettura del file template.pri per determinare il modello di TPAC

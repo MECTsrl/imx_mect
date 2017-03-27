@@ -32,7 +32,10 @@
 #include <QString>
 #include <QtPlugin>
 #include <QDebug>
+#include <QAction>
 #include <iostream>
+#include <QResource>
+
 
 namespace CTE {
 namespace Internal {
@@ -51,7 +54,7 @@ public:
         setWidget(ctEditor);
         setContext(Core::Context("CTE.MainView"));
         setDisplayName(tr("MectSuite"));
-        setIcon(QIcon());
+        setIcon(QIcon(QString::fromAscii(":/icons/Mect3.ico")));
         setPriority(0);
         setId("CTE.CTEMode");
         setContextHelpId(QString());
@@ -87,6 +90,8 @@ CTEPlugin::initialize(const QStringList &arguments, QString *errorMessage)
     Q_UNUSED(arguments)
     Q_UNUSED(errorMessage)
 
+    QResource::registerResource(QString::fromAscii("./qtc.qrc"));
+
     // Create a unique context for our own view, that will be used for the
     // menu entry later.
     Core::Context context("CTE.MainView");
@@ -104,6 +109,7 @@ CTEPlugin::initialize(const QStringList &arguments, QString *errorMessage)
     Core::ActionContainer *CTEMenu = Core::ActionManager::createMenu("CTE.CTEMenu");
     QMenu *menu = CTEMenu->menu();
     menu->setTitle(tr("&MECT Editor"));
+    // menu->setIcon(QIcon(QString::fromAscii(":/icons/Mect3.ico")));
     menu->setEnabled(true);
 
     // Add the Cross Table Editor action command to the menu

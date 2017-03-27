@@ -12,7 +12,18 @@ enum errorMessages_e
 {
     errCTNoError = 0,
     errCTDuplicateName,
-
+    errCTNoPriority,
+    errCTNoUpdate,
+    errCTNoName,
+    errCTNoType,
+    errCTNoDecimals,
+    errCTNoVarDecimals,
+    errCTNoProtocol,
+    errCTNoIP,
+    errCTBadIP,
+    errCTNoPort,
+    errCTNoNode,
+    errCTNoRegister,
     errCTTotals
 };
 

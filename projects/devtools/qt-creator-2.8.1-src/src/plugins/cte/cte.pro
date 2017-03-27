@@ -21,3 +21,8 @@ FORMS += \
 
 LIBS += \
     -L../projectexplorer -lProjectExplorer
+
+RESOURCES += \
+    qtc.qrc
+
+OTHER_FILES +=

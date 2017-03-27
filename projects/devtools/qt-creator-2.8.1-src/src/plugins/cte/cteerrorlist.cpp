@@ -129,6 +129,7 @@ int cteErrorList::lstErrors2Grid(const QList<Err_CT>  &lstErrors)
     ui->tblErrors->setSortingEnabled(true);
     ui->tblErrors->horizontalHeader()->setResizeMode(colVarName, QHeaderView::Stretch);
     ui->tblErrors->horizontalHeader()->setResizeMode(colErrMsg, QHeaderView::Stretch);
+    ui->tblErrors->setAlternatingRowColors(true);
     ui->tblErrors->setEnabled(true);
     this->setCursor(Qt::ArrowCursor);
     // Return Value

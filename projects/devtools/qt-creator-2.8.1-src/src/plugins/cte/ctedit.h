@@ -76,7 +76,7 @@ private:
     // Gestione interfaccia
     void    showGroupVars(int nRow);                // Imposta in interfaccia il gruppo di appartenenza di una variabile (Ritentivo, NR, System)
     void    enableFields();                         // Abilitazione dei campi form in funzione di Protocollo
-    bool    isLineModified();                       // Check su modifica record corrente
+    bool    isLineModified(int nRow);               // Check se linea corrente Grid è diversa da Form in Editing
     bool    riassegnaBlocchi();                     // Riassegnazione blocchi variabili
     void    showAllRows(bool fShowAll);             // Visualizza o nascondi tutte le righe
     void    setRowColor(int nRow, int nAlternate);  // Imposta il colore di sfondo di una riga
@@ -84,11 +84,11 @@ private:
     void    displayStatusMessage(QString szMessage, int nSeconds = 0);// Show message in ui->lblMessage
     void    enableInterface();                      // Abilita l'interfaccia in funzione dello stato del sistema
     // Gestione Controlli
-    int     checkFormFields(int nRow);   // Controlli formali sulla riga a termine editing
+    int     checkFormFields(int nRow, QStringList &lstValues, bool fShowErrors = false);   // Controlli formali sulla riga a termine editing
     int     globalChecks();                                 // Controlli complessivi su tutta la CT
     bool    isFormEmpty();                          // Controllo Form Editing vuoto
     bool    isValidVarName(QString szName);         // Controllo del Nome Variabile
-    void    fillErrorMessage(int nRow, int nCol, int nErrCode, QChar severity, Err_CT *errCt);
+    void    fillErrorMessage(int nRow, int nCol, int nErrCode, QString szVarName, QString szValue, QChar severity, Err_CT *errCt);
     // Gestione Configurazione Progetto
     QString getModelName();                         // Lettura del file template.pri per determinare il modello di TPAC
     // Calcolo valori in funzione del Modello e del Protocollo

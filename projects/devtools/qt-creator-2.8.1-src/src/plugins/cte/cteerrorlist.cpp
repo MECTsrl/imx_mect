@@ -20,6 +20,7 @@ cteErrorList::cteErrorList(QWidget *parent) :
     lstCols[colRow] = trUtf8("Row");
     lstCols[colColumn] = trUtf8("Column");
     lstCols[colVarName] = trUtf8("Variable Name");
+    lstCols[colValue] = trUtf8("Value");
     lstCols[colErrCode] = trUtf8("Error Code");
     lstCols[colErrMsg] = trUtf8("Error Message");
     // Impostazione parametri TableView
@@ -150,6 +151,9 @@ QString cteErrorList::list2CellValue(int nCol, const Err_CT &recErr)
     }
     else if (nCol == colVarName)  {
         szTemp =  recErr.szVarName;
+    }
+    else if (nCol == colValue)  {
+        szTemp =  recErr.szValue;
     }
     else if (nCol == colErrCode)  {
         szTemp = QString::number(recErr.nCodErr);

@@ -63,6 +63,15 @@ const char *updateTypeName[] = {"H",
                                 "V",
                                 "X" };
 
+const char *logic_operators[] = {">",
+                                 ">=",
+                                 "<",
+                                 "<=",
+                                 "==",
+                                 "!=",
+                                 "RISING EDGE",
+                                 "FALLING EDGE" };
+
 // PRODUCT_NAMES <-- PRODUCT_ID
 const char *product_name[] = {
     /*00*/ "AnyTPAC",
@@ -247,14 +256,14 @@ static int newAlarmEvent(int isAlarm, uint16_t addr, char *expr, size_t len)
     if (p == NULL) {
         goto exit_error;
     }
-    if (strncmp(p, ">", 1) == 0) {
-        ALCrossTable[lastAlarmEvent].ALOperator = OPER_GREATER;
-    } else if (strncmp(p, ">=", 2) == 0) {
+    if (strncmp(p, ">=", 2) == 0) { // before ">" !!!
         ALCrossTable[lastAlarmEvent].ALOperator = OPER_GREATER_EQ;
-    } else if (strncmp(p, "<", 1) == 0) {
-        ALCrossTable[lastAlarmEvent].ALOperator = OPER_SMALLER;
+    } else if (strncmp(p, ">", 1) == 0) {
+        ALCrossTable[lastAlarmEvent].ALOperator = OPER_GREATER;
     } else if (strncmp(p, "<=", 2) == 0) {
         ALCrossTable[lastAlarmEvent].ALOperator = OPER_SMALLER_EQ;
+    } else if (strncmp(p, "<", 1) == 0) {
+        ALCrossTable[lastAlarmEvent].ALOperator = OPER_SMALLER;
     } else if (strncmp(p, "==", 2) == 0) {
         ALCrossTable[lastAlarmEvent].ALOperator = OPER_EQUAL;
     } else if (strncmp(p, "!=", 2) == 0) {
@@ -279,10 +288,12 @@ static int newAlarmEvent(int isAlarm, uint16_t addr, char *expr, size_t len)
         if (s == p) {
             // identifier (check later on)
             strncpy(ALCrossTable[lastAlarmEvent].ALCompareVar, p, MAX_IDNAME_LEN);
+            ALCrossTable[lastAlarmEvent].ALCompareVal = 0.0;
         } else {
             // number
             ALCrossTable[lastAlarmEvent].ALCompareVar[0] = 0;
-            memcpy(&ALCrossTable[lastAlarmEvent].ALCompareVal, &f, sizeof(uint32_t));
+            ALCrossTable[lastAlarmEvent].ALCompareVal = f;
+            // memcpy(&ALCrossTable[lastAlarmEvent].ALCompareVal, &f, sizeof(uint32_t));
         }
     }
     return 0;
@@ -331,6 +342,13 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
         CrossTable[addr].OldVal = 0;
         CrossTable[addr].device = 0xffff;
         CrossTable[addr].node = 0xffff;
+        // New Elements used for Alarms
+        CrossTable[addr].usedInAlarmsEvents = 0;
+        CrossTable[addr].ALType = -1;
+        CrossTable[addr].ALSource[0] = 0;
+        CrossTable[addr].ALOperator = -1;
+        CrossTable[addr].ALCompareVar[0] = 0;
+        CrossTable[addr].ALCompareVal = 0;
     }
     lastAlarmEvent = 0;
     for (addr = 0; addr <= DimAlarmsCT; ++addr) {
@@ -343,6 +361,8 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
         ALCrossTable[addr].ALCompareVal = 0;
         ALCrossTable[addr].ALOperator = 0;
         ALCrossTable[addr].ALFilterTime = 0;
+        ALCrossTable[addr].ALFilterCount = 0;
+        ALCrossTable[addr].comparison = 0;
     }
 
     // open file
@@ -608,12 +628,14 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
                 CrossTable[addr].Output = FALSE;
             } else if (strncmp(p, "[AL ", 4) == 0) {
                 CrossTable[addr].Output = FALSE;
+                CrossTable[addr].ALType = Alarm;
                 if (strlen(p) < 10 || newAlarmEvent(1, addr, &(p[3]), strlen(p) - 3)) {
                     ERR = TRUE;
                     break;
                 }
             } else if (strncmp(p, "[EV ", 4) == 0) {
                 CrossTable[addr].Output = FALSE;
+                CrossTable[addr].ALType = Event;
                 if (strlen(p) < 10 || newAlarmEvent(0, addr, &p[3], strlen(p) - 3)) {
                     ERR = TRUE;
                     break;
@@ -629,8 +651,11 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
     }
 
     // check alarms and events
+    fprintf(stderr, "\nalarms/events:\n");
     for (indx = 1; indx <= lastAlarmEvent; ++indx) {
-        // retrieve the source variable address
+        float fvalue = 0;
+        int compatible = TRUE;
+        // retrieve the source variable address (Name ---> Pos)
         addr = tagAddr(ALCrossTable[indx].ALSource, CrossTable);
         if (addr == 0) {
             ERR = TRUE;
@@ -638,35 +663,17 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
         }
         ALCrossTable[indx].SourceAddr = addr;
         CrossTable[addr].usedInAlarmsEvents = TRUE;
-        // if the comparison is with a variable
-        if (ALCrossTable[indx].ALCompareVar[0] != 0) {
-            // then retrieve the compare variable address
-            addr = tagAddr(ALCrossTable[indx].ALCompareVar, CrossTable);
-            if (addr == 0) {
-                ERR = TRUE;
-                break;
-            }
-            ALCrossTable[indx].CompareAddr = addr;
-            CrossTable[addr].usedInAlarmsEvents = TRUE;
-        } else {
-            // the comparison CrossTableis with a fixed value, now check for the vartype
-            // since we saved the value as float before and we wish to check
-            // directly afterwards using uint32_t values
-            float fvalue = *(float *)&ALCrossTable[indx].ALCompareVal;
-            int n;
+        fprintf(stderr, "\t%2d: %s", indx, CrossTable[ALCrossTable[indx].TagAddr].Tag);
+        fprintf(stderr, " = %s", CrossTable[ALCrossTable[indx].SourceAddr].Tag);
 
-            switch (CrossTable[addr].Types) {
+        // which comparison?
+        switch (CrossTable[addr].Types) {
             case BIT:
             case BYTE_BIT:
             case WORD_BIT:
             case DWORD_BIT:
-                if (fvalue <= 0) {
-                    ALCrossTable[indx].ALCompareVal = 0;
-                } else if (fvalue <= 1) {
-                    ALCrossTable[indx].ALCompareVal = 1;
-                } else {
-                    ALCrossTable[indx].ALCompareVal = 2;
-                }
+                ALCrossTable[indx].comparison = COMP_UNSIGNED;
+                fprintf(stderr, " (u)");
                 break;
             case INT16:
             case INT16BA:
@@ -674,40 +681,304 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
             case DINTDCBA:
             case DINTCDAB:
             case DINTBADC:
-                for (n = 0; n < CrossTable[addr].Decimal; ++n) {
-                    fvalue *= 10;
-                }
-                // NB this may either overflow or underflow
-                ALCrossTable[indx].ALCompareVal = fvalue;
+                ALCrossTable[indx].comparison = COMP_SIGNED;
+                fprintf(stderr, " (s)");
                 break;
+            case UINT8:
             case UINT16:
             case UINT16BA:
             case UDINT:
             case UDINTDCBA:
             case UDINTCDAB:
             case UDINTBADC:
-                if (fvalue <= 0) {
-                    fvalue = 0; // why check unsigned with a negative value?
-                } else {
-                    for (n = 0; n < CrossTable[addr].Decimal; ++n) {
-                        fvalue *= 10;
-                    }
-                }
-                // NB this may overflow
-                ALCrossTable[indx].ALCompareVal = fvalue;
+                ALCrossTable[indx].comparison = COMP_UNSIGNED;
+                fprintf(stderr, " (u)");
                 break;
             case REAL:
             case REALDCBA:
             case REALCDAB:
             case REALBADC:
-                // the value is already stored as a float, comparisons will be ok
+                ALCrossTable[indx].comparison = COMP_FLOATING;
+                fprintf(stderr, " (f)");
                 break;
             default:
                 ; // FIXME: assert
-            }
         }
+
+        switch (ALCrossTable[indx].ALOperator)  {
+            case OPER_RISING    : fprintf(stderr, " RISING"); break;
+            case OPER_FALLING   : fprintf(stderr, " FALLING"); break;
+            case OPER_EQUAL     : fprintf(stderr, " =="); break;
+            case OPER_NOT_EQUAL : fprintf(stderr, " !="); break;
+            case OPER_GREATER   : fprintf(stderr, " >" ); break;
+            case OPER_GREATER_EQ: fprintf(stderr, " >="); break;
+            case OPER_SMALLER   : fprintf(stderr, " <" ); break;
+            case OPER_SMALLER_EQ: fprintf(stderr, " <="); break;
+            default             : ;
+        }
+
+        if (ALCrossTable[lastAlarmEvent].ALOperator != OPER_FALLING
+            && ALCrossTable[lastAlarmEvent].ALOperator != OPER_RISING) {
+            // if the comparison is with a variable
+            if (ALCrossTable[indx].ALCompareVar[0] != 0) {
+                // then retrieve the compare variable address
+                addr = tagAddr(ALCrossTable[indx].ALCompareVar, CrossTable);
+                if (addr == 0) {
+                    ERR = TRUE;
+                    break;
+                }
+                ALCrossTable[indx].CompareAddr = addr;
+                CrossTable[addr].usedInAlarmsEvents = TRUE;
+                fprintf(stderr, " %s", CrossTable[addr].Tag);
+
+                // check for incompatibles types
+                switch (CrossTable[ALCrossTable[indx].SourceAddr].Types) {
+
+                    case BIT:
+                    case BYTE_BIT:
+                    case WORD_BIT:
+                    case DWORD_BIT:
+                        switch (CrossTable[ALCrossTable[indx].CompareAddr].Types) {
+                            case BIT:
+                            case BYTE_BIT:
+                            case WORD_BIT:
+                            case DWORD_BIT:
+                                compatible = TRUE;
+                                break;
+                            case INT16:
+                            case INT16BA:
+                            case DINT:
+                            case DINTDCBA:
+                            case DINTCDAB:
+                            case DINTBADC:
+                                compatible = FALSE; // only == 0 and != 0
+                                break;
+                            case UINT8:
+                            case UINT16:
+                            case UINT16BA:
+                            case UDINT:
+                            case UDINTDCBA:
+                            case UDINTCDAB:
+                            case UDINTBADC:
+                                compatible = FALSE; // only == 0 and != 0
+                                break;
+                            case REAL:
+                            case REALDCBA:
+                            case REALCDAB:
+                            case REALBADC:
+                                compatible = FALSE; // only == 0 and != 0
+                                break;
+                            default:
+                                ; // FIXME: assert
+                            }
+                        break;
+
+                    case INT16:
+                    case INT16BA:
+                    case DINT:
+                    case DINTDCBA:
+                    case DINTCDAB:
+                    case DINTBADC:
+                        switch (CrossTable[ALCrossTable[indx].CompareAddr].Types) {
+                            case BIT:
+                            case BYTE_BIT:
+                            case WORD_BIT:
+                            case DWORD_BIT:
+                                compatible = FALSE;
+                                break;
+                            case INT16:
+                            case INT16BA:
+                            case DINT:
+                            case DINTDCBA:
+                            case DINTCDAB:
+                            case DINTBADC:
+                                compatible = (CrossTable[ALCrossTable[indx].SourceAddr].Decimal == CrossTable[ALCrossTable[indx].CompareAddr].Decimal);
+                                break;
+                            case UINT8:
+                            case UINT16:
+                            case UINT16BA:
+                            case UDINT:
+                            case UDINTDCBA:
+                            case UDINTCDAB:
+                            case UDINTBADC:
+                                // compatible = (CrossTable[ALCrossTable[indx].SourceAddr].Decimal == CrossTable[ALCrossTable[indx].CompareAddr].Decimal);
+                                compatible = FALSE;
+                                break;
+                            case REAL:
+                            case REALDCBA:
+                            case REALCDAB:
+                            case REALBADC:
+                                compatible = FALSE;
+                                break;
+                            default:
+                                ; // FIXME: assert
+                        }
+                        break;
+
+                    case UINT8:
+                    case UINT16:
+                    case UINT16BA:
+                    case UDINT:
+                    case UDINTDCBA:
+                    case UDINTCDAB:
+                    case UDINTBADC:
+                        switch (CrossTable[ALCrossTable[indx].CompareAddr].Types) {
+                            case BIT:
+                            case BYTE_BIT:
+                            case WORD_BIT:
+                            case DWORD_BIT:
+                                compatible = FALSE;
+                                break;
+                            case INT16:
+                            case INT16BA:
+                            case DINT:
+                            case DINTDCBA:
+                            case DINTCDAB:
+                            case DINTBADC:
+                                // compatible = (CrossTable[ALCrossTable[indx].SourceAddr].Decimal == CrossTable[ALCrossTable[indx].CompareAddr].Decimal);
+                                compatible = FALSE;
+                                break;
+                            case UINT8:
+                            case UINT16:
+                            case UINT16BA:
+                            case UDINT:
+                            case UDINTDCBA:
+                            case UDINTCDAB:
+                            case UDINTBADC:
+                                compatible = (CrossTable[ALCrossTable[indx].SourceAddr].Decimal == CrossTable[ALCrossTable[indx].CompareAddr].Decimal);
+                                break;
+                            case REAL:
+                            case REALDCBA:
+                            case REALCDAB:
+                            case REALBADC:
+                                compatible = FALSE;
+                                break;
+                            default:
+                                ; // FIXME: assert
+                        }
+                        break;
+
+                    case REAL:
+                    case REALDCBA:
+                    case REALCDAB:
+                    case REALBADC:
+                        switch (CrossTable[ALCrossTable[indx].CompareAddr].Types) {
+                            case BIT:
+                            case BYTE_BIT:
+                            case WORD_BIT:
+                            case DWORD_BIT:
+                                compatible = FALSE;
+                                break;
+                            case INT16:
+                            case INT16BA:
+                            case DINT:
+                            case DINTDCBA:
+                            case DINTCDAB:
+                            case DINTBADC:
+                                compatible = FALSE;
+                                break;
+                            case UINT8:
+                            case UINT16:
+                            case UINT16BA:
+                            case UDINT:
+                            case UDINTDCBA:
+                            case UDINTCDAB:
+                            case UDINTBADC:
+                                compatible = FALSE;
+                                break;
+                            case REAL:
+                            case REALDCBA:
+                            case REALCDAB:
+                            case REALBADC:
+                                compatible = TRUE; // no decimal test
+                                break;
+                            default:
+                                ; // FIXME: assert
+                        }
+                        break;
+
+                    default:
+                        ; // FIXME: assert
+                }
+                if (! compatible) {
+                    fprintf(stderr, " [WARNING: comparison between incompatible types]");
+                }
+
+            } else {
+                // the comparison CrossTableis with a fixed value, now check for the vartype
+                // since we saved the value as float before and we wish to check
+                // directly afterwards using uint32_t values
+                // float fvalue = *(float *)&ALCrossTable[indx].ALCompareVal;
+                fvalue = ALCrossTable[indx].ALCompareVal;
+                int n;
+
+                switch (CrossTable[addr].Types) {
+                    case BIT:
+                    case BYTE_BIT:
+                    case WORD_BIT:
+                    case DWORD_BIT:
+                            if (fvalue <= 0.0) {
+                            ALCrossTable[indx].ALCompareVal = 0;
+                            } else if (fvalue <= 1.0) {
+                            ALCrossTable[indx].ALCompareVal = 1;
+                        } else {
+                            ALCrossTable[indx].ALCompareVal = 2;
+                        }
+                        break;
+                    case INT16:
+                    case INT16BA:
+                    case DINT:
+                    case DINTDCBA:
+                    case DINTCDAB:
+                    case DINTBADC:
+                        for (n = 0; n < CrossTable[addr].Decimal; ++n) {
+                            fvalue *= 10;
+                        }
+                        // NB this may either overflow or underflow
+                        ALCrossTable[indx].ALCompareVal = fvalue;
+                        break;
+                        case UINT8:
+                    case UINT16:
+                    case UINT16BA:
+                    case UDINT:
+                    case UDINTDCBA:
+                    case UDINTCDAB:
+                    case UDINTBADC:
+                        if (fvalue <= 0) {
+                            fvalue = 0; // why check unsigned with a negative value?
+                        } else {
+                            for (n = 0; n < CrossTable[addr].Decimal; ++n) {
+                                fvalue *= 10;
+                            }
+                        }
+                        // NB this may overflow
+                        ALCrossTable[indx].ALCompareVal = fvalue;
+                        break;
+                    case REAL:
+                    case REALDCBA:
+                    case REALCDAB:
+                    case REALBADC:
+                        // the value is already stored as a float, comparisons will be ok
+                        break;
+                    default:
+                        ; // FIXME: assert
+                }
+                fprintf(stderr, " %f", fvalue);
+            }
+
+        }
+        fprintf(stderr, "\n");
+        // Saving CrossTable Alarm Values
+        CrossTable[ALCrossTable[indx].TagAddr].usedInAlarmsEvents = TRUE;
+        CrossTable[ALCrossTable[indx].TagAddr].ALComparison = ALCrossTable[indx].comparison;
+        strcpy(CrossTable[ALCrossTable[indx].TagAddr].ALSource, ALCrossTable[indx].ALSource);
+        CrossTable[ALCrossTable[indx].TagAddr].ALOperator = ALCrossTable[indx].ALOperator;
+        CrossTable[ALCrossTable[indx].TagAddr].ALCompareVal = fvalue;
+        CrossTable[ALCrossTable[indx].TagAddr].ALCompatible = compatible;
+
     }
 
+// close file
     // close file
 exit_function:
     if (xtable) {

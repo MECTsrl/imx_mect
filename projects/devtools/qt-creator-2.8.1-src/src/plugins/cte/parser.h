@@ -22,6 +22,7 @@ extern "C" {
 #define MAX_PROTOCOL_LEN     9 // TCPRTUSRV.
 #define MAX_DEVICE_LEN      13 // /dev/ttyUSB0.
 #define MAX_COMMENT_NAME    30
+
 #define OPER_GREATER    41
 #define OPER_GREATER_EQ 42
 #define OPER_SMALLER    43
@@ -30,6 +31,10 @@ extern "C" {
 #define OPER_NOT_EQUAL  46
 #define OPER_RISING     47
 #define OPER_FALLING    48
+
+#define COMP_UNSIGNED   77
+#define COMP_SIGNED     78
+#define COMP_FLOATING      79
 
 /******************************************************************************
  ****************************** TYPEDEFS SECTION ******************************
@@ -105,6 +110,18 @@ enum productId {
         /*22*/ TPAC1008_02_AF
 };
 
+enum logicalOperators {
+    oper_greater = 0,
+    oper_greater_eq,
+    oper_smaller,
+    oper_smaller_eq,
+    oper_equal,
+    oper_not_equal,
+    oper_rising,
+    oper_falling,
+    oper_totals
+};
+
 struct  CrossTableRecord {
     int16_t Enable;
     int  UsedEntry;
@@ -124,7 +141,15 @@ struct  CrossTableRecord {
     int16_t Counter;
     uint32_t OldVal;
     uint16_t Error;
-    int usedInAlarmsEvents;
+    // Fields for Events / Alarms
+    int     usedInAlarmsEvents;
+    int     ALType;
+    char    ALSource[MAX_IDNAME_LEN];
+    int     ALOperator;
+    char    ALCompareVar[MAX_IDNAME_LEN];
+    float   ALCompareVal;
+    int     ALComparison;
+    int     ALCompatible;
     //
     uint16_t device;
     uint16_t node;
@@ -138,11 +163,12 @@ struct  Alarms {
     char ALCompareVar[MAX_IDNAME_LEN];
     uint16_t SourceAddr;
     uint16_t CompareAddr;
-    uint32_t ALCompareVal;
+    float ALCompareVal;
     uint16_t ALOperator;
     uint16_t ALFilterTime;
     uint16_t ALFilterCount;
     uint16_t ALError;
+    int comparison;
 };
 
 /******************************************************************************
@@ -160,6 +186,8 @@ extern const char *fieldbusName[];
 extern const char *varTypeName[];
 extern const char *updateTypeName[];
 extern const char *product_name[];
+extern const char *logic_operators[];
+
 //struct CrossTableRecord CrossTable[1 + DimCrossTable];	 // campi sono riempiti a partire dall'indice 1
 
 #ifdef __cplusplus

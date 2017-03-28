@@ -73,7 +73,9 @@ enum colonne_e
     colBlockSize,
     colComment,
     colBehavior,
+    colSourceVar,
     colCondition,
+    colCompare,
     colTotals
 };
 
@@ -124,7 +126,9 @@ ctedit::ctedit(QWidget *parent) :
     lstErrorMessages[errCTNoName] = trUtf8("Invalid or Empty Variable Name");
     lstErrorMessages[errCTNoType] = trUtf8("No Type Selected");
     lstErrorMessages[errCTNoDecimals] = trUtf8("Invalid Decimals");
+    lstErrorMessages[errCTNoDecimalZero] = trUtf8("Decimals Must be 0 for BIT Type");
     lstErrorMessages[errCTNoVarDecimals] = trUtf8("Empty or Invalid Decimal Variable");
+    lstErrorMessages[errCTWrongDecimals] = trUtf8("Invalid Bit Position");
     lstErrorMessages[errCTNoProtocol] = trUtf8("No Protocol Selected");
     lstErrorMessages[errCTNoIP] = trUtf8("No IP Address");
     lstErrorMessages[errCTBadIP] = trUtf8("Invalid IP Address");
@@ -136,7 +140,7 @@ ctedit::ctedit(QWidget *parent) :
     for (nCol = 0; nCol < colTotals; nCol++)  {
         lstHeadCols.append(szEMPTY);
     }
-    lstHeadCols[colPriority] = trUtf8("Priority");
+    lstHeadCols[colPriority] = trUtf8("Prior.");
     lstHeadCols[colUpdate] = trUtf8("Update");
     lstHeadCols[colName] = trUtf8("Name");
     lstHeadCols[colType] = trUtf8("Type");
@@ -149,8 +153,10 @@ ctedit::ctedit(QWidget *parent) :
     lstHeadCols[colBlock] = trUtf8("Block");
     lstHeadCols[colBlockSize] = trUtf8("Blk Size");
     lstHeadCols[colComment] = trUtf8("Comment");
-    lstHeadCols[colBehavior] = trUtf8("Behavior");
+    lstHeadCols[colBehavior] = trUtf8("Behav.");
+    lstHeadCols[colSourceVar] = trUtf8("Source");
     lstHeadCols[colCondition] = trUtf8("Condition");
+    lstHeadCols[colCompare] = trUtf8("Compare");
     // Lista Priorità
     lstPriority.clear();
     lstPriority
@@ -184,21 +190,16 @@ ctedit::ctedit(QWidget *parent) :
     // Lista Significati
     lstBehavior.clear();
     lstBehavior
-            << QString::fromAscii("READ")
-            << QString::fromAscii("READ/WRITE")
-            << QString::fromAscii("ALARM")
-            << QString::fromAscii("EVENT")
+            << QString::fromAscii("R/O")
+            << QString::fromAscii("R/W")
+            << QString::fromAscii("AL")
+            << QString::fromAscii("EV")
         ;
     // Lista condizioni di Allarme / Eventi
     lstCondition.clear();
-    lstCondition.append(QString::fromAscii(">"));
-    lstCondition.append(QString::fromAscii(">="));
-    lstCondition.append(QString::fromAscii("<"));
-    lstCondition.append(QString::fromAscii("<="));
-    lstCondition.append(QString::fromAscii("=="));
-    lstCondition.append(QString::fromAscii("!="));
-    lstCondition.append(QString::fromAscii("RISING EDGE"));
-    lstCondition.append(QString::fromAscii("FALLING EDGE"));
+    for (nCol = 0; nCol < oper_totals; nCol++)  {
+        lstCondition.append(QString::fromAscii(logic_operators[nCol]));
+    }
     // Caricamento delle varie Combos
     // Combo Priority
     szToolTip.clear();
@@ -358,7 +359,7 @@ ctedit::ctedit(QWidget *parent) :
     ui->tblCT->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tblCT, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(displayUserMenu(const QPoint &)));
     // connect(ui->tblCT, SIGNAL(clicked(QModelIndex)), this, SLOT(itemClicked(QModelIndex)));
-    connect(ui->tblCT->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+    connect(ui->tblCT->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)), this,
             SLOT(tableItemChanged(const QItemSelection &, const QItemSelection & ) ));
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(tabSelected(int)));
 
@@ -534,6 +535,10 @@ bool    ctedit::ctable2Grid()
     ui->tblCT->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tblCT->setSelectionMode(QAbstractItemView::ExtendedSelection);
     ui->tblCT->setHorizontalHeaderLabels(lstHeadCols);
+    // Larghezza fissa per alcune colonne
+    ui->tblCT->horizontalHeader()->setResizeMode(colPriority, QHeaderView::Stretch);
+    ui->tblCT->horizontalHeader()->setResizeMode(colUpdate, QHeaderView::Stretch);
+    ui->tblCT->horizontalHeader()->setResizeMode(colBehavior, QHeaderView::Stretch);
     ui->tblCT->setEnabled(true);
     // Show All Elements
     if (fRes)  {
@@ -603,11 +608,34 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
         // Commento
         lstRecValues[colComment] = QString::fromAscii(lstCTRecords[nRow].Comment).trimmed();
         // Behavior
-        // Caso Read/ReadWrite
-        if (lstCTRecords[nRow].Output == _FALSE)
-            lstRecValues[colBehavior] = lstBehavior[bevReadOnly];
-        else if (lstCTRecords[nRow].Output == _TRUE)
-            lstRecValues[colBehavior] = lstBehavior[bevReadWrite];
+        // Allarme o Evento
+        if (lstCTRecords[nRow].usedInAlarmsEvents)  {
+            // Tipo Allarme-Evento
+            if (lstCTRecords[nRow].ALType == Alarm)
+                lstRecValues[colBehavior] = lstBehavior[bevAlarm];
+            else if (lstCTRecords[nRow].ALType == Event)
+                lstRecValues[colBehavior] = lstBehavior[bevEvent];
+            // Source Var
+            lstRecValues[colSourceVar] = QString::fromAscii(lstCTRecords[nRow].ALSource);
+            // Dest Var or Value
+            szTemp = QString::fromAscii(lstCTRecords[nRow].ALCompareVar);
+            if (szTemp.isEmpty())
+                lstRecValues[colCompare] = QString::number(lstCTRecords[nRow].ALCompareVal, 'f', 3);
+            else
+                lstRecValues[colCompare] = szTemp;
+        }
+        else   {
+            // R/O o R/W
+            if (lstCTRecords[nRow].Output == _FALSE)
+                lstRecValues[colBehavior] = lstBehavior[bevReadOnly];
+            else if (lstCTRecords[nRow].Output == _TRUE)
+                lstRecValues[colBehavior] = lstBehavior[bevReadWrite];
+            // Source Var - Condition - Compare
+            lstRecValues[colSourceVar] = szEMPTY;
+            lstRecValues[colCondition] = szEMPTY;
+            lstRecValues[colCompare] = szEMPTY;
+
+        }
         // Caso Alarm / Event
             // bevAlarm,
             // bevEvent,
@@ -719,7 +747,7 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
     return true;
 }
 bool ctedit::iface2values(QStringList &lstRecValues)
-// Copia da Zona Editing a Lista Stringhe per Grid e Record CT
+// Copia da Zona Editing a Lista Stringhe per Controlli, Grid e Record CT
 {
     QString szTemp;
     int     nPos = 0;
@@ -975,12 +1003,20 @@ void ctedit::freeCTrec(int nRow)
     lstCTRecords[nRow].Counter = 0;
     lstCTRecords[nRow].OldVal = 0;
     lstCTRecords[nRow].Error = 0;
-    lstCTRecords[nRow].usedInAlarmsEvents = 0;
     lstCTRecords[nRow].device = 0;
+    lstCTRecords[nRow].usedInAlarmsEvents = FALSE;
+    lstCTRecords[nRow].ALType = -1;
+    strcpy(lstCTRecords[nRow].ALSource, "");
+    lstCTRecords[nRow].ALOperator;
+    strcpy(lstCTRecords[nRow].ALCompareVar, "");
+    lstCTRecords[nRow].ALCompareVal = 0.0;
+    lstCTRecords[nRow].ALComparison = -1;
+    lstCTRecords[nRow].ALCompatible  = FALSE;
     strcpy(lstCTRecords[nRow].Comment, "");
 }
 void ctedit::listClear(QStringList &lstRecValues)
 // Svuotamento e pulizia Lista Stringhe per passaggio dati Interfaccia <---> Record CT
+// La lista passata come parametro viene svuotata e riempita con colTotals stringhe vuote
 {
     int nCol = 0;
     lstRecValues.clear();
@@ -1277,14 +1313,14 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
     // Se la riga corrente è stata modificata, salva il contenuto
     if (nRow >= 0 && nRow < lstCTRecords.count())  {
         // Il contenuto viene aggiornato solo se la linea risulta modificata e il form non è vuoto
-        if (isLineModified() && ! isFormEmpty())  {
+        if (! isFormEmpty() && isLineModified(nRow))  {
+            // Valori da interfaccia a Lista Stringhe
+            fRes = iface2values(lstFields);
             // Primo controllo di coerenza sulla riga corrente
-            nErrors = checkFormFields(nRow);
+            nErrors = checkFormFields(nRow, lstFields, true);
             if (nErrors == 0)  {
                 // Copia l'attuale CT nella lista Undo
                 lstUndo.append(lstCTRecords);
-                // Valori da interfaccia a CT
-                fRes = iface2values(lstFields);
                 if (fRes)  {
                     // Salva Record
                     fIsModif = list2CTrec(lstFields, nRow);
@@ -1301,7 +1337,14 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
     }
     // Cambio riga Ko
     if (nErrors > 0 || ! fRes)    {
+        // Disconnette segnale per evitare ricorsione
+        disconnect(ui->tblCT->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)), this,
+                SLOT(tableItemChanged(const QItemSelection &, const QItemSelection & ) ));
+        // Cambia Selezione (ritorna a riga precedente)
         ui->tblCT->selectRow(nRow);
+        // Riconnette slot gestione
+        connect(ui->tblCT->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)), this,
+                SLOT(tableItemChanged(const QItemSelection &, const QItemSelection & ) ));
         return;
     }
     // Marca CT come modificata
@@ -1734,29 +1777,29 @@ bool ctedit::isFormEmpty()
     return (nFilled == 0);
 }
 
-bool ctedit::isLineModified()
-// Check su modifica record corrente
+bool ctedit::isLineModified(int nRow)
+// Check se linea corrente Grid è diversa da Form in Editing
 {
     int     nModif = 0;
 
-    // Confronto tra Interfaccia e Grid video
-    if(m_nGridRow >= 0 && m_nGridRow < lstCTRecords.count())  {
-        nModif += (ui->cboPriority->currentText().trimmed() != ui->tblCT->item(m_nGridRow, colPriority)->text().trimmed());
-        nModif += (ui->cboUpdate->currentText().trimmed() != ui->tblCT->item(m_nGridRow, colUpdate)->text().trimmed());
-        nModif += (ui->txtName->text().trimmed() != ui->tblCT->item(m_nGridRow, colName)->text().trimmed());
-        nModif += (ui->cboType->currentText().trimmed() != ui->tblCT->item(m_nGridRow, colType)->text().trimmed());
-        nModif += (ui->txtDecimal->text().trimmed() != ui->tblCT->item(m_nGridRow, colDecimal)->text().trimmed());
-        nModif += (ui->cboProtocol->currentText().trimmed() != ui->tblCT->item(m_nGridRow, colProtocol)->text().trimmed());
-        nModif += (ui->txtIP->text().trimmed() != ui->tblCT->item(m_nGridRow, colIP)->text().trimmed());
-        nModif += (ui->txtPort->text().trimmed() != ui->tblCT->item(m_nGridRow, colPort)->text().trimmed());
-        nModif += (ui->txtNode->text().trimmed() != ui->tblCT->item(m_nGridRow, colNodeID)->text().trimmed());
-        nModif += (ui->txtRegister->text().trimmed() != ui->tblCT->item(m_nGridRow, colRegister)->text().trimmed());
-        // nModif += (ui->txtBlock->text().trimmed() != ui->tblCT->item(m_nGridRow, colBlock)->text().trimmed());
-        // nModif += (ui->txtBlockSize->text().trimmed() != ui->tblCT->item(m_nGridRow, colBlockSize)->text().trimmed());
-        nModif += (ui->txtComment->text().trimmed() != ui->tblCT->item(m_nGridRow, colComment)->text().trimmed());
-        nModif += (ui->cboBehavior->currentText().trimmed() != ui->tblCT->item(m_nGridRow, colBehavior)->text().trimmed());
+    // Confronto tra Form Editing e riga Grid
+    if(nRow >= 0 && nRow < lstCTRecords.count())  {
+        nModif += (ui->cboPriority->currentText().trimmed() != ui->tblCT->item(nRow, colPriority)->text().trimmed());
+        nModif += (ui->cboUpdate->currentText().trimmed() != ui->tblCT->item(nRow, colUpdate)->text().trimmed());
+        nModif += (ui->txtName->text().trimmed() != ui->tblCT->item(nRow, colName)->text().trimmed());
+        nModif += (ui->cboType->currentText().trimmed() != ui->tblCT->item(nRow, colType)->text().trimmed());
+        nModif += (ui->txtDecimal->text().trimmed() != ui->tblCT->item(nRow, colDecimal)->text().trimmed());
+        nModif += (ui->cboProtocol->currentText().trimmed() != ui->tblCT->item(nRow, colProtocol)->text().trimmed());
+        nModif += (ui->txtIP->text().trimmed() != ui->tblCT->item(nRow, colIP)->text().trimmed());
+        nModif += (ui->txtPort->text().trimmed() != ui->tblCT->item(nRow, colPort)->text().trimmed());
+        nModif += (ui->txtNode->text().trimmed() != ui->tblCT->item(nRow, colNodeID)->text().trimmed());
+        nModif += (ui->txtRegister->text().trimmed() != ui->tblCT->item(nRow, colRegister)->text().trimmed());
+        // nModif += (ui->txtBlock->text().trimmed() != ui->tblCT->item(nRow, colBlock)->text().trimmed());
+        // nModif += (ui->txtBlockSize->text().trimmed() != ui->tblCT->item(nRow, colBlockSize)->text().trimmed());
+        nModif += (ui->txtComment->text().trimmed() != ui->tblCT->item(nRow, colComment)->text().trimmed());
+        nModif += (ui->cboBehavior->currentText().trimmed() != ui->tblCT->item(nRow, colBehavior)->text().trimmed());
     }
-    qDebug() << "Modified(): N.Row:" << m_nGridRow << "Numero Modifiche:" << nModif;
+    qDebug() << "Modified(): N.Row:" << nRow << "Numero Modifiche:" << nModif;
     return (nModif > 0);
 }
 
@@ -1892,10 +1935,13 @@ void ctedit::showAllRows(bool fShowAll)
 void ctedit::on_cmdGotoRow_clicked()
 // Goto Row n
 {
-
+    QStringList lstFields;
     bool fOk;
 
-    if (checkFormFields(m_nGridRow) > 0)
+    // Valori da interfaccia a Lista Stringhe
+    fOk = iface2values(lstFields);
+    // Controllo di coerenza sulla riga corrente
+    if (checkFormFields(m_nGridRow, lstFields) > 0)
         return;
     // Input Dialog per Numero riga
     int nRow = QInputDialog::getInt(this, tr("Row to Jump To"),
@@ -1910,8 +1956,11 @@ void ctedit::on_cmdSearch_clicked()
 {
     bool fOk;
     int  nRow = 0;
+    QStringList lstFields;
 
-    if (checkFormFields(m_nGridRow) > 0)
+    // Valori da interfaccia a Lista Stringhe
+    fOk = iface2values(lstFields);
+    if (checkFormFields(m_nGridRow, lstFields) > 0)
         return;
     // Input Dialog per Nome Variabile
     QString szText;
@@ -2274,21 +2323,23 @@ void    ctedit::enableProtocolsFromModel(QString szModel)
             disableComboItem(ui->cboProtocol, nCur);
     }
 }
-void ctedit::fillErrorMessage(int nRow, int nCol, int nErrCode, QChar severity, Err_CT *errCt)
+void ctedit::fillErrorMessage(int nRow, int nCol, int nErrCode, QString szVarName, QString szValue, QChar severity, Err_CT *errCt)
 {
     errCt->cSeverity = severity;
     errCt->nRow = nRow;
     errCt->nCol = nCol;
     errCt->nCodErr = nErrCode;
     errCt->szErrMessage = lstErrorMessages[nErrCode];
-    errCt->szVarName = QString::fromAscii(lstCTRecords[nRow].Tag).trimmed();
+    errCt->szVarName = szVarName;
+    errCt->szValue = szValue;
 }
 int ctedit::globalChecks()
 // Controlli complessivi su tutta la CT
 {
     int         nRow = 0;
     int         nErrors = 0;
-
+    bool        fRecOk = false;
+    QStringList lstFields;
     QString     szTemp;
     Err_CT      errCt;
     // Form per Display Errori
@@ -2303,16 +2354,18 @@ int ctedit::globalChecks()
             // Controllo univocità di nome
             szTemp = QString::fromAscii(lstCTRecords[nRow].Tag).trimmed();
             if (lstUniqueVarNames.indexOf(szTemp) > 0)  {
-                fillErrorMessage(nRow, colName, errCTDuplicateName, szSeverityError, &errCt);
+                fillErrorMessage(nRow, colName, errCTDuplicateName, szTemp, szTemp, chSeverityError, &errCt);
                 lstCTErrors.append(errCt);
                 nErrors++;
             }
             else  {
                 lstUniqueVarNames.append(szTemp);
             }
-        }
         // Controlli specifici di Riga
-        // nErrors += checkFormFields(nRow, false);
+        fRecOk = recCT2List(lstFields, nRow);
+        if (fRecOk)
+            nErrors += checkFormFields(nRow, lstFields, false);
+        }
     }
     // Display finestra errore
     if(nErrors)  {
@@ -2361,43 +2414,129 @@ bool ctedit::isValidVarName(QString szName)
     return fRes;
 }
 
-int ctedit::checkFormFields(int nRow)
-// Controlli formali sulla riga a termine editing
+int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fShowErrors)
+// Controlli formali sulla riga a termine editing o ciclicamente durante controllo globale valori
 {
     int         nErrors = 0;
     int         nJumpRow = 0;
+    int         nPos = -1;
+    int         nType = -1;
+    int         nVal = 0;
+    int         nProtocol = -1;
+    bool        fOk = false;
     Err_CT      errCt;
     QString     szTemp;
+    QString     szVarName;
+    QString     szIP;
     // Form per Display Errori
     cteErrorList    *errWindow;
 
     // Clear Error List
     lstCTErrors.clear();
+    // Controllo Variable Name
+    szVarName = lstValues[colName];
     // Controllo cboPriority
-    if (ui->cboPriority->currentIndex() < 0)  {
-        fillErrorMessage(nRow, colPriority, errCTNoPriority, szSeverityError, &errCt);
+    szTemp = lstValues[colPriority];
+    nPos = szTemp.isEmpty() ? -1 : lstPriority.indexOf(szTemp);
+    if (nPos < 0)  {
+        fillErrorMessage(nRow, colPriority, errCTNoPriority, szVarName, szTemp, chSeverityError, &errCt);
         lstCTErrors.append(errCt);
         nErrors++;
     }
     // Controllo Update
-    if (ui->cboUpdate->currentIndex() < 0)  {
-        fillErrorMessage(nRow, colUpdate, errCTNoUpdate, szSeverityError, &errCt);
+    szTemp = lstValues[colUpdate];
+    nPos = szTemp.isEmpty() ? -1 : lstPLC.indexOf(szTemp);
+    if (nPos < 0)  {
+        fillErrorMessage(nRow, colUpdate, errCTNoUpdate, szVarName, szTemp, chSeverityError, &errCt);
         lstCTErrors.append(errCt);
         nErrors++;
     }
-    // Controllo Variable Name
-    szTemp = ui->txtName->text().trimmed();
-    if (! isValidVarName(szTemp))  {
-        fillErrorMessage(nRow, colName, errCTNoName, szSeverityError, &errCt);
+    // Controllo Variable Name    
+    if (! isValidVarName(szVarName))  {
+        fillErrorMessage(nRow, colName, errCTNoName, szVarName, szVarName, chSeverityError, &errCt);
+        lstCTErrors.append(errCt);
+        nErrors++;
+    }
+    // Controllo Type
+    szTemp = lstValues[colType];
+    nType = szTemp.isEmpty() ? -1 : lstTipi.indexOf(szTemp);
+    if (nType < 0)  {
+        fillErrorMessage(nRow, colUpdate, errCTNoUpdate, szVarName, szTemp, chSeverityError, &errCt);
+        lstCTErrors.append(errCt);
+        nErrors++;
+    }
+    // Controllo Decimal
+    szTemp = lstValues[colDecimal];
+    if (szTemp.isEmpty())  {
+        fillErrorMessage(nRow, colDecimal, errCTNoDecimals, szVarName, szTemp, chSeverityError, &errCt);
         lstCTErrors.append(errCt);
         nErrors++;
     }
     else  {
-        ui->txtName->setText(szTemp);
+        // Numero Decimali
+        nVal = szTemp.toInt(&fOk);
+        nVal = fOk ? nVal : 0;
+        // Decimali a 0 per tipo Bit
+        if (nType == BIT && nVal > 0)  {
+            fillErrorMessage(nRow, colDecimal, errCTNoDecimalZero, szVarName, szTemp, chSeverityError, &errCt);
+            lstCTErrors.append(errCt);
+            nErrors++;
+        }
+        else if (nType == BYTE_BIT) {
+            if (nVal < 1 or nVal > 8)  {
+                fillErrorMessage(nRow, colDecimal, errCTWrongDecimals, szVarName, szTemp, chSeverityError, &errCt);
+                lstCTErrors.append(errCt);
+                nErrors++;
+            }
+        }
+        else if (nType == WORD_BIT) {
+            if (nVal < 1 or nVal > 16)  {
+                fillErrorMessage(nRow, colDecimal, errCTWrongDecimals, szVarName, szTemp, chSeverityError, &errCt);
+                lstCTErrors.append(errCt);
+                nErrors++;
+            }
+        }
+        else if (nType == DWORD_BIT) {
+            if (nVal < 1 or nVal > 32)  {
+                fillErrorMessage(nRow, colDecimal, errCTWrongDecimals, szVarName, szTemp, chSeverityError, &errCt);
+                lstCTErrors.append(errCt);
+                nErrors++;
+            }
+        }
+        // Numero Decimali > 4 ===> Variable
+        else if (nVal >= 4)  {
+            if (nVal > DimCrossTable || ! lstCTRecords[nVal].Enable ||
+            (lstCTRecords[nVal].Types != UINT8 &&  lstCTRecords[nVal].Types != UINT16 && lstCTRecords[nVal].Types != UINT16BA &&
+             lstCTRecords[nVal].Types != UDINT &&  lstCTRecords[nVal].Types != UDINTDCBA && lstCTRecords[nVal].Types != UDINTCDAB &&
+             lstCTRecords[nVal].Types != UDINTBADC ) )   {
+                fillErrorMessage(nRow, colDecimal, errCTNoVarDecimals, szVarName, szTemp, chSeverityError, &errCt);
+                lstCTErrors.append(errCt);
+                nErrors++;
+            }
+        }
     }
-    // Conteggio finale errori
-    if (nErrors)  {
-        qDebug() << "Found Errors:" << nErrors;
+    // Controllo Protocol
+    szTemp = lstValues[colProtocol];
+    nProtocol = szTemp.isEmpty() ? -1 : lstPLC.indexOf(szTemp);
+    if (nProtocol < 0)  {
+        fillErrorMessage(nRow, colProtocol, errCTNoProtocol, szVarName, szTemp, chSeverityError, &errCt);
+        lstCTErrors.append(errCt);
+        nErrors++;
+    }
+    // Controllo Ip Address
+    szIP = lstValues[colIP].trimmed();
+    if (nProtocol < 0)  {
+        fillErrorMessage(nRow, colProtocol, errCTNoProtocol, szVarName, szTemp, chSeverityError, &errCt);
+        lstCTErrors.append(errCt);
+        nErrors++;
+    }
+
+    //
+    // TODO: Ulteriori controlli formali....errCTNoUpdate
+    //
+    qDebug() << "Found Errors:" << nErrors;
+    // Form visualizzazione errori se richiesto
+    if (fShowErrors && nErrors)  {
         errWindow = new cteErrorList(this);
         errWindow->setModal(true);
         errWindow->lstErrors2Grid(lstCTErrors);

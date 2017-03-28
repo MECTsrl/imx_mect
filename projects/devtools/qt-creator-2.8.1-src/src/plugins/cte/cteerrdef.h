@@ -4,8 +4,8 @@
 #include <QString>
 #include <QChar>
 
-const QChar szSeverityError = QChar::fromAscii('E');
-const QChar szSeverityWarning = QChar::fromAscii('W');
+const QChar chSeverityError = QChar::fromAscii('E');
+const QChar chSeverityWarning = QChar::fromAscii('W');
 
 // Struttura definizione Errore in CT
 enum errorMessages_e
@@ -17,6 +17,8 @@ enum errorMessages_e
     errCTNoName,
     errCTNoType,
     errCTNoDecimals,
+    errCTNoDecimalZero,
+    errCTWrongDecimals,
     errCTNoVarDecimals,
     errCTNoProtocol,
     errCTNoIP,
@@ -34,6 +36,7 @@ enum errorCols_e
     colRow,
     colColumn,
     colVarName,
+    colValue,
     colErrCode,
     colErrMsg,
     colErrTotals
@@ -45,6 +48,7 @@ struct Err_CT {
     int             nRow;                   // Riga errore
     int             nCol;                   // Colonna Errore
     QString         szVarName;              // Nome della Variabile associata
+    QString         szValue;                // Valore letto
     int             nCodErr;                // Codice errore
     QString         szErrMessage;           // Error Message
 };

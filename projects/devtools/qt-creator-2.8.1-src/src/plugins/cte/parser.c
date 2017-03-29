@@ -72,6 +72,8 @@ const char *logic_operators[] = {">",
                                  "RISING EDGE",
                                  "FALLING EDGE" };
 
+
+
 // PRODUCT_NAMES <-- PRODUCT_ID
 const char *product_name[] = {
     /*00*/ "AnyTPAC",
@@ -256,27 +258,28 @@ static int newAlarmEvent(int isAlarm, uint16_t addr, char *expr, size_t len)
     if (p == NULL) {
         goto exit_error;
     }
-    if (strncmp(p, ">=", 2) == 0) { // before ">" !!!
-        ALCrossTable[lastAlarmEvent].ALOperator = OPER_GREATER_EQ;
-    } else if (strncmp(p, ">", 1) == 0) {
-        ALCrossTable[lastAlarmEvent].ALOperator = OPER_GREATER;
-    } else if (strncmp(p, "<=", 2) == 0) {
-        ALCrossTable[lastAlarmEvent].ALOperator = OPER_SMALLER_EQ;
-    } else if (strncmp(p, "<", 1) == 0) {
-        ALCrossTable[lastAlarmEvent].ALOperator = OPER_SMALLER;
-    } else if (strncmp(p, "==", 2) == 0) {
-        ALCrossTable[lastAlarmEvent].ALOperator = OPER_EQUAL;
-    } else if (strncmp(p, "!=", 2) == 0) {
-        ALCrossTable[lastAlarmEvent].ALOperator = OPER_NOT_EQUAL;
-    } else if (strncmp(p, "RISING", 6) == 0) {
-        ALCrossTable[lastAlarmEvent].ALOperator = OPER_RISING;
-    } else if (strncmp(p, "FALLING", 7) == 0) {
-        ALCrossTable[lastAlarmEvent].ALOperator = OPER_FALLING;
+    // Vengono testati prima gli operatori a 2 caratteri...
+    if (strncmp(p, logic_operators[oper_greater_eq], 2) == 0) {
+        ALCrossTable[lastAlarmEvent].ALOperator = oper_greater_eq;
+    } else if (strncmp(p, logic_operators[oper_greater], 1) == 0) {
+        ALCrossTable[lastAlarmEvent].ALOperator = oper_greater;
+    } else if (strncmp(p, logic_operators[oper_smaller_eq], 2) == 0) {
+        ALCrossTable[lastAlarmEvent].ALOperator = oper_smaller_eq;
+    } else if (strncmp(p, logic_operators[oper_smaller], 1) == 0) {
+        ALCrossTable[lastAlarmEvent].ALOperator = oper_smaller;
+    } else if (strncmp(p, logic_operators[oper_equal], 2) == 0) {
+        ALCrossTable[lastAlarmEvent].ALOperator = oper_equal;
+    } else if (strncmp(p, logic_operators[oper_not_equal], 2) == 0) {
+        ALCrossTable[lastAlarmEvent].ALOperator = oper_not_equal;
+    } else if (strncmp(p, logic_operators[oper_rising], 6) == 0) {
+        ALCrossTable[lastAlarmEvent].ALOperator = oper_rising;
+    } else if (strncmp(p, logic_operators[oper_falling], 7) == 0) {
+        ALCrossTable[lastAlarmEvent].ALOperator = oper_falling;
     } else {
         goto exit_error;
     }
-
-    if (ALCrossTable[lastAlarmEvent].ALOperator != OPER_FALLING && ALCrossTable[lastAlarmEvent].ALOperator != OPER_RISING) {
+    ALCrossTable[lastAlarmEvent].ALCompareVar[0] = 0;
+    if (ALCrossTable[lastAlarmEvent].ALOperator != oper_falling && ALCrossTable[lastAlarmEvent].ALOperator != oper_rising) {
         char *s;
         float f;
 
@@ -329,7 +332,7 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
         CrossTable[addr].UsedEntry = 0;
         CrossTable[addr].Plc = FALSE;
         CrossTable[addr].Tag[0] = 0;
-        CrossTable[addr].Types = UNKNOWN;
+        CrossTable[addr].VarType = UNKNOWN;
         CrossTable[addr].Decimal = 0;
         CrossTable[addr].Protocol = PLC;
         CrossTable[addr].IPAddress = 0x00000000;
@@ -338,7 +341,7 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
         CrossTable[addr].Offset = 0;
         CrossTable[addr].Block = 0;
         CrossTable[addr].BlockSize = 0;
-        CrossTable[addr].Output = FALSE;
+        CrossTable[addr].Behavior = -1;
         CrossTable[addr].OldVal = 0;
         CrossTable[addr].device = 0xffff;
         CrossTable[addr].node = 0xffff;
@@ -449,68 +452,68 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
             break;
         }
         if (strcmp(p, "BIT") == 0) {
-            CrossTable[addr].Types = BIT;
+            CrossTable[addr].VarType = BIT;
         } else if (strcmp(p, "BYTE") == 0) {
-            CrossTable[addr].Types = UINT8;
+            CrossTable[addr].VarType = UINT8;
         } else if (strcmp(p, "BYTE_BIT") == 0) {
-            CrossTable[addr].Types = BYTE_BIT;
+            CrossTable[addr].VarType = BYTE_BIT;
         } else if (strcmp(p, "WORD_BIT") == 0) {
-            CrossTable[addr].Types = WORD_BIT;
+            CrossTable[addr].VarType = WORD_BIT;
         } else if (strcmp(p, "DWORD_BIT") == 0) {
-            CrossTable[addr].Types = DWORD_BIT;
+            CrossTable[addr].VarType = DWORD_BIT;
         } else if (strcmp(p, "UINT") == 0) {
-            CrossTable[addr].Types = UINT16;
+            CrossTable[addr].VarType = UINT16;
         } else if (strcmp(p, "UINTBA") == 0) {
-            CrossTable[addr].Types = UINT16BA;
+            CrossTable[addr].VarType = UINT16BA;
         } else if (strcmp(p, "INT") == 0) {
-            CrossTable[addr].Types = INT16;
+            CrossTable[addr].VarType = INT16;
         } else if (strcmp(p, "INTBA") == 0) {
-            CrossTable[addr].Types = INT16BA;
+            CrossTable[addr].VarType = INT16BA;
         } else if (strcmp(p, "UDINT") == 0) {
-            CrossTable[addr].Types = UDINT;
+            CrossTable[addr].VarType = UDINT;
         } else if (strcmp(p, "UDINTDCBA") == 0) {
-            CrossTable[addr].Types = UDINTDCBA;
+            CrossTable[addr].VarType = UDINTDCBA;
         } else if (strcmp(p, "UDINTCDAB") == 0) {
-            CrossTable[addr].Types = UDINTCDAB;
+            CrossTable[addr].VarType = UDINTCDAB;
         } else if (strcmp(p, "UDINTBADC") == 0) {
-            CrossTable[addr].Types = UDINTBADC;
+            CrossTable[addr].VarType = UDINTBADC;
         } else if (strcmp(p, "DINT") == 0) {
-            CrossTable[addr].Types = DINT;
+            CrossTable[addr].VarType = DINT;
         } else if (strcmp(p, "DINTDCBA") == 0) {
-            CrossTable[addr].Types = DINTDCBA;
+            CrossTable[addr].VarType = DINTDCBA;
         } else if (strcmp(p, "DINTCDAB") == 0) {
-            CrossTable[addr].Types = DINTCDAB;
+            CrossTable[addr].VarType = DINTCDAB;
         } else if (strcmp(p, "DINTBADC") == 0) {
-            CrossTable[addr].Types = DINTBADC;
+            CrossTable[addr].VarType = DINTBADC;
         } else if (strcmp(p, "REAL") == 0) {
-            CrossTable[addr].Types = REAL;
+            CrossTable[addr].VarType = REAL;
         } else if (strcmp(p, "REALDCBA") == 0) {
-            CrossTable[addr].Types = REALDCBA;
+            CrossTable[addr].VarType = REALDCBA;
         } else if (strcmp(p, "REALCDAB") == 0) {
-            CrossTable[addr].Types = REALCDAB;
+            CrossTable[addr].VarType = REALCDAB;
         } else if (strcmp(p, "REALBADC") == 0) {
-            CrossTable[addr].Types = REALBADC;
+            CrossTable[addr].VarType = REALBADC;
 
         } else if (strcmp(p, "UINTAB") == 0) {
-            CrossTable[addr].Types = UINT16; // bUINT16ackward compatibility
+            CrossTable[addr].VarType = UINT16; // bUINT16ackward compatibility
         } else if (strcmp(p, "INTAB") == 0) {
-            CrossTable[addr].Types = INT16; // backward compatibility
+            CrossTable[addr].VarType = INT16; // backward compatibility
         } else if (strcmp(p, "UDINTABCD") == 0) {
-            CrossTable[addr].Types = UDINT; // backward compatibility
+            CrossTable[addr].VarType = UDINT; // backward compatibility
         } else if (strcmp(p, "DINTABCD") == 0) {
-            CrossTable[addr].Types = DINT; // backward compatibility
+            CrossTable[addr].VarType = DINT; // backward compatibility
         } else if (strcmp(p, "FDCBA") == 0) {
-            CrossTable[addr].Types = REALDCBA; // backward compatibility
+            CrossTable[addr].VarType = REALDCBA; // backward compatibility
         } else if (strcmp(p, "FCDAB") == 0) {
-            CrossTable[addr].Types = REALCDAB; // backward compatibility
+            CrossTable[addr].VarType = REALCDAB; // backward compatibility
         } else if (strcmp(p, "FABCD") == 0) {
-            CrossTable[addr].Types = REAL; // backward compatibility
+            CrossTable[addr].VarType = REAL; // backward compatibility
         } else if (strcmp(p, "FBADC") == 0) {
-            CrossTable[addr].Types = REALBADC; // backward compatibility
+            CrossTable[addr].VarType = REALBADC; // backward compatibility
 
         } else {
             if (CrossTable[addr].Enable > 0) {
-                CrossTable[addr].Types = UNKNOWN;
+                CrossTable[addr].VarType = UNKNOWN;
                 ERR = TRUE;
                 break;
             }
@@ -623,18 +626,18 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
                 }
             }
             if (strncmp(p, "[RW]", 4) == 0) {
-                CrossTable[addr].Output = TRUE;
+                CrossTable[addr].Behavior = behavior_readwrite;
             } else if (strncmp(p, "[RO]", 4) == 0) {
-                CrossTable[addr].Output = FALSE;
+                CrossTable[addr].Behavior = behavior_readonly;
             } else if (strncmp(p, "[AL ", 4) == 0) {
-                CrossTable[addr].Output = FALSE;
+                CrossTable[addr].Behavior = behavior_alarm;
                 CrossTable[addr].ALType = Alarm;
                 if (strlen(p) < 10 || newAlarmEvent(1, addr, &(p[3]), strlen(p) - 3)) {
                     ERR = TRUE;
                     break;
                 }
             } else if (strncmp(p, "[EV ", 4) == 0) {
-                CrossTable[addr].Output = FALSE;
+                CrossTable[addr].Behavior = behavior_event;
                 CrossTable[addr].ALType = Event;
                 if (strlen(p) < 10 || newAlarmEvent(0, addr, &p[3], strlen(p) - 3)) {
                     ERR = TRUE;
@@ -667,7 +670,7 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
         fprintf(stderr, " = %s", CrossTable[ALCrossTable[indx].SourceAddr].Tag);
 
         // which comparison?
-        switch (CrossTable[addr].Types) {
+        switch (CrossTable[addr].VarType) {
             case BIT:
             case BYTE_BIT:
             case WORD_BIT:
@@ -706,19 +709,19 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
         }
 
         switch (ALCrossTable[indx].ALOperator)  {
-            case OPER_RISING    : fprintf(stderr, " RISING"); break;
-            case OPER_FALLING   : fprintf(stderr, " FALLING"); break;
-            case OPER_EQUAL     : fprintf(stderr, " =="); break;
-            case OPER_NOT_EQUAL : fprintf(stderr, " !="); break;
-            case OPER_GREATER   : fprintf(stderr, " >" ); break;
-            case OPER_GREATER_EQ: fprintf(stderr, " >="); break;
-            case OPER_SMALLER   : fprintf(stderr, " <" ); break;
-            case OPER_SMALLER_EQ: fprintf(stderr, " <="); break;
+            case oper_greater       : fprintf(stderr, " %s", logic_operators[oper_greater]); break;
+            case oper_greater_eq    : fprintf(stderr, " %s", logic_operators[oper_greater_eq]); break;
+            case oper_smaller       : fprintf(stderr, " %s", logic_operators[oper_smaller]); break;
+            case oper_smaller_eq    : fprintf(stderr, " %s", logic_operators[oper_smaller_eq]); break;
+            case oper_equal         : fprintf(stderr, " %s", logic_operators[oper_equal]); break;
+            case oper_not_equal     : fprintf(stderr, " %s", logic_operators[oper_not_equal]); break;
+            case oper_rising        : fprintf(stderr, " %s", logic_operators[oper_rising]); break;
+            case oper_falling       : fprintf(stderr, " %s", logic_operators[oper_falling]); break;
             default             : ;
         }
 
-        if (ALCrossTable[lastAlarmEvent].ALOperator != OPER_FALLING
-            && ALCrossTable[lastAlarmEvent].ALOperator != OPER_RISING) {
+        if (ALCrossTable[lastAlarmEvent].ALOperator != oper_falling
+            && ALCrossTable[lastAlarmEvent].ALOperator != oper_rising) {
             // if the comparison is with a variable
             if (ALCrossTable[indx].ALCompareVar[0] != 0) {
                 // then retrieve the compare variable address
@@ -732,13 +735,13 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
                 fprintf(stderr, " %s", CrossTable[addr].Tag);
 
                 // check for incompatibles types
-                switch (CrossTable[ALCrossTable[indx].SourceAddr].Types) {
+                switch (CrossTable[ALCrossTable[indx].SourceAddr].VarType) {
 
                     case BIT:
                     case BYTE_BIT:
                     case WORD_BIT:
                     case DWORD_BIT:
-                        switch (CrossTable[ALCrossTable[indx].CompareAddr].Types) {
+                        switch (CrossTable[ALCrossTable[indx].CompareAddr].VarType) {
                             case BIT:
                             case BYTE_BIT:
                             case WORD_BIT:
@@ -779,7 +782,7 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
                     case DINTDCBA:
                     case DINTCDAB:
                     case DINTBADC:
-                        switch (CrossTable[ALCrossTable[indx].CompareAddr].Types) {
+                        switch (CrossTable[ALCrossTable[indx].CompareAddr].VarType) {
                             case BIT:
                             case BYTE_BIT:
                             case WORD_BIT:
@@ -822,7 +825,7 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
                     case UDINTDCBA:
                     case UDINTCDAB:
                     case UDINTBADC:
-                        switch (CrossTable[ALCrossTable[indx].CompareAddr].Types) {
+                        switch (CrossTable[ALCrossTable[indx].CompareAddr].VarType) {
                             case BIT:
                             case BYTE_BIT:
                             case WORD_BIT:
@@ -862,7 +865,7 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
                     case REALDCBA:
                     case REALCDAB:
                     case REALBADC:
-                        switch (CrossTable[ALCrossTable[indx].CompareAddr].Types) {
+                        switch (CrossTable[ALCrossTable[indx].CompareAddr].VarType) {
                             case BIT:
                             case BYTE_BIT:
                             case WORD_BIT:
@@ -912,7 +915,7 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
                 fvalue = ALCrossTable[indx].ALCompareVal;
                 int n;
 
-                switch (CrossTable[addr].Types) {
+                switch (CrossTable[addr].VarType) {
                     case BIT:
                     case BYTE_BIT:
                     case WORD_BIT:
@@ -1029,7 +1032,7 @@ int SaveXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
             sprintf(token, "%-16s;", CrossTable[addr].Tag);
             strcat(row, token);
             // Type
-            sprintf(token, "%-9s;", varTypeName[CrossTable[addr].Types]);
+            sprintf(token, "%-9s;", varTypeName[CrossTable[addr].VarType]);
             strcat(row, token);
             // Decimals CrossTable[addr].Decimal
             sprintf(token, "%-4d;", CrossTable[addr].Decimal);
@@ -1070,11 +1073,22 @@ int SaveXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
             sprintf(token, "%-4d;", CrossTable[addr].BlockSize);
             strcat(row, token);
             // Behavior (da completare con Gestione Allarmi)
-            if (CrossTable[addr].Output)  {
+            if (CrossTable[addr].Behavior == behavior_readwrite)  {
                 strcat(row, "[RW]");
             }
-            else  {
+            else if (CrossTable[addr].Behavior == behavior_readonly) {
                 strcat(row, "[RO]");
+            }
+            else if (CrossTable[addr].Behavior == behavior_alarm || CrossTable[addr].Behavior == behavior_event)  {
+                if (CrossTable[addr].Behavior == behavior_alarm)  {
+                    strcat(row, "[AL ");
+                }
+                else {
+                    strcat(row, "[EV ");
+                }
+                // TODO: Complete writing alarm conditions
+                // Closing condition
+                strcat(row, "]");
             }
             // Comment
             strcat(row, CrossTable[addr].Comment);

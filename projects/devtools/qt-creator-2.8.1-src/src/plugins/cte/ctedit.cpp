@@ -79,14 +79,6 @@ enum colonne_e
     colTotals
 };
 
-enum behavior_e
-{
-    bevReadOnly = 0,
-    bevReadWrite,
-    bevAlarm,
-    bevEvent,
-    bevTotals
-};
 
 //extern int LoadXTable(char *crossTableFile);
 //extern int SaveXTable(char *crossTableFile);
@@ -187,7 +179,7 @@ ctedit::ctedit(QWidget *parent) :
     for (nCol = AnyTPAC; nCol <= TPAC1008_02_AF; nCol++)  {
         lstProductNames.append(QString::fromAscii(product_name[nCol]));
     }
-    // Lista Significati
+    // Lista Significati (da mantenere allineata con enum behaviors in parser.h)
     lstBehavior.clear();
     lstBehavior
             << QString::fromAscii("R/O")
@@ -316,6 +308,8 @@ ctedit::ctedit(QWidget *parent) :
     ui->txtNode->setValidator(new QIntValidator(nValMin, MAXBLOCKSIZE -1, this));
     ui->txtBlock->setValidator(new QIntValidator(nValMin, nValMax, this));
     ui->txtBlockSize->setValidator(new QIntValidator(nValMin, nValMax, this));
+    // Validatori per Double
+    ui->txtFixedValue->setValidator(new QDoubleValidator(this));
     // Validator per txtIp
     QString szExp = QString::fromAscii("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}");
     QRegExp regExprIP(szExp);
@@ -579,8 +573,8 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
         // Campo Name
         lstRecValues[colName] = QString::fromAscii(lstCTRecords[nRow].Tag);
         // Campo Type
-        if (lstCTRecords[nRow].Types >= BIT && lstCTRecords[nRow].Types <= UNKNOWN)
-            lstRecValues[colType] = lstTipi[lstCTRecords[nRow].Types];
+        if (lstCTRecords[nRow].VarType >= BIT && lstCTRecords[nRow].VarType <= UNKNOWN)
+            lstRecValues[colType] = lstTipi[lstCTRecords[nRow].VarType];
         // Campo Decimal
         lstRecValues[colDecimal] = QString::number(lstCTRecords[nRow].Decimal);
         // Protocol
@@ -612,24 +606,32 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
         if (lstCTRecords[nRow].usedInAlarmsEvents)  {
             // Tipo Allarme-Evento
             if (lstCTRecords[nRow].ALType == Alarm)
-                lstRecValues[colBehavior] = lstBehavior[bevAlarm];
+                lstRecValues[colBehavior] = lstBehavior[behavior_alarm];
             else if (lstCTRecords[nRow].ALType == Event)
-                lstRecValues[colBehavior] = lstBehavior[bevEvent];
+                lstRecValues[colBehavior] = lstBehavior[behavior_event];
+            // Operatore Logico
+            if (lstCTRecords[nRow].ALOperator >= 0 && lstCTRecords[nRow].ALOperator < oper_totals)
+                lstRecValues[colCondition] = lstCondition[lstCTRecords[nRow].ALOperator];
+            else
+                lstRecValues[colCondition] = szEMPTY;
             // Source Var
             lstRecValues[colSourceVar] = QString::fromAscii(lstCTRecords[nRow].ALSource);
-            // Dest Var or Value
+            // Compare Var or Value
             szTemp = QString::fromAscii(lstCTRecords[nRow].ALCompareVar);
             if (szTemp.isEmpty())
                 lstRecValues[colCompare] = QString::number(lstCTRecords[nRow].ALCompareVal, 'f', 3);
             else
                 lstRecValues[colCompare] = szTemp;
+            // Rising o Falling senza seconda parte
+            if (lstCTRecords[nRow].ALOperator == oper_rising || lstCTRecords[nRow].ALOperator == oper_falling)
+                lstRecValues[colCompare] = szEMPTY;
         }
         else   {
             // R/O o R/W
-            if (lstCTRecords[nRow].Output == _FALSE)
-                lstRecValues[colBehavior] = lstBehavior[bevReadOnly];
-            else if (lstCTRecords[nRow].Output == _TRUE)
-                lstRecValues[colBehavior] = lstBehavior[bevReadWrite];
+            if (lstCTRecords[nRow].Behavior == behavior_readonly)
+                lstRecValues[colBehavior] = lstBehavior[behavior_readonly];
+            else if (lstCTRecords[nRow].Behavior == behavior_readwrite)
+                lstRecValues[colBehavior] = lstBehavior[behavior_readwrite];
             // Source Var - Condition - Compare
             lstRecValues[colSourceVar] = szEMPTY;
             lstRecValues[colCondition] = szEMPTY;
@@ -637,8 +639,8 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
 
         }
         // Caso Alarm / Event
-            // bevAlarm,
-            // bevEvent,
+            // behavior_alarm,
+            // behavior_event,
 
     }
     // Return value
@@ -666,7 +668,9 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
 {
     QString szTemp;
     int     nPos = 0;
+    QList<int> lstVarTypes;
 
+    lstVarTypes.clear();
     // Row #
     szTemp = QLocale::system().toString(m_nGridRow + 1);
     ui->txtRow->setText(szTemp);
@@ -742,7 +746,24 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
         nPos = ui->cboBehavior->findText(szTemp, Qt::MatchFixedString);
         if (nPos >= 0 && nPos < ui->cboBehavior->count())
             ui->cboBehavior->setCurrentIndex(nPos);
+        // Caricamento ulteriori elementi interfaccia Allarmi / Eventi
+        if (nPos > behavior_readwrite)  {
+            fillComboVarNames(ui->cboVariable1, lstVarTypes);
+            // Ricerca posizione prima variabile
+            szTemp = lstRecValues[colSourceVar].trimmed();
+            nPos = -1;
+            if (! szTemp.isEmpty())
+                nPos = ui->cboVariable1->findText(szTemp, Qt::MatchExactly);
+            ui->cboVariable1->setCurrentIndex(nPos);
+            // Operatore confronto
+            nPos = -1;
+            szTemp = lstRecValues[colCondition].trimmed();
+            if (! szTemp.isEmpty())
+                nPos = ui->cboCondition->findText(szTemp, Qt::MatchExactly);
+            ui->cboCondition->setCurrentIndex(nPos);
+        }
     }
+
     enableFields();
     return true;
 }
@@ -878,7 +899,7 @@ bool    ctedit::riassegnaBlocchi()
         if (lstCTRecords[nRow].Enable > 0)  {
             // Salto riga o condizione di inizio nuovo blocco
             // Inizio nuovo blocco
-            if (nPrevRow != nRow - 1 || prevPriority != lstCTRecords[nRow].Enable || prevType != lstCTRecords[nRow].Types || prevProtocol !=  lstCTRecords[nRow].Protocol
+            if (nPrevRow != nRow - 1 || prevPriority != lstCTRecords[nRow].Enable || prevType != lstCTRecords[nRow].VarType || prevProtocol !=  lstCTRecords[nRow].Protocol
                     || prevIpAdr != lstCTRecords[nRow].IPAddress || prevPort != lstCTRecords[nRow].Port || prevNodeId != lstCTRecords[nRow].NodeId
                     || curBSize >= MAXBLOCKSIZE)  {
                 // Rinumera block start del Blocco precedente se esiste
@@ -893,7 +914,7 @@ bool    ctedit::riassegnaBlocchi()
                 prevProtocol =  lstCTRecords[nRow].Protocol;
                 prevIpAdr = lstCTRecords[nRow].IPAddress;
                 prevPort = lstCTRecords[nRow].Port;
-                prevType = lstCTRecords[nRow].Types;
+                prevType = lstCTRecords[nRow].VarType;
                 prevNodeId = lstCTRecords[nRow].NodeId;
                 curBlock = (int16_t) nBlockStart + 1;
                 curBSize = 1;
@@ -990,7 +1011,7 @@ void ctedit::freeCTrec(int nRow)
     lstCTRecords[nRow].Enable = 0;
     lstCTRecords[nRow].Plc = (UpdateType) 0;
     strcpy(lstCTRecords[nRow].Tag, "");
-    lstCTRecords[nRow].Types = (varTypes) 0;
+    lstCTRecords[nRow].VarType = (varTypes) 0;
     lstCTRecords[nRow].Decimal = 0;
     lstCTRecords[nRow].Protocol = (FieldbusType) 0;
     lstCTRecords[nRow].IPAddress = 0;
@@ -999,7 +1020,7 @@ void ctedit::freeCTrec(int nRow)
     lstCTRecords[nRow].Offset = 0;
     lstCTRecords[nRow].Block = 0;
     lstCTRecords[nRow].BlockBase = 0;
-    lstCTRecords[nRow].Output = 0;
+    lstCTRecords[nRow].Behavior = 0;
     lstCTRecords[nRow].Counter = 0;
     lstCTRecords[nRow].OldVal = 0;
     lstCTRecords[nRow].Error = 0;
@@ -1007,7 +1028,7 @@ void ctedit::freeCTrec(int nRow)
     lstCTRecords[nRow].usedInAlarmsEvents = FALSE;
     lstCTRecords[nRow].ALType = -1;
     strcpy(lstCTRecords[nRow].ALSource, "");
-    lstCTRecords[nRow].ALOperator;
+    lstCTRecords[nRow].ALOperator = -1;
     strcpy(lstCTRecords[nRow].ALCompareVar, "");
     lstCTRecords[nRow].ALCompareVal = 0.0;
     lstCTRecords[nRow].ALComparison = -1;
@@ -1057,7 +1078,7 @@ bool ctedit::list2CTrec(QStringList &lstRecValues, int nRow)
         // Campo Type
         nPos = lstTipi.indexOf(lstRecValues[colType]);
         nPos = (nPos >= 0 && nPos < lstTipi.count()) ? nPos : 0;
-        lstCTRecords[nRow].Types = (varTypes) nPos;
+        lstCTRecords[nRow].VarType = (varTypes) nPos;
         // Campo Decimal
         nPos = lstRecValues[colDecimal].toInt(&fOk);
         nPos = fOk ? nPos : 0;
@@ -1100,7 +1121,7 @@ bool ctedit::list2CTrec(QStringList &lstRecValues, int nRow)
         // Behavior
         nPos = lstBehavior.indexOf(lstRecValues[colBehavior]);
         nPos = (nPos >= 0 && nPos < lstBehavior.count()) ? nPos : 0;
-        lstCTRecords[nRow].Output= (int) nPos;
+        lstCTRecords[nRow].Behavior= (int) nPos;
     }
     // Return Value
     return fRes;
@@ -1390,6 +1411,13 @@ void ctedit::clearEntryForm()
     ui->txtBlockSize->setText(szEMPTY);
     ui->txtComment->setText(szEMPTY);
     ui->cboBehavior->setCurrentIndex(-1);
+    // Sottoform per Allarmi/Eventi
+    ui->cboVariable1->setCurrentIndex(-1);
+    ui->cboCondition->setCurrentIndex(-1);
+    ui->optFixedVal->setChecked(false);
+    ui->optVariableVal->setChecked(false);
+    ui->txtFixedValue->setText(szEMPTY);
+    ui->cboVariable2->setCurrentIndex(-1);
 }
 
 void ctedit::displayUserMenu(const QPoint &pos)
@@ -2323,6 +2351,14 @@ void    ctedit::enableProtocolsFromModel(QString szModel)
             disableComboItem(ui->cboProtocol, nCur);
     }
 }
+void ctedit::on_cboBehavior_currentIndexChanged(int index)
+{
+    // Abilitazione o meno del frame condizioni allarmi/eventi
+    if (index > behavior_readwrite) {
+        ui->fraCondition->setVisible(true);
+    } else
+        ui->fraCondition->setVisible(false);
+}
 void ctedit::fillErrorMessage(int nRow, int nCol, int nErrCode, QString szVarName, QString szValue, QChar severity, Err_CT *errCt)
 {
     errCt->cSeverity = severity;
@@ -2413,7 +2449,32 @@ bool ctedit::isValidVarName(QString szName)
     // Return value
     return fRes;
 }
+int ctedit::fillComboVarNames(QComboBox *comboBox, QList<int> lstTypes)
+// Caricamento ComboBox con Nomi Variabili filtrate in funzione del Tipo
+{
+    bool    fTypeFilter = lstTypes.count() > 0;
+    int     nRow = 0;
+    int     nAdded = 0;
+    bool    f2Add = false;
 
+    comboBox->clear();
+    for (nRow = 0; nRow < lstCTRecords.count(); nRow++)  {
+        if (lstCTRecords[nRow].Enable)  {
+            if (fTypeFilter)  {
+                f2Add = lstTypes.indexOf(lstCTRecords[nRow].VarType) >= 0 ? true : false;
+            }
+            else  {
+                f2Add = true;
+            }
+            // If Var is defined and of a correct type, insert in list
+            if (f2Add)  {
+                comboBox->addItem(QString::fromAscii(lstCTRecords[nRow].Tag), nRow);
+                nAdded++;
+            }
+        }
+    }
+    return nAdded;
+}
 int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fShowErrors)
 // Controlli formali sulla riga a termine editing o ciclicamente durante controllo globale valori
 {
@@ -2506,9 +2567,9 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fShowErrors)
         // Numero Decimali > 4 ===> Variable
         else if (nVal >= 4)  {
             if (nVal > DimCrossTable || ! lstCTRecords[nVal].Enable ||
-            (lstCTRecords[nVal].Types != UINT8 &&  lstCTRecords[nVal].Types != UINT16 && lstCTRecords[nVal].Types != UINT16BA &&
-             lstCTRecords[nVal].Types != UDINT &&  lstCTRecords[nVal].Types != UDINTDCBA && lstCTRecords[nVal].Types != UDINTCDAB &&
-             lstCTRecords[nVal].Types != UDINTBADC ) )   {
+            (lstCTRecords[nVal].VarType != UINT8 &&  lstCTRecords[nVal].VarType != UINT16 && lstCTRecords[nVal].VarType != UINT16BA &&
+             lstCTRecords[nVal].VarType != UDINT &&  lstCTRecords[nVal].VarType != UDINTDCBA && lstCTRecords[nVal].VarType != UDINTCDAB &&
+             lstCTRecords[nVal].VarType != UDINTBADC ) )   {
                 fillErrorMessage(nRow, colDecimal, errCTNoVarDecimals, szVarName, szTemp, chSeverityError, &errCt);
                 lstCTErrors.append(errCt);
                 nErrors++;
@@ -2525,8 +2586,9 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fShowErrors)
     }
     // Controllo Ip Address
     szIP = lstValues[colIP].trimmed();
-    if (nProtocol < 0)  {
-        fillErrorMessage(nRow, colProtocol, errCTNoProtocol, szVarName, szTemp, chSeverityError, &errCt);
+    if (szIP.isEmpty() &&
+            (nProtocol == TCP || nProtocol == TCPRTU || nProtocol == TCP_SRV || nProtocol == TCPRTU_SRV))  {
+        fillErrorMessage(nRow, colIP, errCTNoIP, szVarName, szTemp, chSeverityError, &errCt);
         lstCTErrors.append(errCt);
         nErrors++;
     }
@@ -2549,4 +2611,58 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fShowErrors)
     }
     // Return Value
     return nErrors;
+}
+
+void ctedit::on_cboVariable1_currentIndexChanged(int index)
+{
+    QVariant vIndex;
+    int     nRow = 0;
+    bool    fOk = false;
+    QList<int> lstVarTypes;
+
+    lstVarTypes.clear();
+    if (index >= 0)  {
+        vIndex = ui->cboVariable1->itemData(index);
+        nRow = vIndex.toInt(&fOk);
+        qDebug() << "Row Source" << nRow;
+        if (fOk && nRow >= 0 && nRow < DimCrossTable)  {
+            // TODO: Fill Var2 Type List with compatible types
+            fillComboVarNames(ui->cboVariable2, lstVarTypes);
+        }
+    }
+}
+
+void ctedit::on_cboCondition_currentIndexChanged(int index)
+{
+    if (index >= oper_rising)  {
+        ui->cboVariable2->setCurrentIndex(-1);
+        ui->txtFixedValue->setText(szEMPTY);
+    }
+    else  {
+
+    }
+}
+
+void ctedit::on_optFixedVal_clicked(bool checked)
+{
+    if (checked)  {
+        ui->txtFixedValue->setEnabled(true);
+        ui->cboVariable2->setEnabled(false);
+    }
+    else  {
+        ui->txtFixedValue->setEnabled(false);
+        ui->cboVariable2->setEnabled(true);
+    }
+}
+
+void ctedit::on_optVariableVal_clicked(bool checked)
+{
+    if (checked)  {
+        ui->txtFixedValue->setEnabled(false);
+        ui->cboVariable2->setEnabled(true);
+    }
+    else  {
+        ui->txtFixedValue->setEnabled(true);
+        ui->cboVariable2->setEnabled(false);
+    }
 }

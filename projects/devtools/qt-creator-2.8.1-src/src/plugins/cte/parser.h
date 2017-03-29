@@ -23,15 +23,6 @@ extern "C" {
 #define MAX_DEVICE_LEN      13 // /dev/ttyUSB0.
 #define MAX_COMMENT_NAME    30
 
-#define OPER_GREATER    41
-#define OPER_GREATER_EQ 42
-#define OPER_SMALLER    43
-#define OPER_SMALLER_EQ 44
-#define OPER_EQUAL      45
-#define OPER_NOT_EQUAL  46
-#define OPER_RISING     47
-#define OPER_FALLING    48
-
 #define COMP_UNSIGNED   77
 #define COMP_SIGNED     78
 #define COMP_FLOATING      79
@@ -122,12 +113,20 @@ enum logicalOperators {
     oper_totals
 };
 
+enum behaviors  {
+    behavior_readonly = 0,
+    behavior_readwrite,
+    behavior_alarm,
+    behavior_event,
+    behavior_totals
+};
+
 struct  CrossTableRecord {
     int16_t Enable;
     int  UsedEntry;
     enum UpdateType Plc;
     char Tag[MAX_IDNAME_LEN];
-    enum varTypes Types;
+    enum varTypes VarType;
     uint16_t Decimal;
     enum FieldbusType Protocol;
     uint32_t IPAddress;
@@ -137,7 +136,7 @@ struct  CrossTableRecord {
     uint16_t Block;
     uint16_t BlockBase;
     int16_t BlockSize;
-    int Output;
+    int     Behavior;
     int16_t Counter;
     uint32_t OldVal;
     uint16_t Error;

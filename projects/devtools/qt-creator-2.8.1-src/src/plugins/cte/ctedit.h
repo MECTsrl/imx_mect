@@ -58,6 +58,16 @@ private slots:
     void on_cmdCompile_clicked();                   // Generate Compiled Files
     void on_cmdUndo_clicked();                      // Retrieve a CT Block from Undo List
 
+    void on_cboBehavior_currentIndexChanged(int index);
+
+    void on_cboVariable1_currentIndexChanged(int index);
+
+    void on_cboCondition_currentIndexChanged(int index);
+
+    void on_optFixedVal_clicked(bool checked);
+
+    void on_optVariableVal_clicked(bool checked);
+
 private:
     //---------------------------------------------------------------------
     // Funzioni locali al modulo
@@ -83,6 +93,7 @@ private:
     void    jumpToGridRow(int nRow);                // Salto alla riga nRow del Grid
     void    displayStatusMessage(QString szMessage, int nSeconds = 0);// Show message in ui->lblMessage
     void    enableInterface();                      // Abilita l'interfaccia in funzione dello stato del sistema
+    int     fillComboVarNames(QComboBox *comboBox, QList<int> lstTypes);    // Caricamento ComboBox con Nomi Variabili filtrate in funzione del Tipo
     // Gestione Controlli
     int     checkFormFields(int nRow, QStringList &lstValues, bool fShowErrors = false);   // Controlli formali sulla riga a termine editing
     int     globalChecks();                                 // Controlli complessivi su tutta la CT

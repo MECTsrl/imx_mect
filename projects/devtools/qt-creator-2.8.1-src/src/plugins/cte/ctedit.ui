@@ -1075,6 +1075,9 @@
                  <height>16777215</height>
                 </size>
                </property>
+               <property name="insertPolicy">
+                <enum>QComboBox::InsertAlphabetically</enum>
+               </property>
               </widget>
              </item>
              <item row="1" column="3">
@@ -1123,6 +1126,9 @@
                  <width>200</width>
                  <height>16777215</height>
                 </size>
+               </property>
+               <property name="insertPolicy">
+                <enum>QComboBox::InsertAlphabetically</enum>
                </property>
               </widget>
              </item>

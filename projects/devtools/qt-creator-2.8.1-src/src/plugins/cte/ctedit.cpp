@@ -2595,7 +2595,6 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
     }
     // Controllo Protocol
     szTemp = lstValues[colProtocol];
-    qDebug() << "Protocol: " << szTemp;
     nProtocol = szTemp.isEmpty() ? -1 : lstProtocol.indexOf(szTemp);
     if (nProtocol < 0)  {
         fillErrorMessage(nRow, colProtocol, errCTNoProtocol, szVarName, szTemp, chSeverityError, &errCt);

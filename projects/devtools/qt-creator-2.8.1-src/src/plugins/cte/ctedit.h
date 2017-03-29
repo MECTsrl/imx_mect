@@ -93,9 +93,10 @@ private:
     void    jumpToGridRow(int nRow);                // Salto alla riga nRow del Grid
     void    displayStatusMessage(QString szMessage, int nSeconds = 0);// Show message in ui->lblMessage
     void    enableInterface();                      // Abilita l'interfaccia in funzione dello stato del sistema
-    int     fillComboVarNames(QComboBox *comboBox, QList<int> lstTypes);    // Caricamento ComboBox con Nomi Variabili filtrate in funzione del Tipo
+    int     fillVarList(QStringList &lstVars, QList<int> &lstTypes);        // Fill sorted List of Variables Names for Types in lstTypes
+    int     fillComboVarNames(QComboBox *comboBox, QList<int> &lstTypes);   // Caricamento ComboBox con Nomi Variabili filtrate in funzione del Tipo
     // Gestione Controlli
-    int     checkFormFields(int nRow, QStringList &lstValues, bool fShowErrors = false);   // Controlli formali sulla riga a termine editing
+    int     checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine = true);   // Controlli formali sulla riga a termine editing
     int     globalChecks();                                 // Controlli complessivi su tutta la CT
     bool    isFormEmpty();                          // Controllo Form Editing vuoto
     bool    isValidVarName(QString szName);         // Controllo del Nome Variabile
@@ -120,7 +121,7 @@ private:
     QStringList lstPriority;
     QStringList lstPLC;
     QStringList lstTipi;
-    QStringList lstBusType;
+    QStringList lstProtocol;
     QList<bool> lstBusEnabler;
     QStringList lstBehavior;
     QStringList lstCondition;

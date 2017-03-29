@@ -168,10 +168,10 @@ ctedit::ctedit(QWidget *parent) :
         lstTipi.append(QString::fromAscii(varTypeName[nCol]));
     }
     // Lista Protocolli (tipi di Bus)
-    lstBusType.clear();
+    lstProtocol.clear();
     lstBusEnabler.clear();
     for (nCol = PLC; nCol <= TCPRTU_SRV; nCol++)  {
-        lstBusType.append(QString::fromAscii(fieldbusName[nCol]));
+        lstProtocol.append(QString::fromAscii(fieldbusName[nCol]));
         lstBusEnabler.append(true);         // Di default tutti i tipi di Bus sono abilitati
     }
     // Lista Prodotti
@@ -237,8 +237,8 @@ ctedit::ctedit(QWidget *parent) :
     // Combo Tipo Bus
     szToolTip.clear();
     szToolTip.append(tr("Protocol with the remote device"));
-    for  (nCol=0; nCol<lstBusType.count(); nCol++)   {
-        ui->cboProtocol->addItem(lstBusType[nCol], lstBusType[nCol]);
+    for  (nCol=0; nCol<lstProtocol.count(); nCol++)   {
+        ui->cboProtocol->addItem(lstProtocol[nCol], lstProtocol[nCol]);
     }
     ui->cboProtocol->setToolTip(szToolTip);
     // Indirizzo IP
@@ -578,8 +578,8 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
         // Campo Decimal
         lstRecValues[colDecimal] = QString::number(lstCTRecords[nRow].Decimal);
         // Protocol
-        if (lstCTRecords[nRow].Protocol >= 0 && lstCTRecords[nRow].Protocol < lstBusType.count())
-            lstRecValues[colProtocol] = lstBusType[lstCTRecords[nRow].Protocol];
+        if (lstCTRecords[nRow].Protocol >= 0 && lstCTRecords[nRow].Protocol < lstProtocol.count())
+            lstRecValues[colProtocol] = lstProtocol[lstCTRecords[nRow].Protocol];
         // IP Address (Significativo solo per Protocolli a base TCP)
         if (lstCTRecords[nRow].Protocol == TCP || lstCTRecords[nRow].Protocol == TCPRTU ||
                 lstCTRecords[nRow].Protocol == TCP_SRV || lstCTRecords[nRow].Protocol ==TCPRTU_SRV)  {
@@ -805,7 +805,7 @@ bool ctedit::iface2values(QStringList &lstRecValues)
     lstRecValues[colDecimal] = szTemp.trimmed();
     // Protocol lstBusType
     nPos = ui->cboProtocol->currentIndex();
-    if (nPos >= 0 && nPos < lstBusType.count())
+    if (nPos >= 0 && nPos < lstProtocol.count())
         szTemp = ui->cboProtocol->itemData(nPos).toString();
     else
         szTemp = szEMPTY;
@@ -1084,8 +1084,8 @@ bool ctedit::list2CTrec(QStringList &lstRecValues, int nRow)
         nPos = fOk ? nPos : 0;
         lstCTRecords[nRow].Decimal = nPos;
         // Protocol
-        nPos = lstBusType.indexOf(lstRecValues[colProtocol]);
-        nPos = (nPos >= 0 && nPos < lstBusType.count()) ? nPos : 0;
+        nPos = lstProtocol.indexOf(lstRecValues[colProtocol]);
+        nPos = (nPos >= 0 && nPos < lstProtocol.count()) ? nPos : 0;
         lstCTRecords[nRow].Protocol = (FieldbusType) nPos;
         // IP Address (Significativo solo per Protocolli a base TCP)
         if (lstCTRecords[nRow].Protocol == TCP || lstCTRecords[nRow].Protocol == TCPRTU ||
@@ -1969,7 +1969,7 @@ void ctedit::on_cmdGotoRow_clicked()
     // Valori da interfaccia a Lista Stringhe
     fOk = iface2values(lstFields);
     // Controllo di coerenza sulla riga corrente
-    if (checkFormFields(m_nGridRow, lstFields) > 0)
+    if (checkFormFields(m_nGridRow, lstFields, true) > 0)
         return;
     // Input Dialog per Numero riga
     int nRow = QInputDialog::getInt(this, tr("Row to Jump To"),
@@ -1988,7 +1988,7 @@ void ctedit::on_cmdSearch_clicked()
 
     // Valori da interfaccia a Lista Stringhe
     fOk = iface2values(lstFields);
-    if (checkFormFields(m_nGridRow, lstFields) > 0)
+    if (checkFormFields(m_nGridRow, lstFields, true) > 0)
         return;
     // Input Dialog per Nome Variabile
     QString szText;
@@ -2197,7 +2197,7 @@ QStringList ctedit::getPortsFromModel(QString szModel, QString szProtocol)
 {
     QStringList lstValues;
     int nModel = lstProductNames.indexOf(szModel);
-    int nProtocol = lstBusType.indexOf(szProtocol);
+    int nProtocol = lstProtocol.indexOf(szProtocol);
 
     lstValues.clear();
     // Valori generici in funzione del Protocollo con modello non specificato
@@ -2268,7 +2268,7 @@ void    ctedit::enableProtocolsFromModel(QString szModel)
 
     lstBusEnabler.clear();
     // Abilita di default tutti i Protocolli
-    for (nCur = 0; nCur < lstBusType.count(); nCur++)  {
+    for (nCur = 0; nCur < lstProtocol.count(); nCur++)  {
         lstBusEnabler.append(true);
     }
     // Abilitazione dei protocolli in funzione del modello
@@ -2344,7 +2344,7 @@ void    ctedit::enableProtocolsFromModel(QString szModel)
         lstBusEnabler[CANOPEN] = false;
     }
     // Spegne sulla Combo dei protocolli le voci non abilitate
-    for (nCur = 0; nCur < lstBusType.count(); nCur++)  {
+    for (nCur = 0; nCur < lstProtocol.count(); nCur++)  {
         if (lstBusEnabler[nCur])
             enableComboItem(ui->cboProtocol, nCur);
         else
@@ -2384,7 +2384,7 @@ int ctedit::globalChecks()
     lstCTErrors.clear();
     lstUniqueVarNames.clear();
     // Ciclo Globale su tutti gli Items di CT
-    for (nRow = 0; nRow < DimCrossTable; nRow++)  {
+    for (nRow = 0; nRow < lstCTRecords.count(); nRow++)  {
         // Controlla solo righe utilizzate
         if (lstCTRecords[nRow].Enable)  {
             // Controllo univocità di nome
@@ -2449,15 +2449,15 @@ bool ctedit::isValidVarName(QString szName)
     // Return value
     return fRes;
 }
-int ctedit::fillComboVarNames(QComboBox *comboBox, QList<int> lstTypes)
-// Caricamento ComboBox con Nomi Variabili filtrate in funzione del Tipo
+int ctedit::fillVarList(QStringList &lstVars, QList<int> &lstTypes)
+// Fill sorted List of Variables Names for Types in lstTypes
 {
     bool    fTypeFilter = lstTypes.count() > 0;
     int     nRow = 0;
-    int     nAdded = 0;
     bool    f2Add = false;
 
-    comboBox->clear();
+    lstVars.clear();
+
     for (nRow = 0; nRow < lstCTRecords.count(); nRow++)  {
         if (lstCTRecords[nRow].Enable)  {
             if (fTypeFilter)  {
@@ -2468,14 +2468,30 @@ int ctedit::fillComboVarNames(QComboBox *comboBox, QList<int> lstTypes)
             }
             // If Var is defined and of a correct type, insert in list
             if (f2Add)  {
-                comboBox->addItem(QString::fromAscii(lstCTRecords[nRow].Tag), nRow);
-                nAdded++;
+                lstVars.append(QString::fromAscii(lstCTRecords[nRow].Tag));
             }
         }
     }
-    return nAdded;
+    // Ordimanento Alfabetico della Lista
+    lstVars.sort();
+    // Return value
+    return lstVars.count();
 }
-int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fShowErrors)
+
+int ctedit::fillComboVarNames(QComboBox *comboBox, QList<int> &lstTypes)
+// Caricamento ComboBox con Nomi Variabili filtrate in funzione del Tipo
+{
+    QStringList lstVars;
+
+    lstVars.clear();
+    comboBox->clear();
+    if (fillVarList(lstVars, lstTypes) > 0)
+    {
+        comboBox->addItems(lstVars);
+    }
+    return lstVars.count();
+}
+int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
 // Controlli formali sulla riga a termine editing o ciclicamente durante controllo globale valori
 {
     int         nErrors = 0;
@@ -2492,8 +2508,9 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fShowErrors)
     // Form per Display Errori
     cteErrorList    *errWindow;
 
-    // Clear Error List
-    lstCTErrors.clear();
+    // Clear Error List if single line show
+    if (fSingleLine)
+        lstCTErrors.clear();
     // Controllo Variable Name
     szVarName = lstValues[colName];
     // Controllo cboPriority
@@ -2578,7 +2595,8 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fShowErrors)
     }
     // Controllo Protocol
     szTemp = lstValues[colProtocol];
-    nProtocol = szTemp.isEmpty() ? -1 : lstPLC.indexOf(szTemp);
+    qDebug() << "Protocol: " << szTemp;
+    nProtocol = szTemp.isEmpty() ? -1 : lstProtocol.indexOf(szTemp);
     if (nProtocol < 0)  {
         fillErrorMessage(nRow, colProtocol, errCTNoProtocol, szVarName, szTemp, chSeverityError, &errCt);
         lstCTErrors.append(errCt);
@@ -2588,6 +2606,7 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fShowErrors)
     szIP = lstValues[colIP].trimmed();
     if (szIP.isEmpty() &&
             (nProtocol == TCP || nProtocol == TCPRTU || nProtocol == TCP_SRV || nProtocol == TCPRTU_SRV))  {
+
         fillErrorMessage(nRow, colIP, errCTNoIP, szVarName, szTemp, chSeverityError, &errCt);
         lstCTErrors.append(errCt);
         nErrors++;
@@ -2598,7 +2617,7 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fShowErrors)
     //
     qDebug() << "Found Errors:" << nErrors;
     // Form visualizzazione errori se richiesto
-    if (fShowErrors && nErrors)  {
+    if (fSingleLine && nErrors)  {
         errWindow = new cteErrorList(this);
         errWindow->setModal(true);
         errWindow->lstErrors2Grid(lstCTErrors);

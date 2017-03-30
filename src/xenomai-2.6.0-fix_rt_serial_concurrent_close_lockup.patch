@@ -1,0 +1,26 @@
+--- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2017-03-30 23:02:00.256511899 +0000
++++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2017-03-30 23:00:47.501561429 +0000
+@@ -1197,22 +1197,7 @@
+ 	ctx = (struct rt_imx_mxs_auart_ctx *)context->dev_private;
+ 	port = ctx->port;
+ 
+-	/* Wait for the alarm to expire. */
+-	if (ctx->rs485 & RS485_RTS_AL_MASK) {
+-		retval = rt_alarm_inquire(&ctx->rts_deassert, &rts_deassert_info);
+-		/* Wait for the alarm to expire. */
+-		while ((retval >= 0) && (rts_deassert_info.expiration != TM_INFINITE)) {
+-			rt_task_yield();
+-
+-			retval = rt_alarm_inquire(&ctx->rts_deassert, &rts_deassert_info);
+-		}
+-		/* Wait for the alarm to notify the expiration to the handler. */
+-		while (retval > 0) {
+-			rt_task_yield();
+-
+-			retval = rt_alarm_inquire(&ctx->rts_deassert, &rts_deassert_info);
+-		}
+-	}
++	/* NOTE: here we should wait for the alarm to expire. */
+ 
+ 	rtdm_lock_get_irqsave(&ctx->lock, lock_ctx);
+ 

@@ -1197,22 +1197,7 @@ rt_imx_mxs_auart_close(struct rtdm_dev_context *context, rtdm_user_info_t *user_
 	ctx = (struct rt_imx_mxs_auart_ctx *)context->dev_private;
 	port = ctx->port;
 
-	/* Wait for the alarm to expire. */
-	if (ctx->rs485 & RS485_RTS_AL_MASK) {
-		retval = rt_alarm_inquire(&ctx->rts_deassert, &rts_deassert_info);
-		/* Wait for the alarm to expire. */
-		while ((retval >= 0) && (rts_deassert_info.expiration != TM_INFINITE)) {
-			rt_task_yield();
-
-			retval = rt_alarm_inquire(&ctx->rts_deassert, &rts_deassert_info);
-		}
-		/* Wait for the alarm to notify the expiration to the handler. */
-		while (retval > 0) {
-			rt_task_yield();
-
-			retval = rt_alarm_inquire(&ctx->rts_deassert, &rts_deassert_info);
-		}
-	}
+	/* NOTE: here we should wait for the alarm to expire. */
 
 	rtdm_lock_get_irqsave(&ctx->lock, lock_ctx);
 

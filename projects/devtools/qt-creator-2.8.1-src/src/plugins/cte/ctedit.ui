@@ -26,7 +26,7 @@
       <enum>QFrame::StyledPanel</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+      <enum>QFrame::Sunken</enum>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
@@ -36,6 +36,11 @@
           <width>60</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>MS Shell Dlg 2</family>
+         </font>
         </property>
         <property name="text">
          <string>Model:</string>
@@ -61,6 +66,9 @@
         </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Sunken</enum>
         </property>
         <property name="text">
          <string/>
@@ -97,6 +105,9 @@
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
+        <property name="frameShadow">
+         <enum>QFrame::Sunken</enum>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -130,7 +141,7 @@
           <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Sunken</enum>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
@@ -146,6 +157,11 @@
               <width>72</width>
               <height>48</height>
              </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>MS Shell Dlg 2</family>
+             </font>
             </property>
             <property name="toolTip">
              <string>Show or Hide unused rows</string>
@@ -178,6 +194,11 @@
               <height>48</height>
              </size>
             </property>
+            <property name="font">
+             <font>
+              <family>MS Shell Dlg 2</family>
+             </font>
+            </property>
             <property name="toolTip">
              <string>Import User Data from another Cross Table File</string>
             </property>
@@ -205,6 +226,11 @@
               <width>72</width>
               <height>48</height>
              </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>MS Shell Dlg 2</family>
+             </font>
             </property>
             <property name="toolTip">
              <string>Import User Data from another Cross Table File</string>
@@ -234,6 +260,11 @@
               <height>48</height>
              </size>
             </property>
+            <property name="font">
+             <font>
+              <family>MS Shell Dlg 2</family>
+             </font>
+            </property>
             <property name="toolTip">
              <string>Import User Data from another Cross Table File</string>
             </property>
@@ -262,6 +293,11 @@
               <height>48</height>
              </size>
             </property>
+            <property name="font">
+             <font>
+              <family>MS Shell Dlg 2</family>
+             </font>
+            </property>
             <property name="text">
              <string>Undo</string>
             </property>
@@ -287,6 +323,11 @@
               <height>48</height>
              </size>
             </property>
+            <property name="font">
+             <font>
+              <family>MS Shell Dlg 2</family>
+             </font>
+            </property>
             <property name="text">
              <string>Blocks</string>
             </property>
@@ -311,6 +352,11 @@
               <width>72</width>
               <height>48</height>
              </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>MS Shell Dlg 2</family>
+             </font>
             </property>
             <property name="text">
              <string>Compile</string>
@@ -340,6 +386,11 @@
               <height>48</height>
              </size>
             </property>
+            <property name="font">
+             <font>
+              <family>MS Shell Dlg 2</family>
+             </font>
+            </property>
             <property name="toolTip">
              <string>Save changes</string>
             </property>
@@ -363,7 +414,7 @@
           <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Sunken</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
@@ -374,7 +425,7 @@
                <enum>QFrame::StyledPanel</enum>
               </property>
               <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
+               <enum>QFrame::Sunken</enum>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout">
                <item>

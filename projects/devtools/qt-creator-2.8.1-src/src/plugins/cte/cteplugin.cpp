@@ -54,7 +54,7 @@ public:
         setWidget(ctEditor);
         setContext(Core::Context("CTE.MainView"));
         setDisplayName(tr("MectSuite"));
-        setIcon(QIcon(QString::fromAscii(":/icons/img/Mect3.ico")));
+        setIcon(QIcon(QString::fromAscii(":/icons/img/Mect3.png")));
         setPriority(0);
         setId("CTE.CTEMode");
         setContextHelpId(QString());
@@ -109,7 +109,6 @@ CTEPlugin::initialize(const QStringList &arguments, QString *errorMessage)
     Core::ActionContainer *CTEMenu = Core::ActionManager::createMenu("CTE.CTEMenu");
     QMenu *menu = CTEMenu->menu();
     menu->setTitle(tr("&MECT Editor"));
-    // menu->setIcon(QIcon(QString::fromAscii(":/icons/img/Mect3.ico")));
     menu->setEnabled(true);
 
     // Add the Cross Table Editor action command to the menu

@@ -264,7 +264,8 @@ MECT_TARGET_RFSPKGS := $(MECT_TARGET_RFSPKGS:%=$(MECT_RPMDIR)/%)
 export MECT_HOST_TOOLS_DIR := /opt/MECT
 
 # Toolchain archive
-MECT_CSXCPREFIX = arm-2011.03
+# for Linux
+MECT_CSXCPREFIX := arm-2011.03
 MECT_CSXCARCH = $(MECT_CSXCPREFIX)-41-arm-none-linux-gnueabi-i686-pc-linux-gnu.tar.bz2
 MECT_CSXCUNPACK = $(CURDIR)/$(MECT_CSXCPREFIX)
 # Keep this in sync with LTIB config
@@ -272,6 +273,8 @@ export MECT_CSXCDIR := $(MECT_HOST_TOOLS_DIR)/CodeSourcery
 export MECT_CC_DIRECTORY = $(MECT_CSXCDIR)
 export MECT_CC_VERSION := 
 export MECT_CC_RADIX := arm-none-linux-gnueabi
+# for Windows
+MECT_WCSXCARCH := arm-2011.03-41-arm-none-linux-gnueabi.exe
 
 # LTIB archive
 MECT_LTIB_EVKARCH = L2.6.35_1.1.0_130130_source.tar.gz
@@ -309,6 +312,7 @@ MECT_DOWNLOADS := \
 	$(MECT_CSXCARCH) \
 	$(MECT_LTIB_EVKARCH) \
 	$(MECT_FSPKG_DL) \
+	$(MECT_WCSXCARCH) \
 
 MECT_DLMD5 := $(MECT_DOWNLOADS:%=%.$(MECT_MD5EXT))
 MECT_DOWNLOADS := $(MECT_DOWNLOADS) $(MECT_DLMD5)
@@ -343,6 +347,7 @@ MECT_PACKAGES = \
 	m4 \
 	make \
 	mount \
+	nsis \
 	openssl \
 	patch \
 	perl \

@@ -323,10 +323,11 @@ ctedit::ctedit(QWidget *parent) :
     QString szExp = QString::fromAscii("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}");
     QRegExp regExprIP(szExp);
     ui->txtIP->setValidator(new QRegExpValidator(regExprIP, this));
-    // Validator per Nome variabile
+    // Validator per Nome variabile e Comment
     QString szNameExp = QString::fromAscii("\\w+");
     QRegExp regExprName(szNameExp);
     ui->txtName->setValidator(new QRegExpValidator(regExprName, this));
+    ui->txtComment->setValidator(new QRegExpValidator(regExprName, this));
     // Campi sempre locked
     ui->txtRow->setEnabled(false);
     ui->fraOptions->setEnabled(false);
@@ -480,8 +481,8 @@ bool    ctedit::list2GridRow(QStringList &lstRecValues, int nRow)
             fAdd = false;
             tItem->setText(szTemp);
         }
-        // Allineamento
-        if (nCol == colName || nCol == colComment)
+        // Allineamento Celle
+        if (nCol == colName || nCol == colComment || nCol == colSourceVar || nCol == colCompare)
             // Item Allineato a Sx
             tItem->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         else
@@ -608,7 +609,7 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
         lstRecValues[colComment] = QString::fromAscii(lstCTRecords[nRow].Comment).trimmed();
         // Behavior
         // Allarme o Evento
-        if (lstCTRecords[nRow].usedInAlarmsEvents)  {
+        if (lstCTRecords[nRow].usedInAlarmsEvents && lstCTRecords[nRow].Behavior >= behavior_alarm)  {
             // Tipo Allarme-Evento
             if (lstCTRecords[nRow].ALType == Alarm)
                 lstRecValues[colBehavior] = lstBehavior[behavior_alarm];
@@ -624,7 +625,7 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
             // Compare Var or Value
             szTemp = QString::fromAscii(lstCTRecords[nRow].ALCompareVar);
             if (szTemp.isEmpty())
-                lstRecValues[colCompare] = QString::number(lstCTRecords[nRow].ALCompareVal, 'f', 3);
+                lstRecValues[colCompare] = QString::number(lstCTRecords[nRow].ALCompareVal, 'f', 4);
             else
                 lstRecValues[colCompare] = szTemp;
             // Rising o Falling senza seconda parte
@@ -753,10 +754,12 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
             ui->cboBehavior->setCurrentIndex(nPos);
         // Caricamento ulteriori elementi interfaccia Allarmi / Eventi
         if (nPos > behavior_readwrite)  {
-            // Seleziona tutte le variabili tranne le H
-            fillComboVarNames(ui->cboVariable1, lstVarTypes, lstNoHUpdates);
+            // Seleziona tutte le variabili tranne le H lstAllVarTypes
+            // fillComboVarNames(ui->cboVariable1, lstVarTypes, lstNoHUpdates);
+            fillComboVarNames(ui->cboVariable1, lstAllVarTypes, lstNoHUpdates);
             // Ricerca posizione prima variabile
             szTemp = lstRecValues[colSourceVar].trimmed();
+            qDebug() << "Alarm Variable:" << szTemp;
             nPos = -1;
             if (! szTemp.isEmpty())  {
                 nPos = ui->cboVariable1->findText(szTemp, Qt::MatchExactly);
@@ -2487,7 +2490,7 @@ int ctedit::fillVarList(QStringList &lstVars, QList<int> &lstTypes, QList<int> &
             }
             // Filter on Update Type
             if (f2Add && fUpdateFilter)  {
-                fUpdateOk = lstUpdates.indexOf(lstCTRecords[nRow].Update);
+                fUpdateOk = lstUpdates.indexOf(lstCTRecords[nRow].Update) >= 0 ? true : false;
             }
             else {
                 fUpdateOk = f2Add;
@@ -2502,6 +2505,7 @@ int ctedit::fillVarList(QStringList &lstVars, QList<int> &lstTypes, QList<int> &
     // Ordimanento Alfabetico della Lista
     lstVars.sort();
     // Return value
+    qDebug() << "Items Added to List:" << lstVars.count();
     return lstVars.count();
 }
 
@@ -2608,12 +2612,13 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
                 nErrors++;
             }
         }
-        // Numero Decimali > 4 ===> Variable
-        else if (nVal >= 4)  {
+        // Numero Decimali > 4 ===> Variable (per tipi differenti da Bit in tutte le versioni possibili)
+        else if (nVal >= 4 && nType != BYTE_BIT && nType == WORD_BIT && nType == DWORD_BIT)  {
+            // Controlla che il numero indicato punti ad una variabile del tipo necessario a contenere il numero di decimali
             if (nVal > DimCrossTable || ! lstCTRecords[nVal].Enable ||
-            (lstCTRecords[nVal].VarType != UINT8 &&  lstCTRecords[nVal].VarType != UINT16 && lstCTRecords[nVal].VarType != UINT16BA &&
-             lstCTRecords[nVal].VarType != UDINT &&  lstCTRecords[nVal].VarType != UDINTDCBA && lstCTRecords[nVal].VarType != UDINTCDAB &&
-             lstCTRecords[nVal].VarType != UDINTBADC ) )   {
+                    (lstCTRecords[nVal].VarType != UINT8 &&  lstCTRecords[nVal].VarType != UINT16 && lstCTRecords[nVal].VarType != UINT16BA &&
+                     lstCTRecords[nVal].VarType != UDINT &&  lstCTRecords[nVal].VarType != UDINTDCBA && lstCTRecords[nVal].VarType != UDINTCDAB &&
+                     lstCTRecords[nVal].VarType != UDINTBADC ) )   {
                 fillErrorMessage(nRow, colDecimal, errCTNoVarDecimals, szVarName, szTemp, chSeverityError, &errCt);
                 lstCTErrors.append(errCt);
                 nErrors++;

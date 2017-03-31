@@ -157,15 +157,23 @@ ctedit::ctedit(QWidget *parent) :
             << QString::fromAscii("2")
             << QString::fromAscii("3")
         ;
-    // Lista PLC (Frequenza Aggiornamento
-    lstPLC.clear();
+    // Lista PLC (Frequenza Aggiornamento)
+    lstUpdateNames.clear();
+    lstAllUpdates.clear();
+    lstNoHUpdates.clear();
     for (nCol = Htype; nCol <= Xtype; nCol++)  {
-        lstPLC.append(QString::fromAscii(updateTypeName[nCol]));
+        lstUpdateNames.append(QString::fromAscii(updateTypeName[nCol]));
+        lstAllUpdates.append(nCol);
+        if (nCol != Htype)  {
+            lstNoHUpdates.append(nCol);
+        }
     }
     // Lista TIPI Variabili
     lstTipi.clear();
+    lstAllVarTypes.clear();
     for (nCol = BIT; nCol <= UNKNOWN; nCol++)  {
         lstTipi.append(QString::fromAscii(varTypeName[nCol]));
+        lstAllVarTypes.append(nCol);
     }
     // Lista Protocolli (tipi di Bus)
     lstProtocol.clear();
@@ -212,8 +220,9 @@ ctedit::ctedit(QWidget *parent) :
     szToolTip.append(tr("S - Permanent Slow Logging\n"));
     szToolTip.append(tr("F - Permanent Fast Logging\n"));
     szToolTip.append(tr("V - Permanent Logging if Changed"));
-    for  (nCol=0; nCol<lstPLC.count(); nCol++)   {
-        ui->cboUpdate->addItem(lstPLC[nCol], lstPLC[nCol]);
+    szToolTip.append(tr("X - Permanent Logging on Shot"));
+    for  (nCol=0; nCol<lstUpdateNames.count(); nCol++)   {
+        ui->cboUpdate->addItem(lstUpdateNames[nCol], lstUpdateNames[nCol]);
     }
     ui->cboUpdate->setToolTip(szToolTip);
     // ToolTip nome variabile
@@ -513,9 +522,6 @@ bool    ctedit::ctable2Grid()
     for (nCur = 0; nCur < lstCTRecords.count(); ++nCur)  {
         // Covert CT Record 2 User Values
         fRes = recCT2List(lstFields, nCur);
-        // Add Var Name to Variable List
-        if (! lstFields[colName].isEmpty())
-            lstUsedVarNames.append(lstFields[colName].trimmed());
         // If Ok add row to Table View
         if (fRes)  {
             ui->tblCT->insertRow(nCur);
@@ -523,8 +529,6 @@ bool    ctedit::ctable2Grid()
         }
     }
     qDebug() << tr("Loaded Rows: %1") .arg(nCur);
-    // Ordinamento Lista Variabili
-    lstUsedVarNames.sort();
     // Impostazione parametri TableView
     ui->tblCT->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tblCT->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -542,6 +546,7 @@ bool    ctedit::ctable2Grid()
         ui->cmdSave->setEnabled(true);
         // ui->cmdSave->setEnabled(m_isCtModified);
         showAllRows(m_fShowAllRows);
+        fillVarList(lstUsedVarNames, lstAllVarTypes, lstAllUpdates);
     }
     else
         qDebug() << tr("Error Loading Rows");
@@ -568,8 +573,8 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
         if (lstCTRecords[nRow].Enable >= 0 && lstCTRecords[nRow].Enable < lstPriority.count())
             lstRecValues[colPriority] = lstPriority[lstCTRecords[nRow].Enable];
         // Campo Update
-        if (lstCTRecords[nRow].Plc >= 0 && lstCTRecords[nRow].Plc < lstPLC.count())
-            lstRecValues[colUpdate] = lstPLC[lstCTRecords[nRow].Plc];
+        if (lstCTRecords[nRow].Update >= 0 && lstCTRecords[nRow].Update < lstUpdateNames.count())
+            lstRecValues[colUpdate] = lstUpdateNames[lstCTRecords[nRow].Update];
         // Campo Name
         lstRecValues[colName] = QString::fromAscii(lstCTRecords[nRow].Tag);
         // Campo Type
@@ -748,12 +753,14 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
             ui->cboBehavior->setCurrentIndex(nPos);
         // Caricamento ulteriori elementi interfaccia Allarmi / Eventi
         if (nPos > behavior_readwrite)  {
-            fillComboVarNames(ui->cboVariable1, lstVarTypes);
+            // Seleziona tutte le variabili tranne le H
+            fillComboVarNames(ui->cboVariable1, lstVarTypes, lstNoHUpdates);
             // Ricerca posizione prima variabile
             szTemp = lstRecValues[colSourceVar].trimmed();
             nPos = -1;
-            if (! szTemp.isEmpty())
+            if (! szTemp.isEmpty())  {
                 nPos = ui->cboVariable1->findText(szTemp, Qt::MatchExactly);
+            }
             ui->cboVariable1->setCurrentIndex(nPos);
             // Operatore confronto
             nPos = -1;
@@ -761,6 +768,7 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
             if (! szTemp.isEmpty())
                 nPos = ui->cboCondition->findText(szTemp, Qt::MatchExactly);
             ui->cboCondition->setCurrentIndex(nPos);
+
         }
     }
 
@@ -785,7 +793,7 @@ bool ctedit::iface2values(QStringList &lstRecValues)
     lstRecValues[colPriority] = szTemp.trimmed();
     // Update colUpdate
     nPos = ui->cboUpdate->currentIndex();
-    if (nPos >= 0 && nPos < lstPLC.count())
+    if (nPos >= 0 && nPos < lstUpdateNames.count())
         szTemp = ui->cboUpdate->itemData(nPos).toString();
     else
         szTemp = szEMPTY;
@@ -1009,7 +1017,7 @@ void ctedit::freeCTrec(int nRow)
         return;
     lstCTRecords[nRow].UsedEntry = 0;
     lstCTRecords[nRow].Enable = 0;
-    lstCTRecords[nRow].Plc = (UpdateType) 0;
+    lstCTRecords[nRow].Update = (UpdateType) 0;
     strcpy(lstCTRecords[nRow].Tag, "");
     lstCTRecords[nRow].VarType = (varTypes) 0;
     lstCTRecords[nRow].Decimal = 0;
@@ -1065,9 +1073,9 @@ bool ctedit::list2CTrec(QStringList &lstRecValues, int nRow)
         nPos = (nPos >= 0 && nPos < lstPriority.count()) ? nPos : 0;
         lstCTRecords[nRow].Enable = (int16_t) nPos;
         // Update
-        nPos = lstPLC.indexOf(lstRecValues[colUpdate]);
-        nPos = (nPos >= 0 && nPos < lstPLC.count()) ? nPos : 0;
-        lstCTRecords[nRow].Plc = (UpdateType) nPos;
+        nPos = lstUpdateNames.indexOf(lstRecValues[colUpdate]);
+        nPos = (nPos >= 0 && nPos < lstUpdateNames.count()) ? nPos : 0;
+        lstCTRecords[nRow].Update = (UpdateType) nPos;
         // Campo Name
         strcpy(lstCTRecords[nRow].Tag, lstRecValues[colName].trimmed().toAscii().data());
         // Campo Abilitazione record
@@ -1236,12 +1244,19 @@ void ctedit::on_cboType_currentIndexChanged(int index)
     if (index == BIT)  {
         ui->txtDecimal->setText(szZERO);
         ui->txtDecimal->setEnabled(false);
+        // Abilita possibilità di rendere la variabile un allarme/evento
+        enableComboItem(ui->cboBehavior, behavior_alarm);
+        enableComboItem(ui->cboBehavior, behavior_event);
     }
     else  {
         ui->txtDecimal->setEnabled(true);
         // Default 1 decimale se non specificato o presente valore
         if (ui->txtDecimal->text().isEmpty())
             ui->txtDecimal->setText(QString::fromAscii("1"));
+        // Disabilita possibilità di rendere la variabile un allarme/evento
+        disableComboItem(ui->cboBehavior, behavior_alarm);
+        disableComboItem(ui->cboBehavior, behavior_event);
+
     }
 }
 void ctedit::on_cboProtocol_currentIndexChanged(int index)
@@ -1348,6 +1363,7 @@ void ctedit::tableItemChanged(const QItemSelection & selected, const QItemSelect
                     // Aggiorna Grid Utente per riga corrente
                     if (fIsModif)  {
                         fRes = list2GridRow(lstFields, nRow);
+
                     }
                     qDebug() << "Row changed:" << nRow;
                 }
@@ -1963,14 +1979,14 @@ void ctedit::showAllRows(bool fShowAll)
 void ctedit::on_cmdGotoRow_clicked()
 // Goto Row n
 {
-    QStringList lstFields;
+    // QStringList lstFields;
     bool fOk;
 
     // Valori da interfaccia a Lista Stringhe
-    fOk = iface2values(lstFields);
+    // fOk = iface2values(lstFields);
     // Controllo di coerenza sulla riga corrente
-    if (checkFormFields(m_nGridRow, lstFields, true) > 0)
-        return;
+    // if (checkFormFields(m_nGridRow, lstFields, true) > 0)
+    //     return;
     // Input Dialog per Numero riga
     int nRow = QInputDialog::getInt(this, tr("Row to Jump To"),
                                  tr("Enter Row Number to Jump to:"), m_nGridRow + 1, 1, DimCrossTable, 1, &fOk);
@@ -1984,12 +2000,12 @@ void ctedit::on_cmdSearch_clicked()
 {
     bool fOk;
     int  nRow = 0;
-    QStringList lstFields;
+    // QStringList lstFields;
 
     // Valori da interfaccia a Lista Stringhe
-    fOk = iface2values(lstFields);
-    if (checkFormFields(m_nGridRow, lstFields, true) > 0)
-        return;
+    // fOk = iface2values(lstFields);
+    // if (checkFormFields(m_nGridRow, lstFields, true) > 0)
+    //     return;
     // Input Dialog per Nome Variabile
     QString szText;
 
@@ -2449,25 +2465,36 @@ bool ctedit::isValidVarName(QString szName)
     // Return value
     return fRes;
 }
-int ctedit::fillVarList(QStringList &lstVars, QList<int> &lstTypes)
-// Fill sorted List of Variables Names for Types in lstTypes
+int ctedit::fillVarList(QStringList &lstVars, QList<int> &lstTypes, QList<int> &lstUpdates)
+// Fill sorted List of Variables Names for Types in lstTypes and Update Type in lstUpdates
 {
     bool    fTypeFilter = lstTypes.count() > 0;
+    bool    fUpdateFilter = lstUpdates.count() > 0;
     int     nRow = 0;
     bool    f2Add = false;
+    bool    fUpdateOk = false;
 
     lstVars.clear();
 
     for (nRow = 0; nRow < lstCTRecords.count(); nRow++)  {
         if (lstCTRecords[nRow].Enable)  {
+            // Filter on Var Type
             if (fTypeFilter)  {
                 f2Add = lstTypes.indexOf(lstCTRecords[nRow].VarType) >= 0 ? true : false;
             }
             else  {
                 f2Add = true;
             }
+            // Filter on Update Type
+            if (f2Add && fUpdateFilter)  {
+                fUpdateOk = lstUpdates.indexOf(lstCTRecords[nRow].Update);
+            }
+            else {
+                fUpdateOk = f2Add;
+            }
+
             // If Var is defined and of a correct type, insert in list
-            if (f2Add)  {
+            if (f2Add && fUpdateOk)  {
                 lstVars.append(QString::fromAscii(lstCTRecords[nRow].Tag));
             }
         }
@@ -2478,14 +2505,14 @@ int ctedit::fillVarList(QStringList &lstVars, QList<int> &lstTypes)
     return lstVars.count();
 }
 
-int ctedit::fillComboVarNames(QComboBox *comboBox, QList<int> &lstTypes)
-// Caricamento ComboBox con Nomi Variabili filtrate in funzione del Tipo
+int ctedit::fillComboVarNames(QComboBox *comboBox, QList<int> &lstTypes, QList<int> &lstUpdates)
+// Caricamento ComboBox con Nomi Variabili filtrate in funzione del Tipo e della Persistenza
 {
     QStringList lstVars;
 
     lstVars.clear();
     comboBox->clear();
-    if (fillVarList(lstVars, lstTypes) > 0)
+    if (fillVarList(lstVars, lstTypes, lstUpdates) > 0)
     {
         comboBox->addItems(lstVars);
     }
@@ -2523,7 +2550,7 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
     }
     // Controllo Update
     szTemp = lstValues[colUpdate];
-    nPos = szTemp.isEmpty() ? -1 : lstPLC.indexOf(szTemp);
+    nPos = szTemp.isEmpty() ? -1 : lstUpdateNames.indexOf(szTemp);
     if (nPos < 0)  {
         fillErrorMessage(nRow, colUpdate, errCTNoUpdate, szVarName, szTemp, chSeverityError, &errCt);
         lstCTErrors.append(errCt);
@@ -2633,19 +2660,18 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
 
 void ctedit::on_cboVariable1_currentIndexChanged(int index)
 {
-    QVariant vIndex;
+    QString szVarName;
     int     nRow = 0;
-    bool    fOk = false;
     QList<int> lstVarTypes;
 
     lstVarTypes.clear();
     if (index >= 0)  {
-        vIndex = ui->cboVariable1->itemData(index);
-        nRow = vIndex.toInt(&fOk);
-        qDebug() << "Row Source" << nRow;
-        if (fOk && nRow >= 0 && nRow < DimCrossTable)  {
+        szVarName = ui->cboVariable1->currentText();
+        nRow = varName2Row(szVarName, lstCTRecords);
+        qDebug() << "Row First Variable in Alarm:" << nRow;
+        if (nRow >= 0 && nRow < DimCrossTable)  {
             // TODO: Fill Var2 Type List with compatible types
-            fillComboVarNames(ui->cboVariable2, lstVarTypes);
+            fillComboVarNames(ui->cboVariable2, lstVarTypes, lstNoHUpdates);
         }
     }
 }
@@ -2683,4 +2709,24 @@ void ctedit::on_optVariableVal_clicked(bool checked)
         ui->txtFixedValue->setEnabled(true);
         ui->cboVariable2->setEnabled(false);
     }
+}
+int ctedit::varName2Row(QString &szVarName, QList<CrossTableRecord> &lstCTRecs)
+// Search in Cross Table the index of szVarName
+{
+    int nRow = -1;
+    char searchTag[MAX_IDNAME_LEN];
+
+    if (! szVarName.isEmpty())  {
+        strcpy(searchTag, szVarName.toAscii().data());
+        for (nRow = 0; nRow < lstCTRecs.count(); nRow++)  {
+            if (lstCTRecs[nRow].UsedEntry)  {
+                if (strcmp(searchTag, lstCTRecs[nRow].Tag) == 0)
+                    break;
+            }
+        }
+        // Check Failed Search
+        if (nRow == lstCTRecs.count())
+            nRow = -1;
+    }
+    return nRow;
 }

@@ -124,7 +124,7 @@ enum behaviors  {
 struct  CrossTableRecord {
     int16_t Enable;
     int  UsedEntry;
-    enum UpdateType Plc;
+    enum UpdateType Update;
     char Tag[MAX_IDNAME_LEN];
     enum varTypes VarType;
     uint16_t Decimal;

@@ -330,7 +330,7 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
     for (addr = 1; addr <= DimCrossTable; ++addr) {
         CrossTable[addr].Enable = 0;
         CrossTable[addr].UsedEntry = 0;
-        CrossTable[addr].Plc = FALSE;
+        CrossTable[addr].Update = FALSE;
         CrossTable[addr].Tag[0] = 0;
         CrossTable[addr].VarType = UNKNOWN;
         CrossTable[addr].Decimal = 0;
@@ -410,22 +410,22 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
 
         switch (p[0]) {
         case 'H':
-            CrossTable[addr].Plc = Htype;
+            CrossTable[addr].Update = Htype;
             break;
         case 'P':
-            CrossTable[addr].Plc = Ptype;
+            CrossTable[addr].Update = Ptype;
             break;
         case 'S':
-            CrossTable[addr].Plc = Stype;
+            CrossTable[addr].Update = Stype;
             break;
         case 'F':
-            CrossTable[addr].Plc = Ftype;
+            CrossTable[addr].Update = Ftype;
             break;
         case 'V':
-            CrossTable[addr].Plc = Vtype;
+            CrossTable[addr].Update = Vtype;
             break;
         case 'X':
-            CrossTable[addr].Plc = Xtype;
+            CrossTable[addr].Update = Xtype;
             break;
         default:
             ERR = TRUE;
@@ -1026,7 +1026,7 @@ int SaveXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
             sprintf(token, "%1d;", CrossTable[addr].Enable);
             strcat(row, token);
             // Update
-            sprintf(token, "%s;", updateTypeName[CrossTable[addr].Plc]);
+            sprintf(token, "%s;", updateTypeName[CrossTable[addr].Update]);
             strcat(row, token);
             // Name
             sprintf(token, "%-16s;", CrossTable[addr].Tag);

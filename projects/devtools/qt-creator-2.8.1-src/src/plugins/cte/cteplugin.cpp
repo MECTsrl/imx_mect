@@ -54,7 +54,7 @@ public:
         setWidget(ctEditor);
         setContext(Core::Context("CTE.MainView"));
         setDisplayName(tr("MectSuite"));
-        setIcon(QIcon(QString::fromAscii(":/icons/img/Mect3.png")));
+        setIcon(QIcon(QString::fromAscii(":/icons/img/Logo_Mect.png")));
         setPriority(0);
         setId("CTE.CTEMode");
         setContextHelpId(QString());

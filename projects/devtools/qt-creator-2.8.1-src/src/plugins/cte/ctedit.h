@@ -93,8 +93,9 @@ private:
     void    jumpToGridRow(int nRow);                // Salto alla riga nRow del Grid
     void    displayStatusMessage(QString szMessage, int nSeconds = 0);// Show message in ui->lblMessage
     void    enableInterface();                      // Abilita l'interfaccia in funzione dello stato del sistema
-    int     fillVarList(QStringList &lstVars, QList<int> &lstTypes);        // Fill sorted List of Variables Names for Types in lstTypes
-    int     fillComboVarNames(QComboBox *comboBox, QList<int> &lstTypes);   // Caricamento ComboBox con Nomi Variabili filtrate in funzione del Tipo
+    int     fillVarList(QStringList &lstVars, QList<int> &lstTypes, QList<int> &lstUpdates); // Fill sorted List of Variables Names for Types in lstTypes and Update Type in lstUpdates
+    int     fillComboVarNames(QComboBox *comboBox, QList<int> &lstTypes, QList<int> &lstUpdates);   // Caricamento ComboBox con Nomi Variabili filtrate in funzione del Tipo and Update Type in lstUpdates
+    int     varName2Row(QString &szVarName, QList<CrossTableRecord> &lstCTRecs);        // Search in Cross Table Record List the index of szVarName
     // Gestione Controlli
     int     checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine = true);   // Controlli formali sulla riga a termine editing
     int     globalChecks();                                 // Controlli complessivi su tutta la CT
@@ -119,7 +120,7 @@ private:
     // Liste varie per prompt colonne e valori Combo Box (per traduzioni)
     QStringList lstHeadCols;
     QStringList lstPriority;
-    QStringList lstPLC;
+    QStringList lstUpdateNames;
     QStringList lstTipi;
     QStringList lstProtocol;
     QList<bool> lstBusEnabler;
@@ -147,6 +148,9 @@ private:
     QList<QList<CrossTableRecord> > lstUndo;        // Lista degli Undo di elementi di Cross Table Editor
     CrossTableRecord        CrossTable[1 + DimCrossTable];	 // campi sono riempiti a partire dall'indice 1
     // Controllo e Gestione  Errori
+    QList<int>              lstAllUpdates;          // Lista contenente tutti i tipi di Update (per filtro su Nomi variabili)
+    QList<int>              lstNoHUpdates;          // Lista contenente tutti i tipi di Update tranne H (per Allarmi)
+    QList<int>              lstAllVarTypes;         // Lista contenente tutti i tipi di Variabili definiti
     QStringList             lstUsedVarNames;        // Lista contenente i nomi delle variabili (per Search)
     QList<Err_CT>           lstCTErrors;
     QStringList             lstUniqueVarNames;      // Lista per controllo univocità identificatori

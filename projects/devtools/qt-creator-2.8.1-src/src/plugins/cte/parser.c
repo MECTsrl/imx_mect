@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <locale.h>
 #include "parser.h"
 
 uint16_t lastAlarmEvent = 0;
@@ -69,8 +69,8 @@ const char *logic_operators[] = {">",
                                  "<=",
                                  "==",
                                  "!=",
-                                 "RISING EDGE",
-                                 "FALLING EDGE" };
+                                 "RISING",
+                                 "FALLING" };
 
 
 
@@ -279,25 +279,33 @@ static int newAlarmEvent(int isAlarm, uint16_t addr, char *expr, size_t len)
         goto exit_error;
     }
     ALCrossTable[lastAlarmEvent].ALCompareVar[0] = 0;
+    // Per operatori diversi da RISING e FALLING cerca la parte DX dell'espressione
     if (ALCrossTable[lastAlarmEvent].ALOperator != oper_falling && ALCrossTable[lastAlarmEvent].ALOperator != oper_rising) {
         char *s;
-        float f;
+        float f = 0.0;
 
         p = strtok_r(NULL, " ]", &r);
         if (p == NULL) {
             goto exit_error;
         }
-        f = strtof(p, &s);
-        if (s == p) {
-            // identifier (check later on)
+        if (isalpha(*p))  {
             strncpy(ALCrossTable[lastAlarmEvent].ALCompareVar, p, MAX_IDNAME_LEN);
-            ALCrossTable[lastAlarmEvent].ALCompareVal = 0.0;
-        } else {
-            // number
-            ALCrossTable[lastAlarmEvent].ALCompareVar[0] = 0;
             ALCrossTable[lastAlarmEvent].ALCompareVal = f;
-            // memcpy(&ALCrossTable[lastAlarmEvent].ALCompareVal, &f, sizeof(uint32_t));
         }
+        else  {
+            // Trying to convert string in float
+            f = strtof(p, &s);
+            if (s == p) {
+                // Error in Conversion, maybe identifier (check later on)
+                strncpy(ALCrossTable[lastAlarmEvent].ALCompareVar, p, MAX_IDNAME_LEN);
+                ALCrossTable[lastAlarmEvent].ALCompareVal = 0.0;
+            } else {
+                // string as number
+                ALCrossTable[lastAlarmEvent].ALCompareVar[0] = 0;
+                ALCrossTable[lastAlarmEvent].ALCompareVal = f;
+            }
+        }
+        // fprintf(stderr, "Voice:%d - Compare Value: %s Estimated Value: %f Compare Var: %s\n", addr, p, f, ALCrossTable[lastAlarmEvent].ALCompareVar);
     }
     return 0;
 
@@ -326,11 +334,13 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
     FILE *xtable = NULL;
     char *cPosComment = 0;
 
-    // init tables
+    // Setting English Locale
+    setlocale(LC_NUMERIC, "C");
+    // init tables    
     for (addr = 1; addr <= DimCrossTable; ++addr) {
         CrossTable[addr].Enable = 0;
         CrossTable[addr].UsedEntry = 0;
-        CrossTable[addr].Plc = FALSE;
+        CrossTable[addr].Update = FALSE;
         CrossTable[addr].Tag[0] = 0;
         CrossTable[addr].VarType = UNKNOWN;
         CrossTable[addr].Decimal = 0;
@@ -369,7 +379,7 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
     }
 
     // open file
-    fprintf(stderr, "loading '%s' ...", crossTableFile);
+    fprintf(stderr, "loading '%s' ...\n", crossTableFile);
     xtable = fopen(crossTableFile, "r");
     if (xtable == NULL)  {
         ERR = TRUE;
@@ -410,22 +420,22 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
 
         switch (p[0]) {
         case 'H':
-            CrossTable[addr].Plc = Htype;
+            CrossTable[addr].Update = Htype;
             break;
         case 'P':
-            CrossTable[addr].Plc = Ptype;
+            CrossTable[addr].Update = Ptype;
             break;
         case 'S':
-            CrossTable[addr].Plc = Stype;
+            CrossTable[addr].Update = Stype;
             break;
         case 'F':
-            CrossTable[addr].Plc = Ftype;
+            CrossTable[addr].Update = Ftype;
             break;
         case 'V':
-            CrossTable[addr].Plc = Vtype;
+            CrossTable[addr].Update = Vtype;
             break;
         case 'X':
-            CrossTable[addr].Plc = Xtype;
+            CrossTable[addr].Update = Xtype;
             break;
         default:
             ERR = TRUE;
@@ -644,7 +654,7 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
                     break;
                 }
             }
-            // fprintf(stderr, "Voice:%d - %s\n", addr, CrossTable[addr].Output == TRUE ? "R/W" : "R/O" );
+            fprintf(stderr, "Voice:%d - Behavior: %d\n", addr, CrossTable[addr].Behavior);
 
         }
     }
@@ -976,6 +986,7 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
         CrossTable[ALCrossTable[indx].TagAddr].ALComparison = ALCrossTable[indx].comparison;
         strcpy(CrossTable[ALCrossTable[indx].TagAddr].ALSource, ALCrossTable[indx].ALSource);
         CrossTable[ALCrossTable[indx].TagAddr].ALOperator = ALCrossTable[indx].ALOperator;
+        strcpy(CrossTable[ALCrossTable[indx].TagAddr].ALCompareVar, ALCrossTable[indx].ALCompareVar);
         CrossTable[ALCrossTable[indx].TagAddr].ALCompareVal = fvalue;
         CrossTable[ALCrossTable[indx].TagAddr].ALCompatible = compatible;
 
@@ -1026,7 +1037,7 @@ int SaveXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
             sprintf(token, "%1d;", CrossTable[addr].Enable);
             strcat(row, token);
             // Update
-            sprintf(token, "%s;", updateTypeName[CrossTable[addr].Plc]);
+            sprintf(token, "%s;", updateTypeName[CrossTable[addr].Update]);
             strcat(row, token);
             // Name
             sprintf(token, "%-16s;", CrossTable[addr].Tag);
@@ -1086,8 +1097,25 @@ int SaveXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
                 else {
                     strcat(row, "[EV ");
                 }
-                // TODO: Complete writing alarm conditions
-                // Closing condition
+                // Left part of Alarm/Event condition
+                strcat(row, CrossTable[addr].ALSource);
+                strcat(row, " ");
+                // Operator
+                strcat(row, logic_operators[CrossTable[addr].ALOperator]);
+                // Right part of Alarm/Event (if Any)
+                if (CrossTable[addr].ALOperator != oper_rising && CrossTable[addr].ALOperator != oper_falling)  {
+                    // Space Sep.
+                    strcat(row, " ");
+                    // The right part is a Variable Name
+                    if (strlen(CrossTable[addr].ALCompareVar) > 0)  {
+                        strcat(row, CrossTable[addr].ALCompareVar);
+                    }
+                    else  {
+                        sprintf(token, "%0.4f", CrossTable[addr].ALCompareVal);
+                        strcat(row, token);
+                    }
+                }
+                // Closing Alarm/Event condition
                 strcat(row, "]");
             }
             // Comment

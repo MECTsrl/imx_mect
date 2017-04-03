@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/icons">
-        <file>img/Mect3.ico</file>
-        <file>img/Mect3.png</file>
+        <file>img/Logo_Mect.png</file>
     </qresource>
 </RCC>

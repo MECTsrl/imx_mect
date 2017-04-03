@@ -1,6 +1,11 @@
 # TODO set the proper version.
 ATCM_VERSION := 1.2.3-dummy
 
+# Set dummy default version.
+ifeq ($(strip $(MECT_BUILD_RELEASE)),)
+    MECT_BUILD_RELEASE := 2.1.0
+endif
+
 MAKEFILE_NAME := $(lastword $(MAKEFILE_LIST))
 
 export LC_ALL := C
@@ -12,7 +17,7 @@ export WINEDEBUG := -all
 DRIVE_C = $(WINEPREFIX)/drive_c
 
 DISPLAY_SAVED := $(DISPLAY)
-export DISPLAY := 
+export DISPLAY :=
 
 
 SRC_DIRECTORY := $(CURDIR)/../../src
@@ -46,7 +51,7 @@ QT_BIN_DIR := $(subst /,\\\\,$(QT_BIN_DIR))
 QTC_VER := 2.8.1
 QTC_DIRECTORY := qt-creator-$(QTC_VER)-src
 # NOTE: No install. Build in the installation directory.
-QTC_BUILD_DIR = $(CURDIR)/$(QTC_DIRECTORY)-build
+QTC_BUILD_DIR := $(CURDIR)/$(QTC_DIRECTORY)-build
 QTC_INST_DIR_H := $(DRIVE_C)/MECT/Qt-Creator-$(QTC_VER)
 export QTC_INST_DIR := C:/MECT/Qt-Creator-$(QTC_VER)
 QTC_BIN_DIR = $(QTC_INST_DIR)/bin
@@ -56,7 +61,7 @@ QTC_BIN_DIR := $(subst /,\\\\,$(QTC_BIN_DIR))
 #
 QWT_VER := 6.1
 QWT_DIRECTORY := qwt-$(QWT_VER)-multiaxes
-QWT_BUILD_DIR = $(CURDIR)/$(QWT_DIRECTORY)-build
+QWT_BUILD_DIR := $(CURDIR)/$(QWT_DIRECTORY)-build
 
 QWT_PATCH_NODEBUG = $(SRC_DIRECTORY)/qwt-6.1-multiaxes-no_debug.patch
 
@@ -65,13 +70,16 @@ QWT_PATCH_NODEBUG = $(SRC_DIRECTORY)/qwt-6.1-multiaxes-no_debug.patch
 MP_DIRECTORY := ../mect_plugins
 ifeq ($(shell expr "$$(wine --version)" : "wine-1\\.6"),8)
 	# Makefile.Release binds install path to c:
-	MP_INST_DIR := 
+	MP_INST_DIR :=
 else
 	MP_INST_DIR := $(QT_INST_DIR)
 endif
 
 MP_PATCH_PATHS = $(SRC_DIRECTORY)/mect_plugins-build_inst_paths.patch
 MP_PATCH_QRC_INSTPATH = $(SRC_DIRECTORY)/mect_plugins-qrc_inst_paths.patch
+
+# MECT Suite installer
+INSTALLER_DIR := $(CURDIR)/installer
 
 # MECT Cross Table Editor
 #
@@ -135,7 +143,10 @@ tools: wine
 	sed -i '/^"PATH"=/ s/"$$/;$(QTC_BIN_DIR)"/' $(WINEPREFIX)/system.reg
 
 .PHONY: qt
-qt: rebase do_qt rebase
+qt:
+	make -f $(MAKEFILE_NAME) rebase
+	make -f $(MAKEFILE_NAME) do_qt
+	make -f $(MAKEFILE_NAME) rebase
 
 .PHONY: do_qt
 do_qt:
@@ -170,6 +181,7 @@ do_qt:
 	    -no-libtiff
 	$(MAKE) -j$(NPROCS) -C $(QT_DIRECTORY); $(SANE)
 
+
 .PHONY: install-qt
 install-qt: clean-qt
 	mkdir -p $(QT_INST_DIR_H)
@@ -198,7 +210,10 @@ $(LC_DLL):
 	$(MAKE) -C $(LC_DIRECTORY) -f Makefile.windows all install; $(SANE)
 
 .PHONY: qtc
-qtc: rebase do_qtc rebase
+qtc:
+	make -f $(MAKEFILE_NAME) rebase
+	make -f $(MAKEFILE_NAME) do_qtc
+	make -f $(MAKEFILE_NAME) rebase
 
 .PHONY: do_qtc
 do_qtc:
@@ -208,7 +223,10 @@ do_qtc:
 	$(MAKE) -C $(QTC_BUILD_DIR) INSTALL_ROOT=$(QTC_INST_DIR) install; $(SANE)
 
 .PHONY: qwt
-qwt: rebase do_qwt rebase
+qwt:
+	make -f $(MAKEFILE_NAME) rebase
+	make -f $(MAKEFILE_NAME) do_qwt
+	make -f $(MAKEFILE_NAME) rebase
 
 .PHONY: do_qwt
 do_qwt:
@@ -219,7 +237,12 @@ do_qwt:
 	$(MAKE) -C $(QWT_BUILD_DIR) INSTALL_ROOT= install; $(SANE)
 
 .PHONY: mp
-mp: rebase do_mp rebase
+mp:
+	make -f $(MAKEFILE_NAME) rebase
+	make -f $(MAKEFILE_NAME) do_mp
+	make -f $(MAKEFILE_NAME) rebase
+	make -f $(MAKEFILE_NAME) do_qt_tutorial
+	make -f $(MAKEFILE_NAME) rebase
 
 .PHONY: do_mp
 do_mp:
@@ -232,15 +255,27 @@ do_mp:
 	$(MAKE) -j $(NPROCS) -C $(MP_DIRECTORY)/qt_plugins; $(SANE)
 	$(MAKE) -C $(MP_DIRECTORY)/qt_plugins INSTALL_ROOT=$(MP_INST_DIR) install; $(SANE)
 
+.PHONY: do_qt_tutorial
+do_qt_tutorial:
+	test -d $(MP_DIRECTORY)/qt_help/tutorial
+	cd $(MP_DIRECTORY)/qt_help/tutorial; for h in doc.qhp doc_eng.qhp; do \
+	    wine $(QT_INST_DIR_H)/bin/qhelpgenerator.exe $$h -o `dirname $$h`/`basename $$h .qhp`.qch; \
+	done
+	cd $(MP_DIRECTORY)/qt_help/tutorial; zip -9 help_XXX.zip *.qch *.html
+
+.PHONY: installer
+installer:
+	$(MAKE) -C $(INSTALLER_DIR) MECT_BUILD_RELEASE=$(MECT_BUILD_RELEASE)
+
 
 # Utils
 .PHONY: run-qtc
-run-qtc: export WINEDEBUG := 
+run-qtc: export WINEDEBUG :=
 run-qtc: export DISPLAY := $(DISPLAY_SAVED)
 run-qtc:
 	wine $(QTC_INST_DIR)/bin/qtcreator.exe
 
-# msys-1.0.dll rebase is a workaround for a bug in Cygwin use of persistent memory
+# msys-1.0.dll rebase is a workaround for a bug in Cygwin's use of persistent memory
 .PHONY: rebase
 rebase:
 	-wineserver -k
@@ -327,7 +362,7 @@ buildclean-qwt:
 
 
 .PHONY: cmd
-cmd: export WINEDEBUG := 
+cmd: export WINEDEBUG :=
 cmd: export DISPLAY := $(DISPLAY_SAVED)
 cmd:
 	#wineconsole cmd
@@ -340,9 +375,11 @@ cmd:
 	#wine mingw-get install mingw-ccache
 	#wine unzip -o -d c:/ c:/4c.zip
 	#wine c:/ATCMControl/Engineering/bin/4ceng.exe; $(SANE)
+	#wineconsole 'wine/drive_c/Program Files/MECT/MECTSuite-test/MECTSuite.bat'
+	wine 'wine/drive_c/MECT/Qt-Creator-2.8.1/bin/ctc.exe'
 
 .PHONY: ctc
-ctc: export WINEDEBUG := 
+ctc: export WINEDEBUG :=
 ctc: export DISPLAY := $(DISPLAY_SAVED)
 ctc:
 	wine qt-creator-2.8.1-src-build/bin/ctc.exe

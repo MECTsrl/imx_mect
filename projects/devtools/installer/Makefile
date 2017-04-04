@@ -97,6 +97,10 @@ QTT_RPMROOT := $(shell pwd)/rpmroot
 
 CSXC_ARC := arm-2011.03-41-arm-none-linux-gnueabi.exe
 
+CAN_ARC := ATCM.zip
+
+UNZIP_EXE := unzip.exe
+
 
 # Set dummy default version.
 ifeq ($(strip $(MECT_BUILD_RELEASE)),)
@@ -154,6 +158,10 @@ all:
 	archive="`pwd`/$(ARCHNAME)"; cd $(INSTALLDST); sudo zip -r "$$archive" *; sudo chown $$USER "$$archive"
 	# Code Sourcery ARM cross compiler installer
 	cp --reflink=auto $(SRCDIR)/$(CSXC_ARC) .
+	# CAN builder
+	cp --reflink=auto $(SRCDIR)/$(CAN_ARC) .
+	# unzip
+	cp --reflink=auto $(SRCDIR)/$(UNZIP_EXE) .
 	# NSIS build
 	makensis -DAPPNAME=$(APPNAME) -DVERSIONMAJOR=$(VERSIONMAJOR) -DVERSIONMINOR=$(VERSIONMINOR) -DVERSIONBUILD=$(VERSIONBUILD) -DARCHNAME=$(ARCHNAME) -DINSTALLPRG=$(INSTALLPRG) -DINSTALLSIZE="`du -s ${INSTALLDST} | awk '{print $$1}'`" -DQTH_DIR=$(QTH_DIR) -DMINGW_DIR=$(MINGW_DIR) -DQTC_DIR=$(QTC_DIR) -DEMB_DIR=$(EMB_DIR) $(INSTALLSCR)
 

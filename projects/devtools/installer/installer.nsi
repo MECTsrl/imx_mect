@@ -21,6 +21,7 @@ SetCompress off
 !define RUNNAME         "${APPNAME}-v${VERSION}"
 !define UNINSTNAME      "${APPNAME}-v${VERSION}-uninstall.exe"
 !define ARMCCSETUP      "arm-2011.03-41-arm-none-linux-gnueabi.exe"
+!define CANBALL		"ATCM.zip"
 !define QTHINI          "${QTH_DIR}\bin\qt.conf"
 !define QTTINI          "${EMB_DIR}\usr\bin\qt.conf"
 !define ROAMINGAPPDATA  "$LOCALAPPDATA\..\Roaming"
@@ -201,20 +202,26 @@ section "install"
 
     setOutPath $INSTDIR
 
-    # Install the main archive.
-    #
-    # FIXME Use external ZIP archive.
-    file "/oname=$TEMP\${INSTALLBALL}" ${INSTALLBALL}
-    file "/oname=$TEMP\unzip.exe" "..\..\..\..\src\unzip.exe"
-    execWait '"$TEMP\unzip.exe" -o $TEMP\${INSTALLBALL}'
-    delete "$TEMP\${INSTALLBALL}"
-    delete "$TEMP\unzip.exe"
-    # FIXME Compress all files within installer.
-    ### file /r install-them-all/*
-
     # Install the icon(s).
     #
     file ${ICONNAME}
+
+    # Install the main archive.
+    #
+    # FIXME Install using an external ZIP archive.
+    file "/oname=$TEMP\unzip.exe" "unzip.exe"
+
+    file "/oname=$TEMP\${CANBALL}" ${CANBALL}
+    execWait '"$TEMP\unzip.exe" -o $TEMP\${CANBALL}'
+    delete "$TEMP\${CANBALL}"
+
+    file "/oname=$TEMP\${INSTALLBALL}" ${INSTALLBALL}
+    execWait '"$TEMP\unzip.exe" -o $TEMP\${INSTALLBALL}'
+    delete "$TEMP\${INSTALLBALL}"
+
+    delete "$TEMP\unzip.exe"
+    # FIXME Compress all files within the installer.
+    ### file /r install-them-all/*
 
 
     #
@@ -255,6 +262,14 @@ section "install"
     writeRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTKEY}" "NoModify" 1
     writeRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTKEY}" "NoRepair" 1
     writeRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTKEY}" "EstimatedSize" ${INSTALLSIZE}
+    writeRegStr HKLM "Software\ATCM" "CAN" "$\"$INSTDIR\ATCM\CANOpen\$\""
+    writeRegStr HKLM "Software\ATCM" "EDS" "$\"$INSTDIR\ATCM\CANOpen\eds\$\""
+    writeRegStr HKLM "Software\ATCM" "TEMPLATE" "$\"$INSTDIR$\""
+    writeRegStr HKLM "Software\ATCM" "IPADDR" "$\"192.168.0.210$\""
+    writeRegStr HKLM "Software\ATCM" "NETMASK" "$\"255.255.255.0$\""
+    writeRegStr HKLM "Software\ATCM" "user" "$\"root$\""
+    writeRegStr HKLM "Software\ATCM" "pwd" "$\"root$\""
+    writeRegDWORD HKLM "Software\ATCM" "LANG" 1
 
 
     #
@@ -449,6 +464,7 @@ section "uninstall"
     rmDir /r "$INSTDIR\${EMB_DIR}"
     rmDir /r "$INSTDIR\${QTH_DIR}"
     rmDir /r "$INSTDIR\${MINGW_DIR}"
+    rmDir /r "$INSTDIR\${CANBALL}"
     rmDir /r "$INSTDIR\QtProject"
 
     # Clean up the Start Menu.
@@ -461,6 +477,7 @@ section "uninstall"
     # Clean up the registry.
     #
     deleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTKEY}"
+    deleteRegKey HKLM "Software\ATCM"
 
     # LAST: delete the uninstaller.
     delete "$INSTDIR\${UNINSTNAME}"

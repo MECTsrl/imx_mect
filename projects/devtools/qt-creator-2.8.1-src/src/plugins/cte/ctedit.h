@@ -64,9 +64,9 @@ private slots:
 
     void on_cboCondition_currentIndexChanged(int index);
 
-    void on_optFixedVal_clicked(bool checked);
+    void on_optFixedVal_toggled(bool checked);
 
-    void on_optVariableVal_clicked(bool checked);
+    void on_optVariableVal_toggled(bool checked);
 
 private:
     //---------------------------------------------------------------------

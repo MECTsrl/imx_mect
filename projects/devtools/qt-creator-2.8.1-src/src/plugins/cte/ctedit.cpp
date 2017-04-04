@@ -529,7 +529,7 @@ bool    ctedit::ctable2Grid()
             fRes = list2GridRow(lstFields, nCur);
         }
     }
-    qDebug() << tr("Loaded Rows: %1") .arg(nCur);
+    // qDebug() << tr("Loaded Rows: %1") .arg(nCur);
     // Impostazione parametri TableView
     ui->tblCT->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tblCT->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -549,8 +549,9 @@ bool    ctedit::ctable2Grid()
         showAllRows(m_fShowAllRows);
         fillVarList(lstUsedVarNames, lstAllVarTypes, lstAllUpdates);
     }
-    else
+    else  {
         qDebug() << tr("Error Loading Rows");
+    }
     // Return value
     this->setCursor(Qt::ArrowCursor);
     return fRes;
@@ -748,18 +749,25 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
     // Behavior
     szTemp = lstRecValues[colBehavior].trimmed();
     ui->cboBehavior->setCurrentIndex(-1);
+    // Seleziona tutte le variabili tranne le H lstAllVarTypes a prescindere dallo stato della variabile
+    fillComboVarNames(ui->cboVariable1, lstAllVarTypes, lstNoHUpdates);
+    fillComboVarNames(ui->cboVariable2, lstAllVarTypes, lstNoHUpdates);
+    // Clear Data Entry Form for Alarm/Variables (da fare sempre)
+    ui->cboVariable1->setCurrentIndex(-1);
+    ui->cboCondition->setCurrentIndex(-1);
+    ui->txtFixedValue->setText(szEMPTY);
+    ui->cboVariable2->setCurrentIndex(-1);
+    // Analisi del Behavior
     if (! szTemp.isEmpty())  {
         nPos = ui->cboBehavior->findText(szTemp, Qt::MatchFixedString);
         if (nPos >= 0 && nPos < ui->cboBehavior->count())
             ui->cboBehavior->setCurrentIndex(nPos);
         // Caricamento ulteriori elementi interfaccia Allarmi / Eventi
-        if (nPos > behavior_readwrite)  {
-            // Seleziona tutte le variabili tranne le H lstAllVarTypes
+        if (nPos >= behavior_alarm)  {
             // fillComboVarNames(ui->cboVariable1, lstVarTypes, lstNoHUpdates);
-            fillComboVarNames(ui->cboVariable1, lstAllVarTypes, lstNoHUpdates);
             // Ricerca posizione prima variabile
             szTemp = lstRecValues[colSourceVar].trimmed();
-            qDebug() << "Alarm Variable:" << szTemp;
+            qDebug() << "Alarm Source Variable:" << szTemp;
             nPos = -1;
             if (! szTemp.isEmpty())  {
                 nPos = ui->cboVariable1->findText(szTemp, Qt::MatchExactly);
@@ -771,10 +779,37 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
             if (! szTemp.isEmpty())
                 nPos = ui->cboCondition->findText(szTemp, Qt::MatchExactly);
             ui->cboCondition->setCurrentIndex(nPos);
-
+            // Seconda parte dell'espressione
+            // Prepara le cose come se non ci fosse una seconda parte
+            ui->optFixedVal->setChecked(false);
+            ui->optVariableVal->setChecked(false);
+            ui->fraSelector->setEnabled(false);
+            ui->fraRight->setEnabled(false);
+            // Condizione binaria
+            if (nPos < oper_rising)  {
+                ui->fraSelector->setEnabled(true);
+                ui->fraRight->setEnabled(true);
+                // Determina se la parte DX espressione è un Numero o un Nome Variabile
+                szTemp = lstRecValues[colCompare].trimmed();
+                if (! szTemp.isEmpty())  {
+                    QChar c = szTemp.at(0);
+                    if (! c.isLetter())  {
+                        // Numero
+                        ui->optFixedVal->setChecked(true);
+                        ui->txtFixedValue->setText(szTemp);
+                    }
+                    else  {
+                        // Variabile
+                        ui->optVariableVal->setChecked(true);
+                        // Riempimento della Combo già avvenuto nella selezione della variabile1
+                        nPos = ui->cboVariable2->findText(szTemp, Qt::MatchExactly);
+                        ui->cboVariable2->setCurrentIndex(nPos);
+                    }
+                }
+            }
         }
     }
-
+    // Abilitazione campi
     enableFields();
     return true;
 }
@@ -842,13 +877,50 @@ bool ctedit::iface2values(QStringList &lstRecValues)
     // Comment
     szTemp = ui->txtComment->text();
     lstRecValues[colComment] = szTemp.trimmed();
+    // Clear all values for Alarms/Events
+    lstRecValues[colSourceVar] = szEMPTY;
+    lstRecValues[colCondition] = szEMPTY;
+    lstRecValues[colCompare] = szEMPTY;
     // Behavior
     nPos = ui->cboBehavior->currentIndex();
     if (nPos >= 0 && nPos < lstBehavior.count())
-        szTemp = ui->cboBehavior->itemData(nPos).toString();
+        szTemp = ui->cboBehavior->itemText(nPos);
     else
         szTemp = szEMPTY;
     lstRecValues[colBehavior] = szTemp.trimmed();
+    // Gestione Allarmi/Eventi (Se necessario)
+    if (nPos >= behavior_alarm)  {
+        // Source Var
+        nPos = ui->cboVariable1->currentIndex();
+        if (nPos >= 0 && nPos < ui->cboVariable1->count())
+            szTemp = ui->cboVariable1->itemText(nPos);
+        else
+            szTemp = szEMPTY;
+        qDebug() << "Variable Var1 Pos: " << nPos;
+        lstRecValues[colSourceVar] = szTemp;
+        // Operator
+        nPos = ui->cboCondition->currentIndex();
+        if (nPos >= 0 && nPos < ui->cboCondition->count())
+            szTemp = ui->cboCondition->itemText(nPos);
+        else
+            szTemp = szEMPTY;
+        lstRecValues[colCondition] = szTemp;
+        // Fixed Value or Variable name
+        if (ui->optFixedVal->isChecked())  {
+            // Save Fixed Value
+            szTemp = ui->txtFixedValue->text().trimmed();
+        }
+        else  {
+            // Save Variable Name
+            nPos = ui->cboVariable2->currentIndex();
+            if (nPos >= 0 && nPos < ui->cboVariable2->count())
+                szTemp = ui->cboVariable2->itemText(nPos);
+            else
+                szTemp = szEMPTY;
+        }
+        lstRecValues[colCompare] = szTemp;
+    }
+    qDebug() << "Alarm Source Variable: " << lstRecValues[colSourceVar];
     // Return value
     return true;
 }
@@ -953,7 +1025,7 @@ bool    ctedit::riassegnaBlocchi()
     }
     // Return value as reload CT
     fRes = ctable2Grid();
-    qDebug() << "Reload finished";
+    // qDebug() << "Reload finished";
     ui->cmdBlocchi->setEnabled(true);
     this->setCursor(Qt::ArrowCursor);
     return fRes;
@@ -1129,10 +1201,60 @@ bool ctedit::list2CTrec(QStringList &lstRecValues, int nRow)
         lstCTRecords[nRow].BlockSize = nPos;
         // Commento
         strcpy(lstCTRecords[nRow].Comment, lstRecValues[colComment].trimmed().toAscii().data());
+        // Clear all Variable - Event fields
+        lstCTRecords[nRow].usedInAlarmsEvents = FALSE;
+        lstCTRecords[nRow].ALType = -1;
+        strcpy(lstCTRecords[nRow].ALSource, szEMPTY.toAscii().data());
+        lstCTRecords[nRow].ALOperator = -1;
+        strcpy(lstCTRecords[nRow].ALCompareVar, szEMPTY.toAscii().data());
+        lstCTRecords[nRow].ALCompareVal = 0.0;
+        lstCTRecords[nRow].ALComparison = -1;
+        lstCTRecords[nRow].ALCompatible = 0;
         // Behavior
         nPos = lstBehavior.indexOf(lstRecValues[colBehavior]);
         nPos = (nPos >= 0 && nPos < lstBehavior.count()) ? nPos : 0;
-        lstCTRecords[nRow].Behavior= (int) nPos;
+        lstCTRecords[nRow].Behavior = nPos;
+        // Salvataggio dei valori di Allarme/Evento
+        if (nPos >= behavior_alarm)   {
+            // Flag isAlarm
+            lstCTRecords[nRow].usedInAlarmsEvents = TRUE;
+            // Type of Alarm or Event
+            if (nPos == behavior_alarm)
+                lstCTRecords[nRow].ALType = Alarm;
+            else
+                lstCTRecords[nRow].ALType = Event;
+            // Left Variable Name
+            strcpy(lstCTRecords[nRow].ALSource, lstRecValues[colSourceVar].trimmed().toAscii().data());
+            // Operator
+            nPos = lstCondition.indexOf(lstRecValues[colCondition]);
+            nPos = (nPos >= 0 && nPos < lstCondition.count()) ? nPos : -1;
+            lstCTRecords[nRow].ALOperator = nPos;
+            // Compare VAR - VAL
+            QString szCompare = lstRecValues[colCompare].trimmed();
+            if (szCompare.isEmpty())  {
+                strcpy(lstCTRecords[nRow].ALCompareVar, szEMPTY.toAscii().data());
+                lstCTRecords[nRow].ALCompareVal = 0.0;
+            }
+            else  {
+                QChar cc = szCompare.at(0);
+                if (cc.isLetter())  {
+                    // Variable
+                    strcpy(lstCTRecords[nRow].ALCompareVar, szCompare.toAscii().data());
+                    lstCTRecords[nRow].ALCompareVal = 0.0;
+                }
+                else  {
+                    float fValue = 0;
+                    // Value
+                    strcpy(lstCTRecords[nRow].ALCompareVar, szEMPTY.toAscii().data());
+                    fValue = szCompare.toFloat(&fOk);
+                    fValue = fOk ? fValue : 0.0;
+                    lstCTRecords[nRow].ALCompareVal = fValue;
+                    // TODO: Fill correct values for Comparison and Compatible
+                    lstCTRecords[nRow].ALComparison = COMP_UNSIGNED;
+                    lstCTRecords[nRow].ALCompatible = 1;
+                }
+            }
+        }
     }
     // Return Value
     return fRes;
@@ -1798,7 +1920,7 @@ void ctedit::cutSelected()
     // Result
     m_szMsg = tr("Rows Cutted: %1") .arg(lstCopiedRecords.count());
     displayStatusMessage(m_szMsg);
-    qDebug() << m_szMsg;
+    // qDebug() << m_szMsg;
 }
 bool ctedit::isFormEmpty()
 // Controllo Form Editing vuoto
@@ -1819,8 +1941,14 @@ bool ctedit::isFormEmpty()
     // nFilled += (ui->txtBlockSize->text().trimmed() != ui->tblCT->item(m_nGridRow, colBlockSize)->text().trimmed());
     nFilled += (! ui->txtComment->text().trimmed().isEmpty());
     nFilled += (ui->cboBehavior->currentIndex() >= 0);
+    if (ui->cboBehavior->currentIndex() >= behavior_alarm)  {
+        nFilled += (ui->cboVariable1->currentIndex() >= 0);
+        nFilled += (ui->cboCondition->currentIndex() >= 0);
+        nFilled += (ui->cboVariable2->currentIndex() >= 0);
+        nFilled += (! ui->txtFixedValue->text().trimmed().isEmpty());
+    }
     // Return Value
-    qDebug() << "isFormEmpty(): N.Row:" << m_nGridRow << "Campi definiti:" << nFilled;
+    // qDebug() << "isFormEmpty(): N.Row:" << m_nGridRow << "Campi definiti:" << nFilled;
     return (nFilled == 0);
 }
 
@@ -1845,8 +1973,17 @@ bool ctedit::isLineModified(int nRow)
         // nModif += (ui->txtBlockSize->text().trimmed() != ui->tblCT->item(nRow, colBlockSize)->text().trimmed());
         nModif += (ui->txtComment->text().trimmed() != ui->tblCT->item(nRow, colComment)->text().trimmed());
         nModif += (ui->cboBehavior->currentText().trimmed() != ui->tblCT->item(nRow, colBehavior)->text().trimmed());
+        // Frame Allarmi
+        if (ui->cboBehavior->currentIndex() >= behavior_alarm)  {
+            nModif += (ui->cboVariable1->currentText().trimmed() != ui->tblCT->item(nRow, colSourceVar)->text().trimmed());
+            nModif += (ui->cboCondition->currentText().trimmed() != ui->tblCT->item(nRow, colCondition)->text().trimmed());
+            if (ui->optFixedVal->isChecked())
+                nModif += (ui->txtFixedValue->text().trimmed() != ui->tblCT->item(nRow, colCompare)->text().trimmed());
+            else
+                nModif += (ui->cboVariable2->currentText().trimmed() != ui->tblCT->item(nRow, colCompare)->text().trimmed());
+        }
     }
-    qDebug() << "Modified(): N.Row:" << nRow << "Numero Modifiche:" << nModif;
+    // qDebug() << "Modified(): N.Row:" << nRow << "Numero Modifiche:" << nModif;
     return (nModif > 0);
 }
 
@@ -2088,7 +2225,7 @@ void ctedit::on_cmdCompile_clicked()
     // Imposta come Directory corrente di esecuzione la directory del File CT
     procCompile.setWorkingDirectory(m_szCurrentCTPath);
     // Esecuzione Comando
-    qDebug() << szCommand << lstArguments;
+    // qDebug() << szCommand << lstArguments;
     procCompile.start(szCommand, lstArguments);
     if (!procCompile.waitForStarted())  {
         m_szMsg = tr("Error Starting Cross Table Compiler!\n");
@@ -2146,7 +2283,7 @@ QString ctedit::getModelName()
             szLine = szLine.trimmed();
             // Search TYPE string in Line
             if (szLine.startsWith(QString::fromAscii("TYPE"), Qt::CaseSensitive))  {
-                qDebug() << tr("Model Line: %1") .arg(szLine);
+                // qDebug() << tr("Model Line: %1") .arg(szLine);
                 nPos = szLine.indexOf(QString::fromAscii("="));
                 if (nPos > 0)  {
                     szModel = szLine.mid(nPos + 1).trimmed();
@@ -2161,7 +2298,7 @@ QString ctedit::getModelName()
     else {
         qDebug() << tr("Template File: %1 not found") .arg(szFileTemplate);
     }
-    qDebug() << tr("Current Model: %1") .arg(szModel);
+    // qDebug() << tr("Current Model: %1") .arg(szModel);
     // return value
     return szModel;
 }
@@ -2505,7 +2642,7 @@ int ctedit::fillVarList(QStringList &lstVars, QList<int> &lstTypes, QList<int> &
     // Ordimanento Alfabetico della Lista
     lstVars.sort();
     // Return value
-    qDebug() << "Items Added to List:" << lstVars.count();
+    // qDebug() << "Items Added to List:" << lstVars.count();
     return lstVars.count();
 }
 
@@ -2646,7 +2783,7 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
     //
     // TODO: Ulteriori controlli formali....errCTNoUpdate
     //
-    qDebug() << "Found Errors:" << nErrors;
+    // qDebug() << "Found Errors:" << nErrors;
     // Form visualizzazione errori se richiesto
     if (fSingleLine && nErrors)  {
         errWindow = new cteErrorList(this);
@@ -2692,29 +2829,6 @@ void ctedit::on_cboCondition_currentIndexChanged(int index)
     }
 }
 
-void ctedit::on_optFixedVal_clicked(bool checked)
-{
-    if (checked)  {
-        ui->txtFixedValue->setEnabled(true);
-        ui->cboVariable2->setEnabled(false);
-    }
-    else  {
-        ui->txtFixedValue->setEnabled(false);
-        ui->cboVariable2->setEnabled(true);
-    }
-}
-
-void ctedit::on_optVariableVal_clicked(bool checked)
-{
-    if (checked)  {
-        ui->txtFixedValue->setEnabled(false);
-        ui->cboVariable2->setEnabled(true);
-    }
-    else  {
-        ui->txtFixedValue->setEnabled(true);
-        ui->cboVariable2->setEnabled(false);
-    }
-}
 int ctedit::varName2Row(QString &szVarName, QList<CrossTableRecord> &lstCTRecs)
 // Search in Cross Table the index of szVarName
 {
@@ -2734,4 +2848,20 @@ int ctedit::varName2Row(QString &szVarName, QList<CrossTableRecord> &lstCTRecs)
             nRow = -1;
     }
     return nRow;
+}
+
+void ctedit::on_optFixedVal_toggled(bool checked)
+{
+    if (checked)  {
+        ui->txtFixedValue->setEnabled(true);
+        ui->cboVariable2->setEnabled(false);
+    }
+}
+
+void ctedit::on_optVariableVal_toggled(bool checked)
+{
+    if (checked)  {
+        ui->txtFixedValue->setEnabled(false);
+        ui->cboVariable2->setEnabled(true);
+    }
 }

@@ -141,14 +141,14 @@ struct  CrossTableRecord {
     uint32_t OldVal;
     uint16_t Error;
     // Fields for Events / Alarms
-    int     usedInAlarmsEvents;
-    int     ALType;
-    char    ALSource[MAX_IDNAME_LEN];
-    int     ALOperator;
-    char    ALCompareVar[MAX_IDNAME_LEN];
-    float   ALCompareVal;
-    int     ALComparison;
-    int     ALCompatible;
+    int     usedInAlarmsEvents;                     // 1 if used in AL/EV
+    int     ALType;                                 // from enum EventAlarm (0=Alarm 1=Event...)
+    char    ALSource[MAX_IDNAME_LEN];               // Name of source variable in Alarms
+    int     ALOperator;                             // Operator on variable, from enum logicalOperators
+    char    ALCompareVar[MAX_IDNAME_LEN];           // Compare variable (right side of operation, if any)
+    float   ALCompareVal;                           // Fixed comparision value (in alternative to Compare Variable)
+    int     ALComparison;                           // Type of comparision (Signed, unsigned, float determined from left variable type)
+    int     ALCompatible;                           // 1 if both side of comparision are between compatible types
     //
     uint16_t device;
     uint16_t node;

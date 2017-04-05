@@ -379,7 +379,7 @@ do_qt_tutorial:
 
 .PHONY: installer
 installer:
-	$(MAKE) -C $(INSTALLER_DIR) MECT_BUILD_RELEASE=$(MECT_BUILD_RELEASE)
+	make -C $(INSTALLER_DIR) MECT_BUILD_RELEASE=$(MECT_BUILD_RELEASE)
 
 
 # Utils
@@ -404,14 +404,6 @@ clean: clean-wine clean-qt clean-qtc clean-qwt clean-mp
 
 .PHONY: clean-wine
 clean-wine:
-
-.PHONY: clean-qt
-clean-qt:
-	-if test -d $(QT_DIRECTORY); then \
-	    $(MAKE) -C $(QT_DIRECTORY) clean; \
-	    $(SANE); \
-	    find $(QT_DIRECTORY)/qmake -name \*.o -print0 | xargs -0 rm -f; \
-	fi
 
 .PHONY: clean-qt
 clean-qt:

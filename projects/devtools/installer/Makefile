@@ -3,10 +3,12 @@
 # NOTE: override as needed!
 #
 QTH_WINE_INSTALL_PREFIX := C:/MECT/Qt-4.8.5
+QTH_ARM_WINE_INSTALL_PREFIX := C:/MECT/Qt-4.8.5-arm
 #
 ########################################################################
 
 QTH_DIR := Qt-4.8.5
+QTH_ARM_DIR := Qt-4.8.5-arm
 QTC_DIR := Qt-Creator-2.8.1
 MINGW_DIR := MinGW
 EMB_DIR := target
@@ -70,6 +72,8 @@ QTH_INSTALLSTUFF := \
     $(QTH_DIR)/.qmake.cache \
     $(QTH_DIR)/.tag \
 
+QTH_ARM_INSTALLSRC := ../wine/drive_c/MECT/$(QTH_ARM_DIR)
+
 QTC_INSTALLSRC := ../wine/drive_c/MECT
 QTC_INSTALLSTUFF := \
     $(QTC_DIR)/bin \
@@ -117,6 +121,19 @@ all:
 	    mkdir -p `dirname $(INSTALLDST)/$$p`; \
 	    cp -aL --reflink=auto $(QTH_INSTALLSRC)/$$p `dirname $(INSTALLDST)/$$p`; \
 	done
+	for d in `find $(INSTALLDST)/Qt-4.8.5 -type d -name mkspecs -print`; do \
+	    for m in `find $$d -type f -name qmake.conf -print`; do \
+		grep -q '^QMAKE_INCDIR += "."$$' $$m || echo 'QMAKE_INCDIR += "."' >> $$m; \
+	    done; \
+	done
+	for d in `find $(INSTALLDST)/Qt-4.8.5 -type d -name lib -print`; do \
+	    for m in `find $$d -type f -name \*.prl -print`; do \
+		sed -i 's|^\s*QMAKE_PRL_BUILD_DIR\s*=\s*$(QTH_WINE_INSTALL_PREFIX)|QMAKE_PRL_BUILD_DIR = @@_QT_INSTALL_DIR_@@|' $$m; \
+	    done; \
+	done
+	# Qt ARM
+	test -d "$(QTH_ARM_INSTALLSRC)"
+	cp -aL --reflink=auto $(QTH_ARM_INSTALLSRC) $(INSTALLDST)
 	for d in `find $(INSTALLDST) -type d -name mkspecs -print`; do \
 	    for m in `find $$d -type f -name qmake.conf -print`; do \
 		grep -q '^QMAKE_INCDIR += "."$$' $$m || echo 'QMAKE_INCDIR += "."' >> $$m; \
@@ -124,7 +141,7 @@ all:
 	done
 	for d in `find $(INSTALLDST) -type d -name lib -print`; do \
 	    for m in `find $$d -type f -name \*.prl -print`; do \
-		sed -i 's|^\s*QMAKE_PRL_BUILD_DIR\s*=\s*$(QTH_WINE_INSTALL_PREFIX)|QMAKE_PRL_BUILD_DIR = @@_QT_INSTALL_DIR_@@|' $$m; \
+		sed -i 's|^\s*QMAKE_PRL_BUILD_DIR\s*=\s*$(QTH_ARM_WINE_INSTALL_PREFIX)|QMAKE_PRL_BUILD_DIR = @@_QT_INSTALL_DIR_@@|' $$m; \
 	    done; \
 	done
 	# Qt Creator x86
@@ -163,7 +180,7 @@ all:
 	# unzip
 	cp --reflink=auto $(SRCDIR)/$(UNZIP_EXE) .
 	# NSIS build
-	makensis -DAPPNAME=$(APPNAME) -DVERSIONMAJOR=$(VERSIONMAJOR) -DVERSIONMINOR=$(VERSIONMINOR) -DVERSIONBUILD=$(VERSIONBUILD) -DARCHNAME=$(ARCHNAME) -DINSTALLPRG=$(INSTALLPRG) -DINSTALLSIZE="`du -s ${INSTALLDST} | awk '{print $$1}'`" -DQTH_DIR=$(QTH_DIR) -DMINGW_DIR=$(MINGW_DIR) -DQTC_DIR=$(QTC_DIR) -DEMB_DIR=$(EMB_DIR) $(INSTALLSCR)
+	makensis -DAPPNAME=$(APPNAME) -DVERSIONMAJOR=$(VERSIONMAJOR) -DVERSIONMINOR=$(VERSIONMINOR) -DVERSIONBUILD=$(VERSIONBUILD) -DARCHNAME=$(ARCHNAME) -DINSTALLPRG=$(INSTALLPRG) -DINSTALLSIZE="`du -s ${INSTALLDST} | awk '{print $$1}'`" -DQTH_DIR=$(QTH_DIR) -DQTH_ARM_DIR=$(QTH_ARM_DIR) -DMINGW_DIR=$(MINGW_DIR) -DQTC_DIR=$(QTC_DIR) -DEMB_DIR=$(EMB_DIR) $(INSTALLSCR)
 
 
 .PHONY: clean

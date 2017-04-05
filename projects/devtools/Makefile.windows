@@ -46,6 +46,35 @@ export QT_INST_DIR := C:/MECT/Qt-$(QT_VER)
 QT_BIN_DIR = $(QT_INST_DIR)/bin
 QT_BIN_DIR := $(subst /,\\\\,$(QT_BIN_DIR))
 
+# Qt ARM
+#
+QT_ARM_INST_DIR_H = $(DRIVE_C)/MECT/Qt-$(QT_VER)-arm
+export QT_ARM_INST_DIR = C:/MECT/Qt-$(QT_VER)-arm
+QT_ARM_BIN_DIR = $(QT_ARM_INST_DIR)/bin
+QT_ARM_BIN_DIR := $(subst /,\\\\,$(QT_ARM_BIN_DIR))
+QT_ARM_INSTALLS := \
+    bin \
+    changes-4.8.5 \
+    imports \
+    include \
+    INSTALL \
+    LGPL_EXCEPTION.txt \
+    lib \
+    LICENSE.FDL \
+    LICENSE.GPL3 \
+    LICENSE.LGPL \
+    mkspecs \
+    plugins \
+    projects.pro \
+    qmake \
+    README \
+    templates \
+    tmp \
+    tools \
+    translations \
+    util \
+
+
 # Qt Creator
 #
 QTC_VER := 2.8.1
@@ -92,6 +121,13 @@ CTE_DIRECTORY = $(QTC_DIRECTORY)/src/plugins/cte
 RFS_DIRECTORY := rootfs
 RFS_ARCHIVE := $(RFS_DIRECTORY)_dev.zip
 
+# ARM cross compiler (Code Sourcery)
+XCCC_ARCH := ../../src/Sourcery_G++_Lite.tar.xz
+XCCC_INSTALL_DIR = xccs
+XCCC_INSTALL_PATH_H = $(DRIVE_C)/$(XCCC_INSTALL_DIR)
+XCCC_INSTALL_PATH = C:/$(XCCC_INSTALL_DIR)
+XCCC_BIN_PATH := $(subst /,\\\\,$(XCCC_INSTALL_PATH))\\\\bin
+
 
 # Progs
 QMAKE = wine $(QT_INST_DIR_H)/bin/qmake.exe
@@ -110,10 +146,13 @@ all:
 	make -f $(MAKEFILE_NAME) tools
 	make -f $(MAKEFILE_NAME) qt
 	make -f $(MAKEFILE_NAME) install-qt
+	make -f $(MAKEFILE_NAME) qt_arm
+	make -f $(MAKEFILE_NAME) install-qt_arm
 	make -f $(MAKEFILE_NAME) qwt
 	make -f $(MAKEFILE_NAME) libs
 	make -f $(MAKEFILE_NAME) qtc
 	make -f $(MAKEFILE_NAME) mp
+	make -f $(MAKEFILE_NAME) installer
 
 .PHONY: wine
 wine: $(WINEPREFIX)
@@ -123,9 +162,15 @@ $(WINEPREFIX):
 
 .PHONY: tools
 tools: wine
+	# MinGW
 	rm -rf $(MGW_INST_DIR)
 	mkdir -p $(MGW_INST_DIR)
 	cd $(MGW_INST_DIR); unzip $(MGW_ARCHIVE)
+	# ARM cross compiler (Code Sourcery)
+	rm -rf $(XCCC_INSTALL_PATH_H)
+	mkdir -p $(XCCC_INSTALL_PATH_H)
+	tar xJf $(XCCC_ARCH) -C $(XCCC_INSTALL_PATH_H)
+	# Windows setup
 	install -m 644 -D $(MGW_PROF_DEF) $(MGW_INST_DIR)/var/lib/mingw-get/data/profile.xml
 	sed -i 's|  <repository uri="http://prdownloads.sourceforge.net/mingw/%F.xml.lzma?download">|  <repository uri="http://www.mect.it/archive/mingw/%F.xml.lzma">|' $(MGW_INST_DIR)/var/lib/mingw-get/data/profile.xml
 	install -m 644 -D $(MGW_PROF_DEF) $(MGW_INST_DIR)/var/lib/mingw-get/data/defaults.xml
@@ -137,6 +182,7 @@ tools: wine
 	-wineserver -k		# Sync the registry
 	sed -i '/^"PATH"=/ s/C:\\\\MinGW\\\\msys\\\\1.0\\\\bin;//g' $(WINEPREFIX)/system.reg
 	sed -i '/^"PATH"=/ s/"C:/"C:\\\\MinGW\\\\msys\\\\1.0\\\\bin;C:/' $(WINEPREFIX)/system.reg
+	sed -i '/^"PATH"=/ s/"C:/"$(XCCC_BIN_PATH);C:/' $(WINEPREFIX)/system.reg
 	sed -i '/^"PATH"=/ s/;$(QT_BIN_DIR)//g' $(WINEPREFIX)/system.reg
 	sed -i '/^"PATH"=/ s/"$$/;$(QT_BIN_DIR)"/' $(WINEPREFIX)/system.reg
 	sed -i '/^"PATH"=/ s/;$(QTC_BIN_DIR)//g' $(WINEPREFIX)/system.reg
@@ -181,9 +227,9 @@ do_qt:
 	    -no-libtiff
 	$(MAKE) -j$(NPROCS) -C $(QT_DIRECTORY); $(SANE)
 
-
 .PHONY: install-qt
-install-qt: clean-qt
+install-qt:
+	make -f $(MAKEFILE_NAME) clean-qt
 	mkdir -p $(QT_INST_DIR_H)
 	rsync -a --inplace --delete $(QT_DIRECTORY)/ $(QT_INST_DIR_H)/
 	echo '[Paths]' > '$(QT_INST_DIR_H)/bin/qt.conf'
@@ -201,6 +247,73 @@ install-qt: clean-qt
 	echo 'Demos = demos' >> '$(QT_INST_DIR_H)/bin/qt.conf'
 	for m in `find $(QT_INST_DIR_H)/mkspecs -name qmake.conf -print`; do echo 'QMAKE_INCDIR += "."' >> $$m; done
 	for m in `find $(QT_INST_DIR_H)/lib -name \*.prl -print`; do sed -i 's|[Zz]:$(CURDIR)/$(QT_DIRECTORY)|$(QT_INST_DIR)|' $$m; done
+
+.PHONY: qt_arm
+qt_arm:
+	make -f $(MAKEFILE_NAME) rebase
+	make -f $(MAKEFILE_NAME) do_qt_arm
+	make -f $(MAKEFILE_NAME) rebase
+
+.PHONY: do_qt_arm
+do_qt_arm:
+	test -d $(QT_DIRECTORY)
+	make -f $(MAKEFILE_NAME) buildclean-qt
+	mkdir -p mkspecs/qws/linux-g++-mx
+	cd $(QT_DIRECTORY); MAKEFLAGS=-j$(NPROC) wine configure \
+	    -xplatform qws/linux-g++-mx \
+	    -confirm-license \
+	    -embedded \
+	    -fast \
+	    -fontconfig \
+	    -little-endian \
+	    -no-3dnow \
+	    -no-accessibility \
+	    -no-declarative \
+	    -nomake demos \
+	    -nomake examples \
+	    -no-mmx \
+	    -no-multimedia \
+	    -no-phonon \
+	    -no-phonon-backend \
+	    -no-qt3support \
+	    -no-script \
+	    -no-scripttools \
+	    -no-sse \
+	    -no-sse2 \
+	    -no-stl \
+	    -no-webkit \
+	    -no-xmlpatterns \
+	    -opensource \
+	    -plugin-sql-mysql \
+	    -release \
+	    -shared \
+	    -no-libtiff
+
+.PHONY: install-qt_arm
+install-qt_arm:
+	test -n '$(QT_DIRECTORY)'
+	test -n '$(QT_ARM_INST_DIR_H)'
+	make -f $(MAKEFILE_NAME) clean-qt
+	rm -rf '$(QT_ARM_INST_DIR_H)'
+	mkdir -p '$(QT_ARM_INST_DIR_H)'
+	for s in $(QT_ARM_INSTALLS); do \
+	    cp -a --reflink=auto $(QT_DIRECTORY)/$$s $(QT_ARM_INST_DIR_H); \
+	done
+	echo '[Paths]' > '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
+	echo 'Prefix = $(QT_ARM_INST_DIR)' >> '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
+	echo 'Documentation = doc' >> '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
+	echo 'Headers = include' >> '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
+	echo 'Libraries = lib' >> '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
+	echo 'Binaries = bin' >> '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
+	echo 'Plugins = plugins' >> '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
+	echo 'Imports = imports' >> '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
+	echo 'Data = .' >> '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
+	echo 'Translations = translations' >> '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
+	echo 'Settings = .' >> '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
+	echo 'Examples = examples' >> '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
+	echo 'Demos = demos' >> '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
+	for m in `find $(QT_ARM_INST_DIR_H)/mkspecs -name qmake.conf -print`; do echo 'QMAKE_INCDIR += "."' >> $$m; done
+	for m in `find $(QT_ARM_INST_DIR_H)/lib -name \*.prl -print`; do sed -i 's|[Zz]:$(CURDIR)/$(QT_DIRECTORY)|$(QT_INST_DIR)|' $$m; done
 
 .PHONY: libs
 libs: $(LC_DLL)
@@ -257,6 +370,7 @@ do_mp:
 
 .PHONY: do_qt_tutorial
 do_qt_tutorial:
+	# TODO create .qhp files in Qt Creator tree.
 	test -d $(MP_DIRECTORY)/qt_help/tutorial
 	cd $(MP_DIRECTORY)/qt_help/tutorial; for h in doc.qhp doc_eng.qhp; do \
 	    wine $(QT_INST_DIR_H)/bin/qhelpgenerator.exe $$h -o `dirname $$h`/`basename $$h .qhp`.qch; \
@@ -290,6 +404,14 @@ clean: clean-wine clean-qt clean-qtc clean-qwt clean-mp
 
 .PHONY: clean-wine
 clean-wine:
+
+.PHONY: clean-qt
+clean-qt:
+	-if test -d $(QT_DIRECTORY); then \
+	    $(MAKE) -C $(QT_DIRECTORY) clean; \
+	    $(SANE); \
+	    find $(QT_DIRECTORY)/qmake -name \*.o -print0 | xargs -0 rm -f; \
+	fi
 
 .PHONY: clean-qt
 clean-qt:
@@ -376,7 +498,9 @@ cmd:
 	#wine unzip -o -d c:/ c:/4c.zip
 	#wine c:/ATCMControl/Engineering/bin/4ceng.exe; $(SANE)
 	#wineconsole 'wine/drive_c/Program Files/MECT/MECTSuite-test/MECTSuite.bat'
-	wine 'wine/drive_c/MECT/Qt-Creator-2.8.1/bin/ctc.exe'
+	#wine 'setup ATCM CanBuilder 1.03.exe'
+	#wine arm-none-linux-gnueabi-g++.exe -v
+	wine qt-everywhere-opensource-src-4.8.5/bin/qmake.exe -query QMAKE_XSPEC
 
 .PHONY: ctc
 ctc: export WINEDEBUG :=

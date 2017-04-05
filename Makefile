@@ -315,6 +315,7 @@ MECT_DOWNLOADS := \
 	$(MECT_WCSXCARCH) \
 	unzip.exe \
 	ATCM.zip \
+	Sourcery_G++_Lite.tar.xz \
 
 MECT_DLMD5 := $(MECT_DOWNLOADS:%=%.$(MECT_MD5EXT))
 MECT_DOWNLOADS := $(MECT_DOWNLOADS) $(MECT_DLMD5)

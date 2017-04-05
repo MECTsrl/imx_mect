@@ -23,6 +23,7 @@ SetCompress off
 !define ARMCCSETUP      "arm-2011.03-41-arm-none-linux-gnueabi.exe"
 !define CANBALL		"ATCM.zip"
 !define QTHINI          "${QTH_DIR}\bin\qt.conf"
+!define QTHARMINI       "${QTH_ARM_DIR}\bin\qt.conf"
 !define QTTINI          "${EMB_DIR}\usr\bin\qt.conf"
 !define ROAMINGAPPDATA  "$LOCALAPPDATA\..\Roaming"
 !define QTPROJECT	"QtProject"
@@ -37,6 +38,9 @@ Var ARMCCUNIXINSTPATH	# Target compiler install directory with forward slashes.
 
 !define QTPOSTINSTBAT   "$TEMP\QTPOSTINST.BAT"
 !define QTPOSTINSTSH    "$TEMP\qtpostinst.sh"
+
+!define QTARMPOSTINSTBAT "$TEMP\QTARMPOSTINST.BAT"
+!define QTARMPOSTINSTSH  "$TEMP\qtarmpostinst.sh"
 
 # Need to write shared locations in file system and registry.
 RequestExecutionLevel admin
@@ -325,7 +329,7 @@ section "install"
     pop $R0
     strCpy $ARMCCUNIXINSTPATH $R0
 
-    # Setup Qt Creator configuration templates.
+    # Configure the Qt Creator configuration templates.
     #
     # Create the worker shell script.
     push $9
@@ -358,7 +362,7 @@ section "install"
     fileWrite $9 'exit$\r$\n'
     fileClose $9
     pop $9
-    # Configure the host Qt.
+    # Do configure the Qt Creator configuration templates.
     execWait "${QTPRJSETUPBAT}"
     # Clean up.
     delete "$TEMP\${QTPRJSETUPSH}"
@@ -413,7 +417,56 @@ section "install"
     delete "$TEMP\${QTPOSTINSTSH}"
     delete "$TEMP\${QTPOSTINSTBAT}"
 
-    # Configure the target Qt.
+    # Configure the target (ARM) Qt (actually only qmake).
+    #
+    writeINIStr "${QTHARMINI}" "Paths" "Prefix" "$UNIXINSTDIR/${QTH_ARM_DIR}"
+    writeINIStr "${QTHARMINI}" "Paths" "Documentation" "doc"
+    writeINIStr "${QTHARMINI}" "Paths" "Headers" "include"
+    writeINIStr "${QTHARMINI}" "Paths" "Libraries" "lib"
+    writeINIStr "${QTHARMINI}" "Paths" "Binaries" "bin"
+    writeINIStr "${QTHARMINI}" "Paths" "Plugins" "plugins"
+    writeINIStr "${QTHARMINI}" "Paths" "Imports" "imports"
+    writeINIStr "${QTHARMINI}" "Paths" "Data" "."
+    writeINIStr "${QTHARMINI}" "Paths" "Translations" "translations"
+    writeINIStr "${QTHARMINI}" "Paths" "Settings" "."
+    writeINIStr "${QTHARMINI}" "Paths" "Examples" "examples"
+    writeINIStr "${QTHARMINI}" "Paths" "Demos" "demos"
+    flushINI "${QTHARMINI}"
+    # Create the worker shell script.
+    push $9
+    fileOpen $9 '${QTARMPOSTINSTSH}' w
+    fileWrite $9 '#!/bin/sh$\n'
+    fileWrite $9 '$\n'
+    fileWrite $9 'set -x$\n'
+    fileWrite $9 '$\n'
+    fileWrite $9 'cd "$INSTDIR\${QTH_ARM_DIR}"$\n'
+    fileWrite $9 'for f in $$(find . -type f -name \*.prl -print); do$\n'
+    fileWrite $9 "    sed -i 's|@@_QT_INSTALL_DIR_@@|$UNIXINSTDIR/${QTH_ARM_DIR}|' $$f$\n"
+    fileWrite $9 'done$\n'
+    pop $9
+    # Create the launcher batch script.
+    push $9
+    fileOpen $9 '${QTARMPOSTINSTBAT}' w
+    fileWrite $9 '@echo off$\r$\n'
+    fileWrite $9 'set PATH=$INSTDIR\${MINGW_DIR}\bin;%PATH%$\r$\n'
+    fileWrite $9 'set PATH=$INSTDIR\${MINGW_DIR}\msys\1.0\bin;%PATH%$\r$\n'
+    fileWrite $9 'set PATH=$INSTDIR\${QTC_DIR}\bin;%PATH%$\r$\n'
+    fileWrite $9 'set PATH=$INSTDIR\${QTH_DIR}\bin;%PATH%$\r$\n'
+    fileWrite $9 'set PATH=$INSTDIR\${QTH_DIR}\lib;%PATH%$\r$\n'
+    fileWrite $9 '@echo on$\r$\n'
+    fileWrite $9 '$\r$\n'
+    fileWrite $9 'bash "${QTARMPOSTINSTSH}"$\r$\n'
+    fileWrite $9 '$\r$\n'
+    fileWrite $9 'exit$\r$\n'
+    fileClose $9
+    pop $9
+    # Configure the host Qt.
+    execWait "${QTARMPOSTINSTBAT}"
+    # Clean up.
+    delete "$TEMP\${QTARMPOSTINSTSH}"
+    delete "$TEMP\${QTARMPOSTINSTBAT}"
+
+    # Configure the embeddded Qt. [ TODO Is this really needed? ]
     #
     writeINIStr "${QTTINI}" "Paths" "Prefix" "$UNIXINSTDIR/${EMB_DIR}/usr"
     writeINIStr "${QTTINI}" "Paths" "Documentation" "doc"
@@ -461,10 +514,12 @@ section "uninstall"
     delete "$INSTDIR\${MECTSUITEVBS}"
     # NOTE Keep in sync with the contents of the installs.
     rmDir /r "$INSTDIR\${QTC_DIR}"
+    rmDir /r "$INSTDIR\${QTC_ARM_DIR}"
     rmDir /r "$INSTDIR\${EMB_DIR}"
     rmDir /r "$INSTDIR\${QTH_DIR}"
     rmDir /r "$INSTDIR\${MINGW_DIR}"
     rmDir /r "$INSTDIR\${CANBALL}"
+    rmDir /r "$INSTDIR\ATCM"
     rmDir /r "$INSTDIR\QtProject"
 
     # Clean up the Start Menu.

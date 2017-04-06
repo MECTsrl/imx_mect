@@ -29,17 +29,17 @@ MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_PLUGINSCRT_TAG := v2.0.12.1
+export MECT_BUILD_PLUGINSCRT_TAG := 0.0
 
 # git branch and tag for the mect_apps project
 MECT_BUILD_APPSCRT_BRANCH := mect_suite_2.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_APPSCRT_TAG := v2.0.12rc11
+export MECT_BUILD_APPSCRT_TAG := 0.0
 
 # git branch and tag for the cloner project
 MECT_BUILD_CLONERCRT_BRANCH := master
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_CLONERCRT_TAG := v2.0.12rc11
+export MECT_BUILD_CLONERCRT_TAG := 0.0
 
 # ---------------------------
 
@@ -313,6 +313,9 @@ MECT_DOWNLOADS := \
 	$(MECT_LTIB_EVKARCH) \
 	$(MECT_FSPKG_DL) \
 	$(MECT_WCSXCARCH) \
+	unzip.exe \
+	ATCM.zip \
+	Sourcery_G++_Lite.tar.xz \
 
 MECT_DLMD5 := $(MECT_DOWNLOADS:%=%.$(MECT_MD5EXT))
 MECT_DOWNLOADS := $(MECT_DOWNLOADS) $(MECT_DLMD5)

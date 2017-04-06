@@ -437,3 +437,15 @@ void disableComboItem(QComboBox *Combo, int nItemIndex)
     if (nItemIndex >= 0 && nItemIndex < Combo->count())
         Combo->setItemData(nItemIndex, 0, Qt::UserRole - 1);
 }
+bool disableAndBlockSignals(QWidget *widget)
+// Disabilita e blocca segnali di un oggetto QWidget*
+{
+    widget->setDisabled(true);
+    return widget->blockSignals(true);
+}
+bool enableAndUnlockSignals(QWidget *widget)
+// Riabilita e sblocca segnali di un oggetto QWidget*
+{
+    widget->setEnabled(true);
+    return widget->blockSignals(false);
+}

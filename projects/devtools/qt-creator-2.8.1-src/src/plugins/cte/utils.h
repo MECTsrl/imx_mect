@@ -33,4 +33,6 @@
     void        doEvents();
     void        enableComboItem(QComboBox *Combo, int nItemIndex);          // Riabilita la voce nItemIndex della Combo
     void        disableComboItem(QComboBox *Combo, int nItemIndex);         // Disabilita la voce nItemIndex della Combo
+    bool        disableAndBlockSignals(QWidget *widget);                    // Disabilita e blocca segnali di un oggetto QWidget*
+    bool        enableAndUnlockSignals(QWidget *widget);                    // Riabilita e sblocca segnali di un oggetto QWidget*
 #endif // UTILS_H

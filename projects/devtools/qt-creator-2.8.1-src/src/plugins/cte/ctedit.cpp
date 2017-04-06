@@ -48,6 +48,7 @@
 // Tabs in TabWidget
 #define TAB_CT 0
 #define TAB_SYSTEM 1
+#undef  WORD_BIT
 
 // String Costants
 const QString szDEF_IP_PORT = QString::fromAscii("502");
@@ -127,6 +128,16 @@ ctedit::ctedit(QWidget *parent) :
     lstErrorMessages[errCTNoPort] = trUtf8("Empty or Invalid Port Value");
     lstErrorMessages[errCTNoNode] = trUtf8("Empty or Invalid Node Address");
     lstErrorMessages[errCTNoRegister] = trUtf8("Empty or Invalid Register Value");
+    lstErrorMessages[errCTNoBehavior] = trUtf8("Empty or Invalid Behavior");
+    lstErrorMessages[errCTNoBit] = trUtf8("Alarm/Event Variables must be of BIT type");
+    lstErrorMessages[errCTBadPriorityUpdate] = trUtf8("Wrong Priority or Update for Alarm/Event Variable");
+    lstErrorMessages[errCTNoVar1] = trUtf8("Empty or Invalid Left Condition Variable");
+    lstErrorMessages[errCTNoCondition] = trUtf8("Empty or Invalid Alarm/Event Condition");
+    lstErrorMessages[errCTRiseFallNotBit] = trUtf8("Rising/Falling Variable must be of BIT Type");
+    lstErrorMessages[errCTInvalidNum] = trUtf8("Invalid Numeric Value in Alarm/Event Condition");
+    lstErrorMessages[errCTEmptyCondExpression] = trUtf8("Empty or Invalid Expression in Alarm/Event Condition");
+    lstErrorMessages[errCTNoVar2] = trUtf8("Empty or Invalid Right Condition Variable");
+    lstErrorMessages[errCTIncompatibleVar] = trUtf8("Incompatible Var in Alarm/Event Condition");
     // Titoli colonne
     lstHeadCols.clear();
     for (nCol = 0; nCol < colTotals; nCol++)  {
@@ -171,7 +182,7 @@ ctedit::ctedit(QWidget *parent) :
     // Lista TIPI Variabili
     lstTipi.clear();
     lstAllVarTypes.clear();
-    for (nCol = BIT; nCol <= UNKNOWN; nCol++)  {
+    for (nCol = BIT; nCol < TYPE_TOTALS; nCol++)  {
         lstTipi.append(QString::fromAscii(varTypeName[nCol]));
         lstAllVarTypes.append(nCol);
     }
@@ -356,6 +367,7 @@ ctedit::ctedit(QWidget *parent) :
     m_fShowAllRows = false;
     m_fCutOrPaste = false;
     m_nCurTab = 0;
+    m_vtAlarmVarType = UNKNOWN;
     // Seleziona il primo Tab
     ui->tabWidget->setCurrentIndex(m_nCurTab);
     ui->tabWidget->setTabEnabled(TAB_SYSTEM, false);
@@ -580,7 +592,7 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
         // Campo Name
         lstRecValues[colName] = QString::fromAscii(lstCTRecords[nRow].Tag);
         // Campo Type
-        if (lstCTRecords[nRow].VarType >= BIT && lstCTRecords[nRow].VarType <= UNKNOWN)
+        if (lstCTRecords[nRow].VarType >= BIT && lstCTRecords[nRow].VarType < TYPE_TOTALS)
             lstRecValues[colType] = lstTipi[lstCTRecords[nRow].VarType];
         // Campo Decimal
         lstRecValues[colDecimal] = QString::number(lstCTRecords[nRow].Decimal);
@@ -654,7 +666,7 @@ bool ctedit::recCT2List(QStringList &lstRecValues, int nRow)
     return true;
 }
 
-void ctedit::on_cmdHideShow_clicked(bool checked)
+void ctedit::on_cmdHideShow_toggled(bool checked)
 {
 
     // Titolo del Bottone
@@ -678,6 +690,7 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
     QList<int> lstVarTypes;
 
     lstVarTypes.clear();
+    m_vtAlarmVarType = UNKNOWN;
     // Row #
     szTemp = QLocale::system().toString(m_nGridRow + 1);
     ui->txtRow->setText(szTemp);
@@ -749,22 +762,20 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
     // Behavior
     szTemp = lstRecValues[colBehavior].trimmed();
     ui->cboBehavior->setCurrentIndex(-1);
-    // Seleziona tutte le variabili tranne le H lstAllVarTypes a prescindere dallo stato della variabile
-    fillComboVarNames(ui->cboVariable1, lstAllVarTypes, lstNoHUpdates);
-    fillComboVarNames(ui->cboVariable2, lstAllVarTypes, lstNoHUpdates);
-    // Clear Data Entry Form for Alarm/Variables (da fare sempre)
-    ui->cboVariable1->setCurrentIndex(-1);
-    ui->cboCondition->setCurrentIndex(-1);
-    ui->txtFixedValue->setText(szEMPTY);
-    ui->cboVariable2->setCurrentIndex(-1);
-    // Analisi del Behavior
+    // Analisi del Behavior per determinare uso degli Allarmi
     if (! szTemp.isEmpty())  {
         nPos = ui->cboBehavior->findText(szTemp, Qt::MatchFixedString);
         if (nPos >= 0 && nPos < ui->cboBehavior->count())
             ui->cboBehavior->setCurrentIndex(nPos);
         // Caricamento ulteriori elementi interfaccia Allarmi / Eventi
         if (nPos >= behavior_alarm)  {
-            // fillComboVarNames(ui->cboVariable1, lstVarTypes, lstNoHUpdates);
+            // Clear Data Entry Form for Alarm/Variables
+            // Seleziona tutte le variabili tranne le H lstAllVarTypes a prescindere dallo stato della variabile
+            ui->cboVariable1->setCurrentIndex(-1);
+            ui->cboVariable2->setCurrentIndex(-1);
+            fillComboVarNames(ui->cboVariable1, lstAllVarTypes, lstNoHUpdates);
+            fillComboVarNames(ui->cboVariable2, lstAllVarTypes, lstNoHUpdates);
+            ui->txtFixedValue->setText(szEMPTY);
             // Ricerca posizione prima variabile
             szTemp = lstRecValues[colSourceVar].trimmed();
             qDebug() << "Alarm Source Variable:" << szTemp;
@@ -776,8 +787,14 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
             // Operatore confronto
             nPos = -1;
             szTemp = lstRecValues[colCondition].trimmed();
-            if (! szTemp.isEmpty())
+            if (! szTemp.isEmpty())  {
                 nPos = ui->cboCondition->findText(szTemp, Qt::MatchExactly);
+            }
+//          // Rising e Falling concesso solo per i vari tipi di Bit
+//            if (nPos >= oper_rising && nPos <= oper_falling &&
+//                    !(m_nAlarmVarType == BIT || m_nAlarmVarType == BYTE_BIT || m_nAlarmVarType == WORD_BIT || m_nAlarmVarType == DWORD_BIT))  {
+//                nPos = -1;
+//            }
             ui->cboCondition->setCurrentIndex(nPos);
             // Seconda parte dell'espressione
             // Prepara le cose come se non ci fosse una seconda parte
@@ -839,6 +856,14 @@ bool ctedit::iface2values(QStringList &lstRecValues)
     // Name
     szTemp = ui->txtName->text().trimmed();
     lstRecValues[colName] = szTemp;
+    // Update Used Variable List
+    if (! szTemp.isEmpty())  {
+        nPos = lstUsedVarNames.indexOf(szTemp);
+        if (nPos < 0)  {
+            lstUsedVarNames.append(szTemp);
+            lstUsedVarNames.sort();
+        }
+    }
     // Type colType
     nPos = ui->cboType->currentIndex();
     if (nPos >= 0 && nPos < lstTipi.count())
@@ -1137,6 +1162,7 @@ bool ctedit::list2CTrec(QStringList &lstRecValues, int nRow)
     bool        fOk = false;
     int         nPos = 0;
     char        ip[MAX_IPADDR_LEN];
+    QList<int>  lstTypes;
 
     // Abilitazione riga (Nome Vuoto => Riga disabilitata)
     if (lstRecValues[colName].isEmpty())  {
@@ -1236,6 +1262,7 @@ bool ctedit::list2CTrec(QStringList &lstRecValues, int nRow)
                 lstCTRecords[nRow].ALCompareVal = 0.0;
             }
             else  {
+                // Decisione se il secondo lato dell'espressione sia una costante o un nome variabile
                 QChar cc = szCompare.at(0);
                 if (cc.isLetter())  {
                     // Variable
@@ -2132,6 +2159,13 @@ void ctedit::on_cmdGotoRow_clicked()
                                  tr("Enter Row Number to Jump to:"), m_nGridRow + 1, 1, DimCrossTable, 1, &fOk);
     if (fOk)  {
         nRow--;
+        // Se la riga non è visibile chiede conferma se fare ShowAll
+        if (lstCTRecords[nRow].UsedEntry == 0 && ! m_fShowAllRows)  {
+            m_szMsg = trUtf8("The requested row is not visible. Show all rows?");
+            if (queryUser(this, szTitle, m_szMsg, false))  {
+                ui->cmdHideShow->setChecked(true);
+            }
+        }
         jumpToGridRow(nRow);
     }
 }
@@ -2171,11 +2205,7 @@ void ctedit::jumpToGridRow(int nRow)
 {
     // Controlla se la riga selezionata è abilitata. In caso contrario deve abilitare visualizzazione di tutte le righe
     ui->tblCT->selectRow(nRow);
-    //if (lstCTRecords[nRow].UsedEntry == 0)  {
-        // on_cmdHideShow_clicked(true);
-    //}
-    // In entrambi i casi cerca di centrare la riga nel grid
-    ui->tblCT->scrollToItem(ui->tblCT->currentItem(), QAbstractItemView::PositionAtCenter);
+    // ui->tblCT->scrollToItem(ui->tblCT->currentItem(), QAbstractItemView::PositionAtCenter);
     ui->tblCT->setFocus();
     m_nGridRow = nRow;
 }
@@ -2650,13 +2680,20 @@ int ctedit::fillComboVarNames(QComboBox *comboBox, QList<int> &lstTypes, QList<i
 // Caricamento ComboBox con Nomi Variabili filtrate in funzione del Tipo e della Persistenza
 {
     QStringList lstVars;
+    int         nItem = 0;
+    bool        oldState = comboBox->blockSignals(true);
 
     lstVars.clear();
+    comboBox->setCurrentIndex(-1);
     comboBox->clear();
     if (fillVarList(lstVars, lstTypes, lstUpdates) > 0)
     {
-        comboBox->addItems(lstVars);
+        for (nItem = 0; nItem < lstVars.count(); nItem++)  {
+            comboBox->addItem(lstVars[nItem], lstVars[nItem]);
+        }
+        comboBox->setCurrentIndex(-1);
     }
+    comboBox->blockSignals(oldState);
     return lstVars.count();
 }
 int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
@@ -2665,14 +2702,19 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
     int         nErrors = 0;
     int         nJumpRow = 0;
     int         nPos = -1;
+    int         nPriority = -1;
     int         nType = -1;
+    int         nUpdate = -1;
     int         nVal = 0;
     int         nProtocol = -1;
+    varTypes    nTypeVar1 = UNKNOWN;
     bool        fOk = false;
     Err_CT      errCt;
     QString     szTemp;
     QString     szVarName;
     QString     szIP;
+    QString     szVar1;
+
     // Form per Display Errori
     cteErrorList    *errWindow;
 
@@ -2683,15 +2725,15 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
     szVarName = lstValues[colName];
     // Controllo cboPriority
     szTemp = lstValues[colPriority];
-    nPos = szTemp.isEmpty() ? -1 : lstPriority.indexOf(szTemp);
-    if (nPos < 0)  {
+    nPriority = szTemp.isEmpty() ? -1 : lstPriority.indexOf(szTemp);
+    if (nPriority < 0)  {
         fillErrorMessage(nRow, colPriority, errCTNoPriority, szVarName, szTemp, chSeverityError, &errCt);
         lstCTErrors.append(errCt);
         nErrors++;
     }
     // Controllo Update
     szTemp = lstValues[colUpdate];
-    nPos = szTemp.isEmpty() ? -1 : lstUpdateNames.indexOf(szTemp);
+    nUpdate = szTemp.isEmpty() ? -1 : lstUpdateNames.indexOf(szTemp);
     if (nPos < 0)  {
         fillErrorMessage(nRow, colUpdate, errCTNoUpdate, szVarName, szTemp, chSeverityError, &errCt);
         lstCTErrors.append(errCt);
@@ -2775,11 +2817,117 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
     if (szIP.isEmpty() &&
             (nProtocol == TCP || nProtocol == TCPRTU || nProtocol == TCP_SRV || nProtocol == TCPRTU_SRV))  {
 
-        fillErrorMessage(nRow, colIP, errCTNoIP, szVarName, szTemp, chSeverityError, &errCt);
+        fillErrorMessage(nRow, colIP, errCTNoIP, szVarName, szIP, chSeverityError, &errCt);
         lstCTErrors.append(errCt);
         nErrors++;
     }
+    // Controlli per gestione Allarmi/Eventi
+    szTemp = lstValues[colBehavior];
+    nPos = szTemp.isEmpty() ? -1 : lstBehavior.indexOf(szTemp);
+    if (nPos < 0 || nPos >= lstBehavior.count())  {
+        fillErrorMessage(nRow, colBehavior, errCTNoBehavior, szVarName, szTemp, chSeverityError, &errCt);
+        lstCTErrors.append(errCt);
+        nErrors++;
+    }
+    // Controlli specifici per Allarmi/Eventi
+    if (nPos >= behavior_alarm && nPos <= behavior_event)  {
+        // Controllo che la variabile Alarm/Event sia di tipo BIT
+        if (nType != BIT)  {
+            fillErrorMessage(nRow, colType, errCTNoBit, szVarName, szVarName, chSeverityError, &errCt);
+            lstCTErrors.append(errCt);
+            nErrors++;
+        }
+        // Controllo che la variabile impostata come Alarm/Event abbia priority > 0 e non sia Update=H
+        if (nPriority <= 0 || nUpdate <= Htype)  {
+            fillErrorMessage(nRow, colType, errCTBadPriorityUpdate, szVarName, szVarName, chSeverityError, &errCt);
+            lstCTErrors.append(errCt);
+            nErrors++;
+        }
+        // Controllo che la variabile selezionata come Var1 sia NON H
+        QStringList lstAlarmVars;
+        fillVarList(lstAlarmVars, lstAllVarTypes, lstNoHUpdates);
+        // Variable 1
+        szVar1 = lstValues[colSourceVar];
+        nPos = szVar1.isEmpty() ? -1 : lstAlarmVars.indexOf(szVar1);
+        if (nPos < 0)  {
+            fillErrorMessage(nRow, colSourceVar, errCTNoVar1, szVarName, szVar1, chSeverityError, &errCt);
+            lstCTErrors.append(errCt);
+            nErrors++;
+        }
+        // Ricerca della Variabile 1 per estrarre il Tipo
+        if (! szVar1.isEmpty())  {
+            nPos = varName2Row(szVar1, lstCTRecords);
+            if (nPos >= 0 && nPos < lstCTRecords.count())
+                nTypeVar1 = lstCTRecords[nPos].VarType;
+        }
+        // Controllo sull'operatore di comparazione
+        szTemp = lstValues[colCondition];
+        if (nPos < 0)  {
+            fillErrorMessage(nRow, colCondition, errCTNoCondition, szVarName, szTemp, chSeverityError, &errCt);
+            lstCTErrors.append(errCt);
+            nErrors++;
+        }
+        // Controllo sulla parte DX espressione
+        // Operatore Rising/Falling
+        if (nPos >= oper_rising && nPos <= oper_falling)  {
+            lstValues[colCompare].clear();
+            if (! (nTypeVar1 == BIT || nTypeVar1 == BYTE_BIT || nTypeVar1 == WORD_BIT || nTypeVar1 == DWORD_BIT))  {
+                fillErrorMessage(nRow, colSourceVar, errCTRiseFallNotBit, szVarName, szTemp, chSeverityError, &errCt);
+                lstCTErrors.append(errCt);
+                nErrors++;
+            }
+        }
+        // Altri Operatori
+        else if (nPos >= 0 && nPos < oper_rising)  {
+            // Espressione vuota
+            szTemp = lstValues[colCompare];
+            if (szTemp.isEmpty())  {
+                fillErrorMessage(nRow, colCompare, errCTEmptyCondExpression, szVarName, szTemp, chSeverityError, &errCt);
+                lstCTErrors.append(errCt);
+                nErrors++;
+            }
+            else  {
+                QChar c = szTemp.at(0);
+                if (! c.isLetter())  {
+                    // Numero
+                    bool fOk;
+                    double dblVal = szTemp.toDouble(&fOk);
+                    if (!fOk)  {
+                        // Invalid Number
+                        fillErrorMessage(nRow, colCompare, errCTInvalidNum, szVarName, szTemp, chSeverityError, &errCt);
+                        lstCTErrors.append(errCt);
+                        nErrors++;
+                    }
+                }
+                else  {
+                    // Variabile
+                    // Ricerca nome variabile in Var NO H
+                    nPos = lstAlarmVars.indexOf(szTemp);
+                    if (nPos < 0 )  {
+                        // Variabile non definita
+                        fillErrorMessage(nRow, colCompare, errCTNoVar2, szVarName, szTemp, chSeverityError, &errCt);
+                        lstCTErrors.append(errCt);
+                        nErrors++;
+                    }
+                    nPos = varName2Row(szTemp, lstCTRecords);
+                    // Verifica di Compatibilità di tipo
+                    if (nPos >= 0 && nPos < lstCTRecords.count())  {
+                        varTypes tipoVar2 = lstCTRecords[nPos].VarType;
+                        QList<int> lstCompatTypes;
+                        // Ricerca dei tipi compatibili con Var1
+                        fillCompatibleTypesList(nTypeVar1, lstCompatTypes);
+                        if (lstCompatTypes.indexOf(tipoVar2) < 0)  {
+                            // Variabile 2 non compatibile
+                            fillErrorMessage(nRow, colCompare, errCTIncompatibleVar, szVarName, szTemp, chSeverityError, &errCt);
+                            lstCTErrors.append(errCt);
+                            nErrors++;
 
+                        }
+                    }
+                }
+            }
+        }
+    }
     //
     // TODO: Ulteriori controlli formali....errCTNoUpdate
     //
@@ -2803,17 +2951,59 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
 void ctedit::on_cboVariable1_currentIndexChanged(int index)
 {
     QString szVarName;
-    int     nRow = 0;
-    QList<int> lstVarTypes;
+    int     nRow = -1;
+    QList<int> lstVTypes;
+    QString szRightVar;
 
-    lstVarTypes.clear();
+    lstVTypes.clear();
+    ui->lblTypeVar1->setText(szEMPTY);
+    m_vtAlarmVarType = UNKNOWN;
     if (index >= 0)  {
+        szRightVar.clear();
         szVarName = ui->cboVariable1->currentText();
-        nRow = varName2Row(szVarName, lstCTRecords);
-        qDebug() << "Row First Variable in Alarm:" << nRow;
-        if (nRow >= 0 && nRow < DimCrossTable)  {
-            // TODO: Fill Var2 Type List with compatible types
-            fillComboVarNames(ui->cboVariable2, lstVarTypes, lstNoHUpdates);
+        if (!szVarName.isEmpty())  {
+            nRow = varName2Row(szVarName, lstCTRecords);
+        }
+        if (nRow >= 0 && nRow < lstCTRecords.count())  {
+            // Recupera il tipo della Variabile a SX dell'espressione Allarme/Evento
+            m_vtAlarmVarType = lstCTRecords[nRow].VarType;
+            qDebug() << "Row First Variable in Alarm (Row - Name - nType - Type):" << nRow << szVarName << m_vtAlarmVarType << QString::fromAscii(varTypeName[m_vtAlarmVarType]);
+            QString szVar1Type = QString::fromAscii(varTypeName[m_vtAlarmVarType]);
+            szVar1Type.prepend(QString::fromAscii("["));
+            szVar1Type.append(QString::fromAscii("]"));
+            ui->lblTypeVar1->setText(szVar1Type);
+            // Disabilita le voci per Rising and falling
+            if (m_vtAlarmVarType == BIT || m_vtAlarmVarType == BYTE_BIT || m_vtAlarmVarType == WORD_BIT || m_vtAlarmVarType == DWORD_BIT)  {
+                qDebug() << "Condition Enabled";
+                enableComboItem(ui->cboCondition, oper_rising);
+                enableComboItem(ui->cboCondition, oper_falling);
+            }
+            else  {
+                qDebug() << "Condition is Disabled";
+                disableComboItem(ui->cboCondition, oper_rising);
+                disableComboItem(ui->cboCondition, oper_falling);
+            }
+            // Salva il nome della Var DX se già specificato
+            if (ui->cboVariable2->count() > 0 && ui->cboVariable2->currentIndex() >= 0)  {
+                szRightVar = ui->cboVariable2->currentText();
+            }
+            // Fill Var Type List with compatible types
+            fillCompatibleTypesList(m_vtAlarmVarType, lstVTypes);
+            // Fill Right Var Combo List
+            fillComboVarNames(ui->cboVariable2, lstVTypes, lstNoHUpdates);
+            // Reset Index Variable
+            ui->cboVariable2->setCurrentIndex(-1);
+            // Search Left variable in Right List to remove it
+            nRow = ui->cboVariable2->findText(szVarName, Qt::MatchExactly);
+            if (nRow >= 0 && nRow < ui->cboVariable2->count())
+                ui->cboVariable2->removeItem(nRow);
+            // Search original var in combo if available
+            if (! szRightVar.isEmpty())  {
+                nRow = ui->cboVariable2->findText(szRightVar, Qt::MatchExactly);
+                if (nRow >= 0 && nRow < ui->cboVariable2->count())  {
+                    ui->cboVariable2->setCurrentIndex(nRow);
+                }
+            }
         }
     }
 }
@@ -2823,9 +3013,12 @@ void ctedit::on_cboCondition_currentIndexChanged(int index)
     if (index >= oper_rising)  {
         ui->cboVariable2->setCurrentIndex(-1);
         ui->txtFixedValue->setText(szEMPTY);
+        ui->fraSelector->setEnabled(false);
+        ui->fraRight->setEnabled(false);
     }
     else  {
-
+        ui->fraSelector->setEnabled(true);
+        ui->fraRight->setEnabled(true);
     }
 }
 
@@ -2865,3 +3058,67 @@ void ctedit::on_optVariableVal_toggled(bool checked)
         ui->cboVariable2->setEnabled(true);
     }
 }
+int  ctedit::fillCompatibleTypesList(varTypes nTypeVar, QList<int> &lstTypes)
+// Riempie la lista dei tipi compatibili tra loro
+{
+    // Pulizia lista di destinazione
+    lstTypes.clear();
+    if (nTypeVar >= BIT && nTypeVar < TYPE_TOTALS) {
+        switch (nTypeVar) {
+            // Vari tipi di BIT
+            case BIT:
+            case BYTE_BIT:
+            case WORD_BIT:
+            case DWORD_BIT:
+                lstTypes.append(BIT);
+                lstTypes.append(BYTE_BIT);
+                lstTypes.append(WORD_BIT);
+                lstTypes.append(DWORD_BIT);
+                break;
+            // Vari tipi di SIGNED INT
+            case INT16:
+            case INT16BA:
+            case DINT:
+            case DINTDCBA:
+            case DINTCDAB:
+            case DINTBADC:
+                lstTypes.append(INT16);
+                lstTypes.append(INT16BA);
+                lstTypes.append(DINT);
+                lstTypes.append(DINTDCBA);
+                lstTypes.append(DINTCDAB);
+                lstTypes.append(DINTBADC);
+                break;
+            // Vari tipi di UNSIGNED INT
+            case UINT8:
+            case UINT16:
+            case UINT16BA:
+            case UDINT:
+            case UDINTDCBA:
+            case UDINTCDAB:
+            case UDINTBADC:
+                lstTypes.append(UINT8);
+                lstTypes.append(UINT16);
+                lstTypes.append(UINT16BA);
+                lstTypes.append(UDINT);
+                lstTypes.append(UDINTDCBA);
+                lstTypes.append(UDINTCDAB);
+                lstTypes.append(UDINTBADC);
+                break;
+            // Vari tipi di REAL
+            case REAL:
+            case REALDCBA:
+            case REALCDAB:
+            case REALBADC:
+                lstTypes.append(REAL);
+                lstTypes.append(REALDCBA);
+                lstTypes.append(REALCDAB);
+                lstTypes.append(REALBADC);
+                break;
+            default:
+                lstTypes.append(UNKNOWN);
+        }
+    }
+    return lstTypes.count();
+}
+

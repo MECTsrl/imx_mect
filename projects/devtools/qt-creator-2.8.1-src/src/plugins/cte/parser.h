@@ -72,7 +72,8 @@ enum varTypes {BIT = 0,
                DINTDCBA,
                DINTCDAB,
                DINTBADC,
-               UNKNOWN
+               UNKNOWN,
+               TYPE_TOTALS
               };
 
 enum productId {

@@ -1345,6 +1345,36 @@
                      </widget>
                     </item>
                     <item>
+                     <spacer name="horizontalSpacer_6">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="lblpType">
+                      <property name="text">
+                       <string>Type:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="lblTypeVar1">
+                      <property name="frameShape">
+                       <enum>QFrame::NoFrame</enum>
+                      </property>
+                      <property name="text">
+                       <string>[INT]</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
                      <spacer name="horizontalSpacer_3">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
@@ -1574,10 +1604,6 @@
         </layout>
        </item>
       </layout>
-      <zorder>fraBottoni</zorder>
-      <zorder>fraEdit</zorder>
-      <zorder>tblCT</zorder>
-      <zorder>fraCondition</zorder>
      </widget>
      <widget class="QWidget" name="tabSystem">
       <property name="enabled">

@@ -26,19 +26,29 @@ enum errorMessages_e
     errCTNoPort,
     errCTNoNode,
     errCTNoRegister,
+    errCTNoBehavior,
+    errCTNoBit,
+    errCTBadPriorityUpdate,
+    errCTNoVar1,
+    errCTNoCondition,
+    errCTRiseFallNotBit,
+    errCTInvalidNum,
+    errCTEmptyCondExpression,
+    errCTNoVar2,
+    errCTIncompatibleVar,
     errCTTotals
 };
 
 const int nErrCols = 5;
 enum errorCols_e
 {
-    colSeverity = 0,
-    colRow,
-    colColumn,
-    colVarName,
-    colValue,
-    colErrCode,
-    colErrMsg,
+    colErrSeverity = 0,
+    colErrRow,
+    colErrColumn,
+    colErrVarName,
+    colErrValue,
+    colErrCodeErr,
+    colErrMsgErr,
     colErrTotals
 };
 

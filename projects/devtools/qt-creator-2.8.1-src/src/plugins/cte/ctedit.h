@@ -42,7 +42,6 @@ private slots:
     void copySelected(bool fClearSelection);                            // Copia delle righe selezionate in Buffer di Copiatura
     void pasteSelected();                           // Incolla righe da Buffer di copiatura a Riga corrente
     void cutSelected();                             // Taglia righe in Buffer di copiatura
-    void on_cmdHideShow_clicked(bool checked);      // Bottone Hide/Show righe vuote
     void on_cmdBlocchi_clicked();                   // Riordino Blocchi
     void on_cmdSave_clicked();                      // Salvataggio file
     void displayUserMenu(const QPoint &pos);        // Menu contestuale Grid
@@ -67,6 +66,8 @@ private slots:
     void on_optFixedVal_toggled(bool checked);
 
     void on_optVariableVal_toggled(bool checked);
+
+    void on_cmdHideShow_toggled(bool checked);
 
 private:
     //---------------------------------------------------------------------
@@ -95,10 +96,11 @@ private:
     void    enableInterface();                      // Abilita l'interfaccia in funzione dello stato del sistema
     int     fillVarList(QStringList &lstVars, QList<int> &lstTypes, QList<int> &lstUpdates); // Fill sorted List of Variables Names for Types in lstTypes and Update Type in lstUpdates
     int     fillComboVarNames(QComboBox *comboBox, QList<int> &lstTypes, QList<int> &lstUpdates);   // Caricamento ComboBox con Nomi Variabili filtrate in funzione del Tipo and Update Type in lstUpdates
+    int     fillCompatibleTypesList(varTypes nTypeVar, QList<int> &lstTypes);           // Riempie la lista dei tipi compatibili tra loro
     int     varName2Row(QString &szVarName, QList<CrossTableRecord> &lstCTRecs);        // Search in Cross Table Record List the index of szVarName
     // Gestione Controlli
     int     checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine = true);   // Controlli formali sulla riga a termine editing
-    int     globalChecks();                                 // Controlli complessivi su tutta la CT
+    int     globalChecks();                         // Controlli complessivi su tutta la CT
     bool    isFormEmpty();                          // Controllo Form Editing vuoto
     bool    isValidVarName(QString szName);         // Controllo del Nome Variabile
     void    fillErrorMessage(int nRow, int nCol, int nErrCode, QString szVarName, QString szValue, QChar severity, Err_CT *errCt);
@@ -161,6 +163,7 @@ private:
     bool        m_fShowAllRows;                     // Vero se sono visualizzate tutte le righe
     bool        m_fCutOrPaste;                      // Vero se è in corso un Cut or Paste
     bool        m_fEmptyForm;                       // Vero se il Form di Data Entry risulta vuoto
+    varTypes    m_vtAlarmVarType;                    // Tipo della variabile SX in un espressione Allarme/Evento
 };
 
 #endif // CTEDIT_H

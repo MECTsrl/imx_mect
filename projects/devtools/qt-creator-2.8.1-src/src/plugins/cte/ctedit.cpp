@@ -2272,10 +2272,10 @@ void ctedit::on_cmdCompile_clicked()
     lstArguments.append(szTemp);
     // Parametro 2: -g Nome del file GVL (Case preserved)
     szFileName = QString::fromAscii("%1.gvl") .arg(m_szCurrentCTName);
+    szFileName.prepend(m_szCurrentPLCPath);
     szTemp = szFileName;
     szTemp.prepend(QString::fromAscii("-g"));
     lstArguments.append(szTemp);
-    szFileName.prepend(m_szCurrentCTPath);
     fileBackUp(szFileName);
     // Parametro 3: -i Nome del file .h (Forced LowerCase)
     szFileName = QString::fromAscii("%1.h") .arg(m_szCurrentCTName.toLower());

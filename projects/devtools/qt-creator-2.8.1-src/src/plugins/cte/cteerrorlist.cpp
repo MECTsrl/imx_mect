@@ -11,18 +11,18 @@ cteErrorList::cteErrorList(QWidget *parent) :
 
     ui->setupUi(this);
     lstCols.clear();
-    for (nCol = colSeverity ; nCol < colErrTotals; nCol++)  {
+    for (nCol = colErrSeverity ; nCol < colErrTotals; nCol++)  {
         lstCols.append(QString::fromAscii(""));
     }
     // Riempimento liste
     // Titoli colonne  colSeverity
-    lstCols[colSeverity] = trUtf8("Level");
-    lstCols[colRow] = trUtf8("Row");
-    lstCols[colColumn] = trUtf8("Column");
-    lstCols[colVarName] = trUtf8("Variable Name");
-    lstCols[colValue] = trUtf8("Value");
-    lstCols[colErrCode] = trUtf8("Error Code");
-    lstCols[colErrMsg] = trUtf8("Error Message");
+    lstCols[colErrSeverity] = trUtf8("Level");
+    lstCols[colErrRow] = trUtf8("Row");
+    lstCols[colErrColumn] = trUtf8("Column");
+    lstCols[colErrVarName] = trUtf8("Variable Name");
+    lstCols[colErrValue] = trUtf8("Value");
+    lstCols[colErrCodeErr] = trUtf8("Error Code");
+    lstCols[colErrMsgErr] = trUtf8("Error Message");
     // Impostazione parametri TableView
     ui->tblErrors->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tblErrors->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -61,7 +61,7 @@ void cteErrorList::tableItemChanged(const QItemSelection & selected, const QItem
     // Estrae il numero di riga dal modello
     nRow  = selected.indexes().at(0).row();
     // Recupera il valore riga dalla colonna colRow
-    szTemp = ui->tblErrors->item(nRow, colRow)->text();
+    szTemp = ui->tblErrors->item(nRow, colErrRow)->text();
     // Conversione in Int
     nRow = szTemp.toInt(&fOk);
     m_nGridRow = fOk ? nRow - 1 : -1;
@@ -91,7 +91,7 @@ int cteErrorList::lstErrors2Grid(const QList<Err_CT>  &lstErrors)
             // Inserimento riga
             ui->tblErrors->insertRow(nRow);
             // Voci di Errore
-            for (nCol = colSeverity; nCol < colErrTotals; nCol++)  {
+            for (nCol = colErrSeverity; nCol < colErrTotals; nCol++)  {
                 szTemp = list2CellValue(nCol, lstErrors[nRow]);
                 tItem = ui->tblErrors->item(nRow, nCol);
                 if (tItem == NULL)  {
@@ -103,7 +103,7 @@ int cteErrorList::lstErrors2Grid(const QList<Err_CT>  &lstErrors)
                     tItem->setText(szTemp);
                 }
                 // Adjust Alignment
-                if (nCol == colErrMsg || nCol == colVarName)  {
+                if (nCol == colErrMsgErr || nCol == colErrVarName)  {
                     // Item Allineato a Sx
                     tItem->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
                 }
@@ -126,10 +126,10 @@ int cteErrorList::lstErrors2Grid(const QList<Err_CT>  &lstErrors)
     ui->tblErrors->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tblErrors->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tblErrors->setHorizontalHeaderLabels(lstCols);
-    ui->tblErrors->horizontalHeader()->setSortIndicator(colRow, Qt::AscendingOrder);
+    ui->tblErrors->horizontalHeader()->setSortIndicator(colErrRow, Qt::AscendingOrder);
     ui->tblErrors->setSortingEnabled(true);
-    ui->tblErrors->horizontalHeader()->setResizeMode(colVarName, QHeaderView::Stretch);
-    ui->tblErrors->horizontalHeader()->setResizeMode(colErrMsg, QHeaderView::Stretch);
+    ui->tblErrors->horizontalHeader()->setResizeMode(colErrVarName, QHeaderView::Stretch);
+    ui->tblErrors->horizontalHeader()->setResizeMode(colErrMsgErr, QHeaderView::Stretch);
     ui->tblErrors->setAlternatingRowColors(true);
     ui->tblErrors->setEnabled(true);
     this->setCursor(Qt::ArrowCursor);
@@ -140,25 +140,25 @@ QString cteErrorList::list2CellValue(int nCol, const Err_CT &recErr)
 {
     QString     szTemp;
 
-    if (nCol == colSeverity)  {
+    if (nCol == colErrSeverity)  {
         szTemp = QString(recErr.cSeverity);
     }
-    else if (nCol == colRow)  {
+    else if (nCol == colErrRow)  {
         szTemp = QString::number(recErr.nRow + 1);
     }
-    else if (nCol == colColumn)  {
+    else if (nCol == colErrColumn)  {
         szTemp = QString::number(recErr.nCol + 1);
     }
-    else if (nCol == colVarName)  {
+    else if (nCol == colErrVarName)  {
         szTemp =  recErr.szVarName;
     }
-    else if (nCol == colValue)  {
+    else if (nCol == colErrValue)  {
         szTemp =  recErr.szValue;
     }
-    else if (nCol == colErrCode)  {
+    else if (nCol == colErrCodeErr)  {
         szTemp = QString::number(recErr.nCodErr);
     }
-    else if (nCol == colErrMsg)  {
+    else if (nCol == colErrMsgErr)  {
         szTemp = recErr.szErrMessage;
     }
     // Return Value

@@ -261,7 +261,7 @@
                </font>
               </property>
               <property name="toolTip">
-               <string>Import User Data from another Cross Table File</string>
+               <string>Jump to line #</string>
               </property>
               <property name="text">
                <string>Goto Row</string>
@@ -296,7 +296,7 @@
                </font>
               </property>
               <property name="toolTip">
-               <string>Import User Data from another Cross Table File</string>
+               <string>Search Variable by Name</string>
               </property>
               <property name="text">
                <string>Search</string>
@@ -365,6 +365,9 @@
                 <bold>false</bold>
                </font>
               </property>
+              <property name="toolTip">
+               <string>Undo Changes</string>
+              </property>
               <property name="text">
                <string>Undo</string>
               </property>
@@ -397,6 +400,9 @@
                 <bold>false</bold>
                </font>
               </property>
+              <property name="toolTip">
+               <string>Reorder Blocks Assignment</string>
+              </property>
               <property name="text">
                <string>Blocks</string>
               </property>
@@ -428,6 +434,9 @@
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
+              </property>
+              <property name="toolTip">
+               <string>Start Cross Table complier</string>
               </property>
               <property name="text">
                <string>Compile</string>
@@ -469,6 +478,47 @@
               </property>
               <property name="text">
                <string>Save</string>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <property name="autoDefault">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="cmdPLC">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>72</width>
+                <height>48</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>72</width>
+                <height>48</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>MS Shell Dlg 2</family>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="toolTip">
+               <string>Save changes</string>
+              </property>
+              <property name="statusTip">
+               <string>Start PLC Editor</string>
+              </property>
+              <property name="text">
+               <string>PLC</string>
               </property>
               <property name="checkable">
                <bool>false</bool>
@@ -1631,7 +1681,6 @@
   <tabstop>cmdUndo</tabstop>
   <tabstop>cmdBlocchi</tabstop>
   <tabstop>cmdCompile</tabstop>
-  <tabstop>cmdSave</tabstop>
   <tabstop>optRetentive</tabstop>
   <tabstop>optNonRetentive</tabstop>
   <tabstop>optSystem</tabstop>

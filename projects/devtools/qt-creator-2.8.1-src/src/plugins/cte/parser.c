@@ -654,7 +654,7 @@ int LoadXTable(char *crossTableFile, struct CrossTableRecord *CrossTable)
                     break;
                 }
             }
-            fprintf(stderr, "Voice:%d - Behavior: %d\n", addr, CrossTable[addr].Behavior);
+            // fprintf(stderr, "Voice:%d - Behavior: %d\n", addr, CrossTable[addr].Behavior);
 
         }
     }

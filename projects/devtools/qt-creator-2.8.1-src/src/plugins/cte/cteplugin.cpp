@@ -186,6 +186,7 @@ CTEPlugin::enableIfCT()
     // Building Cross Table File Name
     szFileCT = pd + QString::fromAscii("/") + QString::fromAscii(Constants::CT_PROJ_REL_PATH) + QString::fromAscii("/") + QString::fromAscii(Constants::CT_FILE_NAME);
     qDebug()  << "Checking File: " << szFileCT;
+    qDebug()  << "Project File Path; " << pd;
     // Any cross table in the project?
     QFileInfo ctFile(szFileCT);
     fFileExists = ctFile.exists() && ctFile.isFile();

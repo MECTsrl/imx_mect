@@ -29,6 +29,7 @@
 #include <QCoreApplication>
 #include <QProcess>
 #include <QTextStream>
+#include <QProcessEnvironment>
 
 /* ----  Local Defines:   ----------------------------------------------------- */
 #define _TRUE  1
@@ -53,10 +54,14 @@
 // String Costants
 const QString szDEF_IP_PORT = QString::fromAscii("502");
 const QString szEMPTY_IP = QString::fromAscii("0.0.0.0");
-const QString szTitle = QString::fromAscii("Mect Cross Table Editor");
+const QString szTitle = QString::fromAscii("Mect Editor");
 const QString szSlash = QString::fromAscii("/");
 const QString szCrossCompier = QString::fromAscii("ctc");
 const QString szTemplateFile = QString::fromAscii("template.pri");
+const QString szPLCEnvVar = QString::fromAscii("PLCUNIXINSTPATH");
+const QString szProExt = QString::fromAscii(".pro");
+const QString szPLCExt = QString::fromAscii(".4cp");
+const QString szPLCDir = QString::fromAscii("plc");
 
 enum colonne_e
 {
@@ -387,7 +392,41 @@ ctedit::~ctedit()
 }
 void    ctedit::setProjectPath(QString szProjectPath)
 {
-    m_szCurrentProjectPath = szProjectPath;
+    QDir projectDir(szProjectPath);
+    QString     szProjectName;
+
+    if (projectDir.exists() && ! szProjectPath.isEmpty())  {
+        projectDir.setFilter(QDir::Files | QDir::NoDotAndDotDot);
+        QStringList filesList;
+        filesList.append(QString::fromAscii("*.pro"));
+        QStringList lstFile = projectDir.entryList(filesList);
+
+        if (lstFile.count() > 0)  {
+            szProjectName = lstFile.at(0);
+        }
+        // Costruzione del Path progetto
+        m_szCurrentProjectPath = szProjectPath;
+        // Nome Progetto senza Path
+        m_szCurrentProjectName = szProjectName;
+        // Costruzione del Path PLC
+        m_szCurrentPLCPath = szProjectPath;
+        m_szCurrentPLCPath.append(szSlash);
+        m_szCurrentPLCPath.append(szPLCDir);
+        m_szCurrentPLCPath.append(szSlash);
+        QDir dirPlc(m_szCurrentPLCPath);
+        // Create if not exists PLC Dir
+        if (!dirPlc.exists()) {
+            dirPlc.mkpath(m_szCurrentPLCPath);
+        }
+    }
+    else  {
+        m_szCurrentProjectPath.clear();
+        m_szCurrentProjectName.clear();
+        m_szCurrentPLCPath.clear();
+    }
+    qDebug() << "Project Path:" << m_szCurrentProjectPath;
+    qDebug() << "Project Name:" << m_szCurrentProjectName;
+    qDebug() << "PLC Path:" << m_szCurrentPLCPath;
 }
 
 bool    ctedit::selectCTFile(QString szFileCT)
@@ -423,7 +462,7 @@ bool    ctedit::selectCTFile(QString szFileCT)
     // Load Ok, init default values
     if (fRes)  {
         QFileInfo fInfo(m_szCurrentCTFile);
-        m_szCurrentCTPath = fInfo.absolutePath();
+        m_szCurrentCTPath = fInfo.absolutePath();       
         m_szCurrentCTPath.append(szSlash);
         m_szCurrentCTName = fInfo.baseName();
         // Reading Model from template.pri
@@ -2374,6 +2413,7 @@ void ctedit::enableInterface()
     ui->cmdBlocchi->setEnabled(true);
     ui->cmdCompile->setEnabled(! m_isCtModified);
     ui->cmdSave->setEnabled(m_isCtModified);
+    ui->cmdPLC->setEnabled(! m_isCtModified);
     ui->fraCondition->setEnabled(true);
     ui->tblCT->setEnabled(true);
     m_fCutOrPaste = false;
@@ -2734,7 +2774,7 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
     // Controllo Update
     szTemp = lstValues[colUpdate];
     nUpdate = szTemp.isEmpty() ? -1 : lstUpdateNames.indexOf(szTemp);
-    if (nPos < 0)  {
+    if (nUpdate < 0)  {
         fillErrorMessage(nRow, colUpdate, errCTNoUpdate, szVarName, szTemp, chSeverityError, &errCt);
         lstCTErrors.append(errCt);
         nErrors++;
@@ -2749,7 +2789,7 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
     szTemp = lstValues[colType];
     nType = szTemp.isEmpty() ? -1 : lstTipi.indexOf(szTemp);
     if (nType < 0)  {
-        fillErrorMessage(nRow, colUpdate, errCTNoUpdate, szVarName, szTemp, chSeverityError, &errCt);
+        fillErrorMessage(nRow, colUpdate, errCTNoType, szVarName, szTemp, chSeverityError, &errCt);
         lstCTErrors.append(errCt);
         nErrors++;
     }
@@ -2929,7 +2969,7 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
         }
     }
     //
-    // TODO: Ulteriori controlli formali....errCTNoUpdate
+    // TODO: Ulteriori controlli formali....
     //
     // qDebug() << "Found Errors:" << nErrors;
     // Form visualizzazione errori se richiesto
@@ -3122,3 +3162,54 @@ int  ctedit::fillCompatibleTypesList(varTypes nTypeVar, QList<int> &lstTypes)
     return lstTypes.count();
 }
 
+
+void ctedit::on_cmdPLC_clicked()
+{
+    QString     szPathPLCApplication;
+    QStringList lstEnv;
+    QString     szCommand;
+    QStringList lstArguments;
+    QString     szTemp;
+    QProcess    procPLC;
+    qint64      pidPLC;
+
+    // Lista delle variabili d'ambiente
+    lstEnv = QProcessEnvironment::systemEnvironment().toStringList();
+    qDebug() << "Current Environment:";
+    int i = 0;
+    for (i=0; i<lstEnv.count(); i++)  {
+        qDebug() << i << lstEnv[i];
+    }
+    // Ricerca della variabile specifica per il lancio del PLC
+    szPathPLCApplication = QProcessEnvironment::systemEnvironment().value(szPLCEnvVar, szEMPTY);
+    // Search Path of PLC Application
+    if (! szPathPLCApplication.isEmpty())  {
+        // To be modified with specifics of PLC Application
+        szTemp = QString::fromAscii("%1");
+        qDebug() << szTemp;
+        szPathPLCApplication.remove(szTemp, Qt::CaseInsensitive);
+        szPathPLCApplication.append(QString::fromAscii("/bin/linguist"));
+        // Build PLC Editor Application command
+        szCommand = szPathPLCApplication;
+        // First parameter: File 4cp
+        szTemp = m_szCurrentProjectName;
+        szTemp.remove(szProExt, Qt::CaseInsensitive);
+        szTemp.append(szPLCExt);
+        szTemp.prepend(m_szCurrentPLCPath);
+        lstArguments.append(szTemp);
+        // Imposta come Directory corrente di esecuzione la directory del File PLC
+        procPLC.setWorkingDirectory(m_szCurrentPLCPath);
+        // Esecuzione Comando
+        qDebug() << szCommand << lstArguments;
+        if (! procPLC.startDetached(szCommand, lstArguments, m_szCurrentPLCPath, &pidPLC))  {
+            m_szMsg = tr("Error Starting PLC Compiler!\n");
+            m_szMsg.append(szCommand);
+            warnUser(this, szTitle, m_szMsg);
+        }
+    }
+    else  {
+        m_szMsg = tr("Referencer to Application PLC Compiler %1 Not Found!\n") .arg(szPLCEnvVar);
+        m_szMsg.append(szCommand);
+        warnUser(this, szTitle, m_szMsg);
+    }
+}

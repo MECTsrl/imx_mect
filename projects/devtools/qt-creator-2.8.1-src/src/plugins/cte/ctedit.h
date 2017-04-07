@@ -69,6 +69,8 @@ private slots:
 
     void on_cmdHideShow_toggled(bool checked);
 
+    void on_cmdPLC_clicked();
+
 private:
     //---------------------------------------------------------------------
     // Funzioni locali al modulo
@@ -116,8 +118,10 @@ private:
     int         m_nGridRow;                         // Riga corrente sul Grid
     QString     m_szCurrentCTFile;                  // File Cross Table corrente (completo di Path)
     QString     m_szCurrentCTPath;                  // Path del file Cross Table corrente
+    QString     m_szCurrentPLCPath;                 // Path della parte PLC del Progetto corrente
     QString     m_szCurrentCTName;                  // Nome del file Cross Table (senza Path)
     QString     m_szCurrentProjectPath;             // Project Path corrente
+    QString     m_szCurrentProjectName;             // Project Name senza Path
     QString     m_szCurrentModel;                   // Modello TPAC del progetto
     // Liste varie per prompt colonne e valori Combo Box (per traduzioni)
     QStringList lstHeadCols;

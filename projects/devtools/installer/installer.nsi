@@ -227,31 +227,6 @@ section "install"
     # unzip
     file '/oname=$TEMP\unzip.exe' unzip.exe
 
-
-
-
-    #
-    # Install additional fonts.
-    #
-
-    file '/oname=$TEMP\${FONTS_ARC}' ${FONTS_ARC}
-    rmDir /r '$TEMP\MSfonts'
-    ClearErrors
-    execWait '"$TEMP\unzip.exe" -o "$TEMP\${FONTS_ARC}" -d "$TEMP\MSfonts"'
-    ifErrors 0 FONTEXnoError
-	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing additional fonts.$\n$\nPress OK to continue.'
-FONTEXnoError:
-    delete '$TEMP\${FONTS_ARC}'
-    ClearErrors
-    execWait '"$SYSDIR\CScript.exe" $TEMP\MSfonts\Fonts\install.vbs $TEMP\MSfonts //e:vbscript //B //NOLOGO'
-    ifErrors 0 FONTINnoError
-	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing additional fonts.$\n$\nPress OK to continue.'
-FONTINnoError:
-    #rmDir /r '$TEMP\Fonts'
-
-
-
-
     # CAN
     file '/oname=$TEMP\${CANBALL}' '${CANBALL}'
     ClearErrors
@@ -341,8 +316,28 @@ ARMCCnoError:
     readRegStr $ARMCCWININSTPATH HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sourcery G++ Lite for ARM GNU/Linux" "InstallLocation"
 
     #
+    # Install additional fonts.
+    #
+
+    file '/oname=$TEMP\${FONTS_ARC}' ${FONTS_ARC}
+    rmDir /r '$TEMP\MSfonts'
+    ClearErrors
+    execWait '"$TEMP\unzip.exe" -o "$TEMP\${FONTS_ARC}" -d "$TEMP\MSfonts"'
+    ifErrors 0 FONTEXnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing additional fonts.$\n$\nPress OK to continue.'
+FONTEXnoError:
+    delete '$TEMP\${FONTS_ARC}'
+    ClearErrors
+    execWait '"$SYSDIR\CScript.exe" $TEMP\MSfonts\Fonts\install.vbs $TEMP\MSfonts //e:vbscript //B //NOLOGO'
+    ifErrors 0 FONTINnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing additional fonts.$\n$\nPress OK to continue.'
+FONTINnoError:
+    rmDir /r '$TEMP\Fonts'
+
+    #
     # Cleanup
     #
+
     delete '$TEMP\unzip.exe'
 
     #

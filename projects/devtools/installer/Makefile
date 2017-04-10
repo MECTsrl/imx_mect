@@ -86,6 +86,7 @@ endif
 QTC_INSTALLSRC := ../wine/drive_c/MECT
 QTC_INSTALLSTUFF := \
     $(QTC_DIR)/bin \
+    $(QTC_DIR)/doc \
     $(QTC_DIR)/lib \
     $(QTC_DIR)/share \
 

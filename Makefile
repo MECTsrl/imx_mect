@@ -313,9 +313,12 @@ MECT_DOWNLOADS := \
 	$(MECT_LTIB_EVKARCH) \
 	$(MECT_FSPKG_DL) \
 	$(MECT_WCSXCARCH) \
-	unzip.exe \
+	7za.exe \
 	ATCM.zip \
+	perl-5.24.0-mingw32.zip \
+	Qt-4.8.5-arm.zip \
 	Sourcery_G++_Lite.tar.xz \
+	unzip.exe \
 
 MECT_DLMD5 := $(MECT_DOWNLOADS:%=%.$(MECT_MD5EXT))
 MECT_DOWNLOADS := $(MECT_DOWNLOADS) $(MECT_DLMD5)

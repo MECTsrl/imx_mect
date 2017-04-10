@@ -7,7 +7,6 @@ SetCompress off
 !define VERSION         "${VERSIONMAJOR}.${VERSIONMINOR}.${VERSIONBUILD}"
 !define UNINSTKEY       "${COMPANYNAME} ${APPNAME} v${VERSION}"
 
-!define INSTALLBALL     "${ARCHNAME}"
 !define MECTSUITEBAT    "${APPNAME}-${VERSION}-run.bat"
 !define MECTSUITEVBS    "${APPNAME}-${VERSION}-exec.vbs"
 !define MECTSUITEMAIN   "qtcreator.exe"
@@ -21,17 +20,28 @@ SetCompress off
 !define RUNNAME         "${APPNAME}-v${VERSION}"
 !define UNINSTNAME      "${APPNAME}-v${VERSION}-uninstall.exe"
 !define ARMCCSETUP      "arm-2011.03-41-arm-none-linux-gnueabi.exe"
+!define MECTAPPSBALL	"MECTAPPS.zip"
+!define MECTAPPS_DIR	"MectApps"
 !define CANBALL		"ATCM.zip"
+!define CAN_DIR		"ATCM"
+!define PLCBALL		"PLC.zip"
 !define QTHINI          "${QTH_DIR}\bin\qt.conf"
 !define QTHARMINI       "${QTH_ARM_DIR}\bin\qt.conf"
 !define QTTINI          "${EMB_DIR}\usr\bin\qt.conf"
 !define ROAMINGAPPDATA  "$LOCALAPPDATA\..\Roaming"
 !define QTPROJECT	"QtProject"
 
+Var PLCWININSTPATH	# PLC Engineering executable and path
+Var PLCUNIXINSTPATH	# PLC Engineering executable and path with forward slashes
+#Var PLCWINUNINST	# PLC Engineering uninstaller
+Var PLCWINBINPATH	# PLC Engineering binary path
 Var ARMCCWININSTPATH	# Target toolchain installation path
+Var ARMCCUNIXINSTPATH	# Target compiler install directory with forward slashes
 Var ARMCCWINUNINST	# Target toolchain uninstaller
-Var UNIXINSTDIR		# MinGW install directory with forward slashes.
-Var ARMCCUNIXINSTPATH	# Target compiler install directory with forward slashes.
+Var UNIXINSTDIR		# MinGW install directory with forward slashes
+Var QTCUNIX_DIR		# Qt Creator install directory with forward slashes
+Var QTHUNIX_DIR		# Qt host (x86) install directory with forward slashes
+Var EMBUNIX_DIR		# Embedded root file system install directory
 
 !define QTPRJSETUPBAT   "$TEMP\QTPRJSETUP.BAT"
 !define QTPRJSETUPSH    "$TEMP\qtprjsetup.sh"
@@ -90,22 +100,22 @@ Function DirectoryLeave
     # No forbidden characters in $INSTDIR?
     StrCmp $R0 0 NoSpaces
         # Show message box then go back to the directory page.
-        MessageBox MB_OK|MB_ICONEXCLAMATION \
-            "Error: The installation path cannot contain$\n\
+        messageBox MB_OK|MB_ICONEXCLAMATION \
+            'Error: The installation path cannot contain$\n\
             spaces or ! @ # $$ % ^ & * , ;$\n\
             $\n\
-            Please select a suitable installation path."
+            Please select a suitable installation path.'
         Abort
 
     NoSpaces:
 
-    ${If} ${FileExists} "$INSTDIR\*"
-        MessageBox MB_YESNO|MB_ICONEXCLAMATION \
-	    "$INSTDIR exists and will be deleted.$\n\
-	    Continue the installation?" IDYES yep
+    ${If} ${FileExists} '$INSTDIR\*'
+        messageBox MB_YESNO|MB_ICONEXCLAMATION \
+	    '$INSTDIR exists and will be deleted.$\n\
+	    Continue the installation?' IDYES yep
 	    Abort
 	yep:
-	    rmDir /r "$INSTDIR"
+	    rmDir /r '$INSTDIR'
     ${EndIf}
 
 FunctionEnd
@@ -213,32 +223,131 @@ section "install"
     # Install the main archive.
     #
     # FIXME Install using an external ZIP archive.
-    file "/oname=$TEMP\unzip.exe" "unzip.exe"
 
-    file "/oname=$TEMP\${CANBALL}" ${CANBALL}
-    execWait '"$TEMP\unzip.exe" -o $TEMP\${CANBALL}'
-    delete "$TEMP\${CANBALL}"
+    # unzip
+    file '/oname=$TEMP\unzip.exe' unzip.exe
 
-    file "/oname=$TEMP\${INSTALLBALL}" ${INSTALLBALL}
-    execWait '"$TEMP\unzip.exe" -o $TEMP\${INSTALLBALL}'
-    delete "$TEMP\${INSTALLBALL}"
 
-    delete "$TEMP\unzip.exe"
+
+
+    #
+    # Install additional fonts.
+    #
+
+    file '/oname=$TEMP\${FONTS_ARC}' ${FONTS_ARC}
+    rmDir /r '$TEMP\MSfonts'
+    ClearErrors
+    execWait '"$TEMP\unzip.exe" -o "$TEMP\${FONTS_ARC}" -d "$TEMP\MSfonts"'
+    ifErrors 0 FONTEXnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing additional fonts.$\n$\nPress OK to continue.'
+FONTEXnoError:
+    delete '$TEMP\${FONTS_ARC}'
+    ClearErrors
+    execWait '"$SYSDIR\CScript.exe" $TEMP\MSfonts\Fonts\install.vbs $TEMP\MSfonts //e:vbscript //B //NOLOGO'
+    ifErrors 0 FONTINnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing additional fonts.$\n$\nPress OK to continue.'
+FONTINnoError:
+    #rmDir /r '$TEMP\Fonts'
+
+
+
+
+    # CAN
+    file '/oname=$TEMP\${CANBALL}' '${CANBALL}'
+    ClearErrors
+    execWait '"$TEMP\unzip.exe" -o "$TEMP\${CANBALL}"'
+    ifErrors 0 CANnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${CANBALL}$\n$\nPress OK to abort the installation.'
+	quit
+CANnoError:
+    delete '$TEMP\${CANBALL}'
+
+    # MECT apps
+    file '/oname=$TEMP\${MECTAPPSBALL}' '${MECTAPPSBALL}'
+    rmDir /r "$TEMP\MECTAPPS_TMPDIR"
+    createDirectory "$TEMP\MECTAPPS_TMPDIR"
+    ClearErrors
+    execWait '"$TEMP\unzip.exe" -o "$TEMP\${MECTAPPSBALL}" -d "$TEMP\MECTAPPS_TMPDIR"'
+    ifErrors 0 APPSnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${MECTAPPSBALL}$\n$\nPress OK to abort the installation.'
+	quit
+APPSnoError:
+    delete '$TEMP\${MECTAPPSBALL}'
+    ClearErrors
+    rmDir /r 'C:\MectApps'
+    execWait 'xcopy "$TEMP\MECTAPPS_TMPDIR" "C:\" /E /Y /B'
+    ifErrors 0 COPYAPPSnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing in$\nC:\MectApps$\n$\nPress OK to abort the installation.'
+	quit
+COPYAPPSnoError:
+    rmDir /r "$TEMP\MECTAPPS_TMPDIR"
+
+    # Bulk: Qt host, Qt Creator, root FS target, qmake target, etc.
+    file '/oname=$TEMP\${ARCHNAME}' '${ARCHNAME}'
+    ClearErrors
+    execWait '"$TEMP\unzip.exe" -o "$TEMP\${ARCHNAME}"'
+    ifErrors 0 INSTnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${ARCHNAME}$\n$\nPress OK to abort the installation.'
+	quit
+INSTnoError:
+    delete '$TEMP\${ARCHNAME}'
+
     # FIXME Compress all files within the installer.
     ### file /r install-them-all/*
 
+    #
+    # Install PLC Engineering.
+    #
+
+    file '/oname=$TEMP\${PLCBALL}' '${PLCBALL}'
+    rmDir /r "$TEMP\PLC"
+    ClearErrors
+    execWait '"$TEMP\unzip.exe" -o "$TEMP\${PLCBALL}" -d "$TEMP"'
+    ifErrors 0 PLCEXnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${PLCBALL}$\n$\nPress OK to abort the installation.'
+	quit
+PLCEXnoError:
+    delete '$TEMP\${PLCBALL}'
+    ClearErrors
+    execWait '$TEMP\PLC\ATCMcontrol_Engineering_v2.20.02.4018\Setup.exe'
+    ifErrors 0 PLCnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing PLC Engineering.$\n$\nPress OK to abort the installation.'
+	quit
+PLCnoError:
+    rmDir /r '$TEMP\PLC'
+
+    # Collect the PLC Engineering executable and full path.
+    readRegStr $PLCWININSTPATH HKLM "Software\Classes\4CProjectFile\shell\open\command" ""
+    readRegStr $PLCWINBINPATH HKLM "Software\Softing\4ControlV2\2.0" "BinPath"
+
+    # Fix PLC Engineering installation.
+    delete '$PLCWINBINPATH\ATHW119\${PLC_ATHW}'
+    file '/oname=$PLCWINBINPATH\ATHW119\${PLC_ATHW}' ${PLC_ATHW}
 
     #
     # Install the target compilation toolchain.
     #
 
-    file "/oname=$TEMP\${ARMCCSETUP}" ${ARMCCSETUP}
+    file '/oname=$TEMP\${ARMCCSETUP}' ${ARMCCSETUP}
+    ClearErrors
     execWait '"$TEMP\${ARMCCSETUP}" -i GUI'
-    delete "$TEMP\${ARMCCSETUP}"
+    ifErrors 0 ARMCCnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing Code SOurcery toolchain.$\n$\nPress OK to abort the installation.'
+	quit
+ARMCCnoError:
+    delete '$TEMP\${ARMCCSETUP}'
 
     # Collect the compiler install path.
     readRegStr $ARMCCWININSTPATH HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sourcery G++ Lite for ARM GNU/Linux" "InstallLocation"
 
+    #
+    # Cleanup
+    #
+    delete '$TEMP\unzip.exe'
+
+    #
+    # Post-install setup
+    #
 
     # Set up the Start menu and the Desktop.
     #
@@ -280,20 +389,69 @@ section "install"
     # Script to run the MECT Suite in the proper environment.
     #
 
-    # Create the configuration script.
+    # Get the MinGW installation path suitable for Qt (forward slashes).
+    push $INSTDIR
+    push "\"
+    call strSlash
+    pop $R0
+    strCpy $UNIXINSTDIR $R0
+
+    # Get the target compilation chain installation path suitable for Qt (forward slashes).
+    push $ARMCCWININSTPATH
+    push "\"
+    call strSlash
+    pop $R0
+    strCpy $ARMCCUNIXINSTPATH $R0
+
+    # Get the PLC Engineering executable and path suitable for Qt (forward slashes).
+    push $PLCWININSTPATH
+    push "\"
+    call strSlash
+    pop $R0
+    strCpy $PLCUNIXINSTPATH $R0
+
+    # Get the Qt Creator install directory suitable for Qt (forward slashes).
+    push $INSTDIR\${QTC_DIR}
+    push "\"
+    call strSlash
+    pop $R0
+    strCpy $QTCUNIX_DIR $R0
+
+    # Get the Qt x86 install directory suitable for Qt (forward slashes).
+    push $INSTDIR\${QTH_DIR}
+    push "\"
+    call strSlash
+    pop $R0
+    strCpy $QTHUNIX_DIR $R0
+
+    # Get the Qt x86 install directory suitable for Qt (forward slashes).
+    push $INSTDIR\${EMB_DIR}
+    push "\"
+    call strSlash
+    pop $R0
+    strCpy $EMBUNIX_DIR $R0
+
+    # Create the actual launcher script that sets up the environment.
     push $9
     fileOpen $9 "$INSTDIR\${MECTSUITEBAT}" w
     fileWrite $9 "@echo off$\r$\n"
     fileWrite $9 "$\r$\n"
     fileWrite $9 'setlocal EnableDelayedExpansion$\r$\n'
     fileWrite $9 "$\r$\n"
+    fileWrite $9 'set PATH=$ARMCCWININSTPATH\bin;%PATH%$\r$\n'
     fileWrite $9 'set PATH=$INSTDIR\${MINGW_DIR}\bin;%PATH%$\r$\n'
     fileWrite $9 'set PATH=$INSTDIR\${MINGW_DIR}\msys\1.0\bin;%PATH%$\r$\n'
     fileWrite $9 'set PATH=$INSTDIR\${QTC_DIR}\bin;%PATH%$\r$\n'
     fileWrite $9 'set PATH=$INSTDIR\${QTH_DIR}\bin;%PATH%$\r$\n'
     fileWrite $9 'set PATH=$INSTDIR\${QTH_DIR}\lib;%PATH%$\r$\n'
     fileWrite $9 "$\r$\n"
-    fileWrite $9 '"$INSTDIR\${QTC_DIR}\bin\qtcreator.exe"$\r$\n'
+    fileWrite $9 'set PLCUNIXINSTPATH=$PLCUNIXINSTPATH$\r$\n'
+    fileWrite $9 "$\r$\n"
+    fileWrite $9 'set MECT_QTC_INSTALL_DIR=$QTCUNIX_DIR$\r$\n'
+    fileWrite $9 'set MECT_QTH_INSTALL_DIR=$QTHUNIX_DIR$\r$\n'
+    fileWrite $9 'set MECT_QTT_INSTALL_DIR=$EMBUNIX_DIR$\r$\n'
+    fileWrite $9 "$\r$\n"
+    fileWrite $9 '"$INSTDIR\${QTC_DIR}\bin\qtcreator.exe" -settingspath "$INSTDIR"$\r$\n'
     fileWrite $9 "$\r$\n"
     fileWrite $9 "exit$\r$\n"
     fileClose $9
@@ -315,22 +473,10 @@ section "install"
     # Post-install configurations
     #
 
-    # Get the MinGW installation path suitable for Qt (forward slashes).
-    push $INSTDIR
-    push "\"
-    call strSlash
-    pop $R0
-    strCpy $UNIXINSTDIR $R0
-
-    # Get the target compilation chain installation path suitable for Qt (forward slashes).
-    push $ARMCCWININSTPATH
-    push "\"
-    call strSlash
-    pop $R0
-    strCpy $ARMCCUNIXINSTPATH $R0
-
-    # Configure the Qt Creator configuration templates.
+    # Configure the Qt Creator configuration templates (QtProject).
     #
+    delete "${QTPRJSETUPSH}"
+    delete "${QTPRJSETUPBAT}"
     # Create the worker shell script.
     push $9
     fileOpen $9 '${QTPRJSETUPSH}' w
@@ -346,7 +492,7 @@ section "install"
     fileWrite $9 "    ' $$f$\n"
     fileWrite $9 'done$\n'
     pop $9
-    # Create the launcher batch script.
+    # Create the launcher batch script for the worker script.
     push $9
     fileOpen $9 '${QTPRJSETUPBAT}' w
     fileWrite $9 '@echo off$\r$\n'
@@ -365,10 +511,11 @@ section "install"
     # Do configure the Qt Creator configuration templates.
     execWait "${QTPRJSETUPBAT}"
     # Clean up.
-    delete "$TEMP\${QTPRJSETUPSH}"
-    delete "$TEMP\${QTPRJSETUPBAT}"
+    delete "${QTPRJSETUPSH}"
+    delete "${QTPRJSETUPBAT}"
+    execWait 'xcopy "$INSTDIR\${QTPROJECT}" "$INSTDIR\${QTPROJECT}-default\" /E /Y /B'
 
-    # Configure the host Qt.
+    # Configure the host Qt and Qt Creator.
     #
     writeINIStr "${QTHINI}" "Paths" "Prefix" "$UNIXINSTDIR/${QTH_DIR}"
     writeINIStr "${QTHINI}" "Paths" "Documentation" "doc"
@@ -383,6 +530,9 @@ section "install"
     writeINIStr "${QTHINI}" "Paths" "Examples" "examples"
     writeINIStr "${QTHINI}" "Paths" "Demos" "demos"
     flushINI "${QTHINI}"
+
+    delete "${QTPOSTINSTSH}"
+    delete "${QTPOSTINSTBAT}"
     # Create the worker shell script.
     push $9
     fileOpen $9 '${QTPOSTINSTSH}' w
@@ -390,12 +540,17 @@ section "install"
     fileWrite $9 '$\n'
     fileWrite $9 'set -x$\n'
     fileWrite $9 '$\n'
-    fileWrite $9 'cd "$INSTDIR\${QTH_DIR}"$\n'
+    fileWrite $9 'cd "$INSTDIR\${QTH_DIR}\lib"$\n'
     fileWrite $9 'for f in $$(find . -type f -name \*.prl -print); do$\n'
     fileWrite $9 "    sed -i 's|@@_QT_INSTALL_DIR_@@|$UNIXINSTDIR/${QTH_DIR}|' $$f$\n"
     fileWrite $9 'done$\n'
+    fileWrite $9 '$\n'
+    fileWrite $9 'cd "C:\${MECTAPPS_DIR}"$\n'
+    fileWrite $9 'for f in $$(find . -type f -name systemicons.qrc -print); do$\n'
+    fileWrite $9 "    sed -i 's|@@_MECTAPPS_SYSTEMICONS_PREFIX_@@|$UNIXINSTDIR/${QTC_DIR}|' $$f$\n"
+    fileWrite $9 'done$\n'
     pop $9
-    # Create the launcher batch script.
+    # Create the launcher batch script for the worker script.
     push $9
     fileOpen $9 '${QTPOSTINSTBAT}' w
     fileWrite $9 '@echo off$\r$\n'
@@ -414,10 +569,10 @@ section "install"
     # Configure the host Qt.
     execWait "${QTPOSTINSTBAT}"
     # Clean up.
-    delete "$TEMP\${QTPOSTINSTSH}"
-    delete "$TEMP\${QTPOSTINSTBAT}"
+    delete "${QTPOSTINSTSH}"
+    delete "${QTPOSTINSTBAT}"
 
-    # Configure the target (ARM) Qt (actually only qmake).
+    # Configure the target (ARM) Qt.
     #
     writeINIStr "${QTHARMINI}" "Paths" "Prefix" "$UNIXINSTDIR/${QTH_ARM_DIR}"
     writeINIStr "${QTHARMINI}" "Paths" "Documentation" "doc"
@@ -432,6 +587,9 @@ section "install"
     writeINIStr "${QTHARMINI}" "Paths" "Examples" "examples"
     writeINIStr "${QTHARMINI}" "Paths" "Demos" "demos"
     flushINI "${QTHARMINI}"
+
+    delete "${QTARMPOSTINSTSH}"
+    delete "${QTARMPOSTINSTBAT}"
     # Create the worker shell script.
     push $9
     fileOpen $9 '${QTARMPOSTINSTSH}' w
@@ -439,10 +597,21 @@ section "install"
     fileWrite $9 '$\n'
     fileWrite $9 'set -x$\n'
     fileWrite $9 '$\n'
-    fileWrite $9 'cd "$INSTDIR\${QTH_ARM_DIR}"$\n'
+    fileWrite $9 'cd "$INSTDIR\${QTH_ARM_DIR}\lib"$\n'
     fileWrite $9 'for f in $$(find . -type f -name \*.prl -print); do$\n'
     fileWrite $9 "    sed -i 's|@@_QT_INSTALL_DIR_@@|$UNIXINSTDIR/${QTH_ARM_DIR}|' $$f$\n"
     fileWrite $9 'done$\n'
+    fileWrite $9 '$\n'
+    fileWrite $9 'cd "$UNIXINSTDIR/${QTH_ARM_DIR}"$\n'
+    fileWrite $9 'if test -d mkspecs/qws/linux-g++-mx; then$\n'
+    fileWrite $9 "    sed -i 's|@@_MECT_QTTUNIX_INSTALL_DIR_@@|$EMBUNIX_DIR|g' mkspecs/qws/linux-g++-mx/qmake.conf$\n"
+    fileWrite $9 "    sed -i 's|C:|../../..|g' mkspecs/qws/linux-g++-mx/qmake.conf$\n"
+    fileWrite $9 'fi$\n'
+    fileWrite $9 '$\n'
+    fileWrite $9 'if test -f mkspecs/common/mect.conf; then$\n'
+    fileWrite $9 "    sed -i 's|@@_MECT_QTTUNIX_INSTALL_DIR_@@|$EMBUNIX_DIR|g' mkspecs/common/mect.conf$\n"
+    fileWrite $9 "    sed -i 's|C:|../../..|g' mkspecs/common/mect.conf$\n"
+    fileWrite $9 'fi$\n'
     pop $9
     # Create the launcher batch script.
     push $9
@@ -463,8 +632,8 @@ section "install"
     # Configure the host Qt.
     execWait "${QTARMPOSTINSTBAT}"
     # Clean up.
-    delete "$TEMP\${QTARMPOSTINSTSH}"
-    delete "$TEMP\${QTARMPOSTINSTBAT}"
+    delete "${QTARMPOSTINSTSH}"
+    delete "${QTARMPOSTINSTBAT}"
 
     # Configure the embeddded Qt. [ TODO Is this really needed? ]
     #
@@ -518,9 +687,10 @@ section "uninstall"
     rmDir /r "$INSTDIR\${QTH_DIR}"
     rmDir /r "$INSTDIR\${QTH_ARM_DIR}"
     rmDir /r "$INSTDIR\${MINGW_DIR}"
-    rmDir /r "$INSTDIR\${CANBALL}"
-    rmDir /r "$INSTDIR\ATCM"
-    rmDir /r "$INSTDIR\QtProject"
+    rmDir /r "$INSTDIR\${CAN_DIR}"
+    rmDir /r "C:\${MECTAPPS_DIR}"
+    rmDir /r "$INSTDIR\${QTPROJECT}"
+    rmDir /r "$INSTDIR\${QTPROJECT}-default"
 
     # Clean up the Start Menu.
     #
@@ -536,6 +706,11 @@ section "uninstall"
 
     # LAST: delete the uninstaller.
     delete "$INSTDIR\${UNINSTNAME}"
+
+    # Uninstall PLC Engineering.
+    # [ FIXME: the key has a random component, e.g.,
+    # Software\Microsoft\Windows\CurrentVersion\Uninstall\{E5493DB8-035F-11D5-B8FA-002018641833}\UninstallString
+    #readRegStr $PLCWINUNINST HKLM "" "UninstallString"
 
     # Uninstall the target toolchain.
     readRegStr $ARMCCWINUNINST HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sourcery G++ Lite for ARM GNU/Linux" "UninstallString"

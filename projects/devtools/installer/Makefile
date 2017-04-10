@@ -199,6 +199,7 @@ endif
 	# Qt Creator configuration template
 	cp -aL --reflink=auto QtProject "$(INSTALLDST)"
 	#
+	# MECT apps
 	mv $(MECTAPPS_DIR) $(MECTAPPS_SAVE_DIR)
 	make -C ../../.. projects_setup_mect_apps
 	rm -rf $(MECTAPPS_DIR)/.git

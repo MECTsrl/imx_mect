@@ -315,7 +315,9 @@ MECT_DOWNLOADS := \
 	$(MECT_WCSXCARCH) \
 	7za.exe \
 	ATCM.zip \
+	ATHW119_4CVM.kad \
 	perl-5.24.0-mingw32.zip \
+	PLC.zip \
 	Qt-4.8.5-arm.zip \
 	Sourcery_G++_Lite.tar.xz \
 	unzip.exe \

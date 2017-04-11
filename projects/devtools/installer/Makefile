@@ -287,9 +287,7 @@ endif
 	$(INSTALLSCR)
 	#
 	# Install the installer (if called from main Makefile).
-	if test -n "$(MECT_IMGDIR)"; then \
-	    cp -a --reflink=auto $(INSTALLSCR) $(MECT_IMGDIR); \
-	fi
+	if test -n "$(MECT_IMGDIR)"; then cp -a --reflink=auto $(INSTALLPRG) $(MECT_IMGDIR); fi
 
 
 .PHONY: clean

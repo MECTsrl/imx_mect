@@ -30,6 +30,7 @@
 #include <QProcess>
 #include <QTextStream>
 #include <QProcessEnvironment>
+#include <QVBoxLayout>
 
 /* ----  Local Defines:   ----------------------------------------------------- */
 #define _TRUE  1
@@ -49,6 +50,8 @@
 // Tabs in TabWidget
 #define TAB_CT 0
 #define TAB_SYSTEM 1
+#define TAB_TREND 2
+
 #undef  WORD_BIT
 
 // String Costants
@@ -58,10 +61,12 @@ const QString szTitle = QString::fromAscii("Mect Editor");
 const QString szSlash = QString::fromAscii("/");
 const QString szCrossCompier = QString::fromAscii("ctc");
 const QString szTemplateFile = QString::fromAscii("template.pri");
+const QString szEnvFile = QString::fromAscii("EnvVars.txt");
 const QString szPLCEnvVar = QString::fromAscii("PLCUNIXINSTPATH");
 const QString szProExt = QString::fromAscii(".pro");
 const QString szPLCExt = QString::fromAscii(".4cp");
 const QString szPLCDir = QString::fromAscii("plc");
+const QString szINIFILE = QString::fromAscii("system.ini");
 
 enum colonne_e
 {
@@ -373,9 +378,19 @@ ctedit::ctedit(QWidget *parent) :
     m_fCutOrPaste = false;
     m_nCurTab = 0;
     m_vtAlarmVarType = UNKNOWN;
+    // Creazione del Tab per il System Editor
+    QVBoxLayout *vbSystem = new QVBoxLayout(ui->tabSystem);
+    mectSet = new MectSettings(ui->tabSystem);
+    vbSystem->addWidget(mectSet);
+    // Creazione del Tab per il Trend Editor
+    QVBoxLayout *vbTrend = new QVBoxLayout(ui->tabTrend);
+    // TODO: Add widget for Trend Editor
+
     // Seleziona il primo Tab
     ui->tabWidget->setCurrentIndex(m_nCurTab);
-    ui->tabWidget->setTabEnabled(TAB_SYSTEM, false);
+    ui->tabWidget->setTabEnabled(TAB_SYSTEM, true);
+    ui->tabWidget->setTabEnabled(TAB_TREND, false);
+
     // Connessione Segnali - Slot
     ui->tblCT->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tblCT, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(displayUserMenu(const QPoint &)));
@@ -474,6 +489,8 @@ bool    ctedit::selectCTFile(QString szFileCT)
         }
         m_isCtModified = false;
         m_fCutOrPaste = false;
+        // Se tutto Ok, carica anche le impostazioni del file INI
+        mectSet->loadProjectFiles(m_szCurrentCTPath + szINIFILE, m_szCurrentProjectPath + szSlash + m_szCurrentProjectName, m_szCurrentProjectPath);
         enableInterface();
     }
     return fRes;
@@ -3173,12 +3190,19 @@ void ctedit::on_cmdPLC_clicked()
     QProcess    procPLC;
     qint64      pidPLC;
 
-    // Lista delle variabili d'ambiente
+    // Lista delle variabili d'ambiente per controllo configurazione
     lstEnv = QProcessEnvironment::systemEnvironment().toStringList();
-    qDebug() << "Current Environment:";
-    int i = 0;
-    for (i=0; i<lstEnv.count(); i++)  {
-        qDebug() << i << lstEnv[i];
+    QFile   fEnv(m_szCurrentProjectPath + szSlash + szEnvFile);
+    fEnv.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+    if (fEnv.isOpen())  {
+        QTextStream txtEnv(&fEnv);
+        qDebug() << "Current Environment:";
+        int i = 0;
+        for (i=0; i<lstEnv.count(); i++)  {
+            qDebug() << i << lstEnv[i];
+            txtEnv << i << " - " << lstEnv[i] << endl;
+        }
+        fEnv.close();
     }
     // Ricerca della variabile specifica per il lancio del PLC
     szPathPLCApplication = QProcessEnvironment::systemEnvironment().value(szPLCEnvVar, szEMPTY);

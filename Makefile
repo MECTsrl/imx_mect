@@ -93,7 +93,7 @@ export MECT_RPMDIR = $(MECT_RPMBASEDIR)/RPMS/$(MECT_TARGET_ARCH)
 # Top-level directory for target image build receipts
 MECT_MKIMGDIR := $(CURDIR)/targets
 # Top-level directory fo target device images
-MECT_IMGDIR := $(CURDIR)/images
+export MECT_IMGDIR := $(CURDIR)/images
 # Projects directory
 MECT_PRJDIR := $(CURDIR)/projects
 # Utility to compare current target images with a given reference set.

@@ -3216,7 +3216,7 @@ void ctedit::on_cmdPLC_clicked()
         szTemp = QString::fromAscii("%1");
         qDebug() << szTemp;
         szPathPLCApplication.remove(szTemp, Qt::CaseInsensitive);
-        szPathPLCApplication.append(QString::fromAscii("/bin/linguist"));
+        // szPathPLCApplication.append(QString::fromAscii("/bin/linguist"));
         // Build PLC Editor Application command
         szCommand = szPathPLCApplication;
         // First parameter: File 4cp
@@ -3225,20 +3225,28 @@ void ctedit::on_cmdPLC_clicked()
         szTemp.append(szPLCExt);
         szTemp.prepend(m_szCurrentPLCPath);
         lstArguments.append(szTemp);
-        // Imposta come Directory corrente di esecuzione la directory del File PLC
-        procPLC.setWorkingDirectory(m_szCurrentPLCPath);
-        // Esecuzione Comando
-        m_szMsg = tr("Command: \n") + szCommand + szSpace(1) + szTemp;
-        qDebug() << szCommand + szSpace(1) + szTemp;
-        notifyUser(this, szTitle, m_szMsg);
-        if (! procPLC.startDetached(szCommand, lstArguments, m_szCurrentPLCPath, &pidPLC))  {
-            m_szMsg = tr("Error Starting PLC Compiler!\n");
-            m_szMsg.append(szCommand);
+        QFile plcPro(szTemp);
+        if (! plcPro.exists())  {
+            m_szMsg = tr("PLC Project File Not Found\n");
+            m_szMsg.append(szTemp);
             warnUser(this, szTitle, m_szMsg);
+        }
+        else  {
+            // Imposta come Directory corrente di esecuzione la directory del File PLC
+            procPLC.setWorkingDirectory(m_szCurrentPLCPath);
+            // Esecuzione Comando
+            m_szMsg = tr("Command: \n") + szCommand + szSpace(1) + szTemp;
+            qDebug() << szCommand + szSpace(1) + szTemp;
+            notifyUser(this, szTitle, m_szMsg);
+            if (! procPLC.startDetached(szCommand, lstArguments, m_szCurrentPLCPath, &pidPLC))  {
+                m_szMsg = tr("Error Starting PLC Compiler!\n");
+                m_szMsg.append(szCommand);
+                warnUser(this, szTitle, m_szMsg);
+            }
         }
     }
     else  {
-        m_szMsg = tr("Referencer to Application PLC Compiler %1 Not Found!\n") .arg(szPLCEnvVar);
+        m_szMsg = tr("Reference to Application PLC Compiler %1 Not Found!\n") .arg(szPLCEnvVar);
         m_szMsg.append(szCommand);
         warnUser(this, szTitle, m_szMsg);
     }

@@ -6,18 +6,21 @@ HEADERS += \
     ctedit.h \
     utils.h \  
     cteerrdef.h \
-    cteerrorlist.h
+    cteerrorlist.h \
+    mectsettings.h
 
 SOURCES += \
     cteplugin.cpp \
     parser.c \
     ctedit.cpp \
     utils.cpp \  
-    cteerrorlist.cpp
+    cteerrorlist.cpp \
+    mectsettings.cpp
 
 FORMS += \
     ctedit.ui \  
-    cteerrorlist.ui
+    cteerrorlist.ui \
+    mectsettings.ui
 
 LIBS += \
     -L../projectexplorer -lProjectExplorer

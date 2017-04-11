@@ -172,10 +172,7 @@ tools: wine
 	# MinGW
 	rm -rf $(MGW_INST_DIR)
 	mkdir -p $(MGW_INST_DIR)
-	cd $(MGW_INST_DIR); unzip $(MGW_ARCHIVE)
-	# Perl
-	unzip -o -d $(DRIVE_C)/$(PERL_INSTALL_DIR) $(PERL_ARCH)
-	rsync -a $(PERL_INSTALL_PATH_H)/ $(MGW_INST_DIR)/msys/1.0/
+	unzip -q -o -d $(MGW_INST_DIR) $(MGW_ARCHIVE)
 	rm -rf $(PERL_INSTALL_PATH_H)
 	# ARM cross compiler (Code Sourcery)
 	rm -rf $(XCCC_INSTALL_PATH_H)
@@ -189,7 +186,11 @@ tools: wine
 	-wineserver -k		# Sync the registry
 	sed -i '/^"PATH"=/ s/C:\\\\MinGW\\\\bin;//g' $(WINEPREFIX)/system.reg
 	sed -i '/^"PATH"=/ s/"C:/"C:\\\\MinGW\\\\bin;C:/' $(WINEPREFIX)/system.reg
+	# MinGW & MSYS setup
 	wine mingw-get install mingw32-base msys-base mingw32-gcc-g++ msys-rebase
+	# Perl setup
+	unzip -q -o -d $(DRIVE_C)/$(PERL_INSTALL_DIR) $(PERL_ARCH)
+	rsync -a $(PERL_INSTALL_PATH_H)/ $(MGW_INST_DIR)/msys/1.0/
 	-wineserver -k		# Sync the registry
 	sed -i '/^"PATH"=/ s/C:\\\\MinGW\\\\msys\\\\1.0\\\\bin;//g' $(WINEPREFIX)/system.reg
 	sed -i '/^"PATH"=/ s/"C:/"C:\\\\MinGW\\\\msys\\\\1.0\\\\bin;C:/' $(WINEPREFIX)/system.reg
@@ -334,7 +335,7 @@ install-prebuilt-qt_arm:
 	test -r '$(SRC_DIRECTORY)/$(QT_ARM_PREBARCH)'
 	rm -rf $(QT_ARM_INST_DIR_H)
 	mkdir -p `dirname $(QT_ARM_INST_DIR_H)`
-	unzip -o -d `dirname $(QT_ARM_INST_DIR_H)` $(SRC_DIRECTORY)/$(QT_ARM_PREBARCH)
+	unzip -q -o -d `dirname $(QT_ARM_INST_DIR_H)` $(SRC_DIRECTORY)/$(QT_ARM_PREBARCH)
 	test -d '$(QT_ARM_INST_DIR_H)'
 	### echo '[Paths]' > '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
 	### echo 'Prefix = $(QT_ARM_INST_DIR)' >> '$(QT_ARM_INST_DIR_H)/bin/qt.conf'

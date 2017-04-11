@@ -548,9 +548,15 @@ projects: projects_setup projects_build
 # Build the development tools.
 .PHONY: devtools
 devtools: projects_setup_mect_plugins
-	test -d $(MECT_PRJDIR)/devtools
 	test -r $(MECT_PRJDIR)/devtools/Makefile
 	$(MAKE) -C $(MECT_PRJDIR)/devtools
+
+# Build the Windows installer (run this AFTER devtools above).
+.PHONY: installer
+installer:
+	test -d $(MECT_PRJDIR)/devtools/wine
+	test -r $(MECT_PRJDIR)/devtools/installer/Makefile
+	$(MAKE) -C $(MECT_PRJDIR)/devtools/installer
 
 
 .PHONY: spec_setup

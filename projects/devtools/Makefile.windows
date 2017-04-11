@@ -244,7 +244,7 @@ do_qt:
 install-qt:
 	make -f $(MAKEFILE_NAME) clean-qt
 	mkdir -p `dirname $(QT_INST_DIR_H)`
-	cp -a --reflink=quto $(QT_DIRECTORY) $(QT_INST_DIR_H)
+	cp -a --reflink=auto $(QT_DIRECTORY) $(QT_INST_DIR_H)
 	echo '[Paths]' > '$(QT_INST_DIR_H)/bin/qt.conf'
 	echo 'Prefix = $(QT_INST_DIR)' >> '$(QT_INST_DIR_H)/bin/qt.conf'
 	echo 'Documentation = doc' >> '$(QT_INST_DIR_H)/bin/qt.conf'

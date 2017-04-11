@@ -200,14 +200,11 @@ endif
 	cp -aL --reflink=auto QtProject "$(INSTALLDST)"
 	#
 	# MECT apps
-	mv $(MECTAPPS_DIR) $(MECTAPPS_SAVE_DIR)
-	make -C ../../.. projects_setup_mect_apps
-	rm -rf $(MECTAPPS_DIR)/.git
 	rm -rf $(MECTAPPS_DESTDIR)
-	mv ../../mect_apps $(MECTAPPS_DESTDIR)
-	test -d $(MECTAPPS_SAVE_DIR)
-	rm -rf $(MECTAPPS_DIR)
-	mv $(MECTAPPS_SAVE_DIR) $(MECTAPPS_DIR)
+	mkdir -p $(MECTAPPS_DESTDIR)
+	cp -a --reflink=auto $(MECTAPPS_DIR)/.git $(MECTAPPS_DESTDIR)
+	cd $(MECTAPPS_DESTDIR); git checkout .
+	rm -rf $(MECTAPPS_DESTDIR)/.git
 	find $(MECTAPPS_DESTDIR) -type f -name systemicons.qrc -exec sed -i 's|>C:/Qt485/desktop|>@@_MECTAPPS_SYSTEMICONS_PREFIX_@@|' {} \;
 	for f in `grep -rIl 'ATCM_TEMPLATE_BASE_DIR\s*=\s*C:/Qt485/desktop/share/qtcreator/templates/wizards' $(MECTAPPS_DESTDIR)`; do \
 	    sed -i 's|ATCM_TEMPLATE_BASE_DIR\s*=\s*C:/Qt485/desktop/share/qtcreator/templates/wizards|ATCM_TEMPLATE_BASE_DIR = $$$$(MECT_QTC_INSTALL_DIR)/share/qtcreator/templates/wizards|' $$f; \

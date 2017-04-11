@@ -316,6 +316,7 @@ MECT_DOWNLOADS := \
 	7za.exe \
 	ATCM.zip \
 	perl-5.24.0-mingw32.zip \
+	PLC.zip \
 	Qt-4.8.5-arm.zip \
 	Sourcery_G++_Lite.tar.xz \
 	unzip.exe \

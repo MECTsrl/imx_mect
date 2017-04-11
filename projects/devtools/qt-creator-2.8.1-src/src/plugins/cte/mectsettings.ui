@@ -247,7 +247,7 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
@@ -420,13 +420,16 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="toolTip">
             <string/>
            </property>
            <property name="text">
             <string>Retries</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_Retries</cstring>
            </property>
           </widget>
          </item>
@@ -448,13 +451,16 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="toolTip">
             <string/>
            </property>
            <property name="text">
             <string>Pwd Logout Page [s]</string>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox_PwdLogoutPage</cstring>
            </property>
           </widget>
          </item>
@@ -476,10 +482,13 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
             <string>Screen Saver [s]</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_ScreenSaver</cstring>
            </property>
           </widget>
          </item>
@@ -501,10 +510,13 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
             <string>Pwd Timeout [s]</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_PwdTimeout</cstring>
            </property>
           </widget>
          </item>
@@ -526,10 +538,13 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
             <string>Blacklist</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_Blacklist</cstring>
            </property>
           </widget>
          </item>
@@ -551,10 +566,13 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
             <string>Fast Log Period [s]</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_FastLogPeriod</cstring>
            </property>
           </widget>
          </item>
@@ -576,7 +594,7 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
@@ -607,7 +625,7 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
@@ -638,10 +656,13 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
             <string>Max Log Space [Mb]</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_MaxLogSpace</cstring>
            </property>
           </widget>
          </item>
@@ -663,10 +684,13 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
             <string>Trend Window [s]</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_TraceWindow</cstring>
            </property>
           </widget>
          </item>
@@ -688,10 +712,13 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
             <string>Slow Log Period [s]</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_SlowLogPeriod</cstring>
            </property>
           </widget>
          </item>
@@ -924,11 +951,17 @@ QTabWidget::tab-bar {
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
            <property name="text">
             <string>Language</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="buddy">
+            <cstring>comboBoxLanguage</cstring>
            </property>
           </widget>
          </item>
@@ -1000,13 +1033,16 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
             <string>Start Page</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox_StartPage</cstring>
            </property>
           </widget>
          </item>
@@ -1078,13 +1114,16 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
             <string>Home Page</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox_HomePage</cstring>
            </property>
           </widget>
          </item>
@@ -1165,7 +1204,7 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
@@ -1318,7 +1357,7 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
@@ -1371,10 +1410,13 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
             <string>Read Period 1 [ms]</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_ReadPeriod1</cstring>
            </property>
           </widget>
          </item>
@@ -1455,10 +1497,13 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
             <string>Read Period 2 [ms]</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_ReadPeriod2</cstring>
            </property>
           </widget>
          </item>
@@ -1536,10 +1581,13 @@ QTabWidget::tab-bar {
             </font>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
             <string>Read Period 3 [ms]</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_ReadPeriod3</cstring>
            </property>
           </widget>
          </item>
@@ -1732,6 +1780,9 @@ QTabWidget::tab-bar {
            <property name="text">
             <string>Parity</string>
            </property>
+           <property name="buddy">
+            <cstring>comboBox_Parity_SERIAL_PORT_0</cstring>
+           </property>
           </widget>
          </item>
          <item row="1" column="3" alignment="Qt::AlignHCenter">
@@ -1745,6 +1796,9 @@ QTabWidget::tab-bar {
            <property name="text">
             <string>Stopbits</string>
            </property>
+           <property name="buddy">
+            <cstring>comboBox_Stopbits_SERIAL_PORT_0</cstring>
+           </property>
           </widget>
          </item>
          <item row="2" column="0" alignment="Qt::AlignHCenter">
@@ -1756,7 +1810,7 @@ QTabWidget::tab-bar {
             </sizepolicy>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
+            <enum>Qt::WheelFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -1839,6 +1893,9 @@ QTabWidget::tab-bar {
            <property name="wordWrap">
             <bool>false</bool>
            </property>
+           <property name="buddy">
+            <cstring>comboBox_Baudrate_SERIAL_PORT_0</cstring>
+           </property>
           </widget>
          </item>
          <item row="1" column="2" alignment="Qt::AlignHCenter">
@@ -1851,6 +1908,9 @@ QTabWidget::tab-bar {
            </property>
            <property name="text">
             <string>Databits</string>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox_Databits_SERIAL_PORT_0</cstring>
            </property>
           </widget>
          </item>
@@ -1902,12 +1962,18 @@ QTabWidget::tab-bar {
            <property name="text">
             <string>Silence [ms]</string>
            </property>
+           <property name="buddy">
+            <cstring>lineEdit_Silence_SERIAL_PORT_0</cstring>
+           </property>
           </widget>
          </item>
          <item row="0" column="1" alignment="Qt::AlignHCenter">
           <widget class="QLabel" name="label_Timeout_SERIAL_PORT_0">
            <property name="text">
             <string>Timeout [ms]</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_Timeout_SERIAL_PORT_0</cstring>
            </property>
           </widget>
          </item>
@@ -2015,6 +2081,9 @@ QTabWidget::tab-bar {
            <property name="text">
             <string>Stopbits</string>
            </property>
+           <property name="buddy">
+            <cstring>comboBox_Stopbits_SERIAL_PORT_1</cstring>
+           </property>
           </widget>
          </item>
          <item row="1" column="2" alignment="Qt::AlignHCenter">
@@ -2028,6 +2097,9 @@ QTabWidget::tab-bar {
            <property name="text">
             <string>Databits</string>
            </property>
+           <property name="buddy">
+            <cstring>comboBox_Databits_SERIAL_PORT_1</cstring>
+           </property>
           </widget>
          </item>
          <item row="2" column="0" alignment="Qt::AlignHCenter">
@@ -2039,7 +2111,7 @@ QTabWidget::tab-bar {
             </sizepolicy>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
+            <enum>Qt::WheelFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -2109,6 +2181,9 @@ QTabWidget::tab-bar {
            </property>
            <property name="text">
             <string>Parity</string>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox_Parity_SERIAL_PORT_1</cstring>
            </property>
           </widget>
          </item>
@@ -2195,6 +2270,9 @@ QTabWidget::tab-bar {
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="buddy">
+            <cstring>comboBox_Baudrate_SERIAL_PORT_1</cstring>
+           </property>
           </widget>
          </item>
          <item row="2" column="3" alignment="Qt::AlignHCenter">
@@ -2271,12 +2349,18 @@ QTabWidget::tab-bar {
            <property name="text">
             <string>Silence [ms]</string>
            </property>
+           <property name="buddy">
+            <cstring>lineEdit_Silence_SERIAL_PORT_1</cstring>
+           </property>
           </widget>
          </item>
          <item row="0" column="1" alignment="Qt::AlignHCenter">
           <widget class="QLabel" name="label_Timeout_SERIAL_PORT_1">
            <property name="text">
             <string>Timeout [ms]</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_Timeout_SERIAL_PORT_1</cstring>
            </property>
           </widget>
          </item>
@@ -2371,6 +2455,9 @@ QTabWidget::tab-bar {
            <property name="text">
             <string>Databits</string>
            </property>
+           <property name="buddy">
+            <cstring>comboBox_Databits_SERIAL_PORT_2</cstring>
+           </property>
           </widget>
          </item>
          <item row="2" column="0" alignment="Qt::AlignHCenter">
@@ -2382,7 +2469,7 @@ QTabWidget::tab-bar {
             </sizepolicy>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
+            <enum>Qt::WheelFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -2456,6 +2543,9 @@ QTabWidget::tab-bar {
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="buddy">
+            <cstring>comboBox_Baudrate_SERIAL_PORT_2</cstring>
+           </property>
           </widget>
          </item>
          <item row="2" column="1" alignment="Qt::AlignHCenter">
@@ -2496,6 +2586,9 @@ QTabWidget::tab-bar {
            </property>
            <property name="text">
             <string>Stopbits</string>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox_Stopbits_SERIAL_PORT_2</cstring>
            </property>
           </widget>
          </item>
@@ -2550,6 +2643,9 @@ QTabWidget::tab-bar {
            </property>
            <property name="text">
             <string>Parity</string>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox_Parity_SERIAL_PORT_2</cstring>
            </property>
           </widget>
          </item>
@@ -2614,6 +2710,9 @@ QTabWidget::tab-bar {
            <property name="text">
             <string>Timeout [ms]</string>
            </property>
+           <property name="buddy">
+            <cstring>lineEdit_Timeout_SERIAL_PORT_2</cstring>
+           </property>
           </widget>
          </item>
          <item row="0" column="0">
@@ -2633,6 +2732,9 @@ QTabWidget::tab-bar {
           <widget class="QLabel" name="label_Silence_SERIAL_PORT_2">
            <property name="text">
             <string>Silence [ms]</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_Silence_SERIAL_PORT_2</cstring>
            </property>
           </widget>
          </item>
@@ -2743,6 +2845,9 @@ QTabWidget::tab-bar {
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="buddy">
+            <cstring>comboBox_Baudrate_SERIAL_PORT_3</cstring>
+           </property>
           </widget>
          </item>
          <item row="2" column="0" alignment="Qt::AlignHCenter">
@@ -2754,7 +2859,7 @@ QTabWidget::tab-bar {
             </sizepolicy>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
+            <enum>Qt::WheelFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -2825,6 +2930,9 @@ QTabWidget::tab-bar {
            <property name="text">
             <string>Databits</string>
            </property>
+           <property name="buddy">
+            <cstring>comboBox_Databits_SERIAL_PORT_3</cstring>
+           </property>
           </widget>
          </item>
          <item row="2" column="1" alignment="Qt::AlignHCenter">
@@ -2865,6 +2973,9 @@ QTabWidget::tab-bar {
            </property>
            <property name="text">
             <string>Stopbits</string>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox_Stopbits_SERIAL_PORT_3</cstring>
            </property>
           </widget>
          </item>
@@ -2919,6 +3030,9 @@ QTabWidget::tab-bar {
            </property>
            <property name="text">
             <string>Parity</string>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox_Parity_SERIAL_PORT_3</cstring>
            </property>
           </widget>
          </item>
@@ -2983,12 +3097,18 @@ QTabWidget::tab-bar {
            <property name="text">
             <string>Timeout [ms]</string>
            </property>
+           <property name="buddy">
+            <cstring>lineEdit_Timeout_SERIAL_PORT_3</cstring>
+           </property>
           </widget>
          </item>
          <item row="1" column="1" alignment="Qt::AlignHCenter">
           <widget class="QLabel" name="label_Silence_SERIAL_PORT_3">
            <property name="text">
             <string>Silence [ms]</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_Silence_SERIAL_PORT_3</cstring>
            </property>
           </widget>
          </item>
@@ -3112,6 +3232,9 @@ QTabWidget::tab-bar {
            <property name="text">
             <string>Silence [ms]</string>
            </property>
+           <property name="buddy">
+            <cstring>lineEdit_Silence_TCP_IP_PORT</cstring>
+           </property>
           </widget>
          </item>
          <item row="1" column="1" alignment="Qt::AlignHCenter">
@@ -3124,6 +3247,9 @@ QTabWidget::tab-bar {
            </property>
            <property name="text">
             <string>Timeout [ms]</string>
+           </property>
+           <property name="buddy">
+            <cstring>lineEdit_Timeout_TCP_IP_PORT</cstring>
            </property>
           </widget>
          </item>
@@ -3260,6 +3386,9 @@ QTabWidget::tab-bar {
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="buddy">
+            <cstring>comboBox_Baudrate_CANOPEN_0</cstring>
+           </property>
           </widget>
          </item>
          <item row="3" column="0">
@@ -3290,7 +3419,7 @@ QTabWidget::tab-bar {
             </size>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
+            <enum>Qt::WheelFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -3343,6 +3472,9 @@ QTabWidget::tab-bar {
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="buddy">
+            <cstring>comboBox_Baudrate_CANOPEN_1</cstring>
+           </property>
           </widget>
          </item>
          <item row="2" column="0" alignment="Qt::AlignHCenter">
@@ -3360,7 +3492,7 @@ QTabWidget::tab-bar {
             </size>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
+            <enum>Qt::WheelFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -3449,6 +3581,59 @@ QTabWidget::tab-bar {
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>comboBox_PwdLogoutPage</tabstop>
+  <tabstop>lineEdit_PwdTimeout</tabstop>
+  <tabstop>lineEdit_ScreenSaver</tabstop>
+  <tabstop>lineEdit_SlowLogPeriod</tabstop>
+  <tabstop>lineEdit_FastLogPeriod</tabstop>
+  <tabstop>lineEdit_MaxLogSpace</tabstop>
+  <tabstop>lineEdit_TraceWindow</tabstop>
+  <tabstop>lineEdit_Retries</tabstop>
+  <tabstop>lineEdit_Blacklist</tabstop>
+  <tabstop>comboBoxLanguage</tabstop>
+  <tabstop>comboBox_StartPage</tabstop>
+  <tabstop>comboBox_HomePage</tabstop>
+  <tabstop>checkBox_BuzzerTouch</tabstop>
+  <tabstop>checkBox_BuzzerAlarm</tabstop>
+  <tabstop>lineEdit_ReadPeriod1</tabstop>
+  <tabstop>lineEdit_ReadPeriod2</tabstop>
+  <tabstop>lineEdit_ReadPeriod3</tabstop>
+  <tabstop>comboBox_Baudrate_SERIAL_PORT_0</tabstop>
+  <tabstop>comboBox_Parity_SERIAL_PORT_0</tabstop>
+  <tabstop>comboBox_Databits_SERIAL_PORT_0</tabstop>
+  <tabstop>comboBox_Stopbits_SERIAL_PORT_0</tabstop>
+  <tabstop>lineEdit_Timeout_SERIAL_PORT_0</tabstop>
+  <tabstop>lineEdit_Silence_SERIAL_PORT_0</tabstop>
+  <tabstop>comboBox_Baudrate_SERIAL_PORT_1</tabstop>
+  <tabstop>comboBox_Parity_SERIAL_PORT_1</tabstop>
+  <tabstop>comboBox_Databits_SERIAL_PORT_1</tabstop>
+  <tabstop>comboBox_Stopbits_SERIAL_PORT_1</tabstop>
+  <tabstop>lineEdit_Timeout_SERIAL_PORT_1</tabstop>
+  <tabstop>lineEdit_Silence_SERIAL_PORT_1</tabstop>
+  <tabstop>comboBox_Baudrate_SERIAL_PORT_2</tabstop>
+  <tabstop>comboBox_Parity_SERIAL_PORT_2</tabstop>
+  <tabstop>comboBox_Databits_SERIAL_PORT_2</tabstop>
+  <tabstop>comboBox_Stopbits_SERIAL_PORT_2</tabstop>
+  <tabstop>lineEdit_Timeout_SERIAL_PORT_2</tabstop>
+  <tabstop>lineEdit_Silence_SERIAL_PORT_2</tabstop>
+  <tabstop>comboBox_Baudrate_SERIAL_PORT_3</tabstop>
+  <tabstop>comboBox_Parity_SERIAL_PORT_3</tabstop>
+  <tabstop>comboBox_Databits_SERIAL_PORT_3</tabstop>
+  <tabstop>comboBox_Stopbits_SERIAL_PORT_3</tabstop>
+  <tabstop>lineEdit_Timeout_SERIAL_PORT_3</tabstop>
+  <tabstop>lineEdit_Silence_SERIAL_PORT_3</tabstop>
+  <tabstop>lineEdit_Timeout_TCP_IP_PORT</tabstop>
+  <tabstop>lineEdit_Silence_TCP_IP_PORT</tabstop>
+  <tabstop>comboBox_Baudrate_CANOPEN_0</tabstop>
+  <tabstop>comboBox_Baudrate_CANOPEN_1</tabstop>
+  <tabstop>cmdSave</tabstop>
+  <tabstop>cmdImport</tabstop>
+  <tabstop>cmdUndo</tabstop>
+  <tabstop>line</tabstop>
+  <tabstop>line_4</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

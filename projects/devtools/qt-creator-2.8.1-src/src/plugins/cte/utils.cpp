@@ -97,6 +97,11 @@ bool fileBackUp(const QString &szFile)
 
     if (fileExists(szFile))  {
         szFileDest.append(QString::fromAscii(".bak"));
+        QFile   destFile(szFileDest);
+        // Elimina eventuale copia precedente del file
+        if (destFile.exists())
+            destFile.remove();
+        // Copia su file .Bak
         fRes = sourceFile.copy(szFileDest);
     }
     // Return Value

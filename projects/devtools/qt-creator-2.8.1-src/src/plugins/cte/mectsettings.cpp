@@ -9,8 +9,8 @@
 #include <QFileInfo>
 #include <QSettings>
 #include <QTextStream>
-#include <stdio.h>
-#include <stdlib.h>
+#include <QValidator>
+#include <QIntValidator>
 
 
 #define MAX_SPACE_AVAILABLE_MAX 128
@@ -20,6 +20,7 @@ const QString szPAGE = QString::fromAscii("page");
 const QString szEMPTY = QString::fromAscii("");
 const QString szSEMICOL = QString::fromAscii(";");
 const QChar   chSpace = QChar::fromAscii(20);
+const QString szBackSpace = QString::fromAscii("\\");
 const QString szDEFLANG  = QString::fromAscii("it");
 const QString szLANGMAPFILE = QString::fromAscii(":/csv/others/lang_table.csv");
 
@@ -27,7 +28,33 @@ MectSettings::MectSettings(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MectSettings)
 {
+    int     nValMaxInt16 = 65535;
+
     ui->setupUi(this);
+    // Impostazione degli opportuni Validator per i campi integers
+    ui->lineEdit_Retries->setValidator(new QIntValidator(0, nValMaxInt16, this));
+    ui->lineEdit_Blacklist->setValidator(new QIntValidator(0, nValMaxInt16, this));
+    ui->lineEdit_ReadPeriod1->setValidator(new QIntValidator(1, nValMaxInt16, this));
+    ui->lineEdit_ReadPeriod2->setValidator(new QIntValidator(1, nValMaxInt16, this));
+    ui->lineEdit_ReadPeriod3->setValidator(new QIntValidator(1, nValMaxInt16, this));
+    ui->lineEdit_PwdTimeout->setValidator(new QIntValidator(0, nValMaxInt16, this));
+    ui->lineEdit_ScreenSaver->setValidator(new QIntValidator(0, nValMaxInt16, this));
+    ui->lineEdit_SlowLogPeriod->setValidator(new QIntValidator(2, nValMaxInt16, this));
+    ui->lineEdit_FastLogPeriod->setValidator(new QIntValidator(1, nValMaxInt16, this));
+    ui->lineEdit_MaxLogSpace->setValidator(new QIntValidator(1, MAX_SPACE_AVAILABLE_MAX, this));
+    ui->lineEdit_TraceWindow->setValidator(new QIntValidator(0, nValMaxInt16, this));
+    /* SERIAL 0 */
+    ui->lineEdit_Silence_SERIAL_PORT_0->setValidator(new QIntValidator(0, nValMaxInt16, this));
+    ui->lineEdit_Timeout_SERIAL_PORT_0->setValidator(new QIntValidator(0, nValMaxInt16, this));
+    /* SERIAL 1 */
+    ui->lineEdit_Silence_SERIAL_PORT_1->setValidator(new QIntValidator(0, nValMaxInt16, this));
+    ui->lineEdit_Timeout_SERIAL_PORT_1->setValidator(new QIntValidator(0, nValMaxInt16, this));
+    /* SERIAL 2 */
+    ui->lineEdit_Silence_SERIAL_PORT_2->setValidator(new QIntValidator(0, nValMaxInt16, this));
+    ui->lineEdit_Timeout_SERIAL_PORT_2->setValidator(new QIntValidator(0, nValMaxInt16, this));
+    /* TCP_IP */
+    ui->lineEdit_Silence_TCP_IP_PORT->setValidator(new QIntValidator(0, nValMaxInt16, this));
+    ui->lineEdit_Timeout_TCP_IP_PORT->setValidator(new QIntValidator(0, nValMaxInt16, this));
 }
 
 MectSettings::~MectSettings()
@@ -45,10 +72,9 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
     m_szFileSettings = szFileSettings;
     m_szFilePro = szFilePro;
     m_szProjectPath = szProjectPath;
-    qDebug() << "Settings:" << szFileSettings;
-    qDebug() << "Project: " << szFilePro;
-    qDebug() << "Pr.Path: " << szProjectPath;
-
+    // qDebug() << "Settings: " << m_szFileSettings;
+    // qDebug() << "Project:  " << m_szFilePro;
+    // qDebug() << "Path Prj: " << m_szProjectPath;
     ui->tabWidget->setCurrentIndex(0);
 
     if (!QFile(szFileSettings).exists())
@@ -70,14 +96,20 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
 
     // Cerca nel file .pro le righe relative agli oggetti ui
     while(!in.atEnd()) {
-        QString line = in.readLine();
-        if (line.trimmed().split(chSpace).at(0).startsWith(szPAGE) && line.trimmed().split(chSpace).at(0).endsWith(QString::fromAscii(".ui")))
-        {
-            pagesList << QFileInfo(line.trimmed().split(chSpace).at(0)).baseName();
+        QString line = in.readLine().trimmed();
+        line.replace(szBackSpace, QString::fromAscii(""));
+        line = line.trimmed();
+        if (! line.isEmpty())  {
+            QStringList lstItems = line.split(chSpace);
+            if (lstItems.at(0).startsWith(szPAGE) && lstItems.at(0).endsWith(QString::fromAscii(".ui")))
+            {
+                // Verifica che il file esista nella directory corrente
+                pagesList << QFileInfo(lstItems.at(0)).baseName();
+            }
         }
     }
     file.close();
-    qDebug() << "Page List:" << pagesList;
+    // qDebug() << "Ui File list" << pagesList;
     /* Aggiungo in coda le pagine di Libreria */
     pagesList << QString::fromAscii("alarms")
               << QString::fromAscii("alarms_history")
@@ -122,7 +154,7 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
         }
         langFile.close();
     }
-    qDebug() << "LanguageMap Items: " << LanguageMap.count();
+    // qDebug() << "LanguageMap Items: " << LanguageMap.count();
     /* load the translations file list */
     QDirIterator lang_it(szProjectPath, QDirIterator::Subdirectories);
     QString lang = settings.value(QString::fromAscii("SYSTEM/language"), szDEFLANG).toString();
@@ -162,16 +194,16 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
     ui->lineEdit_ReadPeriod3->setText(settings.value(QString::fromAscii("SYSTEM/read_period_ms_3")).toString());
     szValue = settings.value(QString::fromAscii("SYSTEM/home_page")).toString();
     ui->comboBox_HomePage->setCurrentIndex(ui->comboBox_HomePage->findText(szValue));
-    qDebug() << "Home Page" << szValue;
+    // qDebug() << "Home Page" << szValue;
     szValue = settings.value(QString::fromAscii("SYSTEM/start_page")).toString();
     ui->comboBox_StartPage->setCurrentIndex(ui->comboBox_StartPage->findText(szValue));
-    qDebug() << "Start Page" << szValue;
+    // qDebug() << "Start Page" << szValue;
     ui->checkBox_BuzzerTouch->setChecked(settings.value(QString::fromAscii("SYSTEM/buzzer_touch")).toBool());
     ui->checkBox_BuzzerAlarm->setChecked(settings.value(QString::fromAscii("SYSTEM/buzzer_alarm")).toBool());
     ui->lineEdit_PwdTimeout->setText(settings.value(QString::fromAscii("SYSTEM/pwd_timeout_s")).toString());
     szValue = settings.value(QString::fromAscii("SYSTEM/pwd_logout_page")).toString();
     ui->comboBox_PwdLogoutPage->setCurrentIndex(ui->comboBox_PwdLogoutPage->findText(szValue));
-    qDebug() << "Pwd Logout Page" << szValue;
+    // qDebug() << "Pwd Logout Page" << szValue;
     ui->lineEdit_ScreenSaver->setText(settings.value(QString::fromAscii("SYSTEM/screen_saver_s")).toString());
     ui->lineEdit_SlowLogPeriod->setText(settings.value(QString::fromAscii("SYSTEM/slow_log_period_s")).toString());
     ui->lineEdit_FastLogPeriod->setText(settings.value(QString::fromAscii("SYSTEM/fast_log_period_s")).toString());
@@ -442,6 +474,9 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
 void MectSettings::on_cmdSave_clicked()
 {
 
+    // Controllo del contenuto dei campi
+    if (! checkFields())
+        return;
     if (fileBackUp(m_szFileSettings))
         save_all();
     else
@@ -450,7 +485,6 @@ void MectSettings::on_cmdSave_clicked()
 }
 void MectSettings::save_all()
 {
-    bool OK;
 
     QSettings settings(m_szFileSettings, QSettings::IniFormat);
     QStringList groups = settings.childGroups();
@@ -458,178 +492,6 @@ void MectSettings::save_all()
     /* SYSTEM */
     if (groups.indexOf(QString::fromAscii("SYSTEM")) >= 0)
     {
-        if (ui->lineEdit_Retries->text().toInt(&OK) < 0 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Retries' parameter must be greater than or egual 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Retries' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_Blacklist->text().toInt(&OK) < 0 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Blacklist' parameter must be greater than or egual 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Blacklist' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_ReadPeriod1->text().toInt(&OK) < 1 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 1' parameter must be greater than 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 1' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_ReadPeriod2->text().toInt(&OK) < 2 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 2' parameter must be greater than 1."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 2' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_ReadPeriod3->text().toInt(&OK) < 3 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 3' parameter must be greater than 2."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 3' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_ReadPeriod3->text().toInt() < ui->lineEdit_ReadPeriod2->text().toInt())
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 3' parameter must be greater than 'Read Period 2' parameter."));
-            return;
-        }
-
-        if (ui->lineEdit_ReadPeriod2->text().toInt() < ui->lineEdit_ReadPeriod1->text().toInt())
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 2' parameter must be greater than 'Read Period 1' parameter."));
-            return;
-        }
-
-        /* if (ui->pushButton_HomePage->text().length() == 0)
-    {
-        QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(this, trUtf8("Error"), trUtf8("'Home Page' parameter can not be empty. Do you want to automatically set the 'Home Page' parameter equal to 'Start Page' parameter?"));
-        QMessageBox::Yes|QMessageBox::No;
-        if (reply == QMessageBox::Yes) {
-            ui->pushButton_HomePage->setText(ui->pushButton_StartPage->text());
-        } else {
-            return;
-        }
-    }*/
-        if (ui->lineEdit_PwdTimeout->text().toInt(&OK) < 0 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Pwd Timeout' parameter must be greater than or egual 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Pwd Timeout' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_ScreenSaver->text().toInt(&OK) < 0 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Screen Saver' parameter must be greater than or egual 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Screen Saver' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_SlowLogPeriod->text().toInt(&OK) < 2 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Slow Log Period' parameter must be greater than 1."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Slow Log Period' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_FastLogPeriod->text().toInt(&OK) < 1 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Fast Log Period' parameter must be greater than 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Fast Log Period' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_SlowLogPeriod->text().toInt() < ui->lineEdit_FastLogPeriod->text().toInt())
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Slow Log Period' parameter must be greater than 'Fast Log Period' parameter."));
-            return;
-        }
-        if (ui->lineEdit_MaxLogSpace->text().toInt(&OK) <= 0 && ui->lineEdit_MaxLogSpace->text().toInt(&OK) > MAX_SPACE_AVAILABLE_MAX && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Max Log Space' parameter must be greater than 0 and less than %1.").arg(MAX_SPACE_AVAILABLE_MAX));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Max Log Space' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_TraceWindow->text().toInt(&OK) < 3 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Trace Window' parameter must be greater than 2."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Trace Window' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_TraceWindow->text().toInt() < (ui->lineEdit_FastLogPeriod->text().toInt()* 3))
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Trace Window' parameter must be at least three times 'Fast Log Period' parameter."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 0' tab, the 'Silence' parameter must be a number."));
-            return;
-        }
-
         settings.setValue(QString::fromAscii("SYSTEM/language"), LanguageMap.key(ui->comboBoxLanguage->currentText(),szDEFLANG));
         settings.setValue(QString::fromAscii("SYSTEM/retries"), ui->lineEdit_Retries->text());
         settings.setValue(QString::fromAscii("SYSTEM/blacklist"), ui->lineEdit_Blacklist->text());
@@ -652,23 +514,6 @@ void MectSettings::save_all()
     /* SERIAL 0 */
     if (groups.indexOf(QString::fromAscii("SERIAL_PORT_0")) >= 0)
     {
-        if (ui->lineEdit_Timeout_SERIAL_PORT_0->text().toInt(&OK) < 0 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 0' tab, the 'Timeout' parameter must be greater than 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 0' tab, the 'Timeout' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_Timeout_SERIAL_PORT_0->text().toInt() <= ui->lineEdit_Silence_SERIAL_PORT_0->text().toInt())
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 0' tab, the 'Timeout' parameter must be greater than 'Silence' parameter."));
-            return;
-        }
         if (ui->comboBox_Baudrate_SERIAL_PORT_0->currentIndex() > 0)
         {
             settings.setValue(QString::fromAscii("SERIAL_PORT_0/baudrate"), ui->comboBox_Baudrate_SERIAL_PORT_0->currentText());
@@ -687,35 +532,6 @@ void MectSettings::save_all()
     /* SERIAL 1 */
     if (groups.indexOf(QString::fromAscii("SERIAL_PORT_1")) >= 0)
     {
-        if (ui->lineEdit_Silence_SERIAL_PORT_1->text().toInt(&OK) < 0 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 1' tab, the 'Silence' parameter must be greater than or egual 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 1' tab, the 'Silence' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_Timeout_SERIAL_PORT_1->text().toInt(&OK) < 1 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 1' tab, the 'Timeout' parameter must be greater than 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 1' tab, the 'Timeout' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_Timeout_SERIAL_PORT_1->text().toInt() <= ui->lineEdit_Silence_SERIAL_PORT_1->text().toInt())
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 1' tab, the 'Timeout' parameter must be greater than 'Silence' parameter."));
-            return;
-        }
         if (ui->comboBox_Baudrate_SERIAL_PORT_1->currentIndex() > 0)
         {
             settings.setValue(QString::fromAscii("SERIAL_PORT_1/baudrate"), ui->comboBox_Baudrate_SERIAL_PORT_1->currentText());
@@ -734,35 +550,6 @@ void MectSettings::save_all()
     /* SERIAL 2 */
     if (groups.indexOf(QString::fromAscii("SERIAL_PORT_2")) >= 0)
     {
-        if (ui->lineEdit_Silence_SERIAL_PORT_2->text().toInt(&OK) < 0 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 2' tab, the 'Silence' parameter must be greater than or egual 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 2' tab, the 'Silence' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_Timeout_SERIAL_PORT_2->text().toInt(&OK) < 1 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 2' tab, the 'Timeout' parameter must be greater than 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 2' tab, the 'Timeout' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_Timeout_SERIAL_PORT_2->text().toInt() <= ui->lineEdit_Silence_SERIAL_PORT_2->text().toInt())
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 2' tab, the 'Timeout' parameter must be greater than 'Silence' parameter."));
-            return;
-        }
         if (ui->comboBox_Baudrate_SERIAL_PORT_2->currentIndex() > 0)
         {
             settings.setValue(QString::fromAscii("SERIAL_PORT_2/baudrate"), ui->comboBox_Baudrate_SERIAL_PORT_2->currentText());
@@ -781,35 +568,6 @@ void MectSettings::save_all()
     /* SERIAL 3 */
     if (groups.indexOf(QString::fromAscii("SERIAL_PORT_3")) >= 0)
     {
-        if (ui->lineEdit_Silence_SERIAL_PORT_3->text().toInt(&OK) < 0 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 3' tab, the 'Silence' parameter must be greater than or egual 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 3' tab, the 'Silence' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_Timeout_SERIAL_PORT_3->text().toInt(&OK) < 1 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 3' tab, the 'Timeout' parameter must be greater than 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 3' tab, the 'Timeout' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_Timeout_SERIAL_PORT_3->text().toInt() <= ui->lineEdit_Silence_SERIAL_PORT_3->text().toInt())
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 3' tab, the 'Timeout' parameter must be greater than 'Silence' parameter."));
-            return;
-        }
         if (ui->comboBox_Baudrate_SERIAL_PORT_3->currentIndex() > 0)
         {
             settings.setValue(QString::fromAscii("SERIAL_PORT_3/baudrate"), ui->comboBox_Baudrate_SERIAL_PORT_3->currentText());
@@ -828,36 +586,6 @@ void MectSettings::save_all()
     /* TCP_IP */
     if (groups.indexOf(QString::fromAscii("TCP_IP_PORT")) >= 0)
     {
-        if (ui->lineEdit_Silence_TCP_IP_PORT->text().toInt(&OK) < 0 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'TCP_IP_PORT' tab, the 'Silence' parameter must be greater than or egual 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'TCP_IP_PORT' tab, the 'Silence' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_Timeout_TCP_IP_PORT->text().toInt(&OK) < 1 && OK == true)
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'TCP_IP_PORT' tab, the 'Timeout' parameter must be greater than 0."));
-            return;
-        }
-
-        if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'TCP_IP_PORT' tab, the 'Timeout' parameter must be a number."));
-            return;
-        }
-
-        if (ui->lineEdit_Timeout_TCP_IP_PORT->text().toInt() <= ui->lineEdit_Silence_TCP_IP_PORT->text().toInt())
-        {
-            QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'TCP_IP_PORT' tab, the 'Timeout' parameter must be greater than 'Silence' parameter."));
-            return;
-        }
-
         settings.setValue(QString::fromAscii("TCP_IP_PORT/silence_ms"), ui->lineEdit_Silence_TCP_IP_PORT->text());
         settings.setValue(QString::fromAscii("TCP_IP_PORT/timeout_ms"), ui->lineEdit_Timeout_TCP_IP_PORT->text());
         settings.sync();
@@ -886,8 +614,312 @@ void MectSettings::save_all()
         {
             settings.remove(QString::fromAscii("CANOPEN_1"));
         }
-        settings.sync();
     }
+    settings.sync();
 
     QMessageBox::information(0,trUtf8("Information"),trUtf8("Configuration has been successfully saved."));
+}
+bool MectSettings::checkFields()
+// Controllo del contenuto dei campi
+{
+    bool fRes = false;
+    bool OK = false;
+
+
+    //------------------------
+    // Tab System
+    //------------------------
+    if (ui->lineEdit_Retries->text().toInt(&OK) < 0 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Retries' parameter must be greater than or egual 0."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Retries' parameter must be a number."));
+        goto exitCheck;
+    }
+    if (ui->lineEdit_Blacklist->text().toInt(&OK) < 0 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Blacklist' parameter must be greater than or egual 0."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Blacklist' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_ReadPeriod1->text().toInt(&OK) < 1 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 1' parameter must be greater than 0."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 1' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_ReadPeriod2->text().toInt(&OK) < 2 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 2' parameter must be greater than 1."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 2' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_ReadPeriod3->text().toInt(&OK) < 3 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 3' parameter must be greater than 2."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 3' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_ReadPeriod3->text().toInt() < ui->lineEdit_ReadPeriod2->text().toInt())
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 3' parameter must be greater than 'Read Period 2' parameter."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_ReadPeriod2->text().toInt() < ui->lineEdit_ReadPeriod1->text().toInt())
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Read Period 2' parameter must be greater than 'Read Period 1' parameter."));
+        goto exitCheck;
+    }
+    if (ui->lineEdit_PwdTimeout->text().toInt(&OK) < 0 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Pwd Timeout' parameter must be greater than or egual 0."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Pwd Timeout' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_ScreenSaver->text().toInt(&OK) < 0 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Screen Saver' parameter must be greater than or egual 0."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Screen Saver' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_SlowLogPeriod->text().toInt(&OK) < 2 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Slow Log Period' parameter must be greater than 1."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Slow Log Period' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_FastLogPeriod->text().toInt(&OK) < 1 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Fast Log Period' parameter must be greater than 0."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Fast Log Period' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_SlowLogPeriod->text().toInt() < ui->lineEdit_FastLogPeriod->text().toInt())
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Slow Log Period' parameter must be greater than 'Fast Log Period' parameter."));
+        goto exitCheck;
+    }
+    if (ui->lineEdit_MaxLogSpace->text().toInt(&OK) <= 0 && ui->lineEdit_MaxLogSpace->text().toInt(&OK) > MAX_SPACE_AVAILABLE_MAX && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Max Log Space' parameter must be greater than 0 and less than %1.").arg(MAX_SPACE_AVAILABLE_MAX));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Max Log Space' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_TraceWindow->text().toInt(&OK) < 3 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Trace Window' parameter must be greater than 2."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Trace Window' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_TraceWindow->text().toInt() < (ui->lineEdit_FastLogPeriod->text().toInt()* 3))
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("'Trace Window' parameter must be at least three times 'Fast Log Period' parameter."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 0' tab, the 'Silence' parameter must be a number."));
+        goto exitCheck;
+    }
+    //------------------------
+    /* SERIAL 0 */
+    //------------------------
+    if (ui->lineEdit_Silence_SERIAL_PORT_0->text().toInt(&OK) < 0 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 0' tab, the 'Silence' parameter must be greater than or egual 0."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 0' tab, the 'Silence' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_Timeout_SERIAL_PORT_0->text().toInt(&OK) < 0 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 0' tab, the 'Timeout' parameter must be greater than 0."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 0' tab, the 'Timeout' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_Timeout_SERIAL_PORT_0->text().toInt() <= ui->lineEdit_Silence_SERIAL_PORT_0->text().toInt())
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 0' tab, the 'Timeout' parameter must be greater than 'Silence' parameter."));
+        goto exitCheck;
+    }
+    //------------------------
+    /* SERIAL 1 */
+    //------------------------
+    if (ui->lineEdit_Silence_SERIAL_PORT_1->text().toInt(&OK) < 0 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 1' tab, the 'Silence' parameter must be greater than or egual 0."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 1' tab, the 'Silence' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_Timeout_SERIAL_PORT_1->text().toInt(&OK) < 1 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 1' tab, the 'Timeout' parameter must be greater than 0."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 1' tab, the 'Timeout' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_Timeout_SERIAL_PORT_1->text().toInt() <= ui->lineEdit_Silence_SERIAL_PORT_1->text().toInt())
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 1' tab, the 'Timeout' parameter must be greater than 'Silence' parameter."));
+        goto exitCheck;
+    }
+    //------------------------
+    /* SERIAL 2 */
+    //------------------------
+    if (ui->lineEdit_Silence_SERIAL_PORT_2->text().toInt(&OK) < 0 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 2' tab, the 'Silence' parameter must be greater than or egual 0."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 2' tab, the 'Silence' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_Timeout_SERIAL_PORT_2->text().toInt(&OK) < 1 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 2' tab, the 'Timeout' parameter must be greater than 0."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 2' tab, the 'Timeout' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_Timeout_SERIAL_PORT_2->text().toInt() <= ui->lineEdit_Silence_SERIAL_PORT_2->text().toInt())
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'SERIAL PORT 2' tab, the 'Timeout' parameter must be greater than 'Silence' parameter."));
+        goto exitCheck;
+    }
+    //------------------------
+    /* TCP_IP */
+    //------------------------
+    if (ui->lineEdit_Silence_TCP_IP_PORT->text().toInt(&OK) < 0 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'TCP_IP_PORT' tab, the 'Silence' parameter must be greater than or egual 0."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'TCP_IP_PORT' tab, the 'Silence' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_Timeout_TCP_IP_PORT->text().toInt(&OK) < 1 && OK == true)
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'TCP_IP_PORT' tab, the 'Timeout' parameter must be greater than 0."));
+        goto exitCheck;
+    }
+
+    if(OK == false)/*Controllo che il valore inserito non sia diverso da un numero*/
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'TCP_IP_PORT' tab, the 'Timeout' parameter must be a number."));
+        goto exitCheck;
+    }
+
+    if (ui->lineEdit_Timeout_TCP_IP_PORT->text().toInt() <= ui->lineEdit_Silence_TCP_IP_PORT->text().toInt())
+    {
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("In the 'TCP_IP_PORT' tab, the 'Timeout' parameter must be greater than 'Silence' parameter."));
+        goto exitCheck;
+    }
+    //------------------------
+    // All check are Ok, return true
+    //------------------------
+    fRes = true;
+
+exitCheck:
+    return fRes;
 }

@@ -490,7 +490,7 @@ bool    ctedit::selectCTFile(QString szFileCT)
         m_isCtModified = false;
         m_fCutOrPaste = false;
         // Se tutto Ok, carica anche le impostazioni del file INI
-        mectSet->loadProjectFiles(m_szCurrentCTPath + szINIFILE, m_szCurrentProjectPath + szSlash + m_szCurrentProjectName, m_szCurrentProjectPath);
+        mectSet->loadProjectFiles(m_szCurrentCTPath + szINIFILE, m_szCurrentProjectPath + szSlash + m_szCurrentProjectName, m_szCurrentProjectPath + szSlash);
         enableInterface();
     }
     return fRes;

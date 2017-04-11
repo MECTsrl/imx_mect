@@ -3199,14 +3199,18 @@ void ctedit::on_cmdPLC_clicked()
         qDebug() << "Current Environment:";
         int i = 0;
         for (i=0; i<lstEnv.count(); i++)  {
-            qDebug() << i << lstEnv[i];
-            txtEnv << i << " - " << lstEnv[i] << endl;
+            szTemp = QString::number(i+1);
+            szTemp.append(QString::fromAscii(" - "));
+            szTemp.append(lstEnv[i]);
+            qDebug() << szTemp;
+            txtEnv << szTemp << endl;
         }
         fEnv.close();
     }
     // Ricerca della variabile specifica per il lancio del PLC
     szPathPLCApplication = QProcessEnvironment::systemEnvironment().value(szPLCEnvVar, szEMPTY);
     // Search Path of PLC Application
+    lstArguments.clear();
     if (! szPathPLCApplication.isEmpty())  {
         // To be modified with specifics of PLC Application
         szTemp = QString::fromAscii("%1");
@@ -3224,7 +3228,9 @@ void ctedit::on_cmdPLC_clicked()
         // Imposta come Directory corrente di esecuzione la directory del File PLC
         procPLC.setWorkingDirectory(m_szCurrentPLCPath);
         // Esecuzione Comando
-        qDebug() << szCommand << lstArguments;
+        m_szMsg = tr("Command: \n") + szCommand + szSpace(1) + szTemp;
+        qDebug() << szCommand + szSpace(1) + szTemp;
+        notifyUser(this, szTitle, m_szMsg);
         if (! procPLC.startDetached(szCommand, lstArguments, m_szCurrentPLCPath, &pidPLC))  {
             m_szMsg = tr("Error Starting PLC Compiler!\n");
             m_szMsg.append(szCommand);

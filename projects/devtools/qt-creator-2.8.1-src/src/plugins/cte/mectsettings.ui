@@ -34,6 +34,9 @@
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <widget class="QPushButton" name="cmdImport">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>72</width>
@@ -69,6 +72,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="cmdUndo">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>72</width>
@@ -105,7 +111,7 @@
       <item>
        <widget class="QPushButton" name="cmdSave">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="minimumSize">
          <size>

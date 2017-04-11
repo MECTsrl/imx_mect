@@ -1,5 +1,6 @@
 #include "mectsettings.h"
 #include "ui_mectsettings.h"
+#include "utils.h"
 
 #include <QMessageBox>
 #include <QFile>
@@ -13,7 +14,6 @@
 
 
 #define MAX_SPACE_AVAILABLE_MAX 128
-#define LANGUAGE_MAP_FILE "C:/Qt485/desktop/share/qtcreator/templates/wizards/ATCM-template-project/lang_table.csv"
 #define LINE_SIZE 1024
 
 const QString szPAGE = QString::fromAscii("page");
@@ -21,7 +21,7 @@ const QString szEMPTY = QString::fromAscii("");
 const QString szSEMICOL = QString::fromAscii(";");
 const QChar   chSpace = QChar::fromAscii(20);
 const QString szDEFLANG  = QString::fromAscii("it");
-
+const QString szLANGMAPFILE = QString::fromAscii(":/csv/others/lang_table.csv");
 
 MectSettings::MectSettings(QWidget *parent) :
     QWidget(parent),
@@ -77,7 +77,8 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
         }
     }
     file.close();
-    /*Aggiungo in coda le pagine di default già note*/
+    qDebug() << "Page List:" << pagesList;
+    /* Aggiungo in coda le pagine di Libreria */
     pagesList << QString::fromAscii("alarms")
               << QString::fromAscii("alarms_history")
               << QString::fromAscii("recipe")
@@ -107,7 +108,7 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
     ui->comboBoxLanguage->clear();
 
     /* load Global MECT map of the language and his locale abbreviation */
-    QFile langFile(QString::fromAscii(LANGUAGE_MAP_FILE));
+    QFile langFile(szLANGMAPFILE);
     QString szLine;
     if (langFile.exists() && langFile.open(QFile::ReadOnly | QIODevice::Text)) {
         QTextStream langStream(&langFile);
@@ -121,16 +122,19 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
         }
         langFile.close();
     }
+    qDebug() << "LanguageMap Items: " << LanguageMap.count();
     /* load the translations file list */
     QDirIterator lang_it(szProjectPath, QDirIterator::Subdirectories);
     QString lang = settings.value(QString::fromAscii("SYSTEM/language"), szDEFLANG).toString();
     QString szLangTempl = QString::fromAscii("languages_");
-    int i = 0;
+    int i = -1;
     int indexlang = 0;
     while (lang_it.hasNext()) {
         QString item = lang_it.next();
+        // Cerca tutti i files con estensione .qm
         if (item.endsWith (QString::fromAscii(".qm")) == true)
         {
+            // Determina il codice della Lingua dal nome file (es: languages_it ==> it)
             QString tmplang = item.mid(item.indexOf(szLangTempl) + szLangTempl.length(), 2);
             if (lang == tmplang)
             {
@@ -138,28 +142,36 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
             }
             if (LanguageMap.count() > 0 && LanguageMap.contains(tmplang))
             {
+                // La lingua esiste come chiave, inserisce in combo il valore associato
                 ui->comboBoxLanguage->addItem(LanguageMap.value(tmplang));
             }
             else
             {
+                // La lingua Non esiste come chiave, inserisce in combo solo la chiave
                 ui->comboBoxLanguage->addItem(tmplang);
             }
             i++;
         }
     }
-
+    QString szValue;
     ui->comboBoxLanguage->setCurrentIndex(indexlang);
     ui->lineEdit_Retries->setText(settings.value(QString::fromAscii("SYSTEM/retries")).toString());
     ui->lineEdit_Blacklist->setText(settings.value(QString::fromAscii("SYSTEM/blacklist")).toString());
     ui->lineEdit_ReadPeriod1->setText(settings.value(QString::fromAscii("SYSTEM/read_period_ms_1")).toString());
     ui->lineEdit_ReadPeriod2->setText(settings.value(QString::fromAscii("SYSTEM/read_period_ms_2")).toString());
     ui->lineEdit_ReadPeriod3->setText(settings.value(QString::fromAscii("SYSTEM/read_period_ms_3")).toString());
-    ui->comboBox_HomePage->setCurrentIndex(ui->comboBox_HomePage->findText(settings.value(QString::fromAscii("SYSTEM/home_page")).toString()));
-    ui->comboBox_StartPage->setCurrentIndex(ui->comboBox_StartPage->findText(settings.value(QString::fromAscii("SYSTEM/start_page")).toString()));
+    szValue = settings.value(QString::fromAscii("SYSTEM/home_page")).toString();
+    ui->comboBox_HomePage->setCurrentIndex(ui->comboBox_HomePage->findText(szValue));
+    qDebug() << "Home Page" << szValue;
+    szValue = settings.value(QString::fromAscii("SYSTEM/start_page")).toString();
+    ui->comboBox_StartPage->setCurrentIndex(ui->comboBox_StartPage->findText(szValue));
+    qDebug() << "Start Page" << szValue;
     ui->checkBox_BuzzerTouch->setChecked(settings.value(QString::fromAscii("SYSTEM/buzzer_touch")).toBool());
     ui->checkBox_BuzzerAlarm->setChecked(settings.value(QString::fromAscii("SYSTEM/buzzer_alarm")).toBool());
     ui->lineEdit_PwdTimeout->setText(settings.value(QString::fromAscii("SYSTEM/pwd_timeout_s")).toString());
-    ui->comboBox_PwdLogoutPage->setCurrentIndex(ui->comboBox_PwdLogoutPage->findText(settings.value(QString::fromAscii("SYSTEM/pwd_logout_page")).toString()));
+    szValue = settings.value(QString::fromAscii("SYSTEM/pwd_logout_page")).toString();
+    ui->comboBox_PwdLogoutPage->setCurrentIndex(ui->comboBox_PwdLogoutPage->findText(szValue));
+    qDebug() << "Pwd Logout Page" << szValue;
     ui->lineEdit_ScreenSaver->setText(settings.value(QString::fromAscii("SYSTEM/screen_saver_s")).toString());
     ui->lineEdit_SlowLogPeriod->setText(settings.value(QString::fromAscii("SYSTEM/slow_log_period_s")).toString());
     ui->lineEdit_FastLogPeriod->setText(settings.value(QString::fromAscii("SYSTEM/fast_log_period_s")).toString());
@@ -168,7 +180,7 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
 
     int index;
     QString value;
-
+    /* La presenza del Baud Rate abilita o meno il Tab per la porta in esame */
     value = settings.value(QString::fromAscii("SERIAL_PORT_0/baudrate")).toString();
     if (value.length() > 0)
     {
@@ -429,7 +441,12 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
 
 void MectSettings::on_cmdSave_clicked()
 {
-    save_all();
+
+    if (fileBackUp(m_szFileSettings))
+        save_all();
+    else
+        QMessageBox::critical(0,trUtf8("Error"),trUtf8("Error creating back up copy of file: %1") .arg(m_szFileSettings));
+
 }
 void MectSettings::save_all()
 {

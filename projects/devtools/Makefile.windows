@@ -174,7 +174,7 @@ tools: wine
 	mkdir -p $(MGW_INST_DIR)
 	cd $(MGW_INST_DIR); unzip $(MGW_ARCHIVE)
 	# Perl
-	unzip -o -d $(PERL_INSTALL_DIR) $(PERL_ARCH)
+	unzip -o -d $(DRIVE_C)/$(PERL_INSTALL_DIR) $(PERL_ARCH)
 	rsync -a $(PERL_INSTALL_PATH_H)/ $(MGW_INST_DIR)/msys/1.0/
 	rm -rf $(PERL_INSTALL_PATH_H)
 	# ARM cross compiler (Code Sourcery)

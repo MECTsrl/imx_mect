@@ -5,6 +5,7 @@
 #include "parser.h"
 #include "cteerrdef.h"
 #include "mectsettings.h"
+#include "trendeditor.h"
 
 #include <QTableView>
 #include <QModelIndex>
@@ -118,6 +119,8 @@ private:
     // Gestione Interfaccia
     Ui::ctedit *ui;
     MectSettings    *mectSet;
+    TrendEditor     *trendEdit;
+
     int         m_nGridRow;                         // Riga corrente sul Grid
     QString     m_szCurrentCTFile;                  // File Cross Table corrente (completo di Path)
     QString     m_szCurrentCTPath;                  // Path del file Cross Table corrente

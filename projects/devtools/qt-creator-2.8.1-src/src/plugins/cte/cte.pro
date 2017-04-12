@@ -7,7 +7,8 @@ HEADERS += \
     utils.h \  
     cteerrdef.h \
     cteerrorlist.h \
-    mectsettings.h
+    mectsettings.h \
+    trendeditor.h
 
 SOURCES += \
     cteplugin.cpp \
@@ -15,12 +16,14 @@ SOURCES += \
     ctedit.cpp \
     utils.cpp \  
     cteerrorlist.cpp \
-    mectsettings.cpp
+    mectsettings.cpp \
+    trendeditor.cpp
 
 FORMS += \
     ctedit.ui \  
     cteerrorlist.ui \
-    mectsettings.ui
+    mectsettings.ui \
+    trendeditor.ui
 
 LIBS += \
     -L../projectexplorer -lProjectExplorer

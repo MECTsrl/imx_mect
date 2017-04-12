@@ -75,6 +75,8 @@ const QString szPLCFILE = QString::fromAscii("plc");
 const QString szPLCExt = QString::fromAscii(".4cp");
 const QString szPLCDir = QString::fromAscii("plc");
 const QString szINIFILE = QString::fromAscii("system.ini");
+// Version Number
+const QString szVERSION = QString::fromAscii("Ver. 1.0.0 @ 2017-04-13");
 
 enum colonne_e
 {
@@ -115,6 +117,8 @@ ctedit::ctedit(QWidget *parent) :
     QString szToolTip;
 
     ui->setupUi(this);
+    // Version Number
+    ui->lblModel->setToolTip(szVERSION);
     // Liste di servizio
     lstUsedVarNames.clear();
     lstUndo.clear();
@@ -389,12 +393,14 @@ ctedit::ctedit(QWidget *parent) :
     vbSystem->addWidget(mectSet);
     // Creazione del Tab per il Trend Editor
     QVBoxLayout *vbTrend = new QVBoxLayout(ui->tabTrend);
-    // TODO: Add widget for Trend Editor
+    trendEdit = new TrendEditor(ui->tabTrend);
+    vbTrend->addWidget(trendEdit);
 
     // Seleziona il primo Tab
-    ui->tabWidget->setCurrentIndex(m_nCurTab);
+    ui->tabWidget->setTabEnabled(TAB_CT, true);
     ui->tabWidget->setTabEnabled(TAB_SYSTEM, true);
-    ui->tabWidget->setTabEnabled(TAB_TREND, false);
+    ui->tabWidget->setTabEnabled(TAB_TREND, true);
+    ui->tabWidget->setCurrentIndex(m_nCurTab);
 
     // Connessione Segnali - Slot
     ui->tblCT->setContextMenuPolicy(Qt::CustomContextMenu);

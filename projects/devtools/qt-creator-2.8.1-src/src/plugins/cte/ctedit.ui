@@ -171,7 +171,7 @@
       <enum>QTabWidget::East</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabCT">
       <property name="enabled">
@@ -1657,7 +1657,7 @@
      </widget>
      <widget class="QWidget" name="tabSystem">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <attribute name="title">
        <string>System</string>

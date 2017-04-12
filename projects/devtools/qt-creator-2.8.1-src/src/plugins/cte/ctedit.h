@@ -110,8 +110,8 @@ private:
     // Gestione Configurazione Progetto
     QString getModelName();                         // Lettura del file template.pri per determinare il modello di TPAC
     // Calcolo valori in funzione del Modello e del Protocollo
-    QStringList getPortsFromModel(QString szModel, QString szProtocol);      // Calocolo Porte in funzione di Modello e protocollo
-    void    enableProtocolsFromModel(QString szModel);  // Abilita i Protocolli in funzione del Modello corrente
+    QStringList getPortsFromModel(const QString &szModel, QString szProtocol);      // Calocolo Porte in funzione di Modello e protocollo
+    void    enableProtocolsFromModel(const QString &szModel);  // Abilita i Protocolli in funzione del Modello corrente
     //---------------------------------------------------------------------
     // Variabili varie
     //---------------------------------------------------------------------
@@ -140,9 +140,6 @@ private:
     QString     m_szFormatDate;                     // Format Masks per Date e tempo
     QString     m_szFormatTime;
     QString     m_szMsg;                            // Variabile di servizio per Messaggi
-    // Valori per stringa vuota e Zero (creati così per problemi di classe QString in compilazione sotto Qt
-    QString     szEMPTY;
-    QString     szZERO;
     // Colori per sfondi grid
     QColor      colorRetentive[2];
     QColor      colorNonRetentive[2];

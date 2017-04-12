@@ -55,15 +55,23 @@
 #undef  WORD_BIT
 
 // String Costants
+const QString szEMPTY = QString::fromAscii("");
+const QString szZERO = QString::fromAscii("0");
+const QString szSEMICOL = QString::fromAscii(";");
+const QString szSLASH = QString::fromAscii("/");
+const QString szBACKSLASH = QString::fromAscii("\\");
+const QChar   chDOUBLEQUOTE = QChar::fromAscii(34);
+const QString szDOUBLEQUOTE = QString(1, chDOUBLEQUOTE);
+
 const QString szDEF_IP_PORT = QString::fromAscii("502");
 const QString szEMPTY_IP = QString::fromAscii("0.0.0.0");
 const QString szTitle = QString::fromAscii("Mect Editor");
-const QString szSlash = QString::fromAscii("/");
 const QString szCrossCompier = QString::fromAscii("ctc");
 const QString szTemplateFile = QString::fromAscii("template.pri");
 const QString szEnvFile = QString::fromAscii("EnvVars.txt");
 const QString szPLCEnvVar = QString::fromAscii("PLCUNIXINSTPATH");
 const QString szProExt = QString::fromAscii(".pro");
+const QString szPLCFILE = QString::fromAscii("plc");
 const QString szPLCExt = QString::fromAscii(".4cp");
 const QString szPLCDir = QString::fromAscii("plc");
 const QString szINIFILE = QString::fromAscii("system.ini");
@@ -111,9 +119,6 @@ ctedit::ctedit(QWidget *parent) :
     lstUsedVarNames.clear();
     lstUndo.clear();
     lstCTErrors.clear();
-    // Stringhe generiche per Default campi
-    szEMPTY.clear();
-    szZERO.fromAscii("0");
     //------------------------
     // Riempimento liste
     //------------------------
@@ -205,7 +210,7 @@ ctedit::ctedit(QWidget *parent) :
     }
     // Lista Prodotti
     lstProductNames.clear();
-    for (nCol = AnyTPAC; nCol <= TPAC1008_02_AF; nCol++)  {
+    for (nCol = AnyTPAC; nCol < MODEL_TOTALS; nCol++)  {
         lstProductNames.append(QString::fromAscii(product_name[nCol]));
     }
     // Lista Significati (da mantenere allineata con enum behaviors in parser.h)
@@ -425,9 +430,9 @@ void    ctedit::setProjectPath(QString szProjectPath)
         m_szCurrentProjectName = szProjectName;
         // Costruzione del Path PLC
         m_szCurrentPLCPath = szProjectPath;
-        m_szCurrentPLCPath.append(szSlash);
+        m_szCurrentPLCPath.append(szSLASH);
         m_szCurrentPLCPath.append(szPLCDir);
-        m_szCurrentPLCPath.append(szSlash);
+        m_szCurrentPLCPath.append(szSLASH);
         QDir dirPlc(m_szCurrentPLCPath);
         // Create if not exists PLC Dir
         if (!dirPlc.exists()) {
@@ -449,6 +454,7 @@ bool    ctedit::selectCTFile(QString szFileCT)
 {
     QString     szFile;
     bool        fRes = false;
+    int         nModel = AnyTPAC;
 
     if (fileExists(szFileCT)) {
         szFile = szFileCT;
@@ -478,7 +484,7 @@ bool    ctedit::selectCTFile(QString szFileCT)
     if (fRes)  {
         QFileInfo fInfo(m_szCurrentCTFile);
         m_szCurrentCTPath = fInfo.absolutePath();       
-        m_szCurrentCTPath.append(szSlash);
+        m_szCurrentCTPath.append(szSLASH);
         m_szCurrentCTName = fInfo.baseName();
         // Reading Model from template.pri
         m_szCurrentModel = getModelName();
@@ -486,11 +492,15 @@ bool    ctedit::selectCTFile(QString szFileCT)
         // Abilitazione dei protocolli in funzione del Modello
         if (! m_szCurrentModel.isEmpty())  {
             enableProtocolsFromModel(m_szCurrentModel);
+            nModel = lstProductNames.indexOf(m_szCurrentModel);
+            if (nModel < 0 || nModel >= MODEL_TOTALS)
+                nModel = AnyTPAC;
+            // qDebug() << tr("Model Code: <%1> Model No <%2>") .arg(m_szCurrentModel) .arg(nModel);
         }
         m_isCtModified = false;
         m_fCutOrPaste = false;
         // Se tutto Ok, carica anche le impostazioni del file INI
-        mectSet->loadProjectFiles(m_szCurrentCTPath + szINIFILE, m_szCurrentProjectPath + szSlash + m_szCurrentProjectName, m_szCurrentProjectPath + szSlash);
+        mectSet->loadProjectFiles(m_szCurrentCTPath + szINIFILE, m_szCurrentProjectPath + szSLASH + m_szCurrentProjectName, m_szCurrentProjectPath + szSLASH, nModel);
         enableInterface();
     }
     return fRes;
@@ -834,7 +844,7 @@ bool ctedit::values2Iface(QStringList &lstRecValues)
             ui->txtFixedValue->setText(szEMPTY);
             // Ricerca posizione prima variabile
             szTemp = lstRecValues[colSourceVar].trimmed();
-            qDebug() << "Alarm Source Variable:" << szTemp;
+            // qDebug() << "Alarm Source Variable:" << szTemp;
             nPos = -1;
             if (! szTemp.isEmpty())  {
                 nPos = ui->cboVariable1->findText(szTemp, Qt::MatchExactly);
@@ -977,7 +987,7 @@ bool ctedit::iface2values(QStringList &lstRecValues)
             szTemp = ui->cboVariable1->itemText(nPos);
         else
             szTemp = szEMPTY;
-        qDebug() << "Variable Var1 Pos: " << nPos;
+        // qDebug() << "Variable Var1 Pos: " << nPos;
         lstRecValues[colSourceVar] = szTemp;
         // Operator
         nPos = ui->cboCondition->currentIndex();
@@ -1001,7 +1011,7 @@ bool ctedit::iface2values(QStringList &lstRecValues)
         }
         lstRecValues[colCompare] = szTemp;
     }
-    qDebug() << "Alarm Source Variable: " << lstRecValues[colSourceVar];
+    // qDebug() << "Alarm Source Variable: " << lstRecValues[colSourceVar];
     // Return value
     return true;
 }
@@ -2282,7 +2292,7 @@ void ctedit::on_cmdCompile_clicked()
     if (globalChecks())
         return;
     // CT Compiler Full Path
-    szCommand.append(szSlash);
+    szCommand.append(szSLASH);
     szCommand.append(szCrossCompier);
     // Parametro 1: -c Nome del File sorgente CrossTable
     szTemp = QString::fromAscii("-c%1.csv") .arg(m_szCurrentCTName);
@@ -2356,7 +2366,7 @@ QString ctedit::getModelName()
     szModel.clear();
     // Costruzione del nome del file Template
     szFileTemplate = m_szCurrentProjectPath;
-    szFileTemplate.append(szSlash);
+    szFileTemplate.append(szSLASH);
     szFileTemplate.append(szTemplateFile);
     fileTemplate.setFileName(szFileTemplate);
     // Verifica esistenza filedisplayMessage
@@ -2373,7 +2383,8 @@ QString ctedit::getModelName()
                 nPos = szLine.indexOf(QString::fromAscii("="));
                 if (nPos > 0)  {
                     szModel = szLine.mid(nPos + 1).trimmed();
-                    szModel.remove(QString::fromAscii("\""));
+                    szModel.remove(szDOUBLEQUOTE);
+                    szModel = szModel.trimmed();
                     break;
                 }
             }
@@ -2384,7 +2395,7 @@ QString ctedit::getModelName()
     else {
         qDebug() << tr("Template File: %1 not found") .arg(szFileTemplate);
     }
-    // qDebug() << tr("Current Model: %1") .arg(szModel);
+    qDebug() << tr("Current Model: <%1>") .arg(szModel);
     // return value
     return szModel;
 }
@@ -2435,9 +2446,10 @@ void ctedit::enableInterface()
     ui->tblCT->setEnabled(true);
     m_fCutOrPaste = false;
 }
-QStringList ctedit::getPortsFromModel(QString szModel, QString szProtocol)
+QStringList ctedit::getPortsFromModel(const QString &szModel, QString szProtocol)
 // Calocolo Porte abilitate in funzione di Modello e protocollo
 {
+
     QStringList lstValues;
     int nModel = lstProductNames.indexOf(szModel);
     int nProtocol = lstProtocol.indexOf(szProtocol);
@@ -2503,11 +2515,14 @@ QStringList ctedit::getPortsFromModel(QString szModel, QString szProtocol)
     // Return value
     return lstValues;
 }
-void    ctedit::enableProtocolsFromModel(QString szModel)
+void    ctedit::enableProtocolsFromModel(const QString &szModel)
 // Abilita i Protocolli in funzione del Modello corrente
 {
     int nCur = 0;
     int nModel = lstProductNames.indexOf(szModel);
+
+
+    // qDebug() << tr("Model Searched: %1 - Found: %2") .arg(szModel) .arg(nModel);
 
     lstBusEnabler.clear();
     // Abilita di default tutti i Protocolli
@@ -2522,9 +2537,6 @@ void    ctedit::enableProtocolsFromModel(QString szModel)
         lstBusEnabler[RTU] = false;
         lstBusEnabler[RTU_SRV] = false;
         lstBusEnabler[MECT_PTC] = false;
-    }
-    else if (nModel == TP1043_01_C)  {
-        lstBusEnabler[CANOPEN] = false;
     }
     else if (nModel == TP1057_01_A)  {
         lstBusEnabler[CANOPEN] = false;
@@ -2542,9 +2554,6 @@ void    ctedit::enableProtocolsFromModel(QString szModel)
         // Tutti i protocolli sono abilitiati
     }
     else if (nModel == TP1070_01_C)  {
-        lstBusEnabler[CANOPEN] = false;
-    }
-    else if (nModel == TP1070_01_D)  {
         lstBusEnabler[CANOPEN] = false;
     }
     else if (nModel == TPAC1006)  {
@@ -2572,9 +2581,6 @@ void    ctedit::enableProtocolsFromModel(QString szModel)
         //  Tutti i protocolli sono abilitiati
     }
     else if (nModel == TPAC1008_02_AB)  {
-        lstBusEnabler[CANOPEN] = false;
-    }
-    else if (nModel == TPAC1008_02_AC)  {
         lstBusEnabler[CANOPEN] = false;
     }
     else if (nModel == TPAC1008_02_AD)  {
@@ -3024,19 +3030,19 @@ void ctedit::on_cboVariable1_currentIndexChanged(int index)
         if (nRow >= 0 && nRow < lstCTRecords.count())  {
             // Recupera il tipo della Variabile a SX dell'espressione Allarme/Evento
             m_vtAlarmVarType = lstCTRecords[nRow].VarType;
-            qDebug() << "Row First Variable in Alarm (Row - Name - nType - Type):" << nRow << szVarName << m_vtAlarmVarType << QString::fromAscii(varTypeName[m_vtAlarmVarType]);
+            // qDebug() << "Row First Variable in Alarm (Row - Name - nType - Type):" << nRow << szVarName << m_vtAlarmVarType << QString::fromAscii(varTypeName[m_vtAlarmVarType]);
             QString szVar1Type = QString::fromAscii(varTypeName[m_vtAlarmVarType]);
             szVar1Type.prepend(QString::fromAscii("["));
             szVar1Type.append(QString::fromAscii("]"));
             ui->lblTypeVar1->setText(szVar1Type);
             // Disabilita le voci per Rising and falling
             if (m_vtAlarmVarType == BIT || m_vtAlarmVarType == BYTE_BIT || m_vtAlarmVarType == WORD_BIT || m_vtAlarmVarType == DWORD_BIT)  {
-                qDebug() << "Condition Enabled";
+                // qDebug() << "Condition Enabled";
                 enableComboItem(ui->cboCondition, oper_rising);
                 enableComboItem(ui->cboCondition, oper_falling);
             }
             else  {
-                qDebug() << "Condition is Disabled";
+                // qDebug() << "Condition is Disabled";
                 disableComboItem(ui->cboCondition, oper_rising);
                 disableComboItem(ui->cboCondition, oper_falling);
             }
@@ -3192,17 +3198,17 @@ void ctedit::on_cmdPLC_clicked()
 
     // Lista delle variabili d'ambiente per controllo configurazione
     lstEnv = QProcessEnvironment::systemEnvironment().toStringList();
-    QFile   fEnv(m_szCurrentProjectPath + szSlash + szEnvFile);
+    QFile   fEnv(m_szCurrentProjectPath + szSLASH + szEnvFile);
     fEnv.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
     if (fEnv.isOpen())  {
         QTextStream txtEnv(&fEnv);
-        qDebug() << "Current Environment:";
+        // qDebug() << "Current Environment:";
         int i = 0;
         for (i=0; i<lstEnv.count(); i++)  {
             szTemp = QString::number(i+1);
             szTemp.append(QString::fromAscii(" - "));
             szTemp.append(lstEnv[i]);
-            qDebug() << szTemp;
+            // qDebug() << szTemp;
             txtEnv << szTemp << endl;
         }
         fEnv.close();
@@ -3214,17 +3220,21 @@ void ctedit::on_cmdPLC_clicked()
     if (! szPathPLCApplication.isEmpty())  {
         // To be modified with specifics of PLC Application
         szTemp = QString::fromAscii("%1");
-        qDebug() << szTemp;
+        // Remove %1
         szPathPLCApplication.remove(szTemp, Qt::CaseInsensitive);
-        // szPathPLCApplication.append(QString::fromAscii("/bin/linguist"));
+        // Remove doublequote
+        szPathPLCApplication.remove(szDOUBLEQUOTE, Qt::CaseInsensitive);
         // Build PLC Editor Application command
         szCommand = szPathPLCApplication;
-        // First parameter: File 4cp
-        szTemp = m_szCurrentProjectName;
-        szTemp.remove(szProExt, Qt::CaseInsensitive);
+        // Enclose command with double quote
+        szCommand.append(szDOUBLEQUOTE);
+        szCommand.prepend(szDOUBLEQUOTE);
+        qDebug() << "PLC Command: " << szCommand;
+        // First parameter: File plc.4cp
+        szTemp = szPLCFILE;
         szTemp.append(szPLCExt);
         szTemp.prepend(m_szCurrentPLCPath);
-        lstArguments.append(szTemp);
+        qDebug() << "PLC File: " << szTemp;
         QFile plcPro(szTemp);
         if (! plcPro.exists())  {
             m_szMsg = tr("PLC Project File Not Found\n");
@@ -3232,6 +3242,10 @@ void ctedit::on_cmdPLC_clicked()
             warnUser(this, szTitle, m_szMsg);
         }
         else  {
+            // Enclose parameter with double quote
+            szTemp.append(szDOUBLEQUOTE);
+            szTemp.prepend(szDOUBLEQUOTE);
+            lstArguments.append(szTemp);
             // Imposta come Directory corrente di esecuzione la directory del File PLC
             procPLC.setWorkingDirectory(m_szCurrentPLCPath);
             // Esecuzione Comando

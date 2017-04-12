@@ -16,19 +16,22 @@
 #define MAX_SPACE_AVAILABLE_MAX 128
 #define LINE_SIZE 1024
 
-const QString szPAGE = QString::fromAscii("page");
 const QString szEMPTY = QString::fromAscii("");
 const QString szSEMICOL = QString::fromAscii(";");
+const QString szBACKSLASH = QString::fromAscii("\\");
 const QChar   chSpace = QChar::fromAscii(20);
-const QString szBackSpace = QString::fromAscii("\\");
+
+const QString szPAGE = QString::fromAscii("page");
 const QString szDEFLANG  = QString::fromAscii("it");
 const QString szLANGMAPFILE = QString::fromAscii(":/csv/others/lang_table.csv");
+
 
 MectSettings::MectSettings(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MectSettings)
 {
     int     nValMaxInt16 = 65535;
+    int     i = 0;
 
     ui->setupUi(this);
     // Impostazione degli opportuni Validator per i campi integers
@@ -55,6 +58,13 @@ MectSettings::MectSettings(QWidget *parent) :
     /* TCP_IP */
     ui->lineEdit_Silence_TCP_IP_PORT->setValidator(new QIntValidator(0, nValMaxInt16, this));
     ui->lineEdit_Timeout_TCP_IP_PORT->setValidator(new QIntValidator(0, nValMaxInt16, this));
+    // Clear Model Info
+    m_nModel = -1;
+    m_szModel.clear();
+    // Tab Enabler
+    for (i = 0; i < tabTotals; i++)
+        m_tabEnabled[i] = true;
+
 }
 
 MectSettings::~MectSettings()
@@ -62,11 +72,31 @@ MectSettings::~MectSettings()
     delete ui;
 }
 
-void    MectSettings::setModel(const QString &szModel)
+void    MectSettings::setModel(const int nModel)
 {
-    m_szModel = szModel;
+    int i = 0;
+
+    if (nModel >= 0 && MODEL_TOTALS)  {
+        m_nModel = nModel;
+        m_szModel = QString::fromAscii(product_name[nModel]);        
+        // Get Port Config from Model Number
+        enablePortsFromModel(nModel);
+    }
+    else  {
+        m_nModel = AnyTPAC;
+        m_szModel.clear();
+    }
+    // Refresh Port Tabs config
+    qDebug() << tr("Model: %1") .arg(nModel);
+    for (i = 0; i < tabTotals; i++)  {
+        // ui->tabWidget->setTabEnabled(i, m_tabEnabled[i]);
+        ui->tabWidget->widget(i)->setEnabled(m_tabEnabled[i]);
+        qDebug() << tr("Tab %1: %2") .arg(i) .arg(m_tabEnabled[i]);
+    }
+    // Set Tab System as current Tab
+    ui->tabWidget->setCurrentIndex(tabSystem);
 }
-bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QString szFilePro, const QString &szProjectPath)
+bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QString szFilePro, const QString &szProjectPath, const int nModel)
 {
     // Copy of Setting File, Project File, Project Path
     m_szFileSettings = szFileSettings;
@@ -75,8 +105,13 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
     // qDebug() << "Settings: " << m_szFileSettings;
     // qDebug() << "Project:  " << m_szFilePro;
     // qDebug() << "Path Prj: " << m_szProjectPath;
-    ui->tabWidget->setCurrentIndex(0);
 
+    // Enable All Tabs as default
+    int nTab = 0;
+    for (nTab = 0; nTab < tabTotals; nTab++)
+        m_tabEnabled[nTab] = true;
+
+    // Ricerca del file di Settings
     if (!QFile(szFileSettings).exists())
     {
         QMessageBox::critical(this,trUtf8("Error"),trUtf8("System.ini file don't exist, it's impossible tool open."));
@@ -97,7 +132,7 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
     // Cerca nel file .pro le righe relative agli oggetti ui
     while(!in.atEnd()) {
         QString line = in.readLine().trimmed();
-        line.replace(szBackSpace, QString::fromAscii(""));
+        line.replace(szBACKSLASH, QString::fromAscii(""));
         line = line.trimmed();
         if (! line.isEmpty())  {
             QStringList lstItems = line.split(chSpace);
@@ -226,7 +261,7 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
     }
     else  {
         // Disable all Tab
-        ui->tabWidget->setTabEnabled(1, false);
+        m_tabEnabled[tabSerial0] = false;
     }
 
     value = settings.value(QString::fromAscii("SERIAL_PORT_0/databits")).toString();
@@ -281,7 +316,7 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
     }
     else  {
         // Disable all Tab
-        ui->tabWidget->setTabEnabled(2, false);
+        m_tabEnabled[tabSerial1] = false;
     }
 
     value = settings.value(QString::fromAscii("SERIAL_PORT_1/databits")).toString();
@@ -336,7 +371,7 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
     }
     else  {
         // Disable all Tab
-        ui->tabWidget->setTabEnabled(3, false);
+        m_tabEnabled[tabSerial2] = false;
     }
 
     value = settings.value(QString::fromAscii("SERIAL_PORT_2/databits")).toString();
@@ -391,7 +426,7 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
     }
     else  {
         // Disable all Tab
-        ui->tabWidget->setTabEnabled(4, false);
+        m_tabEnabled[tabSerial3] = false;
     }
 
     value = settings.value(QString::fromAscii("SERIAL_PORT_3/databits")).toString();
@@ -449,7 +484,7 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
     }
     else  {
         // Disable all Tab
-        ui->tabWidget->setTabEnabled(6, false);
+        m_tabEnabled[tabCan0] = false;
     }
 
     value = settings.value(QString::fromAscii("CANOPEN_1/baudrate")).toString();
@@ -465,8 +500,10 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
     }
     else  {
         // Disable all Tab
-        ui->tabWidget->setTabEnabled(7, false);
+        m_tabEnabled[tabCan1] = false;
     }
+    // Set Model Info for current Model
+    setModel(nModel);
     // All Ok, return true
     return true;
 }
@@ -922,4 +959,78 @@ bool MectSettings::checkFields()
 
 exitCheck:
     return fRes;
+}
+void MectSettings::enablePortsFromModel(int nModel)
+{
+    // tab System and TCP are always ON
+    m_tabEnabled[tabSystem] = true;
+    m_tabEnabled[tabTCP] = true;
+    // Check if model is in range
+    if (nModel == AnyTPAC || nModel >= MODEL_TOTALS)  {
+        return;
+    }
+    // Seriale 0
+    if (nModel == TP1043_01_A ||
+        nModel == TP1070_01_C ||
+        nModel == TPAC1007_03 ||
+        nModel == TPAC1007_04_AA ||
+        nModel == TPAC1007_04_AB ||
+        nModel == TPAC1007_04_AC ||
+        nModel == TPAC1007_LV ||
+        nModel == TPAC1008_02_AB ||
+        nModel == TPLC100 ||
+        nModel == TPLC150 )   {
+        m_tabEnabled[tabSerial0] = true;
+    }
+    else  {
+        m_tabEnabled[tabSerial0] = false;
+    }
+    // Seriale 1
+    if (nModel == TPLC100 ||
+        nModel == TPLC150 )   {
+        m_tabEnabled[tabSerial1] = true;
+    }
+    else  {
+        m_tabEnabled[tabSerial1] = false;
+    }
+    // Seriale 2
+    if (nModel == TPLC100 ||
+        nModel == TPLC150 )   {
+        m_tabEnabled[tabSerial2] = true;
+    }
+    else  {
+        m_tabEnabled[tabSerial2] = false;
+    }
+    // Seriale 3
+    if (nModel == TP1057_01_A ||
+        nModel == TP1057_01_B ||
+        nModel == TP1070_01_A ||
+        nModel == TP1070_01_B ||
+        nModel == TP1070_01_C ||
+        nModel == TPAC1006    ||
+        nModel == TPAC1008_01 ||
+        nModel == TPAC1008_02_AA ||
+        nModel == TPAC1008_02_AB ||
+        nModel == TPAC1008_02_AD ||
+        nModel == TPAC1008_02_AE ||
+        nModel == TPAC1008_02_AF ||
+        nModel == TPLC100 ||
+        nModel == TPLC150 )   {
+        m_tabEnabled[tabSerial3] = true;
+    }
+    else  {
+        m_tabEnabled[tabSerial3] = false;
+    }
+    // Can 0
+    m_tabEnabled[tabCan0] = false;
+    // Can1
+    if (nModel == TP1057_01_A ||
+
+        nModel == TPLC100 ||
+        nModel == TPLC150 )   {
+        m_tabEnabled[tabCan1] = true;
+    }
+    else  {
+        m_tabEnabled[tabCan1] = false;
+    }
 }

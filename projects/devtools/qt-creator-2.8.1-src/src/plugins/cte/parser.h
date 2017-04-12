@@ -80,26 +80,26 @@ enum productId {
         /*00*/ AnyTPAC = 0,
         /*01*/ TP1043_01_A,
         /*02*/ TP1043_01_B,
-        /*03*/ TP1043_01_C,
-        /*04*/ TP1057_01_A,
-        /*05*/ TP1057_01_B,
-        /*06*/ TP1070_01_A,
-        /*07*/ TP1070_01_B,
-        /*08*/ TP1070_01_C,
-        /*09*/ TP1070_01_D,
-        /*10*/ TPAC1006,
-        /*11*/ TPAC1007_03,
-        /*12*/ TPAC1007_04_AA,
-        /*13*/ TPAC1007_04_AB,
-        /*14*/ TPAC1007_04_AC,
-        /*15*/ TPAC1007_LV,
-        /*16*/ TPAC1008_01,
-        /*17*/ TPAC1008_02_AA,
-        /*18*/ TPAC1008_02_AB,
-        /*19*/ TPAC1008_02_AC,
-        /*20*/ TPAC1008_02_AD,
-        /*21*/ TPAC1008_02_AE,
-        /*22*/ TPAC1008_02_AF
+        /*03*/ TP1057_01_A,
+        /*04*/ TP1057_01_B,
+        /*05*/ TP1070_01_A,
+        /*06*/ TP1070_01_B,
+        /*07*/ TP1070_01_C,
+        /*08*/ TPAC1006,
+        /*09*/ TPAC1007_03,
+        /*10*/ TPAC1007_04_AA,
+        /*11*/ TPAC1007_04_AB,
+        /*12*/ TPAC1007_04_AC,
+        /*13*/ TPAC1007_LV,
+        /*14*/ TPAC1008_01,
+        /*15*/ TPAC1008_02_AA,
+        /*16*/ TPAC1008_02_AB,
+        /*17*/ TPAC1008_02_AD,
+        /*18*/ TPAC1008_02_AE,
+        /*19*/ TPAC1008_02_AF,
+        /*20*/ TPLC100,
+        /*21*/ TPLC150,
+               MODEL_TOTALS
 };
 
 enum logicalOperators {
@@ -121,6 +121,21 @@ enum behaviors  {
     behavior_event,
     behavior_totals
 };
+
+// Indici dei Tab della finestra Settings
+enum tabSettings_e
+{
+    tabSystem = 0,
+    tabSerial0,
+    tabSerial1,
+    tabSerial2,
+    tabSerial3,
+    tabTCP,
+    tabCan0,
+    tabCan1,
+    tabTotals
+};
+
 
 struct  CrossTableRecord {
     int16_t Enable;

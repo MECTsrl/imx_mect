@@ -1,6 +1,8 @@
 #ifndef MECTSETTINGS_H
 #define MECTSETTINGS_H
 
+#include "parser.h"
+
 #include <QWidget>
 #include <QHash>
 #include <QString>
@@ -16,12 +18,12 @@ class MectSettings : public QWidget
 public:
     explicit MectSettings(QWidget *parent = 0);
     ~MectSettings();
-    bool loadProjectFiles(const QString &szFileSettings, const QString szFilePro, const QString &szProjectPath);
+    bool loadProjectFiles(const QString &szFileSettings, const QString szFilePro, const QString &szProjectPath, const int nModel);
 
 signals:
 
 public slots:
-    void    setModel(const QString &szModel);
+    void    setModel(const int nModel);
 
 private slots:
 
@@ -33,6 +35,7 @@ private:
     //---------------------------------------------------------------------
     void save_all();
     bool checkFields();
+    void enablePortsFromModel(int nModel);
     //---------------------------------------------------------------------
     // Variabili varie
     //---------------------------------------------------------------------
@@ -42,6 +45,8 @@ private:
     QString m_szProjectPath;
     QString m_szFilePro;
     QString m_szModel;
+    int     m_nModel;
+    bool    m_tabEnabled[tabTotals];
 };
 
 #endif // MECTSETTINGS_H

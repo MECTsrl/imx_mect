@@ -60,6 +60,7 @@ const QString szZERO = QString::fromAscii("0");
 const QString szSEMICOL = QString::fromAscii(";");
 const QString szSLASH = QString::fromAscii("/");
 const QString szBACKSLASH = QString::fromAscii("\\");
+const QString szNEWLINE = QString::fromAscii("\n");
 const QChar   chDOUBLEQUOTE = QChar::fromAscii(34);
 const QString szDOUBLEQUOTE = QString(1, chDOUBLEQUOTE);
 
@@ -438,7 +439,7 @@ void    ctedit::setProjectPath(QString szProjectPath)
         m_szCurrentPLCPath = szProjectPath;
         m_szCurrentPLCPath.append(szSLASH);
         m_szCurrentPLCPath.append(szPLCDir);
-        m_szCurrentPLCPath.append(szSLASH);
+        // m_szCurrentPLCPath.append(szSLASH);
         QDir dirPlc(m_szCurrentPLCPath);
         // Create if not exists PLC Dir
         if (!dirPlc.exists()) {
@@ -2305,6 +2306,7 @@ void ctedit::on_cmdCompile_clicked()
     lstArguments.append(szTemp);
     // Parametro 2: -g Nome del file GVL (Case preserved)
     szFileName = QString::fromAscii("%1.gvl") .arg(m_szCurrentCTName);
+    szFileName.prepend(szSLASH);
     szFileName.prepend(m_szCurrentPLCPath);
     szTemp = szFileName;
     szTemp.prepend(QString::fromAscii("-g"));
@@ -3197,6 +3199,7 @@ void ctedit::on_cmdPLC_clicked()
     QString     szPathPLCApplication;
     QStringList lstEnv;
     QString     szCommand;
+    QString     szPLCEngPath;
     QStringList lstArguments;
     QString     szTemp;
     QProcess    procPLC;
@@ -3231,23 +3234,29 @@ void ctedit::on_cmdPLC_clicked()
         // Remove doublequote
         szPathPLCApplication.remove(szDOUBLEQUOTE, Qt::CaseInsensitive);
         // Build PLC Editor Application command
+        QFileInfo plcExe(szPathPLCApplication);
+        if (plcExe.exists())
+            szPLCEngPath = plcExe.absolutePath();
         szCommand = szPathPLCApplication;
         // Enclose command with double quote
-        szCommand.append(szDOUBLEQUOTE);
-        szCommand.prepend(szDOUBLEQUOTE);
-        qDebug() << "PLC Command: " << szCommand;
+        // szCommand.append(szDOUBLEQUOTE);
+        // szCommand.prepend(szDOUBLEQUOTE);
+        // qDebug() << "PLC Command: " << szCommand;
         // First parameter: File plc.4cp
-        szTemp = szPLCFILE;
+        szTemp = szSLASH;
+        szTemp.append(szPLCFILE);
         szTemp.append(szPLCExt);
         szTemp.prepend(m_szCurrentPLCPath);
-        qDebug() << "PLC File: " << szTemp;
+        // qDebug() << "PLC File: " << szTemp;
         QFile plcPro(szTemp);
         if (! plcPro.exists())  {
             m_szMsg = tr("PLC Project File Not Found\n");
             m_szMsg.append(szTemp);
             warnUser(this, szTitle, m_szMsg);
+            goto endStartPLC;
         }
-        else  {
+        // Verifica e Lancio Engineering
+        if (plcExe.exists())  {
             // Convert File Path to Opertatin System Native Style
             szTemp = QDir::toNativeSeparators(szTemp);
             // Enclose parameter with double quote (MayBe done by QProcess)
@@ -3255,9 +3264,10 @@ void ctedit::on_cmdPLC_clicked()
             //szTemp.prepend(szDOUBLEQUOTE);
             lstArguments.append(szTemp);
             // Imposta come Directory corrente di esecuzione la directory del File PLC
-            procPLC.setWorkingDirectory(m_szCurrentPLCPath);
+            procPLC.setWorkingDirectory(szPLCEngPath);
+            qDebug() << "Plc Path: " << szPLCEngPath;
             // Esecuzione Comando
-            m_szMsg = tr("Command: \n") + szCommand + szSpace(1) + szTemp;
+            m_szMsg = tr("Command: \n") + szCommand + szNEWLINE + szTemp;
             qDebug() << szCommand + szSpace(1) + szTemp;
             notifyUser(this, szTitle, m_szMsg);
             if (! procPLC.startDetached(szCommand, lstArguments, m_szCurrentPLCPath, &pidPLC))  {
@@ -3265,12 +3275,21 @@ void ctedit::on_cmdPLC_clicked()
                 m_szMsg = tr("Error Starting PLC Engineering: %1\n") .arg(errPlc);
                 m_szMsg.append(szCommand);
                 warnUser(this, szTitle, m_szMsg);
+                goto endStartPLC;
             }
+        }
+        else {
+            m_szMsg = tr("Program PLC Engineering Not Found!\n%1") .arg(szPLCEnvVar);
+            m_szMsg.append(szCommand);
+            warnUser(this, szTitle, m_szMsg);
+            goto endStartPLC;
         }
     }
     else  {
-        m_szMsg = tr("Reference to Application PLC Engineering %1 Not Found!\n") .arg(szPLCEnvVar);
+        m_szMsg = tr("Environment Variable for Application PLC Engineering %1 Not Found!\n") .arg(szPLCEnvVar);
         m_szMsg.append(szCommand);
         warnUser(this, szTitle, m_szMsg);
     }
+endStartPLC:
+    return;
 }

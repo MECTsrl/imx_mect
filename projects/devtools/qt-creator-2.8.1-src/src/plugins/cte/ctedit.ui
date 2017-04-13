@@ -27,6 +27,18 @@
   <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
     <widget class="QFrame" name="fraMessage">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>40</height>
+      </size>
+     </property>
      <property name="font">
       <font>
        <weight>50</weight>
@@ -171,7 +183,7 @@
       <enum>QTabWidget::East</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabCT">
       <property name="enabled">
@@ -185,6 +197,18 @@
         <layout class="QVBoxLayout" name="verticalLayout_8">
          <item>
           <widget class="QFrame" name="fraBottoni">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>68</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>68</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <weight>50</weight>
@@ -512,10 +536,10 @@
                </font>
               </property>
               <property name="toolTip">
-               <string>Save changes</string>
+               <string>Start PLC Engineering</string>
               </property>
               <property name="statusTip">
-               <string>Start PLC Editor</string>
+               <string/>
               </property>
               <property name="text">
                <string>PLC</string>

@@ -183,14 +183,14 @@
       <enum>QTabWidget::East</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabCT">
       <property name="enabled">
        <bool>true</bool>
       </property>
       <attribute name="title">
-       <string>Cross Table</string>
+       <string>Crosstable</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
@@ -1689,7 +1689,7 @@
      </widget>
      <widget class="QWidget" name="tabTrend">
       <attribute name="title">
-       <string>Trend</string>
+       <string>Trends</string>
       </attribute>
      </widget>
     </widget>

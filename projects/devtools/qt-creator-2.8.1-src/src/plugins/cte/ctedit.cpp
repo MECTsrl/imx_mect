@@ -2,6 +2,7 @@
 #include "ui_ctedit.h"
 #include "utils.h"
 #include "cteerrorlist.h"
+#include "stdlib.h"
 
 #include <QFile>
 #include <QFileDialog>
@@ -47,6 +48,8 @@
 #define MAX_NODE 5299
 #define MIN_LOCALIO 5300
 #define MAX_LOCALIO 5389
+#define COMMANDLINE 2048
+
 // Tabs in TabWidget
 #define TAB_CT 0
 #define TAB_SYSTEM 1
@@ -143,6 +146,7 @@ ctedit::ctedit(QWidget *parent) :
     lstErrorMessages[errCTNoVarDecimals] = trUtf8("Empty or Invalid Decimal Variable");
     lstErrorMessages[errCTWrongDecimals] = trUtf8("Invalid Bit Position");
     lstErrorMessages[errCTNoProtocol] = trUtf8("No Protocol Selected");
+    lstErrorMessages[errCTNoBITAllowed] = trUtf8("BIT Type not allowed for SRV Protocols");
     lstErrorMessages[errCTNoIP] = trUtf8("No IP Address");
     lstErrorMessages[errCTBadIP] = trUtf8("Invalid IP Address");
     lstErrorMessages[errCTNoPort] = trUtf8("Empty or Invalid Port Value");
@@ -1545,6 +1549,13 @@ void ctedit::on_cboProtocol_currentIndexChanged(int index)
         ui->txtIP->setText(szEMPTY);
         ui->txtPort->setText(szZERO);
     }
+    // Disabilitazione  tipo BIT per i vari tipi di SRV (TCP_SRV, RTU_SRV, TCP_RTU_SRV)
+    if (index == TCP_SRV || index == TCPRTU_SRV || index || RTU_SRV)  {
+        disableComboItem(ui->cboType, BIT);
+    }
+    else {
+        enableComboItem(ui->cboType, BIT);
+    }
     // Abilitazione del campi di data entry in funzione del Protocollo
     enableFields();
 }
@@ -2883,6 +2894,13 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
         lstCTErrors.append(errCt);
         nErrors++;
     }
+    // Tipo BIT non permesso per alcuni protocolli
+    if (nType == BIT &&
+            (nProtocol == TCP_SRV || nProtocol == TCPRTU_SRV || nProtocol == RTU_SRV))  {
+        fillErrorMessage(nRow, colProtocol, errCTNoProtocol, szVarName, szTemp, chSeverityError, &errCt);
+        lstCTErrors.append(errCt);
+        nErrors++;
+    }
     // Controllo Ip Address
     szIP = lstValues[colIP].trimmed();
     if (szIP.isEmpty() &&
@@ -3203,7 +3221,9 @@ void ctedit::on_cmdPLC_clicked()
     QStringList lstArguments;
     QString     szTemp;
     QProcess    procPLC;
-    qint64      pidPLC;
+    // qint64      pidPLC;
+    int         nErr;
+    char        commandLine[COMMANDLINE];
 
     // Lista delle variabili d'ambiente per controllo configurazione
     lstEnv = QProcessEnvironment::systemEnvironment().toStringList();
@@ -3272,9 +3292,16 @@ void ctedit::on_cmdPLC_clicked()
             procPLC.setWorkingDirectory(szPLCEngPath);
             qDebug() << "Plc Path: " << szPLCEngPath;
             // Esecuzione Comando
-            m_szMsg = tr("Command: \n") + szCommand + szNEWLINE + szTemp;
-            qDebug() << szCommand + szSpace(1) + szTemp;
+            szCommand.append(szSpace(1));
+            szCommand.append(szTemp);
+            m_szMsg = tr("Command: \n") + szCommand;
+            qDebug() << m_szMsg;
             notifyUser(this, szTitle, m_szMsg);
+            // Preparazione comando per System
+            strcpy(commandLine, szCommand.toAscii().data());
+            nErr = system(commandLine);
+            qDebug() << tr("Result Code: %1") .arg(nErr);
+            /* Sostituito da System ??
             if (! procPLC.startDetached(szCommand, lstArguments, m_szCurrentPLCPath, &pidPLC))  {
                 QProcess::ProcessError errPlc = procPLC.error();
                 m_szMsg = tr("Error Starting PLC Engineering: %1\n") .arg(errPlc);
@@ -3282,6 +3309,7 @@ void ctedit::on_cmdPLC_clicked()
                 warnUser(this, szTitle, m_szMsg);
                 goto endStartPLC;
             }
+            */
         }
         else {
             m_szMsg = tr("Program PLC Engineering Not Found!\n%1") .arg(szPLCEnvVar);

@@ -21,6 +21,7 @@ enum errorMessages_e
     errCTWrongDecimals,
     errCTNoVarDecimals,
     errCTNoProtocol,
+    errCTNoBITAllowed,
     errCTNoIP,
     errCTBadIP,
     errCTNoPort,

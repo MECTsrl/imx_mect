@@ -353,34 +353,51 @@
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <widget class="QLabel" name="lblColor_1">
-          <property name="font">
-           <font>
-            <weight>50</weight>
-            <bold>false</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Color</string>
-          </property>
-          <property name="buddy">
-           <cstring>cboColor_1</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="cboColor_1">
           <property name="minimumSize">
            <size>
             <width>100</width>
-            <height>0</height>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>30</height>
            </size>
           </property>
           <property name="font">
            <font>
-            <pointsize>10</pointsize>
             <weight>50</weight>
             <bold>false</bold>
            </font>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Box</enum>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="buddy">
+           <cstring>cmdColor_1</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="cmdColor_1">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Set Color</string>
           </property>
          </widget>
         </item>
@@ -610,34 +627,51 @@
        <layout class="QVBoxLayout" name="verticalLayout_9">
         <item>
          <widget class="QLabel" name="lblColor_2">
-          <property name="font">
-           <font>
-            <weight>50</weight>
-            <bold>false</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Color</string>
-          </property>
-          <property name="buddy">
-           <cstring>cboColor_2</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="cboColor_2">
           <property name="minimumSize">
            <size>
             <width>100</width>
-            <height>0</height>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>30</height>
            </size>
           </property>
           <property name="font">
            <font>
-            <pointsize>10</pointsize>
             <weight>50</weight>
             <bold>false</bold>
            </font>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Box</enum>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="buddy">
+           <cstring>cmdColor_2</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="cmdColor_2">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Set Color</string>
           </property>
          </widget>
         </item>
@@ -867,34 +901,51 @@
        <layout class="QVBoxLayout" name="verticalLayout_15">
         <item>
          <widget class="QLabel" name="lblColor_3">
-          <property name="font">
-           <font>
-            <weight>50</weight>
-            <bold>false</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Color</string>
-          </property>
-          <property name="buddy">
-           <cstring>cboColor_3</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="cboColor_3">
           <property name="minimumSize">
            <size>
             <width>100</width>
-            <height>0</height>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>30</height>
            </size>
           </property>
           <property name="font">
            <font>
-            <pointsize>10</pointsize>
             <weight>50</weight>
             <bold>false</bold>
            </font>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Box</enum>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="buddy">
+           <cstring>cmdColor_3</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="cmdColor_3">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Set Color</string>
           </property>
          </widget>
         </item>
@@ -1124,34 +1175,51 @@
        <layout class="QVBoxLayout" name="verticalLayout_21">
         <item>
          <widget class="QLabel" name="lblColor_4">
-          <property name="font">
-           <font>
-            <weight>50</weight>
-            <bold>false</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Color</string>
-          </property>
-          <property name="buddy">
-           <cstring>cboColor_4</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="cboColor_4">
           <property name="minimumSize">
            <size>
             <width>100</width>
-            <height>0</height>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>30</height>
            </size>
           </property>
           <property name="font">
            <font>
-            <pointsize>10</pointsize>
             <weight>50</weight>
             <bold>false</bold>
            </font>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Box</enum>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="buddy">
+           <cstring>cmdColor_4</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="cmdColor_4">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Set Color</string>
           </property>
          </widget>
         </item>
@@ -1297,31 +1365,31 @@
   <tabstop>cboOrientation</tabstop>
   <tabstop>chkVisible_1</tabstop>
   <tabstop>cboVariable_1</tabstop>
-  <tabstop>cboColor_1</tabstop>
+  <tabstop>cmdColor_1</tabstop>
   <tabstop>txtMin_1</tabstop>
   <tabstop>txtMax_1</tabstop>
   <tabstop>txtComment</tabstop>
   <tabstop>chkVisible_2</tabstop>
   <tabstop>cboVariable_2</tabstop>
-  <tabstop>cboColor_2</tabstop>
+  <tabstop>cmdColor_2</tabstop>
   <tabstop>txtMin_2</tabstop>
-  <tabstop>txtMax_2</tabstop>
-  <tabstop>txtComment_2</tabstop>
   <tabstop>chkVisible_3</tabstop>
   <tabstop>cboVariable_3</tabstop>
-  <tabstop>cboColor_3</tabstop>
   <tabstop>txtMin_3</tabstop>
   <tabstop>txtMax_3</tabstop>
   <tabstop>txtComment_3</tabstop>
   <tabstop>chkVisible_4</tabstop>
   <tabstop>cboVariable_4</tabstop>
-  <tabstop>cboColor_4</tabstop>
   <tabstop>txtMin_4</tabstop>
   <tabstop>txtMax_4</tabstop>
   <tabstop>txtComment_4</tabstop>
   <tabstop>cmdImport</tabstop>
   <tabstop>cmdUndo</tabstop>
   <tabstop>cmdSave</tabstop>
+  <tabstop>txtComment_2</tabstop>
+  <tabstop>txtMax_2</tabstop>
+  <tabstop>cmdColor_3</tabstop>
+  <tabstop>cmdColor_4</tabstop>
  </tabstops>
  <resources/>
  <connections/>

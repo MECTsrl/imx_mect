@@ -3227,16 +3227,21 @@ void ctedit::on_cmdPLC_clicked()
     // Search Path of PLC Application
     lstArguments.clear();
     if (! szPathPLCApplication.isEmpty())  {
+        // qDebug() << tr("Env. %1 Variable: <%2>") .arg(szPLCEnvVar) .arg(szPathPLCApplication);
         // To be modified with specifics of PLC Application
         szTemp = QString::fromAscii("%1");
         // Remove %1
         szPathPLCApplication.remove(szTemp, Qt::CaseInsensitive);
         // Remove doublequote
         szPathPLCApplication.remove(szDOUBLEQUOTE, Qt::CaseInsensitive);
+        szPathPLCApplication = szPathPLCApplication.trimmed();
+        // qDebug() << tr("Editor PLC: <%1>") .arg(szPathPLCApplication);
         // Build PLC Editor Application command
         QFileInfo plcExe(szPathPLCApplication);
-        if (plcExe.exists())
+        if (plcExe.exists())  {
             szPLCEngPath = plcExe.absolutePath();
+            qDebug() << tr("Path PLC: <%1>") .arg(szPLCEngPath);
+        }
         szCommand = szPathPLCApplication;
         // Enclose command with double quote
         // szCommand.append(szDOUBLEQUOTE);
@@ -3250,9 +3255,9 @@ void ctedit::on_cmdPLC_clicked()
         // qDebug() << "PLC File: " << szTemp;
         QFile plcPro(szTemp);
         if (! plcPro.exists())  {
-            m_szMsg = tr("PLC Project File Not Found\n");
-            m_szMsg.append(szTemp);
+            m_szMsg = tr("PLC Project File Not Found:\n<%1>") .arg(szTemp);
             warnUser(this, szTitle, m_szMsg);
+            fprintf(stderr, "%s\n", m_szMsg.toAscii().data());
             goto endStartPLC;
         }
         // Verifica e Lancio Engineering

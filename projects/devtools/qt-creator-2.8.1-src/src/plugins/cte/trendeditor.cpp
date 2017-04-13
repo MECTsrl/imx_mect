@@ -6,6 +6,7 @@ TrendEditor::TrendEditor(QWidget *parent) :
     ui(new Ui::TrendEditor)
 {
     ui->setupUi(this);
+    // Filling Fixed Combos
 }
 
 TrendEditor::~TrendEditor()

@@ -17,6 +17,7 @@ public:
 
 private:
     Ui::TrendEditor *ui;
+    QStringList lstOrientation;
 };
 
 #endif // TRENDEDITOR_H

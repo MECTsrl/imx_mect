@@ -188,7 +188,7 @@ endif
 	mkdir -p "$(QTT_RPMROOT)/tmprpmdb"
 	sudo rm -rf "$(QTT_RPMROOT)"
 	sudo rpm --force-debian --root $(QTT_RPMROOT) --dbpath tmprpmdb --ignorearch -ivh --force --nodeps --excludedocs $(QTT_RPM)
-	sudo chown -R $(USER) "$(QTT_RPMROOT)"
+	sudo chown -R $(LOGNAME) "$(QTT_RPMROOT)"
 	mv "$(QTT_RPMROOT)/opt/freescale/rootfs/arm/usr" "$(QTT_RPMROOT)/opt/freescale/rootfs/arm/$(EMB_DIR)"
 	cp -aL --reflink=auto "$(QTT_RPMROOT)/opt/freescale/rootfs/arm/$(EMB_DIR)" "$(INSTALLDST)"
 	for d in /usr/include /usr/lib /lib /usr/src/linux/include; do \
@@ -259,7 +259,7 @@ endif
 	#
 	# NSIS install archive
 	rm -f "$(ARCHNAME)"
-	archive="`pwd`/$(ARCHNAME)"; cd $(INSTALLDST); sudo zip -$(ZCF)r "$$archive" *; sudo chown $$USER "$$archive"
+	archive="`pwd`/$(ARCHNAME)"; cd $(INSTALLDST); sudo zip -$(ZCF)r "$$archive" *; sudo chown $$LOGNAME "$$archive"
 	#
 	# MECT apps archive
 	test -d $(MECTAPPS_DIR)

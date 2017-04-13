@@ -249,10 +249,10 @@ CANnoError:
 APPSnoError:
     delete '$TEMP\${MECTAPPSBALL}'
     ClearErrors
-    rmDir /r '$INSTDIR\MectApps'
+    rmDir /r '$INSTDIR\${MECTAPPS_DIR}'
     execWait 'xcopy "$TEMP\MECTAPPS_TMPDIR" "$INSTDIR\" /E /Y /B'
     ifErrors 0 COPYAPPSnoError
-	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing in$\n$INSTDIR\MectApps$\n$\nPress OK to abort the installation.'
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing in$\n$INSTDIR\${MECTAPPS_DIR}$\n$\nPress OK to abort the installation.'
 	quit
 COPYAPPSnoError:
     rmDir /r "$TEMP\MECTAPPS_TMPDIR"
@@ -511,7 +511,7 @@ FONTINnoError:
     execWait 'xcopy "$INSTDIR\${QTPROJECT}" "$INSTDIR\${QTPROJECT}-default\" /E /Y /B'
     # Correct file attributes
     delete "$INSTDIR\${QTPROJECT}"
-    execWait 'xcopy "$INSTDIR\${QTPROJECT}-default" "$INSTDIR\${QTPROJECT}\" /E /Y /B'
+    execWait 'robocopy "$INSTDIR\${QTPROJECT}-default" "$INSTDIR\${QTPROJECT}\" /E /S '
 
     # Configure the host Qt and Qt Creator.
     #
@@ -543,7 +543,7 @@ FONTINnoError:
     fileWrite $9 "    sed -i 's|@@_QT_INSTALL_DIR_@@|$UNIXINSTDIR/${QTH_DIR}|' $$f$\n"
     fileWrite $9 'done$\n'
     fileWrite $9 '$\n'
-    fileWrite $9 'cd "C:\${MECTAPPS_DIR}"$\n'
+    fileWrite $9 'cd "$INSTDIR\${MECTAPPS_DIR}"$\n'
     fileWrite $9 'for f in $$(find . -type f -name systemicons.qrc -print); do$\n'
     fileWrite $9 "    sed -i 's|@@_MECTAPPS_SYSTEMICONS_PREFIX_@@|$UNIXINSTDIR/${QTC_DIR}|' $$f$\n"
     fileWrite $9 'done$\n'
@@ -686,7 +686,7 @@ section "uninstall"
     rmDir /r "$INSTDIR\${QTH_ARM_DIR}"
     rmDir /r "$INSTDIR\${MINGW_DIR}"
     rmDir /r "$INSTDIR\${CAN_DIR}"
-    rmDir /r "C:\${MECTAPPS_DIR}"
+    rmDir /r "$INSTDIR\${MECTAPPS_DIR}"
     rmDir /r "$INSTDIR\${QTPROJECT}"
     rmDir /r "$INSTDIR\${QTPROJECT}-default"
 

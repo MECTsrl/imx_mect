@@ -3248,9 +3248,11 @@ void ctedit::on_cmdPLC_clicked()
             warnUser(this, szTitle, m_szMsg);
         }
         else  {
-            // Enclose parameter with double quote
-            szTemp.append(szDOUBLEQUOTE);
-            szTemp.prepend(szDOUBLEQUOTE);
+            // Convert File Path to Opertatin System Native Style
+            szTemp = QDir::toNativeSeparators(szTemp);
+            // Enclose parameter with double quote (MayBe done by QProcess)
+            //szTemp.append(szDOUBLEQUOTE);
+            //szTemp.prepend(szDOUBLEQUOTE);
             lstArguments.append(szTemp);
             // Imposta come Directory corrente di esecuzione la directory del File PLC
             procPLC.setWorkingDirectory(m_szCurrentPLCPath);
@@ -3259,14 +3261,15 @@ void ctedit::on_cmdPLC_clicked()
             qDebug() << szCommand + szSpace(1) + szTemp;
             notifyUser(this, szTitle, m_szMsg);
             if (! procPLC.startDetached(szCommand, lstArguments, m_szCurrentPLCPath, &pidPLC))  {
-                m_szMsg = tr("Error Starting PLC Compiler!\n");
+                QProcess::ProcessError errPlc = procPLC.error();
+                m_szMsg = tr("Error Starting PLC Engineering: %1\n") .arg(errPlc);
                 m_szMsg.append(szCommand);
                 warnUser(this, szTitle, m_szMsg);
             }
         }
     }
     else  {
-        m_szMsg = tr("Reference to Application PLC Compiler %1 Not Found!\n") .arg(szPLCEnvVar);
+        m_szMsg = tr("Reference to Application PLC Engineering %1 Not Found!\n") .arg(szPLCEnvVar);
         m_szMsg.append(szCommand);
         warnUser(this, szTitle, m_szMsg);
     }

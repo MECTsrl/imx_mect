@@ -249,10 +249,10 @@ CANnoError:
 APPSnoError:
     delete '$TEMP\${MECTAPPSBALL}'
     ClearErrors
-    rmDir /r 'C:\MectApps'
-    execWait 'xcopy "$TEMP\MECTAPPS_TMPDIR" "C:\" /E /Y /B'
+    rmDir /r '$INSTDIR\MectApps'
+    execWait 'xcopy "$TEMP\MECTAPPS_TMPDIR" "$INSTDIR\" /E /Y /B'
     ifErrors 0 COPYAPPSnoError
-	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing in$\nC:\MectApps$\n$\nPress OK to abort the installation.'
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing in$\n$INSTDIR\MectApps$\n$\nPress OK to abort the installation.'
 	quit
 COPYAPPSnoError:
     rmDir /r "$TEMP\MECTAPPS_TMPDIR"
@@ -509,6 +509,9 @@ FONTINnoError:
     delete "${QTPRJSETUPSH}"
     delete "${QTPRJSETUPBAT}"
     execWait 'xcopy "$INSTDIR\${QTPROJECT}" "$INSTDIR\${QTPROJECT}-default\" /E /Y /B'
+    # Correct file attributes
+    delete "$INSTDIR\${QTPROJECT}"
+    execWait 'xcopy "$INSTDIR\${QTPROJECT}-default" "$INSTDIR\${QTPROJECT}\" /E /Y /B'
 
     # Configure the host Qt and Qt Creator.
     #

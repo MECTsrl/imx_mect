@@ -74,7 +74,7 @@ const QString szPLCExt = QString::fromAscii(".4cp");
 const QString szPLCDir = QString::fromAscii("plc");
 const QString szINIFILE = QString::fromAscii("system.ini");
 // Version Number
-const QString szVERSION = QString::fromAscii("Ver. 1.0.0 @ 2017-04-13");
+const QString szVERSION = QString::fromAscii("Ver. 1.0.0 @ 2017-04-14");
 
 enum colonne_e
 {
@@ -119,6 +119,7 @@ ctedit::ctedit(QWidget *parent) :
     ui->lblModel->setToolTip(szVERSION);
     // Liste di servizio
     lstUsedVarNames.clear();
+    lstLoggedVars.clear();
     lstUndo.clear();
     lstCTErrors.clear();
     //------------------------
@@ -193,8 +194,13 @@ ctedit::ctedit(QWidget *parent) :
     for (nCol = Htype; nCol <= Xtype; nCol++)  {
         lstUpdateNames.append(QString::fromAscii(updateTypeName[nCol]));
         lstAllUpdates.append(nCol);
+        // Esclude dalla lista solo le variabili H
         if (nCol != Htype)  {
-            lstNoHUpdates.append(nCol);
+            lstNoHUpdates.append(nCol);            
+        }
+        // Esclude dalla lista le H e P
+        if (nCol != Htype && nCol != Ptype)  {
+            lstLogUpdates.append(nCol);
         }
     }
     // Lista TIPI Variabili
@@ -506,6 +512,10 @@ bool    ctedit::selectCTFile(QString szFileCT)
         m_fCutOrPaste = false;
         // Se tutto Ok, carica anche le impostazioni del file INI
         mectSet->loadProjectFiles(m_szCurrentCTPath + szINIFILE, m_szCurrentProjectPath + szSLASH + m_szCurrentProjectName, m_szCurrentProjectPath + szSLASH, nModel);
+        // Se tutto Ok, carica anche il primo trend utile
+        trendEdit->updateVarLists(lstLoggedVars);
+        trendEdit->setTrendsPath(m_szCurrentCTPath);
+        // Abilita interfaccia
         enableInterface();
     }
     return fRes;
@@ -595,6 +605,7 @@ bool    ctedit::ctable2Grid()
 
     lstFields.clear();
     lstUsedVarNames.clear();
+    lstLoggedVars.clear();
     // Preparazione tabella
     this->setCursor(Qt::WaitCursor);
     ui->tblCT->setEnabled(false);
@@ -630,7 +641,10 @@ bool    ctedit::ctable2Grid()
         ui->cmdSave->setEnabled(true);
         // ui->cmdSave->setEnabled(m_isCtModified);
         showAllRows(m_fShowAllRows);
+        // Aggiorna le liste delle variabili
         fillVarList(lstUsedVarNames, lstAllVarTypes, lstAllUpdates);
+        fillVarList(lstLoggedVars, lstAllVarTypes, lstLogUpdates);
+
     }
     else  {
         qDebug() << tr("Error Loading Rows");
@@ -906,6 +920,7 @@ bool ctedit::iface2values(QStringList &lstRecValues)
 {
     QString szTemp;
     int     nPos = 0;
+    int     nUpdate = -1;
 
     // Pulizia Buffers
     szTemp.clear();
@@ -918,21 +933,30 @@ bool ctedit::iface2values(QStringList &lstRecValues)
         szTemp = szEMPTY;
     lstRecValues[colPriority] = szTemp.trimmed();
     // Update colUpdate
-    nPos = ui->cboUpdate->currentIndex();
-    if (nPos >= 0 && nPos < lstUpdateNames.count())
-        szTemp = ui->cboUpdate->itemData(nPos).toString();
+    nUpdate = ui->cboUpdate->currentIndex();
+    if (nUpdate >= 0 && nPos < lstUpdateNames.count())
+        szTemp = ui->cboUpdate->itemData(nUpdate).toString();
     else
         szTemp = szEMPTY;
     lstRecValues[colUpdate] = szTemp;
     // Name
     szTemp = ui->txtName->text().trimmed();
     lstRecValues[colName] = szTemp;
-    // Update Used Variable List
+    // Update Used and Logged Variable List
     if (! szTemp.isEmpty())  {
+        // Aggiorna la lista delle variabili utilizzate
         nPos = lstUsedVarNames.indexOf(szTemp);
         if (nPos < 0)  {
             lstUsedVarNames.append(szTemp);
             lstUsedVarNames.sort();
+        }
+        // Aggiorna la lista delle Variabili loggate
+        if (nUpdate != Htype && nUpdate != Ptype)  {
+            nPos = lstLoggedVars.indexOf(szTemp);
+            if (nPos < 0)  {
+                lstLoggedVars.append(szTemp);
+                lstLoggedVars.sort();
+            }
         }
     }
     // Type colType
@@ -2444,6 +2468,10 @@ void ctedit::on_cmdUndo_clicked()
 void ctedit::tabSelected(int nTab)
 // Change current Tab
 {
+    if (nTab == TAB_TREND) {
+        trendEdit->updateVarLists(lstLoggedVars);
+    }
+    // Set Current Tab
     m_nCurTab = nTab;
 }
 void ctedit::enableInterface()

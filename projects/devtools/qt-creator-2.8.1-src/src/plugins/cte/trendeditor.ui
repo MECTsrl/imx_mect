@@ -45,9 +45,9 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="QPushButton" name="cmdImport">
+       <widget class="QPushButton" name="cmdLoad">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="minimumSize">
          <size>
@@ -72,45 +72,7 @@
          <string>Import User Data from another Cross Table File</string>
         </property>
         <property name="text">
-         <string>Import</string>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="cmdUndo">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>72</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>72</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <family>MS Shell Dlg 2</family>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="toolTip">
-         <string>Undo Changes</string>
-        </property>
-        <property name="text">
-         <string>Undo</string>
+         <string>Load</string>
         </property>
         <property name="checkable">
          <bool>false</bool>
@@ -169,6 +131,12 @@
        <height>80</height>
       </size>
      </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>80</height>
+      </size>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -187,7 +155,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Trend Name</string>
+           <string>Trend File Name:</string>
           </property>
           <property name="buddy">
            <cstring>txtTrendName</cstring>
@@ -196,6 +164,9 @@
         </item>
         <item>
          <widget class="QLineEdit" name="txtTrendName">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="minimumSize">
            <size>
             <width>130</width>
@@ -377,6 +348,9 @@
           <property name="text">
            <string/>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
           <property name="buddy">
            <cstring>cmdColor_1</cstring>
           </property>
@@ -507,12 +481,12 @@
            <string>Description</string>
           </property>
           <property name="buddy">
-           <cstring>txtComment</cstring>
+           <cstring>txtComment_1</cstring>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="txtComment">
+         <widget class="QLineEdit" name="txtComment_1">
           <property name="minimumSize">
            <size>
             <width>130</width>
@@ -650,6 +624,9 @@
           </property>
           <property name="text">
            <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
           <property name="buddy">
            <cstring>cmdColor_2</cstring>
@@ -925,6 +902,9 @@
           <property name="text">
            <string/>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
           <property name="buddy">
            <cstring>cmdColor_3</cstring>
           </property>
@@ -1199,6 +1179,9 @@
           <property name="text">
            <string/>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
           <property name="buddy">
            <cstring>cmdColor_4</cstring>
           </property>
@@ -1368,7 +1351,7 @@
   <tabstop>cmdColor_1</tabstop>
   <tabstop>txtMin_1</tabstop>
   <tabstop>txtMax_1</tabstop>
-  <tabstop>txtComment</tabstop>
+  <tabstop>txtComment_1</tabstop>
   <tabstop>chkVisible_2</tabstop>
   <tabstop>cboVariable_2</tabstop>
   <tabstop>cmdColor_2</tabstop>
@@ -1383,8 +1366,7 @@
   <tabstop>txtMin_4</tabstop>
   <tabstop>txtMax_4</tabstop>
   <tabstop>txtComment_4</tabstop>
-  <tabstop>cmdImport</tabstop>
-  <tabstop>cmdUndo</tabstop>
+  <tabstop>cmdLoad</tabstop>
   <tabstop>cmdSave</tabstop>
   <tabstop>txtComment_2</tabstop>
   <tabstop>txtMax_2</tabstop>

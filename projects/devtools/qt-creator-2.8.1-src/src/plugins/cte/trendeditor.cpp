@@ -6,13 +6,35 @@
 #include <QColorDialog>
 #include <QPalette>
 #include <QDebug>
+#include <QCheckBox>
+#include <QLineEdit>
 #include <QLabel>
 #include <QComboBox>
+#include <QFile>
+#include <QTextStream>
+#include <QValidator>
+#include <QDoubleValidator>
 
 const int nTrk1 = 1;
 const int nTrk2 = 2;
 const int nTrk3 = 3;
 const int nTrk4 = 4;
+
+
+
+const QString szTREND1FILE = QString::fromAscii("trend1.csv");
+const QString szDEFCOLOR = QString::fromAscii("palegreen");
+
+enum trendFields
+{   nTrendVisible = 0,
+    nTrendVarName,
+    nTrendColor,
+    nTrendMin,
+    nTrendMax,
+    nTrendDescr,
+    nTrendTotal
+};
+
 
 TrendEditor::TrendEditor(QWidget *parent) :
     QWidget(parent),
@@ -24,13 +46,19 @@ TrendEditor::TrendEditor(QWidget *parent) :
     mapOrientation.insert(QString::fromAscii("P"), trUtf8("Portrait"));
     mapOrientation.insert(QString::fromAscii("L"), trUtf8("Landscape"));
     ui->cboOrientation->addItems(mapOrientation.values());
-    /*
-    for (nCur = 0; nCur < mapOrientation.count(); nCur++)  {
-        ui->cboOrientation->addItem(mapOrientation.value(i));
-    }
-    */
-    // Combo Colori ???
-
+    ui->cboOrientation->setCurrentIndex(-1);
+    // Validators
+    ui->txtMin_1->setValidator(new QDoubleValidator(this));
+    ui->txtMin_2->setValidator(new QDoubleValidator(this));
+    ui->txtMin_3->setValidator(new QDoubleValidator(this));
+    ui->txtMin_4->setValidator(new QDoubleValidator(this));
+    ui->txtMax_1->setValidator(new QDoubleValidator(this));
+    ui->txtMax_2->setValidator(new QDoubleValidator(this));
+    ui->txtMax_3->setValidator(new QDoubleValidator(this));
+    ui->txtMax_4->setValidator(new QDoubleValidator(this));
+    // Path & file infos
+    m_szTrendFile.clear();
+    m_szTrendPath.clear();
 }
 
 TrendEditor::~TrendEditor()
@@ -58,6 +86,7 @@ void TrendEditor::updateVarLists(const QStringList &lstTrendVars)
         else if (nCur == nTrk4)  {
             cboVar = ui->cboVariable_4;
         }
+        qDebug() << tr("Updated Variables Combo: %1") .arg(nCur);
         // Retrieve Current Item selected if Any
         szCurVar = cboVar->currentText();
         // Update Varlist
@@ -125,34 +154,217 @@ bool    TrendEditor::getNewColor(int nTrack)
             qDebug() << tr("Color valid: %1") .arg(szColor);
         }
         else {
-            cColor = QColor(QString::fromAscii("crimson"));
+            cColor = QColor(szDEFCOLOR);
             qDebug() << tr("Color invalid: %1 forced to: %2") .arg(szColor) .arg(cColor.name());
         }
     }
     if (! cColor.isValid()) {
-        cColor = QColor(QString::fromAscii("palegreen"));
+        cColor = QColor(szDEFCOLOR);
     }
     // Open Color Dialog to select New Color
     newColor = QColorDialog::getColor(cColor, this, tr("Select Track %1 Color") .arg(nTrack));
     // Set New Color to Label
     if (newColor.isValid() && destLabel != 0)  {
-        QPalette    palLabel = destLabel->palette();
-        palLabel.setColor(destLabel->backgroundRole(), newColor);
-        destLabel->setAutoFillBackground(true);
-        destLabel->setPalette(palLabel);
-        // Update Label content
-        szColor = newColor.name();
-        szColor.remove(szSHARP);
-        destLabel->setText(szColor);
+        setLabelColor(destLabel, newColor);
         fRes = true;
     }
+    return fRes;
+}
+bool TrendEditor::tokens2Iface(const QStringList &lstTokens, int nRow)
+// Da CSV Tokens ad interfaccia
+{
+    // Puntatori ad oggetto interfaccia del Trend corrente
+    QCheckBox       *chkVisible = 0;
+    QComboBox       *cboVariable = 0;
+    QLabel          *lblColor = 0;
+    QLineEdit       *txtMin = 0;
+    QLineEdit       *txtMax = 0;
+    QLineEdit       *txtComment = 0;
+    // Variabili di supporto per verifica valori
+    QString         szTemp;
+    double          dblVal = 0.0;
+    int             nVal = 0;
+    bool            fOK = false;
+    QColor          cColTrend;
+    bool            fRes = true;
+
+
+    // Assegnazione delle caselle di lavoro
+    if (nRow == nTrk1)  {
+        chkVisible = ui->chkVisible_1;
+        cboVariable = ui->cboVariable_1;
+        lblColor = ui->lblColor_1;
+        txtMin = ui->txtMin_1;
+        txtMax = ui->txtMax_1;
+        txtComment = ui->txtComment_1;
+    } 
+    else if (nRow == nTrk2)  {
+        chkVisible = ui->chkVisible_2;
+        cboVariable = ui->cboVariable_2;
+        lblColor = ui->lblColor_2;
+        txtMin = ui->txtMin_2;
+        txtMax = ui->txtMax_2;
+        txtComment = ui->txtComment_2;
+    } 
+    else if (nRow == nTrk3)  {
+        chkVisible = ui->chkVisible_3;
+        cboVariable = ui->cboVariable_3;
+        lblColor = ui->lblColor_3;
+        txtMin = ui->txtMin_3;
+        txtMax = ui->txtMax_3;
+        txtComment = ui->txtComment_3;
+    } 
+    else if (nRow == nTrk4)  {        
+        chkVisible = ui->chkVisible_4;
+        cboVariable = ui->cboVariable_4;
+        lblColor = ui->lblColor_4;
+        txtMin = ui->txtMin_4;
+        txtMax = ui->txtMax_4;
+        txtComment = ui->txtComment_4;
+    }
+    // Check Visible
+    nVal = lstTokens[nTrendVisible].toInt(&fOK);
+    if (fOK)  {
+        fOK = nVal == 1;
+        chkVisible->setChecked(fOK);
+    }
+    else
+        chkVisible->setChecked(false);
+    // Var Name
+    nVal = cboVariable->findText(lstTokens[nTrendVarName]);
+    if (nVal >= 0 && nVal < cboVariable->count())
+        cboVariable->setCurrentIndex(nVal);
+    else
+        cboVariable->setCurrentIndex(-1);
+    // Color Trend
+    szTemp = lstTokens[nTrendColor];
+    if (!szTemp.isEmpty())  {
+        szTemp.prepend(szSHARP);
+        if (QColor::isValidColor(szTemp))  {
+            cColTrend.setNamedColor(szTemp);
+        }
+    }
+    if (! cColTrend.isValid())
+        cColTrend.setNamedColor(szDEFCOLOR);
+    setLabelColor(lblColor, cColTrend);
+    // MinValue
+    dblVal = lstTokens[nTrendMin].toDouble(&fOK);
+    dblVal = fOK ? dblVal : 0.0;
+    szTemp = QString::number(dblVal, 'f', 3);
+    txtMin->setText(szTemp);
+    // MaxValue
+    dblVal = lstTokens[nTrendMax].toDouble(&fOK);
+    dblVal = fOK ? dblVal : 0.0;
+    szTemp = QString::number(dblVal, 'f', 3);
+    txtMax->setText(szTemp);
+    // Comment
+    txtComment->setText(lstTokens[nTrendDescr]);
+    // Return value
+    return fRes;
+}
+bool TrendEditor::iface2Tokens(QStringList &lstTokens, int nRow)
+// Da Interfaccia a List per scrittura CSV
+{
+    bool            fRes = false;
+    // Puntatori ad oggetto interfaccia del Trend corrente
+    QCheckBox       *chkVisible = 0;
+    QComboBox       *cboVariable = 0;
+    QLabel          *lblColor = 0;
+    QLineEdit       *txtMin = 0;
+    QLineEdit       *txtMax = 0;
+    QLineEdit       *txtComment = 0;
+
+
+    // Assegnazione delle caselle di lavoro
+    if (nRow == nTrk1)  {
+        chkVisible = ui->chkVisible_1;
+        cboVariable = ui->cboVariable_1;
+        lblColor = ui->lblColor_1;
+        txtMin = ui->txtMin_1;
+        txtMax = ui->txtMax_1;
+        txtComment = ui->txtComment_1;
+    }
+    else if (nRow == nTrk2)  {
+        chkVisible = ui->chkVisible_2;
+        cboVariable = ui->cboVariable_2;
+        lblColor = ui->lblColor_2;
+        txtMin = ui->txtMin_2;
+        txtMax = ui->txtMax_2;
+        txtComment = ui->txtComment_2;
+    }
+    else if (nRow == nTrk3)  {
+        chkVisible = ui->chkVisible_3;
+        cboVariable = ui->cboVariable_3;
+        lblColor = ui->lblColor_3;
+        txtMin = ui->txtMin_3;
+        txtMax = ui->txtMax_3;
+        txtComment = ui->txtComment_3;
+    }
+    else if (nRow == nTrk4)  {
+        chkVisible = ui->chkVisible_4;
+        cboVariable = ui->cboVariable_4;
+        lblColor = ui->lblColor_4;
+        txtMin = ui->txtMin_4;
+        txtMax = ui->txtMax_4;
+        txtComment = ui->txtComment_4;
+    }
+    // Salvataggio dei valori su Lista Tokens
+    lstTokens.clear();
+
+    // Return value
     return fRes;
 }
 bool TrendEditor::trendFile2Iface(const QString &szFileTrend)
 // Load a trends file in Interface Fields
 {
-    bool fRes = false;
+    bool            fRes = false;
+    QFile           fSource(szFileTrend);
+    QString         szLine;
+    QStringList     lstTokens;
+    int             nPos = -1;
+    int             nRow = 1;
 
+    if (fSource.exists())  {
+        fSource.open(QIODevice::ReadOnly | QIODevice::Text);
+        if (fSource.isOpen())  {
+            QTextStream txtTrend(&fSource);
+            // Legge la prima riga per l'orientamento del Trend
+            if (!txtTrend.atEnd())  {
+                szLine = txtTrend.readLine().trimmed();
+                if (! szLine.isEmpty())  {
+                    if (mapOrientation.contains(szLine))  {
+                        szLine = mapOrientation.value(szLine);
+                        nPos = ui->cboOrientation->findText(szLine, Qt::MatchFixedString);
+                    }
+                }
+            }
+            if (nPos >= 0 && nPos < ui->cboOrientation->count())
+                ui->cboOrientation->setCurrentIndex(nPos);
+            else
+                ui->cboOrientation->setCurrentIndex(-1);
+            // Cerca nel file le altre 4 righe 1 per ogni trend
+            while(! txtTrend.atEnd() && nRow <= nTrk4) {
+                szLine = txtTrend.readLine().trimmed();
+                // Divide la riga letta in Tokens
+                lstTokens = szLine.split(szSEMICOL);
+                if (lstTokens.count() >= nTrendTotal)  {
+                    // Trim dei Tokens
+                    for (nPos = 0; nPos < lstTokens.count(); nPos++)
+                        lstTokens[nPos] = lstTokens[nPos].trimmed();
+                    // Tokens ad elementi interfaccia
+                    fRes = tokens2Iface(lstTokens, nRow);
+                }
+                else
+                    fRes = false;
+                if (! fRes)
+                    break;
+                // Next Line
+                nRow++;
+            }
+            // Close File
+            fSource.close();
+        }
+    }
     // Return value
     return fRes;
 }
@@ -163,4 +375,47 @@ bool TrendEditor::iface2TrendFile(const QString &szFileTrend)
 
     // Return value
     return fRes;
+}
+
+void TrendEditor::on_cmdLoad_clicked()
+{
+
+}
+
+void TrendEditor::on_cmdSave_clicked()
+{
+
+}
+void TrendEditor::setTrendsPath(const QString &szTrendsPath)
+{
+    QString         szNewTrendFile;
+
+    m_szTrendPath = szTrendsPath;
+    if (m_szTrendFile.isEmpty())  {
+        szNewTrendFile = m_szTrendPath;
+        szNewTrendFile.append(szTREND1FILE);
+        QFile fTrend(szNewTrendFile);
+        if (fTrend.exists())  {
+            if (trendFile2Iface(szNewTrendFile))  {
+                m_szTrendFile = szNewTrendFile;
+                ui->txtTrendName->setText(szNewTrendFile);
+            }
+        }
+    }
+}
+void TrendEditor::setLabelColor(QLabel *destLabel, QColor newColor)
+{
+    QString     szColor;
+
+    if (destLabel != 0 && newColor.isValid())  {
+        QPalette    palLabel = destLabel->palette();
+        palLabel.setColor(destLabel->backgroundRole(), newColor);
+        destLabel->setAutoFillBackground(true);
+        destLabel->setPalette(palLabel);
+        // Update Label content
+        szColor = newColor.name();
+        szColor.remove(szSHARP);
+        szColor = szColor.toUpper();
+        destLabel->setText(szColor);
+    }
 }

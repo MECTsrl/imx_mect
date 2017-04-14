@@ -27,10 +27,6 @@
 #include <QCoreApplication>
 #include "utils.h"
 
-const  char         cDoubleQuote = 34;      // Carattere "
-const  char         cSingleQuote = 39;      // '
-const  char         cSpace = 32;            // Blank
-const  char         cZero = 48;             // Zero
 
 QString szSpace(int nSpaces)
 // Ritorna una stringa di nSpaces Spazio o vuota se nSpaces <= 0

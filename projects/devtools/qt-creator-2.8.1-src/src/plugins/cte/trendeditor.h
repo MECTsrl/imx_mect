@@ -23,15 +23,20 @@ public:
 signals:
 
 public slots:
+    void updateVarLists(const QStringList &lstTrendVars);
 
 private slots:
 
+    void on_cmdColor_1_clicked();
+    void on_cmdColor_2_clicked();
+    void on_cmdColor_3_clicked();
+    void on_cmdColor_4_clicked();
 
 private:
     //---------------------------------------------------------------------
     // Funzioni locali al modulo
     //---------------------------------------------------------------------
-
+    bool    getNewColor(int nTrack);
     //---------------------------------------------------------------------
     // Variabili varie
     //---------------------------------------------------------------------

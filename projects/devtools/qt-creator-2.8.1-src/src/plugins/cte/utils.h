@@ -6,6 +6,28 @@
 #include <QTableWidgetItem>
 #include <QComboBox>
 
+
+// QChar Constants
+const QChar   chDOUBLEQUOTE = QChar::fromAscii(34);
+const QChar   chSpace = QChar::fromAscii(20);
+
+// String Costants
+const QString szEMPTY = QString::fromAscii("");
+const QString szZERO = QString::fromAscii("0");
+const QString szSEMICOL = QString::fromAscii(";");
+const QString szSLASH = QString::fromAscii("/");
+const QString szBACKSLASH = QString::fromAscii("\\");
+const QString szNEWLINE = QString::fromAscii("\n");
+const QString szDOUBLEQUOTE = QString(1, chDOUBLEQUOTE);
+const QString szSHARP = QString::fromAscii("#");
+
+
+const  char     cDoubleQuote = 34;      // Carattere "
+const  char     cSingleQuote = 39;      // '
+const  char     cSpace = 32;            // Blank
+const  char     cZero = 48;             // Zero
+
+
     QString     getPathFromFileName(const QString &fileName);               // Estrae il Path assoluto dal File Name ricevuto come parametro
     void        splitFileName(const QString &fileName, QString &szPath,
                        QString &szFile, QString &szSuffisso);               // Spezza un file name nelle sue componenti Path, Nome File, Suffisso

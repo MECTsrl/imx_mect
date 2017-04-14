@@ -32,6 +32,8 @@
 #include <QTextStream>
 #include <QProcessEnvironment>
 #include <QVBoxLayout>
+#include <QDesktopServices>
+#include <QUrl>
 
 /* ----  Local Defines:   ----------------------------------------------------- */
 #define _TRUE  1
@@ -57,15 +59,6 @@
 
 #undef  WORD_BIT
 
-// String Costants
-const QString szEMPTY = QString::fromAscii("");
-const QString szZERO = QString::fromAscii("0");
-const QString szSEMICOL = QString::fromAscii(";");
-const QString szSLASH = QString::fromAscii("/");
-const QString szBACKSLASH = QString::fromAscii("\\");
-const QString szNEWLINE = QString::fromAscii("\n");
-const QChar   chDOUBLEQUOTE = QChar::fromAscii(34);
-const QString szDOUBLEQUOTE = QString(1, chDOUBLEQUOTE);
 
 const QString szDEF_IP_PORT = QString::fromAscii("502");
 const QString szEMPTY_IP = QString::fromAscii("0.0.0.0");
@@ -76,6 +69,7 @@ const QString szEnvFile = QString::fromAscii("EnvVars.txt");
 const QString szPLCEnvVar = QString::fromAscii("PLCUNIXINSTPATH");
 const QString szProExt = QString::fromAscii(".pro");
 const QString szPLCFILE = QString::fromAscii("plc");
+// const QString szPLCExt = QString::fromAscii(".txt");
 const QString szPLCExt = QString::fromAscii(".4cp");
 const QString szPLCDir = QString::fromAscii("plc");
 const QString szINIFILE = QString::fromAscii("system.ini");
@@ -3222,8 +3216,6 @@ void ctedit::on_cmdPLC_clicked()
     QString     szTemp;
     QProcess    procPLC;
     // qint64      pidPLC;
-    int         nErr;
-    char        commandLine[COMMANDLINE];
 
     // Lista delle variabili d'ambiente per controllo configurazione
     lstEnv = QProcessEnvironment::systemEnvironment().toStringList();
@@ -3292,15 +3284,26 @@ void ctedit::on_cmdPLC_clicked()
             procPLC.setWorkingDirectory(szPLCEngPath);
             qDebug() << "Plc Path: " << szPLCEngPath;
             // Esecuzione Comando
+            szCommand = QDir::toNativeSeparators(szCommand);
             szCommand.append(szSpace(1));
             szCommand.append(szTemp);
-            m_szMsg = tr("Command: \n") + szCommand;
+            m_szMsg = tr("Url to Open: \n") + szTemp;
             qDebug() << m_szMsg;
             notifyUser(this, szTitle, m_szMsg);
+            // Tentativo 1: Open only File URL
+            bool fRes = false;
+            fRes = showFile(szTemp);
+            // Tentativo 2: Open URL of command & parameter
+            // fRes = QDesktopServices::openUrl(QUrl::fromLocalFile(szCommand));
+            if (!fRes)  {
+                m_szMsg = tr("Error Opening URL: %1\n") .arg(szTemp);
+                warnUser(this, szTitle, m_szMsg);
+                goto endStartPLC;
+            }
             // Preparazione comando per System
-            strcpy(commandLine, szCommand.toAscii().data());
-            nErr = system(commandLine);
-            qDebug() << tr("Result Code: %1") .arg(nErr);
+            // strcpy(commandLine, szCommand.toAscii().data());
+            // nErr = system(commandLine);
+            // qDebug() << tr("Result Code: %1") .arg(nErr);
             /* Sostituito da System ??
             if (! procPLC.startDetached(szCommand, lstArguments, m_szCurrentPLCPath, &pidPLC))  {
                 QProcess::ProcessError errPlc = procPLC.error();

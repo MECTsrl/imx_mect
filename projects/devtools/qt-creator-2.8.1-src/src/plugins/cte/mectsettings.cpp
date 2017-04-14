@@ -16,10 +16,6 @@
 #define MAX_SPACE_AVAILABLE_MAX 128
 #define LINE_SIZE 1024
 
-const QString szEMPTY = QString::fromAscii("");
-const QString szSEMICOL = QString::fromAscii(";");
-const QString szBACKSLASH = QString::fromAscii("\\");
-const QChar   chSpace = QChar::fromAscii(20);
 
 const QString szPAGE = QString::fromAscii("page");
 const QString szDEFLANG  = QString::fromAscii("it");

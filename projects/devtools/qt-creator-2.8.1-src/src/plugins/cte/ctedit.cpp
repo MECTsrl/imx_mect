@@ -3209,7 +3209,7 @@ int  ctedit::fillCompatibleTypesList(varTypes nTypeVar, QList<int> &lstTypes)
 void ctedit::on_cmdPLC_clicked()
 {
     QString     szPathPLCApplication;
-    QStringList lstEnv;
+    // QStringList lstEnv;
     QString     szCommand;
     QString     szPLCEngPath;
     QStringList lstArguments;
@@ -3217,6 +3217,8 @@ void ctedit::on_cmdPLC_clicked()
     QProcess    procPLC;
     // qint64      pidPLC;
 
+    // FIXME: Remove usage of PLC Env Variable
+    /*
     // Lista delle variabili d'ambiente per controllo configurazione
     lstEnv = QProcessEnvironment::systemEnvironment().toStringList();
     QFile   fEnv(m_szCurrentProjectPath + szSLASH + szEnvFile);
@@ -3234,6 +3236,7 @@ void ctedit::on_cmdPLC_clicked()
         }
         fEnv.close();
     }
+    */
     // Ricerca della variabile specifica per il lancio del PLC
     szPathPLCApplication = QProcessEnvironment::systemEnvironment().value(szPLCEnvVar, szEMPTY);
     // Search Path of PLC Application
@@ -3252,7 +3255,7 @@ void ctedit::on_cmdPLC_clicked()
         QFileInfo plcExe(szPathPLCApplication);
         if (plcExe.exists())  {
             szPLCEngPath = plcExe.absolutePath();
-            qDebug() << tr("Path PLC: <%1>") .arg(szPLCEngPath);
+            // qDebug() << tr("Path PLC: <%1>") .arg(szPLCEngPath);
         }
         szCommand = szPathPLCApplication;
         // Enclose command with double quote
@@ -3282,15 +3285,15 @@ void ctedit::on_cmdPLC_clicked()
             lstArguments.append(szTemp);
             // Imposta come Directory corrente di esecuzione la directory del File PLC
             procPLC.setWorkingDirectory(szPLCEngPath);
-            qDebug() << "Plc Path: " << szPLCEngPath;
+            // qDebug() << "Plc Path: " << szPLCEngPath;
             // Esecuzione Comando
             szCommand = QDir::toNativeSeparators(szCommand);
             szCommand.append(szSpace(1));
             szCommand.append(szTemp);
             m_szMsg = tr("Url to Open: \n") + szTemp;
             qDebug() << m_szMsg;
-            notifyUser(this, szTitle, m_szMsg);
-            // Tentativo 1: Open only File URL
+            // notifyUser(this, szTitle, m_szMsg);
+            // Tentativo 1: Open only File URL - Funziona !
             bool fRes = false;
             fRes = showFile(szTemp);
             // Tentativo 2: Open URL of command & parameter

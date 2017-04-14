@@ -36,7 +36,9 @@ private:
     //---------------------------------------------------------------------
     // Funzioni locali al modulo
     //---------------------------------------------------------------------
-    bool    getNewColor(int nTrack);
+    bool    getNewColor(int nTrack);                        // Show Color dialog to select new Track color
+    bool    trendFile2Iface(const QString &szFileTrend);    // Load a trends file in Interface Fields
+    bool    iface2TrendFile(const QString &szFileTrend);    // Write Interface Fields to a trends file
     //---------------------------------------------------------------------
     // Variabili varie
     //---------------------------------------------------------------------

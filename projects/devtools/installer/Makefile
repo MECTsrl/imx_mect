@@ -197,7 +197,7 @@ endif
 	done
 	#
 	# Qt Creator configuration template
-	cp -aL --reflink=auto QtProject "$(INSTALLDST)"
+	cp -aL --reflink=auto QtProject "$(INSTALLDST)/QtProject-template"
 	#
 	# MECT apps
 	rm -rf $(MECTAPPS_DESTDIR)
@@ -237,7 +237,7 @@ ifdef $(MYQTARM)
 else
 	# ./install-them-all/Qt-4.8.5-arm/mkspecs/linux-arm-gnueabi-g++/qmake.conf
 	grep -q 'QT_ROOTFS\s*=\s*$$$${QT_CREATOR_PATH}/imx28/rootfs' $(INSTALLDST)/Qt-4.8.5-arm/mkspecs/common/mect.conf
-	sed -i 's|QT_ROOTFS\s*=\s*$$$${QT_CREATOR_PATH}/imx28/rootfs|QT_ROOTFS = @@_MECT_QTTUNIX_INSTALL_DIR_@@/../target|' $(INSTALLDST)/Qt-4.8.5-arm/mkspecs/common/mect.conf
+	sed -i 's|QT_ROOTFS\s*=\s*$$$${QT_CREATOR_PATH}/imx28/rootfs|QT_ROOTFS = @@_MECT_QTTUNIX_INSTALL_DIR_@@|' $(INSTALLDST)/Qt-4.8.5-arm/mkspecs/common/mect.conf
 endif
 	#
 	# MECT apps

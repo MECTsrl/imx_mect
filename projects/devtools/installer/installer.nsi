@@ -446,7 +446,10 @@ FONTINnoError:
     fileWrite $9 'set MECT_QTH_INSTALL_DIR=$QTHUNIX_DIR$\r$\n'
     fileWrite $9 'set MECT_QTT_INSTALL_DIR=$EMBUNIX_DIR$\r$\n'
     fileWrite $9 "$\r$\n"
-    fileWrite $9 '"$INSTDIR\${QTC_DIR}\bin\qtcreator.exe" -settingspath "$INSTDIR"$\r$\n'
+    fileWrite $9 'If Not Exist "${ROAMINGAPPDATA}\${APPNAME}-${VERSION}\*" mkdir "${ROAMINGAPPDATA}\${APPNAME}-${VERSION}"$\r$\n'
+    fileWrite $9 'If Not Exist "${ROAMINGAPPDATA}\${APPNAME}-${VERSION}\${QTPROJECT}\*" xcopy "$INSTDIR\${QTPROJECT}-template" "${ROAMINGAPPDATA}\${APPNAME}-${VERSION}\${QTPROJECT}\" /E /Y /B$\r$\n'
+    fileWrite $9 "$\r$\n"
+    fileWrite $9 '"$INSTDIR\${QTC_DIR}\bin\qtcreator.exe" -settingspath "${ROAMINGAPPDATA}\${APPNAME}-${VERSION}"$\r$\n'
     fileWrite $9 "$\r$\n"
     fileWrite $9 "exit$\r$\n"
     fileClose $9
@@ -480,7 +483,7 @@ FONTINnoError:
     fileWrite $9 'set -x$\n'
     fileWrite $9 '$\n'
     fileWrite $9 'cd "$INSTDIR"$\n'
-    fileWrite $9 'for f in $$(find ${QTPROJECT} -type f -print); do$\n'
+    fileWrite $9 'for f in $$(find ${QTPROJECT}-template -type f -print); do$\n'
     fileWrite $9 "    sed -i '$\n"
     fileWrite $9 "        s|@@_TARGETCC_INSTALL_PATH_@@|$ARMCCUNIXINSTPATH|;$\n"
     fileWrite $9 "        s|@@_MECTSUITE_INSTALL_PATH_@@|$UNIXINSTDIR|;$\n"
@@ -508,10 +511,6 @@ FONTINnoError:
     # Clean up.
     delete "${QTPRJSETUPSH}"
     delete "${QTPRJSETUPBAT}"
-    execWait 'xcopy "$INSTDIR\${QTPROJECT}" "$INSTDIR\${QTPROJECT}-default\" /E /Y /B'
-    # Correct file attributes
-    delete "$INSTDIR\${QTPROJECT}"
-    execWait 'robocopy "$INSTDIR\${QTPROJECT}-default" "$INSTDIR\${QTPROJECT}\" /E /S '
 
     # Configure the host Qt and Qt Creator.
     #
@@ -603,12 +602,10 @@ FONTINnoError:
     fileWrite $9 'cd "$UNIXINSTDIR/${QTH_ARM_DIR}"$\n'
     fileWrite $9 'if test -d mkspecs/qws/linux-g++-mx; then$\n'
     fileWrite $9 "    sed -i 's|@@_MECT_QTTUNIX_INSTALL_DIR_@@|$EMBUNIX_DIR|g' mkspecs/qws/linux-g++-mx/qmake.conf$\n"
-    fileWrite $9 "    sed -i 's|C:|../../..|g' mkspecs/qws/linux-g++-mx/qmake.conf$\n"
     fileWrite $9 'fi$\n'
     fileWrite $9 '$\n'
     fileWrite $9 'if test -f mkspecs/common/mect.conf; then$\n'
     fileWrite $9 "    sed -i 's|@@_MECT_QTTUNIX_INSTALL_DIR_@@|$EMBUNIX_DIR|g' mkspecs/common/mect.conf$\n"
-    fileWrite $9 "    sed -i 's|C:|../../..|g' mkspecs/common/mect.conf$\n"
     fileWrite $9 'fi$\n'
     pop $9
     # Create the launcher batch script.
@@ -688,7 +685,7 @@ section "uninstall"
     rmDir /r "$INSTDIR\${CAN_DIR}"
     rmDir /r "$INSTDIR\${MECTAPPS_DIR}"
     rmDir /r "$INSTDIR\${QTPROJECT}"
-    rmDir /r "$INSTDIR\${QTPROJECT}-default"
+    rmDir /r "$INSTDIR\${QTPROJECT}-template"
 
     # Clean up the Start Menu.
     #

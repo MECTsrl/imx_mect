@@ -450,3 +450,11 @@ bool enableAndUnlockSignals(QWidget *widget)
     widget->setEnabled(true);
     return widget->blockSignals(false);
 }
+QColor getIdealTextColor(const QColor& rBackgroundColor)
+// Return an ideal label color, based on the given background color.
+{
+    const int THRESHOLD = 105;
+
+    int BackgroundDelta = (rBackgroundColor.red() * 0.299) + (rBackgroundColor.green() * 0.587) + (rBackgroundColor.blue() * 0.114);
+    return QColor((255- BackgroundDelta < THRESHOLD) ? Qt::black : Qt::white);
+}

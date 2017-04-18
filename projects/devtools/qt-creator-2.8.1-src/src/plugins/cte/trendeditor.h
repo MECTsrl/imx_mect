@@ -46,6 +46,7 @@ private:
     bool    iface2Tokens(QStringList &lstTokens, int nRow);         // Da Interfaccia a List per scrittura CSV
     bool    iface2TrendFile(const QString &szFileTrend);    // Write Interface Fields to a trends file
     void    setLabelColor(QLabel *destLabel, QColor newColor);
+    bool    checkFields();                                  // Controllo del contenuto dei campi
     //---------------------------------------------------------------------
     // Variabili varie
     //---------------------------------------------------------------------
@@ -54,6 +55,7 @@ private:
     QHash<QString, QString> mapOrientation;
     QString         m_szTrendFile;
     QString         m_szTrendPath;
+    QString         m_szMsg;                            // Variabile di servizio per Messaggi
 
 };
 

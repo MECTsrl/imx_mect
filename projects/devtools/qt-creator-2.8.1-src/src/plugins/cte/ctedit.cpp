@@ -513,8 +513,12 @@ bool    ctedit::selectCTFile(QString szFileCT)
         // Se tutto Ok, carica anche le impostazioni del file INI
         mectSet->loadProjectFiles(m_szCurrentCTPath + szINIFILE, m_szCurrentProjectPath + szSLASH + m_szCurrentProjectName, m_szCurrentProjectPath + szSLASH, nModel);
         // Se tutto Ok, carica anche il primo trend utile
+        QString szFileTemplate;
+        szFileTemplate = m_szCurrentProjectPath;
+        szFileTemplate.append(szSLASH);
+        szFileTemplate.append(szTemplateFile);
         trendEdit->updateVarLists(lstLoggedVars);
-        trendEdit->setTrendsPath(m_szCurrentCTPath);
+        trendEdit->setTrendsFiles(m_szCurrentCTPath, szEMPTY, szFileTemplate);
         // Abilita interfaccia
         enableInterface();
     }

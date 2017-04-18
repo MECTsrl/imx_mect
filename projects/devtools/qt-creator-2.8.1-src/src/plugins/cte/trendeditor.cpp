@@ -17,6 +17,10 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+
+#define LINE_SIZE 1024
+
+
 const int nTrk1 = 1;
 const int nTrk2 = 2;
 const int nTrk3 = 3;
@@ -29,6 +33,10 @@ const QString szTRENDMASK =  QString::fromAscii("trend*.csv");
 const QString szDEFCOLOR = QString::fromAscii("palegreen");
 const QString szPORTRAIT = QString::fromAscii("P");
 const QString szLANDSCAPE = QString::fromAscii("L");
+const QString szTitle = QString::fromAscii("Mect Editor");
+const QString szTrendRelPath = QString::fromAscii("config/");
+const QString szTrendSection = QString::fromAscii("customtrend.files");
+const QString szTrendExt = QString::fromAscii(".csv");
 
 enum trendFields
 {   nTrendVisible = 0,
@@ -64,6 +72,7 @@ TrendEditor::TrendEditor(QWidget *parent) :
     // Path & file infos
     m_szTrendFile.clear();
     m_szTrendPath.clear();
+    m_szTemplateFile.clear();
 }
 
 TrendEditor::~TrendEditor()
@@ -95,7 +104,9 @@ void TrendEditor::updateVarLists(const QStringList &lstTrendVars)
         // Retrieve Current Item selected if Any
         szCurVar = cboVar->currentText();
         // Update Varlist
+
         cboVar->clear();
+        cboVar->addItem(szEMPTY);
         cboVar->addItems(lstTrendVars);
         // Fetch previous value
         nPos = -1;
@@ -170,7 +181,7 @@ bool    TrendEditor::getNewColor(int nTrack)
     newColor = QColorDialog::getColor(cColor, this, tr("Select Track %1 Color") .arg(nTrack));
     // Set New Color to Label
     if (newColor.isValid() && destLabel != 0)  {
-        setLabelColor(destLabel, newColor);
+        setObjectColor(destLabel, newColor);
         fRes = true;
     }
     return fRes;
@@ -251,7 +262,7 @@ bool TrendEditor::tokens2Iface(const QStringList &lstTokens, int nRow)
     }
     if (! cColTrend.isValid())
         cColTrend.setNamedColor(szDEFCOLOR);
-    setLabelColor(lblColor, cColTrend);
+    setObjectColor(lblColor, cColTrend);
     // MinValue
     dblVal = lstTokens[nTrendMin].toDouble(&fOK);
     dblVal = fOK ? dblVal : 0.0;
@@ -323,6 +334,8 @@ bool TrendEditor::iface2Tokens(QStringList &lstTokens, int nRow)
     lstTokens[nTrendVisible] = (chkVisible->isChecked() ? szTRUE : szFALSE);
     // Variabile Name
     lstTokens[nTrendVarName] = cboVariable->currentText().trimmed();
+    lstTokens[nTrendVarName].append(szSpace(16));
+    lstTokens[nTrendVarName] = lstTokens[nTrendVarName].left(16);
     // Color Name
     lstTokens[nTrendColor] = lblColor->text().trimmed();
     // Trend Min
@@ -393,6 +406,7 @@ bool TrendEditor::iface2TrendFile(const QString &szFileTrend)
 {
     bool            fOk = false;
     QFile           fDest(szFileTrend);
+    QFileInfo       infoDest;
     QString         szLine;
     QStringList     lstTokens;
     int             nRow = 1;
@@ -400,6 +414,7 @@ bool TrendEditor::iface2TrendFile(const QString &szFileTrend)
     // Apertura del File in modalità scrittura troncata
     fDest.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
     if (fDest.isOpen())  {
+        infoDest.setFile(fDest);
         QTextStream txtTrend(&fDest);
         // Trend Orientation
         szLine = mapOrientation.key(ui->cboOrientation->currentText());
@@ -417,7 +432,18 @@ bool TrendEditor::iface2TrendFile(const QString &szFileTrend)
                 break;
         }
         txtTrend.flush();
+        szLine = fDest.fileName();
         fDest.close();
+    }
+    // Update the Template file if needed
+    if (fOk)  {
+        // Nome del file senza Path
+        szLine = infoDest.fileName();
+        // Nome file Trend relativo al percorso progetto
+        szLine.prepend(szTrendRelPath);
+        // Aggiorna la sezione customtrends del file template.pri
+        fOk = updateTemplateFile(szLine);
+
     }
     // Return value
     return fOk;
@@ -425,77 +451,109 @@ bool TrendEditor::iface2TrendFile(const QString &szFileTrend)
 
 void TrendEditor::on_cmdLoad_clicked()
 {
-    QString szSourceFile;
+    QString szSourceFile = m_szTrendPath + m_szTrendFile;
+
 
     szSourceFile = QFileDialog::getOpenFileName(this, tr("Open Trend File"),
-                                              m_szTrendFile, tr("Trends Files (trend*.csv)"));
+                                              szSourceFile, tr("Trends Files (trend*.csv)"));
     if (! szSourceFile.isEmpty())  {
         QFile fTrend(szSourceFile);
         if (fTrend.exists())  {
             if (trendFile2Iface(szSourceFile))  {
-                m_szTrendFile = szSourceFile;
-                ui->txtTrendName->setText(szSourceFile);
+                QFileInfo infoSource(szSourceFile);
+                m_szTrendFile = infoSource.fileName();
+                ui->txtTrendName->setText(infoSource.completeBaseName());
             }
         }
     }
 }
-
 void TrendEditor::on_cmdSave_clicked()
 {
-    QString szDestFile;
+    QString         szDestFile = m_szTrendPath + m_szTrendFile;
+    bool            fOverWrite = true;
+
+    QFile fTrend(szDestFile);
+    if (fTrend.exists())  {
+        m_szMsg = tr("File %1 Exists. Overwrite?") .arg(m_szTrendFile);
+        fOverWrite = queryUser(this, szTitle, m_szMsg, false);
+        // Create Backup
+        if (fOverWrite)
+            fileBackUp(szDestFile);
+    }
+    // Write File
+    if (fOverWrite)  {
+        // Scrittura nuovi valori
+        if (! iface2TrendFile(szDestFile))  {
+            m_szMsg = tr("Error Saving Trend File: %1") .arg(m_szTrendFile);
+            notifyUser(this, szTitle, m_szMsg);
+        }
+    }
+
+}
+
+void TrendEditor::on_cmdSaveAs_clicked()
+{
+    QString szDestFile = m_szTrendPath + m_szTrendFile;
 
     // Checking interface Values
     if (! checkFields())
         return;
-    // Ask Dialog file name
+    // Ask Dialog file name.
+    // FIXME: Restrict QFileDialog to current trend specific directory
     szDestFile = QFileDialog::getSaveFileName(this, tr("Save Trend File"),
-                                              m_szTrendFile, tr("Trends Files (trend*.csv)"));
+                                              szDestFile, tr("Trends Files (trend*.csv)"));
     if (! szDestFile.isEmpty())  {
         // Copia di salvataggio
         fileBackUp(szDestFile);
         // Scrittura nuovi valori
         if (iface2TrendFile(szDestFile))  {
-            m_szTrendFile = szDestFile;
-            ui->txtTrendName->setText(szDestFile);
+            QFileInfo infoDestination(szDestFile);
+            m_szTrendFile = infoDestination.fileName();
+            ui->txtTrendName->setText(infoDestination.completeBaseName());
         }
     }
 }
-void TrendEditor::setTrendsPath(const QString &szTrendsPath)
+void TrendEditor::setTrendsFiles(const QString &szTrendsPath, const QString szNewFile, const QString szTemplateFile)
 {
     QString         szNewTrendFile;
 
+    // Force Trends Path to new received path
     m_szTrendPath = szTrendsPath;
+    m_szTrendFile = szNewFile;
+    m_szTemplateFile = szTemplateFile;
+    szNewTrendFile = m_szTrendPath;
+    // If is the received trend file name is empty, set it to default
     if (m_szTrendFile.isEmpty())  {
-        szNewTrendFile = m_szTrendPath;
-        szNewTrendFile.append(szTREND1FILE);
-        QFile fTrend(szNewTrendFile);
-        if (fTrend.exists())  {
-            if (trendFile2Iface(szNewTrendFile))  {
-                m_szTrendFile = szNewTrendFile;
-                ui->txtTrendName->setText(szNewTrendFile);
-            }
+        m_szTrendFile = szTREND1FILE;
+    }
+    // Build full File Name
+    szNewTrendFile.append(m_szTrendFile);
+    QFileInfo fTrend(szNewTrendFile);
+    if (fTrend.exists())  {
+        if (trendFile2Iface(szNewTrendFile))  {
+            ui->txtTrendName->setText(fTrend.completeBaseName());
         }
     }
 }
-void TrendEditor::setLabelColor(QLabel *destLabel, QColor newColor)
+void TrendEditor::setObjectColor(QLabel *destObject, QColor newColor)
 // Imposta background e foreground di una label con il colore newColor
 {
     QString     szColor;
     QColor      cTextColor;
 
-    if (destLabel != 0 && newColor.isValid())  {
-        QPalette    palLabel = destLabel->palette();
-        palLabel.setColor(destLabel->backgroundRole(), newColor);
+    if (destObject != 0 && newColor.isValid())  {
+        QPalette    palLabel = destObject->palette();
+        palLabel.setColor(destObject->backgroundRole(), newColor);
         // Calcola un colore opportuno per il Testo della Label
         cTextColor = getIdealTextColor(newColor);
-        palLabel.setColor(destLabel->foregroundRole(), cTextColor);
-        destLabel->setAutoFillBackground(true);        
-        destLabel->setPalette(palLabel);
+        palLabel.setColor(destObject->foregroundRole(), cTextColor);
+        destObject->setAutoFillBackground(true);
+        destObject->setPalette(palLabel);
         // Update Label content
         szColor = newColor.name();
         szColor.remove(szSHARP);
         szColor = szColor.toUpper();
-        destLabel->setText(szColor);
+        destObject->setText(szColor);
     }
 }
 bool TrendEditor::checkFields()
@@ -560,4 +618,78 @@ bool TrendEditor::checkFields()
 exitCheck:
     return fRes;
 
+}
+
+bool TrendEditor::updateTemplateFile(const QString &szTrendFile)
+// Aggiorna la sezione customtrends del file template.pri
+{
+    bool        fRes = true;
+    bool        fAdded = false;
+    QFile       fTemplate(m_szTemplateFile);
+    QString     szLine;
+    QStringList lstSourceRows;
+    QStringList lstDestRows;
+    int         nRow = 0;
+
+    if (fTemplate.exists())  {
+        lstSourceRows.clear();
+        lstDestRows.clear();
+        // Lettura del file Template
+        fTemplate.open(QIODevice::ReadOnly | QIODevice::Text);
+        if (fTemplate.isOpen())  {
+            QTextStream streamTemplate(&fTemplate);
+            lstSourceRows.clear();
+            // Read entire file
+            while (! streamTemplate.atEnd())  {
+                szLine = streamTemplate.readLine(LINE_SIZE);
+                lstSourceRows.append(szLine);
+            }
+            fTemplate.close();
+            // Search Template row (Must already exist)
+            szLine.clear();
+            for (nRow = 0; nRow < lstSourceRows.count(); nRow++)  {
+                szLine = lstSourceRows[nRow];
+                // Ricerca della selezione
+                if (szLine.contains(szTrendSection))  {
+                    // Join splitted rows
+                    while (szLine.endsWith(chBACKSLASH))  {
+                        szLine.remove(chBACKSLASH);
+                        nRow++;
+                        if (nRow < lstSourceRows.count())  {
+                            szLine.append(lstSourceRows[nRow].trimmed());
+                        }
+                    }
+                    qDebug() << tr("Template before: %1") .arg(szLine);
+                    if (! szLine.contains(szTrendFile))  {
+                        szLine.append(szSpace(1));
+                        szLine.append(szTrendFile);
+                        qDebug() << tr("Template after: %1") .arg(szLine);
+                        fAdded = true;
+                    }
+                }
+                lstDestRows.append(szLine);
+            }
+            // Rewrite of file
+            if (fAdded)  {
+                // Backup file
+                fileBackUp(m_szTemplateFile);
+                // Rewrite Updated file
+                fTemplate.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
+                if (fTemplate.isOpen())  {
+                    QTextStream streamOut(&fTemplate);
+                    for (nRow = 0; nRow < lstDestRows.count(); nRow ++)  {
+                        streamOut << lstDestRows[nRow] << endl;
+                    }
+                    fTemplate.close();
+                }
+                else
+                    fRes = false;
+            }
+        }
+        else
+            fRes = false;
+
+    }
+    // Return value
+    return fRes;
 }

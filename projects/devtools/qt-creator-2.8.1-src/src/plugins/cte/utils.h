@@ -11,6 +11,7 @@
 // QChar Constants
 const QChar   chDOUBLEQUOTE = QChar::fromAscii(34);
 const QChar   chSpace = QChar::fromAscii(20);
+const QChar   chBACKSLASH = QChar::fromAscii(92);
 
 // String Costants
 const QString szEMPTY = QString::fromAscii("");

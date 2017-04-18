@@ -5,6 +5,7 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QComboBox>
+#include <QColor>
 
 
 // QChar Constants
@@ -20,6 +21,8 @@ const QString szBACKSLASH = QString::fromAscii("\\");
 const QString szNEWLINE = QString::fromAscii("\n");
 const QString szDOUBLEQUOTE = QString(1, chDOUBLEQUOTE);
 const QString szSHARP = QString::fromAscii("#");
+const QString szTRUE = QString::fromAscii("1");
+const QString szFALSE = QString::fromAscii("0");
 
 
 const  char     cDoubleQuote = 34;      // Carattere "
@@ -57,4 +60,5 @@ const  char     cZero = 48;             // Zero
     void        disableComboItem(QComboBox *Combo, int nItemIndex);         // Disabilita la voce nItemIndex della Combo
     bool        disableAndBlockSignals(QWidget *widget);                    // Disabilita e blocca segnali di un oggetto QWidget*
     bool        enableAndUnlockSignals(QWidget *widget);                    // Riabilita e sblocca segnali di un oggetto QWidget*
+    QColor      getIdealTextColor(const QColor& rBackgroundColor);          // Return an ideal label color, based on the given background color.
 #endif // UTILS_H

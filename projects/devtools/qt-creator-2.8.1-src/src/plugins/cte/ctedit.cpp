@@ -1704,10 +1704,10 @@ void ctedit::displayUserMenu(const QPoint &pos)
     QMenu gridMenu(this);
     // Items del Menu contestuale
     // Inserisci righe
-    QAction *insRows = gridMenu.addAction(trUtf8("Insert Rows"));
+    QAction *insRows = gridMenu.addAction(trUtf8("Insert Blank Rows"));
     insRows->setEnabled(selection.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Cancella righe
-    QAction *emptyRows = gridMenu.addAction(trUtf8("Empty Rows"));
+    QAction *emptyRows = gridMenu.addAction(trUtf8("Clear Rows"));
     emptyRows->setEnabled(selection.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Elimina righe
     QAction *remRows = gridMenu.addAction(trUtf8("Delete Rows"));

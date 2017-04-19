@@ -183,7 +183,7 @@
       <enum>QTabWidget::East</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabCT">
       <property name="enabled">
@@ -577,6 +577,12 @@
              <layout class="QHBoxLayout" name="horizontalLayout_2">
               <item>
                <widget class="QFrame" name="fraOptions">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>75</height>
+                 </size>
+                </property>
                 <property name="font">
                  <font>
                   <weight>50</weight>

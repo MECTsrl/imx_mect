@@ -1,7 +1,9 @@
-/* A Bison parser, made by GNU Bison 1.875c.  */
+/* A Bison parser, made by GNU Bison 2.3.  */
 
-/* Skeleton parser for Yacc-like parsing with Bison,
-   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Skeleton implementation for Bison's Yacc-like parsers in C
+
+   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,16 +17,24 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.  */
 
-/* As a special exception, when this file is copied by Bison into a
-   Bison output file, you may use that output file without restriction.
-   This special exception was added by the Free Software Foundation
-   in version 1.24 of Bison.  */
+/* As a special exception, you may create a larger work that contains
+   part or all of the Bison parser skeleton and distribute that work
+   under terms of your choice, so long as that work isn't itself a
+   parser generator using the skeleton or a modified version thereof
+   as a parser skeleton.  Alternatively, if you modify or redistribute
+   the parser skeleton itself, you may (at your option) remove this
+   special exception, which will cause the skeleton and the resulting
+   Bison output files to be licensed under the GNU General Public
+   License without this special exception.
 
-/* Written by Richard Stallman by simplifying the original so called
-   ``semantic'' parser.  */
+   This special exception was added by the Free Software Foundation in
+   version 2.2 of Bison.  */
+
+/* C LALR(1) parser skeleton written by Richard Stallman, by
+   simplifying the original so-called "semantic" parser.  */
 
 /* All symbols defined below should begin with yy or YY, to avoid
    infringing on user name space.  This should be done even for local
@@ -35,6 +45,9 @@
 
 /* Identify Bison output.  */
 #define YYBISON 1
+
+/* Bison version.  */
+#define YYBISON_VERSION "2.3"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -529,6 +542,7 @@
      NEG = 731
    };
 #endif
+/* Tokens.  */
 #define END_OF_INPUT 258
 #define CLOSE_SYM 259
 #define HANDLER_SYM 260
@@ -1060,9 +1074,15 @@ inline Item *or_or_concat(THD *thd, Item* A, Item* B)
 # define YYERROR_VERBOSE 0
 #endif
 
-#if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
+/* Enabling the token table.  */
+#ifndef YYTOKEN_TABLE
+# define YYTOKEN_TABLE 0
+#endif
+
+#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
+typedef union YYSTYPE
 #line 56 "sql_yacc.yy"
-typedef union YYSTYPE {
+{
   int  num;
   ulong ulong_num;
   ulonglong ulonglong_number;
@@ -1095,9 +1115,10 @@ typedef union YYSTYPE {
   timestamp_type date_time_type;
   st_select_lex *select_lex;
   chooser_compare_func_creator boolfunc2creator;
-} YYSTYPE;
-/* Line 191 of yacc.c.  */
-#line 1101 "sql_yacc.cc"
+}
+/* Line 187 of yacc.c.  */
+#line 1121 "sql_yacc.cc"
+	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1
@@ -1111,56 +1132,171 @@ typedef union YYSTYPE {
 bool my_yyoverflow(short **a, YYSTYPE **b, ulong *yystacksize);
 
 
-/* Line 214 of yacc.c.  */
-#line 1116 "sql_yacc.cc"
+/* Line 216 of yacc.c.  */
+#line 1137 "sql_yacc.cc"
 
-#if ! defined (yyoverflow) || YYERROR_VERBOSE
+#ifdef short
+# undef short
+#endif
 
-# ifndef YYFREE
-#  define YYFREE free
+#ifdef YYTYPE_UINT8
+typedef YYTYPE_UINT8 yytype_uint8;
+#else
+typedef unsigned char yytype_uint8;
+#endif
+
+#ifdef YYTYPE_INT8
+typedef YYTYPE_INT8 yytype_int8;
+#elif (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+typedef signed char yytype_int8;
+#else
+typedef short int yytype_int8;
+#endif
+
+#ifdef YYTYPE_UINT16
+typedef YYTYPE_UINT16 yytype_uint16;
+#else
+typedef unsigned short int yytype_uint16;
+#endif
+
+#ifdef YYTYPE_INT16
+typedef YYTYPE_INT16 yytype_int16;
+#else
+typedef short int yytype_int16;
+#endif
+
+#ifndef YYSIZE_T
+# ifdef __SIZE_TYPE__
+#  define YYSIZE_T __SIZE_TYPE__
+# elif defined size_t
+#  define YYSIZE_T size_t
+# elif ! defined YYSIZE_T && (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+#  include <stddef.h> /* INFRINGES ON USER NAME SPACE */
+#  define YYSIZE_T size_t
+# else
+#  define YYSIZE_T unsigned int
 # endif
-# ifndef YYMALLOC
-#  define YYMALLOC malloc
+#endif
+
+#define YYSIZE_MAXIMUM ((YYSIZE_T) -1)
+
+#ifndef YY_
+# if YYENABLE_NLS
+#  if ENABLE_NLS
+#   include <libintl.h> /* INFRINGES ON USER NAME SPACE */
+#   define YY_(msgid) dgettext ("bison-runtime", msgid)
+#  endif
 # endif
+# ifndef YY_
+#  define YY_(msgid) msgid
+# endif
+#endif
+
+/* Suppress unused-variable warnings by "using" E.  */
+#if ! defined lint || defined __GNUC__
+# define YYUSE(e) ((void) (e))
+#else
+# define YYUSE(e) /* empty */
+#endif
+
+/* Identity function, used to suppress warnings about constant conditions.  */
+#ifndef lint
+# define YYID(n) (n)
+#else
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+static int
+YYID (int i)
+#else
+static int
+YYID (i)
+    int i;
+#endif
+{
+  return i;
+}
+#endif
+
+#if ! defined yyoverflow || YYERROR_VERBOSE
 
 /* The parser invokes alloca or malloc; define the necessary symbols.  */
 
 # ifdef YYSTACK_USE_ALLOCA
 #  if YYSTACK_USE_ALLOCA
-#   define YYSTACK_ALLOC alloca
-#  endif
-# else
-#  if defined (alloca) || defined (_ALLOCA_H)
-#   define YYSTACK_ALLOC alloca
-#  else
 #   ifdef __GNUC__
 #    define YYSTACK_ALLOC __builtin_alloca
+#   elif defined __BUILTIN_VA_ARG_INCR
+#    include <alloca.h> /* INFRINGES ON USER NAME SPACE */
+#   elif defined _AIX
+#    define YYSTACK_ALLOC __alloca
+#   elif defined _MSC_VER
+#    include <malloc.h> /* INFRINGES ON USER NAME SPACE */
+#    define alloca _alloca
+#   else
+#    define YYSTACK_ALLOC alloca
+#    if ! defined _ALLOCA_H && ! defined _STDLIB_H && (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+#     include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
+#     ifndef _STDLIB_H
+#      define _STDLIB_H 1
+#     endif
+#    endif
 #   endif
 #  endif
 # endif
 
 # ifdef YYSTACK_ALLOC
-   /* Pacify GCC's `empty if-body' warning. */
-#  define YYSTACK_FREE(Ptr) do { /* empty */; } while (0)
-# else
-#  if defined (__STDC__) || defined (__cplusplus)
-#   include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
-#   define YYSIZE_T size_t
+   /* Pacify GCC's `empty if-body' warning.  */
+#  define YYSTACK_FREE(Ptr) do { /* empty */; } while (YYID (0))
+#  ifndef YYSTACK_ALLOC_MAXIMUM
+    /* The OS might guarantee only one guard page at the bottom of the stack,
+       and a page size can be as small as 4096 bytes.  So we cannot safely
+       invoke alloca (N) if N exceeds 4096.  Use a slightly smaller number
+       to allow for a few compiler-allocated temporary stack slots.  */
+#   define YYSTACK_ALLOC_MAXIMUM 4032 /* reasonable circa 2006 */
 #  endif
+# else
 #  define YYSTACK_ALLOC YYMALLOC
 #  define YYSTACK_FREE YYFREE
+#  ifndef YYSTACK_ALLOC_MAXIMUM
+#   define YYSTACK_ALLOC_MAXIMUM YYSIZE_MAXIMUM
+#  endif
+#  if (defined __cplusplus && ! defined _STDLIB_H \
+       && ! ((defined YYMALLOC || defined malloc) \
+	     && (defined YYFREE || defined free)))
+#   include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
+#   ifndef _STDLIB_H
+#    define _STDLIB_H 1
+#   endif
+#  endif
+#  ifndef YYMALLOC
+#   define YYMALLOC malloc
+#   if ! defined malloc && ! defined _STDLIB_H && (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+void *malloc (YYSIZE_T); /* INFRINGES ON USER NAME SPACE */
+#   endif
+#  endif
+#  ifndef YYFREE
+#   define YYFREE free
+#   if ! defined free && ! defined _STDLIB_H && (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+void free (void *); /* INFRINGES ON USER NAME SPACE */
+#   endif
+#  endif
 # endif
-#endif /* ! defined (yyoverflow) || YYERROR_VERBOSE */
+#endif /* ! defined yyoverflow || YYERROR_VERBOSE */
 
 
-#if (! defined (yyoverflow) \
-     && (! defined (__cplusplus) \
-	 || (defined (YYSTYPE_IS_TRIVIAL) && YYSTYPE_IS_TRIVIAL)))
+#if (! defined yyoverflow \
+     && (! defined __cplusplus \
+	 || (defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
 
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
 {
-  short yyss;
+  yytype_int16 yyss;
   YYSTYPE yyvs;
   };
 
@@ -1170,24 +1306,24 @@ union yyalloc
 /* The size of an array large to enough to hold all stacks, each with
    N elements.  */
 # define YYSTACK_BYTES(N) \
-     ((N) * (sizeof (short) + sizeof (YYSTYPE))				\
+     ((N) * (sizeof (yytype_int16) + sizeof (YYSTYPE)) \
       + YYSTACK_GAP_MAXIMUM)
 
 /* Copy COUNT objects from FROM to TO.  The source and destination do
    not overlap.  */
 # ifndef YYCOPY
-#  if defined (__GNUC__) && 1 < __GNUC__
+#  if defined __GNUC__ && 1 < __GNUC__
 #   define YYCOPY(To, From, Count) \
       __builtin_memcpy (To, From, (Count) * sizeof (*(From)))
 #  else
 #   define YYCOPY(To, From, Count)		\
       do					\
 	{					\
-	  register YYSIZE_T yyi;		\
+	  YYSIZE_T yyi;				\
 	  for (yyi = 0; yyi < (Count); yyi++)	\
 	    (To)[yyi] = (From)[yyi];		\
 	}					\
-      while (0)
+      while (YYID (0))
 #  endif
 # endif
 
@@ -1205,39 +1341,33 @@ union yyalloc
 	yynewbytes = yystacksize * sizeof (*Stack) + YYSTACK_GAP_MAXIMUM; \
 	yyptr += yynewbytes / sizeof (*yyptr);				\
       }									\
-    while (0)
+    while (YYID (0))
 
 #endif
 
-#if defined (__STDC__) || defined (__cplusplus)
-   typedef signed char yysigned_char;
-#else
-   typedef short yysigned_char;
-#endif
-
-/* YYFINAL -- State number of the termination state. */
+/* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  548
 /* YYLAST -- Last index in YYTABLE.  */
 #define YYLAST   38574
 
-/* YYNTOKENS -- Number of terminals. */
+/* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  495
-/* YYNNTS -- Number of nonterminals. */
+/* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  493
-/* YYNRULES -- Number of rules. */
+/* YYNRULES -- Number of rules.  */
 #define YYNRULES  1672
-/* YYNRULES -- Number of states. */
+/* YYNRULES -- Number of states.  */
 #define YYNSTATES  3102
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
 #define YYMAXUTOK   731
 
-#define YYTRANSLATE(YYX) 						\
+#define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
 
 /* YYTRANSLATE[YYLEX] -- Bison symbol number corresponding to YYLEX.  */
-static const unsigned short yytranslate[] =
+static const yytype_uint16 yytranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -1318,7 +1448,7 @@ static const unsigned short yytranslate[] =
 #if YYDEBUG
 /* YYPRHS[YYN] -- Index of the first RHS symbol of rule number YYN in
    YYRHS.  */
-static const unsigned short yyprhs[] =
+static const yytype_uint16 yyprhs[] =
 {
        0,     0,     3,     5,     8,    10,    12,    14,    16,    18,
       20,    22,    24,    26,    28,    30,    32,    34,    36,    38,
@@ -1490,8 +1620,8 @@ static const unsigned short yyprhs[] =
     5213,  5215,  5218
 };
 
-/* YYRHS -- A `-1'-separated list of the rules' RHS. */
-static const short yyrhs[] =
+/* YYRHS -- A `-1'-separated list of the rules' RHS.  */
+static const yytype_int16 yyrhs[] =
 {
      496,     0,    -1,     3,    -1,   497,     3,    -1,   611,    -1,
      649,    -1,   639,    -1,   966,    -1,   508,    -1,   651,    -1,
@@ -2018,7 +2148,7 @@ static const short yyrhs[] =
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
-static const unsigned short yyrline[] =
+static const yytype_uint16 yyrline[] =
 {
        0,   744,   744,   758,   761,   762,   763,   764,   765,   766,
      767,   768,   769,   770,   771,   772,   773,   774,   775,   776,
@@ -2191,9 +2321,9 @@ static const unsigned short yyrline[] =
 };
 #endif
 
-#if YYDEBUG || YYERROR_VERBOSE
-/* YYTNME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
-   First, the terminals, then, starting at YYNTOKENS, nonterminals. */
+#if YYDEBUG || YYERROR_VERBOSE || YYTOKEN_TABLE
+/* YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
+   First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "END_OF_INPUT", "CLOSE_SYM",
@@ -2408,7 +2538,7 @@ static const char *const yytname[] =
 # ifdef YYPRINT
 /* YYTOKNUM[YYLEX-NUM] -- Internal token number corresponding to
    token YYLEX-NUM.  */
-static const unsigned short yytoknum[] =
+static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
@@ -2464,7 +2594,7 @@ static const unsigned short yytoknum[] =
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
-static const unsigned short yyr1[] =
+static const yytype_uint16 yyr1[] =
 {
        0,   495,   496,   496,   497,   497,   497,   497,   497,   497,
      497,   497,   497,   497,   497,   497,   497,   497,   497,   497,
@@ -2637,7 +2767,7 @@ static const unsigned short yyr1[] =
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
-static const unsigned char yyr2[] =
+static const yytype_uint8 yyr2[] =
 {
        0,     2,     1,     2,     1,     1,     1,     1,     1,     1,
        1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
@@ -2812,7 +2942,7 @@ static const unsigned char yyr2[] =
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
    STATE-NUM when YYTABLE doesn't specify something else to do.  Zero
    means the default is an error.  */
-static const unsigned short yydefact[] =
+static const yytype_uint16 yydefact[] =
 {
        0,     2,     0,   398,   463,  1643,     0,  1647,   114,  1085,
     1006,  1020,     0,   463,     0,  1022,     0,     0,     0,   463,
@@ -3127,8 +3257,8 @@ static const unsigned short yydefact[] =
     1116,   994
 };
 
-/* YYDEFGOTO[NTERM-NUM]. */
-static const short yydefgoto[] =
+/* YYDEFGOTO[NTERM-NUM].  */
+static const yytype_int16 yydefgoto[] =
 {
       -1,    49,    50,    51,    52,    53,  1262,    54,   586,   953,
     1334,  1335,    55,    56,   929,  1309,  1310,  1311,    57,  1734,
@@ -3501,7 +3631,7 @@ static const int yypact[] =
 };
 
 /* YYPGOTO[NTERM-NUM].  */
-static const short yypgoto[] =
+static const yytype_int16 yypgoto[] =
 {
    -2603, -2603, -2603, -2603, -2603, -2603, -2603, -2603, -2603, -2603,
    -2603,   344, -2603, -2603, -2603, -2603,   374, -1539, -2603, -2603,
@@ -3560,7 +3690,7 @@ static const short yypgoto[] =
    number is the opposite.  If zero, do what YYDEFACT says.
    If YYTABLE_NINF, syntax error.  */
 #define YYTABLE_NINF -1659
-static const short yytable[] =
+static const yytype_int16 yytable[] =
 {
      314,   649,   651,   788,   988,  1174,   349,   635,   637,   639,
      343,  1270,   348,  1276,   997,  1263,   578,   613,  1030,  1231,
@@ -7422,7 +7552,7 @@ static const short yytable[] =
        0,     0,     0,     0,  2620
 };
 
-static const short yycheck[] =
+static const yytype_int16 yycheck[] =
 {
        2,   407,   408,   498,   610,   811,    14,   395,   396,   397,
       12,   916,    14,   919,   620,   910,   336,   369,   663,   878,
@@ -11286,7 +11416,7 @@ static const short yycheck[] =
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
-static const unsigned short yystos[] =
+static const yytype_uint16 yystos[] =
 {
        0,     3,     5,    26,    27,    30,    32,    35,    38,    41,
       43,    44,    46,    48,    49,    50,    52,    53,    55,    60,
@@ -11601,22 +11731,6 @@ static const unsigned short yystos[] =
      770,   776
 };
 
-#if ! defined (YYSIZE_T) && defined (__SIZE_TYPE__)
-# define YYSIZE_T __SIZE_TYPE__
-#endif
-#if ! defined (YYSIZE_T) && defined (size_t)
-# define YYSIZE_T size_t
-#endif
-#if ! defined (YYSIZE_T)
-# if defined (__STDC__) || defined (__cplusplus)
-#  include <stddef.h> /* INFRINGES ON USER NAME SPACE */
-#  define YYSIZE_T size_t
-# endif
-#endif
-#if ! defined (YYSIZE_T)
-# define YYSIZE_T unsigned int
-#endif
-
 #define yyerrok		(yyerrstatus = 0)
 #define yyclearin	(yychar = YYEMPTY)
 #define YYEMPTY		(-2)
@@ -11642,29 +11756,62 @@ do								\
       yychar = (Token);						\
       yylval = (Value);						\
       yytoken = YYTRANSLATE (yychar);				\
-      YYPOPSTACK;						\
+      YYPOPSTACK (1);						\
       goto yybackup;						\
     }								\
   else								\
-    { 								\
-      yyerror ("syntax error: cannot back up");\
+    {								\
+      yyerror (YY_("syntax error: cannot back up")); \
       YYERROR;							\
     }								\
-while (0)
+while (YYID (0))
+
 
 #define YYTERROR	1
 #define YYERRCODE	256
 
-/* YYLLOC_DEFAULT -- Compute the default location (before the actions
-   are run).  */
 
+/* YYLLOC_DEFAULT -- Set CURRENT to span from RHS[1] to RHS[N].
+   If N is 0, then set CURRENT to the empty location which ends
+   the previous symbol: RHS[0] (always defined).  */
+
+#define YYRHSLOC(Rhs, K) ((Rhs)[K])
 #ifndef YYLLOC_DEFAULT
-# define YYLLOC_DEFAULT(Current, Rhs, N)		\
-   ((Current).first_line   = (Rhs)[1].first_line,	\
-    (Current).first_column = (Rhs)[1].first_column,	\
-    (Current).last_line    = (Rhs)[N].last_line,	\
-    (Current).last_column  = (Rhs)[N].last_column)
+# define YYLLOC_DEFAULT(Current, Rhs, N)				\
+    do									\
+      if (YYID (N))                                                    \
+	{								\
+	  (Current).first_line   = YYRHSLOC (Rhs, 1).first_line;	\
+	  (Current).first_column = YYRHSLOC (Rhs, 1).first_column;	\
+	  (Current).last_line    = YYRHSLOC (Rhs, N).last_line;		\
+	  (Current).last_column  = YYRHSLOC (Rhs, N).last_column;	\
+	}								\
+      else								\
+	{								\
+	  (Current).first_line   = (Current).last_line   =		\
+	    YYRHSLOC (Rhs, 0).last_line;				\
+	  (Current).first_column = (Current).last_column =		\
+	    YYRHSLOC (Rhs, 0).last_column;				\
+	}								\
+    while (YYID (0))
 #endif
+
+
+/* YY_LOCATION_PRINT -- Print the location on the stream.
+   This macro was not mandated originally: define only if we know
+   we won't break user code: when these are the locations we know.  */
+
+#ifndef YY_LOCATION_PRINT
+# if YYLTYPE_IS_TRIVIAL
+#  define YY_LOCATION_PRINT(File, Loc)			\
+     fprintf (File, "%d.%d-%d.%d",			\
+	      (Loc).first_line, (Loc).first_column,	\
+	      (Loc).last_line,  (Loc).last_column)
+# else
+#  define YY_LOCATION_PRINT(File, Loc) ((void) 0)
+# endif
+#endif
+
 
 /* YYLEX -- calling `yylex' with the right arguments.  */
 
@@ -11686,42 +11833,96 @@ while (0)
 do {						\
   if (yydebug)					\
     YYFPRINTF Args;				\
-} while (0)
+} while (YYID (0))
 
-# define YYDSYMPRINT(Args)			\
-do {						\
-  if (yydebug)					\
-    yysymprint Args;				\
-} while (0)
+# define YY_SYMBOL_PRINT(Title, Type, Value, Location)			  \
+do {									  \
+  if (yydebug)								  \
+    {									  \
+      YYFPRINTF (stderr, "%s ", Title);					  \
+      yy_symbol_print (stderr,						  \
+		  Type, Value); \
+      YYFPRINTF (stderr, "\n");						  \
+    }									  \
+} while (YYID (0))
 
-# define YYDSYMPRINTF(Title, Token, Value, Location)		\
-do {								\
-  if (yydebug)							\
-    {								\
-      YYFPRINTF (stderr, "%s ", Title);				\
-      yysymprint (stderr, 					\
-                  Token, Value);	\
-      YYFPRINTF (stderr, "\n");					\
-    }								\
-} while (0)
+
+/*--------------------------------.
+| Print this symbol on YYOUTPUT.  |
+`--------------------------------*/
+
+/*ARGSUSED*/
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+static void
+yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
+#else
+static void
+yy_symbol_value_print (yyoutput, yytype, yyvaluep)
+    FILE *yyoutput;
+    int yytype;
+    YYSTYPE const * const yyvaluep;
+#endif
+{
+  if (!yyvaluep)
+    return;
+# ifdef YYPRINT
+  if (yytype < YYNTOKENS)
+    YYPRINT (yyoutput, yytoknum[yytype], *yyvaluep);
+# else
+  YYUSE (yyoutput);
+# endif
+  switch (yytype)
+    {
+      default:
+	break;
+    }
+}
+
+
+/*--------------------------------.
+| Print this symbol on YYOUTPUT.  |
+`--------------------------------*/
+
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+static void
+yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
+#else
+static void
+yy_symbol_print (yyoutput, yytype, yyvaluep)
+    FILE *yyoutput;
+    int yytype;
+    YYSTYPE const * const yyvaluep;
+#endif
+{
+  if (yytype < YYNTOKENS)
+    YYFPRINTF (yyoutput, "token %s (", yytname[yytype]);
+  else
+    YYFPRINTF (yyoutput, "nterm %s (", yytname[yytype]);
+
+  yy_symbol_value_print (yyoutput, yytype, yyvaluep);
+  YYFPRINTF (yyoutput, ")");
+}
 
 /*------------------------------------------------------------------.
 | yy_stack_print -- Print the state stack from its BOTTOM up to its |
 | TOP (included).                                                   |
 `------------------------------------------------------------------*/
 
-#if defined (__STDC__) || defined (__cplusplus)
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 static void
-yy_stack_print (short *bottom, short *top)
+yy_stack_print (yytype_int16 *bottom, yytype_int16 *top)
 #else
 static void
 yy_stack_print (bottom, top)
-    short *bottom;
-    short *top;
+    yytype_int16 *bottom;
+    yytype_int16 *top;
 #endif
 {
   YYFPRINTF (stderr, "Stack now");
-  for (/* Nothing. */; bottom <= top; ++bottom)
+  for (; bottom <= top; ++bottom)
     YYFPRINTF (stderr, " %d", *bottom);
   YYFPRINTF (stderr, "\n");
 }
@@ -11730,45 +11931,52 @@ yy_stack_print (bottom, top)
 do {								\
   if (yydebug)							\
     yy_stack_print ((Bottom), (Top));				\
-} while (0)
+} while (YYID (0))
 
 
 /*------------------------------------------------.
 | Report that the YYRULE is going to be reduced.  |
 `------------------------------------------------*/
 
-#if defined (__STDC__) || defined (__cplusplus)
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 static void
-yy_reduce_print (int yyrule)
+yy_reduce_print (YYSTYPE *yyvsp, int yyrule)
 #else
 static void
-yy_reduce_print (yyrule)
+yy_reduce_print (yyvsp, yyrule)
+    YYSTYPE *yyvsp;
     int yyrule;
 #endif
 {
+  int yynrhs = yyr2[yyrule];
   int yyi;
-  unsigned int yylno = yyrline[yyrule];
-  YYFPRINTF (stderr, "Reducing stack by rule %d (line %u), ",
-             yyrule - 1, yylno);
-  /* Print the symbols being reduced, and their result.  */
-  for (yyi = yyprhs[yyrule]; 0 <= yyrhs[yyi]; yyi++)
-    YYFPRINTF (stderr, "%s ", yytname [yyrhs[yyi]]);
-  YYFPRINTF (stderr, "-> %s\n", yytname [yyr1[yyrule]]);
+  unsigned long int yylno = yyrline[yyrule];
+  YYFPRINTF (stderr, "Reducing stack by rule %d (line %lu):\n",
+	     yyrule - 1, yylno);
+  /* The symbols being reduced.  */
+  for (yyi = 0; yyi < yynrhs; yyi++)
+    {
+      fprintf (stderr, "   $%d = ", yyi + 1);
+      yy_symbol_print (stderr, yyrhs[yyprhs[yyrule] + yyi],
+		       &(yyvsp[(yyi + 1) - (yynrhs)])
+		       		       );
+      fprintf (stderr, "\n");
+    }
 }
 
 # define YY_REDUCE_PRINT(Rule)		\
 do {					\
   if (yydebug)				\
-    yy_reduce_print (Rule);		\
-} while (0)
+    yy_reduce_print (yyvsp, Rule); \
+} while (YYID (0))
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
    multiple parsers can coexist.  */
 int yydebug;
 #else /* !YYDEBUG */
 # define YYDPRINTF(Args)
-# define YYDSYMPRINT(Args)
-# define YYDSYMPRINTF(Title, Token, Value, Location)
+# define YY_SYMBOL_PRINT(Title, Type, Value, Location)
 # define YY_STACK_PRINT(Bottom, Top)
 # define YY_REDUCE_PRINT(Rule)
 #endif /* !YYDEBUG */
@@ -11783,12 +11991,8 @@ int yydebug;
    if the built-in stack extension method is used).
 
    Do not make this value too large; the results are undefined if
-   SIZE_MAX < YYSTACK_BYTES (YYMAXDEPTH)
+   YYSTACK_ALLOC_MAXIMUM < YYSTACK_BYTES (YYMAXDEPTH)
    evaluated with infinite-precision integer arithmetic.  */
-
-#if defined (YYMAXDEPTH) && YYMAXDEPTH == 0
-# undef YYMAXDEPTH
-#endif
 
 #ifndef YYMAXDEPTH
 # define YYMAXDEPTH 10000
@@ -11799,45 +12003,47 @@ int yydebug;
 #if YYERROR_VERBOSE
 
 # ifndef yystrlen
-#  if defined (__GLIBC__) && defined (_STRING_H)
+#  if defined __GLIBC__ && defined _STRING_H
 #   define yystrlen strlen
 #  else
 /* Return the length of YYSTR.  */
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 static YYSIZE_T
-#   if defined (__STDC__) || defined (__cplusplus)
 yystrlen (const char *yystr)
-#   else
+#else
+static YYSIZE_T
 yystrlen (yystr)
-     const char *yystr;
-#   endif
+    const char *yystr;
+#endif
 {
-  register const char *yys = yystr;
-
-  while (*yys++ != '\0')
+  YYSIZE_T yylen;
+  for (yylen = 0; yystr[yylen]; yylen++)
     continue;
-
-  return yys - yystr - 1;
+  return yylen;
 }
 #  endif
 # endif
 
 # ifndef yystpcpy
-#  if defined (__GLIBC__) && defined (_STRING_H) && defined (_GNU_SOURCE)
+#  if defined __GLIBC__ && defined _STRING_H && defined _GNU_SOURCE
 #   define yystpcpy stpcpy
 #  else
 /* Copy YYSRC to YYDEST, returning the address of the terminating '\0' in
    YYDEST.  */
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 static char *
-#   if defined (__STDC__) || defined (__cplusplus)
 yystpcpy (char *yydest, const char *yysrc)
-#   else
+#else
+static char *
 yystpcpy (yydest, yysrc)
-     char *yydest;
-     const char *yysrc;
-#   endif
+    char *yydest;
+    const char *yysrc;
+#endif
 {
-  register char *yyd = yydest;
-  register const char *yys = yysrc;
+  char *yyd = yydest;
+  const char *yys = yysrc;
 
   while ((*yyd++ = *yys++) != '\0')
     continue;
@@ -11847,70 +12053,192 @@ yystpcpy (yydest, yysrc)
 #  endif
 # endif
 
-#endif /* !YYERROR_VERBOSE */
+# ifndef yytnamerr
+/* Copy to YYRES the contents of YYSTR after stripping away unnecessary
+   quotes and backslashes, so that it's suitable for yyerror.  The
+   heuristic is that double-quoting is unnecessary unless the string
+   contains an apostrophe, a comma, or backslash (other than
+   backslash-backslash).  YYSTR is taken from yytname.  If YYRES is
+   null, do not copy; instead, return the length of what the result
+   would have been.  */
+static YYSIZE_T
+yytnamerr (char *yyres, const char *yystr)
+{
+  if (*yystr == '"')
+    {
+      YYSIZE_T yyn = 0;
+      char const *yyp = yystr;
 
+      for (;;)
+	switch (*++yyp)
+	  {
+	  case '\'':
+	  case ',':
+	    goto do_not_strip_quotes;
+
+	  case '\\':
+	    if (*++yyp != '\\')
+	      goto do_not_strip_quotes;
+	    /* Fall through.  */
+	  default:
+	    if (yyres)
+	      yyres[yyn] = *yyp;
+	    yyn++;
+	    break;
+
+	  case '"':
+	    if (yyres)
+	      yyres[yyn] = '\0';
+	    return yyn;
+	  }
+    do_not_strip_quotes: ;
+    }
+
+  if (! yyres)
+    return yystrlen (yystr);
+
+  return yystpcpy (yyres, yystr) - yyres;
+}
+# endif
+
+/* Copy into YYRESULT an error message about the unexpected token
+   YYCHAR while in state YYSTATE.  Return the number of bytes copied,
+   including the terminating null byte.  If YYRESULT is null, do not
+   copy anything; just return the number of bytes that would be
+   copied.  As a special case, return 0 if an ordinary "syntax error"
+   message will do.  Return YYSIZE_MAXIMUM if overflow occurs during
+   size calculation.  */
+static YYSIZE_T
+yysyntax_error (char *yyresult, int yystate, int yychar)
+{
+  int yyn = yypact[yystate];
+
+  if (! (YYPACT_NINF < yyn && yyn <= YYLAST))
+    return 0;
+  else
+    {
+      int yytype = YYTRANSLATE (yychar);
+      YYSIZE_T yysize0 = yytnamerr (0, yytname[yytype]);
+      YYSIZE_T yysize = yysize0;
+      YYSIZE_T yysize1;
+      int yysize_overflow = 0;
+      enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
+      char const *yyarg[YYERROR_VERBOSE_ARGS_MAXIMUM];
+      int yyx;
+
+# if 0
+      /* This is so xgettext sees the translatable formats that are
+	 constructed on the fly.  */
+      YY_("syntax error, unexpected %s");
+      YY_("syntax error, unexpected %s, expecting %s");
+      YY_("syntax error, unexpected %s, expecting %s or %s");
+      YY_("syntax error, unexpected %s, expecting %s or %s or %s");
+      YY_("syntax error, unexpected %s, expecting %s or %s or %s or %s");
+# endif
+      char *yyfmt;
+      char const *yyf;
+      static char const yyunexpected[] = "syntax error, unexpected %s";
+      static char const yyexpecting[] = ", expecting %s";
+      static char const yyor[] = " or %s";
+      char yyformat[sizeof yyunexpected
+		    + sizeof yyexpecting - 1
+		    + ((YYERROR_VERBOSE_ARGS_MAXIMUM - 2)
+		       * (sizeof yyor - 1))];
+      char const *yyprefix = yyexpecting;
+
+      /* Start YYX at -YYN if negative to avoid negative indexes in
+	 YYCHECK.  */
+      int yyxbegin = yyn < 0 ? -yyn : 0;
+
+      /* Stay within bounds of both yycheck and yytname.  */
+      int yychecklim = YYLAST - yyn + 1;
+      int yyxend = yychecklim < YYNTOKENS ? yychecklim : YYNTOKENS;
+      int yycount = 1;
+
+      yyarg[0] = yytname[yytype];
+      yyfmt = yystpcpy (yyformat, yyunexpected);
+
+      for (yyx = yyxbegin; yyx < yyxend; ++yyx)
+	if (yycheck[yyx + yyn] == yyx && yyx != YYTERROR)
+	  {
+	    if (yycount == YYERROR_VERBOSE_ARGS_MAXIMUM)
+	      {
+		yycount = 1;
+		yysize = yysize0;
+		yyformat[sizeof yyunexpected - 1] = '\0';
+		break;
+	      }
+	    yyarg[yycount++] = yytname[yyx];
+	    yysize1 = yysize + yytnamerr (0, yytname[yyx]);
+	    yysize_overflow |= (yysize1 < yysize);
+	    yysize = yysize1;
+	    yyfmt = yystpcpy (yyfmt, yyprefix);
+	    yyprefix = yyor;
+	  }
+
+      yyf = YY_(yyformat);
+      yysize1 = yysize + yystrlen (yyf);
+      yysize_overflow |= (yysize1 < yysize);
+      yysize = yysize1;
+
+      if (yysize_overflow)
+	return YYSIZE_MAXIMUM;
+
+      if (yyresult)
+	{
+	  /* Avoid sprintf, as that infringes on the user's name space.
+	     Don't have undefined behavior even if the translation
+	     produced a string with the wrong number of "%s"s.  */
+	  char *yyp = yyresult;
+	  int yyi = 0;
+	  while ((*yyp = *yyf) != '\0')
+	    {
+	      if (*yyp == '%' && yyf[1] == 's' && yyi < yycount)
+		{
+		  yyp += yytnamerr (yyp, yyarg[yyi++]);
+		  yyf += 2;
+		}
+	      else
+		{
+		  yyp++;
+		  yyf++;
+		}
+	    }
+	}
+      return yysize;
+    }
+}
+#endif /* YYERROR_VERBOSE */
 
 
-#if YYDEBUG
-/*--------------------------------.
-| Print this symbol on YYOUTPUT.  |
-`--------------------------------*/
-
-#if defined (__STDC__) || defined (__cplusplus)
-static void
-yysymprint (FILE *yyoutput, int yytype, YYSTYPE *yyvaluep)
-#else
-static void
-yysymprint (yyoutput, yytype, yyvaluep)
-    FILE *yyoutput;
-    int yytype;
-    YYSTYPE *yyvaluep;
-#endif
-{
-  /* Pacify ``unused variable'' warnings.  */
-  (void) yyvaluep;
-
-  if (yytype < YYNTOKENS)
-    {
-      YYFPRINTF (yyoutput, "token %s (", yytname[yytype]);
-# ifdef YYPRINT
-      YYPRINT (yyoutput, yytoknum[yytype], *yyvaluep);
-# endif
-    }
-  else
-    YYFPRINTF (yyoutput, "nterm %s (", yytname[yytype]);
-
-  switch (yytype)
-    {
-      default:
-        break;
-    }
-  YYFPRINTF (yyoutput, ")");
-}
-
-#endif /* ! YYDEBUG */
 /*-----------------------------------------------.
 | Release the memory associated to this symbol.  |
 `-----------------------------------------------*/
 
-#if defined (__STDC__) || defined (__cplusplus)
+/*ARGSUSED*/
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 static void
-yydestruct (int yytype, YYSTYPE *yyvaluep)
+yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep)
 #else
 static void
-yydestruct (yytype, yyvaluep)
+yydestruct (yymsg, yytype, yyvaluep)
+    const char *yymsg;
     int yytype;
     YYSTYPE *yyvaluep;
 #endif
 {
-  /* Pacify ``unused variable'' warnings.  */
-  (void) yyvaluep;
+  YYUSE (yyvaluep);
+
+  if (!yymsg)
+    yymsg = "Deleting";
+  YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
 
   switch (yytype)
     {
 
       default:
-        break;
+	break;
     }
 }
 
@@ -11918,13 +12246,13 @@ yydestruct (yytype, yyvaluep)
 /* Prevent warnings from -Wmissing-prototypes.  */
 
 #ifdef YYPARSE_PARAM
-# if defined (__STDC__) || defined (__cplusplus)
+#if defined __STDC__ || defined __cplusplus
 int yyparse (void *YYPARSE_PARAM);
-# else
+#else
 int yyparse ();
-# endif
+#endif
 #else /* ! YYPARSE_PARAM */
-#if defined (__STDC__) || defined (__cplusplus)
+#if defined __STDC__ || defined __cplusplus
 int yyparse (void);
 #else
 int yyparse ();
@@ -11941,14 +12269,18 @@ int yyparse ();
 `----------*/
 
 #ifdef YYPARSE_PARAM
-# if defined (__STDC__) || defined (__cplusplus)
-int yyparse (void *YYPARSE_PARAM)
-# else
-int yyparse (YYPARSE_PARAM)
-  void *YYPARSE_PARAM;
-# endif
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+int
+yyparse (void *YYPARSE_PARAM)
+#else
+int
+yyparse (YYPARSE_PARAM)
+    void *YYPARSE_PARAM;
+#endif
 #else /* ! YYPARSE_PARAM */
-#if defined (__STDC__) || defined (__cplusplus)
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 int
 yyparse (void)
 #else
@@ -11958,22 +12290,28 @@ yyparse ()
 #endif
 #endif
 {
-  /* The lookahead symbol.  */
+  /* The look-ahead symbol.  */
 int yychar;
 
-/* The semantic value of the lookahead symbol.  */
+/* The semantic value of the look-ahead symbol.  */
 YYSTYPE yylval;
 
 /* Number of syntax errors so far.  */
 int yynerrs;
 
-  register int yystate;
-  register int yyn;
+  int yystate;
+  int yyn;
   int yyresult;
   /* Number of tokens to shift before error messages enabled.  */
   int yyerrstatus;
-  /* Lookahead token as an internal (translated) token number.  */
+  /* Look-ahead token as an internal (translated) token number.  */
   int yytoken = 0;
+#if YYERROR_VERBOSE
+  /* Buffer for error messages, and its allocated size.  */
+  char yymsgbuf[128];
+  char *yymsg = yymsgbuf;
+  YYSIZE_T yymsg_alloc = sizeof yymsgbuf;
+#endif
 
   /* Three stacks and their tools:
      `yyss': related to states,
@@ -11984,18 +12322,18 @@ int yynerrs;
      to reallocate them elsewhere.  */
 
   /* The state stack.  */
-  short	yyssa[YYINITDEPTH];
-  short *yyss = yyssa;
-  register short *yyssp;
+  yytype_int16 yyssa[YYINITDEPTH];
+  yytype_int16 *yyss = yyssa;
+  yytype_int16 *yyssp;
 
   /* The semantic value stack.  */
   YYSTYPE yyvsa[YYINITDEPTH];
   YYSTYPE *yyvs = yyvsa;
-  register YYSTYPE *yyvsp;
+  YYSTYPE *yyvsp;
 
 
 
-#define YYPOPSTACK   (yyvsp--, yyssp--)
+#define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N))
 
   YYSIZE_T yystacksize = YYINITDEPTH;
 
@@ -12004,9 +12342,9 @@ int yynerrs;
   YYSTYPE yyval;
 
 
-  /* When reducing, the number of symbols on the RHS of the reduced
-     rule.  */
-  int yylen;
+  /* The number of symbols on the RHS of the reduced rule.
+     Keep to zero when no symbol should be popped.  */
+  int yylen = 0;
 
   YYDPRINTF ((stderr, "Starting parse\n"));
 
@@ -12030,8 +12368,7 @@ int yynerrs;
 `------------------------------------------------------------*/
  yynewstate:
   /* In all cases, when you get here, the value and location stacks
-     have just been pushed. so pushing a state here evens the stacks.
-     */
+     have just been pushed.  So pushing a state here evens the stacks.  */
   yyssp++;
 
  yysetstate:
@@ -12044,18 +12381,18 @@ int yynerrs;
 
 #ifdef yyoverflow
       {
-	/* Give user a chance to reallocate the stack. Use copies of
+	/* Give user a chance to reallocate the stack.  Use copies of
 	   these so that the &'s don't force the real ones into
 	   memory.  */
 	YYSTYPE *yyvs1 = yyvs;
-	short *yyss1 = yyss;
+	yytype_int16 *yyss1 = yyss;
 
 
 	/* Each stack pointer address is followed by the size of the
 	   data in use in that stack, in bytes.  This used to be a
 	   conditional around just the two extra args, but that might
 	   be undefined if yyoverflow is a macro.  */
-	yyoverflow ("parser stack overflow",
+	yyoverflow (YY_("memory exhausted"),
 		    &yyss1, yysize * sizeof (*yyssp),
 		    &yyvs1, yysize * sizeof (*yyvsp),
 
@@ -12066,21 +12403,21 @@ int yynerrs;
       }
 #else /* no yyoverflow */
 # ifndef YYSTACK_RELOCATE
-      goto yyoverflowlab;
+      goto yyexhaustedlab;
 # else
       /* Extend the stack our own way.  */
       if (YYMAXDEPTH <= yystacksize)
-	goto yyoverflowlab;
+	goto yyexhaustedlab;
       yystacksize *= 2;
       if (YYMAXDEPTH < yystacksize)
 	yystacksize = YYMAXDEPTH;
 
       {
-	short *yyss1 = yyss;
+	yytype_int16 *yyss1 = yyss;
 	union yyalloc *yyptr =
 	  (union yyalloc *) YYSTACK_ALLOC (YYSTACK_BYTES (yystacksize));
 	if (! yyptr)
-	  goto yyoverflowlab;
+	  goto yyexhaustedlab;
 	YYSTACK_RELOCATE (yyss);
 	YYSTACK_RELOCATE (yyvs);
 
@@ -12111,19 +12448,17 @@ int yynerrs;
 `-----------*/
 yybackup:
 
-/* Do appropriate processing given the current state.  */
-/* Read a lookahead token if we need one and don't already have one.  */
-/* yyresume: */
+  /* Do appropriate processing given the current state.  Read a
+     look-ahead token if we need one and don't already have one.  */
 
-  /* First try to decide what to do without reference to lookahead token.  */
-
+  /* First try to decide what to do without reference to look-ahead token.  */
   yyn = yypact[yystate];
   if (yyn == YYPACT_NINF)
     goto yydefault;
 
-  /* Not known => get a lookahead token if don't already have one.  */
+  /* Not known => get a look-ahead token if don't already have one.  */
 
-  /* YYCHAR is either YYEMPTY or YYEOF or a valid lookahead symbol.  */
+  /* YYCHAR is either YYEMPTY or YYEOF or a valid look-ahead symbol.  */
   if (yychar == YYEMPTY)
     {
       YYDPRINTF ((stderr, "Reading a token: "));
@@ -12138,7 +12473,7 @@ yybackup:
   else
     {
       yytoken = YYTRANSLATE (yychar);
-      YYDSYMPRINTF ("Next token is", yytoken, &yylval, &yylloc);
+      YY_SYMBOL_PRINT ("Next token is", yytoken, &yylval, &yylloc);
     }
 
   /* If the proper action on seeing token YYTOKEN is to reduce or to
@@ -12158,22 +12493,21 @@ yybackup:
   if (yyn == YYFINAL)
     YYACCEPT;
 
-  /* Shift the lookahead token.  */
-  YYDPRINTF ((stderr, "Shifting token %s, ", yytname[yytoken]));
-
-  /* Discard the token being shifted unless it is eof.  */
-  if (yychar != YYEOF)
-    yychar = YYEMPTY;
-
-  *++yyvsp = yylval;
-
-
   /* Count tokens shifted since error; after three, turn off error
      status.  */
   if (yyerrstatus)
     yyerrstatus--;
 
+  /* Shift the look-ahead token.  */
+  YY_SYMBOL_PRINT ("Shifting", yytoken, &yylval, &yylloc);
+
+  /* Discard the shifted token unless it is eof.  */
+  if (yychar != YYEOF)
+    yychar = YYEMPTY;
+
   yystate = yyn;
+  *++yyvsp = yylval;
+
   goto yynewstate;
 
 
@@ -12241,7 +12575,7 @@ yyreduce:
             YYABORT;
           }
           lex->sql_command= SQLCOM_DEALLOCATE_PREPARE;
-          lex->prepared_stmt_name= yyvsp[0].lex_str;
+          lex->prepared_stmt_name= (yyvsp[(3) - (3)].lex_str);
         }
     break;
 
@@ -12256,7 +12590,7 @@ yyreduce:
             YYABORT;
           }
           lex->sql_command= SQLCOM_PREPARE;
-          lex->prepared_stmt_name= yyvsp[-2].lex_str;
+          lex->prepared_stmt_name= (yyvsp[(2) - (4)].lex_str);
         }
     break;
 
@@ -12265,7 +12599,7 @@ yyreduce:
     {
           THD *thd=YYTHD;
           LEX *lex= thd->lex;
-          lex->prepared_stmt_code= yyvsp[0].lex_str;
+          lex->prepared_stmt_code= (yyvsp[(1) - (1)].lex_str);
           lex->prepared_stmt_code_is_varref= FALSE;
         }
     break;
@@ -12275,7 +12609,7 @@ yyreduce:
     {
           THD *thd=YYTHD;
           LEX *lex= thd->lex;
-          lex->prepared_stmt_code= yyvsp[0].lex_str;
+          lex->prepared_stmt_code= (yyvsp[(2) - (2)].lex_str);
           lex->prepared_stmt_code_is_varref= TRUE;
         }
     break;
@@ -12291,7 +12625,7 @@ yyreduce:
             YYABORT;
           }
           lex->sql_command= SQLCOM_EXECUTE;
-          lex->prepared_stmt_name= yyvsp[0].lex_str;
+          lex->prepared_stmt_name= (yyvsp[(2) - (2)].lex_str);
         }
     break;
 
@@ -12304,7 +12638,7 @@ yyreduce:
 #line 886 "sql_yacc.yy"
     {
           LEX *lex=Lex;
-          LEX_STRING *lexstr= (LEX_STRING*)sql_memdup(&yyvsp[0].lex_str, sizeof(LEX_STRING));
+          LEX_STRING *lexstr= (LEX_STRING*)sql_memdup(&(yyvsp[(2) - (2)].lex_str), sizeof(LEX_STRING));
           if (!lexstr || lex->prepared_stmt_params.push_back(lexstr))
               YYABORT;
         }
@@ -12315,7 +12649,7 @@ yyreduce:
     {
 	  LEX *lex= Lex;
 	  lex->sql_command= SQLCOM_HELP;
-	  lex->help_arg= yyvsp[0].lex_str.str;
+	  lex->help_arg= (yyvsp[(2) - (2)].lex_str).str;
        }
     break;
 
@@ -12336,42 +12670,42 @@ yyreduce:
   case 67:
 #line 923 "sql_yacc.yy"
     {
-	 Lex->mi.host = yyvsp[0].lex_str.str;
+	 Lex->mi.host = (yyvsp[(3) - (3)].lex_str).str;
        }
     break;
 
   case 68:
 #line 928 "sql_yacc.yy"
     {
-	 Lex->mi.user = yyvsp[0].lex_str.str;
+	 Lex->mi.user = (yyvsp[(3) - (3)].lex_str).str;
        }
     break;
 
   case 69:
 #line 933 "sql_yacc.yy"
     {
-	 Lex->mi.password = yyvsp[0].lex_str.str;
+	 Lex->mi.password = (yyvsp[(3) - (3)].lex_str).str;
        }
     break;
 
   case 70:
 #line 938 "sql_yacc.yy"
     {
-	 Lex->mi.port = yyvsp[0].ulong_num;
+	 Lex->mi.port = (yyvsp[(3) - (3)].ulong_num);
        }
     break;
 
   case 71:
 #line 943 "sql_yacc.yy"
     {
-	 Lex->mi.connect_retry = yyvsp[0].ulong_num;
+	 Lex->mi.connect_retry = (yyvsp[(3) - (3)].ulong_num);
        }
     break;
 
   case 72:
 #line 947 "sql_yacc.yy"
     {
-           Lex->mi.ssl= yyvsp[0].ulong_num ? 
+           Lex->mi.ssl= (yyvsp[(3) - (3)].ulong_num) ? 
                LEX_MASTER_INFO::SSL_ENABLE : LEX_MASTER_INFO::SSL_DISABLE;
          }
     break;
@@ -12379,49 +12713,49 @@ yyreduce:
   case 73:
 #line 952 "sql_yacc.yy"
     {
-           Lex->mi.ssl_ca= yyvsp[0].lex_str.str;
+           Lex->mi.ssl_ca= (yyvsp[(3) - (3)].lex_str).str;
          }
     break;
 
   case 74:
 #line 956 "sql_yacc.yy"
     {
-           Lex->mi.ssl_capath= yyvsp[0].lex_str.str;
+           Lex->mi.ssl_capath= (yyvsp[(3) - (3)].lex_str).str;
          }
     break;
 
   case 75:
 #line 960 "sql_yacc.yy"
     {
-           Lex->mi.ssl_cert= yyvsp[0].lex_str.str;
+           Lex->mi.ssl_cert= (yyvsp[(3) - (3)].lex_str).str;
          }
     break;
 
   case 76:
 #line 964 "sql_yacc.yy"
     {
-           Lex->mi.ssl_cipher= yyvsp[0].lex_str.str;
+           Lex->mi.ssl_cipher= (yyvsp[(3) - (3)].lex_str).str;
          }
     break;
 
   case 77:
 #line 968 "sql_yacc.yy"
     {
-           Lex->mi.ssl_key= yyvsp[0].lex_str.str;
+           Lex->mi.ssl_key= (yyvsp[(3) - (3)].lex_str).str;
 	 }
     break;
 
   case 79:
 #line 977 "sql_yacc.yy"
     {
-	 Lex->mi.log_file_name = yyvsp[0].lex_str.str;
+	 Lex->mi.log_file_name = (yyvsp[(3) - (3)].lex_str).str;
        }
     break;
 
   case 80:
 #line 981 "sql_yacc.yy"
     {
-           Lex->mi.pos = yyvsp[0].ulonglong_number;
+           Lex->mi.pos = (yyvsp[(3) - (3)].ulonglong_number);
            /* 
               If the user specified a value < BIN_LOG_HEADER_SIZE, adjust it
               instead of causing subsequent errors. 
@@ -12440,14 +12774,14 @@ yyreduce:
   case 81:
 #line 997 "sql_yacc.yy"
     {
-           Lex->mi.relay_log_name = yyvsp[0].lex_str.str;
+           Lex->mi.relay_log_name = (yyvsp[(3) - (3)].lex_str).str;
          }
     break;
 
   case 82:
 #line 1001 "sql_yacc.yy"
     {
-           Lex->mi.relay_log_pos = yyvsp[0].ulong_num;
+           Lex->mi.relay_log_pos = (yyvsp[(3) - (3)].ulong_num);
            /* Adjust if < BIN_LOG_HEADER_SIZE (same comment as Lex->mi.pos) */
            Lex->mi.relay_log_pos = max(BIN_LOG_HEADER_SIZE, Lex->mi.relay_log_pos);
          }
@@ -12459,7 +12793,7 @@ yyreduce:
 	  THD *thd= YYTHD;
 	  LEX *lex=Lex;
 	  lex->sql_command= SQLCOM_CREATE_TABLE;
-	  if (!lex->select_lex.add_table_to_list(thd, yyvsp[0].table, NULL,
+	  if (!lex->select_lex.add_table_to_list(thd, (yyvsp[(5) - (5)].table), NULL,
 						 TL_OPTION_UPDATING,
 						 (using_update_log ?
 						  TL_READ_NO_INSERT:
@@ -12470,7 +12804,7 @@ yyreduce:
 	  lex->col_list.empty();
 	  lex->change=NullS;
 	  bzero((char*) &lex->create_info,sizeof(lex->create_info));
-	  lex->create_info.options=yyvsp[-3].num | yyvsp[-1].num;
+	  lex->create_info.options=(yyvsp[(2) - (5)].num) | (yyvsp[(4) - (5)].num);
 	  lex->create_info.db_type= (enum db_type) lex->thd->variables.table_type;
 	  lex->create_info.default_table_charset= NULL;
 	  lex->name=0;
@@ -12487,7 +12821,7 @@ yyreduce:
     {
 	    LEX *lex=Lex;
 	    lex->sql_command= SQLCOM_CREATE_INDEX;
-	    if (!lex->current_select->add_table_to_list(lex->thd, yyvsp[0].table, NULL,
+	    if (!lex->current_select->add_table_to_list(lex->thd, (yyvsp[(7) - (7)].table), NULL,
 							TL_OPTION_UPDATING))
 	      YYABORT;
 	    lex->create_list.empty();
@@ -12502,7 +12836,7 @@ yyreduce:
     {
 	    LEX *lex=Lex;
 
-	    lex->key_list.push_back(new Key(yyvsp[-9].key_type,yyvsp[-7].lex_str.str, yyvsp[-6].key_alg, 0, lex->col_list));
+	    lex->key_list.push_back(new Key((yyvsp[(2) - (11)].key_type),(yyvsp[(4) - (11)].lex_str).str, (yyvsp[(5) - (11)].key_alg), 0, lex->col_list));
 	    lex->col_list.empty();
 	  }
     break;
@@ -12520,8 +12854,8 @@ yyreduce:
     {
 	    LEX *lex=Lex;
 	    lex->sql_command=SQLCOM_CREATE_DB;
-	    lex->name=yyvsp[-2].lex_str.str;
-            lex->create_info.options=yyvsp[-3].num;
+	    lex->name=(yyvsp[(4) - (6)].lex_str).str;
+            lex->create_info.options=(yyvsp[(3) - (6)].num);
 	  }
     break;
 
@@ -12530,8 +12864,8 @@ yyreduce:
     {
 	    LEX *lex=Lex;
 	    lex->sql_command = SQLCOM_CREATE_FUNCTION;
-	    lex->udf.name = yyvsp[0].lex_str;
-	    lex->udf.type= yyvsp[-2].udf_type;
+	    lex->udf.name = (yyvsp[(4) - (4)].lex_str);
+	    lex->udf.type= (yyvsp[(2) - (4)].udf_type);
 	  }
     break;
 
@@ -12539,8 +12873,8 @@ yyreduce:
 #line 1073 "sql_yacc.yy"
     {
 	    LEX *lex=Lex;
-	    lex->udf.returns=(Item_result) yyvsp[-2].num;
-	    lex->udf.dl=yyvsp[0].lex_str.str;
+	    lex->udf.returns=(Item_result) (yyvsp[(7) - (9)].num);
+	    lex->udf.dl=(yyvsp[(9) - (9)].lex_str).str;
 	  }
     break;
 
@@ -12558,7 +12892,7 @@ yyreduce:
 #line 1084 "sql_yacc.yy"
     {
             LEX *lex=Lex;
-            if (!(lex->name= (char *)yyvsp[0].table))
+            if (!(lex->name= (char *)(yyvsp[(2) - (2)].table)))
               YYABORT;
           }
     break;
@@ -12567,7 +12901,7 @@ yyreduce:
 #line 1090 "sql_yacc.yy"
     {
             LEX *lex=Lex;
-            if (!(lex->name= (char *)yyvsp[-1].table))
+            if (!(lex->name= (char *)(yyvsp[(3) - (4)].table)))
               YYABORT;
           }
     break;
@@ -12681,82 +13015,82 @@ yyreduce:
 
   case 114:
 #line 1148 "sql_yacc.yy"
-    { yyval.num= 0; }
+    { (yyval.num)= 0; }
     break;
 
   case 115:
 #line 1149 "sql_yacc.yy"
-    { yyval.num= yyvsp[0].num;}
+    { (yyval.num)= (yyvsp[(1) - (1)].num);}
     break;
 
   case 116:
 #line 1152 "sql_yacc.yy"
-    { yyval.num=yyvsp[0].num; }
+    { (yyval.num)=(yyvsp[(1) - (1)].num); }
     break;
 
   case 117:
 #line 1153 "sql_yacc.yy"
-    { yyval.num= yyvsp[-1].num | yyvsp[0].num; }
+    { (yyval.num)= (yyvsp[(1) - (2)].num) | (yyvsp[(2) - (2)].num); }
     break;
 
   case 118:
 #line 1156 "sql_yacc.yy"
-    { yyval.num=HA_LEX_CREATE_TMP_TABLE; }
+    { (yyval.num)=HA_LEX_CREATE_TMP_TABLE; }
     break;
 
   case 119:
 #line 1159 "sql_yacc.yy"
-    { yyval.num= 0; }
+    { (yyval.num)= 0; }
     break;
 
   case 120:
 #line 1160 "sql_yacc.yy"
-    { yyval.num=HA_LEX_CREATE_IF_NOT_EXISTS; }
+    { (yyval.num)=HA_LEX_CREATE_IF_NOT_EXISTS; }
     break;
 
   case 128:
 #line 1176 "sql_yacc.yy"
-    { Lex->create_info.db_type= yyvsp[0].db_type; }
+    { Lex->create_info.db_type= (yyvsp[(3) - (3)].db_type); }
     break;
 
   case 129:
 #line 1177 "sql_yacc.yy"
-    { Lex->create_info.db_type= yyvsp[0].db_type; WARN_DEPRECATED("TYPE=storage_engine","ENGINE=storage_engine"); }
+    { Lex->create_info.db_type= (yyvsp[(3) - (3)].db_type); WARN_DEPRECATED("TYPE=storage_engine","ENGINE=storage_engine"); }
     break;
 
   case 130:
 #line 1178 "sql_yacc.yy"
-    { Lex->create_info.max_rows= yyvsp[0].ulonglong_number; Lex->create_info.used_fields|= HA_CREATE_USED_MAX_ROWS;}
+    { Lex->create_info.max_rows= (yyvsp[(3) - (3)].ulonglong_number); Lex->create_info.used_fields|= HA_CREATE_USED_MAX_ROWS;}
     break;
 
   case 131:
 #line 1179 "sql_yacc.yy"
-    { Lex->create_info.min_rows= yyvsp[0].ulonglong_number; Lex->create_info.used_fields|= HA_CREATE_USED_MIN_ROWS;}
+    { Lex->create_info.min_rows= (yyvsp[(3) - (3)].ulonglong_number); Lex->create_info.used_fields|= HA_CREATE_USED_MIN_ROWS;}
     break;
 
   case 132:
 #line 1180 "sql_yacc.yy"
-    { Lex->create_info.avg_row_length=yyvsp[0].ulong_num; Lex->create_info.used_fields|= HA_CREATE_USED_AVG_ROW_LENGTH;}
+    { Lex->create_info.avg_row_length=(yyvsp[(3) - (3)].ulong_num); Lex->create_info.used_fields|= HA_CREATE_USED_AVG_ROW_LENGTH;}
     break;
 
   case 133:
 #line 1181 "sql_yacc.yy"
-    { Lex->create_info.password=yyvsp[0].lex_str.str; }
+    { Lex->create_info.password=(yyvsp[(3) - (3)].lex_str).str; }
     break;
 
   case 134:
 #line 1182 "sql_yacc.yy"
-    { Lex->create_info.comment=yyvsp[0].lex_str.str; }
+    { Lex->create_info.comment=(yyvsp[(3) - (3)].lex_str).str; }
     break;
 
   case 135:
 #line 1183 "sql_yacc.yy"
-    { Lex->create_info.auto_increment_value=yyvsp[0].ulonglong_number; Lex->create_info.used_fields|= HA_CREATE_USED_AUTO;}
+    { Lex->create_info.auto_increment_value=(yyvsp[(3) - (3)].ulonglong_number); Lex->create_info.used_fields|= HA_CREATE_USED_AUTO;}
     break;
 
   case 136:
 #line 1184 "sql_yacc.yy"
-    { Lex->create_info.table_options|= yyvsp[0].ulong_num ? HA_OPTION_PACK_KEYS : HA_OPTION_NO_PACK_KEYS; Lex->create_info.used_fields|= HA_CREATE_USED_PACK_KEYS;}
+    { Lex->create_info.table_options|= (yyvsp[(3) - (3)].ulong_num) ? HA_OPTION_PACK_KEYS : HA_OPTION_NO_PACK_KEYS; Lex->create_info.used_fields|= HA_CREATE_USED_PACK_KEYS;}
     break;
 
   case 137:
@@ -12766,32 +13100,32 @@ yyreduce:
 
   case 138:
 #line 1186 "sql_yacc.yy"
-    { Lex->create_info.table_options|= yyvsp[0].ulong_num ? HA_OPTION_CHECKSUM : HA_OPTION_NO_CHECKSUM; }
+    { Lex->create_info.table_options|= (yyvsp[(3) - (3)].ulong_num) ? HA_OPTION_CHECKSUM : HA_OPTION_NO_CHECKSUM; }
     break;
 
   case 139:
 #line 1187 "sql_yacc.yy"
-    { Lex->create_info.table_options|= yyvsp[0].ulong_num ? HA_OPTION_DELAY_KEY_WRITE : HA_OPTION_NO_DELAY_KEY_WRITE; }
+    { Lex->create_info.table_options|= (yyvsp[(3) - (3)].ulong_num) ? HA_OPTION_DELAY_KEY_WRITE : HA_OPTION_NO_DELAY_KEY_WRITE; }
     break;
 
   case 140:
 #line 1188 "sql_yacc.yy"
-    { Lex->create_info.row_type= yyvsp[0].row_type; }
+    { Lex->create_info.row_type= (yyvsp[(3) - (3)].row_type); }
     break;
 
   case 141:
 #line 1189 "sql_yacc.yy"
-    { Lex->create_info.raid_type= yyvsp[0].ulong_num; Lex->create_info.used_fields|= HA_CREATE_USED_RAID;}
+    { Lex->create_info.raid_type= (yyvsp[(3) - (3)].ulong_num); Lex->create_info.used_fields|= HA_CREATE_USED_RAID;}
     break;
 
   case 142:
 #line 1190 "sql_yacc.yy"
-    { Lex->create_info.raid_chunks= yyvsp[0].ulong_num; Lex->create_info.used_fields|= HA_CREATE_USED_RAID;}
+    { Lex->create_info.raid_chunks= (yyvsp[(3) - (3)].ulong_num); Lex->create_info.used_fields|= HA_CREATE_USED_RAID;}
     break;
 
   case 143:
 #line 1191 "sql_yacc.yy"
-    { Lex->create_info.raid_chunksize= yyvsp[0].ulong_num*RAID_BLOCK_SIZE; Lex->create_info.used_fields|= HA_CREATE_USED_RAID;}
+    { Lex->create_info.raid_chunksize= (yyvsp[(3) - (3)].ulong_num)*RAID_BLOCK_SIZE; Lex->create_info.used_fields|= HA_CREATE_USED_RAID;}
     break;
 
   case 144:
@@ -12812,17 +13146,17 @@ yyreduce:
 
   case 147:
 #line 1207 "sql_yacc.yy"
-    { Lex->create_info.merge_insert_method= yyvsp[0].ulong_num; Lex->create_info.used_fields|= HA_CREATE_USED_INSERT_METHOD;}
+    { Lex->create_info.merge_insert_method= (yyvsp[(3) - (3)].ulong_num); Lex->create_info.used_fields|= HA_CREATE_USED_INSERT_METHOD;}
     break;
 
   case 148:
 #line 1209 "sql_yacc.yy"
-    { Lex->create_info.data_file_name= yyvsp[0].lex_str.str; }
+    { Lex->create_info.data_file_name= (yyvsp[(4) - (4)].lex_str).str; }
     break;
 
   case 149:
 #line 1210 "sql_yacc.yy"
-    { Lex->create_info.index_file_name= yyvsp[0].lex_str.str; }
+    { Lex->create_info.index_file_name= (yyvsp[(4) - (4)].lex_str).str; }
     break;
 
   case 150:
@@ -12830,15 +13164,15 @@ yyreduce:
     {
           HA_CREATE_INFO *cinfo= &Lex->create_info;
           if ((cinfo->used_fields & HA_CREATE_USED_DEFAULT_CHARSET) &&
-               cinfo->default_table_charset && yyvsp[0].charset &&
-               !my_charset_same(cinfo->default_table_charset,yyvsp[0].charset))
+               cinfo->default_table_charset && (yyvsp[(4) - (4)].charset) &&
+               !my_charset_same(cinfo->default_table_charset,(yyvsp[(4) - (4)].charset)))
           {
             net_printf(YYTHD, ER_CONFLICTING_DECLARATIONS,
                        "CHARACTER SET ", cinfo->default_table_charset->csname,
-                       "CHARACTER SET ", yyvsp[0].charset->csname);
+                       "CHARACTER SET ", (yyvsp[(4) - (4)].charset)->csname);
             YYABORT;
           }
-	  Lex->create_info.default_table_charset= yyvsp[0].charset;
+	  Lex->create_info.default_table_charset= (yyvsp[(4) - (4)].charset);
           Lex->create_info.used_fields|= HA_CREATE_USED_DEFAULT_CHARSET;
         }
     break;
@@ -12848,14 +13182,14 @@ yyreduce:
     {
           HA_CREATE_INFO *cinfo= &Lex->create_info;
           if ((cinfo->used_fields & HA_CREATE_USED_DEFAULT_CHARSET) &&
-               cinfo->default_table_charset && yyvsp[0].charset &&
-               !my_charset_same(cinfo->default_table_charset,yyvsp[0].charset))
+               cinfo->default_table_charset && (yyvsp[(4) - (4)].charset) &&
+               !my_charset_same(cinfo->default_table_charset,(yyvsp[(4) - (4)].charset)))
             {
               net_printf(YYTHD,ER_COLLATION_CHARSET_MISMATCH,
-                         yyvsp[0].charset->name, cinfo->default_table_charset->csname);
+                         (yyvsp[(4) - (4)].charset)->name, cinfo->default_table_charset->csname);
               YYABORT;
             }
-            Lex->create_info.default_table_charset= yyvsp[0].charset;
+            Lex->create_info.default_table_charset= (yyvsp[(4) - (4)].charset);
             Lex->create_info.used_fields|= HA_CREATE_USED_DEFAULT_CHARSET;
         }
     break;
@@ -12863,9 +13197,9 @@ yyreduce:
   case 152:
 #line 1247 "sql_yacc.yy"
     {
-	  yyval.db_type = ha_resolve_by_name(yyvsp[0].lex_str.str,yyvsp[0].lex_str.length);
-	  if (yyval.db_type == DB_TYPE_UNKNOWN) {
-	    net_printf(YYTHD, ER_UNKNOWN_STORAGE_ENGINE, yyvsp[0].lex_str.str);
+	  (yyval.db_type) = ha_resolve_by_name((yyvsp[(1) - (1)].lex_str).str,(yyvsp[(1) - (1)].lex_str).length);
+	  if ((yyval.db_type) == DB_TYPE_UNKNOWN) {
+	    net_printf(YYTHD, ER_UNKNOWN_STORAGE_ENGINE, (yyvsp[(1) - (1)].lex_str).str);
 	    YYABORT;
 	  }
 	}
@@ -12873,52 +13207,52 @@ yyreduce:
 
   case 153:
 #line 1256 "sql_yacc.yy"
-    { yyval.row_type= ROW_TYPE_DEFAULT; }
+    { (yyval.row_type)= ROW_TYPE_DEFAULT; }
     break;
 
   case 154:
 #line 1257 "sql_yacc.yy"
-    { yyval.row_type= ROW_TYPE_FIXED; }
+    { (yyval.row_type)= ROW_TYPE_FIXED; }
     break;
 
   case 155:
 #line 1258 "sql_yacc.yy"
-    { yyval.row_type= ROW_TYPE_DYNAMIC; }
+    { (yyval.row_type)= ROW_TYPE_DYNAMIC; }
     break;
 
   case 156:
 #line 1259 "sql_yacc.yy"
-    { yyval.row_type= ROW_TYPE_COMPRESSED; }
+    { (yyval.row_type)= ROW_TYPE_COMPRESSED; }
     break;
 
   case 157:
 #line 1262 "sql_yacc.yy"
-    { yyval.ulong_num= RAID_TYPE_0; }
+    { (yyval.ulong_num)= RAID_TYPE_0; }
     break;
 
   case 158:
 #line 1263 "sql_yacc.yy"
-    { yyval.ulong_num= RAID_TYPE_0; }
+    { (yyval.ulong_num)= RAID_TYPE_0; }
     break;
 
   case 159:
 #line 1264 "sql_yacc.yy"
-    { yyval.ulong_num=yyvsp[0].ulong_num;}
+    { (yyval.ulong_num)=(yyvsp[(1) - (1)].ulong_num);}
     break;
 
   case 160:
 #line 1267 "sql_yacc.yy"
-    { yyval.ulong_num= MERGE_INSERT_DISABLED; }
+    { (yyval.ulong_num)= MERGE_INSERT_DISABLED; }
     break;
 
   case 161:
 #line 1268 "sql_yacc.yy"
-    { yyval.ulong_num= MERGE_INSERT_TO_FIRST; }
+    { (yyval.ulong_num)= MERGE_INSERT_TO_FIRST; }
     break;
 
   case 162:
 #line 1269 "sql_yacc.yy"
-    { yyval.ulong_num= MERGE_INSERT_TO_LAST; }
+    { (yyval.ulong_num)= MERGE_INSERT_TO_LAST; }
     break;
 
   case 163:
@@ -12928,27 +13262,27 @@ yyreduce:
 
   case 165:
 #line 1276 "sql_yacc.yy"
-    { yyval.udf_type = UDFTYPE_FUNCTION; }
+    { (yyval.udf_type) = UDFTYPE_FUNCTION; }
     break;
 
   case 166:
 #line 1277 "sql_yacc.yy"
-    { yyval.udf_type = UDFTYPE_AGGREGATE; }
+    { (yyval.udf_type) = UDFTYPE_AGGREGATE; }
     break;
 
   case 167:
 #line 1280 "sql_yacc.yy"
-    {yyval.num = (int) STRING_RESULT; }
+    {(yyval.num) = (int) STRING_RESULT; }
     break;
 
   case 168:
 #line 1281 "sql_yacc.yy"
-    {yyval.num = (int) REAL_RESULT; }
+    {(yyval.num) = (int) REAL_RESULT; }
     break;
 
   case 169:
 #line 1282 "sql_yacc.yy"
-    {yyval.num = (int) INT_RESULT; }
+    {(yyval.num) = (int) INT_RESULT; }
     break;
 
   case 175:
@@ -12962,7 +13296,7 @@ yyreduce:
 #line 1304 "sql_yacc.yy"
     {
 	    LEX *lex=Lex;
-	    lex->key_list.push_back(new Key(yyvsp[-5].key_type,yyvsp[-4].simple_string, yyvsp[-3].key_alg, 0, lex->col_list));
+	    lex->key_list.push_back(new Key((yyvsp[(1) - (6)].key_type),(yyvsp[(2) - (6)].simple_string), (yyvsp[(3) - (6)].key_alg), 0, lex->col_list));
 	    lex->col_list.empty();		/* Alloced by sql_alloc */
 	  }
     break;
@@ -12971,8 +13305,8 @@ yyreduce:
 #line 1310 "sql_yacc.yy"
     {
 	    LEX *lex=Lex;
-	    const char *key_name= yyvsp[-4].simple_string ? yyvsp[-4].simple_string:yyvsp[-6].simple_string;
-	    lex->key_list.push_back(new Key(yyvsp[-5].key_type, key_name, yyvsp[-3].key_alg, 0,
+	    const char *key_name= (yyvsp[(3) - (7)].simple_string) ? (yyvsp[(3) - (7)].simple_string):(yyvsp[(1) - (7)].simple_string);
+	    lex->key_list.push_back(new Key((yyvsp[(2) - (7)].key_type), key_name, (yyvsp[(4) - (7)].key_alg), 0,
 				    lex->col_list));
 	    lex->col_list.empty();		/* Alloced by sql_alloc */
 	  }
@@ -12982,13 +13316,13 @@ yyreduce:
 #line 1318 "sql_yacc.yy"
     {
 	    LEX *lex=Lex;
-	    lex->key_list.push_back(new foreign_key(yyvsp[-4].simple_string ? yyvsp[-4].simple_string:yyvsp[-7].simple_string, lex->col_list,
-				    yyvsp[0].table,
+	    lex->key_list.push_back(new foreign_key((yyvsp[(4) - (8)].simple_string) ? (yyvsp[(4) - (8)].simple_string):(yyvsp[(1) - (8)].simple_string), lex->col_list,
+				    (yyvsp[(8) - (8)].table),
 				    lex->ref_list,
 				    lex->fk_delete_opt,
 				    lex->fk_update_opt,
 				    lex->fk_match_option));
-	    lex->key_list.push_back(new Key(Key::MULTIPLE, yyvsp[-4].simple_string ? yyvsp[-4].simple_string : yyvsp[-7].simple_string,
+	    lex->key_list.push_back(new Key(Key::MULTIPLE, (yyvsp[(4) - (8)].simple_string) ? (yyvsp[(4) - (8)].simple_string) : (yyvsp[(1) - (8)].simple_string),
 					    HA_KEY_ALG_UNDEF, 1,
 					    lex->col_list));
 	    lex->col_list.empty();		/* Alloced by sql_alloc */
@@ -13011,17 +13345,17 @@ yyreduce:
 
   case 184:
 #line 1351 "sql_yacc.yy"
-    { yyval.simple_string=(char*) 0; }
+    { (yyval.simple_string)=(char*) 0; }
     break;
 
   case 185:
 #line 1352 "sql_yacc.yy"
-    { yyval.simple_string= yyvsp[0].simple_string; }
+    { (yyval.simple_string)= (yyvsp[(1) - (1)].simple_string); }
     break;
 
   case 186:
 #line 1356 "sql_yacc.yy"
-    { yyval.simple_string=yyvsp[0].simple_string; }
+    { (yyval.simple_string)=(yyvsp[(2) - (2)].simple_string); }
     break;
 
   case 187:
@@ -13039,8 +13373,8 @@ yyreduce:
 #line 1369 "sql_yacc.yy"
     {
 	  LEX *lex=Lex;
-	  if (add_field_to_list(lex->thd, yyvsp[-3].lex_str.str,
-				(enum enum_field_types) yyvsp[-1].num,
+	  if (add_field_to_list(lex->thd, (yyvsp[(1) - (4)].lex_str).str,
+				(enum enum_field_types) (yyvsp[(3) - (4)].num),
 				lex->length,lex->dec,lex->type,
 				lex->default_value, lex->on_update_value, 
                                 lex->comment,
@@ -13052,143 +13386,143 @@ yyreduce:
 
   case 189:
 #line 1382 "sql_yacc.yy"
-    { yyval.num=yyvsp[-2].num; }
+    { (yyval.num)=(yyvsp[(1) - (3)].num); }
     break;
 
   case 190:
 #line 1383 "sql_yacc.yy"
-    { yyval.num=yyvsp[-2].num; }
+    { (yyval.num)=(yyvsp[(1) - (3)].num); }
     break;
 
   case 191:
 #line 1384 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_FLOAT; }
+    { (yyval.num)=FIELD_TYPE_FLOAT; }
     break;
 
   case 192:
 #line 1385 "sql_yacc.yy"
     { Lex->length=(char*) "1";
-					  yyval.num=FIELD_TYPE_TINY; }
+					  (yyval.num)=FIELD_TYPE_TINY; }
     break;
 
   case 193:
 #line 1387 "sql_yacc.yy"
     { Lex->length=(char*) "1";
-					  yyval.num=FIELD_TYPE_TINY; }
+					  (yyval.num)=FIELD_TYPE_TINY; }
     break;
 
   case 194:
 #line 1389 "sql_yacc.yy"
     { Lex->length=(char*) "1";
-					  yyval.num=FIELD_TYPE_TINY; }
+					  (yyval.num)=FIELD_TYPE_TINY; }
     break;
 
   case 195:
 #line 1391 "sql_yacc.yy"
-    { Lex->length=yyvsp[-2].lex_str.str;
-					  yyval.num=FIELD_TYPE_STRING; }
+    { Lex->length=(yyvsp[(3) - (5)].lex_str).str;
+					  (yyval.num)=FIELD_TYPE_STRING; }
     break;
 
   case 196:
 #line 1393 "sql_yacc.yy"
     { Lex->length=(char*) "1";
-					  yyval.num=FIELD_TYPE_STRING; }
+					  (yyval.num)=FIELD_TYPE_STRING; }
     break;
 
   case 197:
 #line 1395 "sql_yacc.yy"
-    { Lex->length=yyvsp[-1].lex_str.str;
-					  yyval.num=FIELD_TYPE_STRING;
+    { Lex->length=(yyvsp[(3) - (4)].lex_str).str;
+					  (yyval.num)=FIELD_TYPE_STRING;
 					  Lex->charset=national_charset_info; }
     break;
 
   case 198:
 #line 1398 "sql_yacc.yy"
     { Lex->length=(char*) "1";
-					  yyval.num=FIELD_TYPE_STRING;
+					  (yyval.num)=FIELD_TYPE_STRING;
 					  Lex->charset=national_charset_info; }
     break;
 
   case 199:
 #line 1401 "sql_yacc.yy"
-    { Lex->length=yyvsp[-1].lex_str.str;
+    { Lex->length=(yyvsp[(3) - (4)].lex_str).str;
 					  Lex->charset=&my_charset_bin;
-					  yyval.num=FIELD_TYPE_STRING; }
+					  (yyval.num)=FIELD_TYPE_STRING; }
     break;
 
   case 200:
 #line 1404 "sql_yacc.yy"
     { Lex->length= (char*) "1";
 					  Lex->charset=&my_charset_bin;
-					  yyval.num=FIELD_TYPE_STRING; }
+					  (yyval.num)=FIELD_TYPE_STRING; }
     break;
 
   case 201:
 #line 1407 "sql_yacc.yy"
-    { Lex->length=yyvsp[-2].lex_str.str;
-					  yyval.num=FIELD_TYPE_VAR_STRING; }
+    { Lex->length=(yyvsp[(3) - (5)].lex_str).str;
+					  (yyval.num)=FIELD_TYPE_VAR_STRING; }
     break;
 
   case 202:
 #line 1409 "sql_yacc.yy"
-    { Lex->length=yyvsp[-1].lex_str.str;
-					  yyval.num=FIELD_TYPE_VAR_STRING;
+    { Lex->length=(yyvsp[(3) - (4)].lex_str).str;
+					  (yyval.num)=FIELD_TYPE_VAR_STRING;
 					  Lex->charset=national_charset_info; }
     break;
 
   case 203:
 #line 1412 "sql_yacc.yy"
-    { Lex->length=yyvsp[-1].lex_str.str;
+    { Lex->length=(yyvsp[(3) - (4)].lex_str).str;
 					  Lex->charset=&my_charset_bin;
-					  yyval.num=FIELD_TYPE_VAR_STRING; }
+					  (yyval.num)=FIELD_TYPE_VAR_STRING; }
     break;
 
   case 204:
 #line 1415 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_YEAR; }
+    { (yyval.num)=FIELD_TYPE_YEAR; }
     break;
 
   case 205:
 #line 1416 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_DATE; }
+    { (yyval.num)=FIELD_TYPE_DATE; }
     break;
 
   case 206:
 #line 1417 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_TIME; }
+    { (yyval.num)=FIELD_TYPE_TIME; }
     break;
 
   case 207:
 #line 1419 "sql_yacc.yy"
     {
 	    if (YYTHD->variables.sql_mode & MODE_MAXDB)
-	      yyval.num=FIELD_TYPE_DATETIME;
+	      (yyval.num)=FIELD_TYPE_DATETIME;
 	    else
             {
               /* 
                 Unlike other types TIMESTAMP fields are NOT NULL by default.
               */
               Lex->type|= NOT_NULL_FLAG;
-	      yyval.num=FIELD_TYPE_TIMESTAMP;
+	      (yyval.num)=FIELD_TYPE_TIMESTAMP;
             }
 	   }
     break;
 
   case 208:
 #line 1431 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_DATETIME; }
+    { (yyval.num)=FIELD_TYPE_DATETIME; }
     break;
 
   case 209:
 #line 1432 "sql_yacc.yy"
     { Lex->charset=&my_charset_bin;
-					  yyval.num=FIELD_TYPE_TINY_BLOB; }
+					  (yyval.num)=FIELD_TYPE_TINY_BLOB; }
     break;
 
   case 210:
 #line 1434 "sql_yacc.yy"
     { Lex->charset=&my_charset_bin;
-					  yyval.num=FIELD_TYPE_BLOB; }
+					  (yyval.num)=FIELD_TYPE_BLOB; }
     break;
 
   case 211:
@@ -13196,8 +13530,8 @@ yyreduce:
     { 
 #ifdef HAVE_SPATIAL
 					  Lex->charset=&my_charset_bin;
-					  Lex->uint_geom_type= (uint)yyvsp[0].num;
-					  yyval.num=FIELD_TYPE_GEOMETRY;
+					  Lex->uint_geom_type= (uint)(yyvsp[(1) - (1)].num);
+					  (yyval.num)=FIELD_TYPE_GEOMETRY;
 #else
 	                                  net_printf(Lex->thd, ER_FEATURE_DISABLED,
 			                             sym_group_geom.name,
@@ -13210,59 +13544,59 @@ yyreduce:
   case 212:
 #line 1448 "sql_yacc.yy"
     { Lex->charset=&my_charset_bin;
-					  yyval.num=FIELD_TYPE_MEDIUM_BLOB; }
+					  (yyval.num)=FIELD_TYPE_MEDIUM_BLOB; }
     break;
 
   case 213:
 #line 1450 "sql_yacc.yy"
     { Lex->charset=&my_charset_bin;
-					  yyval.num=FIELD_TYPE_LONG_BLOB; }
+					  (yyval.num)=FIELD_TYPE_LONG_BLOB; }
     break;
 
   case 214:
 #line 1452 "sql_yacc.yy"
     { Lex->charset=&my_charset_bin;
-					  yyval.num=FIELD_TYPE_MEDIUM_BLOB; }
+					  (yyval.num)=FIELD_TYPE_MEDIUM_BLOB; }
     break;
 
   case 215:
 #line 1454 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_MEDIUM_BLOB; }
+    { (yyval.num)=FIELD_TYPE_MEDIUM_BLOB; }
     break;
 
   case 216:
 #line 1455 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_TINY_BLOB; }
+    { (yyval.num)=FIELD_TYPE_TINY_BLOB; }
     break;
 
   case 217:
 #line 1456 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_BLOB; }
+    { (yyval.num)=FIELD_TYPE_BLOB; }
     break;
 
   case 218:
 #line 1457 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_MEDIUM_BLOB; }
+    { (yyval.num)=FIELD_TYPE_MEDIUM_BLOB; }
     break;
 
   case 219:
 #line 1458 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_LONG_BLOB; }
+    { (yyval.num)=FIELD_TYPE_LONG_BLOB; }
     break;
 
   case 220:
 #line 1460 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_DECIMAL;}
+    { (yyval.num)=FIELD_TYPE_DECIMAL;}
     break;
 
   case 221:
 #line 1462 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_DECIMAL;}
+    { (yyval.num)=FIELD_TYPE_DECIMAL;}
     break;
 
   case 222:
 #line 1464 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_DECIMAL;}
+    { (yyval.num)=FIELD_TYPE_DECIMAL;}
     break;
 
   case 223:
@@ -13272,7 +13606,7 @@ yyreduce:
 
   case 224:
 #line 1466 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_ENUM; }
+    { (yyval.num)=FIELD_TYPE_ENUM; }
     break;
 
   case 225:
@@ -13282,18 +13616,18 @@ yyreduce:
 
   case 226:
 #line 1468 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_SET; }
+    { (yyval.num)=FIELD_TYPE_SET; }
     break;
 
   case 227:
 #line 1469 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_MEDIUM_BLOB; }
+    { (yyval.num)=FIELD_TYPE_MEDIUM_BLOB; }
     break;
 
   case 228:
 #line 1471 "sql_yacc.yy"
     {
-	    yyval.num=FIELD_TYPE_LONGLONG;
+	    (yyval.num)=FIELD_TYPE_LONGLONG;
 	    Lex->type|= (AUTO_INCREMENT_FLAG | NOT_NULL_FLAG | UNSIGNED_FLAG |
 		         UNIQUE_FLAG);
 	  }
@@ -13301,42 +13635,42 @@ yyreduce:
 
   case 229:
 #line 1479 "sql_yacc.yy"
-    { yyval.num= Field::GEOM_GEOMETRY; }
+    { (yyval.num)= Field::GEOM_GEOMETRY; }
     break;
 
   case 230:
 #line 1480 "sql_yacc.yy"
-    { yyval.num= Field::GEOM_GEOMETRYCOLLECTION; }
+    { (yyval.num)= Field::GEOM_GEOMETRYCOLLECTION; }
     break;
 
   case 231:
 #line 1481 "sql_yacc.yy"
-    { yyval.num= Field::GEOM_POINT; }
+    { (yyval.num)= Field::GEOM_POINT; }
     break;
 
   case 232:
 #line 1482 "sql_yacc.yy"
-    { yyval.num= Field::GEOM_MULTIPOINT; }
+    { (yyval.num)= Field::GEOM_MULTIPOINT; }
     break;
 
   case 233:
 #line 1483 "sql_yacc.yy"
-    { yyval.num= Field::GEOM_LINESTRING; }
+    { (yyval.num)= Field::GEOM_LINESTRING; }
     break;
 
   case 234:
 #line 1484 "sql_yacc.yy"
-    { yyval.num= Field::GEOM_MULTILINESTRING; }
+    { (yyval.num)= Field::GEOM_MULTILINESTRING; }
     break;
 
   case 235:
 #line 1485 "sql_yacc.yy"
-    { yyval.num= Field::GEOM_POLYGON; }
+    { (yyval.num)= Field::GEOM_POLYGON; }
     break;
 
   case 236:
 #line 1486 "sql_yacc.yy"
-    { yyval.num= Field::GEOM_MULTIPOLYGON; }
+    { (yyval.num)= Field::GEOM_MULTIPOLYGON; }
     break;
 
   case 237:
@@ -13391,43 +13725,43 @@ yyreduce:
 
   case 247:
 #line 1512 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_LONG; }
+    { (yyval.num)=FIELD_TYPE_LONG; }
     break;
 
   case 248:
 #line 1513 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_TINY; }
+    { (yyval.num)=FIELD_TYPE_TINY; }
     break;
 
   case 249:
 #line 1514 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_SHORT; }
+    { (yyval.num)=FIELD_TYPE_SHORT; }
     break;
 
   case 250:
 #line 1515 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_INT24; }
+    { (yyval.num)=FIELD_TYPE_INT24; }
     break;
 
   case 251:
 #line 1516 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_LONGLONG; }
+    { (yyval.num)=FIELD_TYPE_LONGLONG; }
     break;
 
   case 252:
 #line 1519 "sql_yacc.yy"
-    { yyval.num= YYTHD->variables.sql_mode & MODE_REAL_AS_FLOAT ?
+    { (yyval.num)= YYTHD->variables.sql_mode & MODE_REAL_AS_FLOAT ?
 			      FIELD_TYPE_FLOAT : FIELD_TYPE_DOUBLE; }
     break;
 
   case 253:
 #line 1521 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_DOUBLE; }
+    { (yyval.num)=FIELD_TYPE_DOUBLE; }
     break;
 
   case 254:
 #line 1522 "sql_yacc.yy"
-    { yyval.num=FIELD_TYPE_DOUBLE; }
+    { (yyval.num)=FIELD_TYPE_DOUBLE; }
     break;
 
   case 255:
@@ -13437,7 +13771,7 @@ yyreduce:
 
   case 256:
 #line 1527 "sql_yacc.yy"
-    { Lex->length=yyvsp[-1].lex_str.str; }
+    { Lex->length=(yyvsp[(2) - (3)].lex_str).str; }
     break;
 
   case 257:
@@ -13449,7 +13783,7 @@ yyreduce:
 #line 1532 "sql_yacc.yy"
     {
 	  LEX *lex=Lex;
-	  lex->length=yyvsp[-3].lex_str.str; lex->dec=yyvsp[-1].lex_str.str;
+	  lex->length=(yyvsp[(2) - (5)].lex_str).str; lex->dec=(yyvsp[(4) - (5)].lex_str).str;
 	}
     break;
 
@@ -13495,7 +13829,7 @@ yyreduce:
 
   case 267:
 #line 1552 "sql_yacc.yy"
-    { Lex->length= yyvsp[-1].lex_str.str; }
+    { Lex->length= (yyvsp[(2) - (3)].lex_str).str; }
     break;
 
   case 268:
@@ -13535,7 +13869,7 @@ yyreduce:
 
   case 276:
 #line 1569 "sql_yacc.yy"
-    { Lex->default_value=yyvsp[0].item; }
+    { Lex->default_value=(yyvsp[(2) - (2)].item); }
     break;
 
   case 277:
@@ -13586,7 +13920,7 @@ yyreduce:
 
   case 283:
 #line 1597 "sql_yacc.yy"
-    { Lex->comment= &yyvsp[0].lex_str; }
+    { Lex->comment= &(yyvsp[(2) - (2)].lex_str); }
     break;
 
   case 284:
@@ -13597,27 +13931,27 @@ yyreduce:
   case 285:
 #line 1600 "sql_yacc.yy"
     {
-	    if (Lex->charset && !my_charset_same(Lex->charset,yyvsp[0].charset))
+	    if (Lex->charset && !my_charset_same(Lex->charset,(yyvsp[(2) - (2)].charset)))
 	    {
 	      net_printf(YYTHD,ER_COLLATION_CHARSET_MISMATCH,
-			 yyvsp[0].charset->name,Lex->charset->csname);
+			 (yyvsp[(2) - (2)].charset)->name,Lex->charset->csname);
 	      YYABORT;
 	    }
 	    else
 	    {
-	      Lex->charset=yyvsp[0].charset;
+	      Lex->charset=(yyvsp[(2) - (2)].charset);
 	    }
 	  }
     break;
 
   case 286:
 #line 1615 "sql_yacc.yy"
-    { yyval.item= new Item_func_now_local(); }
+    { (yyval.item)= new Item_func_now_local(); }
     break;
 
   case 287:
 #line 1616 "sql_yacc.yy"
-    { yyval.item=yyvsp[0].item; }
+    { (yyval.item)=(yyvsp[(1) - (1)].item); }
     break;
 
   case 288:
@@ -13633,9 +13967,9 @@ yyreduce:
   case 290:
 #line 1626 "sql_yacc.yy"
     {
-	  if (!(yyval.charset=get_charset_by_csname(yyvsp[0].lex_str.str,MY_CS_PRIMARY,MYF(0))))
+	  if (!((yyval.charset)=get_charset_by_csname((yyvsp[(1) - (1)].lex_str).str,MY_CS_PRIMARY,MYF(0))))
 	  {
-	    net_printf(YYTHD,ER_UNKNOWN_CHARACTER_SET,yyvsp[0].lex_str.str);
+	    net_printf(YYTHD,ER_UNKNOWN_CHARACTER_SET,(yyvsp[(1) - (1)].lex_str).str);
 	    YYABORT;
 	  }
 	}
@@ -13643,26 +13977,26 @@ yyreduce:
 
   case 291:
 #line 1633 "sql_yacc.yy"
-    { yyval.charset= &my_charset_bin; }
+    { (yyval.charset)= &my_charset_bin; }
     break;
 
   case 292:
 #line 1637 "sql_yacc.yy"
-    { yyval.charset=yyvsp[0].charset;   }
+    { (yyval.charset)=(yyvsp[(1) - (1)].charset);   }
     break;
 
   case 293:
 #line 1638 "sql_yacc.yy"
-    { yyval.charset=NULL; }
+    { (yyval.charset)=NULL; }
     break;
 
   case 294:
 #line 1643 "sql_yacc.yy"
     {
-	  if (!(yyval.charset=get_charset_by_csname(yyvsp[0].lex_str.str,MY_CS_PRIMARY,MYF(0))) &&
-	      !(yyval.charset=get_old_charset_by_name(yyvsp[0].lex_str.str)))
+	  if (!((yyval.charset)=get_charset_by_csname((yyvsp[(1) - (1)].lex_str).str,MY_CS_PRIMARY,MYF(0))) &&
+	      !((yyval.charset)=get_old_charset_by_name((yyvsp[(1) - (1)].lex_str).str)))
 	  {
-	    net_printf(YYTHD,ER_UNKNOWN_CHARACTER_SET,yyvsp[0].lex_str.str);
+	    net_printf(YYTHD,ER_UNKNOWN_CHARACTER_SET,(yyvsp[(1) - (1)].lex_str).str);
 	    YYABORT;
 	  }
 	}
@@ -13670,25 +14004,25 @@ yyreduce:
 
   case 295:
 #line 1651 "sql_yacc.yy"
-    { yyval.charset= &my_charset_bin; }
+    { (yyval.charset)= &my_charset_bin; }
     break;
 
   case 296:
 #line 1655 "sql_yacc.yy"
-    { yyval.charset=yyvsp[0].charset;   }
+    { (yyval.charset)=(yyvsp[(1) - (1)].charset);   }
     break;
 
   case 297:
 #line 1656 "sql_yacc.yy"
-    { yyval.charset=NULL; }
+    { (yyval.charset)=NULL; }
     break;
 
   case 298:
 #line 1660 "sql_yacc.yy"
     {
-	  if (!(yyval.charset=get_charset_by_name(yyvsp[0].lex_str.str,MYF(0))))
+	  if (!((yyval.charset)=get_charset_by_name((yyvsp[(1) - (1)].lex_str).str,MYF(0))))
 	  {
-	    net_printf(YYTHD,ER_UNKNOWN_COLLATION,yyvsp[0].lex_str.str);
+	    net_printf(YYTHD,ER_UNKNOWN_COLLATION,(yyvsp[(1) - (1)].lex_str).str);
 	    YYABORT;
 	  }
 	}
@@ -13696,22 +14030,22 @@ yyreduce:
 
   case 299:
 #line 1669 "sql_yacc.yy"
-    { yyval.charset=NULL; }
+    { (yyval.charset)=NULL; }
     break;
 
   case 300:
 #line 1670 "sql_yacc.yy"
-    { yyval.charset=yyvsp[0].charset; }
+    { (yyval.charset)=(yyvsp[(2) - (2)].charset); }
     break;
 
   case 301:
 #line 1674 "sql_yacc.yy"
-    { yyval.charset=yyvsp[0].charset;   }
+    { (yyval.charset)=(yyvsp[(1) - (1)].charset);   }
     break;
 
   case 302:
 #line 1675 "sql_yacc.yy"
-    { yyval.charset=NULL; }
+    { (yyval.charset)=NULL; }
     break;
 
   case 303:
@@ -13752,7 +14086,7 @@ yyreduce:
 
   case 309:
 #line 1693 "sql_yacc.yy"
-    { Lex->charset=yyvsp[0].charset; }
+    { Lex->charset=(yyvsp[(2) - (2)].charset); }
     break;
 
   case 312:
@@ -13767,7 +14101,7 @@ yyreduce:
   case 313:
 #line 1708 "sql_yacc.yy"
     {
-	  yyval.table=yyvsp[-2].table;
+	  (yyval.table)=(yyvsp[(2) - (4)].table);
 	}
     break;
 
@@ -13783,12 +14117,12 @@ yyreduce:
 
   case 316:
 #line 1717 "sql_yacc.yy"
-    { Lex->ref_list.push_back(new key_part_spec(yyvsp[0].lex_str.str)); }
+    { Lex->ref_list.push_back(new key_part_spec((yyvsp[(3) - (3)].lex_str).str)); }
     break;
 
   case 317:
 #line 1718 "sql_yacc.yy"
-    { Lex->ref_list.push_back(new key_part_spec(yyvsp[0].lex_str.str)); }
+    { Lex->ref_list.push_back(new key_part_spec((yyvsp[(1) - (1)].lex_str).str)); }
     break;
 
   case 318:
@@ -13813,12 +14147,12 @@ yyreduce:
 
   case 322:
 #line 1730 "sql_yacc.yy"
-    { Lex->fk_delete_opt= yyvsp[0].num; }
+    { Lex->fk_delete_opt= (yyvsp[(3) - (3)].num); }
     break;
 
   case 323:
 #line 1731 "sql_yacc.yy"
-    { Lex->fk_update_opt= yyvsp[0].num; }
+    { Lex->fk_update_opt= (yyvsp[(3) - (3)].num); }
     break;
 
   case 324:
@@ -13838,44 +14172,44 @@ yyreduce:
 
   case 327:
 #line 1737 "sql_yacc.yy"
-    { yyval.num= (int) foreign_key::FK_OPTION_RESTRICT; }
+    { (yyval.num)= (int) foreign_key::FK_OPTION_RESTRICT; }
     break;
 
   case 328:
 #line 1738 "sql_yacc.yy"
-    { yyval.num= (int) foreign_key::FK_OPTION_CASCADE; }
+    { (yyval.num)= (int) foreign_key::FK_OPTION_CASCADE; }
     break;
 
   case 329:
 #line 1739 "sql_yacc.yy"
-    { yyval.num= (int) foreign_key::FK_OPTION_SET_NULL; }
+    { (yyval.num)= (int) foreign_key::FK_OPTION_SET_NULL; }
     break;
 
   case 330:
 #line 1740 "sql_yacc.yy"
-    { yyval.num= (int) foreign_key::FK_OPTION_NO_ACTION; }
+    { (yyval.num)= (int) foreign_key::FK_OPTION_NO_ACTION; }
     break;
 
   case 331:
 #line 1741 "sql_yacc.yy"
-    { yyval.num= (int) foreign_key::FK_OPTION_DEFAULT;  }
+    { (yyval.num)= (int) foreign_key::FK_OPTION_DEFAULT;  }
     break;
 
   case 332:
 #line 1744 "sql_yacc.yy"
-    { yyval.key_type= Key::MULTIPLE; }
+    { (yyval.key_type)= Key::MULTIPLE; }
     break;
 
   case 333:
 #line 1745 "sql_yacc.yy"
-    { yyval.key_type= Key::FULLTEXT; }
+    { (yyval.key_type)= Key::FULLTEXT; }
     break;
 
   case 334:
 #line 1747 "sql_yacc.yy"
     {
 #ifdef HAVE_SPATIAL
-	    yyval.key_type= Key::SPATIAL;
+	    (yyval.key_type)= Key::SPATIAL;
 #else
 	    net_printf(Lex->thd, ER_FEATURE_DISABLED,
 		       sym_group_geom.name, sym_group_geom.needed_define);
@@ -13886,12 +14220,12 @@ yyreduce:
 
   case 335:
 #line 1758 "sql_yacc.yy"
-    { yyval.key_type= Key::PRIMARY; }
+    { (yyval.key_type)= Key::PRIMARY; }
     break;
 
   case 336:
 #line 1759 "sql_yacc.yy"
-    { yyval.key_type= Key::UNIQUE; }
+    { (yyval.key_type)= Key::UNIQUE; }
     break;
 
   case 337:
@@ -13926,24 +14260,24 @@ yyreduce:
 
   case 344:
 #line 1776 "sql_yacc.yy"
-    { yyval.key_type= Key::MULTIPLE; }
+    { (yyval.key_type)= Key::MULTIPLE; }
     break;
 
   case 345:
 #line 1777 "sql_yacc.yy"
-    { yyval.key_type= Key::UNIQUE; }
+    { (yyval.key_type)= Key::UNIQUE; }
     break;
 
   case 346:
 #line 1778 "sql_yacc.yy"
-    { yyval.key_type= Key::FULLTEXT;}
+    { (yyval.key_type)= Key::FULLTEXT;}
     break;
 
   case 347:
 #line 1780 "sql_yacc.yy"
     {
 #ifdef HAVE_SPATIAL
-	    yyval.key_type= Key::SPATIAL;
+	    (yyval.key_type)= Key::SPATIAL;
 #else
 	    net_printf(Lex->thd, ER_FEATURE_DISABLED,
 	               sym_group_geom.name, sym_group_geom.needed_define);
@@ -13954,95 +14288,95 @@ yyreduce:
 
   case 348:
 #line 1792 "sql_yacc.yy"
-    { yyval.key_alg= HA_KEY_ALG_UNDEF; }
+    { (yyval.key_alg)= HA_KEY_ALG_UNDEF; }
     break;
 
   case 349:
 #line 1793 "sql_yacc.yy"
-    { yyval.key_alg= yyvsp[0].key_alg; }
+    { (yyval.key_alg)= (yyvsp[(2) - (2)].key_alg); }
     break;
 
   case 350:
 #line 1794 "sql_yacc.yy"
-    { yyval.key_alg= yyvsp[0].key_alg; }
+    { (yyval.key_alg)= (yyvsp[(2) - (2)].key_alg); }
     break;
 
   case 351:
 #line 1797 "sql_yacc.yy"
-    { yyval.key_alg= HA_KEY_ALG_BTREE; }
+    { (yyval.key_alg)= HA_KEY_ALG_BTREE; }
     break;
 
   case 352:
 #line 1799 "sql_yacc.yy"
     {
-	    yyval.key_alg= HA_KEY_ALG_RTREE;
+	    (yyval.key_alg)= HA_KEY_ALG_RTREE;
 	  }
     break;
 
   case 353:
 #line 1802 "sql_yacc.yy"
-    { yyval.key_alg= HA_KEY_ALG_HASH; }
+    { (yyval.key_alg)= HA_KEY_ALG_HASH; }
     break;
 
   case 354:
 #line 1805 "sql_yacc.yy"
-    { Lex->col_list.push_back(yyvsp[-1].key_part); }
+    { Lex->col_list.push_back((yyvsp[(3) - (4)].key_part)); }
     break;
 
   case 355:
 #line 1806 "sql_yacc.yy"
-    { Lex->col_list.push_back(yyvsp[-1].key_part); }
+    { Lex->col_list.push_back((yyvsp[(1) - (2)].key_part)); }
     break;
 
   case 356:
 #line 1809 "sql_yacc.yy"
-    { yyval.key_part=new key_part_spec(yyvsp[0].lex_str.str); }
+    { (yyval.key_part)=new key_part_spec((yyvsp[(1) - (1)].lex_str).str); }
     break;
 
   case 357:
 #line 1811 "sql_yacc.yy"
     {
-          int key_part_len= atoi(yyvsp[-1].lex_str.str);
+          int key_part_len= atoi((yyvsp[(3) - (4)].lex_str).str);
 #if MYSQL_VERSION_ID < 50000
           if (!key_part_len)
           {
             my_printf_error(ER_UNKNOWN_ERROR,
                             "Key part '%s' length cannot be 0",
-                            MYF(0), yyvsp[-3].lex_str.str);
+                            MYF(0), (yyvsp[(1) - (4)].lex_str).str);
           }
 #endif
-          yyval.key_part=new key_part_spec(yyvsp[-3].lex_str.str,(uint) key_part_len);
+          (yyval.key_part)=new key_part_spec((yyvsp[(1) - (4)].lex_str).str,(uint) key_part_len);
         }
     break;
 
   case 358:
 #line 1825 "sql_yacc.yy"
-    { yyval.simple_string=(char*) 0; }
+    { (yyval.simple_string)=(char*) 0; }
     break;
 
   case 359:
 #line 1826 "sql_yacc.yy"
-    { yyval.simple_string=yyvsp[0].lex_str.str; }
+    { (yyval.simple_string)=(yyvsp[(1) - (1)].lex_str).str; }
     break;
 
   case 360:
 #line 1829 "sql_yacc.yy"
-    { yyval.lex_str.str= 0; yyval.lex_str.length= 0; }
+    { (yyval.lex_str).str= 0; (yyval.lex_str).length= 0; }
     break;
 
   case 361:
 #line 1830 "sql_yacc.yy"
-    { yyval.lex_str=yyvsp[0].lex_str; }
+    { (yyval.lex_str)=(yyvsp[(2) - (2)].lex_str); }
     break;
 
   case 362:
 #line 1833 "sql_yacc.yy"
-    { Lex->interval_list.push_back(yyvsp[0].string); }
+    { Lex->interval_list.push_back((yyvsp[(1) - (1)].string)); }
     break;
 
   case 363:
 #line 1834 "sql_yacc.yy"
-    { Lex->interval_list.push_back(yyvsp[0].string); }
+    { Lex->interval_list.push_back((yyvsp[(3) - (3)].string)); }
     break;
 
   case 364:
@@ -14053,7 +14387,7 @@ yyreduce:
 	  lex->sql_command= SQLCOM_ALTER_TABLE;
 	  lex->name= 0;
 	  lex->duplicates= DUP_ERROR; 
-	  if (!lex->select_lex.add_table_to_list(thd, yyvsp[0].table, NULL,
+	  if (!lex->select_lex.add_table_to_list(thd, (yyvsp[(4) - (4)].table), NULL,
 						 TL_OPTION_UPDATING))
 	    YYABORT;
 	  lex->create_list.empty();
@@ -14089,18 +14423,18 @@ yyreduce:
     {
 	    LEX *lex=Lex;
 	    lex->sql_command=SQLCOM_ALTER_DB;
-	    lex->name= yyvsp[-2].simple_string;
+	    lex->name= (yyvsp[(3) - (5)].simple_string);
 	  }
     break;
 
   case 368:
 #line 1880 "sql_yacc.yy"
-    { yyval.simple_string= 0; }
+    { (yyval.simple_string)= 0; }
     break;
 
   case 369:
 #line 1881 "sql_yacc.yy"
-    { yyval.simple_string= yyvsp[0].lex_str.str; }
+    { (yyval.simple_string)= (yyvsp[(1) - (1)].lex_str).str; }
     break;
 
   case 371:
@@ -14145,7 +14479,7 @@ yyreduce:
 #line 1908 "sql_yacc.yy"
     {
 	     LEX *lex=Lex;
-	     lex->change= yyvsp[0].lex_str.str; 
+	     lex->change= (yyvsp[(3) - (3)].lex_str).str; 
 	     lex->alter_info.is_simple= 0;
 	     lex->alter_info.flags|= ALTER_CHANGE_COLUMN;
 	  }
@@ -14168,12 +14502,12 @@ yyreduce:
 #line 1926 "sql_yacc.yy"
     {
             LEX *lex=Lex;
-            if (add_field_to_list(lex->thd,yyvsp[-3].lex_str.str,
-                                  (enum enum_field_types) yyvsp[-1].num,
+            if (add_field_to_list(lex->thd,(yyvsp[(3) - (6)].lex_str).str,
+                                  (enum enum_field_types) (yyvsp[(5) - (6)].num),
                                   lex->length,lex->dec,lex->type,
                                   lex->default_value, lex->on_update_value,
                                   lex->comment,
-				  yyvsp[-3].lex_str.str, &lex->interval_list, lex->charset,
+				  (yyvsp[(3) - (6)].lex_str).str, &lex->interval_list, lex->charset,
 				  lex->uint_geom_type))
 	       YYABORT;
           }
@@ -14184,7 +14518,7 @@ yyreduce:
     {
 	    LEX *lex=Lex;
 	    lex->alter_info.drop_list.push_back(new Alter_drop(Alter_drop::COLUMN,
-	    			                               yyvsp[-1].lex_str.str)); 
+	    			                               (yyvsp[(3) - (4)].lex_str).str)); 
 	    lex->alter_info.is_simple= 0;
 	    lex->alter_info.flags|= ALTER_DROP_COLUMN;
 	  }
@@ -14211,7 +14545,7 @@ yyreduce:
     {
 	    LEX *lex=Lex;
 	    lex->alter_info.drop_list.push_back(new Alter_drop(Alter_drop::KEY,
-					                       yyvsp[0].lex_str.str));
+					                       (yyvsp[(3) - (3)].lex_str).str));
 	    lex->alter_info.is_simple= 0;
 	    lex->alter_info.flags|= ALTER_DROP_INDEX;
 	  }
@@ -14231,7 +14565,7 @@ yyreduce:
 #line 1966 "sql_yacc.yy"
     {
 	    LEX *lex=Lex;
-	    lex->alter_info.alter_list.push_back(new Alter_column(yyvsp[-3].lex_str.str,yyvsp[0].item));
+	    lex->alter_info.alter_list.push_back(new Alter_column((yyvsp[(3) - (6)].lex_str).str,(yyvsp[(6) - (6)].item)));
 	    lex->alter_info.is_simple= 0;
 	    lex->alter_info.flags|= ALTER_CHANGE_COLUMN;
 	  }
@@ -14241,7 +14575,7 @@ yyreduce:
 #line 1973 "sql_yacc.yy"
     {
 	    LEX *lex=Lex;
-	    lex->alter_info.alter_list.push_back(new Alter_column(yyvsp[-2].lex_str.str,
+	    lex->alter_info.alter_list.push_back(new Alter_column((yyvsp[(3) - (5)].lex_str).str,
                                                                   (Item*) 0));
 	    lex->alter_info.is_simple= 0;
 	    lex->alter_info.flags|= ALTER_CHANGE_COLUMN;
@@ -14252,12 +14586,12 @@ yyreduce:
 #line 1981 "sql_yacc.yy"
     {
 	    LEX *lex=Lex;
-	    lex->select_lex.db=yyvsp[0].table->db.str;
-	    lex->name= yyvsp[0].table->table.str;
-            if (check_table_name(yyvsp[0].table->table.str,yyvsp[0].table->table.length) ||
-                yyvsp[0].table->db.str && check_db_name(yyvsp[0].table->db.str))
+	    lex->select_lex.db=(yyvsp[(3) - (3)].table)->db.str;
+	    lex->name= (yyvsp[(3) - (3)].table)->table.str;
+            if (check_table_name((yyvsp[(3) - (3)].table)->table.str,(yyvsp[(3) - (3)].table)->table.length) ||
+                (yyvsp[(3) - (3)].table)->db.str && check_db_name((yyvsp[(3) - (3)].table)->db.str))
             {
-              net_printf(lex->thd,ER_WRONG_TABLE_NAME,yyvsp[0].table->table.str);
+              net_printf(lex->thd,ER_WRONG_TABLE_NAME,(yyvsp[(3) - (3)].table)->table.str);
               YYABORT;
             }
 	    lex->alter_info.flags|= ALTER_RENAME;
@@ -14267,21 +14601,21 @@ yyreduce:
   case 393:
 #line 1994 "sql_yacc.yy"
     {
-	    if (!yyvsp[-1].charset)
+	    if (!(yyvsp[(4) - (5)].charset))
 	    {
 	      THD *thd= YYTHD;
-	      yyvsp[-1].charset= thd->variables.collation_database;
+	      (yyvsp[(4) - (5)].charset)= thd->variables.collation_database;
 	    }
-	    yyvsp[0].charset= yyvsp[0].charset ? yyvsp[0].charset : yyvsp[-1].charset;
-	    if (!my_charset_same(yyvsp[-1].charset,yyvsp[0].charset))
+	    (yyvsp[(5) - (5)].charset)= (yyvsp[(5) - (5)].charset) ? (yyvsp[(5) - (5)].charset) : (yyvsp[(4) - (5)].charset);
+	    if (!my_charset_same((yyvsp[(4) - (5)].charset),(yyvsp[(5) - (5)].charset)))
 	    {
 	      net_printf(YYTHD,ER_COLLATION_CHARSET_MISMATCH,
-			 yyvsp[0].charset->name,yyvsp[-1].charset->csname);
+			 (yyvsp[(5) - (5)].charset)->name,(yyvsp[(4) - (5)].charset)->csname);
 	      YYABORT;
 	    }
 	    LEX *lex= Lex;
 	    lex->create_info.table_charset= 
-	      lex->create_info.default_table_charset= yyvsp[0].charset;
+	      lex->create_info.default_table_charset= (yyvsp[(5) - (5)].charset);
 	    lex->create_info.used_fields|= (HA_CREATE_USED_CHARSET |
 					    HA_CREATE_USED_DEFAULT_CHARSET);
 	    lex->alter_info.is_simple= 0;
@@ -14348,7 +14682,7 @@ yyreduce:
 
   case 404:
 #line 2043 "sql_yacc.yy"
-    { store_position_for_column(yyvsp[0].lex_str.str); }
+    { store_position_for_column((yyvsp[(2) - (2)].lex_str).str); }
     break;
 
   case 405:
@@ -14432,19 +14766,19 @@ yyreduce:
 #line 2096 "sql_yacc.yy"
     {
            Lex->sql_command = SQLCOM_BEGIN;
-           Lex->start_transaction_opt= yyvsp[0].num;
+           Lex->start_transaction_opt= (yyvsp[(3) - (3)].num);
         }
     break;
 
   case 417:
 #line 2103 "sql_yacc.yy"
-    { yyval.num = 0; }
+    { (yyval.num) = 0; }
     break;
 
   case 418:
 #line 2105 "sql_yacc.yy"
     {
-           yyval.num= MYSQL_START_TRANS_OPT_WITH_CONS_SNAPSHOT;
+           (yyval.num)= MYSQL_START_TRANS_OPT_WITH_CONS_SNAPSHOT;
         }
     break;
 
@@ -14504,7 +14838,7 @@ yyreduce:
   case 431:
 #line 2155 "sql_yacc.yy"
     {
-	  Lex->backup_dir = yyvsp[0].lex_str.str;
+	  Lex->backup_dir = (yyvsp[(6) - (6)].lex_str).str;
         }
     break;
 
@@ -14518,7 +14852,7 @@ yyreduce:
   case 433:
 #line 2165 "sql_yacc.yy"
     {
-	  Lex->backup_dir = yyvsp[0].lex_str.str;
+	  Lex->backup_dir = (yyvsp[(6) - (6)].lex_str).str;
         }
     break;
 
@@ -14555,7 +14889,7 @@ yyreduce:
     {
 	   LEX *lex=Lex;
 	   lex->sql_command = SQLCOM_REPAIR;
-           lex->no_write_to_binlog= yyvsp[-1].num;
+           lex->no_write_to_binlog= (yyvsp[(2) - (3)].num);
 	   lex->check_opt.init();
 	}
     break;
@@ -14605,7 +14939,7 @@ yyreduce:
     {
 	   LEX *lex=Lex;
 	   lex->sql_command = SQLCOM_ANALYZE;
-           lex->no_write_to_binlog= yyvsp[-1].num;
+           lex->no_write_to_binlog= (yyvsp[(2) - (3)].num);
 	   lex->check_opt.init();
 	}
     break;
@@ -14679,7 +15013,7 @@ yyreduce:
     {
 	   LEX *lex=Lex;
 	   lex->sql_command = SQLCOM_OPTIMIZE;
-           lex->no_write_to_binlog= yyvsp[-1].num;
+           lex->no_write_to_binlog= (yyvsp[(2) - (3)].num);
 	   lex->check_opt.init();
 	}
     break;
@@ -14691,17 +15025,17 @@ yyreduce:
 
   case 463:
 #line 2261 "sql_yacc.yy"
-    { yyval.num= 0; }
+    { (yyval.num)= 0; }
     break;
 
   case 464:
 #line 2262 "sql_yacc.yy"
-    { yyval.num= 1; }
+    { (yyval.num)= 1; }
     break;
 
   case 465:
 #line 2263 "sql_yacc.yy"
-    { yyval.num= 1; }
+    { (yyval.num)= 1; }
     break;
 
   case 466:
@@ -14721,9 +15055,9 @@ yyreduce:
     {
 	  LEX *lex=Lex;
 	  SELECT_LEX *sl= lex->current_select;
-	  if (!sl->add_table_to_list(lex->thd, yyvsp[-2].table,NULL,TL_OPTION_UPDATING,
+	  if (!sl->add_table_to_list(lex->thd, (yyvsp[(1) - (3)].table),NULL,TL_OPTION_UPDATING,
 				     TL_IGNORE) ||
-	      !sl->add_table_to_list(lex->thd, yyvsp[0].table,NULL,TL_OPTION_UPDATING,
+	      !sl->add_table_to_list(lex->thd, (yyvsp[(3) - (3)].table),NULL,TL_OPTION_UPDATING,
 				     TL_IGNORE))
 	    YYABORT;
 	}
@@ -14734,7 +15068,7 @@ yyreduce:
     {
           LEX *lex=Lex;
           lex->sql_command= SQLCOM_ASSIGN_TO_KEYCACHE;
-	  lex->name_and_length= yyvsp[0].lex_str;
+	  lex->name_and_length= (yyvsp[(5) - (5)].lex_str);
         }
     break;
 
@@ -14743,7 +15077,7 @@ yyreduce:
     {
           LEX *lex=Lex;
           SELECT_LEX *sel= &lex->select_lex;
-          if (!sel->add_table_to_list(lex->thd, yyvsp[-1].table, NULL, 0,
+          if (!sel->add_table_to_list(lex->thd, (yyvsp[(1) - (2)].table), NULL, 0,
                                       TL_READ,
                                       sel->get_use_index(),
                                       (List<String> *)0))
@@ -14753,12 +15087,12 @@ yyreduce:
 
   case 475:
 #line 2318 "sql_yacc.yy"
-    { yyval.lex_str= yyvsp[0].lex_str; }
+    { (yyval.lex_str)= (yyvsp[(1) - (1)].lex_str); }
     break;
 
   case 476:
 #line 2319 "sql_yacc.yy"
-    { yyval.lex_str = default_key_cache_base; }
+    { (yyval.lex_str) = default_key_cache_base; }
     break;
 
   case 477:
@@ -14779,7 +15113,7 @@ yyreduce:
     {
 	  LEX *lex=Lex;
 	  SELECT_LEX *sel= &lex->select_lex;
-	  if (!sel->add_table_to_list(lex->thd, yyvsp[-2].table, NULL, yyvsp[0].num,
+	  if (!sel->add_table_to_list(lex->thd, (yyvsp[(1) - (3)].table), NULL, (yyvsp[(3) - (3)].num),
                                       TL_READ,
                                       sel->get_use_index(),
                                       (List<String> *)0))
@@ -14816,12 +15150,12 @@ yyreduce:
 
   case 486:
 #line 2370 "sql_yacc.yy"
-    { yyval.num= 0; }
+    { (yyval.num)= 0; }
     break;
 
   case 487:
 #line 2371 "sql_yacc.yy"
-    { yyval.num= TL_OPTION_IGNORE_LEAVES; }
+    { (yyval.num)= TL_OPTION_IGNORE_LEAVES; }
     break;
 
   case 488:
@@ -15008,58 +15342,58 @@ yyreduce:
   case 525:
 #line 2554 "sql_yacc.yy"
     {
-	    if (add_item_to_list(YYTHD, yyvsp[-2].item))
+	    if (add_item_to_list(YYTHD, (yyvsp[(2) - (4)].item)))
 	      YYABORT;
-	    if (yyvsp[0].lex_str.str)
-	      yyvsp[-2].item->set_name(yyvsp[0].lex_str.str,yyvsp[0].lex_str.length,system_charset_info);
-	    else if (!yyvsp[-2].item->name)
-	      yyvsp[-2].item->set_name(yyvsp[-3].simple_string,(uint) (yyvsp[-1].simple_string - yyvsp[-3].simple_string), YYTHD->charset());
+	    if ((yyvsp[(4) - (4)].lex_str).str)
+	      (yyvsp[(2) - (4)].item)->set_name((yyvsp[(4) - (4)].lex_str).str,(yyvsp[(4) - (4)].lex_str).length,system_charset_info);
+	    else if (!(yyvsp[(2) - (4)].item)->name)
+	      (yyvsp[(2) - (4)].item)->set_name((yyvsp[(1) - (4)].simple_string),(uint) ((yyvsp[(3) - (4)].simple_string) - (yyvsp[(1) - (4)].simple_string)), YYTHD->charset());
 	  }
     break;
 
   case 526:
 #line 2564 "sql_yacc.yy"
-    { yyval.simple_string=(char*) Lex->tok_start; }
+    { (yyval.simple_string)=(char*) Lex->tok_start; }
     break;
 
   case 527:
 #line 2567 "sql_yacc.yy"
-    { yyval.simple_string=(char*) Lex->tok_end; }
+    { (yyval.simple_string)=(char*) Lex->tok_end; }
     break;
 
   case 528:
 #line 2570 "sql_yacc.yy"
-    { yyval.item=yyvsp[0].item; }
+    { (yyval.item)=(yyvsp[(1) - (1)].item); }
     break;
 
   case 529:
 #line 2571 "sql_yacc.yy"
-    { yyval.item=yyvsp[0].item; }
+    { (yyval.item)=(yyvsp[(1) - (1)].item); }
     break;
 
   case 530:
 #line 2574 "sql_yacc.yy"
-    { yyval.lex_str.str=0;}
+    { (yyval.lex_str).str=0;}
     break;
 
   case 531:
 #line 2575 "sql_yacc.yy"
-    { yyval.lex_str=yyvsp[0].lex_str; }
+    { (yyval.lex_str)=(yyvsp[(2) - (2)].lex_str); }
     break;
 
   case 532:
 #line 2576 "sql_yacc.yy"
-    { yyval.lex_str=yyvsp[0].lex_str; }
+    { (yyval.lex_str)=(yyvsp[(2) - (2)].lex_str); }
     break;
 
   case 533:
 #line 2577 "sql_yacc.yy"
-    { yyval.lex_str=yyvsp[0].lex_str; }
+    { (yyval.lex_str)=(yyvsp[(1) - (1)].lex_str); }
     break;
 
   case 534:
 #line 2578 "sql_yacc.yy"
-    { yyval.lex_str=yyvsp[0].lex_str; }
+    { (yyval.lex_str)=(yyvsp[(1) - (1)].lex_str); }
     break;
 
   case 535:
@@ -15074,569 +15408,569 @@ yyreduce:
 
   case 537:
 #line 2587 "sql_yacc.yy"
-    { yyval.item= yyvsp[0].item; }
+    { (yyval.item)= (yyvsp[(1) - (1)].item); }
     break;
 
   case 538:
 #line 2588 "sql_yacc.yy"
-    { yyval.item= yyvsp[0].item; }
+    { (yyval.item)= (yyvsp[(1) - (1)].item); }
     break;
 
   case 539:
 #line 2591 "sql_yacc.yy"
-    { yyval.boolfunc2creator = &comp_eq_creator; }
+    { (yyval.boolfunc2creator) = &comp_eq_creator; }
     break;
 
   case 540:
 #line 2592 "sql_yacc.yy"
-    { yyval.boolfunc2creator = &comp_ge_creator; }
+    { (yyval.boolfunc2creator) = &comp_ge_creator; }
     break;
 
   case 541:
 #line 2593 "sql_yacc.yy"
-    { yyval.boolfunc2creator = &comp_gt_creator; }
+    { (yyval.boolfunc2creator) = &comp_gt_creator; }
     break;
 
   case 542:
 #line 2594 "sql_yacc.yy"
-    { yyval.boolfunc2creator = &comp_le_creator; }
+    { (yyval.boolfunc2creator) = &comp_le_creator; }
     break;
 
   case 543:
 #line 2595 "sql_yacc.yy"
-    { yyval.boolfunc2creator = &comp_lt_creator; }
+    { (yyval.boolfunc2creator) = &comp_lt_creator; }
     break;
 
   case 544:
 #line 2596 "sql_yacc.yy"
-    { yyval.boolfunc2creator = &comp_ne_creator; }
+    { (yyval.boolfunc2creator) = &comp_ne_creator; }
     break;
 
   case 545:
 #line 2599 "sql_yacc.yy"
-    { yyval.num = 1; }
+    { (yyval.num) = 1; }
     break;
 
   case 546:
 #line 2600 "sql_yacc.yy"
-    { yyval.num = 0; }
+    { (yyval.num) = 0; }
     break;
 
   case 547:
 #line 2606 "sql_yacc.yy"
-    { yyvsp[-1].item_list->push_front(yyvsp[-4].item); yyval.item= new Item_func_in(*yyvsp[-1].item_list); }
+    { (yyvsp[(4) - (5)].item_list)->push_front((yyvsp[(1) - (5)].item)); (yyval.item)= new Item_func_in(*(yyvsp[(4) - (5)].item_list)); }
     break;
 
   case 548:
 #line 2608 "sql_yacc.yy"
-    { yyvsp[-1].item_list->push_front(yyvsp[-5].item); yyval.item= new Item_func_not(new Item_func_in(*yyvsp[-1].item_list)); }
+    { (yyvsp[(5) - (6)].item_list)->push_front((yyvsp[(1) - (6)].item)); (yyval.item)= new Item_func_not(new Item_func_in(*(yyvsp[(5) - (6)].item_list))); }
     break;
 
   case 549:
 #line 2610 "sql_yacc.yy"
-    { yyval.item= new Item_in_subselect(yyvsp[-2].item, yyvsp[0].select_lex); }
+    { (yyval.item)= new Item_in_subselect((yyvsp[(1) - (3)].item), (yyvsp[(3) - (3)].select_lex)); }
     break;
 
   case 550:
 #line 2612 "sql_yacc.yy"
     {
-            yyval.item= new Item_func_not(new Item_in_subselect(yyvsp[-3].item, yyvsp[0].select_lex));
+            (yyval.item)= new Item_func_not(new Item_in_subselect((yyvsp[(1) - (4)].item), (yyvsp[(4) - (4)].select_lex)));
           }
     break;
 
   case 551:
 #line 2616 "sql_yacc.yy"
-    { yyval.item= new Item_func_between(yyvsp[-4].item,yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_between((yyvsp[(1) - (5)].item),(yyvsp[(3) - (5)].item),(yyvsp[(5) - (5)].item)); }
     break;
 
   case 552:
 #line 2618 "sql_yacc.yy"
-    { yyval.item= new Item_func_not(new Item_func_between(yyvsp[-5].item,yyvsp[-2].item,yyvsp[0].item)); }
+    { (yyval.item)= new Item_func_not(new Item_func_between((yyvsp[(1) - (6)].item),(yyvsp[(4) - (6)].item),(yyvsp[(6) - (6)].item))); }
     break;
 
   case 553:
 #line 2619 "sql_yacc.yy"
-    { yyval.item= or_or_concat(YYTHD, yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= or_or_concat(YYTHD, (yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 554:
 #line 2620 "sql_yacc.yy"
-    { yyval.item= new Item_cond_or(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_cond_or((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 555:
 #line 2621 "sql_yacc.yy"
-    { yyval.item= new Item_cond_xor(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_cond_xor((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 556:
 #line 2622 "sql_yacc.yy"
-    { yyval.item= new Item_cond_and(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_cond_and((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 557:
 #line 2624 "sql_yacc.yy"
     {
-	    yyval.item= new Item_func_eq(new Item_func_soundex(yyvsp[-3].item),
-				 new Item_func_soundex(yyvsp[0].item));
+	    (yyval.item)= new Item_func_eq(new Item_func_soundex((yyvsp[(1) - (4)].item)),
+				 new Item_func_soundex((yyvsp[(4) - (4)].item)));
 	  }
     break;
 
   case 558:
 #line 2629 "sql_yacc.yy"
-    { yyval.item= new Item_func_like(yyvsp[-3].item,yyvsp[-1].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_like((yyvsp[(1) - (4)].item),(yyvsp[(3) - (4)].item),(yyvsp[(4) - (4)].item)); }
     break;
 
   case 559:
 #line 2631 "sql_yacc.yy"
-    { yyval.item= new Item_func_not(new Item_func_like(yyvsp[-4].item,yyvsp[-1].item,yyvsp[0].item));}
+    { (yyval.item)= new Item_func_not(new Item_func_like((yyvsp[(1) - (5)].item),(yyvsp[(4) - (5)].item),(yyvsp[(5) - (5)].item)));}
     break;
 
   case 560:
 #line 2632 "sql_yacc.yy"
-    { yyval.item= new Item_func_regex(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_regex((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 561:
 #line 2634 "sql_yacc.yy"
-    { yyval.item= new Item_func_not(new Item_func_regex(yyvsp[-3].item,yyvsp[0].item)); }
+    { (yyval.item)= new Item_func_not(new Item_func_regex((yyvsp[(1) - (4)].item),(yyvsp[(4) - (4)].item))); }
     break;
 
   case 562:
 #line 2635 "sql_yacc.yy"
-    { yyval.item= new Item_func_isnull(yyvsp[-2].item); }
+    { (yyval.item)= new Item_func_isnull((yyvsp[(1) - (3)].item)); }
     break;
 
   case 563:
 #line 2636 "sql_yacc.yy"
-    { yyval.item= new Item_func_isnotnull(yyvsp[-3].item); }
+    { (yyval.item)= new Item_func_isnotnull((yyvsp[(1) - (4)].item)); }
     break;
 
   case 564:
 #line 2637 "sql_yacc.yy"
-    { yyval.item= new Item_func_equal(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_equal((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 565:
 #line 2638 "sql_yacc.yy"
-    { yyval.item= (*yyvsp[-1].boolfunc2creator)(0)->create(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= (*(yyvsp[(2) - (3)].boolfunc2creator))(0)->create((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 566:
 #line 2640 "sql_yacc.yy"
     {
-	  yyval.item= all_any_subquery_creator(yyvsp[-3].item, yyvsp[-2].boolfunc2creator, yyvsp[-1].num, yyvsp[0].select_lex);
+	  (yyval.item)= all_any_subquery_creator((yyvsp[(1) - (4)].item), (yyvsp[(2) - (4)].boolfunc2creator), (yyvsp[(3) - (4)].num), (yyvsp[(4) - (4)].select_lex));
 	}
     break;
 
   case 567:
 #line 2643 "sql_yacc.yy"
-    { yyval.item= new Item_func_shift_left(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_shift_left((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 568:
 #line 2644 "sql_yacc.yy"
-    { yyval.item= new Item_func_shift_right(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_shift_right((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 569:
 #line 2645 "sql_yacc.yy"
-    { yyval.item= new Item_func_plus(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_plus((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 570:
 #line 2646 "sql_yacc.yy"
-    { yyval.item= new Item_func_minus(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_minus((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 571:
 #line 2647 "sql_yacc.yy"
-    { yyval.item= new Item_func_mul(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_mul((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 572:
 #line 2648 "sql_yacc.yy"
-    { yyval.item= new Item_func_div(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_div((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 573:
 #line 2649 "sql_yacc.yy"
-    { yyval.item= new Item_func_int_div(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_int_div((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 574:
 #line 2650 "sql_yacc.yy"
-    { yyval.item= new Item_func_mod(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_mod((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 575:
 #line 2651 "sql_yacc.yy"
-    { yyval.item= new Item_func_bit_or(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_bit_or((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 576:
 #line 2652 "sql_yacc.yy"
-    { yyval.item= new Item_func_bit_xor(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_bit_xor((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 577:
 #line 2653 "sql_yacc.yy"
-    { yyval.item= new Item_func_bit_and(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_bit_and((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 578:
 #line 2654 "sql_yacc.yy"
-    { yyval.item= new Item_func_mod(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_mod((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 579:
 #line 2656 "sql_yacc.yy"
-    { yyval.item= new Item_date_add_interval(yyvsp[-3].item,yyvsp[-1].item,yyvsp[0].interval,0); }
+    { (yyval.item)= new Item_date_add_interval((yyvsp[(1) - (4)].item),(yyvsp[(3) - (4)].item),(yyvsp[(4) - (4)].interval),0); }
     break;
 
   case 580:
 #line 2658 "sql_yacc.yy"
-    { yyval.item= new Item_date_add_interval(yyvsp[-3].item,yyvsp[-1].item,yyvsp[0].interval,1); }
+    { (yyval.item)= new Item_date_add_interval((yyvsp[(1) - (4)].item),(yyvsp[(3) - (4)].item),(yyvsp[(4) - (4)].interval),1); }
     break;
 
   case 581:
 #line 2664 "sql_yacc.yy"
-    { yyval.item= new Item_func_between(yyvsp[-4].item,yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_between((yyvsp[(1) - (5)].item),(yyvsp[(3) - (5)].item),(yyvsp[(5) - (5)].item)); }
     break;
 
   case 582:
 #line 2666 "sql_yacc.yy"
-    { yyval.item= new Item_func_not(new Item_func_between(yyvsp[-5].item,yyvsp[-2].item,yyvsp[0].item)); }
+    { (yyval.item)= new Item_func_not(new Item_func_between((yyvsp[(1) - (6)].item),(yyvsp[(4) - (6)].item),(yyvsp[(6) - (6)].item))); }
     break;
 
   case 583:
 #line 2667 "sql_yacc.yy"
-    { yyval.item= or_or_concat(YYTHD, yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= or_or_concat(YYTHD, (yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 584:
 #line 2668 "sql_yacc.yy"
-    { yyval.item= new Item_cond_or(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_cond_or((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 585:
 #line 2669 "sql_yacc.yy"
-    { yyval.item= new Item_cond_xor(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_cond_xor((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 586:
 #line 2670 "sql_yacc.yy"
-    { yyval.item= new Item_cond_and(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_cond_and((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 587:
 #line 2672 "sql_yacc.yy"
     {
-	    yyval.item= new Item_func_eq(new Item_func_soundex(yyvsp[-3].item),
-				 new Item_func_soundex(yyvsp[0].item));
+	    (yyval.item)= new Item_func_eq(new Item_func_soundex((yyvsp[(1) - (4)].item)),
+				 new Item_func_soundex((yyvsp[(4) - (4)].item)));
 	  }
     break;
 
   case 588:
 #line 2677 "sql_yacc.yy"
-    { yyval.item= new Item_func_like(yyvsp[-3].item,yyvsp[-1].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_like((yyvsp[(1) - (4)].item),(yyvsp[(3) - (4)].item),(yyvsp[(4) - (4)].item)); }
     break;
 
   case 589:
 #line 2679 "sql_yacc.yy"
-    { yyval.item= new Item_func_not(new Item_func_like(yyvsp[-4].item,yyvsp[-1].item,yyvsp[0].item)); }
+    { (yyval.item)= new Item_func_not(new Item_func_like((yyvsp[(1) - (5)].item),(yyvsp[(4) - (5)].item),(yyvsp[(5) - (5)].item))); }
     break;
 
   case 590:
 #line 2680 "sql_yacc.yy"
-    { yyval.item= new Item_func_regex(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_regex((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 591:
 #line 2682 "sql_yacc.yy"
-    { yyval.item= new Item_func_not(new Item_func_regex(yyvsp[-3].item,yyvsp[0].item)); }
+    { (yyval.item)= new Item_func_not(new Item_func_regex((yyvsp[(1) - (4)].item),(yyvsp[(4) - (4)].item))); }
     break;
 
   case 592:
 #line 2683 "sql_yacc.yy"
-    { yyval.item= new Item_func_isnull(yyvsp[-2].item); }
+    { (yyval.item)= new Item_func_isnull((yyvsp[(1) - (3)].item)); }
     break;
 
   case 593:
 #line 2684 "sql_yacc.yy"
-    { yyval.item= new Item_func_isnotnull(yyvsp[-3].item); }
+    { (yyval.item)= new Item_func_isnotnull((yyvsp[(1) - (4)].item)); }
     break;
 
   case 594:
 #line 2685 "sql_yacc.yy"
-    { yyval.item= new Item_func_equal(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_equal((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 595:
 #line 2686 "sql_yacc.yy"
-    { yyval.item= (*yyvsp[-1].boolfunc2creator)(0)->create(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= (*(yyvsp[(2) - (3)].boolfunc2creator))(0)->create((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 596:
 #line 2688 "sql_yacc.yy"
     {
-	  all_any_subquery_creator(yyvsp[-3].item, yyvsp[-2].boolfunc2creator, yyvsp[-1].num, yyvsp[0].select_lex);
+	  all_any_subquery_creator((yyvsp[(1) - (4)].item), (yyvsp[(2) - (4)].boolfunc2creator), (yyvsp[(3) - (4)].num), (yyvsp[(4) - (4)].select_lex));
 	}
     break;
 
   case 597:
 #line 2691 "sql_yacc.yy"
-    { yyval.item= new Item_func_shift_left(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_shift_left((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 598:
 #line 2692 "sql_yacc.yy"
-    { yyval.item= new Item_func_shift_right(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_shift_right((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 599:
 #line 2693 "sql_yacc.yy"
-    { yyval.item= new Item_func_plus(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_plus((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 600:
 #line 2694 "sql_yacc.yy"
-    { yyval.item= new Item_func_minus(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_minus((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 601:
 #line 2695 "sql_yacc.yy"
-    { yyval.item= new Item_func_mul(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_mul((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 602:
 #line 2696 "sql_yacc.yy"
-    { yyval.item= new Item_func_div(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_div((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 603:
 #line 2697 "sql_yacc.yy"
-    { yyval.item= new Item_func_int_div(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_int_div((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 604:
 #line 2698 "sql_yacc.yy"
-    { yyval.item= new Item_func_bit_or(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_bit_or((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 605:
 #line 2699 "sql_yacc.yy"
-    { yyval.item= new Item_func_bit_xor(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_bit_xor((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 606:
 #line 2700 "sql_yacc.yy"
-    { yyval.item= new Item_func_bit_and(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_bit_and((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 607:
 #line 2701 "sql_yacc.yy"
-    { yyval.item= new Item_func_mod(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_mod((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 608:
 #line 2702 "sql_yacc.yy"
-    { yyval.item= new Item_func_mod(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_mod((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 609:
 #line 2704 "sql_yacc.yy"
-    { yyval.item= new Item_date_add_interval(yyvsp[-3].item,yyvsp[-1].item,yyvsp[0].interval,0); }
+    { (yyval.item)= new Item_date_add_interval((yyvsp[(1) - (4)].item),(yyvsp[(3) - (4)].item),(yyvsp[(4) - (4)].interval),0); }
     break;
 
   case 610:
 #line 2706 "sql_yacc.yy"
-    { yyval.item= new Item_date_add_interval(yyvsp[-3].item,yyvsp[-1].item,yyvsp[0].interval,1); }
+    { (yyval.item)= new Item_date_add_interval((yyvsp[(1) - (4)].item),(yyvsp[(3) - (4)].item),(yyvsp[(4) - (4)].interval),1); }
     break;
 
   case 612:
 #line 2712 "sql_yacc.yy"
-    { yyvsp[-1].item_list->push_front(yyvsp[-4].item); yyval.item= new Item_func_in(*yyvsp[-1].item_list); }
+    { (yyvsp[(4) - (5)].item_list)->push_front((yyvsp[(1) - (5)].item)); (yyval.item)= new Item_func_in(*(yyvsp[(4) - (5)].item_list)); }
     break;
 
   case 613:
 #line 2714 "sql_yacc.yy"
-    { yyvsp[-1].item_list->push_front(yyvsp[-5].item); yyval.item= new Item_func_not(new Item_func_in(*yyvsp[-1].item_list)); }
+    { (yyvsp[(5) - (6)].item_list)->push_front((yyvsp[(1) - (6)].item)); (yyval.item)= new Item_func_not(new Item_func_in(*(yyvsp[(5) - (6)].item_list))); }
     break;
 
   case 614:
 #line 2716 "sql_yacc.yy"
-    { yyval.item= new Item_in_subselect(yyvsp[-2].item, yyvsp[0].select_lex); }
+    { (yyval.item)= new Item_in_subselect((yyvsp[(1) - (3)].item), (yyvsp[(3) - (3)].select_lex)); }
     break;
 
   case 615:
 #line 2718 "sql_yacc.yy"
     {
-            yyval.item= new Item_func_not(new Item_in_subselect(yyvsp[-3].item, yyvsp[0].select_lex));
+            (yyval.item)= new Item_func_not(new Item_in_subselect((yyvsp[(1) - (4)].item), (yyvsp[(4) - (4)].select_lex)));
           }
     break;
 
   case 616:
 #line 2722 "sql_yacc.yy"
-    { yyval.item= new Item_func_between(yyvsp[-4].item,yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_between((yyvsp[(1) - (5)].item),(yyvsp[(3) - (5)].item),(yyvsp[(5) - (5)].item)); }
     break;
 
   case 617:
 #line 2724 "sql_yacc.yy"
-    { yyval.item= new Item_func_not(new Item_func_between(yyvsp[-5].item,yyvsp[-2].item,yyvsp[0].item)); }
+    { (yyval.item)= new Item_func_not(new Item_func_between((yyvsp[(1) - (6)].item),(yyvsp[(4) - (6)].item),(yyvsp[(6) - (6)].item))); }
     break;
 
   case 618:
 #line 2725 "sql_yacc.yy"
-    { yyval.item= or_or_concat(YYTHD, yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= or_or_concat(YYTHD, (yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 619:
 #line 2726 "sql_yacc.yy"
-    { yyval.item= new Item_cond_or(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_cond_or((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 620:
 #line 2727 "sql_yacc.yy"
-    { yyval.item= new Item_cond_xor(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_cond_xor((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 621:
 #line 2729 "sql_yacc.yy"
     {
-	    yyval.item= new Item_func_eq(new Item_func_soundex(yyvsp[-3].item),
-				 new Item_func_soundex(yyvsp[0].item));
+	    (yyval.item)= new Item_func_eq(new Item_func_soundex((yyvsp[(1) - (4)].item)),
+				 new Item_func_soundex((yyvsp[(4) - (4)].item)));
 	  }
     break;
 
   case 622:
 #line 2734 "sql_yacc.yy"
-    { yyval.item= new Item_func_like(yyvsp[-3].item,yyvsp[-1].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_like((yyvsp[(1) - (4)].item),(yyvsp[(3) - (4)].item),(yyvsp[(4) - (4)].item)); }
     break;
 
   case 623:
 #line 2736 "sql_yacc.yy"
-    { yyval.item= new Item_func_not(new Item_func_like(yyvsp[-4].item,yyvsp[-1].item,yyvsp[0].item)); }
+    { (yyval.item)= new Item_func_not(new Item_func_like((yyvsp[(1) - (5)].item),(yyvsp[(4) - (5)].item),(yyvsp[(5) - (5)].item))); }
     break;
 
   case 624:
 #line 2737 "sql_yacc.yy"
-    { yyval.item= new Item_func_regex(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_regex((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 625:
 #line 2739 "sql_yacc.yy"
-    { yyval.item= new Item_func_not(new Item_func_regex(yyvsp[-3].item,yyvsp[0].item)); }
+    { (yyval.item)= new Item_func_not(new Item_func_regex((yyvsp[(1) - (4)].item),(yyvsp[(4) - (4)].item))); }
     break;
 
   case 626:
 #line 2740 "sql_yacc.yy"
-    { yyval.item= new Item_func_isnull(yyvsp[-2].item); }
+    { (yyval.item)= new Item_func_isnull((yyvsp[(1) - (3)].item)); }
     break;
 
   case 627:
 #line 2741 "sql_yacc.yy"
-    { yyval.item= new Item_func_isnotnull(yyvsp[-3].item); }
+    { (yyval.item)= new Item_func_isnotnull((yyvsp[(1) - (4)].item)); }
     break;
 
   case 628:
 #line 2742 "sql_yacc.yy"
-    { yyval.item= new Item_func_equal(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_equal((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 629:
 #line 2743 "sql_yacc.yy"
-    { yyval.item= (*yyvsp[-1].boolfunc2creator)(0)->create(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= (*(yyvsp[(2) - (3)].boolfunc2creator))(0)->create((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 630:
 #line 2745 "sql_yacc.yy"
     {
-	  all_any_subquery_creator(yyvsp[-3].item, yyvsp[-2].boolfunc2creator, yyvsp[-1].num, yyvsp[0].select_lex);
+	  all_any_subquery_creator((yyvsp[(1) - (4)].item), (yyvsp[(2) - (4)].boolfunc2creator), (yyvsp[(3) - (4)].num), (yyvsp[(4) - (4)].select_lex));
 	}
     break;
 
   case 631:
 #line 2748 "sql_yacc.yy"
-    { yyval.item= new Item_func_shift_left(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_shift_left((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 632:
 #line 2749 "sql_yacc.yy"
-    { yyval.item= new Item_func_shift_right(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_shift_right((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 633:
 #line 2750 "sql_yacc.yy"
-    { yyval.item= new Item_func_plus(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_plus((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 634:
 #line 2751 "sql_yacc.yy"
-    { yyval.item= new Item_func_minus(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_minus((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 635:
 #line 2752 "sql_yacc.yy"
-    { yyval.item= new Item_func_mul(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_mul((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 636:
 #line 2753 "sql_yacc.yy"
-    { yyval.item= new Item_func_div(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_div((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 637:
 #line 2754 "sql_yacc.yy"
-    { yyval.item= new Item_func_int_div(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_int_div((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 638:
 #line 2755 "sql_yacc.yy"
-    { yyval.item= new Item_func_bit_or(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_bit_or((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 639:
 #line 2756 "sql_yacc.yy"
-    { yyval.item= new Item_func_bit_xor(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_bit_xor((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 640:
 #line 2757 "sql_yacc.yy"
-    { yyval.item= new Item_func_bit_and(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_bit_and((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 641:
 #line 2758 "sql_yacc.yy"
-    { yyval.item= new Item_func_mod(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_mod((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 642:
 #line 2759 "sql_yacc.yy"
-    { yyval.item= new Item_func_mod(yyvsp[-2].item,yyvsp[0].item); }
+    { (yyval.item)= new Item_func_mod((yyvsp[(1) - (3)].item),(yyvsp[(3) - (3)].item)); }
     break;
 
   case 643:
 #line 2761 "sql_yacc.yy"
-    { yyval.item= new Item_date_add_interval(yyvsp[-3].item,yyvsp[-1].item,yyvsp[0].interval,0); }
+    { (yyval.item)= new Item_date_add_interval((yyvsp[(1) - (4)].item),(yyvsp[(3) - (4)].item),(yyvsp[(4) - (4)].interval),0); }
     break;
 
   case 644:
 #line 2763 "sql_yacc.yy"
-    { yyval.item= new Item_date_add_interval(yyvsp[-3].item,yyvsp[-1].item,yyvsp[0].interval,1); }
+    { (yyval.item)= new Item_date_add_interval((yyvsp[(1) - (4)].item),(yyvsp[(3) - (4)].item),(yyvsp[(4) - (4)].interval),1); }
     break;
 
   case 646:
 #line 2767 "sql_yacc.yy"
-    { yyval.item=yyvsp[0].item; }
+    { (yyval.item)=(yyvsp[(2) - (2)].item); }
     break;
 
   case 648:
 #line 2773 "sql_yacc.yy"
     {
-	    yyval.item= new Item_func_set_collation(yyvsp[-2].item,
-					    new Item_string(yyvsp[0].lex_str.str,
-							    yyvsp[0].lex_str.length,
+	    (yyval.item)= new Item_func_set_collation((yyvsp[(1) - (3)].item),
+					    new Item_string((yyvsp[(3) - (3)].lex_str).str,
+							    (yyvsp[(3) - (3)].lex_str).length,
                                                             YYTHD->charset()));
 	  }
     break;
@@ -15644,7 +15978,7 @@ yyreduce:
   case 651:
 #line 2782 "sql_yacc.yy"
     {
-	    yyval.item= new Item_func_set_user_var(yyvsp[-2].lex_str,yyvsp[0].item);
+	    (yyval.item)= new Item_func_set_user_var((yyvsp[(2) - (4)].lex_str),(yyvsp[(4) - (4)].item));
 	    Lex->uncacheable(UNCACHEABLE_RAND);
 	  }
     break;
@@ -15652,7 +15986,7 @@ yyreduce:
   case 652:
 #line 2787 "sql_yacc.yy"
     {
-	    yyval.item= new Item_func_get_user_var(yyvsp[0].lex_str);
+	    (yyval.item)= new Item_func_get_user_var((yyvsp[(2) - (2)].lex_str));
 	    Lex->uncacheable(UNCACHEABLE_RAND);
 	  }
     break;
@@ -15661,104 +15995,104 @@ yyreduce:
 #line 2792 "sql_yacc.yy"
     {
 
-            if (yyvsp[-1].lex_str.str && yyvsp[0].lex_str.str && check_reserved_words(&yyvsp[-1].lex_str))
+            if ((yyvsp[(4) - (5)].lex_str).str && (yyvsp[(5) - (5)].lex_str).str && check_reserved_words(&(yyvsp[(4) - (5)].lex_str)))
             {
               yyerror(ER(ER_SYNTAX_ERROR));
               YYABORT;
             }
-	    if (!(yyval.item= get_system_var(YYTHD, (enum_var_type) yyvsp[-2].num, yyvsp[-1].lex_str, yyvsp[0].lex_str)))
+	    if (!((yyval.item)= get_system_var(YYTHD, (enum_var_type) (yyvsp[(3) - (5)].num), (yyvsp[(4) - (5)].lex_str), (yyvsp[(5) - (5)].lex_str))))
 	      YYABORT;
 	  }
     break;
 
   case 655:
 #line 2803 "sql_yacc.yy"
-    { yyval.item= yyvsp[0].item; }
+    { (yyval.item)= (yyvsp[(2) - (2)].item); }
     break;
 
   case 656:
 #line 2804 "sql_yacc.yy"
-    { yyval.item= new Item_func_neg(yyvsp[0].item); }
+    { (yyval.item)= new Item_func_neg((yyvsp[(2) - (2)].item)); }
     break;
 
   case 657:
 #line 2805 "sql_yacc.yy"
-    { yyval.item= new Item_func_bit_neg(yyvsp[0].item); }
+    { (yyval.item)= new Item_func_bit_neg((yyvsp[(2) - (2)].item)); }
     break;
 
   case 658:
 #line 2807 "sql_yacc.yy"
     {
-            yyval.item= negate_expression(YYTHD, yyvsp[0].item);
+            (yyval.item)= negate_expression(YYTHD, (yyvsp[(2) - (2)].item));
           }
     break;
 
   case 659:
 #line 2811 "sql_yacc.yy"
     {
-            yyval.item= negate_expression(YYTHD, yyvsp[0].item);
+            (yyval.item)= negate_expression(YYTHD, (yyvsp[(2) - (2)].item));
           }
     break;
 
   case 660:
 #line 2814 "sql_yacc.yy"
-    { yyval.item= yyvsp[-1].item; }
+    { (yyval.item)= (yyvsp[(2) - (3)].item); }
     break;
 
   case 661:
 #line 2816 "sql_yacc.yy"
     {
-	    yyvsp[-1].item_list->push_front(yyvsp[-3].item);
-	    yyval.item= new Item_row(*yyvsp[-1].item_list);
+	    (yyvsp[(4) - (5)].item_list)->push_front((yyvsp[(2) - (5)].item));
+	    (yyval.item)= new Item_row(*(yyvsp[(4) - (5)].item_list));
 	  }
     break;
 
   case 662:
 #line 2821 "sql_yacc.yy"
     {
-	    yyvsp[-1].item_list->push_front(yyvsp[-3].item);
-	    yyval.item= new Item_row(*yyvsp[-1].item_list);
+	    (yyvsp[(5) - (6)].item_list)->push_front((yyvsp[(3) - (6)].item));
+	    (yyval.item)= new Item_row(*(yyvsp[(5) - (6)].item_list));
 	  }
     break;
 
   case 663:
 #line 2825 "sql_yacc.yy"
-    { yyval.item= yyvsp[0].item; }
+    { (yyval.item)= (yyvsp[(2) - (2)].item); }
     break;
 
   case 664:
 #line 2826 "sql_yacc.yy"
-    { yyval.item= yyvsp[0].item; }
+    { (yyval.item)= (yyvsp[(1) - (1)].item); }
     break;
 
   case 665:
 #line 2827 "sql_yacc.yy"
-    { yyval.item= yyvsp[-1].item; }
+    { (yyval.item)= (yyvsp[(3) - (4)].item); }
     break;
 
   case 666:
 #line 2829 "sql_yacc.yy"
-    { yyvsp[-5].item_list->push_front(yyvsp[-2].item);
+    { (yyvsp[(2) - (7)].item_list)->push_front((yyvsp[(5) - (7)].item));
             Select->add_ftfunc_to_list((Item_func_match*)
-                                        (yyval.item=new Item_func_match(*yyvsp[-5].item_list,yyvsp[-1].num))); }
+                                        ((yyval.item)=new Item_func_match(*(yyvsp[(2) - (7)].item_list),(yyvsp[(6) - (7)].num)))); }
     break;
 
   case 667:
 #line 2832 "sql_yacc.yy"
-    { yyval.item= new Item_func_ascii(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_ascii((yyvsp[(3) - (4)].item)); }
     break;
 
   case 668:
 #line 2834 "sql_yacc.yy"
     {
-	    yyval.item= create_func_cast(yyvsp[0].item, ITEM_CAST_CHAR, -1, &my_charset_bin);
+	    (yyval.item)= create_func_cast((yyvsp[(2) - (2)].item), ITEM_CAST_CHAR, -1, &my_charset_bin);
 	  }
     break;
 
   case 669:
 #line 2838 "sql_yacc.yy"
     {
-	    yyval.item= create_func_cast(yyvsp[-3].item, yyvsp[-1].cast_type,
+	    (yyval.item)= create_func_cast((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].cast_type),
 				 Lex->length ? atoi(Lex->length) : -1,
 				 Lex->charset);
 	  }
@@ -15766,13 +16100,13 @@ yyreduce:
 
   case 670:
 #line 2844 "sql_yacc.yy"
-    { yyval.item= new Item_func_case(* yyvsp[-2].item_list, yyvsp[-4].item, yyvsp[-1].item ); }
+    { (yyval.item)= new Item_func_case(* (yyvsp[(4) - (6)].item_list), (yyvsp[(2) - (6)].item), (yyvsp[(5) - (6)].item) ); }
     break;
 
   case 671:
 #line 2846 "sql_yacc.yy"
     {
-	    yyval.item= create_func_cast(yyvsp[-3].item, yyvsp[-1].cast_type,
+	    (yyval.item)= create_func_cast((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].cast_type),
 				 Lex->length ? atoi(Lex->length) : -1,
 				 Lex->charset);
 	  }
@@ -15780,279 +16114,279 @@ yyreduce:
 
   case 672:
 #line 2852 "sql_yacc.yy"
-    { yyval.item= new Item_func_conv_charset(yyvsp[-3].item,yyvsp[-1].charset); }
+    { (yyval.item)= new Item_func_conv_charset((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].charset)); }
     break;
 
   case 673:
 #line 2854 "sql_yacc.yy"
-    { yyval.item= new Item_default_value(yyvsp[-1].item); }
+    { (yyval.item)= new Item_default_value((yyvsp[(3) - (4)].item)); }
     break;
 
   case 674:
 #line 2856 "sql_yacc.yy"
-    { yyval.item= new Item_insert_value(yyvsp[-1].item); }
+    { (yyval.item)= new Item_insert_value((yyvsp[(3) - (4)].item)); }
     break;
 
   case 675:
 #line 2858 "sql_yacc.yy"
     {
-	    if (!yyvsp[-2].symbol.symbol->create_func)
+	    if (!(yyvsp[(1) - (3)].symbol).symbol->create_func)
 	    {
 	      net_printf(Lex->thd, ER_FEATURE_DISABLED,
-			 yyvsp[-2].symbol.symbol->group->name,
-	                 yyvsp[-2].symbol.symbol->group->needed_define);
+			 (yyvsp[(1) - (3)].symbol).symbol->group->name,
+	                 (yyvsp[(1) - (3)].symbol).symbol->group->needed_define);
 	      YYABORT;
 	    }
-	    yyval.item= ((Item*(*)(void))(yyvsp[-2].symbol.symbol->create_func))();
+	    (yyval.item)= ((Item*(*)(void))((yyvsp[(1) - (3)].symbol).symbol->create_func))();
 	  }
     break;
 
   case 676:
 #line 2869 "sql_yacc.yy"
     {
-	    if (!yyvsp[-3].symbol.symbol->create_func)
+	    if (!(yyvsp[(1) - (4)].symbol).symbol->create_func)
 	    {
 	      net_printf(Lex->thd, ER_FEATURE_DISABLED,
-			 yyvsp[-3].symbol.symbol->group->name,
-	                 yyvsp[-3].symbol.symbol->group->needed_define);
+			 (yyvsp[(1) - (4)].symbol).symbol->group->name,
+	                 (yyvsp[(1) - (4)].symbol).symbol->group->needed_define);
 	      YYABORT;
 	    }
-	    yyval.item= ((Item*(*)(Item*))(yyvsp[-3].symbol.symbol->create_func))(yyvsp[-1].item);
+	    (yyval.item)= ((Item*(*)(Item*))((yyvsp[(1) - (4)].symbol).symbol->create_func))((yyvsp[(3) - (4)].item));
 	  }
     break;
 
   case 677:
 #line 2880 "sql_yacc.yy"
     {
-	    if (!yyvsp[-5].symbol.symbol->create_func)
+	    if (!(yyvsp[(1) - (6)].symbol).symbol->create_func)
 	    {
 	      net_printf(Lex->thd, ER_FEATURE_DISABLED,
-			 yyvsp[-5].symbol.symbol->group->name,
-	                 yyvsp[-5].symbol.symbol->group->needed_define);
+			 (yyvsp[(1) - (6)].symbol).symbol->group->name,
+	                 (yyvsp[(1) - (6)].symbol).symbol->group->needed_define);
 	      YYABORT;
 	    }
-	    yyval.item= ((Item*(*)(Item*,Item*))(yyvsp[-5].symbol.symbol->create_func))(yyvsp[-3].item,yyvsp[-1].item);
+	    (yyval.item)= ((Item*(*)(Item*,Item*))((yyvsp[(1) - (6)].symbol).symbol->create_func))((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].item));
 	  }
     break;
 
   case 678:
 #line 2891 "sql_yacc.yy"
     {
-	    if (!yyvsp[-7].symbol.symbol->create_func)
+	    if (!(yyvsp[(1) - (8)].symbol).symbol->create_func)
 	    {
 	      net_printf(Lex->thd, ER_FEATURE_DISABLED,
-			 yyvsp[-7].symbol.symbol->group->name,
-	                 yyvsp[-7].symbol.symbol->group->needed_define);
+			 (yyvsp[(1) - (8)].symbol).symbol->group->name,
+	                 (yyvsp[(1) - (8)].symbol).symbol->group->needed_define);
 	      YYABORT;
 	    }
-	    yyval.item= ((Item*(*)(Item*,Item*,Item*))(yyvsp[-7].symbol.symbol->create_func))(yyvsp[-5].item,yyvsp[-3].item,yyvsp[-1].item);
+	    (yyval.item)= ((Item*(*)(Item*,Item*,Item*))((yyvsp[(1) - (8)].symbol).symbol->create_func))((yyvsp[(3) - (8)].item),(yyvsp[(5) - (8)].item),(yyvsp[(7) - (8)].item));
 	  }
     break;
 
   case 679:
 #line 2902 "sql_yacc.yy"
-    { yyval.item= new Item_date_add_interval(yyvsp[-3].item, yyvsp[-1].item, INTERVAL_DAY, 0);}
+    { (yyval.item)= new Item_date_add_interval((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item), INTERVAL_DAY, 0);}
     break;
 
   case 680:
 #line 2904 "sql_yacc.yy"
-    { yyval.item= new Item_date_add_interval(yyvsp[-5].item, yyvsp[-2].item, yyvsp[-1].interval, 0); }
+    { (yyval.item)= new Item_date_add_interval((yyvsp[(3) - (8)].item), (yyvsp[(6) - (8)].item), (yyvsp[(7) - (8)].interval), 0); }
     break;
 
   case 681:
 #line 2906 "sql_yacc.yy"
-    { yyval.item= new Item_func_atan(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_atan((yyvsp[(3) - (4)].item)); }
     break;
 
   case 682:
 #line 2908 "sql_yacc.yy"
-    { yyval.item= new Item_func_atan(yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_atan((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].item)); }
     break;
 
   case 683:
 #line 2910 "sql_yacc.yy"
-    { yyval.item= new Item_func_char(*yyvsp[-1].item_list); }
+    { (yyval.item)= new Item_func_char(*(yyvsp[(3) - (4)].item_list)); }
     break;
 
   case 684:
 #line 2912 "sql_yacc.yy"
-    { yyval.item= new Item_func_charset(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_charset((yyvsp[(3) - (4)].item)); }
     break;
 
   case 685:
 #line 2914 "sql_yacc.yy"
-    { yyval.item= new Item_func_coalesce(* yyvsp[-1].item_list); }
+    { (yyval.item)= new Item_func_coalesce(* (yyvsp[(3) - (4)].item_list)); }
     break;
 
   case 686:
 #line 2916 "sql_yacc.yy"
-    { yyval.item= new Item_func_collation(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_collation((yyvsp[(3) - (4)].item)); }
     break;
 
   case 687:
 #line 2918 "sql_yacc.yy"
-    { yyval.item= new Item_func_concat(* yyvsp[-1].item_list); }
+    { (yyval.item)= new Item_func_concat(* (yyvsp[(3) - (4)].item_list)); }
     break;
 
   case 688:
 #line 2920 "sql_yacc.yy"
-    { yyvsp[-1].item_list->push_front(yyvsp[-3].item); yyval.item= new Item_func_concat_ws(*yyvsp[-1].item_list); }
+    { (yyvsp[(5) - (6)].item_list)->push_front((yyvsp[(3) - (6)].item)); (yyval.item)= new Item_func_concat_ws(*(yyvsp[(5) - (6)].item_list)); }
     break;
 
   case 689:
 #line 2922 "sql_yacc.yy"
     {
 	    Lex->time_zone_tables_used= &fake_time_zone_tables_list;
-	    yyval.item= new Item_func_convert_tz(yyvsp[-5].item, yyvsp[-3].item, yyvsp[-1].item);
+	    (yyval.item)= new Item_func_convert_tz((yyvsp[(3) - (8)].item), (yyvsp[(5) - (8)].item), (yyvsp[(7) - (8)].item));
 	  }
     break;
 
   case 690:
 #line 2927 "sql_yacc.yy"
-    { yyval.item= new Item_func_curdate_local(); Lex->safe_to_cache_query=0; }
+    { (yyval.item)= new Item_func_curdate_local(); Lex->safe_to_cache_query=0; }
     break;
 
   case 691:
 #line 2929 "sql_yacc.yy"
-    { yyval.item= new Item_func_curtime_local(); Lex->safe_to_cache_query=0; }
+    { (yyval.item)= new Item_func_curtime_local(); Lex->safe_to_cache_query=0; }
     break;
 
   case 692:
 #line 2931 "sql_yacc.yy"
     {
-	    yyval.item= new Item_func_curtime_local(yyvsp[-1].item);
+	    (yyval.item)= new Item_func_curtime_local((yyvsp[(3) - (4)].item));
 	    Lex->safe_to_cache_query=0;
 	  }
     break;
 
   case 693:
 #line 2936 "sql_yacc.yy"
-    { yyval.item= create_func_current_user(); }
+    { (yyval.item)= create_func_current_user(); }
     break;
 
   case 694:
 #line 2938 "sql_yacc.yy"
-    { yyval.item= new Item_date_add_interval(yyvsp[-4].item,yyvsp[-2].item,yyvsp[-1].interval,0); }
+    { (yyval.item)= new Item_date_add_interval((yyvsp[(3) - (7)].item),(yyvsp[(5) - (7)].item),(yyvsp[(6) - (7)].interval),0); }
     break;
 
   case 695:
 #line 2940 "sql_yacc.yy"
-    { yyval.item= new Item_date_add_interval(yyvsp[-4].item,yyvsp[-2].item,yyvsp[-1].interval,1); }
+    { (yyval.item)= new Item_date_add_interval((yyvsp[(3) - (7)].item),(yyvsp[(5) - (7)].item),(yyvsp[(6) - (7)].interval),1); }
     break;
 
   case 696:
 #line 2942 "sql_yacc.yy"
     {
-	    yyval.item= new Item_func_database();
+	    (yyval.item)= new Item_func_database();
             Lex->safe_to_cache_query=0;
 	  }
     break;
 
   case 697:
 #line 2947 "sql_yacc.yy"
-    { yyval.item= new Item_date_typecast(yyvsp[-1].item); }
+    { (yyval.item)= new Item_date_typecast((yyvsp[(3) - (4)].item)); }
     break;
 
   case 698:
 #line 2949 "sql_yacc.yy"
-    { yyval.item= new Item_func_dayofmonth(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_dayofmonth((yyvsp[(3) - (4)].item)); }
     break;
 
   case 699:
 #line 2951 "sql_yacc.yy"
-    { yyvsp[-1].item_list->push_front(yyvsp[-3].item); yyval.item= new Item_func_elt(*yyvsp[-1].item_list); }
+    { (yyvsp[(5) - (6)].item_list)->push_front((yyvsp[(3) - (6)].item)); (yyval.item)= new Item_func_elt(*(yyvsp[(5) - (6)].item_list)); }
     break;
 
   case 700:
 #line 2953 "sql_yacc.yy"
-    { yyval.item= new Item_func_make_set(yyvsp[-3].item, *yyvsp[-1].item_list); }
+    { (yyval.item)= new Item_func_make_set((yyvsp[(3) - (6)].item), *(yyvsp[(5) - (6)].item_list)); }
     break;
 
   case 701:
 #line 2955 "sql_yacc.yy"
     {
-	    yyval.item= new Item_func_encrypt(yyvsp[-1].item);
+	    (yyval.item)= new Item_func_encrypt((yyvsp[(3) - (4)].item));
 	    Lex->uncacheable(UNCACHEABLE_RAND);
 	  }
     break;
 
   case 702:
 #line 2959 "sql_yacc.yy"
-    { yyval.item= new Item_func_encrypt(yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_encrypt((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].item)); }
     break;
 
   case 703:
 #line 2961 "sql_yacc.yy"
-    { yyval.item= new Item_func_decode(yyvsp[-3].item,yyvsp[-1].lex_str.str); }
+    { (yyval.item)= new Item_func_decode((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].lex_str).str); }
     break;
 
   case 704:
 #line 2963 "sql_yacc.yy"
-    { yyval.item= new Item_func_encode(yyvsp[-3].item,yyvsp[-1].lex_str.str); }
+    { (yyval.item)= new Item_func_encode((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].lex_str).str); }
     break;
 
   case 705:
 #line 2965 "sql_yacc.yy"
-    { yyval.item= new Item_func_des_decrypt(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_des_decrypt((yyvsp[(3) - (4)].item)); }
     break;
 
   case 706:
 #line 2967 "sql_yacc.yy"
-    { yyval.item= new Item_func_des_decrypt(yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_des_decrypt((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].item)); }
     break;
 
   case 707:
 #line 2969 "sql_yacc.yy"
-    { yyval.item= new Item_func_des_encrypt(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_des_encrypt((yyvsp[(3) - (4)].item)); }
     break;
 
   case 708:
 #line 2971 "sql_yacc.yy"
-    { yyval.item= new Item_func_des_encrypt(yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_des_encrypt((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].item)); }
     break;
 
   case 709:
 #line 2973 "sql_yacc.yy"
-    { yyval.item= new Item_func_export_set(yyvsp[-5].item, yyvsp[-3].item, yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_export_set((yyvsp[(3) - (8)].item), (yyvsp[(5) - (8)].item), (yyvsp[(7) - (8)].item)); }
     break;
 
   case 710:
 #line 2975 "sql_yacc.yy"
-    { yyval.item= new Item_func_export_set(yyvsp[-7].item, yyvsp[-5].item, yyvsp[-3].item, yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_export_set((yyvsp[(3) - (10)].item), (yyvsp[(5) - (10)].item), (yyvsp[(7) - (10)].item), (yyvsp[(9) - (10)].item)); }
     break;
 
   case 711:
 #line 2977 "sql_yacc.yy"
-    { yyval.item= new Item_func_export_set(yyvsp[-9].item, yyvsp[-7].item, yyvsp[-5].item, yyvsp[-3].item, yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_export_set((yyvsp[(3) - (12)].item), (yyvsp[(5) - (12)].item), (yyvsp[(7) - (12)].item), (yyvsp[(9) - (12)].item), (yyvsp[(11) - (12)].item)); }
     break;
 
   case 712:
 #line 2979 "sql_yacc.yy"
-    { yyval.item= new Item_func_format(yyvsp[-3].item,atoi(yyvsp[-1].lex_str.str)); }
+    { (yyval.item)= new Item_func_format((yyvsp[(3) - (6)].item),atoi((yyvsp[(5) - (6)].lex_str).str)); }
     break;
 
   case 713:
 #line 2981 "sql_yacc.yy"
-    { yyval.item= new Item_func_from_unixtime(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_from_unixtime((yyvsp[(3) - (4)].item)); }
     break;
 
   case 714:
 #line 2983 "sql_yacc.yy"
     {
-	    yyval.item= new Item_func_date_format (new Item_func_from_unixtime(yyvsp[-3].item),yyvsp[-1].item,0);
+	    (yyval.item)= new Item_func_date_format (new Item_func_from_unixtime((yyvsp[(3) - (6)].item)),(yyvsp[(5) - (6)].item),0);
 	  }
     break;
 
   case 715:
 #line 2987 "sql_yacc.yy"
-    { yyvsp[-1].item_list->push_front(yyvsp[-3].item); yyval.item= new Item_func_field(*yyvsp[-1].item_list); }
+    { (yyvsp[(5) - (6)].item_list)->push_front((yyvsp[(3) - (6)].item)); (yyval.item)= new Item_func_field(*(yyvsp[(5) - (6)].item_list)); }
     break;
 
   case 716:
 #line 2989 "sql_yacc.yy"
     {
 #ifdef HAVE_SPATIAL
-	    yyval.item= yyvsp[0].item;
+	    (yyval.item)= (yyvsp[(1) - (1)].item);
 #else
 	    net_printf(Lex->thd, ER_FEATURE_DISABLED,
 	               sym_group_geom.name, sym_group_geom.needed_define);
@@ -16063,45 +16397,45 @@ yyreduce:
 
   case 717:
 #line 2999 "sql_yacc.yy"
-    { yyval.item= new Item_func_get_format(yyvsp[-3].date_time_type, yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_get_format((yyvsp[(3) - (6)].date_time_type), (yyvsp[(5) - (6)].item)); }
     break;
 
   case 718:
 #line 3001 "sql_yacc.yy"
-    { yyval.item= new Item_func_hour(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_hour((yyvsp[(3) - (4)].item)); }
     break;
 
   case 719:
 #line 3003 "sql_yacc.yy"
-    { yyval.item= new Item_func_if(yyvsp[-5].item,yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_if((yyvsp[(3) - (8)].item),(yyvsp[(5) - (8)].item),(yyvsp[(7) - (8)].item)); }
     break;
 
   case 720:
 #line 3005 "sql_yacc.yy"
-    { yyval.item= new Item_func_insert(yyvsp[-7].item,yyvsp[-5].item,yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_insert((yyvsp[(3) - (10)].item),(yyvsp[(5) - (10)].item),(yyvsp[(7) - (10)].item),(yyvsp[(9) - (10)].item)); }
     break;
 
   case 721:
 #line 3008 "sql_yacc.yy"
-    { yyval.item= new Item_date_add_interval(yyvsp[0].item,yyvsp[-3].item,yyvsp[-2].interval,0); }
+    { (yyval.item)= new Item_date_add_interval((yyvsp[(4) - (4)].item),(yyvsp[(1) - (4)].item),(yyvsp[(2) - (4)].interval),0); }
     break;
 
   case 722:
 #line 3010 "sql_yacc.yy"
     {
-            if (yyvsp[0].item->type() != Item::ROW_ITEM)
+            if ((yyvsp[(1) - (1)].item)->type() != Item::ROW_ITEM)
             {
               yyerror(ER(ER_SYNTAX_ERROR));
               YYABORT;
             }
-            yyval.item= new Item_func_interval((Item_row *)yyvsp[0].item);
+            (yyval.item)= new Item_func_interval((Item_row *)(yyvsp[(1) - (1)].item));
           }
     break;
 
   case 723:
 #line 3019 "sql_yacc.yy"
     {
-	    yyval.item= new Item_func_last_insert_id();
+	    (yyval.item)= new Item_func_last_insert_id();
 	    Lex->safe_to_cache_query= 0;
 	  }
     break;
@@ -16109,50 +16443,50 @@ yyreduce:
   case 724:
 #line 3024 "sql_yacc.yy"
     {
-	    yyval.item= new Item_func_last_insert_id(yyvsp[-1].item);
+	    (yyval.item)= new Item_func_last_insert_id((yyvsp[(3) - (4)].item));
 	    Lex->safe_to_cache_query= 0;
 	  }
     break;
 
   case 725:
 #line 3029 "sql_yacc.yy"
-    { yyval.item= new Item_func_left(yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_left((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].item)); }
     break;
 
   case 726:
 #line 3031 "sql_yacc.yy"
-    { yyval.item= new Item_func_locate(yyvsp[-1].item,yyvsp[-3].item); }
+    { (yyval.item)= new Item_func_locate((yyvsp[(5) - (6)].item),(yyvsp[(3) - (6)].item)); }
     break;
 
   case 727:
 #line 3033 "sql_yacc.yy"
-    { yyval.item= new Item_func_locate(yyvsp[-3].item,yyvsp[-5].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_locate((yyvsp[(5) - (8)].item),(yyvsp[(3) - (8)].item),(yyvsp[(7) - (8)].item)); }
     break;
 
   case 728:
 #line 3035 "sql_yacc.yy"
-    { yyvsp[-1].item_list->push_front(yyvsp[-3].item); yyval.item= new Item_func_max(*yyvsp[-1].item_list); }
+    { (yyvsp[(5) - (6)].item_list)->push_front((yyvsp[(3) - (6)].item)); (yyval.item)= new Item_func_max(*(yyvsp[(5) - (6)].item_list)); }
     break;
 
   case 729:
 #line 3037 "sql_yacc.yy"
-    { yyvsp[-1].item_list->push_front(yyvsp[-3].item); yyval.item= new Item_func_min(*yyvsp[-1].item_list); }
+    { (yyvsp[(5) - (6)].item_list)->push_front((yyvsp[(3) - (6)].item)); (yyval.item)= new Item_func_min(*(yyvsp[(5) - (6)].item_list)); }
     break;
 
   case 730:
 #line 3039 "sql_yacc.yy"
-    { yyval.item= new Item_func_log(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_log((yyvsp[(3) - (4)].item)); }
     break;
 
   case 731:
 #line 3041 "sql_yacc.yy"
-    { yyval.item= new Item_func_log(yyvsp[-3].item, yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_log((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item)); }
     break;
 
   case 732:
 #line 3043 "sql_yacc.yy"
     {
-	    yyval.item= new Item_master_pos_wait(yyvsp[-3].item, yyvsp[-1].item);
+	    (yyval.item)= new Item_master_pos_wait((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item));
 	    Lex->safe_to_cache_query=0;
 		  }
     break;
@@ -16160,516 +16494,516 @@ yyreduce:
   case 733:
 #line 3048 "sql_yacc.yy"
     {
-	    yyval.item= new Item_master_pos_wait(yyvsp[-5].item, yyvsp[-3].item, yyvsp[-1].item);
+	    (yyval.item)= new Item_master_pos_wait((yyvsp[(3) - (8)].item), (yyvsp[(5) - (8)].item), (yyvsp[(7) - (8)].item));
 	    Lex->safe_to_cache_query=0;
 	  }
     break;
 
   case 734:
 #line 3053 "sql_yacc.yy"
-    { yyval.item= new Item_func_microsecond(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_microsecond((yyvsp[(3) - (4)].item)); }
     break;
 
   case 735:
 #line 3055 "sql_yacc.yy"
-    { yyval.item= new Item_func_minute(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_minute((yyvsp[(3) - (4)].item)); }
     break;
 
   case 736:
 #line 3057 "sql_yacc.yy"
-    { yyval.item = new Item_func_mod( yyvsp[-3].item, yyvsp[-1].item); }
+    { (yyval.item) = new Item_func_mod( (yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item)); }
     break;
 
   case 737:
 #line 3059 "sql_yacc.yy"
-    { yyval.item= new Item_func_month(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_month((yyvsp[(3) - (4)].item)); }
     break;
 
   case 738:
 #line 3061 "sql_yacc.yy"
-    { yyval.item= new Item_func_now_local(); Lex->safe_to_cache_query=0;}
+    { (yyval.item)= new Item_func_now_local(); Lex->safe_to_cache_query=0;}
     break;
 
   case 739:
 #line 3063 "sql_yacc.yy"
-    { yyval.item= new Item_func_now_local(yyvsp[-1].item); Lex->safe_to_cache_query=0;}
+    { (yyval.item)= new Item_func_now_local((yyvsp[(3) - (4)].item)); Lex->safe_to_cache_query=0;}
     break;
 
   case 740:
 #line 3065 "sql_yacc.yy"
     {
-	    yyval.item= YYTHD->variables.old_passwords ?
-              (Item *) new Item_func_old_password(yyvsp[-1].item) :
-	      (Item *) new Item_func_password(yyvsp[-1].item);
+	    (yyval.item)= YYTHD->variables.old_passwords ?
+              (Item *) new Item_func_old_password((yyvsp[(3) - (4)].item)) :
+	      (Item *) new Item_func_password((yyvsp[(3) - (4)].item));
 	  }
     break;
 
   case 741:
 #line 3071 "sql_yacc.yy"
-    { yyval.item=  new Item_func_old_password(yyvsp[-1].item); }
+    { (yyval.item)=  new Item_func_old_password((yyvsp[(3) - (4)].item)); }
     break;
 
   case 742:
 #line 3073 "sql_yacc.yy"
-    { yyval.item = new Item_func_locate(yyvsp[-1].item,yyvsp[-3].item); }
+    { (yyval.item) = new Item_func_locate((yyvsp[(5) - (6)].item),(yyvsp[(3) - (6)].item)); }
     break;
 
   case 743:
 #line 3075 "sql_yacc.yy"
-    { yyval.item= new Item_func_rand(yyvsp[-1].item); Lex->uncacheable(UNCACHEABLE_RAND);}
+    { (yyval.item)= new Item_func_rand((yyvsp[(3) - (4)].item)); Lex->uncacheable(UNCACHEABLE_RAND);}
     break;
 
   case 744:
 #line 3077 "sql_yacc.yy"
-    { yyval.item= new Item_func_rand(); Lex->uncacheable(UNCACHEABLE_RAND);}
+    { (yyval.item)= new Item_func_rand(); Lex->uncacheable(UNCACHEABLE_RAND);}
     break;
 
   case 745:
 #line 3079 "sql_yacc.yy"
-    { yyval.item= new Item_func_replace(yyvsp[-5].item,yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_replace((yyvsp[(3) - (8)].item),(yyvsp[(5) - (8)].item),(yyvsp[(7) - (8)].item)); }
     break;
 
   case 746:
 #line 3081 "sql_yacc.yy"
-    { yyval.item= new Item_func_right(yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_right((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].item)); }
     break;
 
   case 747:
 #line 3083 "sql_yacc.yy"
-    { yyval.item= new Item_func_round(yyvsp[-1].item, new Item_int((char*)"0",0,1),0); }
+    { (yyval.item)= new Item_func_round((yyvsp[(3) - (4)].item), new Item_int((char*)"0",0,1),0); }
     break;
 
   case 748:
 #line 3084 "sql_yacc.yy"
-    { yyval.item= new Item_func_round(yyvsp[-3].item,yyvsp[-1].item,0); }
+    { (yyval.item)= new Item_func_round((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].item),0); }
     break;
 
   case 749:
 #line 3086 "sql_yacc.yy"
-    { yyval.item= new Item_date_add_interval(yyvsp[-3].item, yyvsp[-1].item, INTERVAL_DAY, 1);}
+    { (yyval.item)= new Item_date_add_interval((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item), INTERVAL_DAY, 1);}
     break;
 
   case 750:
 #line 3088 "sql_yacc.yy"
-    { yyval.item= new Item_date_add_interval(yyvsp[-5].item, yyvsp[-2].item, yyvsp[-1].interval, 1); }
+    { (yyval.item)= new Item_date_add_interval((yyvsp[(3) - (8)].item), (yyvsp[(6) - (8)].item), (yyvsp[(7) - (8)].interval), 1); }
     break;
 
   case 751:
 #line 3090 "sql_yacc.yy"
-    { yyval.item= new Item_func_second(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_second((yyvsp[(3) - (4)].item)); }
     break;
 
   case 752:
 #line 3092 "sql_yacc.yy"
-    { yyval.item= new Item_func_substr(yyvsp[-5].item,yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_substr((yyvsp[(3) - (8)].item),(yyvsp[(5) - (8)].item),(yyvsp[(7) - (8)].item)); }
     break;
 
   case 753:
 #line 3094 "sql_yacc.yy"
-    { yyval.item= new Item_func_substr(yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_substr((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].item)); }
     break;
 
   case 754:
 #line 3096 "sql_yacc.yy"
-    { yyval.item= new Item_func_substr(yyvsp[-5].item,yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_substr((yyvsp[(3) - (8)].item),(yyvsp[(5) - (8)].item),(yyvsp[(7) - (8)].item)); }
     break;
 
   case 755:
 #line 3098 "sql_yacc.yy"
-    { yyval.item= new Item_func_substr(yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_substr((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].item)); }
     break;
 
   case 756:
 #line 3100 "sql_yacc.yy"
-    { yyval.item= new Item_func_substr_index(yyvsp[-5].item,yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_substr_index((yyvsp[(3) - (8)].item),(yyvsp[(5) - (8)].item),(yyvsp[(7) - (8)].item)); }
     break;
 
   case 757:
 #line 3102 "sql_yacc.yy"
-    { yyval.item= new Item_time_typecast(yyvsp[-1].item); }
+    { (yyval.item)= new Item_time_typecast((yyvsp[(3) - (4)].item)); }
     break;
 
   case 758:
 #line 3104 "sql_yacc.yy"
-    { yyval.item= new Item_datetime_typecast(yyvsp[-1].item); }
+    { (yyval.item)= new Item_datetime_typecast((yyvsp[(3) - (4)].item)); }
     break;
 
   case 759:
 #line 3106 "sql_yacc.yy"
-    { yyval.item= new Item_func_add_time(yyvsp[-3].item, yyvsp[-1].item, 1, 0); }
+    { (yyval.item)= new Item_func_add_time((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item), 1, 0); }
     break;
 
   case 760:
 #line 3108 "sql_yacc.yy"
-    { yyval.item= new Item_func_trim(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_trim((yyvsp[(3) - (4)].item)); }
     break;
 
   case 761:
 #line 3110 "sql_yacc.yy"
-    { yyval.item= new Item_func_ltrim(yyvsp[-1].item,yyvsp[-3].item); }
+    { (yyval.item)= new Item_func_ltrim((yyvsp[(6) - (7)].item),(yyvsp[(4) - (7)].item)); }
     break;
 
   case 762:
 #line 3112 "sql_yacc.yy"
-    { yyval.item= new Item_func_rtrim(yyvsp[-1].item,yyvsp[-3].item); }
+    { (yyval.item)= new Item_func_rtrim((yyvsp[(6) - (7)].item),(yyvsp[(4) - (7)].item)); }
     break;
 
   case 763:
 #line 3114 "sql_yacc.yy"
-    { yyval.item= new Item_func_trim(yyvsp[-1].item,yyvsp[-3].item); }
+    { (yyval.item)= new Item_func_trim((yyvsp[(6) - (7)].item),(yyvsp[(4) - (7)].item)); }
     break;
 
   case 764:
 #line 3116 "sql_yacc.yy"
-    { yyval.item= new Item_func_ltrim(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_ltrim((yyvsp[(5) - (6)].item)); }
     break;
 
   case 765:
 #line 3118 "sql_yacc.yy"
-    { yyval.item= new Item_func_rtrim(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_rtrim((yyvsp[(5) - (6)].item)); }
     break;
 
   case 766:
 #line 3120 "sql_yacc.yy"
-    { yyval.item= new Item_func_trim(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_trim((yyvsp[(5) - (6)].item)); }
     break;
 
   case 767:
 #line 3122 "sql_yacc.yy"
-    { yyval.item= new Item_func_trim(yyvsp[-1].item,yyvsp[-3].item); }
+    { (yyval.item)= new Item_func_trim((yyvsp[(5) - (6)].item),(yyvsp[(3) - (6)].item)); }
     break;
 
   case 768:
 #line 3124 "sql_yacc.yy"
-    { yyval.item= new Item_func_round(yyvsp[-3].item,yyvsp[-1].item,1); }
+    { (yyval.item)= new Item_func_round((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].item),1); }
     break;
 
   case 769:
 #line 3126 "sql_yacc.yy"
     {
-	    if (yyvsp[-1].item_list != NULL)
-	      yyval.item = new Item_sum_udf_str(yyvsp[-3].udf, *yyvsp[-1].item_list);
+	    if ((yyvsp[(3) - (4)].item_list) != NULL)
+	      (yyval.item) = new Item_sum_udf_str((yyvsp[(1) - (4)].udf), *(yyvsp[(3) - (4)].item_list));
 	    else
-	      yyval.item = new Item_sum_udf_str(yyvsp[-3].udf);
+	      (yyval.item) = new Item_sum_udf_str((yyvsp[(1) - (4)].udf));
 	  }
     break;
 
   case 770:
 #line 3133 "sql_yacc.yy"
     {
-	    if (yyvsp[-1].item_list != NULL)
-	      yyval.item = new Item_sum_udf_float(yyvsp[-3].udf, *yyvsp[-1].item_list);
+	    if ((yyvsp[(3) - (4)].item_list) != NULL)
+	      (yyval.item) = new Item_sum_udf_float((yyvsp[(1) - (4)].udf), *(yyvsp[(3) - (4)].item_list));
 	    else
-	      yyval.item = new Item_sum_udf_float(yyvsp[-3].udf);
+	      (yyval.item) = new Item_sum_udf_float((yyvsp[(1) - (4)].udf));
 	  }
     break;
 
   case 771:
 #line 3140 "sql_yacc.yy"
     {
-	    if (yyvsp[-1].item_list != NULL)
-	      yyval.item = new Item_sum_udf_int(yyvsp[-3].udf, *yyvsp[-1].item_list);
+	    if ((yyvsp[(3) - (4)].item_list) != NULL)
+	      (yyval.item) = new Item_sum_udf_int((yyvsp[(1) - (4)].udf), *(yyvsp[(3) - (4)].item_list));
 	    else
-	      yyval.item = new Item_sum_udf_int(yyvsp[-3].udf);
+	      (yyval.item) = new Item_sum_udf_int((yyvsp[(1) - (4)].udf));
 	  }
     break;
 
   case 772:
 #line 3147 "sql_yacc.yy"
     {
-	    if (yyvsp[-1].item_list != NULL)
-	      yyval.item = new Item_func_udf_str(yyvsp[-3].udf, *yyvsp[-1].item_list);
+	    if ((yyvsp[(3) - (4)].item_list) != NULL)
+	      (yyval.item) = new Item_func_udf_str((yyvsp[(1) - (4)].udf), *(yyvsp[(3) - (4)].item_list));
 	    else
-	      yyval.item = new Item_func_udf_str(yyvsp[-3].udf);
+	      (yyval.item) = new Item_func_udf_str((yyvsp[(1) - (4)].udf));
 	  }
     break;
 
   case 773:
 #line 3154 "sql_yacc.yy"
     {
-	    if (yyvsp[-1].item_list != NULL)
-	      yyval.item = new Item_func_udf_float(yyvsp[-3].udf, *yyvsp[-1].item_list);
+	    if ((yyvsp[(3) - (4)].item_list) != NULL)
+	      (yyval.item) = new Item_func_udf_float((yyvsp[(1) - (4)].udf), *(yyvsp[(3) - (4)].item_list));
 	    else
-	      yyval.item = new Item_func_udf_float(yyvsp[-3].udf);
+	      (yyval.item) = new Item_func_udf_float((yyvsp[(1) - (4)].udf));
 	  }
     break;
 
   case 774:
 #line 3161 "sql_yacc.yy"
     {
-	    if (yyvsp[-1].item_list != NULL)
-	      yyval.item = new Item_func_udf_int(yyvsp[-3].udf, *yyvsp[-1].item_list);
+	    if ((yyvsp[(3) - (4)].item_list) != NULL)
+	      (yyval.item) = new Item_func_udf_int((yyvsp[(1) - (4)].udf), *(yyvsp[(3) - (4)].item_list));
 	    else
-	      yyval.item = new Item_func_udf_int(yyvsp[-3].udf);
+	      (yyval.item) = new Item_func_udf_int((yyvsp[(1) - (4)].udf));
 	  }
     break;
 
   case 775:
 #line 3168 "sql_yacc.yy"
     {
-            yyval.item= new Item_func_unique_users(yyvsp[-7].item,atoi(yyvsp[-5].lex_str.str),atoi(yyvsp[-3].lex_str.str), * yyvsp[-1].item_list);
+            (yyval.item)= new Item_func_unique_users((yyvsp[(3) - (10)].item),atoi((yyvsp[(5) - (10)].lex_str).str),atoi((yyvsp[(7) - (10)].lex_str).str), * (yyvsp[(9) - (10)].item_list));
 	  }
     break;
 
   case 776:
 #line 3172 "sql_yacc.yy"
     {
-	    yyval.item= new Item_func_unix_timestamp();
+	    (yyval.item)= new Item_func_unix_timestamp();
 	    Lex->safe_to_cache_query=0;
 	  }
     break;
 
   case 777:
 #line 3177 "sql_yacc.yy"
-    { yyval.item= new Item_func_unix_timestamp(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_unix_timestamp((yyvsp[(3) - (4)].item)); }
     break;
 
   case 778:
 #line 3179 "sql_yacc.yy"
-    { yyval.item= new Item_func_user(); Lex->safe_to_cache_query=0; }
+    { (yyval.item)= new Item_func_user(); Lex->safe_to_cache_query=0; }
     break;
 
   case 779:
 #line 3181 "sql_yacc.yy"
-    { yyval.item= new Item_func_curdate_utc(); Lex->safe_to_cache_query=0;}
+    { (yyval.item)= new Item_func_curdate_utc(); Lex->safe_to_cache_query=0;}
     break;
 
   case 780:
 #line 3183 "sql_yacc.yy"
-    { yyval.item= new Item_func_curtime_utc(); Lex->safe_to_cache_query=0;}
+    { (yyval.item)= new Item_func_curtime_utc(); Lex->safe_to_cache_query=0;}
     break;
 
   case 781:
 #line 3185 "sql_yacc.yy"
-    { yyval.item= new Item_func_now_utc(); Lex->safe_to_cache_query=0;}
+    { (yyval.item)= new Item_func_now_utc(); Lex->safe_to_cache_query=0;}
     break;
 
   case 782:
 #line 3187 "sql_yacc.yy"
     {
-            yyval.item= new Item_func_week(yyvsp[-1].item,new Item_int((char*) "0",
+            (yyval.item)= new Item_func_week((yyvsp[(3) - (4)].item),new Item_int((char*) "0",
 				   YYTHD->variables.default_week_format,1));
           }
     break;
 
   case 783:
 #line 3192 "sql_yacc.yy"
-    { yyval.item= new Item_func_week(yyvsp[-3].item,yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_week((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].item)); }
     break;
 
   case 784:
 #line 3194 "sql_yacc.yy"
-    { yyval.item= new Item_func_year(yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_year((yyvsp[(3) - (4)].item)); }
     break;
 
   case 785:
 #line 3196 "sql_yacc.yy"
-    { yyval.item= new Item_func_yearweek(yyvsp[-1].item,new Item_int((char*) "0",0,1)); }
+    { (yyval.item)= new Item_func_yearweek((yyvsp[(3) - (4)].item),new Item_int((char*) "0",0,1)); }
     break;
 
   case 786:
 #line 3198 "sql_yacc.yy"
-    { yyval.item= new Item_func_yearweek(yyvsp[-3].item, yyvsp[-1].item); }
+    { (yyval.item)= new Item_func_yearweek((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item)); }
     break;
 
   case 787:
 #line 3200 "sql_yacc.yy"
     {
-	    yyval.item=new Item_func_benchmark(yyvsp[-3].ulong_num,yyvsp[-1].item);
+	    (yyval.item)=new Item_func_benchmark((yyvsp[(3) - (6)].ulong_num),(yyvsp[(5) - (6)].item));
 	    Lex->uncacheable(UNCACHEABLE_SIDEEFFECT);
 	  }
     break;
 
   case 788:
 #line 3205 "sql_yacc.yy"
-    { yyval.item=new Item_extract( yyvsp[-3].interval, yyvsp[-1].item); }
+    { (yyval.item)=new Item_extract( (yyvsp[(3) - (6)].interval), (yyvsp[(5) - (6)].item)); }
     break;
 
   case 789:
 #line 3209 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (4)].item))); }
     break;
 
   case 790:
 #line 3211 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-3].item, yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item))); }
     break;
 
   case 791:
 #line 3213 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_wkb(yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_wkb((yyvsp[(3) - (4)].item))); }
     break;
 
   case 792:
 #line 3215 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_wkb(yyvsp[-3].item, yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_wkb((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item))); }
     break;
 
   case 793:
 #line 3217 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_spatial_collection(* yyvsp[-1].item_list,
+    { (yyval.item)= GEOM_NEW(Item_func_spatial_collection(* (yyvsp[(3) - (4)].item_list),
                            Geometry::wkb_geometrycollection,
                            Geometry::wkb_point)); }
     break;
 
   case 794:
 #line 3221 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_spatial_collection(* yyvsp[-1].item_list,
+    { (yyval.item)= GEOM_NEW(Item_func_spatial_collection(* (yyvsp[(3) - (4)].item_list),
                   Geometry::wkb_linestring, Geometry::wkb_point)); }
     break;
 
   case 795:
 #line 3224 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW( Item_func_spatial_collection(* yyvsp[-1].item_list,
+    { (yyval.item)= GEOM_NEW( Item_func_spatial_collection(* (yyvsp[(3) - (4)].item_list),
                    Geometry::wkb_multilinestring, Geometry::wkb_linestring)); }
     break;
 
   case 796:
 #line 3227 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (4)].item))); }
     break;
 
   case 797:
 #line 3229 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-3].item, yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item))); }
     break;
 
   case 798:
 #line 3231 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (4)].item))); }
     break;
 
   case 799:
 #line 3233 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-3].item, yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item))); }
     break;
 
   case 800:
 #line 3235 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (4)].item))); }
     break;
 
   case 801:
 #line 3237 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-3].item, yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item))); }
     break;
 
   case 802:
 #line 3239 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_spatial_collection(* yyvsp[-1].item_list,
+    { (yyval.item)= GEOM_NEW(Item_func_spatial_collection(* (yyvsp[(3) - (4)].item_list),
                   Geometry::wkb_multipoint, Geometry::wkb_point)); }
     break;
 
   case 803:
 #line 3242 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_spatial_collection(* yyvsp[-1].item_list,
+    { (yyval.item)= GEOM_NEW(Item_func_spatial_collection(* (yyvsp[(3) - (4)].item_list),
                   Geometry::wkb_multipolygon, Geometry::wkb_polygon)); }
     break;
 
   case 804:
 #line 3245 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_point(yyvsp[-3].item,yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_point((yyvsp[(3) - (6)].item),(yyvsp[(5) - (6)].item))); }
     break;
 
   case 805:
 #line 3247 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (4)].item))); }
     break;
 
   case 806:
 #line 3249 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-3].item, yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item))); }
     break;
 
   case 807:
 #line 3251 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (4)].item))); }
     break;
 
   case 808:
 #line 3253 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-3].item, yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item))); }
     break;
 
   case 809:
 #line 3255 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_spatial_collection(* yyvsp[-1].item_list,
+    { (yyval.item)= GEOM_NEW(Item_func_spatial_collection(* (yyvsp[(3) - (4)].item_list),
 	          Geometry::wkb_polygon, Geometry::wkb_linestring)); }
     break;
 
   case 810:
 #line 3258 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (4)].item))); }
     break;
 
   case 811:
 #line 3260 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-3].item, yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item))); }
     break;
 
   case 812:
 #line 3262 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (4)].item))); }
     break;
 
   case 813:
 #line 3264 "sql_yacc.yy"
-    { yyval.item= GEOM_NEW(Item_func_geometry_from_text(yyvsp[-3].item, yyvsp[-1].item)); }
+    { (yyval.item)= GEOM_NEW(Item_func_geometry_from_text((yyvsp[(3) - (6)].item), (yyvsp[(5) - (6)].item))); }
     break;
 
   case 814:
 #line 3268 "sql_yacc.yy"
-    { yyval.num= FT_NL;  }
+    { (yyval.num)= FT_NL;  }
     break;
 
   case 815:
 #line 3269 "sql_yacc.yy"
-    { yyval.num= FT_NL | FT_EXPAND; }
+    { (yyval.num)= FT_NL | FT_EXPAND; }
     break;
 
   case 816:
 #line 3270 "sql_yacc.yy"
-    { yyval.num= FT_BOOL; }
+    { (yyval.num)= FT_BOOL; }
     break;
 
   case 817:
 #line 3274 "sql_yacc.yy"
-    { yyval.item_list= NULL; }
+    { (yyval.item_list)= NULL; }
     break;
 
   case 818:
 #line 3275 "sql_yacc.yy"
-    { yyval.item_list= yyvsp[0].item_list;}
+    { (yyval.item_list)= (yyvsp[(1) - (1)].item_list);}
     break;
 
   case 819:
 #line 3279 "sql_yacc.yy"
-    { yyval.item=new Item_sum_avg(yyvsp[-1].item); }
+    { (yyval.item)=new Item_sum_avg((yyvsp[(3) - (4)].item)); }
     break;
 
   case 820:
 #line 3281 "sql_yacc.yy"
-    { yyval.item=new Item_sum_and(yyvsp[-1].item); }
+    { (yyval.item)=new Item_sum_and((yyvsp[(3) - (4)].item)); }
     break;
 
   case 821:
 #line 3283 "sql_yacc.yy"
-    { yyval.item=new Item_sum_or(yyvsp[-1].item); }
+    { (yyval.item)=new Item_sum_or((yyvsp[(3) - (4)].item)); }
     break;
 
   case 822:
 #line 3285 "sql_yacc.yy"
-    { yyval.item=new Item_sum_xor(yyvsp[-1].item); }
+    { (yyval.item)=new Item_sum_xor((yyvsp[(3) - (4)].item)); }
     break;
 
   case 823:
 #line 3287 "sql_yacc.yy"
-    { yyval.item=new Item_sum_count(new Item_int((int32) 0L,1)); }
+    { (yyval.item)=new Item_sum_count(new Item_int((int32) 0L,1)); }
     break;
 
   case 824:
 #line 3289 "sql_yacc.yy"
-    { yyval.item=new Item_sum_count(yyvsp[-1].item); }
+    { (yyval.item)=new Item_sum_count((yyvsp[(3) - (4)].item)); }
     break;
 
   case 825:
@@ -16684,37 +17018,37 @@ yyreduce:
 
   case 827:
 #line 3295 "sql_yacc.yy"
-    { yyval.item=new Item_sum_count_distinct(* yyvsp[-2].item_list); }
+    { (yyval.item)=new Item_sum_count_distinct(* (yyvsp[(5) - (7)].item_list)); }
     break;
 
   case 828:
 #line 3297 "sql_yacc.yy"
-    { yyval.item= new Item_sum_unique_users(yyvsp[-7].item,atoi(yyvsp[-5].lex_str.str),atoi(yyvsp[-3].lex_str.str),yyvsp[-1].item); }
+    { (yyval.item)= new Item_sum_unique_users((yyvsp[(3) - (10)].item),atoi((yyvsp[(5) - (10)].lex_str).str),atoi((yyvsp[(7) - (10)].lex_str).str),(yyvsp[(9) - (10)].item)); }
     break;
 
   case 829:
 #line 3299 "sql_yacc.yy"
-    { yyval.item=new Item_sum_min(yyvsp[-1].item); }
+    { (yyval.item)=new Item_sum_min((yyvsp[(3) - (4)].item)); }
     break;
 
   case 830:
 #line 3301 "sql_yacc.yy"
-    { yyval.item=new Item_sum_max(yyvsp[-1].item); }
+    { (yyval.item)=new Item_sum_max((yyvsp[(3) - (4)].item)); }
     break;
 
   case 831:
 #line 3303 "sql_yacc.yy"
-    { yyval.item=new Item_sum_std(yyvsp[-1].item); }
+    { (yyval.item)=new Item_sum_std((yyvsp[(3) - (4)].item)); }
     break;
 
   case 832:
 #line 3305 "sql_yacc.yy"
-    { yyval.item=new Item_sum_variance(yyvsp[-1].item); }
+    { (yyval.item)=new Item_sum_variance((yyvsp[(3) - (4)].item)); }
     break;
 
   case 833:
 #line 3307 "sql_yacc.yy"
-    { yyval.item=new Item_sum_sum(yyvsp[-1].item); }
+    { (yyval.item)=new Item_sum_sum((yyvsp[(3) - (4)].item)); }
     break;
 
   case 834:
@@ -16726,29 +17060,29 @@ yyreduce:
 #line 3313 "sql_yacc.yy"
     {
 	    Select->in_sum_expr--;
-	    yyval.item=new Item_func_group_concat(yyvsp[-5].num,yyvsp[-3].item_list,Select->gorder_list,yyvsp[-1].string);
-	    yyvsp[-3].item_list->empty();
+	    (yyval.item)=new Item_func_group_concat((yyvsp[(3) - (8)].num),(yyvsp[(5) - (8)].item_list),Select->gorder_list,(yyvsp[(7) - (8)].string));
+	    (yyvsp[(5) - (8)].item_list)->empty();
 	  }
     break;
 
   case 836:
 #line 3320 "sql_yacc.yy"
-    { yyval.num = 0; }
+    { (yyval.num) = 0; }
     break;
 
   case 837:
 #line 3321 "sql_yacc.yy"
-    { yyval.num = 1; }
+    { (yyval.num) = 1; }
     break;
 
   case 838:
 #line 3324 "sql_yacc.yy"
-    { yyval.string = new (YYTHD->mem_root) String(",",1,default_charset_info); }
+    { (yyval.string) = new (YYTHD->mem_root) String(",",1,default_charset_info); }
     break;
 
   case 839:
 #line 3325 "sql_yacc.yy"
-    { yyval.string = yyvsp[0].string; }
+    { (yyval.string) = (yyvsp[(2) - (2)].string); }
     break;
 
   case 840:
@@ -16785,58 +17119,58 @@ yyreduce:
 #line 3354 "sql_yacc.yy"
     {
 	  Select->in_sum_expr--;
-	  yyval.item= yyvsp[0].item;
+	  (yyval.item)= (yyvsp[(3) - (3)].item);
 	}
     break;
 
   case 844:
 #line 3360 "sql_yacc.yy"
-    { yyval.cast_type=ITEM_CAST_CHAR; Lex->charset= &my_charset_bin; }
+    { (yyval.cast_type)=ITEM_CAST_CHAR; Lex->charset= &my_charset_bin; }
     break;
 
   case 845:
 #line 3361 "sql_yacc.yy"
-    { yyval.cast_type=ITEM_CAST_CHAR; }
+    { (yyval.cast_type)=ITEM_CAST_CHAR; }
     break;
 
   case 846:
 #line 3362 "sql_yacc.yy"
-    { yyval.cast_type=ITEM_CAST_CHAR; Lex->charset= national_charset_info; }
+    { (yyval.cast_type)=ITEM_CAST_CHAR; Lex->charset= national_charset_info; }
     break;
 
   case 847:
 #line 3363 "sql_yacc.yy"
-    { yyval.cast_type=ITEM_CAST_SIGNED_INT; Lex->charset= NULL; Lex->length= (char*)0; }
+    { (yyval.cast_type)=ITEM_CAST_SIGNED_INT; Lex->charset= NULL; Lex->length= (char*)0; }
     break;
 
   case 848:
 #line 3364 "sql_yacc.yy"
-    { yyval.cast_type=ITEM_CAST_SIGNED_INT; Lex->charset= NULL; Lex->length= (char*)0; }
+    { (yyval.cast_type)=ITEM_CAST_SIGNED_INT; Lex->charset= NULL; Lex->length= (char*)0; }
     break;
 
   case 849:
 #line 3365 "sql_yacc.yy"
-    { yyval.cast_type=ITEM_CAST_UNSIGNED_INT; Lex->charset= NULL; Lex->length= (char*)0; }
+    { (yyval.cast_type)=ITEM_CAST_UNSIGNED_INT; Lex->charset= NULL; Lex->length= (char*)0; }
     break;
 
   case 850:
 #line 3366 "sql_yacc.yy"
-    { yyval.cast_type=ITEM_CAST_UNSIGNED_INT; Lex->charset= NULL; Lex->length= (char*)0; }
+    { (yyval.cast_type)=ITEM_CAST_UNSIGNED_INT; Lex->charset= NULL; Lex->length= (char*)0; }
     break;
 
   case 851:
 #line 3367 "sql_yacc.yy"
-    { yyval.cast_type=ITEM_CAST_DATE; Lex->charset= NULL; Lex->length= (char*)0; }
+    { (yyval.cast_type)=ITEM_CAST_DATE; Lex->charset= NULL; Lex->length= (char*)0; }
     break;
 
   case 852:
 #line 3368 "sql_yacc.yy"
-    { yyval.cast_type=ITEM_CAST_TIME; Lex->charset= NULL; Lex->length= (char*)0; }
+    { (yyval.cast_type)=ITEM_CAST_TIME; Lex->charset= NULL; Lex->length= (char*)0; }
     break;
 
   case 853:
 #line 3369 "sql_yacc.yy"
-    { yyval.cast_type=ITEM_CAST_DATETIME; Lex->charset= NULL; Lex->length= (char*)0; }
+    { (yyval.cast_type)=ITEM_CAST_DATETIME; Lex->charset= NULL; Lex->length= (char*)0; }
     break;
 
   case 854:
@@ -16846,27 +17180,27 @@ yyreduce:
 
   case 855:
 #line 3375 "sql_yacc.yy"
-    { yyval.item_list= Select->expr_list.pop(); }
+    { (yyval.item_list)= Select->expr_list.pop(); }
     break;
 
   case 856:
 #line 3378 "sql_yacc.yy"
-    { Select->expr_list.head()->push_back(yyvsp[0].item); }
+    { Select->expr_list.head()->push_back((yyvsp[(1) - (1)].item)); }
     break;
 
   case 857:
 #line 3379 "sql_yacc.yy"
-    { Select->expr_list.head()->push_back(yyvsp[0].item); }
+    { Select->expr_list.head()->push_back((yyvsp[(3) - (3)].item)); }
     break;
 
   case 858:
 #line 3382 "sql_yacc.yy"
-    { yyval.item_list= yyvsp[0].item_list; }
+    { (yyval.item_list)= (yyvsp[(1) - (1)].item_list); }
     break;
 
   case 859:
 #line 3383 "sql_yacc.yy"
-    { yyval.item_list= yyvsp[-1].item_list; }
+    { (yyval.item_list)= (yyvsp[(2) - (3)].item_list); }
     break;
 
   case 860:
@@ -16876,37 +17210,37 @@ yyreduce:
 
   case 861:
 #line 3388 "sql_yacc.yy"
-    { yyval.item_list= Select->expr_list.pop(); }
+    { (yyval.item_list)= Select->expr_list.pop(); }
     break;
 
   case 862:
 #line 3391 "sql_yacc.yy"
-    { Select->expr_list.head()->push_back(yyvsp[0].item); }
+    { Select->expr_list.head()->push_back((yyvsp[(1) - (1)].item)); }
     break;
 
   case 863:
 #line 3392 "sql_yacc.yy"
-    { Select->expr_list.head()->push_back(yyvsp[0].item); }
+    { Select->expr_list.head()->push_back((yyvsp[(3) - (3)].item)); }
     break;
 
   case 864:
 #line 3395 "sql_yacc.yy"
-    { yyval.item= NULL; }
+    { (yyval.item)= NULL; }
     break;
 
   case 865:
 #line 3396 "sql_yacc.yy"
-    { yyval.item= yyvsp[0].item; }
+    { (yyval.item)= (yyvsp[(1) - (1)].item); }
     break;
 
   case 866:
 #line 3399 "sql_yacc.yy"
-    { yyval.item= NULL; }
+    { (yyval.item)= NULL; }
     break;
 
   case 867:
 #line 3400 "sql_yacc.yy"
-    { yyval.item= yyvsp[0].item; }
+    { (yyval.item)= (yyvsp[(2) - (2)].item); }
     break;
 
   case 868:
@@ -16916,15 +17250,15 @@ yyreduce:
 
   case 869:
 #line 3405 "sql_yacc.yy"
-    { yyval.item_list= Select->when_list.pop(); }
+    { (yyval.item_list)= Select->when_list.pop(); }
     break;
 
   case 870:
 #line 3409 "sql_yacc.yy"
     {
 	    SELECT_LEX *sel=Select;
-	    sel->when_list.head()->push_back(yyvsp[-2].item);
-	    sel->when_list.head()->push_back(yyvsp[0].item);
+	    sel->when_list.head()->push_back((yyvsp[(1) - (3)].item));
+	    sel->when_list.head()->push_back((yyvsp[(3) - (3)].item));
 	}
     break;
 
@@ -16932,109 +17266,109 @@ yyreduce:
 #line 3415 "sql_yacc.yy"
     {
 	    SELECT_LEX *sel=Select;
-	    sel->when_list.head()->push_back(yyvsp[-2].item);
-	    sel->when_list.head()->push_back(yyvsp[0].item);
+	    sel->when_list.head()->push_back((yyvsp[(3) - (5)].item));
+	    sel->when_list.head()->push_back((yyvsp[(5) - (5)].item));
 	  }
     break;
 
   case 872:
 #line 3422 "sql_yacc.yy"
-    { yyval.table_list=yyvsp[0].table_list; }
+    { (yyval.table_list)=(yyvsp[(1) - (1)].table_list); }
     break;
 
   case 873:
 #line 3423 "sql_yacc.yy"
-    { yyval.table_list=yyvsp[0].table_list; }
+    { (yyval.table_list)=(yyvsp[(3) - (3)].table_list); }
     break;
 
   case 874:
 #line 3424 "sql_yacc.yy"
-    { yyval.table_list=yyvsp[0].table_list; }
+    { (yyval.table_list)=(yyvsp[(3) - (3)].table_list); }
     break;
 
   case 875:
 #line 3426 "sql_yacc.yy"
-    { yyval.table_list=yyvsp[0].table_list ; yyvsp[-2].table_list->next->straight=1; }
+    { (yyval.table_list)=(yyvsp[(3) - (3)].table_list) ; (yyvsp[(1) - (3)].table_list)->next->straight=1; }
     break;
 
   case 876:
 #line 3428 "sql_yacc.yy"
-    { add_join_on(yyvsp[-2].table_list,yyvsp[0].item); yyval.table_list=yyvsp[-2].table_list; }
+    { add_join_on((yyvsp[(3) - (5)].table_list),(yyvsp[(5) - (5)].item)); (yyval.table_list)=(yyvsp[(3) - (5)].table_list); }
     break;
 
   case 877:
 #line 3431 "sql_yacc.yy"
     {
 	    SELECT_LEX *sel= Select;
-	    sel->db1=yyvsp[-3].table_list->db; sel->table1=yyvsp[-3].table_list->alias;
-	    sel->db2=yyvsp[-1].table_list->db; sel->table2=yyvsp[-1].table_list->alias;
+	    sel->db1=(yyvsp[(1) - (4)].table_list)->db; sel->table1=(yyvsp[(1) - (4)].table_list)->alias;
+	    sel->db2=(yyvsp[(3) - (4)].table_list)->db; sel->table2=(yyvsp[(3) - (4)].table_list)->alias;
 	  }
     break;
 
   case 878:
 #line 3437 "sql_yacc.yy"
-    { add_join_on(yyvsp[-5].table_list,yyvsp[-1].item); yyval.table_list=yyvsp[-5].table_list; }
+    { add_join_on((yyvsp[(3) - (8)].table_list),(yyvsp[(7) - (8)].item)); (yyval.table_list)=(yyvsp[(3) - (8)].table_list); }
     break;
 
   case 879:
 #line 3440 "sql_yacc.yy"
-    { add_join_on(yyvsp[-2].table_list,yyvsp[0].item); yyvsp[-2].table_list->outer_join|=JOIN_TYPE_LEFT; yyval.table_list=yyvsp[-2].table_list; }
+    { add_join_on((yyvsp[(5) - (7)].table_list),(yyvsp[(7) - (7)].item)); (yyvsp[(5) - (7)].table_list)->outer_join|=JOIN_TYPE_LEFT; (yyval.table_list)=(yyvsp[(5) - (7)].table_list); }
     break;
 
   case 880:
 #line 3442 "sql_yacc.yy"
     {
 	    SELECT_LEX *sel= Select;
-	    sel->db1=yyvsp[-4].table_list->db; sel->table1=yyvsp[-4].table_list->alias;
-	    sel->db2=yyvsp[0].table_list->db; sel->table2=yyvsp[0].table_list->alias;
+	    sel->db1=(yyvsp[(1) - (5)].table_list)->db; sel->table1=(yyvsp[(1) - (5)].table_list)->alias;
+	    sel->db2=(yyvsp[(5) - (5)].table_list)->db; sel->table2=(yyvsp[(5) - (5)].table_list)->alias;
 	  }
     break;
 
   case 881:
 #line 3448 "sql_yacc.yy"
-    { add_join_on(yyvsp[-5].table_list,yyvsp[-1].item); yyvsp[-5].table_list->outer_join|=JOIN_TYPE_LEFT; yyval.table_list=yyvsp[-5].table_list; }
+    { add_join_on((yyvsp[(5) - (10)].table_list),(yyvsp[(9) - (10)].item)); (yyvsp[(5) - (10)].table_list)->outer_join|=JOIN_TYPE_LEFT; (yyval.table_list)=(yyvsp[(5) - (10)].table_list); }
     break;
 
   case 882:
 #line 3450 "sql_yacc.yy"
     {
-	    add_join_natural(yyvsp[-5].table_list,yyvsp[-5].table_list->next);
-	    yyvsp[-5].table_list->next->outer_join|=JOIN_TYPE_LEFT;
-	    yyval.table_list=yyvsp[0].table_list;
+	    add_join_natural((yyvsp[(1) - (6)].table_list),(yyvsp[(1) - (6)].table_list)->next);
+	    (yyvsp[(1) - (6)].table_list)->next->outer_join|=JOIN_TYPE_LEFT;
+	    (yyval.table_list)=(yyvsp[(6) - (6)].table_list);
 	  }
     break;
 
   case 883:
 #line 3456 "sql_yacc.yy"
-    { add_join_on(yyvsp[-6].table_list,yyvsp[0].item); yyvsp[-6].table_list->outer_join|=JOIN_TYPE_RIGHT; yyval.table_list=yyvsp[-2].table_list; }
+    { add_join_on((yyvsp[(1) - (7)].table_list),(yyvsp[(7) - (7)].item)); (yyvsp[(1) - (7)].table_list)->outer_join|=JOIN_TYPE_RIGHT; (yyval.table_list)=(yyvsp[(5) - (7)].table_list); }
     break;
 
   case 884:
 #line 3458 "sql_yacc.yy"
     {
 	    SELECT_LEX *sel= Select;
-	    sel->db1=yyvsp[-4].table_list->db; sel->table1=yyvsp[-4].table_list->alias;
-	    sel->db2=yyvsp[0].table_list->db; sel->table2=yyvsp[0].table_list->alias;
+	    sel->db1=(yyvsp[(1) - (5)].table_list)->db; sel->table1=(yyvsp[(1) - (5)].table_list)->alias;
+	    sel->db2=(yyvsp[(5) - (5)].table_list)->db; sel->table2=(yyvsp[(5) - (5)].table_list)->alias;
 	  }
     break;
 
   case 885:
 #line 3464 "sql_yacc.yy"
-    { add_join_on(yyvsp[-9].table_list,yyvsp[-1].item); yyvsp[-9].table_list->outer_join|=JOIN_TYPE_RIGHT; yyval.table_list=yyvsp[-5].table_list; }
+    { add_join_on((yyvsp[(1) - (10)].table_list),(yyvsp[(9) - (10)].item)); (yyvsp[(1) - (10)].table_list)->outer_join|=JOIN_TYPE_RIGHT; (yyval.table_list)=(yyvsp[(5) - (10)].table_list); }
     break;
 
   case 886:
 #line 3466 "sql_yacc.yy"
     {
-	    add_join_natural(yyvsp[-5].table_list->next,yyvsp[-5].table_list);
-	    yyvsp[-5].table_list->outer_join|=JOIN_TYPE_RIGHT;
-	    yyval.table_list=yyvsp[0].table_list;
+	    add_join_natural((yyvsp[(1) - (6)].table_list)->next,(yyvsp[(1) - (6)].table_list));
+	    (yyvsp[(1) - (6)].table_list)->outer_join|=JOIN_TYPE_RIGHT;
+	    (yyval.table_list)=(yyvsp[(6) - (6)].table_list);
 	  }
     break;
 
   case 887:
 #line 3472 "sql_yacc.yy"
-    { add_join_natural(yyvsp[-3].table_list,yyvsp[-3].table_list->next); yyval.table_list=yyvsp[0].table_list; }
+    { add_join_natural((yyvsp[(1) - (4)].table_list),(yyvsp[(1) - (4)].table_list)->next); (yyval.table_list)=(yyvsp[(4) - (4)].table_list); }
     break;
 
   case 888:
@@ -17066,7 +17400,7 @@ yyreduce:
     {
 	  LEX *lex= Lex;
 	  SELECT_LEX *sel= lex->current_select;
-	  if (!(yyval.table_list= sel->add_table_to_list(lex->thd, yyvsp[-2].table, yyvsp[-1].lex_str_ptr,
+	  if (!((yyval.table_list)= sel->add_table_to_list(lex->thd, (yyvsp[(2) - (4)].table), (yyvsp[(3) - (4)].lex_str_ptr),
 					   sel->get_table_join_options(),
 					   lex->lock_option,
 					   sel->get_use_index(),
@@ -17077,7 +17411,7 @@ yyreduce:
 
   case 893:
 #line 3498 "sql_yacc.yy"
-    { add_join_on(yyvsp[-3].table_list,yyvsp[-1].item); yyvsp[-3].table_list->outer_join|=JOIN_TYPE_LEFT; yyval.table_list=yyvsp[-3].table_list; }
+    { add_join_on((yyvsp[(7) - (10)].table_list),(yyvsp[(9) - (10)].item)); (yyvsp[(7) - (10)].table_list)->outer_join|=JOIN_TYPE_LEFT; (yyval.table_list)=(yyvsp[(7) - (10)].table_list); }
     break;
 
   case 894:
@@ -17086,8 +17420,8 @@ yyreduce:
 	  LEX *lex=Lex;
 	  SELECT_LEX_UNIT *unit= lex->current_select->master_unit();
 	  lex->current_select= unit->outer_select();
-	  if (!(yyval.table_list= lex->current_select->
-                add_table_to_list(lex->thd, new Table_ident(unit), yyvsp[0].lex_str_ptr, 0,
+	  if (!((yyval.table_list)= lex->current_select->
+                add_table_to_list(lex->thd, new Table_ident(unit), (yyvsp[(5) - (5)].lex_str_ptr), 0,
 				  TL_READ,(List<String> *)0,
 	                          (List<String> *)0)))
 
@@ -17097,7 +17431,7 @@ yyreduce:
 
   case 895:
 #line 3511 "sql_yacc.yy"
-    { yyval.table_list=yyvsp[-1].table_list; }
+    { (yyval.table_list)=(yyvsp[(2) - (3)].table_list); }
     break;
 
   case 897:
@@ -17164,7 +17498,7 @@ yyreduce:
 #line 3562 "sql_yacc.yy"
     {
 	    SELECT_LEX *sel= Select;
-	    sel->use_index= *yyvsp[0].string_list;
+	    sel->use_index= *(yyvsp[(2) - (2)].string_list);
 	    sel->use_index_ptr= &sel->use_index;
 	  }
     break;
@@ -17173,7 +17507,7 @@ yyreduce:
 #line 3568 "sql_yacc.yy"
     {
 	    SELECT_LEX *sel= Select;
-	    sel->use_index= *yyvsp[0].string_list;
+	    sel->use_index= *(yyvsp[(2) - (2)].string_list);
 	    sel->use_index_ptr= &sel->use_index;
 	    sel->table_join_options|= TL_OPTION_FORCE_INDEX;
 	  }
@@ -17183,7 +17517,7 @@ yyreduce:
 #line 3575 "sql_yacc.yy"
     {
 	    SELECT_LEX *sel= Select;
-	    sel->ignore_index= *yyvsp[0].string_list;
+	    sel->ignore_index= *(yyvsp[(2) - (2)].string_list);
 	    sel->ignore_index_ptr= &sel->ignore_index;
 	  }
     break;
@@ -17195,7 +17529,7 @@ yyreduce:
 
   case 908:
 #line 3584 "sql_yacc.yy"
-    { yyval.string_list= &Select->interval_list; }
+    { (yyval.string_list)= &Select->interval_list; }
     break;
 
   case 909:
@@ -17211,14 +17545,14 @@ yyreduce:
   case 911:
 #line 3594 "sql_yacc.yy"
     { Select->
-	    interval_list.push_back(new (YYTHD->mem_root) String((const char*) yyvsp[0].lex_str.str, yyvsp[0].lex_str.length,
+	    interval_list.push_back(new (YYTHD->mem_root) String((const char*) (yyvsp[(3) - (3)].lex_str).str, (yyvsp[(3) - (3)].lex_str).length,
 				    system_charset_info)); }
     break;
 
   case 912:
 #line 3598 "sql_yacc.yy"
     { Select->
-	    interval_list.push_back(new (YYTHD->mem_root) String((const char*) yyvsp[0].lex_str.str, yyvsp[0].lex_str.length,
+	    interval_list.push_back(new (YYTHD->mem_root) String((const char*) (yyvsp[(1) - (1)].lex_str).str, (yyvsp[(1) - (1)].lex_str).length,
 				    system_charset_info)); }
     break;
 
@@ -17233,10 +17567,10 @@ yyreduce:
 #line 3608 "sql_yacc.yy"
     {
 	    SELECT_LEX *sel= Select;
-	    if (!(yyval.item= new Item_func_eq(new Item_field(sel->db1, sel->table1,
-						      yyvsp[0].lex_str.str),
+	    if (!((yyval.item)= new Item_func_eq(new Item_field(sel->db1, sel->table1,
+						      (yyvsp[(1) - (1)].lex_str).str),
 				       new Item_field(sel->db2, sel->table2,
-						      yyvsp[0].lex_str.str))))
+						      (yyvsp[(1) - (1)].lex_str).str))))
 	      YYABORT;
 	  }
     break;
@@ -17245,129 +17579,129 @@ yyreduce:
 #line 3617 "sql_yacc.yy"
     {
 	    SELECT_LEX *sel= Select;
-	    if (!(yyval.item= new Item_cond_and(new Item_func_eq(new Item_field(sel->db1,sel->table1,yyvsp[0].lex_str.str), new Item_field(sel->db2,sel->table2,yyvsp[0].lex_str.str)), yyvsp[-2].item)))
+	    if (!((yyval.item)= new Item_cond_and(new Item_func_eq(new Item_field(sel->db1,sel->table1,(yyvsp[(3) - (3)].lex_str).str), new Item_field(sel->db2,sel->table2,(yyvsp[(3) - (3)].lex_str).str)), (yyvsp[(1) - (3)].item))))
 	      YYABORT;
 	  }
     break;
 
   case 916:
 #line 3624 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_DAY_HOUR; }
+    { (yyval.interval)=INTERVAL_DAY_HOUR; }
     break;
 
   case 917:
 #line 3625 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_DAY_MICROSECOND; }
+    { (yyval.interval)=INTERVAL_DAY_MICROSECOND; }
     break;
 
   case 918:
 #line 3626 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_DAY_MINUTE; }
+    { (yyval.interval)=INTERVAL_DAY_MINUTE; }
     break;
 
   case 919:
 #line 3627 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_DAY_SECOND; }
+    { (yyval.interval)=INTERVAL_DAY_SECOND; }
     break;
 
   case 920:
 #line 3628 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_DAY; }
+    { (yyval.interval)=INTERVAL_DAY; }
     break;
 
   case 921:
 #line 3629 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_HOUR_MICROSECOND; }
+    { (yyval.interval)=INTERVAL_HOUR_MICROSECOND; }
     break;
 
   case 922:
 #line 3630 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_HOUR_MINUTE; }
+    { (yyval.interval)=INTERVAL_HOUR_MINUTE; }
     break;
 
   case 923:
 #line 3631 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_HOUR_SECOND; }
+    { (yyval.interval)=INTERVAL_HOUR_SECOND; }
     break;
 
   case 924:
 #line 3632 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_HOUR; }
+    { (yyval.interval)=INTERVAL_HOUR; }
     break;
 
   case 925:
 #line 3633 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_MICROSECOND; }
+    { (yyval.interval)=INTERVAL_MICROSECOND; }
     break;
 
   case 926:
 #line 3634 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_MINUTE_MICROSECOND; }
+    { (yyval.interval)=INTERVAL_MINUTE_MICROSECOND; }
     break;
 
   case 927:
 #line 3635 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_MINUTE_SECOND; }
+    { (yyval.interval)=INTERVAL_MINUTE_SECOND; }
     break;
 
   case 928:
 #line 3636 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_MINUTE; }
+    { (yyval.interval)=INTERVAL_MINUTE; }
     break;
 
   case 929:
 #line 3637 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_MONTH; }
+    { (yyval.interval)=INTERVAL_MONTH; }
     break;
 
   case 930:
 #line 3638 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_SECOND_MICROSECOND; }
+    { (yyval.interval)=INTERVAL_SECOND_MICROSECOND; }
     break;
 
   case 931:
 #line 3639 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_SECOND; }
+    { (yyval.interval)=INTERVAL_SECOND; }
     break;
 
   case 932:
 #line 3640 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_YEAR_MONTH; }
+    { (yyval.interval)=INTERVAL_YEAR_MONTH; }
     break;
 
   case 933:
 #line 3641 "sql_yacc.yy"
-    { yyval.interval=INTERVAL_YEAR; }
+    { (yyval.interval)=INTERVAL_YEAR; }
     break;
 
   case 934:
 #line 3645 "sql_yacc.yy"
-    {yyval.date_time_type=MYSQL_TIMESTAMP_DATE;}
+    {(yyval.date_time_type)=MYSQL_TIMESTAMP_DATE;}
     break;
 
   case 935:
 #line 3646 "sql_yacc.yy"
-    {yyval.date_time_type=MYSQL_TIMESTAMP_TIME;}
+    {(yyval.date_time_type)=MYSQL_TIMESTAMP_TIME;}
     break;
 
   case 936:
 #line 3647 "sql_yacc.yy"
-    {yyval.date_time_type=MYSQL_TIMESTAMP_DATETIME;}
+    {(yyval.date_time_type)=MYSQL_TIMESTAMP_DATETIME;}
     break;
 
   case 937:
 #line 3648 "sql_yacc.yy"
-    {yyval.date_time_type=MYSQL_TIMESTAMP_DATETIME;}
+    {(yyval.date_time_type)=MYSQL_TIMESTAMP_DATETIME;}
     break;
 
   case 941:
 #line 3657 "sql_yacc.yy"
-    { yyval.lex_str_ptr=0; }
+    { (yyval.lex_str_ptr)=0; }
     break;
 
   case 942:
 #line 3659 "sql_yacc.yy"
-    { yyval.lex_str_ptr= (LEX_STRING*) sql_memdup(&yyvsp[0].lex_str,sizeof(LEX_STRING)); }
+    { (yyval.lex_str_ptr)= (LEX_STRING*) sql_memdup(&(yyvsp[(2) - (2)].lex_str),sizeof(LEX_STRING)); }
     break;
 
   case 945:
@@ -17386,10 +17720,10 @@ yyreduce:
 #line 3673 "sql_yacc.yy"
     {
             SELECT_LEX *select= Select;
-	    select->where= yyvsp[0].item;
+	    select->where= (yyvsp[(3) - (3)].item);
             select->parsing_place= NO_MATTER;
-	    if (yyvsp[0].item)
-	      yyvsp[0].item->top_level_item();
+	    if ((yyvsp[(3) - (3)].item))
+	      (yyvsp[(3) - (3)].item)->top_level_item();
 	  }
     break;
 
@@ -17404,33 +17738,33 @@ yyreduce:
 #line 3689 "sql_yacc.yy"
     {
 	    SELECT_LEX *sel= Select;
-	    sel->having= yyvsp[0].item;
+	    sel->having= (yyvsp[(3) - (3)].item);
 	    sel->parsing_place= NO_MATTER;
-	    if (yyvsp[0].item)
-	      yyvsp[0].item->top_level_item();
+	    if ((yyvsp[(3) - (3)].item))
+	      (yyvsp[(3) - (3)].item)->top_level_item();
 	  }
     break;
 
   case 951:
 #line 3699 "sql_yacc.yy"
-    { yyval.item= yyvsp[0].item; }
+    { (yyval.item)= (yyvsp[(2) - (2)].item); }
     break;
 
   case 952:
 #line 3701 "sql_yacc.yy"
     { 
-            yyval.item= new Item_string("\\", 1, &my_charset_latin1);
+            (yyval.item)= new Item_string("\\", 1, &my_charset_latin1);
           }
     break;
 
   case 955:
 #line 3717 "sql_yacc.yy"
-    { if (add_group_to_list(YYTHD, yyvsp[-1].item,(bool) yyvsp[0].num)) YYABORT; }
+    { if (add_group_to_list(YYTHD, (yyvsp[(3) - (4)].item),(bool) (yyvsp[(4) - (4)].num))) YYABORT; }
     break;
 
   case 956:
 #line 3719 "sql_yacc.yy"
-    { if (add_group_to_list(YYTHD, yyvsp[-1].item,(bool) yyvsp[0].num)) YYABORT; }
+    { if (add_group_to_list(YYTHD, (yyvsp[(1) - (2)].item),(bool) (yyvsp[(2) - (2)].num))) YYABORT; }
     break;
 
   case 957:
@@ -17486,27 +17820,27 @@ yyreduce:
 
   case 964:
 #line 3774 "sql_yacc.yy"
-    { if (add_order_to_list(YYTHD, yyvsp[-1].item,(bool) yyvsp[0].num)) YYABORT; }
+    { if (add_order_to_list(YYTHD, (yyvsp[(3) - (4)].item),(bool) (yyvsp[(4) - (4)].num))) YYABORT; }
     break;
 
   case 965:
 #line 3776 "sql_yacc.yy"
-    { if (add_order_to_list(YYTHD, yyvsp[-1].item,(bool) yyvsp[0].num)) YYABORT; }
+    { if (add_order_to_list(YYTHD, (yyvsp[(1) - (2)].item),(bool) (yyvsp[(2) - (2)].num))) YYABORT; }
     break;
 
   case 966:
 #line 3779 "sql_yacc.yy"
-    { yyval.num =  1; }
+    { (yyval.num) =  1; }
     break;
 
   case 967:
 #line 3780 "sql_yacc.yy"
-    { yyval.num =1; }
+    { (yyval.num) =1; }
     break;
 
   case 968:
 #line 3781 "sql_yacc.yy"
-    { yyval.num =0; }
+    { (yyval.num) =0; }
     break;
 
   case 969:
@@ -17543,7 +17877,7 @@ yyreduce:
 #line 3806 "sql_yacc.yy"
     {
             SELECT_LEX *sel= Select;
-            sel->select_limit= yyvsp[0].ulong_num;
+            sel->select_limit= (yyvsp[(1) - (1)].ulong_num);
             sel->offset_limit= 0L;
 	    sel->explicit_limit= 1;
 	  }
@@ -17553,8 +17887,8 @@ yyreduce:
 #line 3813 "sql_yacc.yy"
     {
 	    SELECT_LEX *sel= Select;
-	    sel->select_limit= yyvsp[0].ulong_num;
-	    sel->offset_limit= yyvsp[-2].ulong_num;
+	    sel->select_limit= (yyvsp[(3) - (3)].ulong_num);
+	    sel->offset_limit= (yyvsp[(1) - (3)].ulong_num);
 	    sel->explicit_limit= 1;
 	  }
     break;
@@ -17563,8 +17897,8 @@ yyreduce:
 #line 3820 "sql_yacc.yy"
     {
 	    SELECT_LEX *sel= Select;
-	    sel->select_limit= yyvsp[-2].ulong_num;
-	    sel->offset_limit= yyvsp[0].ulong_num;
+	    sel->select_limit= (yyvsp[(1) - (3)].ulong_num);
+	    sel->offset_limit= (yyvsp[(3) - (3)].ulong_num);
 	    sel->explicit_limit= 1;
 	  }
     break;
@@ -17581,59 +17915,59 @@ yyreduce:
 #line 3836 "sql_yacc.yy"
     {
 	  SELECT_LEX *sel= Select;
-	  sel->select_limit= (ha_rows) yyvsp[0].ulonglong_number;
+	  sel->select_limit= (ha_rows) (yyvsp[(2) - (2)].ulonglong_number);
 	  sel->explicit_limit= 1;
 	}
     break;
 
   case 979:
 #line 3843 "sql_yacc.yy"
-    { int error; yyval.ulong_num= (ulong) my_strtoll10(yyvsp[0].lex_str.str, (char**) 0, &error); }
+    { int error; (yyval.ulong_num)= (ulong) my_strtoll10((yyvsp[(1) - (1)].lex_str).str, (char**) 0, &error); }
     break;
 
   case 980:
 #line 3844 "sql_yacc.yy"
-    { int error; yyval.ulong_num= (ulong) my_strtoll10(yyvsp[0].lex_str.str, (char**) 0, &error); }
+    { int error; (yyval.ulong_num)= (ulong) my_strtoll10((yyvsp[(1) - (1)].lex_str).str, (char**) 0, &error); }
     break;
 
   case 981:
 #line 3845 "sql_yacc.yy"
-    { int error; yyval.ulong_num= (ulong) my_strtoll10(yyvsp[0].lex_str.str, (char**) 0, &error); }
+    { int error; (yyval.ulong_num)= (ulong) my_strtoll10((yyvsp[(1) - (1)].lex_str).str, (char**) 0, &error); }
     break;
 
   case 982:
 #line 3846 "sql_yacc.yy"
-    { int error; yyval.ulong_num= (ulong) my_strtoll10(yyvsp[0].lex_str.str, (char**) 0, &error); }
+    { int error; (yyval.ulong_num)= (ulong) my_strtoll10((yyvsp[(1) - (1)].lex_str).str, (char**) 0, &error); }
     break;
 
   case 983:
 #line 3847 "sql_yacc.yy"
-    { int error; yyval.ulong_num= (ulong) my_strtoll10(yyvsp[0].lex_str.str, (char**) 0, &error); }
+    { int error; (yyval.ulong_num)= (ulong) my_strtoll10((yyvsp[(1) - (1)].lex_str).str, (char**) 0, &error); }
     break;
 
   case 984:
 #line 3851 "sql_yacc.yy"
-    { int error; yyval.ulonglong_number= (ulonglong) my_strtoll10(yyvsp[0].lex_str.str, (char**) 0, &error); }
+    { int error; (yyval.ulonglong_number)= (ulonglong) my_strtoll10((yyvsp[(1) - (1)].lex_str).str, (char**) 0, &error); }
     break;
 
   case 985:
 #line 3852 "sql_yacc.yy"
-    { int error; yyval.ulonglong_number= (ulonglong) my_strtoll10(yyvsp[0].lex_str.str, (char**) 0, &error); }
+    { int error; (yyval.ulonglong_number)= (ulonglong) my_strtoll10((yyvsp[(1) - (1)].lex_str).str, (char**) 0, &error); }
     break;
 
   case 986:
 #line 3853 "sql_yacc.yy"
-    { int error; yyval.ulonglong_number= (ulonglong) my_strtoll10(yyvsp[0].lex_str.str, (char**) 0, &error); }
+    { int error; (yyval.ulonglong_number)= (ulonglong) my_strtoll10((yyvsp[(1) - (1)].lex_str).str, (char**) 0, &error); }
     break;
 
   case 987:
 #line 3854 "sql_yacc.yy"
-    { int error; yyval.ulonglong_number= (ulonglong) my_strtoll10(yyvsp[0].lex_str.str, (char**) 0, &error); }
+    { int error; (yyval.ulonglong_number)= (ulonglong) my_strtoll10((yyvsp[(1) - (1)].lex_str).str, (char**) 0, &error); }
     break;
 
   case 988:
 #line 3855 "sql_yacc.yy"
-    { int error; yyval.ulonglong_number= (ulonglong) my_strtoll10(yyvsp[0].lex_str.str, (char**) 0, &error); }
+    { int error; (yyval.ulonglong_number)= (ulonglong) my_strtoll10((yyvsp[(1) - (1)].lex_str).str, (char**) 0, &error); }
     break;
 
   case 990:
@@ -17650,7 +17984,7 @@ yyreduce:
 	    lex->proc_list.elements=0;
 	    lex->proc_list.first=0;
 	    lex->proc_list.next= (byte**) &lex->proc_list.first;
-	    if (add_proc_to_list(lex->thd, new Item_field(NULL,NULL,yyvsp[0].lex_str.str)))
+	    if (add_proc_to_list(lex->thd, new Item_field(NULL,NULL,(yyvsp[(2) - (2)].lex_str).str)))
 	      YYABORT;
 	    Lex->uncacheable(UNCACHEABLE_SIDEEFFECT);
 	  }
@@ -17670,10 +18004,10 @@ yyreduce:
 #line 3890 "sql_yacc.yy"
     {
 	    LEX *lex= Lex;
-	    if (add_proc_to_list(lex->thd, yyvsp[0].item))
+	    if (add_proc_to_list(lex->thd, (yyvsp[(2) - (2)].item)))
 	      YYABORT;
-	    if (!yyvsp[0].item->name)
-	      yyvsp[0].item->set_name(yyvsp[-1].simple_string,(uint) ((char*) lex->tok_end - yyvsp[-1].simple_string), YYTHD->charset());
+	    if (!(yyvsp[(2) - (2)].item)->name)
+	      (yyvsp[(2) - (2)].item)->set_name((yyvsp[(1) - (2)].simple_string),(uint) ((char*) lex->tok_end - (yyvsp[(1) - (2)].simple_string)), YYTHD->charset());
 	  }
     break;
 
@@ -17700,7 +18034,7 @@ yyreduce:
 #line 3916 "sql_yacc.yy"
     {
              LEX *lex=Lex;
-	     if (lex->result && ((select_dumpvar *)lex->result)->var_list.push_back((LEX_STRING*) sql_memdup(&yyvsp[0].lex_str,sizeof(LEX_STRING))))
+	     if (lex->result && ((select_dumpvar *)lex->result)->var_list.push_back((LEX_STRING*) sql_memdup(&(yyvsp[(2) - (2)].lex_str),sizeof(LEX_STRING))))
 	       YYABORT;
 	   }
     break;
@@ -17710,7 +18044,7 @@ yyreduce:
     {
           LEX *lex= Lex;
           lex->uncacheable(UNCACHEABLE_SIDEEFFECT);
-          if (!(lex->exchange= new sql_exchange(yyvsp[0].lex_str.str, 0)) ||
+          if (!(lex->exchange= new sql_exchange((yyvsp[(3) - (3)].lex_str).str, 0)) ||
               !(lex->result= new select_export(lex->exchange)))
             YYABORT;
 	}
@@ -17723,7 +18057,7 @@ yyreduce:
 	  if (!lex->describe)
 	  {
 	    lex->uncacheable(UNCACHEABLE_SIDEEFFECT);
-	    if (!(lex->exchange= new sql_exchange(yyvsp[0].lex_str.str,1)))
+	    if (!(lex->exchange= new sql_exchange((yyvsp[(3) - (3)].lex_str).str,1)))
 	      YYABORT;
 	    if (!(lex->result= new select_dump(lex->exchange)))
 	      YYABORT;
@@ -17750,7 +18084,7 @@ yyreduce:
   case 1007:
 #line 3962 "sql_yacc.yy"
     {
-	  Lex->insert_list= yyvsp[0].item_list;
+	  Lex->insert_list= (yyvsp[(3) - (3)].item_list);
 	}
     break;
 
@@ -17759,8 +18093,8 @@ yyreduce:
     {
 	  LEX *lex=Lex;
 	  lex->sql_command = SQLCOM_DROP_TABLE;
-	  lex->drop_temporary= yyvsp[-4].num;
-	  lex->drop_if_exists= yyvsp[-2].num;
+	  lex->drop_temporary= (yyvsp[(2) - (6)].num);
+	  lex->drop_if_exists= (yyvsp[(4) - (6)].num);
 	}
     break;
 
@@ -17776,8 +18110,8 @@ yyreduce:
 	     lex->sql_command= SQLCOM_DROP_INDEX;
 	     lex->alter_info.drop_list.empty();
 	     lex->alter_info.drop_list.push_back(new Alter_drop(Alter_drop::KEY,
-                                                                yyvsp[-3].lex_str.str));
-	     if (!lex->current_select->add_table_to_list(lex->thd, yyvsp[-1].table, NULL,
+                                                                (yyvsp[(3) - (6)].lex_str).str));
+	     if (!lex->current_select->add_table_to_list(lex->thd, (yyvsp[(5) - (6)].table), NULL,
 							TL_OPTION_UPDATING))
 	      YYABORT;
 	  }
@@ -17788,8 +18122,8 @@ yyreduce:
     {
 	    LEX *lex=Lex;
 	    lex->sql_command= SQLCOM_DROP_DB;
-	    lex->drop_if_exists=yyvsp[-1].num;
-	    lex->name=yyvsp[0].lex_str.str;
+	    lex->drop_if_exists=(yyvsp[(3) - (4)].num);
+	    lex->name=(yyvsp[(4) - (4)].lex_str).str;
 	 }
     break;
 
@@ -17798,7 +18132,7 @@ yyreduce:
     {
 	    LEX *lex=Lex;
 	    lex->sql_command = SQLCOM_DROP_FUNCTION;
-	    lex->udf.name = yyvsp[0].lex_str;
+	    lex->udf.name = (yyvsp[(3) - (3)].lex_str);
 	  }
     break;
 
@@ -17819,29 +18153,29 @@ yyreduce:
   case 1017:
 #line 4020 "sql_yacc.yy"
     {
-	  if (!Select->add_table_to_list(YYTHD, yyvsp[0].table, NULL, TL_OPTION_UPDATING))
+	  if (!Select->add_table_to_list(YYTHD, (yyvsp[(1) - (1)].table), NULL, TL_OPTION_UPDATING))
 	    YYABORT;
 	}
     break;
 
   case 1018:
 #line 4027 "sql_yacc.yy"
-    { yyval.num= 0; }
+    { (yyval.num)= 0; }
     break;
 
   case 1019:
 #line 4028 "sql_yacc.yy"
-    { yyval.num= 1; }
+    { (yyval.num)= 1; }
     break;
 
   case 1020:
 #line 4032 "sql_yacc.yy"
-    { yyval.num= 0; }
+    { (yyval.num)= 0; }
     break;
 
   case 1021:
 #line 4033 "sql_yacc.yy"
-    { yyval.num= 1; }
+    { (yyval.num)= 1; }
     break;
 
   case 1022:
@@ -17860,7 +18194,7 @@ yyreduce:
   case 1023:
 #line 4051 "sql_yacc.yy"
     {
-	  Select->set_lock_for_tables(yyvsp[-2].lock_type);
+	  Select->set_lock_for_tables((yyvsp[(3) - (5)].lock_type));
 	  Lex->current_select= &Lex->select_lex;
 	}
     break;
@@ -17884,7 +18218,7 @@ yyreduce:
   case 1026:
 #line 4069 "sql_yacc.yy"
     {
-	  Select->set_lock_for_tables(yyvsp[-1].lock_type);
+	  Select->set_lock_for_tables((yyvsp[(3) - (4)].lock_type));
 	  Lex->current_select= &Lex->select_lex;
 	}
     break;
@@ -17901,32 +18235,32 @@ yyreduce:
 
   case 1029:
 #line 4079 "sql_yacc.yy"
-    { yyval.lock_type= TL_WRITE_CONCURRENT_INSERT; }
+    { (yyval.lock_type)= TL_WRITE_CONCURRENT_INSERT; }
     break;
 
   case 1030:
 #line 4080 "sql_yacc.yy"
-    { yyval.lock_type= TL_WRITE_LOW_PRIORITY; }
+    { (yyval.lock_type)= TL_WRITE_LOW_PRIORITY; }
     break;
 
   case 1031:
 #line 4081 "sql_yacc.yy"
-    { yyval.lock_type= TL_WRITE_DELAYED; }
+    { (yyval.lock_type)= TL_WRITE_DELAYED; }
     break;
 
   case 1032:
 #line 4082 "sql_yacc.yy"
-    { yyval.lock_type= TL_WRITE; }
+    { (yyval.lock_type)= TL_WRITE; }
     break;
 
   case 1033:
 #line 4086 "sql_yacc.yy"
-    { yyval.lock_type= yyvsp[0].lock_type; }
+    { (yyval.lock_type)= (yyvsp[(1) - (1)].lock_type); }
     break;
 
   case 1034:
 #line 4087 "sql_yacc.yy"
-    { yyval.lock_type= TL_WRITE_DELAYED; }
+    { (yyval.lock_type)= TL_WRITE_DELAYED; }
     break;
 
   case 1035:
@@ -17991,12 +18325,12 @@ yyreduce:
 
   case 1046:
 #line 4121 "sql_yacc.yy"
-    { Lex->field_list.push_back(yyvsp[0].item); }
+    { Lex->field_list.push_back((yyvsp[(3) - (3)].item)); }
     break;
 
   case 1047:
 #line 4122 "sql_yacc.yy"
-    { Lex->field_list.push_back(yyvsp[0].item); }
+    { Lex->field_list.push_back((yyvsp[(1) - (1)].item)); }
     break;
 
   case 1048:
@@ -18033,8 +18367,8 @@ yyreduce:
 #line 4142 "sql_yacc.yy"
     {
 	  LEX *lex=Lex;
-	  if (lex->field_list.push_back(yyvsp[-2].item) ||
-	      lex->insert_list->push_back(yyvsp[0].item))
+	  if (lex->field_list.push_back((yyvsp[(1) - (3)].item)) ||
+	      lex->insert_list->push_back((yyvsp[(3) - (3)].item)))
 	    YYABORT;
 	 }
     break;
@@ -18084,7 +18418,7 @@ yyreduce:
   case 1067:
 #line 4177 "sql_yacc.yy"
     {
-	  if (Lex->insert_list->push_back(yyvsp[0].item))
+	  if (Lex->insert_list->push_back((yyvsp[(3) - (3)].item)))
 	    YYABORT;
 	}
     break;
@@ -18092,19 +18426,19 @@ yyreduce:
   case 1068:
 #line 4182 "sql_yacc.yy"
     {
-	    if (Lex->insert_list->push_back(yyvsp[0].item))
+	    if (Lex->insert_list->push_back((yyvsp[(1) - (1)].item)))
 	      YYABORT;
 	  }
     break;
 
   case 1069:
 #line 4189 "sql_yacc.yy"
-    { yyval.item= yyvsp[0].item;}
+    { (yyval.item)= (yyvsp[(1) - (1)].item);}
     break;
 
   case 1070:
 #line 4190 "sql_yacc.yy"
-    {yyval.item= new Item_default_value(); }
+    {(yyval.item)= new Item_default_value(); }
     break;
 
   case 1072:
@@ -18130,7 +18464,7 @@ yyreduce:
           if (lex->select_lex.table_list.elements > 1)
 	  {
             lex->sql_command= SQLCOM_UPDATE_MULTI;
-	    lex->multi_lock_option= yyvsp[-4].lock_type;
+	    lex->multi_lock_option= (yyvsp[(3) - (7)].lock_type);
 	  }
 	  else if (lex->select_lex.get_table_list()->derived)
 	  {
@@ -18140,7 +18474,7 @@ yyreduce:
 	    YYABORT;
 	  }
 	  else
-	    Select->set_lock_for_tables(yyvsp[-4].lock_type);
+	    Select->set_lock_for_tables((yyvsp[(3) - (7)].lock_type));
 	}
     break;
 
@@ -18152,7 +18486,7 @@ yyreduce:
   case 1079:
 #line 4238 "sql_yacc.yy"
     {
-	  if (add_item_to_list(YYTHD, yyvsp[-2].item) || add_value_to_list(YYTHD, yyvsp[0].item))
+	  if (add_item_to_list(YYTHD, (yyvsp[(1) - (3)].item)) || add_value_to_list(YYTHD, (yyvsp[(3) - (3)].item)))
 	    YYABORT;
 	}
     break;
@@ -18161,20 +18495,20 @@ yyreduce:
 #line 4249 "sql_yacc.yy"
     {
 	  LEX *lex= Lex;
-	  if (lex->update_list.push_back(yyvsp[-2].item) || 
-	      lex->value_list.push_back(yyvsp[0].item))
+	  if (lex->update_list.push_back((yyvsp[(1) - (3)].item)) || 
+	      lex->value_list.push_back((yyvsp[(3) - (3)].item)))
 	    YYABORT;
 	}
     break;
 
   case 1083:
 #line 4257 "sql_yacc.yy"
-    { yyval.lock_type= YYTHD->update_lock_default; }
+    { (yyval.lock_type)= YYTHD->update_lock_default; }
     break;
 
   case 1084:
 #line 4258 "sql_yacc.yy"
-    { yyval.lock_type= TL_WRITE_LOW_PRIORITY; }
+    { (yyval.lock_type)= TL_WRITE_LOW_PRIORITY; }
     break;
 
   case 1085:
@@ -18197,7 +18531,7 @@ yyreduce:
   case 1087:
 #line 4277 "sql_yacc.yy"
     {
-	  if (!Select->add_table_to_list(YYTHD, yyvsp[0].table, NULL, TL_OPTION_UPDATING,
+	  if (!Select->add_table_to_list(YYTHD, (yyvsp[(2) - (2)].table), NULL, TL_OPTION_UPDATING,
 					 Lex->lock_option))
 	    YYABORT;
 	}
@@ -18236,7 +18570,7 @@ yyreduce:
   case 1095:
 #line 4299 "sql_yacc.yy"
     {
-	  if (!Select->add_table_to_list(YYTHD, new Table_ident(yyvsp[-2].lex_str), yyvsp[0].lex_str_ptr,
+	  if (!Select->add_table_to_list(YYTHD, new Table_ident((yyvsp[(1) - (3)].lex_str)), (yyvsp[(3) - (3)].lex_str_ptr),
 					 TL_OPTION_UPDATING, Lex->lock_option))
 	    YYABORT;
         }
@@ -18246,8 +18580,8 @@ yyreduce:
 #line 4305 "sql_yacc.yy"
     {
 	    if (!Select->add_table_to_list(YYTHD,
-					   new Table_ident(YYTHD, yyvsp[-4].lex_str, yyvsp[-2].lex_str, 0),
-					   yyvsp[0].lex_str_ptr, TL_OPTION_UPDATING,
+					   new Table_ident(YYTHD, (yyvsp[(1) - (5)].lex_str), (yyvsp[(3) - (5)].lex_str), 0),
+					   (yyvsp[(5) - (5)].lex_str_ptr), TL_OPTION_UPDATING,
 					   Lex->lock_option))
 	      YYABORT;
 	  }
@@ -18322,7 +18656,7 @@ yyreduce:
     {
 	    LEX *lex= Lex;
 	    lex->sql_command= SQLCOM_SHOW_TABLES;
-	    lex->select_lex.db= yyvsp[-1].simple_string;
+	    lex->select_lex.db= (yyvsp[(2) - (3)].simple_string);
 	   }
     break;
 
@@ -18332,7 +18666,7 @@ yyreduce:
 	    LEX *lex= Lex;
 	    lex->sql_command= SQLCOM_SHOW_TABLES;
 	    lex->describe= DESCRIBE_EXTENDED;
-	    lex->select_lex.db= yyvsp[-1].simple_string;
+	    lex->select_lex.db= (yyvsp[(3) - (4)].simple_string);
 	  }
     break;
 
@@ -18341,22 +18675,22 @@ yyreduce:
     {
 	    LEX *lex= Lex;
 	    lex->sql_command= SQLCOM_SHOW_OPEN_TABLES;
-	    lex->select_lex.db= yyvsp[-1].simple_string;
+	    lex->select_lex.db= (yyvsp[(3) - (4)].simple_string);
 	  }
     break;
 
   case 1113:
 #line 4377 "sql_yacc.yy"
-    { Lex->create_info.db_type= yyvsp[0].db_type; }
+    { Lex->create_info.db_type= (yyvsp[(2) - (2)].db_type); }
     break;
 
   case 1115:
 #line 4380 "sql_yacc.yy"
     {
 	    Lex->sql_command= SQLCOM_SHOW_FIELDS;
-	    if (yyvsp[-1].simple_string)
-	      yyvsp[-2].table->change_db(yyvsp[-1].simple_string);
-	    if (!Select->add_table_to_list(YYTHD, yyvsp[-2].table, NULL, 0))
+	    if ((yyvsp[(5) - (6)].simple_string))
+	      (yyvsp[(4) - (6)].table)->change_db((yyvsp[(5) - (6)].simple_string));
+	    if (!Select->add_table_to_list(YYTHD, (yyvsp[(4) - (6)].table), NULL, 0))
 	      YYABORT;
 	  }
     break;
@@ -18365,9 +18699,9 @@ yyreduce:
 #line 4391 "sql_yacc.yy"
     {
 	    Lex->sql_command = SQLCOM_SHOW_NEW_MASTER;
-	    Lex->mi.log_file_name = yyvsp[-8].lex_str.str;
-	    Lex->mi.pos = yyvsp[-4].ulonglong_number;
-	    Lex->mi.server_id = yyvsp[0].ulong_num;
+	    Lex->mi.log_file_name = (yyvsp[(8) - (16)].lex_str).str;
+	    Lex->mi.pos = (yyvsp[(12) - (16)].ulonglong_number);
+	    Lex->mi.server_id = (yyvsp[(16) - (16)].ulong_num);
           }
     break;
 
@@ -18397,9 +18731,9 @@ yyreduce:
 #line 4411 "sql_yacc.yy"
     {
 	    Lex->sql_command= SQLCOM_SHOW_KEYS;
-	    if (yyvsp[0].simple_string)
-	      yyvsp[-1].table->change_db(yyvsp[0].simple_string);
-	    if (!Select->add_table_to_list(YYTHD, yyvsp[-1].table, NULL, 0))
+	    if ((yyvsp[(4) - (4)].simple_string))
+	      (yyvsp[(3) - (4)].table)->change_db((yyvsp[(4) - (4)].simple_string));
+	    if (!Select->add_table_to_list(YYTHD, (yyvsp[(3) - (4)].table), NULL, 0))
 	      YYABORT;
 	  }
     break;
@@ -18477,7 +18811,7 @@ yyreduce:
     {
 	    THD *thd= YYTHD;
 	    thd->lex->sql_command= SQLCOM_SHOW_VARIABLES;
-	    thd->lex->option_type= (enum_var_type) yyvsp[-2].num;
+	    thd->lex->option_type= (enum_var_type) (yyvsp[(1) - (3)].num);
 	  }
     break;
 
@@ -18532,7 +18866,7 @@ yyreduce:
     {
 	    LEX *lex=Lex;
 	    lex->sql_command= SQLCOM_SHOW_GRANTS;
-	    lex->grant_user=yyvsp[0].lex_user;
+	    lex->grant_user=(yyvsp[(3) - (3)].lex_user);
 	    lex->grant_user->password.str=NullS;
 	  }
     break;
@@ -18541,8 +18875,8 @@ yyreduce:
 #line 4498 "sql_yacc.yy"
     {
 	    Lex->sql_command=SQLCOM_SHOW_CREATE_DB;
-	    Lex->create_info.options=yyvsp[-1].num;
-	    Lex->name=yyvsp[0].lex_str.str;
+	    Lex->create_info.options=(yyvsp[(3) - (4)].num);
+	    Lex->name=(yyvsp[(4) - (4)].lex_str).str;
 	  }
     break;
 
@@ -18550,7 +18884,7 @@ yyreduce:
 #line 4504 "sql_yacc.yy"
     {
 	    Lex->sql_command = SQLCOM_SHOW_CREATE;
-	    if (!Select->add_table_to_list(YYTHD, yyvsp[0].table, NULL,0))
+	    if (!Select->add_table_to_list(YYTHD, (yyvsp[(3) - (3)].table), NULL,0))
 	      YYABORT;
 	  }
     break;
@@ -18599,17 +18933,17 @@ yyreduce:
 
   case 1150:
 #line 4551 "sql_yacc.yy"
-    { yyval.simple_string= 0; }
+    { (yyval.simple_string)= 0; }
     break;
 
   case 1151:
 #line 4552 "sql_yacc.yy"
-    { yyval.simple_string= yyvsp[0].lex_str.str; }
+    { (yyval.simple_string)= (yyvsp[(2) - (2)].lex_str).str; }
     break;
 
   case 1153:
 #line 4557 "sql_yacc.yy"
-    { Lex->wild=  new (YYTHD->mem_root) String(yyvsp[0].lex_str.str, yyvsp[0].lex_str.length,
+    { Lex->wild=  new (YYTHD->mem_root) String((yyvsp[(2) - (2)].lex_str).str, (yyvsp[(2) - (2)].lex_str).length,
                                                       system_charset_info); }
     break;
 
@@ -18630,7 +18964,7 @@ yyreduce:
 
   case 1159:
 #line 4570 "sql_yacc.yy"
-    { Lex->mi.log_file_name = yyvsp[0].lex_str.str; }
+    { Lex->mi.log_file_name = (yyvsp[(2) - (2)].lex_str).str; }
     break;
 
   case 1160:
@@ -18640,7 +18974,7 @@ yyreduce:
 
   case 1161:
 #line 4574 "sql_yacc.yy"
-    { Lex->mi.pos = yyvsp[0].ulonglong_number; }
+    { Lex->mi.pos = (yyvsp[(2) - (2)].ulonglong_number); }
     break;
 
   case 1162:
@@ -18650,7 +18984,7 @@ yyreduce:
 	  lex->wild=0;
 	  lex->verbose=0;
 	  lex->sql_command=SQLCOM_SHOW_FIELDS;
-	  if (!Select->add_table_to_list(lex->thd, yyvsp[0].table, NULL,0))
+	  if (!Select->add_table_to_list(lex->thd, (yyvsp[(2) - (2)].table), NULL,0))
 	    YYABORT;
 	}
     break;
@@ -18690,12 +19024,12 @@ yyreduce:
 
   case 1171:
 #line 4609 "sql_yacc.yy"
-    { Lex->wild= yyvsp[0].string; }
+    { Lex->wild= (yyvsp[(1) - (1)].string); }
     break;
 
   case 1172:
 #line 4611 "sql_yacc.yy"
-    { Lex->wild= new (YYTHD->mem_root) String((const char*) yyvsp[0].lex_str.str,yyvsp[0].lex_str.length,system_charset_info); }
+    { Lex->wild= new (YYTHD->mem_root) String((const char*) (yyvsp[(1) - (1)].lex_str).str,(yyvsp[(1) - (1)].lex_str).length,system_charset_info); }
     break;
 
   case 1173:
@@ -18703,7 +19037,7 @@ yyreduce:
     {
 	  LEX *lex=Lex;
 	  lex->sql_command= SQLCOM_FLUSH; lex->type=0;
-          lex->no_write_to_binlog= yyvsp[0].num;
+          lex->no_write_to_binlog= (yyvsp[(2) - (2)].num);
 	}
     break;
 
@@ -18827,19 +19161,19 @@ yyreduce:
 #line 4681 "sql_yacc.yy"
     {
 	   Lex->sql_command = SQLCOM_PURGE;
-	   Lex->to_log = yyvsp[0].lex_str.str;
+	   Lex->to_log = (yyvsp[(2) - (2)].lex_str).str;
         }
     break;
 
   case 1202:
 #line 4686 "sql_yacc.yy"
     {
-	  if (yyvsp[0].item->check_cols(1) || yyvsp[0].item->fix_fields(Lex->thd, 0, &yyvsp[0].item))
+	  if ((yyvsp[(2) - (2)].item)->check_cols(1) || (yyvsp[(2) - (2)].item)->fix_fields(Lex->thd, 0, &(yyvsp[(2) - (2)].item)))
 	  {
 	    net_printf(Lex->thd, ER_WRONG_ARGUMENTS, "PURGE LOGS BEFORE");
 	    YYABORT;
 	  }
-	  Item *tmp= new Item_func_unix_timestamp(yyvsp[0].item);
+	  Item *tmp= new Item_func_unix_timestamp((yyvsp[(2) - (2)].item));
 	  /*
 	    it is OK only emulate fix_fieds, because we need only
             value of constant
@@ -18854,13 +19188,13 @@ yyreduce:
 #line 4707 "sql_yacc.yy"
     {
 	  LEX *lex=Lex;
-	  if (yyvsp[0].item->fix_fields(lex->thd, 0, &yyvsp[0].item) || yyvsp[0].item->check_cols(1))
+	  if ((yyvsp[(2) - (2)].item)->fix_fields(lex->thd, 0, &(yyvsp[(2) - (2)].item)) || (yyvsp[(2) - (2)].item)->check_cols(1))
 	  {
 	    send_error(lex->thd, ER_SET_CONSTANTS_ONLY);
 	    YYABORT;
 	  }
           lex->sql_command=SQLCOM_KILL;
-	  lex->thread_id= (ulong) yyvsp[0].item->val_int();
+	  lex->thread_id= (ulong) (yyvsp[(2) - (2)].item)->val_int();
 	}
     break;
 
@@ -18869,7 +19203,7 @@ yyreduce:
     {
 	  LEX *lex=Lex;
 	  lex->sql_command=SQLCOM_CHANGE_DB;
-	  lex->select_lex.db= yyvsp[0].lex_str.str;
+	  lex->select_lex.db= (yyvsp[(2) - (2)].lex_str).str;
 	}
     break;
 
@@ -18878,11 +19212,11 @@ yyreduce:
     {
 	  LEX *lex=Lex;
 	  lex->sql_command= SQLCOM_LOAD;
-	  lex->lock_option= yyvsp[-3].lock_type;
-	  lex->local_file=  yyvsp[-2].num;
+	  lex->lock_option= (yyvsp[(3) - (6)].lock_type);
+	  lex->local_file=  (yyvsp[(4) - (6)].num);
 	  lex->duplicates= DUP_ERROR;
 	  lex->ignore= 0;
-	  if (!(lex->exchange= new sql_exchange(yyvsp[0].lex_str.str,0)))
+	  if (!(lex->exchange= new sql_exchange((yyvsp[(6) - (6)].lex_str).str,0)))
 	    YYABORT;
 	  lex->field_list.empty();
 	}
@@ -18891,7 +19225,7 @@ yyreduce:
   case 1206:
 #line 4743 "sql_yacc.yy"
     {
-	  if (!Select->add_table_to_list(YYTHD, yyvsp[-4].table, NULL, TL_OPTION_UPDATING))
+	  if (!Select->add_table_to_list(YYTHD, (yyvsp[(11) - (15)].table), NULL, TL_OPTION_UPDATING))
 	    YYABORT;
 	}
     break;
@@ -18900,7 +19234,7 @@ yyreduce:
 #line 4749 "sql_yacc.yy"
     {
 	  Lex->sql_command = SQLCOM_LOAD_MASTER_TABLE;
-	  if (!Select->add_table_to_list(YYTHD, yyvsp[-2].table, NULL, TL_OPTION_UPDATING))
+	  if (!Select->add_table_to_list(YYTHD, (yyvsp[(3) - (5)].table), NULL, TL_OPTION_UPDATING))
 	    YYABORT;
 
         }
@@ -18915,27 +19249,27 @@ yyreduce:
 
   case 1209:
 #line 4762 "sql_yacc.yy"
-    { yyval.num=0;}
+    { (yyval.num)=0;}
     break;
 
   case 1210:
 #line 4763 "sql_yacc.yy"
-    { yyval.num=1;}
+    { (yyval.num)=1;}
     break;
 
   case 1211:
 #line 4766 "sql_yacc.yy"
-    { yyval.lock_type= YYTHD->update_lock_default; }
+    { (yyval.lock_type)= YYTHD->update_lock_default; }
     break;
 
   case 1212:
 #line 4767 "sql_yacc.yy"
-    { yyval.lock_type= TL_WRITE_CONCURRENT_INSERT ; }
+    { (yyval.lock_type)= TL_WRITE_CONCURRENT_INSERT ; }
     break;
 
   case 1213:
 #line 4768 "sql_yacc.yy"
-    { yyval.lock_type= TL_WRITE_LOW_PRIORITY; }
+    { (yyval.lock_type)= TL_WRITE_LOW_PRIORITY; }
     break;
 
   case 1214:
@@ -18957,7 +19291,7 @@ yyreduce:
 #line 4786 "sql_yacc.yy"
     {
             DBUG_ASSERT(Lex->exchange);
-            Lex->exchange->field_term= yyvsp[0].string;
+            Lex->exchange->field_term= (yyvsp[(3) - (3)].string);
           }
     break;
 
@@ -18966,7 +19300,7 @@ yyreduce:
     {
             LEX *lex= Lex;
             DBUG_ASSERT(lex->exchange);
-            lex->exchange->enclosed= yyvsp[0].string;
+            lex->exchange->enclosed= (yyvsp[(4) - (4)].string);
             lex->exchange->opt_enclosed= 1;
 	  }
     break;
@@ -18975,7 +19309,7 @@ yyreduce:
 #line 4798 "sql_yacc.yy"
     {
             DBUG_ASSERT(Lex->exchange);
-            Lex->exchange->enclosed= yyvsp[0].string;
+            Lex->exchange->enclosed= (yyvsp[(3) - (3)].string);
           }
     break;
 
@@ -18983,7 +19317,7 @@ yyreduce:
 #line 4803 "sql_yacc.yy"
     {
             DBUG_ASSERT(Lex->exchange);
-            Lex->exchange->escaped= yyvsp[0].string;
+            Lex->exchange->escaped= (yyvsp[(3) - (3)].string);
           }
     break;
 
@@ -18991,7 +19325,7 @@ yyreduce:
 #line 4818 "sql_yacc.yy"
     {
             DBUG_ASSERT(Lex->exchange);
-            Lex->exchange->line_term= yyvsp[0].string;
+            Lex->exchange->line_term= (yyvsp[(3) - (3)].string);
           }
     break;
 
@@ -18999,7 +19333,7 @@ yyreduce:
 #line 4823 "sql_yacc.yy"
     {
             DBUG_ASSERT(Lex->exchange);
-            Lex->exchange->line_start= yyvsp[0].string;
+            Lex->exchange->line_start= (yyvsp[(3) - (3)].string);
           }
     break;
 
@@ -19007,7 +19341,7 @@ yyreduce:
 #line 4831 "sql_yacc.yy"
     {
             DBUG_ASSERT(Lex->exchange);
-            Lex->exchange->skip_lines= atol(yyvsp[-1].lex_str.str);
+            Lex->exchange->skip_lines= atol((yyvsp[(2) - (3)].lex_str).str);
           }
     break;
 
@@ -19015,39 +19349,39 @@ yyreduce:
 #line 4840 "sql_yacc.yy"
     {
 	  THD *thd= YYTHD;
-	  yyval.item = new Item_string(yyvsp[0].lex_str.str,yyvsp[0].lex_str.length,thd->variables.collation_connection);
+	  (yyval.item) = new Item_string((yyvsp[(1) - (1)].lex_str).str,(yyvsp[(1) - (1)].lex_str).length,thd->variables.collation_connection);
 	}
     break;
 
   case 1234:
 #line 4845 "sql_yacc.yy"
-    { yyval.item=  new Item_string(yyvsp[0].lex_str.str,yyvsp[0].lex_str.length,national_charset_info); }
+    { (yyval.item)=  new Item_string((yyvsp[(1) - (1)].lex_str).str,(yyvsp[(1) - (1)].lex_str).length,national_charset_info); }
     break;
 
   case 1235:
 #line 4847 "sql_yacc.yy"
-    { yyval.item = new Item_string(yyvsp[0].lex_str.str,yyvsp[0].lex_str.length,Lex->charset); }
+    { (yyval.item) = new Item_string((yyvsp[(2) - (2)].lex_str).str,(yyvsp[(2) - (2)].lex_str).length,Lex->charset); }
     break;
 
   case 1236:
 #line 4849 "sql_yacc.yy"
-    { ((Item_string*) yyvsp[-1].item)->append(yyvsp[0].lex_str.str,yyvsp[0].lex_str.length); }
+    { ((Item_string*) (yyvsp[(1) - (2)].item))->append((yyvsp[(2) - (2)].lex_str).str,(yyvsp[(2) - (2)].lex_str).length); }
     break;
 
   case 1237:
 #line 4854 "sql_yacc.yy"
-    { yyval.string=  new (YYTHD->mem_root) String(yyvsp[0].lex_str.str,yyvsp[0].lex_str.length,YYTHD->variables.collation_connection); }
+    { (yyval.string)=  new (YYTHD->mem_root) String((yyvsp[(1) - (1)].lex_str).str,(yyvsp[(1) - (1)].lex_str).length,YYTHD->variables.collation_connection); }
     break;
 
   case 1238:
 #line 4856 "sql_yacc.yy"
     {
-	    Item *tmp = new Item_varbinary(yyvsp[0].lex_str.str,yyvsp[0].lex_str.length);
+	    Item *tmp = new Item_varbinary((yyvsp[(1) - (1)].lex_str).str,(yyvsp[(1) - (1)].lex_str).length);
 	    /*
 	      it is OK only emulate fix_fieds, because we need only
               value of constant
 	    */
-	    yyval.string= tmp ?
+	    (yyval.string)= tmp ?
 	      tmp->quick_fix_field(), tmp->val_str((String*) 0) :
 	      (String*) 0;
 	  }
@@ -19062,7 +19396,7 @@ yyreduce:
           {
             Item_param *item= new Item_param((uint) (lex->tok_start -
                                                      (uchar *) thd->query));
-            if (!(yyval.item= item) || lex->param_list.push_back(item))
+            if (!((yyval.item)= item) || lex->param_list.push_back(item))
             {
 	      send_error(thd, ER_OUT_OF_RESOURCES);
 	      YYABORT;
@@ -19078,57 +19412,57 @@ yyreduce:
 
   case 1240:
 #line 4892 "sql_yacc.yy"
-    { yyval.item = yyvsp[0].item; }
+    { (yyval.item) = (yyvsp[(1) - (1)].item); }
     break;
 
   case 1241:
 #line 4893 "sql_yacc.yy"
-    { yyval.item = yyvsp[0].item_num; }
+    { (yyval.item) = (yyvsp[(2) - (2)].item_num); }
     break;
 
   case 1242:
 #line 4895 "sql_yacc.yy"
     {
-	    yyvsp[0].item_num->max_length++;
-	    yyval.item= yyvsp[0].item_num->neg();
+	    (yyvsp[(2) - (2)].item_num)->max_length++;
+	    (yyval.item)= (yyvsp[(2) - (2)].item_num)->neg();
 	  }
     break;
 
   case 1243:
 #line 4903 "sql_yacc.yy"
-    { yyval.item =	yyvsp[0].item; }
+    { (yyval.item) =	(yyvsp[(1) - (1)].item); }
     break;
 
   case 1244:
 #line 4904 "sql_yacc.yy"
-    { yyval.item = yyvsp[0].item_num; }
+    { (yyval.item) = (yyvsp[(1) - (1)].item_num); }
     break;
 
   case 1245:
 #line 4905 "sql_yacc.yy"
-    { yyval.item =	new Item_null();
+    { (yyval.item) =	new Item_null();
 			  Lex->next_state=MY_LEX_OPERATOR_OR_IDENT;}
     break;
 
   case 1246:
 #line 4907 "sql_yacc.yy"
-    { yyval.item= new Item_int((char*) "FALSE",0,1); }
+    { (yyval.item)= new Item_int((char*) "FALSE",0,1); }
     break;
 
   case 1247:
 #line 4908 "sql_yacc.yy"
-    { yyval.item= new Item_int((char*) "TRUE",1,1); }
+    { (yyval.item)= new Item_int((char*) "TRUE",1,1); }
     break;
 
   case 1248:
 #line 4909 "sql_yacc.yy"
-    { yyval.item =	new Item_varbinary(yyvsp[0].lex_str.str,yyvsp[0].lex_str.length);}
+    { (yyval.item) =	new Item_varbinary((yyvsp[(1) - (1)].lex_str).str,(yyvsp[(1) - (1)].lex_str).length);}
     break;
 
   case 1249:
 #line 4911 "sql_yacc.yy"
     {
-	    Item *tmp= new Item_varbinary(yyvsp[0].lex_str.str,yyvsp[0].lex_str.length);
+	    Item *tmp= new Item_varbinary((yyvsp[(2) - (2)].lex_str).str,(yyvsp[(2) - (2)].lex_str).length);
 	    /*
 	      it is OK only emulate fix_fieds, because we need only
               value of constant
@@ -19136,7 +19470,7 @@ yyreduce:
 	    String *str= tmp ?
 	      tmp->quick_fix_field(), tmp->val_str((String*) 0) :
 	      (String*) 0;
-	    yyval.item= new Item_string(str ? str->ptr() : "",
+	    (yyval.item)= new Item_string(str ? str->ptr() : "",
 				str ? str->length() : 0,
 				Lex->charset);
 	  }
@@ -19144,58 +19478,58 @@ yyreduce:
 
   case 1250:
 #line 4924 "sql_yacc.yy"
-    { yyval.item = yyvsp[0].item; }
+    { (yyval.item) = (yyvsp[(2) - (2)].item); }
     break;
 
   case 1251:
 #line 4925 "sql_yacc.yy"
-    { yyval.item = yyvsp[0].item; }
+    { (yyval.item) = (yyvsp[(2) - (2)].item); }
     break;
 
   case 1252:
 #line 4926 "sql_yacc.yy"
-    { yyval.item = yyvsp[0].item; }
+    { (yyval.item) = (yyvsp[(2) - (2)].item); }
     break;
 
   case 1253:
 #line 4929 "sql_yacc.yy"
-    { int error; yyval.item_num = new Item_int(yyvsp[0].lex_str.str, (longlong) my_strtoll10(yyvsp[0].lex_str.str, NULL, &error), yyvsp[0].lex_str.length); }
+    { int error; (yyval.item_num) = new Item_int((yyvsp[(1) - (1)].lex_str).str, (longlong) my_strtoll10((yyvsp[(1) - (1)].lex_str).str, NULL, &error), (yyvsp[(1) - (1)].lex_str).length); }
     break;
 
   case 1254:
 #line 4930 "sql_yacc.yy"
-    { int error; yyval.item_num = new Item_int(yyvsp[0].lex_str.str, (longlong) my_strtoll10(yyvsp[0].lex_str.str, NULL, &error), yyvsp[0].lex_str.length); }
+    { int error; (yyval.item_num) = new Item_int((yyvsp[(1) - (1)].lex_str).str, (longlong) my_strtoll10((yyvsp[(1) - (1)].lex_str).str, NULL, &error), (yyvsp[(1) - (1)].lex_str).length); }
     break;
 
   case 1255:
 #line 4931 "sql_yacc.yy"
-    { yyval.item_num =	new Item_uint(yyvsp[0].lex_str.str, yyvsp[0].lex_str.length); }
+    { (yyval.item_num) =	new Item_uint((yyvsp[(1) - (1)].lex_str).str, (yyvsp[(1) - (1)].lex_str).length); }
     break;
 
   case 1256:
 #line 4932 "sql_yacc.yy"
-    { yyval.item_num =	new Item_real(yyvsp[0].lex_str.str, yyvsp[0].lex_str.length); }
+    { (yyval.item_num) =	new Item_real((yyvsp[(1) - (1)].lex_str).str, (yyvsp[(1) - (1)].lex_str).length); }
     break;
 
   case 1257:
 #line 4933 "sql_yacc.yy"
-    { yyval.item_num =	new Item_float(yyvsp[0].lex_str.str, yyvsp[0].lex_str.length); }
+    { (yyval.item_num) =	new Item_float((yyvsp[(1) - (1)].lex_str).str, (yyvsp[(1) - (1)].lex_str).length); }
     break;
 
   case 1258:
 #line 4941 "sql_yacc.yy"
-    { yyval.item=yyvsp[0].item; }
+    { (yyval.item)=(yyvsp[(1) - (1)].item); }
     break;
 
   case 1259:
 #line 4942 "sql_yacc.yy"
-    { yyval.item=yyvsp[0].item; }
+    { (yyval.item)=(yyvsp[(1) - (1)].item); }
     break;
 
   case 1260:
 #line 4946 "sql_yacc.yy"
     {
-	  yyval.item = new Item_field(NullS,yyvsp[-2].lex_str.str,"*");
+	  (yyval.item) = new Item_field(NullS,(yyvsp[(1) - (3)].lex_str).str,"*");
 	  Lex->current_select->with_wild++;
 	}
     break;
@@ -19203,26 +19537,26 @@ yyreduce:
   case 1261:
 #line 4951 "sql_yacc.yy"
     {
-	  yyval.item = new Item_field((YYTHD->client_capabilities &
-   			     CLIENT_NO_SCHEMA ? NullS : yyvsp[-4].lex_str.str),
-			     yyvsp[-2].lex_str.str,"*");
+	  (yyval.item) = new Item_field((YYTHD->client_capabilities &
+   			     CLIENT_NO_SCHEMA ? NullS : (yyvsp[(1) - (5)].lex_str).str),
+			     (yyvsp[(3) - (5)].lex_str).str,"*");
 	  Lex->current_select->with_wild++;
 	}
     break;
 
   case 1262:
 #line 4960 "sql_yacc.yy"
-    { yyval.item=yyvsp[0].item; }
+    { (yyval.item)=(yyvsp[(1) - (1)].item); }
     break;
 
   case 1263:
 #line 4964 "sql_yacc.yy"
     {
 	  SELECT_LEX *sel=Select;
-	  yyval.item= (sel->parsing_place != IN_HAVING ||
+	  (yyval.item)= (sel->parsing_place != IN_HAVING ||
 	       sel->get_in_sum_expr() > 0) ?
-              (Item*) new Item_field(NullS,NullS,yyvsp[0].lex_str.str) :
-	      (Item*) new Item_ref(NullS, NullS, yyvsp[0].lex_str.str);
+              (Item*) new Item_field(NullS,NullS,(yyvsp[(1) - (1)].lex_str).str) :
+	      (Item*) new Item_ref(NullS, NullS, (yyvsp[(1) - (1)].lex_str).str);
 	}
     break;
 
@@ -19236,12 +19570,12 @@ yyreduce:
 	  {
 	    my_printf_error(ER_TABLENAME_NOT_ALLOWED_HERE,
 			    ER(ER_TABLENAME_NOT_ALLOWED_HERE),
-			    MYF(0), yyvsp[-2].lex_str.str, thd->where);
+			    MYF(0), (yyvsp[(1) - (3)].lex_str).str, thd->where);
 	  }
-	  yyval.item= (sel->parsing_place != IN_HAVING ||
+	  (yyval.item)= (sel->parsing_place != IN_HAVING ||
 	       sel->get_in_sum_expr() > 0) ?
-	      (Item*) new Item_field(NullS,yyvsp[-2].lex_str.str,yyvsp[0].lex_str.str) :
-	      (Item*) new Item_ref(NullS, yyvsp[-2].lex_str.str, yyvsp[0].lex_str.str);
+	      (Item*) new Item_field(NullS,(yyvsp[(1) - (3)].lex_str).str,(yyvsp[(3) - (3)].lex_str).str) :
+	      (Item*) new Item_ref(NullS, (yyvsp[(1) - (3)].lex_str).str, (yyvsp[(3) - (3)].lex_str).str);
 	}
     break;
 
@@ -19255,12 +19589,12 @@ yyreduce:
 	  {
 	    my_printf_error(ER_TABLENAME_NOT_ALLOWED_HERE,
 			    ER(ER_TABLENAME_NOT_ALLOWED_HERE),
-			    MYF(0), yyvsp[-2].lex_str.str, thd->where);
+			    MYF(0), (yyvsp[(2) - (4)].lex_str).str, thd->where);
 	  }
-	  yyval.item= (sel->parsing_place != IN_HAVING ||
+	  (yyval.item)= (sel->parsing_place != IN_HAVING ||
 	       sel->get_in_sum_expr() > 0) ?
-	      (Item*) new Item_field(NullS,yyvsp[-2].lex_str.str,yyvsp[0].lex_str.str) :
-              (Item*) new Item_ref(NullS, yyvsp[-2].lex_str.str, yyvsp[0].lex_str.str);
+	      (Item*) new Item_field(NullS,(yyvsp[(2) - (4)].lex_str).str,(yyvsp[(4) - (4)].lex_str).str) :
+              (Item*) new Item_ref(NullS, (yyvsp[(2) - (4)].lex_str).str, (yyvsp[(4) - (4)].lex_str).str);
 	}
     break;
 
@@ -19274,57 +19608,57 @@ yyreduce:
 	  {
 	    my_printf_error(ER_TABLENAME_NOT_ALLOWED_HERE,
 			    ER(ER_TABLENAME_NOT_ALLOWED_HERE),
-			    MYF(0), yyvsp[-2].lex_str.str, thd->where);
+			    MYF(0), (yyvsp[(3) - (5)].lex_str).str, thd->where);
 	  }
-	  yyval.item= (sel->parsing_place != IN_HAVING ||
+	  (yyval.item)= (sel->parsing_place != IN_HAVING ||
 	       sel->get_in_sum_expr() > 0) ?
 	      (Item*) new Item_field((YYTHD->client_capabilities &
-				      CLIENT_NO_SCHEMA ? NullS : yyvsp[-4].lex_str.str),
-				     yyvsp[-2].lex_str.str, yyvsp[0].lex_str.str) :
+				      CLIENT_NO_SCHEMA ? NullS : (yyvsp[(1) - (5)].lex_str).str),
+				     (yyvsp[(3) - (5)].lex_str).str, (yyvsp[(5) - (5)].lex_str).str) :
 	      (Item*) new Item_ref((YYTHD->client_capabilities &
-				    CLIENT_NO_SCHEMA ? NullS : yyvsp[-4].lex_str.str),
-                                   yyvsp[-2].lex_str.str, yyvsp[0].lex_str.str);
+				    CLIENT_NO_SCHEMA ? NullS : (yyvsp[(1) - (5)].lex_str).str),
+                                   (yyvsp[(3) - (5)].lex_str).str, (yyvsp[(5) - (5)].lex_str).str);
 	}
     break;
 
   case 1267:
 #line 5026 "sql_yacc.yy"
-    { yyval.lex_str=yyvsp[0].lex_str;}
+    { (yyval.lex_str)=(yyvsp[(1) - (1)].lex_str);}
     break;
 
   case 1268:
 #line 5027 "sql_yacc.yy"
-    { yyval.lex_str=yyvsp[0].lex_str;}
+    { (yyval.lex_str)=(yyvsp[(3) - (3)].lex_str);}
     break;
 
   case 1269:
 #line 5028 "sql_yacc.yy"
-    { yyval.lex_str=yyvsp[0].lex_str;}
+    { (yyval.lex_str)=(yyvsp[(2) - (2)].lex_str);}
     break;
 
   case 1270:
 #line 5031 "sql_yacc.yy"
-    { yyval.table=new Table_ident(yyvsp[0].lex_str); }
+    { (yyval.table)=new Table_ident((yyvsp[(1) - (1)].lex_str)); }
     break;
 
   case 1271:
 #line 5032 "sql_yacc.yy"
-    { yyval.table=new Table_ident(YYTHD, yyvsp[-2].lex_str,yyvsp[0].lex_str,0);}
+    { (yyval.table)=new Table_ident(YYTHD, (yyvsp[(1) - (3)].lex_str),(yyvsp[(3) - (3)].lex_str),0);}
     break;
 
   case 1272:
 #line 5033 "sql_yacc.yy"
-    { yyval.table=new Table_ident(yyvsp[0].lex_str);}
+    { (yyval.table)=new Table_ident((yyvsp[(2) - (2)].lex_str));}
     break;
 
   case 1273:
 #line 5037 "sql_yacc.yy"
-    { LEX_STRING db={(char*) any_db,3}; yyval.table=new Table_ident(YYTHD, db,yyvsp[0].lex_str,0); }
+    { LEX_STRING db={(char*) any_db,3}; (yyval.table)=new Table_ident(YYTHD, db,(yyvsp[(1) - (1)].lex_str),0); }
     break;
 
   case 1274:
 #line 5041 "sql_yacc.yy"
-    { yyval.lex_str= yyvsp[0].lex_str; }
+    { (yyval.lex_str)= (yyvsp[(1) - (1)].lex_str); }
     break;
 
   case 1275:
@@ -19335,20 +19669,20 @@ yyreduce:
             {
               CHARSET_INFO *cs= system_charset_info;
               int dummy_error;
-              uint wlen= cs->cset->well_formed_len(cs, yyvsp[0].lex_str.str,
-                                                   yyvsp[0].lex_str.str+yyvsp[0].lex_str.length,
-                                                   yyvsp[0].lex_str.length, &dummy_error);
-              if (wlen < yyvsp[0].lex_str.length)
+              uint wlen= cs->cset->well_formed_len(cs, (yyvsp[(1) - (1)].lex_str).str,
+                                                   (yyvsp[(1) - (1)].lex_str).str+(yyvsp[(1) - (1)].lex_str).length,
+                                                   (yyvsp[(1) - (1)].lex_str).length, &dummy_error);
+              if (wlen < (yyvsp[(1) - (1)].lex_str).length)
               {
                 net_printf(YYTHD, ER_INVALID_CHARACTER_STRING, cs->csname,
-                           yyvsp[0].lex_str.str + wlen);
+                           (yyvsp[(1) - (1)].lex_str).str + wlen);
                 YYABORT;
               }
-	      yyval.lex_str= yyvsp[0].lex_str;
+	      (yyval.lex_str)= (yyvsp[(1) - (1)].lex_str);
             }
 	    else
-	      thd->convert_string(&yyval.lex_str, system_charset_info,
-				  yyvsp[0].lex_str.str, yyvsp[0].lex_str.length, thd->charset());
+	      thd->convert_string(&(yyval.lex_str), system_charset_info,
+				  (yyvsp[(1) - (1)].lex_str).str, (yyvsp[(1) - (1)].lex_str).length, thd->charset());
 	  }
     break;
 
@@ -19357,10 +19691,10 @@ yyreduce:
     {
 	  THD *thd= YYTHD;
 	  if (thd->charset_is_system_charset)
-	    yyval.lex_str= yyvsp[0].lex_str;
+	    (yyval.lex_str)= (yyvsp[(1) - (1)].lex_str);
 	  else
-	    thd->convert_string(&yyval.lex_str, system_charset_info,
-				yyvsp[0].lex_str.str, yyvsp[0].lex_str.length, thd->charset());
+	    thd->convert_string(&(yyval.lex_str), system_charset_info,
+				(yyvsp[(1) - (1)].lex_str).str, (yyvsp[(1) - (1)].lex_str).length, thd->charset());
 	}
     break;
 
@@ -19369,51 +19703,51 @@ yyreduce:
     {
 	  THD *thd= YYTHD;
 	  if (thd->charset_is_collation_connection)
-	    yyval.lex_str= yyvsp[0].lex_str;
+	    (yyval.lex_str)= (yyvsp[(1) - (1)].lex_str);
 	  else
-	    thd->convert_string(&yyval.lex_str, thd->variables.collation_connection,
-				yyvsp[0].lex_str.str, yyvsp[0].lex_str.length, thd->charset());
+	    thd->convert_string(&(yyval.lex_str), thd->variables.collation_connection,
+				(yyvsp[(1) - (1)].lex_str).str, (yyvsp[(1) - (1)].lex_str).length, thd->charset());
 	}
     break;
 
   case 1278:
 #line 5092 "sql_yacc.yy"
-    { yyval.lex_str=yyvsp[0].lex_str; }
+    { (yyval.lex_str)=(yyvsp[(1) - (1)].lex_str); }
     break;
 
   case 1279:
 #line 5094 "sql_yacc.yy"
     {
 	  THD *thd= YYTHD;
-	  yyval.lex_str.str=    thd->strmake(yyvsp[0].symbol.str, yyvsp[0].symbol.length);
-	  yyval.lex_str.length= yyvsp[0].symbol.length;
+	  (yyval.lex_str).str=    thd->strmake((yyvsp[(1) - (1)].symbol).str, (yyvsp[(1) - (1)].symbol).length);
+	  (yyval.lex_str).length= (yyvsp[(1) - (1)].symbol).length;
 	}
     break;
 
   case 1280:
 #line 5102 "sql_yacc.yy"
-    { yyval.lex_str=yyvsp[0].lex_str;}
+    { (yyval.lex_str)=(yyvsp[(1) - (1)].lex_str);}
     break;
 
   case 1281:
 #line 5103 "sql_yacc.yy"
-    { yyval.lex_str=yyvsp[0].lex_str;}
+    { (yyval.lex_str)=(yyvsp[(1) - (1)].lex_str);}
     break;
 
   case 1282:
 #line 5104 "sql_yacc.yy"
-    { yyval.lex_str=yyvsp[0].lex_str;}
+    { (yyval.lex_str)=(yyvsp[(1) - (1)].lex_str);}
     break;
 
   case 1283:
 #line 5108 "sql_yacc.yy"
     {
 	  THD *thd= YYTHD;
-	  if (!(yyval.lex_user=(LEX_USER*) thd->alloc(sizeof(st_lex_user))))
+	  if (!((yyval.lex_user)=(LEX_USER*) thd->alloc(sizeof(st_lex_user))))
 	    YYABORT;
-	  yyval.lex_user->user = yyvsp[0].lex_str;
-	  yyval.lex_user->host.str= (char *) "%";
-	  yyval.lex_user->host.length= 1;
+	  (yyval.lex_user)->user = (yyvsp[(1) - (1)].lex_str);
+	  (yyval.lex_user)->host.str= (char *) "%";
+	  (yyval.lex_user)->host.length= 1;
 	}
     break;
 
@@ -19421,9 +19755,9 @@ yyreduce:
 #line 5117 "sql_yacc.yy"
     {
 	    THD *thd= YYTHD;
-	    if (!(yyval.lex_user=(LEX_USER*) thd->alloc(sizeof(st_lex_user))))
+	    if (!((yyval.lex_user)=(LEX_USER*) thd->alloc(sizeof(st_lex_user))))
 	      YYABORT;
-	    yyval.lex_user->user = yyvsp[-2].lex_str; yyval.lex_user->host=yyvsp[0].lex_str;
+	    (yyval.lex_user)->user = (yyvsp[(1) - (3)].lex_str); (yyval.lex_user)->host=(yyvsp[(3) - (3)].lex_str);
 	  }
     break;
 
@@ -19431,19 +19765,19 @@ yyreduce:
 #line 5124 "sql_yacc.yy"
     {
           THD *thd= YYTHD;
-          if (!(yyval.lex_user=(LEX_USER*) thd->alloc(sizeof(st_lex_user))))
+          if (!((yyval.lex_user)=(LEX_USER*) thd->alloc(sizeof(st_lex_user))))
             YYABORT;
-          yyval.lex_user->user.str= thd->priv_user;
-          yyval.lex_user->user.length= strlen(thd->priv_user);
+          (yyval.lex_user)->user.str= thd->priv_user;
+          (yyval.lex_user)->user.length= strlen(thd->priv_user);
           if (*thd->priv_host != 0)
           {
-            yyval.lex_user->host.str= thd->priv_host;
-            yyval.lex_user->host.length= strlen(thd->priv_host);
+            (yyval.lex_user)->host.str= thd->priv_host;
+            (yyval.lex_user)->host.length= strlen(thd->priv_host);
           }
           else
           {
-            yyval.lex_user->host.str= (char *) "%";
-            yyval.lex_user->host.length= 1;
+            (yyval.lex_user)->host.str= (char *) "%";
+            (yyval.lex_user)->host.length= 1;
           }
 	}
     break;
@@ -20562,50 +20896,50 @@ yyreduce:
 
   case 1509:
 #line 5398 "sql_yacc.yy"
-    { yyval.num=OPT_SESSION; }
+    { (yyval.num)=OPT_SESSION; }
     break;
 
   case 1510:
 #line 5399 "sql_yacc.yy"
-    { yyval.num=OPT_GLOBAL; }
+    { (yyval.num)=OPT_GLOBAL; }
     break;
 
   case 1511:
 #line 5400 "sql_yacc.yy"
-    { yyval.num=OPT_SESSION; }
+    { (yyval.num)=OPT_SESSION; }
     break;
 
   case 1512:
 #line 5401 "sql_yacc.yy"
-    { yyval.num=OPT_SESSION; }
+    { (yyval.num)=OPT_SESSION; }
     break;
 
   case 1513:
 #line 5405 "sql_yacc.yy"
-    { yyval.num=OPT_DEFAULT; }
+    { (yyval.num)=OPT_DEFAULT; }
     break;
 
   case 1514:
 #line 5406 "sql_yacc.yy"
-    { yyval.num=OPT_GLOBAL; }
+    { (yyval.num)=OPT_GLOBAL; }
     break;
 
   case 1515:
 #line 5407 "sql_yacc.yy"
-    { yyval.num=OPT_SESSION; }
+    { (yyval.num)=OPT_SESSION; }
     break;
 
   case 1516:
 #line 5408 "sql_yacc.yy"
-    { yyval.num=OPT_SESSION; }
+    { (yyval.num)=OPT_SESSION; }
     break;
 
   case 1517:
 #line 5413 "sql_yacc.yy"
     {
           LEX *lex=Lex;
-          lex->var_list.push_back(new set_var(lex->option_type, yyvsp[-2].variable.var,
-                                  &yyvsp[-2].variable.base_name, yyvsp[0].item));
+          lex->var_list.push_back(new set_var(lex->option_type, (yyvsp[(1) - (3)].variable).var,
+                                  &(yyvsp[(1) - (3)].variable).base_name, (yyvsp[(3) - (3)].item)));
         }
     break;
 
@@ -20619,14 +20953,14 @@ yyreduce:
           lex->var_list.push_back(new set_var(lex->option_type,
                                               find_sys_var("tx_isolation"),
                                               &tmp,
-                                              new Item_int((int32) yyvsp[0].tx_isolation)));
+                                              new Item_int((int32) (yyvsp[(4) - (4)].tx_isolation))));
         }
     break;
 
   case 1519:
 #line 5433 "sql_yacc.yy"
     {
-	  Lex->var_list.push_back(new set_var_user(new Item_func_set_user_var(yyvsp[-2].lex_str,yyvsp[0].item)));
+	  Lex->var_list.push_back(new set_var_user(new Item_func_set_user_var((yyvsp[(2) - (4)].lex_str),(yyvsp[(4) - (4)].item))));
 	}
     break;
 
@@ -20634,8 +20968,8 @@ yyreduce:
 #line 5437 "sql_yacc.yy"
     {
           LEX *lex=Lex;
-          lex->var_list.push_back(new set_var((enum_var_type) yyvsp[-3].num, yyvsp[-2].variable.var,
-                                  &yyvsp[-2].variable.base_name, yyvsp[0].item));
+          lex->var_list.push_back(new set_var((enum_var_type) (yyvsp[(3) - (6)].num), (yyvsp[(4) - (6)].variable).var,
+                                  &(yyvsp[(4) - (6)].variable).base_name, (yyvsp[(6) - (6)].item)));
         }
     break;
 
@@ -20644,8 +20978,8 @@ yyreduce:
     {
 	  THD *thd= YYTHD;
 	  LEX *lex= Lex;
-	  yyvsp[0].charset= yyvsp[0].charset ? yyvsp[0].charset: global_system_variables.character_set_client;
-	  lex->var_list.push_back(new set_var_collation_client(yyvsp[0].charset,thd->variables.collation_database,yyvsp[0].charset));
+	  (yyvsp[(2) - (2)].charset)= (yyvsp[(2) - (2)].charset) ? (yyvsp[(2) - (2)].charset): global_system_variables.character_set_client;
+	  lex->var_list.push_back(new set_var_collation_client((yyvsp[(2) - (2)].charset),thd->variables.collation_database,(yyvsp[(2) - (2)].charset)));
 	}
     break;
 
@@ -20654,14 +20988,14 @@ yyreduce:
     {
 	  THD *thd= YYTHD;
 	  LEX *lex= Lex;
-	  yyvsp[-1].charset= yyvsp[-1].charset ? yyvsp[-1].charset : global_system_variables.character_set_client;
-	  yyvsp[0].charset= yyvsp[0].charset ? yyvsp[0].charset : yyvsp[-1].charset;
-	  if (!my_charset_same(yyvsp[-1].charset,yyvsp[0].charset))
+	  (yyvsp[(2) - (3)].charset)= (yyvsp[(2) - (3)].charset) ? (yyvsp[(2) - (3)].charset) : global_system_variables.character_set_client;
+	  (yyvsp[(3) - (3)].charset)= (yyvsp[(3) - (3)].charset) ? (yyvsp[(3) - (3)].charset) : (yyvsp[(2) - (3)].charset);
+	  if (!my_charset_same((yyvsp[(2) - (3)].charset),(yyvsp[(3) - (3)].charset)))
 	  {
-	    net_printf(thd,ER_COLLATION_CHARSET_MISMATCH,yyvsp[0].charset->name,yyvsp[-1].charset->csname);
+	    net_printf(thd,ER_COLLATION_CHARSET_MISMATCH,(yyvsp[(3) - (3)].charset)->name,(yyvsp[(2) - (3)].charset)->csname);
 	    YYABORT;
 	  }
-	  lex->var_list.push_back(new set_var_collation_client(yyvsp[0].charset,yyvsp[0].charset,yyvsp[0].charset));
+	  lex->var_list.push_back(new set_var_collation_client((yyvsp[(3) - (3)].charset),(yyvsp[(3) - (3)].charset),(yyvsp[(3) - (3)].charset)));
 	}
     break;
 
@@ -20674,26 +21008,26 @@ yyreduce:
 	      YYABORT;
 	    user->host.str=0;
 	    user->user.str=thd->priv_user;
-	    thd->lex->var_list.push_back(new set_var_password(user, yyvsp[0].simple_string));
+	    thd->lex->var_list.push_back(new set_var_password(user, (yyvsp[(3) - (3)].simple_string)));
 	  }
     break;
 
   case 1524:
 #line 5473 "sql_yacc.yy"
     {
-	    Lex->var_list.push_back(new set_var_password(yyvsp[-2].lex_user,yyvsp[0].simple_string));
+	    Lex->var_list.push_back(new set_var_password((yyvsp[(3) - (5)].lex_user),(yyvsp[(5) - (5)].simple_string)));
 	  }
     break;
 
   case 1525:
 #line 5480 "sql_yacc.yy"
     {
-	  sys_var *tmp=find_sys_var(yyvsp[0].lex_str.str, yyvsp[0].lex_str.length);
+	  sys_var *tmp=find_sys_var((yyvsp[(1) - (1)].lex_str).str, (yyvsp[(1) - (1)].lex_str).length);
 	  if (!tmp)
 	    YYABORT;
-	  yyval.variable.var= tmp;
-	  yyval.variable.base_name.str=0;
-	  yyval.variable.base_name.length=0;
+	  (yyval.variable).var= tmp;
+	  (yyval.variable).base_name.str=0;
+	  (yyval.variable).base_name.length=0;
           /*
             If this is time_zone variable we should open time zone
             describing tables 
@@ -20706,101 +21040,101 @@ yyreduce:
   case 1526:
 #line 5495 "sql_yacc.yy"
     {
-            if (check_reserved_words(&yyvsp[-2].lex_str))
+            if (check_reserved_words(&(yyvsp[(1) - (3)].lex_str)))
             {
 	      yyerror(ER(ER_SYNTAX_ERROR));
               YYABORT;
             }
-	    sys_var *tmp=find_sys_var(yyvsp[0].lex_str.str, yyvsp[0].lex_str.length);
+	    sys_var *tmp=find_sys_var((yyvsp[(3) - (3)].lex_str).str, (yyvsp[(3) - (3)].lex_str).length);
 	    if (!tmp)
 	      YYABORT;
 	    if (!tmp->is_struct())
-	      net_printf(YYTHD, ER_VARIABLE_IS_NOT_STRUCT, yyvsp[0].lex_str.str);
-	    yyval.variable.var= tmp;
-	    yyval.variable.base_name= yyvsp[-2].lex_str;
+	      net_printf(YYTHD, ER_VARIABLE_IS_NOT_STRUCT, (yyvsp[(3) - (3)].lex_str).str);
+	    (yyval.variable).var= tmp;
+	    (yyval.variable).base_name= (yyvsp[(1) - (3)].lex_str);
 	  }
     break;
 
   case 1527:
 #line 5510 "sql_yacc.yy"
     {
-	    sys_var *tmp=find_sys_var(yyvsp[0].lex_str.str, yyvsp[0].lex_str.length);
+	    sys_var *tmp=find_sys_var((yyvsp[(3) - (3)].lex_str).str, (yyvsp[(3) - (3)].lex_str).length);
 	    if (!tmp)
 	      YYABORT;
 	    if (!tmp->is_struct())
-	      net_printf(YYTHD, ER_VARIABLE_IS_NOT_STRUCT, yyvsp[0].lex_str.str);
-	    yyval.variable.var= tmp;
-	    yyval.variable.base_name.str=    (char*) "default";
-	    yyval.variable.base_name.length= 7;
+	      net_printf(YYTHD, ER_VARIABLE_IS_NOT_STRUCT, (yyvsp[(3) - (3)].lex_str).str);
+	    (yyval.variable).var= tmp;
+	    (yyval.variable).base_name.str=    (char*) "default";
+	    (yyval.variable).base_name.length= 7;
 	  }
     break;
 
   case 1528:
 #line 5523 "sql_yacc.yy"
-    { yyval.tx_isolation= ISO_READ_UNCOMMITTED; }
+    { (yyval.tx_isolation)= ISO_READ_UNCOMMITTED; }
     break;
 
   case 1529:
 #line 5524 "sql_yacc.yy"
-    { yyval.tx_isolation= ISO_READ_COMMITTED; }
+    { (yyval.tx_isolation)= ISO_READ_COMMITTED; }
     break;
 
   case 1530:
 #line 5525 "sql_yacc.yy"
-    { yyval.tx_isolation= ISO_REPEATABLE_READ; }
+    { (yyval.tx_isolation)= ISO_REPEATABLE_READ; }
     break;
 
   case 1531:
 #line 5526 "sql_yacc.yy"
-    { yyval.tx_isolation= ISO_SERIALIZABLE; }
+    { (yyval.tx_isolation)= ISO_SERIALIZABLE; }
     break;
 
   case 1532:
 #line 5530 "sql_yacc.yy"
-    { yyval.simple_string=yyvsp[0].lex_str.str;}
+    { (yyval.simple_string)=(yyvsp[(1) - (1)].lex_str).str;}
     break;
 
   case 1533:
 #line 5532 "sql_yacc.yy"
     {
-	    yyval.simple_string= yyvsp[-1].lex_str.length ? YYTHD->variables.old_passwords ?
-	        Item_func_old_password::alloc(YYTHD, yyvsp[-1].lex_str.str) :
-	        Item_func_password::alloc(YYTHD, yyvsp[-1].lex_str.str) :
-	      yyvsp[-1].lex_str.str;
+	    (yyval.simple_string)= (yyvsp[(3) - (4)].lex_str).length ? YYTHD->variables.old_passwords ?
+	        Item_func_old_password::alloc(YYTHD, (yyvsp[(3) - (4)].lex_str).str) :
+	        Item_func_password::alloc(YYTHD, (yyvsp[(3) - (4)].lex_str).str) :
+	      (yyvsp[(3) - (4)].lex_str).str;
 	  }
     break;
 
   case 1534:
 #line 5539 "sql_yacc.yy"
     {
-	    yyval.simple_string= yyvsp[-1].lex_str.length ? Item_func_old_password::alloc(YYTHD, yyvsp[-1].lex_str.str) :
-	      yyvsp[-1].lex_str.str;
+	    (yyval.simple_string)= (yyvsp[(3) - (4)].lex_str).length ? Item_func_old_password::alloc(YYTHD, (yyvsp[(3) - (4)].lex_str).str) :
+	      (yyvsp[(3) - (4)].lex_str).str;
 	  }
     break;
 
   case 1535:
 #line 5547 "sql_yacc.yy"
-    { yyval.item=yyvsp[0].item; }
+    { (yyval.item)=(yyvsp[(1) - (1)].item); }
     break;
 
   case 1536:
 #line 5548 "sql_yacc.yy"
-    { yyval.item=0; }
+    { (yyval.item)=0; }
     break;
 
   case 1537:
 #line 5549 "sql_yacc.yy"
-    { yyval.item=new Item_string("ON",  2, system_charset_info); }
+    { (yyval.item)=new Item_string("ON",  2, system_charset_info); }
     break;
 
   case 1538:
 #line 5550 "sql_yacc.yy"
-    { yyval.item=new Item_string("ALL", 3, system_charset_info); }
+    { (yyval.item)=new Item_string("ALL", 3, system_charset_info); }
     break;
 
   case 1539:
 #line 5551 "sql_yacc.yy"
-    { yyval.item=new Item_string("binary", 6, system_charset_info); }
+    { (yyval.item)=new Item_string("binary", 6, system_charset_info); }
     break;
 
   case 1540:
@@ -20818,29 +21152,29 @@ yyreduce:
   case 1546:
 #line 5576 "sql_yacc.yy"
     {
-	  if (!Select->add_table_to_list(YYTHD, yyvsp[-2].table, yyvsp[-1].lex_str_ptr, 0, (thr_lock_type) yyvsp[0].num))
+	  if (!Select->add_table_to_list(YYTHD, (yyvsp[(1) - (3)].table), (yyvsp[(2) - (3)].lex_str_ptr), 0, (thr_lock_type) (yyvsp[(3) - (3)].num)))
 	   YYABORT;
 	}
     break;
 
   case 1547:
 #line 5583 "sql_yacc.yy"
-    { yyval.num=TL_READ_NO_INSERT; }
+    { (yyval.num)=TL_READ_NO_INSERT; }
     break;
 
   case 1548:
 #line 5584 "sql_yacc.yy"
-    { yyval.num=YYTHD->update_lock_default; }
+    { (yyval.num)=YYTHD->update_lock_default; }
     break;
 
   case 1549:
 #line 5585 "sql_yacc.yy"
-    { yyval.num=TL_WRITE_LOW_PRIORITY; }
+    { (yyval.num)=TL_WRITE_LOW_PRIORITY; }
     break;
 
   case 1550:
 #line 5586 "sql_yacc.yy"
-    { yyval.num= TL_READ; }
+    { (yyval.num)= TL_READ; }
     break;
 
   case 1551:
@@ -20853,7 +21187,7 @@ yyreduce:
     {
 	  LEX *lex= Lex;
 	  lex->sql_command = SQLCOM_HA_OPEN;
-	  if (!lex->current_select->add_table_to_list(lex->thd, yyvsp[-2].table, yyvsp[0].lex_str_ptr, 0))
+	  if (!lex->current_select->add_table_to_list(lex->thd, (yyvsp[(2) - (4)].table), (yyvsp[(4) - (4)].lex_str_ptr), 0))
 	    YYABORT;
 	}
     break;
@@ -20863,7 +21197,7 @@ yyreduce:
     {
 	  LEX *lex= Lex;
 	  lex->sql_command = SQLCOM_HA_CLOSE;
-	  if (!lex->current_select->add_table_to_list(lex->thd, yyvsp[-1].table, 0, 0))
+	  if (!lex->current_select->add_table_to_list(lex->thd, (yyvsp[(2) - (3)].table), 0, 0))
 	    YYABORT;
 	}
     break;
@@ -20876,7 +21210,7 @@ yyreduce:
 	  lex->ha_rkey_mode= HA_READ_KEY_EXACT;	/* Avoid purify warnings */
 	  lex->current_select->select_limit= 1;
 	  lex->current_select->offset_limit= 0L;
-	  if (!lex->current_select->add_table_to_list(lex->thd, yyvsp[-1].table, 0, 0))
+	  if (!lex->current_select->add_table_to_list(lex->thd, (yyvsp[(2) - (3)].table), 0, 0))
 	    YYABORT;
         }
     break;
@@ -20893,7 +21227,7 @@ yyreduce:
 
   case 1557:
 #line 5628 "sql_yacc.yy"
-    { Lex->backup_dir= yyvsp[-1].lex_str.str; }
+    { Lex->backup_dir= (yyvsp[(1) - (2)].lex_str).str; }
     break;
 
   case 1558:
@@ -20931,7 +21265,7 @@ yyreduce:
     {
 	  LEX *lex=Lex;
 	  lex->ha_read_mode = RKEY;
-	  lex->ha_rkey_mode=yyvsp[0].ha_rkey_mode;
+	  lex->ha_rkey_mode=(yyvsp[(1) - (1)].ha_rkey_mode);
 	  if (!(lex->insert_list = new List_item))
 	    YYABORT;
 	}
@@ -20944,27 +21278,27 @@ yyreduce:
 
   case 1566:
 #line 5652 "sql_yacc.yy"
-    { yyval.ha_rkey_mode=HA_READ_KEY_EXACT;   }
+    { (yyval.ha_rkey_mode)=HA_READ_KEY_EXACT;   }
     break;
 
   case 1567:
 #line 5653 "sql_yacc.yy"
-    { yyval.ha_rkey_mode=HA_READ_KEY_OR_NEXT; }
+    { (yyval.ha_rkey_mode)=HA_READ_KEY_OR_NEXT; }
     break;
 
   case 1568:
 #line 5654 "sql_yacc.yy"
-    { yyval.ha_rkey_mode=HA_READ_KEY_OR_PREV; }
+    { (yyval.ha_rkey_mode)=HA_READ_KEY_OR_PREV; }
     break;
 
   case 1569:
 #line 5655 "sql_yacc.yy"
-    { yyval.ha_rkey_mode=HA_READ_AFTER_KEY;   }
+    { (yyval.ha_rkey_mode)=HA_READ_AFTER_KEY;   }
     break;
 
   case 1570:
 #line 5656 "sql_yacc.yy"
-    { yyval.ha_rkey_mode=HA_READ_BEFORE_KEY;  }
+    { (yyval.ha_rkey_mode)=HA_READ_BEFORE_KEY;  }
     break;
 
   case 1571:
@@ -21178,7 +21512,7 @@ yyreduce:
 	    net_printf(lex->thd,ER_DUP_ARGUMENT, "SUBJECT");
 	    YYABORT;
 	  }
-	  lex->x509_subject=yyvsp[0].lex_str.str;
+	  lex->x509_subject=(yyvsp[(2) - (2)].lex_str).str;
 	}
     break;
 
@@ -21191,7 +21525,7 @@ yyreduce:
 	    net_printf(lex->thd,ER_DUP_ARGUMENT, "ISSUER");
 	    YYABORT;
 	  }
-	  lex->x509_issuer=yyvsp[0].lex_str.str;
+	  lex->x509_issuer=(yyvsp[(2) - (2)].lex_str).str;
 	}
     break;
 
@@ -21204,7 +21538,7 @@ yyreduce:
 	    net_printf(lex->thd,ER_DUP_ARGUMENT, "CIPHER");
 	    YYABORT;
 	  }
-	  lex->ssl_cipher=yyvsp[0].lex_str.str;
+	  lex->ssl_cipher=(yyvsp[(2) - (2)].lex_str).str;
 	}
     break;
 
@@ -21227,7 +21561,7 @@ yyreduce:
 #line 5803 "sql_yacc.yy"
     {
 	    LEX *lex= Lex;
-	    lex->current_select->db = yyvsp[-2].lex_str.str;
+	    lex->current_select->db = (yyvsp[(1) - (3)].lex_str).str;
 	    if (lex->grant == GLOBAL_ACLS)
 	      lex->grant = DB_ACLS & ~GRANT_ACL;
 	    else if (lex->columns.elements)
@@ -21257,7 +21591,7 @@ yyreduce:
 #line 5827 "sql_yacc.yy"
     {
 	    LEX *lex=Lex;
-	    if (!lex->current_select->add_table_to_list(lex->thd, yyvsp[0].table,NULL,0))
+	    if (!lex->current_select->add_table_to_list(lex->thd, (yyvsp[(1) - (1)].table),NULL,0))
 	      YYABORT;
 	    if (lex->grant == GLOBAL_ACLS)
 	      lex->grant =  TABLE_ACLS & ~GRANT_ACL;
@@ -21266,13 +21600,13 @@ yyreduce:
 
   case 1620:
 #line 5838 "sql_yacc.yy"
-    { if (Lex->users_list.push_back(yyvsp[0].lex_user)) YYABORT;}
+    { if (Lex->users_list.push_back((yyvsp[(1) - (1)].lex_user))) YYABORT;}
     break;
 
   case 1621:
 #line 5840 "sql_yacc.yy"
     {
-	    if (Lex->users_list.push_back(yyvsp[0].lex_user))
+	    if (Lex->users_list.push_back((yyvsp[(3) - (3)].lex_user)))
 	      YYABORT;
 	  }
     break;
@@ -21280,26 +21614,26 @@ yyreduce:
   case 1622:
 #line 5849 "sql_yacc.yy"
     {
-	   yyval.lex_user=yyvsp[-3].lex_user; yyvsp[-3].lex_user->password=yyvsp[0].lex_str;
-	   if (yyvsp[0].lex_str.length)
+	   (yyval.lex_user)=(yyvsp[(1) - (4)].lex_user); (yyvsp[(1) - (4)].lex_user)->password=(yyvsp[(4) - (4)].lex_str);
+	   if ((yyvsp[(4) - (4)].lex_str).length)
 	   {
              if (YYTHD->variables.old_passwords)
              {
                char *buff= 
                  (char *) YYTHD->alloc(SCRAMBLED_PASSWORD_CHAR_LENGTH_323+1);
                if (buff)
-                 make_scrambled_password_323(buff, yyvsp[0].lex_str.str);
-               yyvsp[-3].lex_user->password.str= buff;
-               yyvsp[-3].lex_user->password.length= SCRAMBLED_PASSWORD_CHAR_LENGTH_323;
+                 make_scrambled_password_323(buff, (yyvsp[(4) - (4)].lex_str).str);
+               (yyvsp[(1) - (4)].lex_user)->password.str= buff;
+               (yyvsp[(1) - (4)].lex_user)->password.length= SCRAMBLED_PASSWORD_CHAR_LENGTH_323;
              }
              else
              {
                char *buff= 
                  (char *) YYTHD->alloc(SCRAMBLED_PASSWORD_CHAR_LENGTH+1);
                if (buff)
-                 make_scrambled_password(buff, yyvsp[0].lex_str.str);
-               yyvsp[-3].lex_user->password.str= buff;
-               yyvsp[-3].lex_user->password.length= SCRAMBLED_PASSWORD_CHAR_LENGTH;
+                 make_scrambled_password(buff, (yyvsp[(4) - (4)].lex_str).str);
+               (yyvsp[(1) - (4)].lex_user)->password.str= buff;
+               (yyvsp[(1) - (4)].lex_user)->password.length= SCRAMBLED_PASSWORD_CHAR_LENGTH;
              }
 	  }
 	}
@@ -21307,12 +21641,12 @@ yyreduce:
 
   case 1623:
 #line 5874 "sql_yacc.yy"
-    { yyval.lex_user=yyvsp[-4].lex_user; yyvsp[-4].lex_user->password=yyvsp[0].lex_str ; }
+    { (yyval.lex_user)=(yyvsp[(1) - (5)].lex_user); (yyvsp[(1) - (5)].lex_user)->password=(yyvsp[(5) - (5)].lex_str) ; }
     break;
 
   case 1624:
 #line 5876 "sql_yacc.yy"
-    { yyval.lex_user=yyvsp[0].lex_user; yyvsp[0].lex_user->password.str=NullS; }
+    { (yyval.lex_user)=(yyvsp[(1) - (1)].lex_user); (yyvsp[(1) - (1)].lex_user)->password.str=NullS; }
     break;
 
   case 1625:
@@ -21326,7 +21660,7 @@ yyreduce:
   case 1629:
 #line 5894 "sql_yacc.yy"
     {
-	  String *new_str = new (YYTHD->mem_root) String((const char*) yyvsp[0].lex_str.str,yyvsp[0].lex_str.length,system_charset_info);
+	  String *new_str = new (YYTHD->mem_root) String((const char*) (yyvsp[(1) - (1)].lex_str).str,(yyvsp[(1) - (1)].lex_str).length,system_charset_info);
 	  List_iterator <LEX_COLUMN> iter(Lex->columns);
 	  class LEX_COLUMN *point;
 	  LEX *lex=Lex;
@@ -21395,7 +21729,7 @@ yyreduce:
   case 1640:
 #line 5945 "sql_yacc.yy"
     {
-	  Lex->mqh.questions=yyvsp[0].ulong_num;
+	  Lex->mqh.questions=(yyvsp[(2) - (2)].ulong_num);
 	  Lex->mqh.bits |= 1;
 	}
     break;
@@ -21403,7 +21737,7 @@ yyreduce:
   case 1641:
 #line 5950 "sql_yacc.yy"
     {
-	  Lex->mqh.updates=yyvsp[0].ulong_num;
+	  Lex->mqh.updates=(yyvsp[(2) - (2)].ulong_num);
 	  Lex->mqh.bits |= 2;
 	}
     break;
@@ -21411,7 +21745,7 @@ yyreduce:
   case 1642:
 #line 5955 "sql_yacc.yy"
     {
-	  Lex->mqh.connections=yyvsp[0].ulong_num;
+	  Lex->mqh.connections=(yyvsp[(2) - (2)].ulong_num);
 	  Lex->mqh.bits |= 4;
 	}
     break;
@@ -21452,7 +21786,7 @@ yyreduce:
 #line 5979 "sql_yacc.yy"
     {
 	  Lex->sql_command = SQLCOM_ROLLBACK_TO_SAVEPOINT;
-	  Lex->savepoint_name = yyvsp[0].lex_str.str;
+	  Lex->savepoint_name = (yyvsp[(4) - (4)].lex_str).str;
 	}
     break;
 
@@ -21460,7 +21794,7 @@ yyreduce:
 #line 5985 "sql_yacc.yy"
     {
 	  Lex->sql_command = SQLCOM_SAVEPOINT;
-	  Lex->savepoint_name = yyvsp[0].lex_str.str;
+	  Lex->savepoint_name = (yyvsp[(2) - (2)].lex_str).str;
 	}
     break;
 
@@ -21488,7 +21822,7 @@ yyreduce:
 	    YYABORT;
           mysql_init_select(lex);
 	  lex->current_select->linkage=UNION_TYPE;
-          if (yyvsp[0].num) /* UNION DISTINCT - remember position */
+          if ((yyvsp[(2) - (2)].num)) /* UNION DISTINCT - remember position */
             lex->current_select->master_unit()->union_distinct=
                                                       lex->current_select;
 	}
@@ -21544,30 +21878,30 @@ yyreduce:
 
   case 1662:
 #line 6063 "sql_yacc.yy"
-    { yyval.num=1; }
+    { (yyval.num)=1; }
     break;
 
   case 1663:
 #line 6064 "sql_yacc.yy"
-    { yyval.num=1; }
+    { (yyval.num)=1; }
     break;
 
   case 1664:
 #line 6065 "sql_yacc.yy"
-    { yyval.num=0; }
+    { (yyval.num)=0; }
     break;
 
   case 1665:
 #line 6071 "sql_yacc.yy"
     {
-	  yyval.item= yyvsp[-1].item;
+	  (yyval.item)= (yyvsp[(2) - (3)].item);
 	}
     break;
 
   case 1666:
 #line 6077 "sql_yacc.yy"
     {
-	  yyval.item= new Item_singlerow_subselect(Lex->current_select->
+	  (yyval.item)= new Item_singlerow_subselect(Lex->current_select->
 					   master_unit()->first_select());
 	}
     break;
@@ -21575,14 +21909,14 @@ yyreduce:
   case 1667:
 #line 6085 "sql_yacc.yy"
     {
-	  yyval.item= yyvsp[-1].item;
+	  (yyval.item)= (yyvsp[(2) - (3)].item);
 	}
     break;
 
   case 1668:
 #line 6091 "sql_yacc.yy"
     {
-	  yyval.item= new Item_exists_subselect(Lex->current_select->master_unit()->
+	  (yyval.item)= new Item_exists_subselect(Lex->current_select->master_unit()->
 					first_select());
 	}
     break;
@@ -21590,14 +21924,14 @@ yyreduce:
   case 1669:
 #line 6099 "sql_yacc.yy"
     {
-    yyval.select_lex= yyvsp[-1].select_lex;
+    (yyval.select_lex)= (yyvsp[(2) - (3)].select_lex);
   }
     break;
 
   case 1670:
 #line 6105 "sql_yacc.yy"
     {
-    yyval.select_lex= Lex->current_select->master_unit()->first_select();
+    (yyval.select_lex)= Lex->current_select->master_unit()->first_select();
   }
     break;
 
@@ -21626,15 +21960,14 @@ yyreduce:
     break;
 
 
+/* Line 1267 of yacc.c.  */
+#line 21965 "sql_yacc.cc"
+      default: break;
     }
+  YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
 
-/* Line 1000 of yacc.c.  */
-#line 21633 "sql_yacc.cc"
-
-  yyvsp -= yylen;
-  yyssp -= yylen;
-
-
+  YYPOPSTACK (yylen);
+  yylen = 0;
   YY_STACK_PRINT (yyss, yyssp);
 
   *++yyvsp = yyval;
@@ -21663,99 +21996,65 @@ yyerrlab:
   if (!yyerrstatus)
     {
       ++yynerrs;
-#if YYERROR_VERBOSE
-      yyn = yypact[yystate];
-
-      if (YYPACT_NINF < yyn && yyn < YYLAST)
-	{
-	  YYSIZE_T yysize = 0;
-	  int yytype = YYTRANSLATE (yychar);
-	  const char* yyprefix;
-	  char *yymsg;
-	  int yyx;
-
-	  /* Start YYX at -YYN if negative to avoid negative indexes in
-	     YYCHECK.  */
-	  int yyxbegin = yyn < 0 ? -yyn : 0;
-
-	  /* Stay within bounds of both yycheck and yytname.  */
-	  int yychecklim = YYLAST - yyn;
-	  int yyxend = yychecklim < YYNTOKENS ? yychecklim : YYNTOKENS;
-	  int yycount = 0;
-
-	  yyprefix = ", expecting ";
-	  for (yyx = yyxbegin; yyx < yyxend; ++yyx)
-	    if (yycheck[yyx + yyn] == yyx && yyx != YYTERROR)
-	      {
-		yysize += yystrlen (yyprefix) + yystrlen (yytname [yyx]);
-		yycount += 1;
-		if (yycount == 5)
-		  {
-		    yysize = 0;
-		    break;
-		  }
-	      }
-	  yysize += (sizeof ("syntax error, unexpected ")
-		     + yystrlen (yytname[yytype]));
-	  yymsg = (char *) YYSTACK_ALLOC (yysize);
-	  if (yymsg != 0)
-	    {
-	      char *yyp = yystpcpy (yymsg, "syntax error, unexpected ");
-	      yyp = yystpcpy (yyp, yytname[yytype]);
-
-	      if (yycount < 5)
-		{
-		  yyprefix = ", expecting ";
-		  for (yyx = yyxbegin; yyx < yyxend; ++yyx)
-		    if (yycheck[yyx + yyn] == yyx && yyx != YYTERROR)
-		      {
-			yyp = yystpcpy (yyp, yyprefix);
-			yyp = yystpcpy (yyp, yytname[yyx]);
-			yyprefix = " or ";
-		      }
-		}
-	      yyerror (yymsg);
+#if ! YYERROR_VERBOSE
+      yyerror (YY_("syntax error"));
+#else
+      {
+	YYSIZE_T yysize = yysyntax_error (0, yystate, yychar);
+	if (yymsg_alloc < yysize && yymsg_alloc < YYSTACK_ALLOC_MAXIMUM)
+	  {
+	    YYSIZE_T yyalloc = 2 * yysize;
+	    if (! (yysize <= yyalloc && yyalloc <= YYSTACK_ALLOC_MAXIMUM))
+	      yyalloc = YYSTACK_ALLOC_MAXIMUM;
+	    if (yymsg != yymsgbuf)
 	      YYSTACK_FREE (yymsg);
-	    }
-	  else
-	    yyerror ("syntax error; also virtual memory exhausted");
-	}
-      else
-#endif /* YYERROR_VERBOSE */
-	yyerror ("syntax error");
+	    yymsg = (char *) YYSTACK_ALLOC (yyalloc);
+	    if (yymsg)
+	      yymsg_alloc = yyalloc;
+	    else
+	      {
+		yymsg = yymsgbuf;
+		yymsg_alloc = sizeof yymsgbuf;
+	      }
+	  }
+
+	if (0 < yysize && yysize <= yymsg_alloc)
+	  {
+	    (void) yysyntax_error (yymsg, yystate, yychar);
+	    yyerror (yymsg);
+	  }
+	else
+	  {
+	    yyerror (YY_("syntax error"));
+	    if (yysize != 0)
+	      goto yyexhaustedlab;
+	  }
+      }
+#endif
     }
 
 
 
   if (yyerrstatus == 3)
     {
-      /* If just tried and failed to reuse lookahead token after an
+      /* If just tried and failed to reuse look-ahead token after an
 	 error, discard it.  */
 
       if (yychar <= YYEOF)
-        {
-          /* If at end of input, pop the error token,
-	     then the rest of the stack, then return failure.  */
+	{
+	  /* Return failure if at end of input.  */
 	  if (yychar == YYEOF)
-	     for (;;)
-	       {
-		 YYPOPSTACK;
-		 if (yyssp == yyss)
-		   YYABORT;
-		 YYDSYMPRINTF ("Error: popping", yystos[*yyssp], yyvsp, yylsp);
-		 yydestruct (yystos[*yyssp], yyvsp);
-	       }
-        }
+	    YYABORT;
+	}
       else
 	{
-	  YYDSYMPRINTF ("Error: discarding", yytoken, &yylval, &yylloc);
-	  yydestruct (yytoken, &yylval);
+	  yydestruct ("Error: discarding",
+		      yytoken, &yylval);
 	  yychar = YYEMPTY;
-
 	}
     }
 
-  /* Else will try to reuse lookahead token after shifting the error
+  /* Else will try to reuse look-ahead token after shifting the error
      token.  */
   goto yyerrlab1;
 
@@ -21765,15 +22064,17 @@ yyerrlab:
 `---------------------------------------------------*/
 yyerrorlab:
 
-#ifdef __GNUC__
-  /* Pacify GCC when the user code never invokes YYERROR and the label
-     yyerrorlab therefore never appears in user code.  */
-  if (0)
+  /* Pacify compilers like GCC when the user code never invokes
+     YYERROR and the label yyerrorlab therefore never appears in user
+     code.  */
+  if (/*CONSTCOND*/ 0)
      goto yyerrorlab;
-#endif
 
-  yyvsp -= yylen;
-  yyssp -= yylen;
+  /* Do not reclaim the symbols of the rule which action triggered
+     this YYERROR.  */
+  YYPOPSTACK (yylen);
+  yylen = 0;
+  YY_STACK_PRINT (yyss, yyssp);
   yystate = *yyssp;
   goto yyerrlab1;
 
@@ -21802,9 +22103,10 @@ yyerrlab1:
       if (yyssp == yyss)
 	YYABORT;
 
-      YYDSYMPRINTF ("Error: popping", yystos[*yyssp], yyvsp, yylsp);
-      yydestruct (yystos[yystate], yyvsp);
-      YYPOPSTACK;
+
+      yydestruct ("Error: popping",
+		  yystos[yystate], yyvsp);
+      YYPOPSTACK (1);
       yystate = *yyssp;
       YY_STACK_PRINT (yyss, yyssp);
     }
@@ -21812,10 +22114,11 @@ yyerrlab1:
   if (yyn == YYFINAL)
     YYACCEPT;
 
-  YYDPRINTF ((stderr, "Shifting error token, "));
-
   *++yyvsp = yylval;
 
+
+  /* Shift the error token.  */
+  YY_SYMBOL_PRINT ("Shifting", yystos[yyn], yyvsp, yylsp);
 
   yystate = yyn;
   goto yynewstate;
@@ -21836,21 +22139,39 @@ yyabortlab:
   goto yyreturn;
 
 #ifndef yyoverflow
-/*----------------------------------------------.
-| yyoverflowlab -- parser overflow comes here.  |
-`----------------------------------------------*/
-yyoverflowlab:
-  yyerror ("parser stack overflow");
+/*-------------------------------------------------.
+| yyexhaustedlab -- memory exhaustion comes here.  |
+`-------------------------------------------------*/
+yyexhaustedlab:
+  yyerror (YY_("memory exhausted"));
   yyresult = 2;
   /* Fall through.  */
 #endif
 
 yyreturn:
+  if (yychar != YYEOF && yychar != YYEMPTY)
+     yydestruct ("Cleanup: discarding lookahead",
+		 yytoken, &yylval);
+  /* Do not reclaim the symbols of the rule which action triggered
+     this YYABORT or YYACCEPT.  */
+  YYPOPSTACK (yylen);
+  YY_STACK_PRINT (yyss, yyssp);
+  while (yyssp != yyss)
+    {
+      yydestruct ("Cleanup: popping",
+		  yystos[*yyssp], yyvsp);
+      YYPOPSTACK (1);
+    }
 #ifndef yyoverflow
   if (yyss != yyssa)
     YYSTACK_FREE (yyss);
 #endif
-  return yyresult;
+#if YYERROR_VERBOSE
+  if (yymsg != yymsgbuf)
+    YYSTACK_FREE (yymsg);
+#endif
+  /* Make sure YYID is used.  */
+  return YYID (yyresult);
 }
 
 

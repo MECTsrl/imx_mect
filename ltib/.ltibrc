@@ -34,7 +34,8 @@ ccache /usr/bin/gcc -B/usr/bin/
 # Local directories, these are searched before the Local Package Pool
 # for files.  This can be a whitespace separated list (including new-lines)
 %ldirs
-/home/imx28/20170110_est/ltib/../src
+/opt/MECT/CodeSourcery/arm-none-linux-gnueabi/libc/usr/bin
+/home/imx28/20170308/ltib/../src
 /var/tmp/pkgs
 
 # The Local Package Pool, the global storage area for downloads.

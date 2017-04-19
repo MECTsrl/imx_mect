@@ -17,7 +17,7 @@
 #define CONFIG_XENO_ARM_TSC_TYPE __XN_TSC_TYPE_KUSER
 
 /* Build system alias */
-#define CONFIG_XENO_BUILD_STRING "i686-pc-linux-gnu"
+#define CONFIG_XENO_BUILD_STRING "x86_64-unknown-linux-gnu"
 
 /* Compiler */
 #define CONFIG_XENO_COMPILER "gcc version 4.5.2 (Sourcery G++ Lite 2011.03-41) "

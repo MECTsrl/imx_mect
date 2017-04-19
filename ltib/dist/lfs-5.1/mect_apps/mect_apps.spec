@@ -2,7 +2,7 @@
 
 Summary         : Default HMI application.
 Name            : mect_apps
-Version         : 0.0
+Version         : v2.0.12rc7
 Release         : 1
 License         : GPL
 Vendor          : MECT s.r.l.

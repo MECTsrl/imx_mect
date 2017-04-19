@@ -8,8 +8,6 @@ SOURCES += ctc.c
 
 HEADERS += ctc.h
 
-LIBS += -lcsv
-
 
 PROJECTNAME = Cross Table Compiler
 

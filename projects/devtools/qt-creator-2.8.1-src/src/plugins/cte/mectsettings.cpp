@@ -160,8 +160,11 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
               << QString::fromAscii("trend_range");
 
     /*Inserimento della lista delle pagine all'interno delle combobox*/
+    ui->comboBox_HomePage->clear();
     ui->comboBox_HomePage->addItems(pagesList);
+    ui->comboBox_StartPage->clear();
     ui->comboBox_StartPage->addItems(pagesList);
+    ui->comboBox_PwdLogoutPage->clear();
     ui->comboBox_PwdLogoutPage->addItem(szEMPTY);
     ui->comboBox_PwdLogoutPage->addItems(pagesList);
 

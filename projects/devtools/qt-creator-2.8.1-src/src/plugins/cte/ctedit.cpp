@@ -954,13 +954,9 @@ bool ctedit::iface2values(QStringList &lstRecValues)
             lstUsedVarNames.append(szTemp);
             lstUsedVarNames.sort();
         }
-        // Aggiorna la lista delle Variabili loggate
+        // Aggiorna la lista delle Variabili loggate se la variabile è loggata
         if (nUpdate != Htype && nUpdate != Ptype)  {
-            nPos = lstLoggedVars.indexOf(szTemp);
-            if (nPos < 0)  {
-                lstLoggedVars.append(szTemp);
-                lstLoggedVars.sort();
-            }
+            fillVarList(lstLoggedVars, lstAllVarTypes, lstLogUpdates);
         }
     }
     // Type colType
@@ -2472,6 +2468,7 @@ void ctedit::on_cmdUndo_clicked()
 void ctedit::tabSelected(int nTab)
 // Change current Tab
 {
+    // Aggiornamento della lista di variabili e ripopolamento
     if (nTab == TAB_TREND) {
         trendEdit->updateVarLists(lstLoggedVars);
     }

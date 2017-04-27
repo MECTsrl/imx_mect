@@ -351,7 +351,7 @@ MECT_DOWNLOADS := \
 	perl-5.24.0-mectpack.7z \
 	PLC.zip \
 	Qt485.7z \
-        Qt485_upd.7z \
+        Qt485_upd_rev$(MECT_BUILD_RELEASE).7z \
         QtProject.7z \
 	unzip.exe \
 

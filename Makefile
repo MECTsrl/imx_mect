@@ -347,6 +347,7 @@ MECT_DOWNLOADS := \
 	ATCM.zip \
 	ATHW119_4CVM.kad \
         Engineering_Help.zip \
+	Fonts.7z \
 	perl-5.24.0-mectpack.7z \
 	PLC.zip \
 	Qt485.7z \

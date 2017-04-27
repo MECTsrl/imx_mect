@@ -1,7 +1,14 @@
 export LC_ALL := C
 
+# ---------------------------
+
 # MECT Suite version
-export MECT_BUILD_RELEASE := 3.0.1rc1
+export MECT_BUILD_MAJOR := 3
+export MECT_BUILD_MINOR := 0
+export MECT_BUILD_BUILD := 1
+export MECT_BUILD_RELEASE = $(MECT_BUILD_MAJOR).$(MECT_BUILD_MINOR).$(MECT_BUILD_BUILD)rc1
+
+# ---------------------------
 
 # imx_mect branch used by ltib_update make target
 # If empty it points to 'master'
@@ -88,7 +95,7 @@ export MECT_RPMDIR = $(MECT_RPMBASEDIR)/RPMS/$(MECT_TARGET_ARCH)
 # Top-level directory for target image build receipts
 MECT_MKIMGDIR := $(CURDIR)/targets
 # Top-level directory fo target device images
-MECT_IMGDIR := $(CURDIR)/images
+export MECT_IMGDIR := $(CURDIR)/images
 # Projects directory
 MECT_PRJDIR := $(CURDIR)/projects
 # Utility to compare current target images with a given reference set.
@@ -335,6 +342,17 @@ MECT_DOWNLOADS := \
 	$(MECT_LTIB_EVKARCH) \
 	$(MECT_LTIB_UBUNTU_12_04_PATCH) \
 	$(MECT_FSPKG_DL) \
+	7za.exe \
+	arm-2011.03-41-arm-none-linux-gnueabi.exe \
+	ATCM.zip \
+	ATHW119_4CVM.kad \
+        Engineering_Help.zip \
+	perl-5.24.0-mectpack.7z \
+	PLC.zip \
+	Qt485.7z \
+        Qt485_upd.7z \
+        QtProject.7z \
+	unzip.exe \
 
 MECT_DLMD5 := $(MECT_DOWNLOADS:%=%.$(MECT_MD5EXT))
 MECT_DOWNLOADS := $(MECT_DOWNLOADS) $(MECT_DLMD5)
@@ -365,7 +383,9 @@ MECT_PACKAGES = \
 	libx11-dev \
 	m4 \
 	make \
+	nsis \
 	openssl \
+	p7zip \
 	patch \
 	perl \
 	pigz \
@@ -701,6 +721,11 @@ cloner_shar:
 	install -m 644 $(MECT_SYSCLONE_TMPL) $(MECT_SYSCLONE_SH)
 	sed -i 's/@@CLONER_VERSION@@/$(MECT_BUILD_RELEASE)/' $(MECT_SYSCLONE_SH)
 	rm -rf $(dir $(MECT_SYSCLONE_DIR))
+
+PHONY: wininst
+wininst:
+	test -f $(MECT_PRJDIR)/installer/Makefile
+	make -C $(MECT_PRJDIR)/installer
 
 # Common target rules
 #

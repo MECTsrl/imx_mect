@@ -23,7 +23,7 @@ MECT_BUILD_ATCMCRT_BRANCH := mect_suite_3.0
 export MECT_BUILD_ATCMCRT_TAG := v2.001
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_CAN_BRANCH := mect_suite_3.0
-MECT_BUILD_ATCMCRT_CAN_REV := 222
+MECT_BUILD_ATCMCRT_CAN_REV := 223
 MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
 # git branch and tag for the mect_plugins project

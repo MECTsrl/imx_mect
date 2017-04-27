@@ -342,19 +342,6 @@ MECT_DOWNLOADS := \
 	$(MECT_LTIB_EVKARCH) \
 	$(MECT_LTIB_UBUNTU_12_04_PATCH) \
 	$(MECT_FSPKG_DL) \
-	7za.exe \
-	unzip.exe \
-	arm-2011.03-41-arm-none-linux-gnueabi.exe \
-	perl-5.24.0-mectpack.7z \
-	\
-	ATCM.zip \
-	ATHW119_4CVM.kad \
-        Engineering_Help.zip \
-	Fonts.7z \
-	PLC.zip \
-	Qt485.7z \
-        Qt485_upd_rev$(MECT_BUILD_RELEASE).7z \
-        QtProject.7z \
 
 MECT_DLMD5 := $(MECT_DOWNLOADS:%=%.$(MECT_MD5EXT))
 MECT_DOWNLOADS := $(MECT_DOWNLOADS) $(MECT_DLMD5)
@@ -725,8 +712,23 @@ cloner_shar:
 	rm -rf $(dir $(MECT_SYSCLONE_DIR))
 
 PHONY: wininst
+wininst: MECT_DOWNLOADS := \
+	    7za.exe \
+	    arm-2011.03-41-arm-none-linux-gnueabi.exe \
+	    ATCM.zip \
+	    ATHW119_4CVM.kad \
+	    Engineering_Help.zip \
+	    Fonts.7z \
+	    perl-5.24.0-mectpack.7z \
+	    PLC.zip \
+	    Qt485.7z \
+	    Qt485_upd_rev$(MECT_BUILD_RELEASE).7z \
+	    QtProject.7z \
+	    unzip.exe
+wininst: MECT_DOWNLOADS += $(MECT_DOWNLOADS:%=%.$(MECT_MD5EXT))
+wininst: MECT_DOWNLOADS := $(MECT_DOWNLOADS:%=$(MECT_FTPDIR)/%)
 wininst:
-	make downloads
+	make MECT_DOWNLOADS="$(MECT_DOWNLOADS)" downloads
 	test -f $(MECT_PRJDIR)/installer/Makefile
 	make -C $(MECT_PRJDIR)/installer
 

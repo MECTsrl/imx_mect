@@ -19850,8 +19850,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +IPADDR0=192.168.5.211
 +NETMASK0=255.255.255.0
 +GATEWAY0=192.168.5.10
-+NAMESERVER01=1.0.0.0
-+NAMESERVER02=1.0.0.0
++NAMESERVER01=8.8.8.8
++NAMESERVER02=8.8.4.4
 +
 +# eth1 setup
 +BOOTPROTO1="[none]"

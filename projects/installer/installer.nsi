@@ -282,11 +282,26 @@ PLCnoError:
     # Fix PLC Engineering installation.
     delete '$PLCWINBINPATH\ATHW119\${PLC_ATHW}'
     file '/oname=$PLCWINBINPATH\ATHW119\${PLC_ATHW}' ${PLC_ATHW}
+    delete '$PLCWINBINPATH\..\Lib\ATCM_CANopen.4cl'
+    delete '$PLCWINBINPATH\..\Lib\ATCM_ProfibusDP.4cl'
+    delete '$PLCWINBINPATH\..\Lib\ATCM_SerialComm.4cl'
+    delete '$PLCWINBINPATH\..\Lib\ATCM_Socket.4cl'
+    delete '$PLCWINBINPATH\..\Lib\ATCM_Utility2.4cl'
+    delete '$PLCWINBINPATH\..\Lib\ATCM_XMLfile.4cl'
+    delete '$PLCWINBINPATH\..\Lib\Datalogger.4cl'
+    delete '$PLCWINBINPATH\..\Lib\HW119.4cl'
+    delete '$PLCWINBINPATH\..\Lib\MBRTU.4cl'
+    delete '$PLCWINBINPATH\..\Lib\MECT.4cl'
+    delete '$PLCWINBINPATH\..\Lib\MectUserUtility.4cl'
+    delete '$PLCWINBINPATH\..\Lib\Modbus.4cl'
+    delete '$PLCWINBINPATH\..\Lib\SDOCAN.4cl'
+    delete '$PLCWINBINPATH\..\Lib\USBManager.4cl'
 
     # PLC Engineering help files
     file '/oname=$TEMP\${PLCHELP_ARC}' '${PLCHELP_ARC}'
     ClearErrors
-    # FIXME: use the actual PLC Engineering install path for -d below.
+    # FIXME: use the actual PLC Engineering install path
+    delete "C:\ATCMControl\Engineering\Help\*.*"
     execWait '"$TEMP\unzip.exe" -j -o -d "C:/ATCMControl/Engineering/Help" "$TEMP\${PLCHELP_ARC}"'
     ifErrors 0 PLCHELPnoError
 	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${PLCHELP_ARC}$\n$\nPress OK to abort the installation.'

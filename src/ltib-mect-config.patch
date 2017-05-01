@@ -19889,11 +19889,12 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/var/spool/cron/crontabs/root ltib/config/platform/imx/merge/local/var/spool/cron/crontabs/root
 --- ltib.reference/config/platform/imx/merge/local/var/spool/cron/crontabs/root
 +++ ltib/config/platform/imx/merge/local/var/spool/cron/crontabs/root
-@@ -0,0 +1,4 @@
+@@ -0,0 +1,5 @@
 +#min h dom m dow cmd
 +#
 +
 +#crontab must end with the last line as space or a comment
++#*/2  * *   * *   /local/bin/rsync-mect.sh
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh ltib/config/platform/imx/merge/usr/bin/fcrts.sh
 --- ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh
 +++ ltib/config/platform/imx/merge/usr/bin/fcrts.sh

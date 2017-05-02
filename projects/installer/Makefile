@@ -35,6 +35,7 @@ CSXC_ARC := arm-2011.03-41-arm-none-linux-gnueabi.exe
 CAN_ARC := ATCM.zip
 PLC_ARC := PLC.zip
 PLC_ATHW := ATHW119_4CVM.kad
+PLC_ATCM_COMMON := ATCM_Common.4cl
 FONTS_ARC := Fonts.7z
 PLCHELP_ARC := Engineering_Help.zip
 
@@ -66,6 +67,7 @@ all:
 	# PLC Engineering
 	cp --reflink=auto $(SRCDIR)/$(PLC_ARC) .
 	cp --reflink=auto $(SRCDIR)/$(PLC_ATHW) .
+	cp --reflink=auto $(SRCDIR)/$(PLC_ATCM_COMMON) .
 	#
 	# PLC Engineering help
 	cp --reflink=auto $(SRCDIR)/$(PLCHELP_ARC) .
@@ -102,6 +104,7 @@ all:
 	    -DPERL_ARC=$(PERL_ARC) \
 	    -DFONTS_ARC=$(FONTS_ARC) \
 	    -DPLC_ATHW=$(PLC_ATHW) \
+	    -DPLC_ATCM_COMMON=$(PLC_ATCM_COMMON) \
 	    -DINSTALLPRG=$(INSTALLPRG) \
 	    -DQTH_DIR=$(QTH_DIR) \
 	    -DQTH_IMX_DIR=$(QTH_IMX_DIR) \
@@ -119,6 +122,7 @@ clean:
 	test -n "$(CSXC_ARC)"
 	test -n "$(CAN_ARC)"
 	test -n "$(PLC_ATHW)"
+	test -n "$(PLC_ATCM_COMMON)"
 	test -n "$(FONTS_ARC)"
 	test -n "$(INSTALLDST)"
 	test -n "$(BULK_ARC)"
@@ -127,4 +131,4 @@ clean:
 	test -n "$(MECTAPPS_DESTDIR)"
 	test -n "$(PLC_ARC)"
 	test -n "$(UNZIP_EXE)"
-	sudo rm -rf $(CSXC_ARC) $(CAN_ARC) $(PLC_ATHW) $(FONTS_ARC) $(INSTALLDST) $(BULK_ARC) $(INSTALLPRG) $(MECTAPPS_ARCHNAME) $(MECTAPPS_DESTDIR) $(PLC_ARC) $(UNZIP_EXE)
+	sudo rm -rf $(CSXC_ARC) $(CAN_ARC) $(PLC_ATHW) $(PLC_ATCM_COMMON) $(FONTS_ARC) $(INSTALLDST) $(BULK_ARC) $(INSTALLPRG) $(MECTAPPS_ARCHNAME) $(MECTAPPS_DESTDIR) $(PLC_ARC) $(UNZIP_EXE)

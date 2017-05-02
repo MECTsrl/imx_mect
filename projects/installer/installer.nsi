@@ -282,6 +282,7 @@ PLCnoError:
     # Fix PLC Engineering installation.
     delete '$PLCWINBINPATH\ATHW119\${PLC_ATHW}'
     file '/oname=$PLCWINBINPATH\ATHW119\${PLC_ATHW}' ${PLC_ATHW}
+    file '/oname=$PLCWINBINPATH\..\Lib\${PLC_ATCM_COMMON}' ${PLC_ATCM_COMMON}
     delete '$PLCWINBINPATH\..\Lib\ATCM_CANopen.4cl'
     delete '$PLCWINBINPATH\..\Lib\ATCM_ProfibusDP.4cl'
     delete '$PLCWINBINPATH\..\Lib\ATCM_SerialComm.4cl'

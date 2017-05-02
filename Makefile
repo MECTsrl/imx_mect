@@ -715,6 +715,7 @@ PHONY: wininst
 wininst: MECT_DOWNLOADS := \
 	    7za.exe \
 	    arm-2011.03-41-arm-none-linux-gnueabi.exe \
+	    ATCM_Common.4cl \
 	    ATCM.zip \
 	    ATHW119_4CVM.kad \
 	    Engineering_Help.zip \

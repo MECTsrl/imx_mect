@@ -402,6 +402,9 @@ all: env downloads setup build image target_dev
 .PHONY: env
 env:
 	set -e; for p in $(MECT_UTILS); do which $$p; done
+	if test "`uname -m`" = x86_64; then \
+		sudo apt-get install libc6:i386; \
+	fi
 	if test -d $(MECT_LTIBDIR); then \
 		echo "*** Error: Destination directory $(MECT_LTIBDIR) exists, will not overwrite."; \
 		echo "Hint: To continue an interupted installation try running LTIB directly:"; \

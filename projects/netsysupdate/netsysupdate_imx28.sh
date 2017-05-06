@@ -112,7 +112,6 @@ echo "* Update the local file system"
 sudo sshpass -p "$passwd" rsync -axh --delete --info=progress2 rootfs/ "$user"@"$ip":/
 
 echo "* Closing..."
-sshpass -p "$passwd" ssh root@"$ip" \
-    mount -oro,remount /
+sshpass -p "$passwd" ssh root@"$ip" sync
 
 echo "* Done."

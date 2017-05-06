@@ -19429,7 +19429,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/bin/rsync-mect.sh ltib/config/platform/imx/merge/local/bin/rsync-mect.sh
 --- ltib.reference/config/platform/imx/merge/local/bin/rsync-mect.sh
 +++ ltib/config/platform/imx/merge/local/bin/rsync-mect.sh
-@@ -0,0 +1,14 @@
+@@ -0,0 +1,15 @@
 +#!/bin/sh
 +
 +test -r /local/etc/rsync-mect.pwd || exit 3
@@ -19441,7 +19441,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +test -s $PIDFILE && test -d /proc/$(cat $PIDFILE) && exit 2
 +
-+/usr/bin/rsync -a --timeout=45 --password-file=/local/etc/rsync-mect.pwd /local/data/ rsync@rsync.rs.mect.it::LOGs/$IP/ > /dev/null 2>&1 &
++/usr/bin/rsync -a --timeout=45 --password-file=/local/etc/rsync-mect.pwd /local/data/alarms/ rsync@rsync.rs.mect.it::LOGs/$IP/alarms/ > /dev/null 2>&1 &
++/usr/bin/rsync -a --timeout=45 --password-file=/local/etc/rsync-mect.pwd /local/data/store/ rsync@rsync.rs.mect.it::LOGs/$IP/store/ > /dev/null 2>&1 &
 +
 +echo -n $! > $PIDFILE
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/icinga/nrpe.cfg ltib/config/platform/imx/merge/local/etc/icinga/nrpe.cfg

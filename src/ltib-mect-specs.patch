@@ -6,7 +6,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : v1.031
++Version         : v2.001
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -105,7 +105,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : v1.031
++Version         : v2.001
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -1210,7 +1210,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 2.0.12rc11
++Version         : 3.0.0rc2
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3536,7 +3536,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v2.0.12rc11
++Version         : v3.0.0rc2
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -4366,10 +4366,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/etc/sysconfig/system.ini
 +	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/data/customtrend/trend1.csv
 +
-+	install -m644 -D recipes/AnOut/up_and_down.csv  $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/data/recipes/AnOut/up_and_down.csv
-+	install -m644 -D recipes/AnOut/sine_wave.csv    $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/data/recipes/AnOut/sine_wave.csv
-+	install -m644 -D recipes/DigOut/from_1_to_4.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/data/recipes/DigOut/from_1_to_4.csv
-+	install -m644 -D recipes/DigOut/from_1_to_8.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/data/recipes/DigOut/from_1_to_8.csv
++	install -m644 -D recipes/AnOut/up_and_down.csv  $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/data/recipe/AnOut/up_and_down.csv
++	install -m644 -D recipes/AnOut/sine_wave.csv    $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/data/recipe/AnOut/sine_wave.csv
++	install -m644 -D recipes/DigOut/from_1_to_4.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/data/recipe/DigOut/from_1_to_4.csv
++	install -m644 -D recipes/DigOut/from_1_to_8.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_03/local/data/recipe/DigOut/from_1_to_8.csv
 +
 +	cd -
 +fi
@@ -4416,10 +4416,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/etc/sysconfig/system.ini
 +	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/data/customtrend/trend1.csv
 +
-+	install -m644 -D recipes/AnOut/up_and_down.csv  $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/data/recipes/AnOut/up_and_down.csv
-+	install -m644 -D recipes/AnOut/sine_wave.csv    $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/data/recipes/AnOut/sine_wave.csv
-+	install -m644 -D recipes/DigOut/from_1_to_4.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/data/recipes/DigOut/from_1_to_4.csv
-+	install -m644 -D recipes/DigOut/from_1_to_8.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/data/recipes/DigOut/from_1_to_8.csv
++	install -m644 -D recipes/AnOut/up_and_down.csv  $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/data/recipe/AnOut/up_and_down.csv
++	install -m644 -D recipes/AnOut/sine_wave.csv    $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/data/recipe/AnOut/sine_wave.csv
++	install -m644 -D recipes/DigOut/from_1_to_4.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/data/recipe/DigOut/from_1_to_4.csv
++	install -m644 -D recipes/DigOut/from_1_to_8.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AC/local/data/recipe/DigOut/from_1_to_8.csv
 +
 +	cd -
 +fi
@@ -4663,10 +4663,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1007_03/local/etc/sysconfig/img/splash.png
 +%{pfx}/TPAC1007_03/local/etc/sysconfig/system.ini
 +%{pfx}/TPAC1007_03/local/data/customtrend/trend1.csv
-+%{pfx}/TPAC1007_03/local/data/recipes/AnOut/up_and_down.csv
-+%{pfx}/TPAC1007_03/local/data/recipes/AnOut/sine_wave.csv
-+%{pfx}/TPAC1007_03/local/data/recipes/DigOut/from_1_to_4.csv
-+%{pfx}/TPAC1007_03/local/data/recipes/DigOut/from_1_to_8.csv
++%{pfx}/TPAC1007_03/local/data/recipe/AnOut/up_and_down.csv
++%{pfx}/TPAC1007_03/local/data/recipe/AnOut/sine_wave.csv
++%{pfx}/TPAC1007_03/local/data/recipe/DigOut/from_1_to_4.csv
++%{pfx}/TPAC1007_03/local/data/recipe/DigOut/from_1_to_8.csv
 +
 +%files lfs-TPAC1007_04_AA
 +%defattr(-,root,root)
@@ -4691,10 +4691,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1007_04_AC/local/etc/sysconfig/img/splash.png
 +%{pfx}/TPAC1007_04_AC/local/etc/sysconfig/system.ini
 +%{pfx}/TPAC1007_04_AC/local/data/customtrend/trend1.csv
-+%{pfx}/TPAC1007_04_AC/local/data/recipes/AnOut/up_and_down.csv
-+%{pfx}/TPAC1007_04_AC/local/data/recipes/AnOut/sine_wave.csv
-+%{pfx}/TPAC1007_04_AC/local/data/recipes/DigOut/from_1_to_4.csv
-+%{pfx}/TPAC1007_04_AC/local/data/recipes/DigOut/from_1_to_8.csv
++%{pfx}/TPAC1007_04_AC/local/data/recipe/AnOut/up_and_down.csv
++%{pfx}/TPAC1007_04_AC/local/data/recipe/AnOut/sine_wave.csv
++%{pfx}/TPAC1007_04_AC/local/data/recipe/DigOut/from_1_to_4.csv
++%{pfx}/TPAC1007_04_AC/local/data/recipe/DigOut/from_1_to_8.csv
 +
 +%files lfs-TPAC1007_LV
 +%defattr(-,root,root)
@@ -4797,7 +4797,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v2.0.12rc11
++Version: v3.0.0rc2
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

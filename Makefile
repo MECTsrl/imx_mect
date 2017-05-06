@@ -379,6 +379,7 @@ MECT_PACKAGES = \
 	perl \
 	pigz \
 	qemu \
+	qemu-user \
 	rpm \
 	sed \
 	sharutils \
@@ -411,6 +412,10 @@ all: env downloads setup build image target_dev
 .PHONY: env
 env:
 	set -e; for p in $(MECT_UTILS); do which $$p; done
+	if test "`uname -m`" = x86_64; then \
+		sudo apt-get install lib32bz2-1.0 lib32ncurses5 lib32z1 libc6-dev-i386; \
+		sudo ln -sf /usr/lib/x86_64-linux-gnu/librt.so /usr/lib/librt.so; \
+	fi
 	if test -d $(MECT_LTIBDIR); then \
 		echo "*** Error: Destination directory $(MECT_LTIBDIR) exists, will not overwrite."; \
 		echo "Hint: To continue an interupted installation try running LTIB directly:"; \

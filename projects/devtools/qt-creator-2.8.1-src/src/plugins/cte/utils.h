@@ -5,6 +5,32 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QComboBox>
+#include <QColor>
+
+
+// QChar Constants
+const QChar   chDOUBLEQUOTE = QChar::fromAscii(34);
+const QChar   chSpace = QChar::fromAscii(20);
+const QChar   chBACKSLASH = QChar::fromAscii(92);
+
+// String Costants
+const QString szEMPTY = QString::fromAscii("");
+const QString szZERO = QString::fromAscii("0");
+const QString szSEMICOL = QString::fromAscii(";");
+const QString szSLASH = QString::fromAscii("/");
+const QString szBACKSLASH = QString::fromAscii("\\");
+const QString szNEWLINE = QString::fromAscii("\n");
+const QString szDOUBLEQUOTE = QString(1, chDOUBLEQUOTE);
+const QString szSHARP = QString::fromAscii("#");
+const QString szTRUE = QString::fromAscii("1");
+const QString szFALSE = QString::fromAscii("0");
+
+
+const  char     cDoubleQuote = 34;      // Carattere "
+const  char     cSingleQuote = 39;      // '
+const  char     cSpace = 32;            // Blank
+const  char     cZero = 48;             // Zero
+
 
     QString     getPathFromFileName(const QString &fileName);               // Estrae il Path assoluto dal File Name ricevuto come parametro
     void        splitFileName(const QString &fileName, QString &szPath,
@@ -35,4 +61,5 @@
     void        disableComboItem(QComboBox *Combo, int nItemIndex);         // Disabilita la voce nItemIndex della Combo
     bool        disableAndBlockSignals(QWidget *widget);                    // Disabilita e blocca segnali di un oggetto QWidget*
     bool        enableAndUnlockSignals(QWidget *widget);                    // Riabilita e sblocca segnali di un oggetto QWidget*
+    QColor      getIdealTextColor(const QColor& rBackgroundColor);          // Return an ideal label color, based on the given background color.
 #endif // UTILS_H

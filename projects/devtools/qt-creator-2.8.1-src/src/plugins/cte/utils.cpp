@@ -27,10 +27,6 @@
 #include <QCoreApplication>
 #include "utils.h"
 
-const  char         cDoubleQuote = 34;      // Carattere "
-const  char         cSingleQuote = 39;      // '
-const  char         cSpace = 32;            // Blank
-const  char         cZero = 48;             // Zero
 
 QString szSpace(int nSpaces)
 // Ritorna una stringa di nSpaces Spazio o vuota se nSpaces <= 0
@@ -453,4 +449,12 @@ bool enableAndUnlockSignals(QWidget *widget)
 {
     widget->setEnabled(true);
     return widget->blockSignals(false);
+}
+QColor getIdealTextColor(const QColor& rBackgroundColor)
+// Return an ideal label color, based on the given background color.
+{
+    const int THRESHOLD = 105;
+
+    int BackgroundDelta = (rBackgroundColor.red() * 0.299) + (rBackgroundColor.green() * 0.587) + (rBackgroundColor.blue() * 0.114);
+    return QColor((255- BackgroundDelta < THRESHOLD) ? Qt::black : Qt::white);
 }

@@ -2,6 +2,7 @@
 #include "ui_ctedit.h"
 #include "utils.h"
 #include "cteerrorlist.h"
+#include "stdlib.h"
 
 #include <QFile>
 #include <QFileDialog>
@@ -31,6 +32,8 @@
 #include <QTextStream>
 #include <QProcessEnvironment>
 #include <QVBoxLayout>
+#include <QDesktopServices>
+#include <QUrl>
 
 /* ----  Local Defines:   ----------------------------------------------------- */
 #define _TRUE  1
@@ -47,6 +50,8 @@
 #define MAX_NODE 5299
 #define MIN_LOCALIO 5300
 #define MAX_LOCALIO 5389
+#define COMMANDLINE 2048
+
 // Tabs in TabWidget
 #define TAB_CT 0
 #define TAB_SYSTEM 1
@@ -54,14 +59,6 @@
 
 #undef  WORD_BIT
 
-// String Costants
-const QString szEMPTY = QString::fromAscii("");
-const QString szZERO = QString::fromAscii("0");
-const QString szSEMICOL = QString::fromAscii(";");
-const QString szSLASH = QString::fromAscii("/");
-const QString szBACKSLASH = QString::fromAscii("\\");
-const QChar   chDOUBLEQUOTE = QChar::fromAscii(34);
-const QString szDOUBLEQUOTE = QString(1, chDOUBLEQUOTE);
 
 const QString szDEF_IP_PORT = QString::fromAscii("502");
 const QString szEMPTY_IP = QString::fromAscii("0.0.0.0");
@@ -72,11 +69,12 @@ const QString szEnvFile = QString::fromAscii("EnvVars.txt");
 const QString szPLCEnvVar = QString::fromAscii("PLCUNIXINSTPATH");
 const QString szProExt = QString::fromAscii(".pro");
 const QString szPLCFILE = QString::fromAscii("plc");
+// const QString szPLCExt = QString::fromAscii(".txt");
 const QString szPLCExt = QString::fromAscii(".4cp");
 const QString szPLCDir = QString::fromAscii("plc");
 const QString szINIFILE = QString::fromAscii("system.ini");
 // Version Number
-const QString szVERSION = QString::fromAscii("Ver. 1.0.0 @ 2017-04-13");
+const QString szVERSION = QString::fromAscii("Ver. 1.0.0 @ 2017-04-14");
 
 enum colonne_e
 {
@@ -121,6 +119,7 @@ ctedit::ctedit(QWidget *parent) :
     ui->lblModel->setToolTip(szVERSION);
     // Liste di servizio
     lstUsedVarNames.clear();
+    lstLoggedVars.clear();
     lstUndo.clear();
     lstCTErrors.clear();
     //------------------------
@@ -142,6 +141,7 @@ ctedit::ctedit(QWidget *parent) :
     lstErrorMessages[errCTNoVarDecimals] = trUtf8("Empty or Invalid Decimal Variable");
     lstErrorMessages[errCTWrongDecimals] = trUtf8("Invalid Bit Position");
     lstErrorMessages[errCTNoProtocol] = trUtf8("No Protocol Selected");
+    lstErrorMessages[errCTNoBITAllowed] = trUtf8("BIT Type not allowed for SRV Protocols");
     lstErrorMessages[errCTNoIP] = trUtf8("No IP Address");
     lstErrorMessages[errCTBadIP] = trUtf8("Invalid IP Address");
     lstErrorMessages[errCTNoPort] = trUtf8("Empty or Invalid Port Value");
@@ -194,8 +194,13 @@ ctedit::ctedit(QWidget *parent) :
     for (nCol = Htype; nCol <= Xtype; nCol++)  {
         lstUpdateNames.append(QString::fromAscii(updateTypeName[nCol]));
         lstAllUpdates.append(nCol);
+        // Esclude dalla lista solo le variabili H
         if (nCol != Htype)  {
-            lstNoHUpdates.append(nCol);
+            lstNoHUpdates.append(nCol);            
+        }
+        // Esclude dalla lista le H e P
+        if (nCol != Htype && nCol != Ptype)  {
+            lstLogUpdates.append(nCol);
         }
     }
     // Lista TIPI Variabili
@@ -438,7 +443,7 @@ void    ctedit::setProjectPath(QString szProjectPath)
         m_szCurrentPLCPath = szProjectPath;
         m_szCurrentPLCPath.append(szSLASH);
         m_szCurrentPLCPath.append(szPLCDir);
-        m_szCurrentPLCPath.append(szSLASH);
+        // m_szCurrentPLCPath.append(szSLASH);
         QDir dirPlc(m_szCurrentPLCPath);
         // Create if not exists PLC Dir
         if (!dirPlc.exists()) {
@@ -507,6 +512,14 @@ bool    ctedit::selectCTFile(QString szFileCT)
         m_fCutOrPaste = false;
         // Se tutto Ok, carica anche le impostazioni del file INI
         mectSet->loadProjectFiles(m_szCurrentCTPath + szINIFILE, m_szCurrentProjectPath + szSLASH + m_szCurrentProjectName, m_szCurrentProjectPath + szSLASH, nModel);
+        // Se tutto Ok, carica anche il primo trend utile
+        QString szFileTemplate;
+        szFileTemplate = m_szCurrentProjectPath;
+        szFileTemplate.append(szSLASH);
+        szFileTemplate.append(szTemplateFile);
+        trendEdit->updateVarLists(lstLoggedVars);
+        trendEdit->setTrendsFiles(m_szCurrentCTPath, szEMPTY, szFileTemplate);
+        // Abilita interfaccia
         enableInterface();
     }
     return fRes;
@@ -596,6 +609,7 @@ bool    ctedit::ctable2Grid()
 
     lstFields.clear();
     lstUsedVarNames.clear();
+    lstLoggedVars.clear();
     // Preparazione tabella
     this->setCursor(Qt::WaitCursor);
     ui->tblCT->setEnabled(false);
@@ -631,7 +645,10 @@ bool    ctedit::ctable2Grid()
         ui->cmdSave->setEnabled(true);
         // ui->cmdSave->setEnabled(m_isCtModified);
         showAllRows(m_fShowAllRows);
+        // Aggiorna le liste delle variabili
         fillVarList(lstUsedVarNames, lstAllVarTypes, lstAllUpdates);
+        fillVarList(lstLoggedVars, lstAllVarTypes, lstLogUpdates);
+
     }
     else  {
         qDebug() << tr("Error Loading Rows");
@@ -907,6 +924,7 @@ bool ctedit::iface2values(QStringList &lstRecValues)
 {
     QString szTemp;
     int     nPos = 0;
+    int     nUpdate = -1;
 
     // Pulizia Buffers
     szTemp.clear();
@@ -919,21 +937,26 @@ bool ctedit::iface2values(QStringList &lstRecValues)
         szTemp = szEMPTY;
     lstRecValues[colPriority] = szTemp.trimmed();
     // Update colUpdate
-    nPos = ui->cboUpdate->currentIndex();
-    if (nPos >= 0 && nPos < lstUpdateNames.count())
-        szTemp = ui->cboUpdate->itemData(nPos).toString();
+    nUpdate = ui->cboUpdate->currentIndex();
+    if (nUpdate >= 0 && nPos < lstUpdateNames.count())
+        szTemp = ui->cboUpdate->itemData(nUpdate).toString();
     else
         szTemp = szEMPTY;
     lstRecValues[colUpdate] = szTemp;
     // Name
     szTemp = ui->txtName->text().trimmed();
     lstRecValues[colName] = szTemp;
-    // Update Used Variable List
+    // Update Used and Logged Variable List
     if (! szTemp.isEmpty())  {
+        // Aggiorna la lista delle variabili utilizzate
         nPos = lstUsedVarNames.indexOf(szTemp);
         if (nPos < 0)  {
             lstUsedVarNames.append(szTemp);
             lstUsedVarNames.sort();
+        }
+        // Aggiorna la lista delle Variabili loggate se la variabile è loggata
+        if (nUpdate != Htype && nUpdate != Ptype)  {
+            fillVarList(lstLoggedVars, lstAllVarTypes, lstLogUpdates);
         }
     }
     // Type colType
@@ -1544,6 +1567,13 @@ void ctedit::on_cboProtocol_currentIndexChanged(int index)
         ui->txtIP->setText(szEMPTY);
         ui->txtPort->setText(szZERO);
     }
+    // Disabilitazione  tipo BIT per i vari tipi di SRV (TCP_SRV, RTU_SRV, TCP_RTU_SRV)
+    if (index == TCP_SRV || index == TCPRTU_SRV || index || RTU_SRV)  {
+        disableComboItem(ui->cboType, BIT);
+    }
+    else {
+        enableComboItem(ui->cboType, BIT);
+    }
     // Abilitazione del campi di data entry in funzione del Protocollo
     enableFields();
 }
@@ -1674,10 +1704,10 @@ void ctedit::displayUserMenu(const QPoint &pos)
     QMenu gridMenu(this);
     // Items del Menu contestuale
     // Inserisci righe
-    QAction *insRows = gridMenu.addAction(trUtf8("Insert Rows"));
+    QAction *insRows = gridMenu.addAction(trUtf8("Insert Blank Rows"));
     insRows->setEnabled(selection.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Cancella righe
-    QAction *emptyRows = gridMenu.addAction(trUtf8("Empty Rows"));
+    QAction *emptyRows = gridMenu.addAction(trUtf8("Clear Rows"));
     emptyRows->setEnabled(selection.count() > 0 && m_nGridRow < MIN_SYSTEM - 1);
     // Elimina righe
     QAction *remRows = gridMenu.addAction(trUtf8("Delete Rows"));
@@ -2305,6 +2335,7 @@ void ctedit::on_cmdCompile_clicked()
     lstArguments.append(szTemp);
     // Parametro 2: -g Nome del file GVL (Case preserved)
     szFileName = QString::fromAscii("%1.gvl") .arg(m_szCurrentCTName);
+    szFileName.prepend(szSLASH);
     szFileName.prepend(m_szCurrentPLCPath);
     szTemp = szFileName;
     szTemp.prepend(QString::fromAscii("-g"));
@@ -2437,6 +2468,11 @@ void ctedit::on_cmdUndo_clicked()
 void ctedit::tabSelected(int nTab)
 // Change current Tab
 {
+    // Aggiornamento della lista di variabili e ripopolamento
+    if (nTab == TAB_TREND) {
+        trendEdit->updateVarLists(lstLoggedVars);
+    }
+    // Set Current Tab
     m_nCurTab = nTab;
 }
 void ctedit::enableInterface()
@@ -2881,6 +2917,13 @@ int ctedit::checkFormFields(int nRow, QStringList &lstValues, bool fSingleLine)
         lstCTErrors.append(errCt);
         nErrors++;
     }
+    // Tipo BIT non permesso per alcuni protocolli
+    if (nType == BIT &&
+            (nProtocol == TCP_SRV || nProtocol == TCPRTU_SRV || nProtocol == RTU_SRV))  {
+        fillErrorMessage(nRow, colProtocol, errCTNoProtocol, szVarName, szTemp, chSeverityError, &errCt);
+        lstCTErrors.append(errCt);
+        nErrors++;
+    }
     // Controllo Ip Address
     szIP = lstValues[colIP].trimmed();
     if (szIP.isEmpty() &&
@@ -3195,13 +3238,16 @@ int  ctedit::fillCompatibleTypesList(varTypes nTypeVar, QList<int> &lstTypes)
 void ctedit::on_cmdPLC_clicked()
 {
     QString     szPathPLCApplication;
-    QStringList lstEnv;
+    // QStringList lstEnv;
     QString     szCommand;
+    QString     szPLCEngPath;
     QStringList lstArguments;
     QString     szTemp;
     QProcess    procPLC;
-    qint64      pidPLC;
+    // qint64      pidPLC;
 
+    // FIXME: Remove usage of PLC Env Variable
+    /*
     // Lista delle variabili d'ambiente per controllo configurazione
     lstEnv = QProcessEnvironment::systemEnvironment().toStringList();
     QFile   fEnv(m_szCurrentProjectPath + szSLASH + szEnvFile);
@@ -3219,35 +3265,47 @@ void ctedit::on_cmdPLC_clicked()
         }
         fEnv.close();
     }
+    */
     // Ricerca della variabile specifica per il lancio del PLC
     szPathPLCApplication = QProcessEnvironment::systemEnvironment().value(szPLCEnvVar, szEMPTY);
     // Search Path of PLC Application
     lstArguments.clear();
     if (! szPathPLCApplication.isEmpty())  {
+        // qDebug() << tr("Env. %1 Variable: <%2>") .arg(szPLCEnvVar) .arg(szPathPLCApplication);
         // To be modified with specifics of PLC Application
         szTemp = QString::fromAscii("%1");
         // Remove %1
         szPathPLCApplication.remove(szTemp, Qt::CaseInsensitive);
         // Remove doublequote
         szPathPLCApplication.remove(szDOUBLEQUOTE, Qt::CaseInsensitive);
+        szPathPLCApplication = szPathPLCApplication.trimmed();
+        // qDebug() << tr("Editor PLC: <%1>") .arg(szPathPLCApplication);
         // Build PLC Editor Application command
+        QFileInfo plcExe(szPathPLCApplication);
+        if (plcExe.exists())  {
+            szPLCEngPath = plcExe.absolutePath();
+            // qDebug() << tr("Path PLC: <%1>") .arg(szPLCEngPath);
+        }
         szCommand = szPathPLCApplication;
         // Enclose command with double quote
-        szCommand.append(szDOUBLEQUOTE);
-        szCommand.prepend(szDOUBLEQUOTE);
-        qDebug() << "PLC Command: " << szCommand;
+        // szCommand.append(szDOUBLEQUOTE);
+        // szCommand.prepend(szDOUBLEQUOTE);
+        // qDebug() << "PLC Command: " << szCommand;
         // First parameter: File plc.4cp
-        szTemp = szPLCFILE;
+        szTemp = szSLASH;
+        szTemp.append(szPLCFILE);
         szTemp.append(szPLCExt);
         szTemp.prepend(m_szCurrentPLCPath);
-        qDebug() << "PLC File: " << szTemp;
+        // qDebug() << "PLC File: " << szTemp;
         QFile plcPro(szTemp);
         if (! plcPro.exists())  {
-            m_szMsg = tr("PLC Project File Not Found\n");
-            m_szMsg.append(szTemp);
+            m_szMsg = tr("PLC Project File Not Found:\n<%1>") .arg(szTemp);
             warnUser(this, szTitle, m_szMsg);
+            fprintf(stderr, "%s\n", m_szMsg.toAscii().data());
+            goto endStartPLC;
         }
-        else  {
+        // Verifica e Lancio Engineering
+        if (plcExe.exists())  {
             // Convert File Path to Opertatin System Native Style
             szTemp = QDir::toNativeSeparators(szTemp);
             // Enclose parameter with double quote (MayBe done by QProcess)
@@ -3255,22 +3313,51 @@ void ctedit::on_cmdPLC_clicked()
             //szTemp.prepend(szDOUBLEQUOTE);
             lstArguments.append(szTemp);
             // Imposta come Directory corrente di esecuzione la directory del File PLC
-            procPLC.setWorkingDirectory(m_szCurrentPLCPath);
+            procPLC.setWorkingDirectory(szPLCEngPath);
+            // qDebug() << "Plc Path: " << szPLCEngPath;
             // Esecuzione Comando
-            m_szMsg = tr("Command: \n") + szCommand + szSpace(1) + szTemp;
-            qDebug() << szCommand + szSpace(1) + szTemp;
-            notifyUser(this, szTitle, m_szMsg);
+            szCommand = QDir::toNativeSeparators(szCommand);
+            szCommand.append(szSpace(1));
+            szCommand.append(szTemp);
+            m_szMsg = tr("Url to Open: \n") + szTemp;
+            qDebug() << m_szMsg;
+            // notifyUser(this, szTitle, m_szMsg);
+            // Tentativo 1: Open only File URL - Funziona !
+            bool fRes = false;
+            fRes = showFile(szTemp);
+            // Tentativo 2: Open URL of command & parameter
+            // fRes = QDesktopServices::openUrl(QUrl::fromLocalFile(szCommand));
+            if (!fRes)  {
+                m_szMsg = tr("Error Opening URL: %1\n") .arg(szTemp);
+                warnUser(this, szTitle, m_szMsg);
+                goto endStartPLC;
+            }
+            // Preparazione comando per System
+            // strcpy(commandLine, szCommand.toAscii().data());
+            // nErr = system(commandLine);
+            // qDebug() << tr("Result Code: %1") .arg(nErr);
+            /* Sostituito da System ??
             if (! procPLC.startDetached(szCommand, lstArguments, m_szCurrentPLCPath, &pidPLC))  {
                 QProcess::ProcessError errPlc = procPLC.error();
                 m_szMsg = tr("Error Starting PLC Engineering: %1\n") .arg(errPlc);
                 m_szMsg.append(szCommand);
                 warnUser(this, szTitle, m_szMsg);
+                goto endStartPLC;
             }
+            */
+        }
+        else {
+            m_szMsg = tr("Program PLC Engineering Not Found!\n%1") .arg(szPLCEnvVar);
+            m_szMsg.append(szCommand);
+            warnUser(this, szTitle, m_szMsg);
+            goto endStartPLC;
         }
     }
     else  {
-        m_szMsg = tr("Reference to Application PLC Engineering %1 Not Found!\n") .arg(szPLCEnvVar);
+        m_szMsg = tr("Environment Variable for Application PLC Engineering %1 Not Found!\n") .arg(szPLCEnvVar);
         m_szMsg.append(szCommand);
         warnUser(this, szTitle, m_szMsg);
     }
+endStartPLC:
+    return;
 }

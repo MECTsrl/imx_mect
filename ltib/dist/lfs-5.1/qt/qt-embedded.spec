@@ -176,7 +176,6 @@ for f in configure.ac configure.in aclocal.m4 configure config.h.in Makefile.am 
 done
 MAKEFLAGS=j$(nproc) ./configure \
 	--prefix=${DEV_IMAGE}/usr \
-	-plugin-sql-mysql \
 	-qt-mouse-tslib \
 	-xplatform qws/linux-g++-mx \
 	-confirm-license \

@@ -159,8 +159,10 @@ private:
     // Controllo e Gestione  Errori
     QList<int>              lstAllUpdates;          // Lista contenente tutti i tipi di Update (per filtro su Nomi variabili)
     QList<int>              lstNoHUpdates;          // Lista contenente tutti i tipi di Update tranne H (per Allarmi)
+    QList<int>              lstLogUpdates;          // Lista contenente tutti i tipi di Update
     QList<int>              lstAllVarTypes;         // Lista contenente tutti i tipi di Variabili definiti
     QStringList             lstUsedVarNames;        // Lista contenente i nomi delle variabili (per Search)
+    QStringList             lstLoggedVars;          // Lista contenente i nomi delle variabili Loggate (per Trends)
     QList<Err_CT>           lstCTErrors;
     QStringList             lstUniqueVarNames;      // Lista per controllo univocità identificatori
     QStringList             lstErrorMessages;       // Lista dei messaggi di errore

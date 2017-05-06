@@ -16,10 +16,6 @@
 #define MAX_SPACE_AVAILABLE_MAX 128
 #define LINE_SIZE 1024
 
-const QString szEMPTY = QString::fromAscii("");
-const QString szSEMICOL = QString::fromAscii(";");
-const QString szBACKSLASH = QString::fromAscii("\\");
-const QChar   chSpace = QChar::fromAscii(20);
 
 const QString szPAGE = QString::fromAscii("page");
 const QString szDEFLANG  = QString::fromAscii("it");
@@ -164,8 +160,11 @@ bool    MectSettings::loadProjectFiles(const QString &szFileSettings, const QStr
               << QString::fromAscii("trend_range");
 
     /*Inserimento della lista delle pagine all'interno delle combobox*/
+    ui->comboBox_HomePage->clear();
     ui->comboBox_HomePage->addItems(pagesList);
+    ui->comboBox_StartPage->clear();
     ui->comboBox_StartPage->addItems(pagesList);
+    ui->comboBox_PwdLogoutPage->clear();
     ui->comboBox_PwdLogoutPage->addItem(szEMPTY);
     ui->comboBox_PwdLogoutPage->addItems(pagesList);
 

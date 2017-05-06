@@ -31,12 +31,6 @@ MGW_PROF_DEF = $(SRC_DIRECTORY)/mingw-profile-defaults.xml
 
 MAKE := wine mingw32-make
 
-# libcsv
-#
-LC_VER := 3.0.3
-LC_DIRECTORY = libcsv-$(LC_VER)
-LC_DLL = $(MGW_INST_DIR)/bin/libcsv.dll
-
 # Qt
 #
 QT_VER := 4.8.5
@@ -156,7 +150,6 @@ all:
 	#make -f $(MAKEFILE_NAME) install-qt_arm
 	make -f $(MAKEFILE_NAME) install-prebuilt-qt_arm
 	make -f $(MAKEFILE_NAME) qwt
-	make -f $(MAKEFILE_NAME) libs
 	make -f $(MAKEFILE_NAME) qtc
 	make -f $(MAKEFILE_NAME) mp
 	make -f $(MAKEFILE_NAME) installer
@@ -199,7 +192,6 @@ tools: wine
 	sed -i '/^"PATH"=/ s/"$$/;$(QT_BIN_DIR)"/' $(WINEPREFIX)/system.reg
 	sed -i '/^"PATH"=/ s/;$(QTC_BIN_DIR)//g' $(WINEPREFIX)/system.reg
 	sed -i '/^"PATH"=/ s/"$$/;$(QTC_BIN_DIR)"/' $(WINEPREFIX)/system.reg
-	echo $(PERL_BIN_PATH)
 
 .PHONY: qt
 qt:
@@ -352,13 +344,6 @@ install-prebuilt-qt_arm:
 	### echo 'Demos = demos' >> '$(QT_ARM_INST_DIR_H)/bin/qt.conf'
 	### for m in `find $(QT_ARM_INST_DIR_H)/mkspecs -name qmake.conf -print`; do echo 'QMAKE_INCDIR += "."' >> $$m; done
 	### for m in `find $(QT_ARM_INST_DIR_H)/lib -name \*.prl -print`; do sed -i 's|[Cc]:/Qt485/imx28/qt-everywhere-opensource-src-4.8.5|$(QT_INST_DIR)|' $$m; done
-
-.PHONY: libs
-libs: $(LC_DLL)
-
-$(LC_DLL):
-	test -d $(LC_DIRECTORY)
-	$(MAKE) -C $(LC_DIRECTORY) -f Makefile.windows all install; $(SANE)
 
 .PHONY: qtc
 qtc:

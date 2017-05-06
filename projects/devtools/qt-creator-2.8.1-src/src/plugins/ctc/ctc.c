@@ -22,7 +22,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
 #include "csv.h"
+#include "libcsv.c"
 
 #define dbg_printf(...)
 //#define dbg_printf printf
@@ -315,7 +317,7 @@ cperror_log_exit(struct csv_parser *p, int line, char *msg)
 static void
 row_init(struct row_s *row)
 {
-    bzero(row, sizeof(struct row_s));
+    memset(row, 0, sizeof(struct row_s));
 
     row->priority = -1;
     row->type = TYPE_NONE;
@@ -326,7 +328,7 @@ row_init(struct row_s *row)
     row->reg = -1;
     row->block = -1;
     row->behavior = BEHAV_NONE;
-    bzero(&(row->alarm_event), sizeof(row->alarm_event));
+    memset(&(row->alarm_event), 0, sizeof(row->alarm_event));
 }
 
 /**
@@ -626,7 +628,7 @@ alarm_or_event_get(char *behavior, struct row_s *row)
     if (alarm_or_event == NULL)
         return "";
 
-    bzero(alarm_or_event, end - start + 2);
+    memset(alarm_or_event, 0, end - start + 2);
 
     return strncpy(alarm_or_event, start, end - start + 1);
 }
@@ -877,7 +879,7 @@ xtable_ids_check(char *id)
 static void
 st_id_init(void)
 {
-    bzero((void *)&st_id, sizeof(st_id));
+    memset((void *)&st_id, 0, sizeof(st_id));
 }
 
 /**

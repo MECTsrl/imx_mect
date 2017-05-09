@@ -28,6 +28,10 @@ SetCompress off
 
 #Var PLCWINUNINST	# PLC Engineering uninstaller
 Var PLCWINBINPATH	# PLC Engineering binary path
+Var PLCWINBIN           # Full path PLC Engineering executable
+Var PLCINSTDIR          # PLC Engineering install path
+Var PLCUNINSTID1        # PLC Engineering uninstaller ID main
+Var PLCUNINSTID2        # PLC Engineering uninstaller ID ATHW119...
 Var ARMCCWININSTPATH	# Target toolchain installation path
 Var ARMCCWINUNINST	# Target toolchain uninstaller
 
@@ -167,15 +171,86 @@ section "install"
     #
     file ${ICONNAME}
 
-    # Install the main archive.
+    # Install utilities
     #
-    # FIXME Install using an external ZIP archive.
-
     # unzip
     file '/oname=$TEMP\unzip.exe' unzip.exe
 
     # 7zip
-    file '/oname=$TEMP\7za.exe' 7za.exe
+    file '/oname=$TEMP\7zG.exe' 7zG.exe
+    file '/oname=$TEMP\7z.dll' 7z.dll
+
+    # Install PLC Engineering.
+    #
+    file '/oname=$TEMP\${PLCARCH}' '${PLCARCH}'
+    rmDir /r "$TEMP\PLC"
+    ClearErrors
+    execWait '"$TEMP\unzip.exe" -o "$TEMP\${PLCARCH}" -d "$TEMP"'
+    ifErrors 0 PLCEXnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${PLCARCH}$\n$\nPress OK to abort the installation.'
+	quit
+PLCEXnoError:
+    delete '$TEMP\${PLCARCH}'
+    ClearErrors
+    execWait '$TEMP\PLC\ATCMcontrol_Engineering_v2.20.02.4018\Setup.exe'
+    ifErrors 0 PLCnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing PLC Engineering.$\n$\nPress OK to abort the installation.'
+	quit
+PLCnoError:
+    rmDir /r '$TEMP\PLC'
+
+    # Collect the PLC Engineering executable and full path.
+    readRegStr $PLCWINBINPATH HKLM "Software\Softing\4ControlV2\2.0" "BinPath"
+    readRegStr $PLCWINBIN HKLM "Software\Softing\Products\61" "VersionFile"
+
+    # Fix PLC Engineering installation.
+    writeRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" "$PLCWINBIN" "WIN7RTM RUNASADMIN"
+    delete '$PLCWINBINPATH\ATHW119\${PLC_ATHW}'
+    file '/oname=$PLCWINBINPATH\ATHW119\${PLC_ATHW}' ${PLC_ATHW}
+    file '/oname=$PLCWINBINPATH\..\Lib\${PLC_ATCM_COMMON}' ${PLC_ATCM_COMMON}
+    delete '$PLCWINBINPATH\..\Lib\ATCM_CANopen.4cl'
+    delete '$PLCWINBINPATH\..\Lib\ATCM_ProfibusDP.4cl'
+    delete '$PLCWINBINPATH\..\Lib\ATCM_SerialComm.4cl'
+    delete '$PLCWINBINPATH\..\Lib\ATCM_Socket.4cl'
+    delete '$PLCWINBINPATH\..\Lib\ATCM_Utility2.4cl'
+    delete '$PLCWINBINPATH\..\Lib\ATCM_XMLfile.4cl'
+    delete '$PLCWINBINPATH\..\Lib\Datalogger.4cl'
+    delete '$PLCWINBINPATH\..\Lib\HW119.4cl'
+    delete '$PLCWINBINPATH\..\Lib\MBRTU.4cl'
+    delete '$PLCWINBINPATH\..\Lib\MECT.4cl'
+    delete '$PLCWINBINPATH\..\Lib\MectUserUtility.4cl'
+    delete '$PLCWINBINPATH\..\Lib\Modbus.4cl'
+    delete '$PLCWINBINPATH\..\Lib\SDOCAN.4cl'
+    delete '$PLCWINBINPATH\..\Lib\USBManager.4cl'
+
+    # PLC Engineering help files
+    file '/oname=$TEMP\${PLCHELP_ARC}' '${PLCHELP_ARC}'
+    delete "$PLCWINBINPATH\..\Help\*.*"
+    ClearErrors
+    execWait '"$TEMP\unzip.exe" -j -o -d "C:/ATCMControl/Engineering/Help" "$TEMP\${PLCHELP_ARC}"'
+    ifErrors 0 PLCHELPnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${PLCHELP_ARC}$\n$\nPress OK to abort the installation.'
+	quit
+PLCHELPnoError:
+    delete '$TEMP\${PLCHELP_ARC}'
+
+    # Install the target compilation toolchain.
+    #
+    file '/oname=$TEMP\${ARMCCSETUP}' ${ARMCCSETUP}
+    ClearErrors
+    execWait '"$TEMP\${ARMCCSETUP}" -i GUI'
+    ifErrors 0 ARMCCnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing Code SOurcery toolchain.$\n$\nPress OK to abort the installation.'
+	quit
+ARMCCnoError:
+    delete '$TEMP\${ARMCCSETUP}'
+
+    # Collect the install path of the compiler.
+    readRegStr $ARMCCWININSTPATH HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sourcery G++ Lite for ARM GNU/Linux" "InstallLocation"
+
+    # Install the main archive.
+    #
+    # FIXME Install using an external ZIP archive.
 
     # CAN
     file '/oname=$TEMP\${CANARCH}' '${CANARCH}'
@@ -193,7 +268,7 @@ CANnoError:
     # Bulk base: Qt host, Qt Creator, root FS target, qmake target, etc.
     file '/oname=$TEMP\${BULK_ARC_BASE}' '${BULK_ARC_BASE}'
     ClearErrors
-    execWait '"$TEMP\7za.exe" x -y "$TEMP\${BULK_ARC_BASE}"'
+    execWait '"$TEMP\7zG.exe" x -y "$TEMP\${BULK_ARC_BASE}"'
     ifErrors 0 INSTBASEnoError
 	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${BULK_ARC_BASE}$\n$\nPress OK to abort the installation.'
 	quit
@@ -203,7 +278,7 @@ INSTBASEnoError:
     # Bulk update: Qt host, Qt Creator, root FS target, qmake target, etc.
     file '/oname=$TEMP\${BULK_ARC_UPDATE}' '${BULK_ARC_UPDATE}'
     ClearErrors
-    execWait '"$TEMP\7za.exe" x -y "$TEMP\${BULK_ARC_UPDATE}"'
+    execWait '"$TEMP\7zG.exe" x -y "$TEMP\${BULK_ARC_UPDATE}"'
     ifErrors 0 INSTUPDATEnoError
 	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${BULK_ARC_UPDATE}$\n$\nPress OK to abort the installation.'
 	quit
@@ -235,7 +310,7 @@ INSTUPDATEnoError:
     # Qt Creator default setup
     file '/oname=$TEMP\${QTPROJECT}.7z' '${QTPROJECT}.7z'
     ClearErrors
-    execWait '"$TEMP\7za.exe" x -y "$TEMP\${QTPROJECT}.7z"'
+    execWait '"$TEMP\7zG.exe" x -y "$TEMP\${QTPROJECT}.7z"'
     ifErrors 0 QTPnoError
 	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${QTPROJECT}.7z$\n$\nPress OK to abort the installation.'
 	quit
@@ -245,7 +320,7 @@ QTPnoError:
     # Perl 5.24.0 (MECT repack).
     file '/oname=$TEMP\${PERL_ARC}' '${PERL_ARC}'
     ClearErrors
-    execWait '"$TEMP\7za.exe" x -y "$TEMP\${PERL_ARC}"'
+    execWait '"$TEMP\7zG.exe" x -y "$TEMP\${PERL_ARC}"'
     ifErrors 0 PERLnoError
 	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${PERL_ARC}$\n$\nPress OK to abort the installation.'
 	quit
@@ -255,85 +330,12 @@ PERLnoError:
     # FIXME Compress all files within the installer.
     ### file /r install-them-all/*
 
-    #
-    # Install PLC Engineering.
-    #
-
-    file '/oname=$TEMP\${PLCARCH}' '${PLCARCH}'
-    rmDir /r "$TEMP\PLC"
-    ClearErrors
-    execWait '"$TEMP\unzip.exe" -o "$TEMP\${PLCARCH}" -d "$TEMP"'
-    ifErrors 0 PLCEXnoError
-	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${PLCARCH}$\n$\nPress OK to abort the installation.'
-	quit
-PLCEXnoError:
-    delete '$TEMP\${PLCARCH}'
-    ClearErrors
-    execWait '$TEMP\PLC\ATCMcontrol_Engineering_v2.20.02.4018\Setup.exe'
-    ifErrors 0 PLCnoError
-	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing PLC Engineering.$\n$\nPress OK to abort the installation.'
-	quit
-PLCnoError:
-    rmDir /r '$TEMP\PLC'
-
-    # Collect the PLC Engineering executable and full path.
-    readRegStr $PLCWINBINPATH HKLM "Software\Softing\4ControlV2\2.0" "BinPath"
-
-    # Fix PLC Engineering installation.
-    delete '$PLCWINBINPATH\ATHW119\${PLC_ATHW}'
-    file '/oname=$PLCWINBINPATH\ATHW119\${PLC_ATHW}' ${PLC_ATHW}
-    file '/oname=$PLCWINBINPATH\..\Lib\${PLC_ATCM_COMMON}' ${PLC_ATCM_COMMON}
-    delete '$PLCWINBINPATH\..\Lib\ATCM_CANopen.4cl'
-    delete '$PLCWINBINPATH\..\Lib\ATCM_ProfibusDP.4cl'
-    delete '$PLCWINBINPATH\..\Lib\ATCM_SerialComm.4cl'
-    delete '$PLCWINBINPATH\..\Lib\ATCM_Socket.4cl'
-    delete '$PLCWINBINPATH\..\Lib\ATCM_Utility2.4cl'
-    delete '$PLCWINBINPATH\..\Lib\ATCM_XMLfile.4cl'
-    delete '$PLCWINBINPATH\..\Lib\Datalogger.4cl'
-    delete '$PLCWINBINPATH\..\Lib\HW119.4cl'
-    delete '$PLCWINBINPATH\..\Lib\MBRTU.4cl'
-    delete '$PLCWINBINPATH\..\Lib\MECT.4cl'
-    delete '$PLCWINBINPATH\..\Lib\MectUserUtility.4cl'
-    delete '$PLCWINBINPATH\..\Lib\Modbus.4cl'
-    delete '$PLCWINBINPATH\..\Lib\SDOCAN.4cl'
-    delete '$PLCWINBINPATH\..\Lib\USBManager.4cl'
-
-    # PLC Engineering help files
-    file '/oname=$TEMP\${PLCHELP_ARC}' '${PLCHELP_ARC}'
-    ClearErrors
-    # FIXME: use the actual PLC Engineering install path
-    delete "C:\ATCMControl\Engineering\Help\*.*"
-    execWait '"$TEMP\unzip.exe" -j -o -d "C:/ATCMControl/Engineering/Help" "$TEMP\${PLCHELP_ARC}"'
-    ifErrors 0 PLCHELPnoError
-	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${PLCHELP_ARC}$\n$\nPress OK to abort the installation.'
-	quit
-PLCHELPnoError:
-    delete '$TEMP\${PLCHELP_ARC}'
-
-    #
-    # Install the target compilation toolchain.
-    #
-
-    file '/oname=$TEMP\${ARMCCSETUP}' ${ARMCCSETUP}
-    ClearErrors
-    execWait '"$TEMP\${ARMCCSETUP}" -i GUI'
-    ifErrors 0 ARMCCnoError
-	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing Code SOurcery toolchain.$\n$\nPress OK to abort the installation.'
-	quit
-ARMCCnoError:
-    delete '$TEMP\${ARMCCSETUP}'
-
-    # Collect the compiler install path.
-    readRegStr $ARMCCWININSTPATH HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sourcery G++ Lite for ARM GNU/Linux" "InstallLocation"
-
-    #
     # Install the additional fonts.
     #
-
     file '/oname=$TEMP\${FONTS_ARC}' ${FONTS_ARC}
     rmDir /r '$TEMP\Fonts'
     ClearErrors
-    execWait '"$TEMP\7za.exe" x -y -o"$TEMP" "$TEMP\${FONTS_ARC}"'
+    execWait '"$TEMP\7zG.exe" x -y -o"$TEMP" "$TEMP\${FONTS_ARC}"'
     ifErrors 0 FONTEXnoError
 	messageBox MB_OK|MB_ICONEXCLAMATION 'Cannot install the fonts.$\n$\nPress OK to continue.'
 FONTEXnoError:
@@ -346,13 +348,11 @@ FONTINnoError:
     rmDir /r '$TEMP\Fonts'
 
 
-
-    #
     # Cleanup
     #
-
     delete '$TEMP\unzip.exe'
-    delete '$TEMP\7za.exe'
+    delete '$TEMP\7zG.exe'
+    delete '$TEMP\7z.dll'
 
     #
     # Post-install setup
@@ -458,8 +458,19 @@ functionEnd
 
 section "uninstall"
 
-    # Get the actual install path.
+    # Get the actual install paths.
     readRegStr $INSTDIR HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTKEY}" "InstallLocation"
+    readRegStr $PLCINSTDIR HKLM "Software\Softing\Setup4C" "Path"
+
+    # Uninstall PLC Engineering.
+    readRegStr $PLCUNINSTID2 HKLM "Software\Softing\Products\52\Setup\52" "Deinstall"
+    execWait 'MsiExec.exe /X$PLCUNINSTID2'
+    readRegStr $PLCUNINSTID1 HKLM "Software\Softing\Products\61\Setup\61" "Deinstall"
+    execWait 'MsiExec.exe /X$PLCUNINSTID1'
+
+    # Uninstall the target toolchain.
+    readRegStr $ARMCCWINUNINST HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sourcery G++ Lite for ARM GNU/Linux" "UninstallString"
+    execWait "$ARMCCWINUNINST"
 
     # Clean up the path.
     #
@@ -472,6 +483,7 @@ section "uninstall"
     delete "$INSTDIR\${MECTSUITEVBS}"
     delete "$INSTDIR\${MECTAPPSBALL}"
     rmDir /r "$INSTDIR\${CAN_DIR}"
+    rmDir /r "$PLCINSTDIR"
     rmDir /r "$INSTDIR\${QTPROJECT}"
     rmDir /r "$INSTDIR\${QTH_DIR}"
     rmDir /r "$INSTDIR\${QTH_IMX_DIR}"
@@ -487,6 +499,7 @@ section "uninstall"
     #
     deleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTKEY}"
     deleteRegKey HKLM "Software\ATCM"
+    deleteRegValue HKLM "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" "$PLCWINBIN"
 
     # LAST: delete the uninstaller.
     delete "$INSTDIR\${UNINSTNAME}"
@@ -495,10 +508,6 @@ section "uninstall"
     # [ FIXME: Cannot.  The registry key has a random component, e.g.,
     # Software\Microsoft\Windows\CurrentVersion\Uninstall\{E5493DB8-035F-11D5-B8FA-002018641833}\UninstallString
     #readRegStr $PLCWINUNINST HKLM "" "UninstallString"
-
-    # Uninstall the target toolchain.
-    readRegStr $ARMCCWINUNINST HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sourcery G++ Lite for ARM GNU/Linux" "UninstallString"
-    execWait "$ARMCCWINUNINST"
 
     # Remove the install directory (if empty).
     rmDir "$INSTDIR"

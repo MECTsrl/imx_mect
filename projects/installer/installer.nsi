@@ -450,29 +450,11 @@ functionEnd
 
 section "uninstall"
 
-    # Get the actual install paths.
+    # Get the install paths.
     readRegStr $INSTDIR HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTKEY}" "InstallLocation"
     readRegStr $PLCINSTDIR HKLM "Software\Softing\Setup4C" "Path"
 
     # Uninstall PLC Engineering.
-    #
-    # FIXME: Create some dummy files to avoid uninstaller errors.
-    readRegStr $PLCWINBINPATH HKLM "Software\Softing\4ControlV2\2.0" "BinPath"
-    push $9
-    fileOpen $9 "$PLCWINBINPATH\..\Lib\Modbus.4cl" w
-    fileWrite $9 'Set WshShell = CreateObject("WScript.Shell")$\r$\n'
-    fileWrite $9 'WshShell.Run chr(34) & "$INSTDIR\${MECTSUITEBAT}" & Chr(34), 0$\r$\n'
-    fileWrite $9 "$\r$\n"
-    fileWrite $9 "Set WshShell = Nothing$\r$\n"
-    fileClose $9
-    fileOpen $9 "$PLCWINBINPATH\..\Lib\HW119.4cl" w
-    fileWrite $9 'Set WshShell = CreateObject("WScript.Shell")$\r$\n'
-    fileWrite $9 'WshShell.Run chr(34) & "$INSTDIR\${MECTSUITEBAT}" & Chr(34), 0$\r$\n'
-    fileWrite $9 "$\r$\n"
-    fileWrite $9 "Set WshShell = Nothing$\r$\n"
-    fileClose $9
-    pop $9
-    # Now run the uninstallers.
     readRegStr $PLCUNINSTID2 HKLM "Software\Softing\Products\52\Setup\52" "Deinstall"
     execWait 'MsiExec.exe /X$PLCUNINSTID2'
     readRegStr $PLCUNINSTID1 HKLM "Software\Softing\Products\61\Setup\61" "Deinstall"

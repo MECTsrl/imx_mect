@@ -8179,7 +8179,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 --- ltib.reference/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
 +++ ltib/dist/lfs-5.1/usb_modeswitch/usb_modeswitch_data.spec
-@@ -0,0 +1,76 @@
+@@ -0,0 +1,108 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Data for the USB Modeswitch tool
@@ -8229,6 +8229,38 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 +
++#########################################################
++# FIXME: THIS BREAKS SUPPORT FOR OTHER 05c6:1000 DEVICES!
++#########################################################
++#
++# Add support for 05c6:1000 --> 05c6:6000
++#
++# http://www.draisberghof.de/usb_modeswitch/bb/viewtopic.php?f=3&t=2565
++#
++# usb_modeswitch -W -v 05c6 -p 1000 -K
++#
++# «I don't think it is possible to add the generic 05c6:1000
++# to a distributed usb_modeswitch data package, the vendor,
++# product, or manufacturer strings are unfortunately not unique.
++# There is however nothing preventing you from using a
++# proprietary config file on your own computer, it should
++# contain:
++# 
++# TargetVendor=0x05c6
++# TargetProduct=0x6000
++# 
++# StandardEject=1
++# 
++# The file should be named 05c6:1000 and placed in the
++# /etc/usb_modeswitch.d directory.»
++#
++cd $RPM_BUILD_ROOT%{pfx}/usr/share/usb_modeswitch
++cat > 05c6:1000 <<EOM
++TargetVendor=0x05c6
++TargetProduct=0x6000
++
++StandardEject=1
++EOM
 +
 +# Compact the mode switching databse.
 +cd $RPM_BUILD_ROOT%{pfx}/usr/share/usb_modeswitch

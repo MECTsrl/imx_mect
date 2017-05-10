@@ -728,6 +728,7 @@ wininst: MECT_DOWNLOADS := \
 	    Fonts.7z \
 	    perl-5.24.0-mectpack.7z \
 	    PLC.zip \
+	    sourcery-g++-lite.7z \
 	    Qt485.7z \
 	    Qt485_upd_rev$(MECT_BUILD_RELEASE).7z \
 	    QtProject.7z \

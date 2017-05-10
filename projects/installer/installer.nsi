@@ -19,7 +19,6 @@ SetCompress off
 !define ABOUTURL        "http://www.mect.it/"
 !define RUNNAME         "${APPNAME}-v${VERSION}"
 !define UNINSTNAME      "${APPNAME}-v${VERSION}-uninstall.exe"
-!define ARMCCSETUP      "arm-2011.03-41-arm-none-linux-gnueabi.exe"
 !define MECTAPPSBALL	"MectApps.zip"
 !define CANARCH		"ATCM.zip"
 !define CAN_DIR		"ATCM"
@@ -32,8 +31,6 @@ Var PLCWINBIN           # Full path PLC Engineering executable
 Var PLCINSTDIR          # PLC Engineering install path
 Var PLCUNINSTID1        # PLC Engineering uninstaller ID main
 Var PLCUNINSTID2        # PLC Engineering uninstaller ID ATHW119...
-Var ARMCCWININSTPATH	# Target toolchain installation path
-Var ARMCCWINUNINST	# Target toolchain uninstaller
 
 # Need to write shared locations in file system and registry.
 RequestExecutionLevel admin
@@ -236,21 +233,17 @@ PLCHELPnoError:
 
     # Install the target compilation toolchain.
     #
-    file '/oname=$TEMP\${ARMCCSETUP}' ${ARMCCSETUP}
+    file '/oname=$TEMP\${CSXC_ARC}' '${CSXC_ARC}'
     ClearErrors
-    execWait '"$TEMP\${ARMCCSETUP}" -i GUI'
-    ifErrors 0 ARMCCnoError
-	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing Code SOurcery toolchain.$\n$\nPress OK to abort the installation.'
+    execWait '"$TEMP\7zG.exe" x -y "$TEMP\${CSXC_ARC}"'
+    ifErrors 0 INSTCSXCnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${CSXC_ARC}$\n$\nPress OK to abort the installation.'
 	quit
-ARMCCnoError:
-    delete '$TEMP\${ARMCCSETUP}'
-
-    # Collect the install path of the compiler.
-    readRegStr $ARMCCWININSTPATH HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sourcery G++ Lite for ARM GNU/Linux" "InstallLocation"
+INSTCSXCnoError:
+    delete '$TEMP\${CSXC_ARC}'
 
     # Install the main archive.
     #
-    # FIXME Install using an external ZIP archive.
 
     # CAN
     file '/oname=$TEMP\${CANARCH}' '${CANARCH}'
@@ -327,9 +320,6 @@ QTPnoError:
 PERLnoError:
     delete '$TEMP\${PERL_ARC}'
 
-    # FIXME Compress all files within the installer.
-    ### file /r install-them-all/*
-
     # Install the additional fonts.
     #
     file '/oname=$TEMP\${FONTS_ARC}' ${FONTS_ARC}
@@ -397,6 +387,7 @@ FONTINnoError:
     #
     #nsExec::ExecToLog 'echo "%PATH%"|findstr /i /c:"C:\Qt485\desktop\mingw32\bin">nul || C:\Qt485\desktop\bin\pathman /au "C:\Qt485\desktop\mingw32\bin"'
     execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\desktop\mingw32\bin"'
+    execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\${CSXC_DIR}\bin"'
 
 
     #
@@ -424,6 +415,7 @@ FONTINnoError:
     fileWrite $9 'WshShell.Run chr(34) & "$INSTDIR\${MECTSUITEBAT}" & Chr(34), 0$\r$\n'
     fileWrite $9 "$\r$\n"
     fileWrite $9 "Set WshShell = Nothing$\r$\n"
+    fileClose $9
     pop $9
 
 
@@ -463,17 +455,32 @@ section "uninstall"
     readRegStr $PLCINSTDIR HKLM "Software\Softing\Setup4C" "Path"
 
     # Uninstall PLC Engineering.
+    #
+    # FIXME: Create some dummy files to avoid uninstaller errors.
+    readRegStr $PLCWINBINPATH HKLM "Software\Softing\4ControlV2\2.0" "BinPath"
+    push $9
+    fileOpen $9 "$PLCWINBINPATH\..\Lib\Modbus.4cl" w
+    fileWrite $9 'Set WshShell = CreateObject("WScript.Shell")$\r$\n'
+    fileWrite $9 'WshShell.Run chr(34) & "$INSTDIR\${MECTSUITEBAT}" & Chr(34), 0$\r$\n'
+    fileWrite $9 "$\r$\n"
+    fileWrite $9 "Set WshShell = Nothing$\r$\n"
+    fileClose $9
+    fileOpen $9 "$PLCWINBINPATH\..\Lib\HW119.4cl" w
+    fileWrite $9 'Set WshShell = CreateObject("WScript.Shell")$\r$\n'
+    fileWrite $9 'WshShell.Run chr(34) & "$INSTDIR\${MECTSUITEBAT}" & Chr(34), 0$\r$\n'
+    fileWrite $9 "$\r$\n"
+    fileWrite $9 "Set WshShell = Nothing$\r$\n"
+    fileClose $9
+    pop $9
+    # Now run the uninstallers.
     readRegStr $PLCUNINSTID2 HKLM "Software\Softing\Products\52\Setup\52" "Deinstall"
     execWait 'MsiExec.exe /X$PLCUNINSTID2'
     readRegStr $PLCUNINSTID1 HKLM "Software\Softing\Products\61\Setup\61" "Deinstall"
     execWait 'MsiExec.exe /X$PLCUNINSTID1'
 
-    # Uninstall the target toolchain.
-    readRegStr $ARMCCWINUNINST HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sourcery G++ Lite for ARM GNU/Linux" "UninstallString"
-    execWait "$ARMCCWINUNINST"
-
     # Clean up the path.
     #
+    execWait '"$INSTDIR\desktop\bin\pathman" /ru "$INSTDIR\${CSXC_DIR}\bin"'
     execWait '"$INSTDIR\desktop\bin\pathman" /ru "$INSTDIR\desktop\mingw32\bin"'
 
     # Remove all files.
@@ -487,6 +494,7 @@ section "uninstall"
     rmDir /r "$INSTDIR\${QTPROJECT}"
     rmDir /r "$INSTDIR\${QTH_DIR}"
     rmDir /r "$INSTDIR\${QTH_IMX_DIR}"
+    rmDir /r "$INSTDIR\${CSXC_DIR}"
 
     # Clean up the Start Menu.
     #

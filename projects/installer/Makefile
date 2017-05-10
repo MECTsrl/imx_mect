@@ -31,7 +31,8 @@ QT_ARCHIVE_BASE := Qt485.7z
 QT_ARCHIVE_UPDATE := Qt485_upd_rev$(MECT_BUILD_RELEASE).7z
 QTPROJECT := QtProject
 
-CSXC_ARC := arm-2011.03-41-arm-none-linux-gnueabi.exe
+CSXC_ARC := sourcery-g++-lite.7z
+CSXC_DIR = $(basename $(CSXC_ARC))
 CAN_ARC := ATCM.zip
 PLC_ARC := PLC.zip
 PLC_ATHW := ATHW119_4CVM.kad
@@ -68,8 +69,6 @@ all:
 	cp --reflink=auto $(SRCDIR)/$(PLC_ARC) .
 	cp --reflink=auto $(SRCDIR)/$(PLC_ATHW) .
 	cp --reflink=auto $(SRCDIR)/$(PLC_ATCM_COMMON) .
-	#
-	# PLC Engineering help
 	cp --reflink=auto $(SRCDIR)/$(PLCHELP_ARC) .
 	#
 	# Code Sourcery ARM cross compiler installer
@@ -97,6 +96,7 @@ all:
 	    -DVERSIONMAJOR=$(MECT_BUILD_MAJOR) \
 	    -DVERSIONMINOR=$(MECT_BUILD_MINOR) \
 	    -DVERSIONBUILD=$(MECT_BUILD_BUILD) \
+	    -DCSXC_ARC=$(CSXC_ARC) \
 	    -DBULK_ARC_BASE=$(BULK_ARC_BASE) \
 	    -DBULK_ARC_UPDATE=$(BULK_ARC_UPDATE) \
 	    -DQTPROJECT=$(QTPROJECT) \
@@ -107,6 +107,7 @@ all:
 	    -DPLC_ATCM_COMMON=$(PLC_ATCM_COMMON) \
 	    -DINSTALLPRG=$(INSTALLPRG) \
 	    -DQTH_DIR=$(QTH_DIR) \
+	    -DCSXC_DIR=$(CSXC_DIR) \
 	    -DQTH_IMX_DIR=$(QTH_IMX_DIR) \
 	    -DQTH_ARM_DIR=$(QTH_ARM_DIR) \
 	    -DQTC_DIR=$(QTC_DIR) \
@@ -131,4 +132,5 @@ clean:
 	test -n "$(MECTAPPS_DESTDIR)"
 	test -n "$(PLC_ARC)"
 	test -n "$(UNZIP_EXE)"
-	sudo rm -rf $(CSXC_ARC) $(CAN_ARC) $(PLC_ATHW) $(PLC_ATCM_COMMON) $(FONTS_ARC) $(INSTALLDST) $(BULK_ARC) $(INSTALLPRG) $(MECTAPPS_ARCHNAME) $(MECTAPPS_DESTDIR) $(PLC_ARC) $(UNZIP_EXE)
+	test -n "$(CSXC_ARC)"
+	sudo rm -rf $(CSXC_ARC) $(CAN_ARC) $(PLC_ATHW) $(PLC_ATCM_COMMON) $(FONTS_ARC) $(INSTALLDST) $(BULK_ARC) $(INSTALLPRG) $(MECTAPPS_ARCHNAME) $(MECTAPPS_DESTDIR) $(PLC_ARC) $(UNZIP_EXE) $(CSXC_ARC)

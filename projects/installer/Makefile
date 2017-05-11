@@ -41,7 +41,6 @@ FONTS_ARC := Fonts.7z
 PLCHELP_ARC := Engineering_Help.zip
 
 UNZIP_EXE := unzip.exe
-UN7ZIP_EXE := 7za.exe
 UN7ZIPG_EXE := 7zG.exe
 UN7ZIP_DLL := 7z.dll
 PERL_ARC := perl-5.24.0-mectpack.7z
@@ -56,7 +55,6 @@ all:
 	cp --reflink=auto $(SRCDIR)/$(UNZIP_EXE) .
 	#
 	# 7zip
-	cp --reflink=auto $(SRCDIR)/$(UN7ZIP_EXE) .
 	cp --reflink=auto $(SRCDIR)/$(UN7ZIPG_EXE) .
 	cp --reflink=auto $(SRCDIR)/$(UN7ZIP_DLL) .
 	#

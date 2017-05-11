@@ -718,6 +718,7 @@ cloner_shar:
 
 PHONY: wininst
 wininst: MECT_DOWNLOADS := \
+	    7za.exe \
 	    7z.dll \
 	    7zG.exe \
 	    arm-2011.03-41-arm-none-linux-gnueabi.exe \

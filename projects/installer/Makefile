@@ -42,6 +42,7 @@ PLCHELP_ARC := Engineering_Help.zip
 
 UNZIP_EXE := unzip.exe
 UN7ZIP_EXE := 7za.exe
+UN7ZIPG_EXE := 7zG.exe
 PERL_ARC := perl-5.24.0-mectpack.7z
 
 
@@ -55,6 +56,7 @@ all:
 	#
 	# 7zip
 	cp --reflink=auto $(SRCDIR)/$(UN7ZIP_EXE) .
+	cp --reflink=auto $(SRCDIR)/$(UN7ZIPG_EXE) .
 	#
 	# MECT apps
 	rm -rf $(MECTAPPS_DESTDIR)

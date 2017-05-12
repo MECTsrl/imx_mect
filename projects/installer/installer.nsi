@@ -331,7 +331,7 @@ PERLnoError:
 FONTEXnoError:
     delete '$TEMP\${FONTS_ARC}'
     ClearErrors
-    execWait '"$SYSDIR\CScript.exe" $TEMP\Fonts\install.vbs $TEMP\Fonts //e:vbscript //B //NOLOGO'
+    execWait '"$SYSDIR\CScript.exe" $TEMP\Fonts\install.vbs $TEMP\ //e:vbscript //B //NOLOGO'
     ifErrors 0 FONTINnoError
 	messageBox MB_OK|MB_ICONEXCLAMATION 'Cannot install the fonts.$\n$\nPress OK to continue.'
 FONTINnoError:

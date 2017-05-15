@@ -43,7 +43,7 @@ PLCHELP_ARC := Engineering_Help.zip
 UNZIP_EXE := unzip.exe
 UN7ZIPG_EXE := 7zG.exe
 UN7ZIP_DLL := 7z.dll
-PERL_ARC := perl-5.24.0-mectpack.7z
+PERL_INST := ActivePerl-5.16.3.1603-MSWin32-x86-296746.msi
 
 
 .PHONY: all
@@ -79,8 +79,8 @@ all:
 	# CAN builder
 	cp --reflink=auto $(SRCDIR)/$(CAN_ARC) .
 	#
-	# Perl 5.24.0
-	cp -aL --reflink=auto $(SRCDIR)/$(PERL_ARC) .
+	# ActivePerl 5.16.3.1603-MSWin32-x86-296746
+	cp --reflink=auto $(SRCDIR)/$(PERL_INST) .
 	#
 	# Bulk install archive (Qt x86, Qt ARM, Qt Creator, root FS, ...)
 	cp --reflink=auto $(SRCDIR)/$(QT_ARCHIVE_BASE) $(BULK_ARC_BASE)
@@ -103,7 +103,7 @@ all:
 	    -DBULK_ARC_UPDATE=$(BULK_ARC_UPDATE) \
 	    -DQTPROJECT=$(QTPROJECT) \
 	    -DPLCHELP_ARC=$(PLCHELP_ARC) \
-	    -DPERL_ARC=$(PERL_ARC) \
+	    -DPERL_INST=$(PERL_INST) \
 	    -DFONTS_ARC=$(FONTS_ARC) \
 	    -DPLC_ATHW=$(PLC_ATHW) \
 	    -DPLC_ATCM_COMMON=$(PLC_ATCM_COMMON) \
@@ -135,4 +135,4 @@ clean:
 	test -n "$(PLC_ARC)"
 	test -n "$(UNZIP_EXE)"
 	test -n "$(CSXC_ARC)"
-	sudo rm -rf $(CSXC_ARC) $(CAN_ARC) $(PLC_ATHW) $(PLC_ATCM_COMMON) $(FONTS_ARC) $(INSTALLDST) $(BULK_ARC) $(INSTALLPRG) $(MECTAPPS_ARCHNAME) $(MECTAPPS_DESTDIR) $(PLC_ARC) $(UNZIP_EXE) $(CSXC_ARC)
+	sudo rm -rf $(CSXC_ARC) $(CAN_ARC) $(PLC_ATHW) $(PLC_ATCM_COMMON) $(FONTS_ARC) $(INSTALLDST) $(BULK_ARC) $(INSTALLPRG) $(MECTAPPS_ARCHNAME) $(MECTAPPS_DESTDIR) $(PLC_ARC) $(UNZIP_EXE) $(CSXC_ARC) $(PERL_INST)

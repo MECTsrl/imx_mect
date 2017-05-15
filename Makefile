@@ -710,18 +710,18 @@ PHONY: wininst
 wininst: MECT_DOWNLOADS := \
 	    7z.dll \
 	    7zG.exe \
+	    ActivePerl-5.16.3.1603-MSWin32-x86-296746.msi \
 	    arm-2011.03-41-arm-none-linux-gnueabi.exe \
 	    ATCM_Common.4cl \
 	    ATCM.zip \
 	    ATHW119_4CVM.kad \
 	    Engineering_Help.zip \
 	    Fonts.7z \
-	    perl-5.24.0-mectpack.7z \
 	    PLC.zip \
-	    sourcery-g++-lite.7z \
 	    Qt485.7z \
 	    Qt485_upd_rev$(MECT_BUILD_RELEASE).7z \
 	    QtProject.7z \
+	    sourcery-g++-lite.7z \
 	    unzip.exe
 wininst: MECT_DOWNLOADS += $(MECT_DOWNLOADS:%=%.$(MECT_MD5EXT))
 wininst: MECT_DOWNLOADS := $(MECT_DOWNLOADS:%=$(MECT_FTPDIR)/%)

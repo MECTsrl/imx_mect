@@ -231,6 +231,17 @@ PLCnoError:
 PLCHELPnoError:
     delete '$TEMP\${PLCHELP_ARC}'
 
+    # Install Active Perl.
+    #
+    file '/oname=$TEMP\${PERL_INST}' '${PERL_INST}'
+    ClearErrors
+    execWait '"msiexec" /i "$TEMP\${PERL_INST}"'
+    ifErrors 0 PERLnoError
+	messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing Perl.$\n$\nPress OK to abort the installation.'
+	quit
+PERLnoError:
+    rmDir /r '$TEMP\${PERL_INST}'
+
     # Install the target compilation toolchain.
     #
     file '/oname=$TEMP\${CSXC_ARC}' '${CSXC_ARC}'
@@ -309,16 +320,6 @@ INSTUPDATEnoError:
 	quit
 QTPnoError:
     delete '$TEMP\${QTPROJECT}.7z'
-
-    # Perl 5.24.0 (MECT repack).
-    file '/oname=$TEMP\${PERL_ARC}' '${PERL_ARC}'
-    ClearErrors
-    execWait '"$TEMP\7zG.exe" x -y "$TEMP\${PERL_ARC}"'
-    ifErrors 0 PERLnoError
-	messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${PERL_ARC}$\n$\nPress OK to abort the installation.'
-	quit
-PERLnoError:
-    delete '$TEMP\${PERL_ARC}'
 
     # Install the additional fonts.
     #

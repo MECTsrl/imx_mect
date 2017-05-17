@@ -622,8 +622,9 @@ ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 		TPAC1008_02_AD \
 		TPAC1008_02_AE \
 		TPAC1008_02_AF \
-		TPLC100 \
-		TPLC150 \
+
+#		TPLC100_01_AA \
+#		TPLC100_01_AB \
 
 endif
 
@@ -791,7 +792,7 @@ target_rfs: $(MECT_COMMON_RFSPKGS)
 		echo "MectApps: $(MECT_BUILD_APPSCRT_BRANCH)/$(MECT_BUILD_APPSCRT_TAG)"; \
 	) > $(MECT_RFSDIR)/$(MECT_RFS_VERSION_FILE)
 	# Target-specific tuning (better build target-specific packages?)
-	if test "$(MECT_BUILD_TARGET)" = "TPLC100" -o "$(MECT_BUILD_TARGET)" = "TPLC150"; then \
+	if test "$(MECT_BUILD_TARGET)" = "TPLC100_01_AA" -o "$(MECT_BUILD_TARGET)" = "TPLC100_01_AB"; then \
 		sudo rm -f $(MECT_RFSDIR)/usr/bin/ts_calibrate; \
 	fi
 	sudo du -sh --apparent-size $(MECT_RFSDIR)

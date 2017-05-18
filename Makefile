@@ -6,7 +6,7 @@ export LC_ALL := C
 export MECT_BUILD_MAJOR := 3
 export MECT_BUILD_MINOR := 0
 export MECT_BUILD_BUILD := 0
-export MECT_BUILD_RELEASE = $(MECT_BUILD_MAJOR).$(MECT_BUILD_MINOR).$(MECT_BUILD_BUILD)rc6
+export MECT_BUILD_RELEASE = $(MECT_BUILD_MAJOR).$(MECT_BUILD_MINOR).$(MECT_BUILD_BUILD)rc7
 
 # ---------------------------
 
@@ -622,9 +622,8 @@ ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 		TPAC1008_02_AD \
 		TPAC1008_02_AE \
 		TPAC1008_02_AF \
-
-#		TPLC100_01_AA \
-#		TPLC100_01_AB \
+		TPLC100_01_AA \
+		TPLC100_01_AB \
 
 endif
 

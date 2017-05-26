@@ -23,7 +23,7 @@ SetCompress off
 !define CANARCH		"ATCM.zip"
 !define CAN_DIR		"ATCM"
 !define PLCARCH		"PLC.zip"
-!define ROAMINGAPPDATA  "$LOCALAPPDATA\..\Roaming"
+!define ROAMINGAPPDATA  "%USERPROFILE%\AppData\Roaming"
 
 #Var PLCWINUNINST	# PLC Engineering uninstaller
 Var PLCWINBINPATH	# PLC Engineering binary path

@@ -1210,7 +1210,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 3.0.0rc7
++Version         : 3.0.0rc9
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3536,7 +3536,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v3.0.0rc7
++Version         : v3.0.0rc9
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -4806,7 +4806,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v3.0.0rc7
++Version: v3.0.0rc9
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -6826,7 +6826,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec
 +++ ltib/dist/lfs-5.1/skell/skell.spec
-@@ -9,20 +9,101 @@
+@@ -9,20 +9,103 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -6881,6 +6881,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Patch46         : skell-1.18-remove_boa_rc_script.patch
 +Patch47         : skell-1.18-no_fstab.patch
 +Patch48         : skell-1.18-remove_passwd_group.patch
++Patch49         : skell-1.18-remove_services.patch
++Patch50         : skell-1.18-remove_shadow.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -6932,7 +6934,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +112,174 @@
+@@ -31,24 +114,175 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -6973,6 +6975,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%patch46 -p1
 +%patch47 -p1
 +%patch48 -p1
++%patch49 -p1
++%patch50 -p1
  
  %Build
 +export LC_ALL
@@ -7057,7 +7061,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/etc/rc.d/rcS
 +%{pfx}/etc/rc.d/rc.serial
 +%{pfx}/etc/securetty
-+%{pfx}/etc/shadow
 +%{pfx}/etc/shells
 +%{pfx}/etc/sysctl.conf
 +%{pfx}/etc/udhcpd.conf

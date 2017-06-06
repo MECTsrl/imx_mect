@@ -19430,7 +19430,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 --- ltib.reference/config/platform/imx/merge/etc/shadow
 +++ ltib/config/platform/imx/merge/etc/shadow
 @@ -0,0 +1,41 @@
-+root:$1$kmiZb8Op$66xleA/3tYt8y.ktD7H9U1:0:0:99999:7:::
++root:$1$KZqDSbN6$.fLf2cZW6zybjk3glD4UZ1:17323:0:99999:7:::
 +bin:*:11851:0:99999:7:::
 +daemon:*:11851:0:99999:7:::
 +adm:*:11851:0:99999:7:::

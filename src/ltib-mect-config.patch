@@ -19005,31 +19005,33 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +        cd /local 2>/dev/null
 +
-+        test -d /local/sd_card/data || rsync -arxL /local/flash/data /local/sd_card/
++        test -d /local/sd_card/data || rsync -ax /local/flash/data/ /local/sd_card/data/
 +        if [ "`readlink data`" != "sd_card/data" ]; then
 +            rm -f data
 +            ln -s sd_card/data 2>/dev/null
 +        fi
 +
-+        test -d /local/sd_card/control || rsync -arxL /local/flash/control /local/sd_card/
++        test -d /local/sd_card/control || rsync -ax /local/flash/control/ /local/sd_card/control/
 +        if [ "`readlink control`" != "sd_card/control" ]; then
 +            rm -f control
-+            ln -s /local/sd_card/control control 2>/dev/null
++            ln -s sd_card/control 2>/dev/null
 +        fi
 +
-+        test -d /local/sd_card/root || rsync -arxL /local/flash/root /local/sd_card/
++        test -d /local/sd_card/root || rsync -ax /local/flash/root/ /local/sd_card/root/
 +        if [ "`readlink root`" != "sd_card/root" ]; then
 +            rm -f root
-+            ln -s /local/sd_card/root root 2>/dev/null
++            ln -s sd_card/root 2>/dev/null
 +        fi
 +
-+        test -d /local/sd_card/etc || rsync -arxL /local/flash/etc /local/sd_card/
++        test -d /local/sd_card/etc || rsync -ax /local/flash/etc/ /local/sd_card/etc/
 +        if [ "`readlink etc`" != "sd_card/etc" ]; then
 +            rm -f etc
-+            ln -s /local/sd_card/etc etc 2>/dev/null
++            ln -s sd_card/etc 2>/dev/null
 +        fi
 +
 +        touch $APPLICATION
++
++	/etc/rc.d/init.d/network restart
 +
 +        echo "Updated the links."
 +
@@ -19045,20 +19047,18 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +        if [ "`readlink control`" != "flash/control" ]; then
 +            rm -f control
-+            ln -s /local/flash/control control 2>/dev/null
++            ln -s flash/control 2>/dev/null
 +        fi
 +
 +        if [ "`readlink root`" != "flash/root" ]; then
 +            rm -f root
-+            ln -s /local/flash/root root 2>/dev/null
++            ln -s flash/root 2>/dev/null
 +        fi
 +
 +        if [ "`readlink etc`" != "flash/etc" ]; then
 +            rm -f etc
-+            ln -s /local/flash/etc etc 2>/dev/null
++            ln -s flash/etc 2>/dev/null
 +        fi
-+
-+        mkdir -p /local/sd_card/data
 +
 +        touch $STORAGE
 +
@@ -19075,17 +19075,17 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +        if [ "`readlink control`" != "flash/control" ]; then
 +            rm -f control
-+            ln -s /local/flash/control control 2>/dev/null
++            ln -s flash/control 2>/dev/null
 +        fi
 +
 +        if [ "`readlink root`" != "flash/root" ]; then
 +            rm -f root
-+            ln -s /local/flash/root root 2>/dev/null
++            ln -s flash/root 2>/dev/null
 +        fi
 +
 +        if [ "`readlink etc`" != "flash/etc" ]; then
 +            rm -f etc
-+            ln -s /local/flash/etc etc 2>/dev/null
++            ln -s flash/etc 2>/dev/null
 +        fi
 +
 +        echo "Updated the links."
@@ -19112,17 +19112,17 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +	if [ "`readlink control`" != "flash/control" ]; then
 +		rm -f control
-+		ln -s /local/flash/control control 2>/dev/null
++		ln -s flash/control 2>/dev/null
 +	fi
 +
 +	if [ "`readlink root`" != "flash/root" ]; then
 +		rm -f root
-+		ln -s /local/flash/root root 2>/dev/null
++		ln -s flash/root 2>/dev/null
 +	fi
 +
 +	if [ "`readlink etc`" != "flash/etc" ]; then
 +		rm -f etc 2>/dev/null
-+		ln -s /local/flash/etc etc 2>/dev/null
++		ln -s flash/etc 2>/dev/null
 +	fi
 +
 +	echo "Updated the links."

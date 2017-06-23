@@ -128,6 +128,10 @@ MECT_SYSCLONE_LOOP = $(MECT_SYSCLONE_SHDIR)/sysupdate_cloner_$(MECT_BUILD_RELEAS
 MECT_SYSCLONE_DIR := $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE)/temp
 # Program to update target kernel
 MECT_KOBS_TMPL := $(MECT_FTPDIR)/kobs-ng
+# sysupdate for MECT Remote Services configuration
+MECT_SYSUPD_VPN_PRE := $(MECT_FTPDIR)/sysupdate_vpn_pre.sh
+MECT_SYSUPD_VPN = $(MECT_IMGDIR)/sysupdate_vpn.sh
+MECT_SYSUPD_VPN_POST := $(MECT_FTPDIR)/sysupdate_vpn_post.sh
 
 # Extension of the MD5 checksums for the downloads.
 MECT_MD5EXT := md5
@@ -705,6 +709,24 @@ cloner_shar:
 	install -m 644 $(MECT_SYSCLONE_TMPL) $(MECT_SYSCLONE_SH)
 	sed -i 's/@@CLONER_VERSION@@/$(MECT_BUILD_RELEASE)/' $(MECT_SYSCLONE_SH)
 	rm -rf $(dir $(MECT_SYSCLONE_DIR))
+
+# Build the sysupdate for MECT Remote Services configuration.
+.PHONY: sysupdate_mrs
+sysupdate_mrs: MRS_COMPONENTS := \
+    usr/sbin/rsync-mect.sh \
+    etc/rsync-mect.pwd \
+    local/var/spool/cron/crontabs/root.default \
+
+sysupdate_mrs:
+	test -n '$(MRS_COMPONENTS)'
+	for f in $(MRS_COMPONENTS:%=$(MECT_LTIB_RFSDIR)/%); do test -r $$f; done
+	rm -f $(MECT_SYSUPD_VPN)
+	cat $(MECT_SYSUPD_VPN_PRE) > $(MECT_SYSUPD_VPN)
+	cd $(MECT_LTIB_RFSDIR); shar -x $(MRS_COMPONENTS) >> $(MECT_SYSUPD_VPN)
+	tail -1 $(MECT_SYSUPD_VPN) | grep -q '^exit 0$$'
+	sed -i '$$ d' $(MECT_SYSUPD_VPN)
+	cat $(MECT_SYSUPD_VPN_POST) >> $(MECT_SYSUPD_VPN)
+
 
 PHONY: wininst
 wininst: MECT_DOWNLOADS := \

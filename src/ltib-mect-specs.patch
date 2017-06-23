@@ -4922,7 +4922,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,156 @@
+@@ -10,40 +10,157 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -5016,10 +5016,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	/etc/rc.d/init.d/sdcheck \
 +	/etc/rc.d/init.d/setup \
 +	/etc/rc.d/rc.local \
-+	/local/bin/rsync-mect.sh \
 +	/local/etc/ppp/ip-down \
 +	/local/etc/ppp/ip-up \
 +	/usr/bin/fcrts.sh \
++	/usr/sbin/rsync-mect.sh \
 +	/usr/sbin/usb3g.sh \
 +	/usr/sbin/wifi.sh \
 +; do
@@ -5071,15 +5071,16 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/etc/rc.d/init.d/setup
 +%{pfx}/etc/rc.d/rc.local
 +%{pfx}/etc/resolv.conf
++%{pfx}/etc/rsync-mect.pwd
 +%{pfx}/etc/services
 +%{pfx}/etc/shadow
 +%{pfx}/usr/bin/fcrts.sh
++%{pfx}/usr/sbin/rsync-mect.sh
 +%{pfx}/usr/sbin/usb3g.sh
 +%{pfx}/usr/sbin/wifi.sh
 +
 +%Files lfs
 +%defattr(-,root,root)
-+%{pfx}/local/bin/rsync-mect.sh
 +%{pfx}/local/etc/icinga/nrpe.cfg
 +%{pfx}/local/etc/ppp/chat-usb3g
 +%{pfx}/local/etc/ppp/ip-down
@@ -5090,7 +5091,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/local/etc/sysconfig/lang_table.csv
 +%{pfx}/local/etc/sysconfig/net.conf
 +%{pfx}/local/root/make_usb_device
-+%{pfx}/local/var/spool/cron/crontabs/root
++%{pfx}/local/var/spool/cron/crontabs/root.default
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 --- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 +++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec

@@ -19245,6 +19245,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +# Fix root home directory permissions.
 +test -d /local/flash/root && chmod 0755 /local/flash/root
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rsync-mect.pwd ltib/config/platform/imx/merge/etc/rsync-mect.pwd
+--- ltib.reference/config/platform/imx/merge/etc/rsync-mect.pwd
++++ ltib/config/platform/imx/merge/etc/rsync-mect.pwd
+@@ -0,0 +1 @@
++rsync-logger
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/services ltib/config/platform/imx/merge/etc/services
 --- ltib.reference/config/platform/imx/merge/etc/services
 +++ ltib/config/platform/imx/merge/etc/services
@@ -19471,24 +19476,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +user:$1$pJefShJL$CoX8T20vn1g.ug0jZIczM.:11851:0:99999:7:::
 +messagebus:!:15:0:99999:7:::
 +haldaemon:!:15:0:99999:7:::
-diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/bin/rsync-mect.sh ltib/config/platform/imx/merge/local/bin/rsync-mect.sh
---- ltib.reference/config/platform/imx/merge/local/bin/rsync-mect.sh
-+++ ltib/config/platform/imx/merge/local/bin/rsync-mect.sh
-@@ -0,0 +1,14 @@
-+#!/bin/sh
-+
-+test -r /local/etc/rsync-mect.pwd || exit 3
-+
-+IP="$(/sbin/ip addr show dev tun0 2>/dev/null | /usr/bin/awk '/ inet / { print $2; }')"
-+test -n "$IP" || exit 1
-+
-+PIDFILE=/var/run/rsync-$IP.pid
-+
-+test -s $PIDFILE && test -d /proc/$(cat $PIDFILE) && exit 2
-+
-+/usr/bin/rsync -a --timeout=45 --password-file=/local/etc/rsync-mect.pwd --include 'alarms/' --include 'alarms/*' --include 'store/' --include 'store/*' --exclude '*' /local/data/ rsync@rsync.rs.mect.it::LOGs/$IP/ > /dev/null 2>&1 &
-+
-+echo -n $! > $PIDFILE
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/icinga/nrpe.cfg ltib/config/platform/imx/merge/local/etc/icinga/nrpe.cfg
 --- ltib.reference/config/platform/imx/merge/local/etc/icinga/nrpe.cfg
 +++ ltib/config/platform/imx/merge/local/etc/icinga/nrpe.cfg
@@ -19931,15 +19918,15 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	modprobe g_file_storage file=/local/root/backing_file
 +	return $?
 +fi
-diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/var/spool/cron/crontabs/root ltib/config/platform/imx/merge/local/var/spool/cron/crontabs/root
---- ltib.reference/config/platform/imx/merge/local/var/spool/cron/crontabs/root
-+++ ltib/config/platform/imx/merge/local/var/spool/cron/crontabs/root
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/var/spool/cron/crontabs/root.default ltib/config/platform/imx/merge/local/var/spool/cron/crontabs/root.default
+--- ltib.reference/config/platform/imx/merge/local/var/spool/cron/crontabs/root.default
++++ ltib/config/platform/imx/merge/local/var/spool/cron/crontabs/root.default
 @@ -0,0 +1,5 @@
 +#min h dom m dow cmd
 +#
 +
 +#crontab must end with the last line as space or a comment
-+#*/2  * *   * *   /local/bin/rsync-mect.sh
++#*/2  * *   * *   /usr/sbin/rsync-mect.sh
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh ltib/config/platform/imx/merge/usr/bin/fcrts.sh
 --- ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh
 +++ ltib/config/platform/imx/merge/usr/bin/fcrts.sh
@@ -19947,6 +19934,26 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#!/bin/sh
 +
 +exec /local/root/fcrts
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/rsync-mect.sh ltib/config/platform/imx/merge/usr/sbin/rsync-mect.sh
+--- ltib.reference/config/platform/imx/merge/usr/sbin/rsync-mect.sh
++++ ltib/config/platform/imx/merge/usr/sbin/rsync-mect.sh
+@@ -0,0 +1,16 @@
++#!/bin/sh
++
++PWDFILE="/etc/rsync-mect.pwd"
++
++test -r "$PWDFILE" || exit 3
++
++IP="$(/sbin/ip addr show dev tun0 2>/dev/null | /usr/bin/awk '/ inet / { print $2; }')"
++test -n "$IP" || exit 1
++
++PIDFILE=/var/run/rsync-$IP.pid
++
++test -s $PIDFILE && test -d /proc/$(cat $PIDFILE) && exit 2
++
++/usr/bin/rsync -a --timeout=45 --password-file="$PWDFILE" --include 'alarms/' --include 'alarms/*' --include 'store/' --include 'store/*' --exclude '*' /local/data/ rsync@rsync.rs.mect.it::LOGs/$IP/ > /dev/null 2>&1 &
++
++echo -n $! > $PIDFILE
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/usb3g.sh ltib/config/platform/imx/merge/usr/sbin/usb3g.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/usb3g.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/usb3g.sh

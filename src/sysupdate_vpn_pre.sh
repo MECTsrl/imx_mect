@@ -1,12 +1,12 @@
 #!/bin/sh
 
-# Execution trace
+# Trace the execution.
 set -x
 
-# Set in /etc/rc.d/init.d/S10setup
-mntdir=/tmp/mnt
+ERRMSG="SYSUPDATE ERROR:"
 
-CWD="$(pwd)"
+# Set in /etc/rc.d/init.d/S10setup
+MNTDIR=/tmp/mnt
 
 LUS="/usr/sbin/rsync-mect.sh"
 LUP="/etc/rsync-mect.pwd"
@@ -20,7 +20,7 @@ do_exit()
 {
     sync 2>&1 | tee /dev/tty1
 
-    test -n "$1" && echo "SYSUPDATE ERROR: $1" | tee /dev/tty1
+    test -n "$1" && echo "${ERRMSG} $1" | tee /dev/tty1
     echo "" | tee /dev/tty1
     echo "*******************************************************" | tee /dev/tty1
     echo "* Please power off and remove the USB storage device. *" | tee /dev/tty1
@@ -35,6 +35,13 @@ do_exit()
         exit 0
     fi
 }
+
+# Gain R/W access to root file system.
+RFSRW="$(grep -q '\s/\s\+ubifs\s.*\brw\b' /proc/mounts; echo $?)"
+if test "$RFSRW" -ne 0; then
+    mount -orw,remount /
+    grep -q '\s/\s\+ubifs\s\+.*\brw\b' /proc/mounts || do_exit "read-only root file system."
+fi
 
 test -s /rootfs_version -a -r /rootfs_version   || do_exit "malformed root file system."
 test -s /etc/serial.conf -a -r /etc/serial.conf || do_exit "serial number not set."

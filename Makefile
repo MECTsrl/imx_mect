@@ -130,7 +130,7 @@ MECT_SYSCLONE_DIR := $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE)/temp
 MECT_KOBS_TMPL := $(MECT_FTPDIR)/kobs-ng
 # sysupdate for MECT Remote Services configuration
 MECT_SYSUPD_VPN_PRE := $(MECT_FTPDIR)/sysupdate_vpn_pre.sh
-MECT_SYSUPD_VPN = $(MECT_IMGDIR)/sysupdate_vpn.sh
+MECT_SYSUPD_VPN = $(MECT_IMGDIR)/sysupdate_vpn_$(MECT_BUILD_RELEASE).sh
 MECT_SYSUPD_VPN_POST := $(MECT_FTPDIR)/sysupdate_vpn_post.sh
 
 # Extension of the MD5 checksums for the downloads.
@@ -402,7 +402,7 @@ endif
 
 
 .PHONY: all
-all: env downloads setup build image target_dev
+all: env downloads setup build image target_dev sysupdate_mrs
 
 # Set up the build environment.
 .PHONY: env

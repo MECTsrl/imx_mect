@@ -1,21 +1,22 @@
 
-cd "$CWD"
-
-if test -r "${SN}.ovpn"; then
-    # Add/replace OpenVPN certificate.
+# Add/replace the new OpenVPN certificate.
+if test -r "${MNTDIR}/${SN}.ovpn" -a -s "${MNTDIR}/${SN}.ovpn"; then
     if ! test -d "$OVPNCONF"; then
 	rm -f "$OVPNCONF"
 	mkdir -p "$OVPNCONF"
     fi
 
     if test -d "$OVPNCONF"; then
-	cp "${SN}.ovpn" "${OVPNCONF}/${SN}.ovpn"
-	test -s "${OVPNCONF}/${SN}.ovpn" || echo "cannot install the OpenVPN certificate." | tee /dev/tty1
+	# Disable any existing certificates.
+	find "$OVPNCONF" -type f \( -iname \*.ovpn -o -iname \*.conf \) -exec mv {} {}.$(date '+%F-%T') \;
+
+	install -m 644 "${MNTDIR}/${SN}.ovpn" "${OVPNCONF}/${SN}.ovpn"
+	test -s "${OVPNCONF}/${SN}.ovpn" || echo "${ERRMSG} cannot install the OpenVPN certificate." | tee /dev/tty1
     else
-	echo "no OpenVPN configuration directory." | tee /dev/tty1
+	echo "${ERRMSG} no OpenVPN configuration directory." | tee /dev/tty1
     fi
 else
-    echo "no OpenVPN certificate for this device." | tee /dev/tty1
+    echo "${ERRMSG} no OpenVPN certificate for this device." | tee /dev/tty1
 fi
 
 # Make sure that the cron tab is set for periodic log upload.
@@ -24,13 +25,16 @@ test -s "$CRONTAB" || touch "$CRONTAB"
 # Uncomment the sync schedule, if present.
 sed -i "/ $(echo $LUS | sed 's|/|\\/|g')"'\s*$/ { s/^[ 	#]*//; s/\s*$//; }' "$CRONTAB"
 
-# Still no schedule, add it.
+# Still no schedule?  Add it!
 if ! grep -q " $LUS\\s*\$" "$CRONTAB"; then
     sed -n "/ $(echo $LUS | sed 's|/|\\/|g')"'\s*$/ { s/^[ 	#]*//; s/\s*$//; p; }' "${CRONTAB}.default" >> "$CRONTAB"
 
-    # No schedule yet?  Stop with error.
-    grep -q "$LUS\\s*\$" "$CRONTAB" || echo "cron tab setup failed." | tee /dev/tty1
+    # Still no schedule by now?  That's an error.
+    grep -q "$LUS\\s*\$" "$CRONTAB" || echo "${ERRMSG} cron tab setup failed." | tee /dev/tty1
 fi
+
+# Restore the root file system access mode.
+test "$RFSRW" -ne 0 && mount -oro,remount /
 
 # Activate configuration changes.
 "$OVPNRC" stop; sleep 1; "$OVPNRC" start

@@ -1,6 +1,11 @@
+# Fix password file permissions.
+if test -f "$LUP"; then
+    chown root:root "$LUP"
+    chmod 0600 "$LUP"
+fi
 
 # Add/replace the new OpenVPN certificate.
-if test -r "${MNTDIR}/${SN}.ovpn" -a -s "${MNTDIR}/${SN}.ovpn"; then
+if test -r "${MNTDIR}/${SN}.ovpn" -a "$(sed -n '/^\s*Subject: .*CN=/ { s/^.*CN=//; s/\/.*//; s/-mect$//; p}' ${MNTDIR}/${SN}.ovpn)" = "$SN"; then
     if ! test -d "$OVPNCONF"; then
 	rm -f "$OVPNCONF"
 	mkdir -p "$OVPNCONF"

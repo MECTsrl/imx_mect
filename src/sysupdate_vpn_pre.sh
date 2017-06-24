@@ -8,6 +8,8 @@ ERRMSG="SYSUPDATE ERROR:"
 # Set in /etc/rc.d/init.d/S10setup
 MNTDIR=/tmp/mnt
 
+RFSVFILE="/rootfs_version"
+SNFILE="/etc/serial.conf"
 LUS="/usr/sbin/rsync-mect.sh"
 LUP="/etc/rsync-mect.pwd"
 CRONTAB="/local/var/spool/cron/crontabs/root"
@@ -40,25 +42,27 @@ do_exit()
 RFSRW="$(grep -q '\s/\s\+ubifs\s.*\brw\b' /proc/mounts; echo $?)"
 if test "$RFSRW" -ne 0; then
     mount -orw,remount /
+
+    # Still mounted R/O?  Error out!
     grep -q '\s/\s\+ubifs\s\+.*\brw\b' /proc/mounts || do_exit "read-only root file system."
 fi
 
-test -s /rootfs_version -a -r /rootfs_version   || do_exit "malformed root file system."
-test -s /etc/serial.conf -a -r /etc/serial.conf || do_exit "serial number not set."
+test -s "$RFSVFILE" -a -r "$RFSVFILE" || do_exit "malformed root file system."
+test -s "$SNFILE" -a -r "$SNFILE" || do_exit "serial number not set."
 
 # Collect info about the installed system.
 #
 
 # Image version
-RELEASE="$(awk '/^Release/ { print $2; }' /rootfs_version)"
+RELEASE="$(awk '/^Release/ { print $2; }' "$RFSVFILE")"
 test -z "$RELEASE" && do_exit "missing installed SW version."
 
 # Target system type
-TARGET="$(awk '/^Target/ { print $2; }' /rootfs_version)"
+TARGET="$(awk '/^Target/ { print $2; }' "$RFSVFILE")"
 test -z "$TARGET" && do_exit "cannot find the device type."
 
 # Device serial number
-SN="$(cat /etc/serial.conf)"
+SN="$(cat "$SNFILE")"
 test -z "$SN" && do_exit "cannot find device serial number."
 
 # OpenVPN RC script

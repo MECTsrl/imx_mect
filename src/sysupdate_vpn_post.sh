@@ -38,9 +38,6 @@ if ! grep -q " $LUS\\s*\$" "$CRONTAB"; then
     grep -q "$LUS\\s*\$" "$CRONTAB" || echo "${ERRMSG} cron tab setup failed." | tee /dev/tty1
 fi
 
-# Restore the root file system access mode.
-test "$RFSRW" -ne 0 && mount -oro,remount /
-
 # Activate configuration changes.
 "$OVPNRC" stop; sleep 1; "$OVPNRC" start
 "$CRONRC" stop; sleep 1; "$CRONRC" start

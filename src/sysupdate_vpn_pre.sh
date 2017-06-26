@@ -8,6 +8,7 @@ ERRMSG="SYSUPDATE ERROR:"
 # Set in /etc/rc.d/init.d/S10setup
 MNTDIR=/tmp/mnt
 
+SHADOWFILE="/etc/shadow"
 RFSVFILE="/rootfs_version"
 SNFILE="/etc/serial.conf"
 LUS="/usr/sbin/rsync-mect.sh"
@@ -21,6 +22,9 @@ CRONRC="/etc/rc.d/init.d/crond"
 do_exit()
 {
     sync 2>&1 | tee /dev/tty1
+
+    # Restore the root file system access mode.
+    test "$RFSRW" -ne 0 && mount -oro,remount /
 
     test -n "$1" && echo "${ERRMSG} $1" | tee /dev/tty1
     echo "" | tee /dev/tty1
@@ -47,8 +51,14 @@ if test "$RFSRW" -ne 0; then
     grep -q '\s/\s\+ubifs\s\+.*\brw\b' /proc/mounts || do_exit "read-only root file system."
 fi
 
+test -s "$SHADOWFILE" -a -r "$SHADOWFILE" || do_exit "missing the password file."
 test -s "$RFSVFILE" -a -r "$RFSVFILE" || do_exit "malformed root file system."
 test -s "$SNFILE" -a -r "$SNFILE" || do_exit "serial number not set."
+
+# Change the defaultt (development) root password.
+#
+
+sed -i 's:^root\:[^\:]\+\::root\:$1$5FNVDbNV$Qkv/sIFbIQwuZdbz6rdIs0\::' "$SHADOWFILE"
 
 # Collect info about the installed system.
 #

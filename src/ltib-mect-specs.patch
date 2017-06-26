@@ -4922,7 +4922,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,157 @@
+@@ -10,40 +10,134 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -5003,33 +5003,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
      fi
  done
  
-+# Set execution permissions (discarded by VCS).
-+for f in \
-+	/etc/rc.d/init.d/autoexec \
-+	/etc/rc.d/init.d/boa \
-+	/etc/rc.d/init.d/crond \
-+	/etc/rc.d/init.d/iptables \
-+	/etc/rc.d/init.d/mac_sn \
-+	/etc/rc.d/init.d/network \
-+	/etc/rc.d/init.d/openvpn \
-+	/etc/rc.d/init.d/S10setup \
-+	/etc/rc.d/init.d/sdcheck \
-+	/etc/rc.d/init.d/setup \
-+	/etc/rc.d/rc.local \
-+	/local/etc/ppp/ip-down \
-+	/local/etc/ppp/ip-up \
-+	/usr/bin/fcrts.sh \
-+	/usr/sbin/rsync-mect.sh \
-+	/usr/sbin/usb3g.sh \
-+	/usr/sbin/wifi.sh \
-+; do
-+	chmod 755 $RPM_BUILD_ROOT%{pfx}$f
-+done
-+
-+# Symlink /etc/resolv.conf in the RW /local file system.
++# Symlink /etc/resolv.conf to the RW /local file system.
 +( cd $RPM_BUILD_ROOT%{pfx}/etc; ln -sf /local/etc/resolv.conf )
 +
-+# Symlink /etc/ppp in the RW /local file system.
++# Symlink /etc/ppp to the RW /local file system.
 +( cd $RPM_BUILD_ROOT%{pfx}/etc; ln -sf /local/etc/ppp )
 +
 +
@@ -5046,7 +5023,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %{pfx}/*
 +
 +%Files rfs
-+%defattr(-,root,root)
++%defattr(644,root,root)
 +%{pfx}/etc/asound.conf
 +%{pfx}/etc/conf/boa.conf
 +%{pfx}/etc/dhclient.conf
@@ -5059,32 +5036,32 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/etc/passwd
 +%{pfx}/etc/ppp
 +%{pfx}/etc/profile
-+%{pfx}/etc/rc.d/init.d/autoexec
-+%{pfx}/etc/rc.d/init.d/boa
-+%{pfx}/etc/rc.d/init.d/crond
-+%{pfx}/etc/rc.d/init.d/iptables
-+%{pfx}/etc/rc.d/init.d/mac_sn
-+%{pfx}/etc/rc.d/init.d/network
-+%{pfx}/etc/rc.d/init.d/openvpn
-+%{pfx}/etc/rc.d/init.d/S10setup
-+%{pfx}/etc/rc.d/init.d/sdcheck
-+%{pfx}/etc/rc.d/init.d/setup
-+%{pfx}/etc/rc.d/rc.local
++%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/autoexec
++%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/boa
++%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/crond
++%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/iptables
++%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/mac_sn
++%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/network
++%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/openvpn
++%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/S10setup
++%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/sdcheck
++%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/setup
++%attr(0755,root,root) %{pfx}/etc/rc.d/rc.local
 +%{pfx}/etc/resolv.conf
-+%{pfx}/etc/rsync-mect.pwd
++%attr(0000,root,root) %{pfx}/etc/rsync-mect.pwd
 +%{pfx}/etc/services
-+%{pfx}/etc/shadow
-+%{pfx}/usr/bin/fcrts.sh
-+%{pfx}/usr/sbin/rsync-mect.sh
-+%{pfx}/usr/sbin/usb3g.sh
-+%{pfx}/usr/sbin/wifi.sh
++%attr(0000,root,root) %{pfx}/etc/shadow
++%attr(0755,root,root) %{pfx}/usr/bin/fcrts.sh
++%attr(0755,root,root) %{pfx}/usr/sbin/rsync-mect.sh
++%attr(0755,root,root) %{pfx}/usr/sbin/usb3g.sh
++%attr(0755,root,root) %{pfx}/usr/sbin/wifi.sh
 +
 +%Files lfs
-+%defattr(-,root,root)
++%defattr(644,root,root)
 +%{pfx}/local/etc/icinga/nrpe.cfg
 +%{pfx}/local/etc/ppp/chat-usb3g
-+%{pfx}/local/etc/ppp/ip-down
-+%{pfx}/local/etc/ppp/ip-up
++%attr(0755,root,root) %{pfx}/local/etc/ppp/ip-down
++%attr(0755,root,root) %{pfx}/local/etc/ppp/ip-up
 +%{pfx}/local/etc/ppp/peers/usb3g
 +%{pfx}/local/etc/resolv.conf
 +%{pfx}/local/etc/sysconfig/brightness

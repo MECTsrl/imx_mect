@@ -26,11 +26,11 @@ do_exit()
     # Restore the root file system access mode.
     test "$RFSRW" -ne 0 && mount -oro,remount /
 
-    test -n "$1" && echo "${ERRMSG} $1" | tee /dev/tty1
-    echo "" | tee /dev/tty1
-    echo "*******************************************************" | tee /dev/tty1
-    echo "* Please power off and remove the USB storage device. *" | tee /dev/tty1
-    echo "*******************************************************" | tee /dev/tty1
+    test -n "$1" && echo -e "${ERRMSG} $1\r" | tee /dev/tty1
+    echo -e "\r" | tee /dev/tty1
+    echo -e "*******************************************************\r" | tee /dev/tty1
+    echo -e "* Please power off and remove the USB storage device. *\r" | tee /dev/tty1
+    echo -e "*******************************************************\r" | tee /dev/tty1
 
     while true; do read -rp "" dummy; done
 
@@ -78,7 +78,7 @@ test -z "$SN" && do_exit "cannot find device serial number."
 # OpenVPN RC script
 test -s "$OVPNRC" || do_exit "missing OpenVPN control script (RC)."
 
-echo "Updating $TARGET SW v$RELEASE for MECT Remote Services." | tee /dev/tty1
+echo -e "Updating $TARGET SW v$RELEASE for MECT Remote Services.\r" | tee /dev/tty1
 
 # Update the device.
 #

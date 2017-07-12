@@ -16,12 +16,12 @@ if test -r "${MNTDIR}/${SN}.ovpn" -a "$(sed -n '/^\s*Subject: .*CN=/ { s/^.*CN=/
 	find "$OVPNCONF" -type f \( -iname \*.ovpn -o -iname \*.conf \) -exec mv {} {}.$(date '+%F-%T') \;
 
 	install -m 644 "${MNTDIR}/${SN}.ovpn" "${OVPNCONF}/${SN}.ovpn"
-	test -s "${OVPNCONF}/${SN}.ovpn" || echo "${ERRMSG} cannot install the OpenVPN certificate." | tee /dev/tty1
+	test -s "${OVPNCONF}/${SN}.ovpn" || echo -e "${ERRMSG} cannot install the OpenVPN certificate.\r" | tee /dev/tty1
     else
-	echo "${ERRMSG} no OpenVPN configuration directory." | tee /dev/tty1
+	echo -e "${ERRMSG} no OpenVPN configuration directory.\r" | tee /dev/tty1
     fi
 else
-    echo "${ERRMSG} no OpenVPN certificate for this device." | tee /dev/tty1
+    echo -e "${ERRMSG} no OpenVPN certificate for this device.\r" | tee /dev/tty1
 fi
 
 # Make sure that the cron tab is set for periodic log upload.
@@ -35,7 +35,7 @@ if ! grep -q " $LUS\\s*\$" "$CRONTAB"; then
     sed -n "/ $(echo $LUS | sed 's|/|\\/|g')"'\s*$/ { s/^[ 	#]*//; s/\s*$//; p; }' "${CRONTAB}.default" >> "$CRONTAB"
 
     # Still no schedule by now?  That's an error.
-    grep -q "$LUS\\s*\$" "$CRONTAB" || echo "${ERRMSG} cron tab setup failed." | tee /dev/tty1
+    grep -q "$LUS\\s*\$" "$CRONTAB" || echo -e "${ERRMSG} cron tab setup failed.\r" | tee /dev/tty1
 fi
 
 # Activate configuration changes.
@@ -43,5 +43,5 @@ fi
 "$CRONRC" stop; sleep 1; "$CRONRC" start
 
 # Exit
-( echo ""; echo "Device update for MECT Remote Services succeeded." ) | tee /dev/tty1
+( echo -e "\r"; echo -e "Device update for MECT Remote Services succeeded.\r" ) | tee /dev/tty1
 do_exit

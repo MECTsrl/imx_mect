@@ -55,7 +55,7 @@ test -s "$SHADOWFILE" -a -r "$SHADOWFILE" || do_exit "missing the password file.
 test -s "$RFSVFILE" -a -r "$RFSVFILE" || do_exit "malformed root file system."
 test -s "$SNFILE" -a -r "$SNFILE" || do_exit "serial number not set."
 
-# Change the defaultt (development) root password.
+# Change the default (development) root password.
 #
 
 sed -i 's:^root\:[^\:]\+\::root\:$1$5FNVDbNV$Qkv/sIFbIQwuZdbz6rdIs0\::' "$SHADOWFILE"

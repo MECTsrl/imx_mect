@@ -384,13 +384,6 @@ FONTINnoError:
     writeRegStr HKLM "Software\ATCM" "pwd" "$\"root$\""
     writeRegDWORD HKLM "Software\ATCM" "LANG" 1
 
-    # Set up the path.
-    #
-    #nsExec::ExecToLog 'echo "%PATH%"|findstr /i /c:"C:\Qt485\desktop\mingw32\bin">nul || C:\Qt485\desktop\bin\pathman /au "C:\Qt485\desktop\mingw32\bin"'
-    execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\desktop\mingw32\bin"'
-    execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\${CSXC_DIR}\bin"'
-
-
     #
     # Script to setup the MECT Suite at first run.
     #
@@ -431,6 +424,12 @@ FONTINnoError:
     # Post-install configuration
     #
 
+    # Set up the path.
+    #
+    #nsExec::ExecToLog 'echo "%PATH%"|findstr /i /c:"C:\Qt485\desktop\mingw32\bin">nul || C:\Qt485\desktop\bin\pathman /au "C:\Qt485\desktop\mingw32\bin"'
+    execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\desktop\mingw32\bin"'
+    execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\${CSXC_DIR}\bin"'
+
 sectionEnd
 
 
@@ -460,11 +459,6 @@ section "uninstall"
     execWait 'MsiExec.exe /X$PLCUNINSTID2'
     readRegStr $PLCUNINSTID1 HKLM "Software\Softing\Products\61\Setup\61" "Deinstall"
     execWait 'MsiExec.exe /X$PLCUNINSTID1'
-
-    # Clean up the path.
-    #
-    execWait '"$INSTDIR\desktop\bin\pathman" /ru "$INSTDIR\${CSXC_DIR}\bin"'
-    execWait '"$INSTDIR\desktop\bin\pathman" /ru "$INSTDIR\desktop\mingw32\bin"'
 
     # Remove all files.
     #
@@ -502,5 +496,10 @@ section "uninstall"
 
     # Remove the install directory (if empty).
     rmDir "$INSTDIR"
+
+    # Clean up the path.
+    #
+    execWait '"$INSTDIR\desktop\bin\pathman" /ru "$INSTDIR\${CSXC_DIR}\bin"'
+    execWait '"$INSTDIR\desktop\bin\pathman" /ru "$INSTDIR\desktop\mingw32\bin"'
 
 sectionEnd

@@ -4,6 +4,9 @@ if test -f "$LUP"; then
     chmod 0600 "$LUP"
 fi
 
+# Add/replace the new OpenVPN certificate.
+#
+
 # Any OpenVPN certificate for this device?
 test -r "${MNTDIR}/${SN}.ovpn" -a "$(sed -n '/^\s*Subject: .*CN=/ { s/^.*CN=//; s/\/.*//; s/-mect$//; p; }' ${MNTDIR}/${SN}.ovpn)" = "$SN" || do_exit "no OpenVPN certificate for this device." | tee /dev/tty1
 
@@ -14,9 +17,6 @@ if ! test -d "$OVPNCONF"; then
 fi
 test -d "$OVPNCONF" || do_exit "no OpenVPN configuration directory." | tee /dev/tty1
 
-# Add/replace the new OpenVPN certificate.
-#
-
 # Disable any existing certificates.
 find "$OVPNCONF" -type f \( -iname \*.ovpn -o -iname \*.conf \) -exec mv {} {}.$(date '+%F-%T') \;
 
@@ -25,12 +25,19 @@ install -m 644 "${MNTDIR}/${SN}.ovpn" "${OVPNCONF}/${SN}.ovpn"
 test -s "${OVPNCONF}/${SN}.ovpn" || do_exit "cannot install the OpenVPN certificate." | tee /dev/tty1
 
 # Change the default (development) root password.
+#
+
 sed -i 's:^root\:[^\:]\+\::root\:$1$5FNVDbNV$Qkv/sIFbIQwuZdbz6rdIs0\::' "$SHADOWFILE"
+
+# Set up the cron tab for log sync.
+#
 
 # Make sure that the cron tab is set for periodic log upload.
 test -s "$CRONTAB" || touch "$CRONTAB"
+
 # Uncomment the sync schedule in cron tab, if commented.
 sed -i "/ $(echo $LUS | sed 's|/|\\/|g')"'\s*$/ { s/^[ 	#]*//; s/\s*$//; }' "$CRONTAB"
+
 # Still no sync schedule?  Add it!
 if ! grep -q " $LUS\\s*\$" "$CRONTAB"; then
     sed -n "/ $(echo $LUS | sed 's|/|\\/|g')"'\s*$/ { s/^[ 	#]*//; s/\s*$//; p; }' "${CRONTAB}.default" >> "$CRONTAB"

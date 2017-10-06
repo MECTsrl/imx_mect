@@ -1,12 +1,18 @@
 diff -aurN rootfs.orig/etc/rc.d/init.d/mount-proc-sys rootfs/etc/rc.d/init.d/mount-proc-sys
---- rootfs.orig/etc/rc.d/init.d/mount-proc-sys	2015-11-06 10:37:21.000000000 +0100
-+++ rootfs/etc/rc.d/init.d/mount-proc-sys	2015-11-06 12:34:21.851145285 +0100
-@@ -12,4 +12,8 @@
+--- rootfs.orig/etc/rc.d/init.d/mount-proc-sys	2017-10-06 13:51:43.220123211 +0000
++++ rootfs/etc/rc.d/init.d/mount-proc-sys	2017-10-06 13:45:56.712459386 +0000
+@@ -11,4 +11,13 @@
      echo "Mounting /proc and /sys "
      mount -n -t proc proc /proc
      mount -n -t sysfs sys /sys
 +
 +    echo "Custom /dev setup on top of devtmpfs"
 +    mknod /dev/buzzer c 35 0
-+    ln -s event0 /dev/input/ts0
++    if [ "$(fgrep TPAC1005 /proc/cpuinfo)" ]; then
++    	ln -s event0 /dev/input/keys
++    	ln -s event1 /dev/input/ts0
++    else
++    	ln -s event0 /dev/input/ts0
++    fi
  fi
+

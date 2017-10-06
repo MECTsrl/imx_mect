@@ -1210,7 +1210,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 3.0.0rc12
++Version         : 3.0.1
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3530,13 +3530,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1267 @@
+@@ -0,0 +1,1326 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define rhtbtr resources-hack-to-build-the-rpm
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v3.0.0rc12
++Version         : v3.0.1
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3712,6 +3712,20 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Prefix          : %{pfx}/TPAC1007_LV/local
 +
 +%Description lfs-TPAC1007_LV
++%{name} package contents limited to just the run-times needed
++on the target.
++
++# TPAC1005
++#
++%Package lfs-TPAC1005
++Summary         : Trimmed %{name} to just the run-times needed for local file system.
++Vendor          : MECT s.r.l.
++Packager        : Francesco Mandracci
++Group           : Applications/System
++AutoReqProv     : no
++Prefix          : %{pfx}/TPAC1005/local
++
++%Description lfs-TPAC1005
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
@@ -4065,6 +4079,24 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +# TPAC1007_LV
 +#
 +d=TPAC1007_LV/Simple
++if test -d $d; then
++	cd $d
++
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
++	$MECT_QT_INSTALL_DIR/bin/qmake \
++		-spec qws/linux-g++-mx \
++		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
++		"DEFINES+=TARGET_ARM" \
++		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
++		Simple.pro
++	make -j1
++
++	cd -
++fi
++
++# TPAC1005
++#
++d=TPAC1005/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4439,6 +4471,23 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
++# TPAC1005
++#
++d=TPAC1005/Simple
++if test -d $d; then
++	cd $d
++
++	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/root/hmi
++	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/etc/sysconfig/Crosstable.csv
++	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/etc/sysconfig/img/splash.png
++	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/etc/sysconfig/system.ini
++	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/data/customtrend/trend1.csv
++	install -m644 -D config/network1.cmg   $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/etc/sysconfig/network1.cmg
++	install -m644 -D config/iomap1.cmg     $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/etc/sysconfig/iomap1.cmg
++
++	cd -
++fi
++
 +# TPAC1006
 +#
 +d=TPAC1006/Simple
@@ -4709,6 +4758,16 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1007_LV/local/etc/sysconfig/system.ini
 +%{pfx}/TPAC1007_LV/local/data/customtrend/trend1.csv
 +
++%files lfs-TPAC1005
++%defattr(-,root,root)
++%{pfx}/TPAC1005/local/root/hmi
++%{pfx}/TPAC1005/local/etc/sysconfig/Crosstable.csv
++%{pfx}/TPAC1005/local/etc/sysconfig/img/splash.png
++%{pfx}/TPAC1005/local/etc/sysconfig/system.ini
++%{pfx}/TPAC1005/local/data/customtrend/trend1.csv
++%{pfx}/TPAC1005/local/etc/sysconfig/iomap0.cmg
++%{pfx}/TPAC1005/local/etc/sysconfig/network0.cmg
++
 +%files lfs-TPAC1006
 +%defattr(-,root,root)
 +%{pfx}/TPAC1006/local/root/hmi
@@ -4806,7 +4865,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v3.0.0rc12
++Version: v3.0.1
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

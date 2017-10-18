@@ -694,8 +694,8 @@ cloner_shar:
 	cat $(MECT_SYSCLONE_POST_TMPL) >> $(MECT_SYSCLONE_SHAR)
 	mkdir -p $(MECT_SYSCLONE_SHDIR)
 	test -d "$(MECT_SYSCLONE_SHDIR)"
-	if /sbin/losetup | grep -q $(MECT_SYSCLONE_IMG); then \
-	    dev=`/sbin/losetup | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
+	if /sbin/losetup -a | grep -q $(MECT_SYSCLONE_IMG); then \
+	    dev=`/sbin/losetup -a | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
 	dd if=/dev/zero of=$(MECT_SYSCLONE_IMG) bs=1k count=`du -s $(MECT_SYSCLONE_DIR) | awk '{ print int($$1 * 1.5); }'`
@@ -723,7 +723,7 @@ sysupdate_mrs:
 	for f in $(MRS_COMPONENTS:%=$(MECT_LTIB_RFSDIR)/%); do test -r $$f; done
 	rm -f $(MECT_SYSUPD_VPN)
 	cat $(MECT_SYSUPD_VPN_PRE) > $(MECT_SYSUPD_VPN)
-	cd $(MECT_LTIB_RFSDIR); shar -x $(MRS_COMPONENTS) >> $(MECT_SYSUPD_VPN)
+	cd $(MECT_LTIB_RFSDIR); sudo shar -x $(MRS_COMPONENTS) >> $(MECT_SYSUPD_VPN)
 	tail -1 $(MECT_SYSUPD_VPN) | grep -q '^exit 0$$'
 	sed -i '$$ d' $(MECT_SYSUPD_VPN)
 	cat $(MECT_SYSUPD_VPN_POST) >> $(MECT_SYSUPD_VPN)
@@ -902,8 +902,8 @@ target_mfg_upd:
 	cp --reflink=auto $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/fs/sysupdate
 	chmod 755 $(MECT_SYSUPDIR)/fs/sysupdate/$(notdir $(MECT_KOBS_TMPL))
 	#
-	if /sbin/losetup | grep -q $(MECT_SYSUPD_IMG); then \
-	    dev=`/sbin/losetup | grep $(MECT_SYSUPD_IMG)\$$ | awk '{ print $$1; }'`; \
+	if /sbin/losetup -a | grep -q $(MECT_SYSUPD_IMG); then \
+	    dev=`/sbin/losetup -a | grep $(MECT_SYSUPD_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
 	sync

@@ -1,8 +1,3 @@
-# Fix password file permissions.
-if test -f "$LUP"; then
-    chown root:root "$LUP"
-    chmod 0600 "$LUP"
-fi
 
 # Add/replace the new OpenVPN certificate.
 #

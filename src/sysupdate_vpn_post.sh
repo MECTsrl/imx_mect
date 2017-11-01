@@ -24,25 +24,8 @@ test -s "${OVPNCONF}/${SN}.ovpn" || do_exit "cannot install the OpenVPN certific
 
 sed -i 's:^root\:[^\:]\+\::root\:$1$5FNVDbNV$Qkv/sIFbIQwuZdbz6rdIs0\::' "$SHADOWFILE"
 
-# Set up the cron tab for log sync.
-#
-
-# Make sure that the cron tab is set for periodic log upload.
-test -s "$CRONTAB" || touch "$CRONTAB"
-
-# Uncomment the sync schedule in cron tab, if commented.
-sed -i "/ $(echo $LUS | sed 's|/|\\/|g')"'\s*$/ { s/^[ 	#]*//; s/\s*$//; }' "$CRONTAB"
-
-# Still no sync schedule?  Add it!
-if ! grep -q " $LUS\\s*\$" "$CRONTAB"; then
-    sed -n "/ $(echo $LUS | sed 's|/|\\/|g')"'\s*$/ { s/^[ 	#]*//; s/\s*$//; p; }' "${CRONTAB}.default" >> "$CRONTAB"
-    # Still no schedule by now?  That's very weird...
-    grep -q "$LUS\\s*\$" "$CRONTAB" || do_exit "cron tab setup failed." | tee /dev/tty1
-fi
-
-# Activate the configuration changes.
+# Activate configuration changes.
 "$OVPNRC" stop; sleep 1; "$OVPNRC" start
-"$CRONRC" stop; sleep 1; "$CRONRC" start
 
 # All set.
 ( echo -e "\r"; echo -e "Device update for MECT Remote Services succeeded.\r" ) | tee /dev/tty1

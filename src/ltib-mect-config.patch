@@ -21743,11 +21743,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +# Fix root home directory permissions.
 +test -d /local/flash/root && chmod 0755 /local/flash/root
-diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rsync-mect.pwd ltib/config/platform/imx/merge/etc/rsync-mect.pwd
---- ltib.reference/config/platform/imx/merge/etc/rsync-mect.pwd
-+++ ltib/config/platform/imx/merge/etc/rsync-mect.pwd
-@@ -0,0 +1 @@
-+rsync-logger
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/services ltib/config/platform/imx/merge/etc/services
 --- ltib.reference/config/platform/imx/merge/etc/services
 +++ ltib/config/platform/imx/merge/etc/services
@@ -22416,15 +22411,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	modprobe g_file_storage file=/local/root/backing_file
 +	return $?
 +fi
-diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/var/spool/cron/crontabs/root.default ltib/config/platform/imx/merge/local/var/spool/cron/crontabs/root.default
---- ltib.reference/config/platform/imx/merge/local/var/spool/cron/crontabs/root.default
-+++ ltib/config/platform/imx/merge/local/var/spool/cron/crontabs/root.default
-@@ -0,0 +1,5 @@
-+#min h dom m dow cmd
-+#
-+
-+#crontab must end with the last line as space or a comment
-+#*/2  * *   * *   /usr/sbin/rsync-mect.sh
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh ltib/config/platform/imx/merge/usr/bin/fcrts.sh
 --- ltib.reference/config/platform/imx/merge/usr/bin/fcrts.sh
 +++ ltib/config/platform/imx/merge/usr/bin/fcrts.sh
@@ -22464,39 +22450,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +/bin/rm -f "$PIDFILE"
 +
 +exit $rv
-diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/rsync-mect.sh ltib/config/platform/imx/merge/usr/sbin/rsync-mect.sh
---- ltib.reference/config/platform/imx/merge/usr/sbin/rsync-mect.sh
-+++ ltib/config/platform/imx/merge/usr/sbin/rsync-mect.sh
-@@ -0,0 +1,29 @@
-+#!/bin/sh
-+
-+# NOTE: script made for cron, with lots of checks but silent fails to reduce noise.
-+
-+# Device S/N
-+SNDEV="$(cat /etc/serial.conf)"
-+test -z "$SNDEV" && exit 0
-+
-+# MECT Remote Services certificate
-+CRT="/etc/openvpn/${SNDEV}.ovpn"
-+test -r "$CRT" || exit 0
-+
-+# Certificate S/N
-+SNCRT="$(sed -n '/^\s*Subject: .*CN=/ { s/^.*CN=//; s/\/.*//; s/-mect$//; p; }' $CRT)"
-+test -z "$SNCRT" && exit 0
-+
-+# Device and certificate S/N do not match.
-+test "$SNDEV" = "$SNCRT" || exit 0
-+
-+PWDFILE="/etc/rsync-mect.pwd"
-+test -r "$PWDFILE" || exit 0
-+
-+PIDFILE=/var/run/rsync-${SNCRT}.pid
-+
-+test -s $PIDFILE && test -d /proc/$(cat $PIDFILE) && exit 0
-+
-+/usr/bin/rsync -a --timeout=45 --password-file="$PWDFILE" --include 'alarms/' --include 'alarms/*' --include 'store/' --include 'store/*' --exclude '*' /local/data/ rsync@rsync.rs.mect.it::LOGs/${SNCRT}/ > /dev/null 2>&1 &
-+
-+echo -n $! > $PIDFILE
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/usb3g.sh ltib/config/platform/imx/merge/usr/sbin/usb3g.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/usb3g.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/usb3g.sh

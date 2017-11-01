@@ -715,8 +715,7 @@ cloner_shar:
 # Build the sysupdate for MECT Remote Services configuration.
 .PHONY: sysupdate_mrs
 sysupdate_mrs: MRS_COMPONENTS := \
-    usr/sbin/rsync-mect.sh \
-    etc/rsync-mect.pwd \
+    usr/sbin/rs_notify_alert.sh \
     local/var/spool/cron/crontabs/root.default \
 
 sysupdate_mrs:

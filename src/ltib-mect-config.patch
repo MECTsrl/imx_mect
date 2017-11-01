@@ -22432,6 +22432,38 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#!/bin/sh
 +
 +exec /local/root/fcrts
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/rs_notify_alert.sh ltib/config/platform/imx/merge/usr/sbin/rs_notify_alert.sh
+--- ltib.reference/config/platform/imx/merge/usr/sbin/rs_notify_alert.sh
++++ ltib/config/platform/imx/merge/usr/sbin/rs_notify_alert.sh
+@@ -0,0 +1,28 @@
++#!/bin/sh
++
++PIDD=/var/run
++PIDFILE="$PIDD/$(/usr/bin/basename $0).pid"
++
++# Already running?
++test -r "$PIDFILE" && test -s "$PIDFILE" && test -d /proc/$(/bin/cat "$PIDFILE") && exit 0
++
++echo $$ > "$PIDFILE"
++
++msg="$(/usr/bin/wget -q -O - 'http://10.1.0.1:8080/log_sync.php?newalarm')"
++rv=$?
++
++# Try to notify four more times.
++for n in $(/usr/bin/seq 1 1 4); do
++	# Succeeded.
++	test $rv -eq 0 && break
++
++	# No luck yet, try again.
++	sleep 30
++
++	msg="$(/usr/bin/wget -q -O - 'http://10.1.0.1:8080/log_sync.php?newalarm')"
++	rv=$?
++done
++
++/bin/rm -f "$PIDFILE"
++
++exit $rv
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/rsync-mect.sh ltib/config/platform/imx/merge/usr/sbin/rsync-mect.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/rsync-mect.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/rsync-mect.sh

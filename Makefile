@@ -619,6 +619,7 @@ ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 		TP1043_01_B \
 		TP1057_01_B \
 		TP1070_01_B \
+		TPAC1005 \
 		TPAC1006 \
 		TPAC1008_01 \
 		TPAC1008_02_AA \
@@ -628,7 +629,6 @@ ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 		TPAC1008_02_AF \
 		TPLC100_01_AA \
 		TPLC100_01_AB \
-		#TPAC1005 \
 
 endif
 

@@ -3715,19 +3715,19 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
-+### # TPAC1005
-+### #
-+### %Package lfs-TPAC1005
-+### Summary         : Trimmed %{name} to just the run-times needed for local file system.
-+### Vendor          : MECT s.r.l.
-+### Packager        : Francesco Mandracci
-+### Group           : Applications/System
-+### AutoReqProv     : no
-+### Prefix          : %{pfx}/TPAC1005/local
-+### 
-+### %Description lfs-TPAC1005
-+### %{name} package contents limited to just the run-times needed
-+### on the target.
++# TPAC1005
++#
++%Package lfs-TPAC1005
++Summary         : Trimmed %{name} to just the run-times needed for local file system.
++Vendor          : MECT s.r.l.
++Packager        : Francesco Mandracci
++Group           : Applications/System
++AutoReqProv     : no
++Prefix          : %{pfx}/TPAC1005/local
++
++%Description lfs-TPAC1005
++%{name} package contents limited to just the run-times needed
++on the target.
 +
 +# TPAC1006
 +#
@@ -4094,23 +4094,23 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+### # TPAC1005
-+### #
-+### d=TPAC1005/Simple
-+### if test -d $d; then
-+### 	cd $d
-+### 
-+### 	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
-+### 	$MECT_QT_INSTALL_DIR/bin/qmake \
-+### 		-spec qws/linux-g++-mx \
-+### 		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
-+### 		"DEFINES+=TARGET_ARM" \
-+### 		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
-+### 		Simple.pro
-+### 	make -j1
-+### 
-+### 	cd -
-+### fi
++# TPAC1005
++#
++d=TPAC1005/Simple
++if test -d $d; then
++	cd $d
++
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
++	$MECT_QT_INSTALL_DIR/bin/qmake \
++		-spec qws/linux-g++-mx \
++		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
++		"DEFINES+=TARGET_ARM" \
++		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
++		Simple.pro
++	make -j1
++
++	cd -
++fi
 +
 +# TPAC1006
 +#
@@ -4471,20 +4471,20 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+### # TPAC1005
-+### #
-+### d=TPAC1005/Simple
-+### if test -d $d; then
-+### 	cd $d
-+### 
-+### 	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/root/hmi
-+### 	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/etc/sysconfig/Crosstable.csv
-+### 	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/etc/sysconfig/img/splash.png
-+### 	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/etc/sysconfig/system.ini
-+### 	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/data/customtrend/trend1.csv
-+### 
-+### 	cd -
-+### fi
++# TPAC1005
++#
++d=TPAC1005/Simple
++if test -d $d; then
++	cd $d
++
++	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/root/hmi
++	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/etc/sysconfig/Crosstable.csv
++	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/etc/sysconfig/img/splash.png
++	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/etc/sysconfig/system.ini
++	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPAC1005/local/data/customtrend/trend1.csv
++
++	cd -
++fi
 +
 +# TPAC1006
 +#
@@ -4756,13 +4756,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1007_LV/local/etc/sysconfig/system.ini
 +%{pfx}/TPAC1007_LV/local/data/customtrend/trend1.csv
 +
-+### %files lfs-TPAC1005
-+### %defattr(-,root,root)
-+### %{pfx}/TPAC1005/local/root/hmi
-+### %{pfx}/TPAC1005/local/etc/sysconfig/Crosstable.csv
-+### %{pfx}/TPAC1005/local/etc/sysconfig/img/splash.png
-+### %{pfx}/TPAC1005/local/etc/sysconfig/system.ini
-+### %{pfx}/TPAC1005/local/data/customtrend/trend1.csv
++%files lfs-TPAC1005
++%defattr(-,root,root)
++%{pfx}/TPAC1005/local/root/hmi
++%{pfx}/TPAC1005/local/etc/sysconfig/Crosstable.csv
++%{pfx}/TPAC1005/local/etc/sysconfig/img/splash.png
++%{pfx}/TPAC1005/local/etc/sysconfig/system.ini
++%{pfx}/TPAC1005/local/data/customtrend/trend1.csv
 +
 +%files lfs-TPAC1006
 +%defattr(-,root,root)

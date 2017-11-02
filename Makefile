@@ -224,7 +224,7 @@ MECT_COMMON_RFSPKGS := \
 	ncurses-rfs-5.3-1.$(MECT_TARGET_ARCH).rpm \
 	nrpe-rfs-2.15-1.$(MECT_TARGET_ARCH).rpm \
 	openssl-rfs-1.0.1s-1.$(MECT_TARGET_ARCH).rpm \
-	openvpn-rfs-2.3.10-1.$(MECT_TARGET_ARCH).rpm \
+	openvpn-rfs-2.4.4-1.$(MECT_TARGET_ARCH).rpm \
 	ppp-rfs-2.4.4-1.$(MECT_TARGET_ARCH).rpm \
 	qt-embedded-rfs-4.8.5-1.$(MECT_TARGET_ARCH).rpm \
 	qwt-rfs-6.1-1_multiaxes.$(MECT_TARGET_ARCH).rpm \

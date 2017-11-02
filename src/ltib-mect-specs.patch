@@ -5788,7 +5788,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : A full-featured SSL VPN solution
 +Name            : openvpn
-+Version         : 2.3.10
++Version         : 2.4.4
 +Release         : 1
 +License         : GPLv2
 +Vendor          : MECT s.r.l.

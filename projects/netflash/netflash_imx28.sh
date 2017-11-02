@@ -83,10 +83,10 @@ tar tf "$lfs_arch" > /dev/null || { echo "$prog: cannot unpack local file system
 set +e
 
 echo "* Upload the kernel."
-sshpass -p "$passwd" scp "$kupd" "$k_arch" "$user"@"$ip":/tmp
+sshpass -p "$passwd" scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$kupd" "$k_arch" "$user"@"$ip":/tmp
 
 echo "* Program the kernel."
-sshpass -p "$passwd" ssh root@"$ip" \
+sshpass -p "$passwd" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@"$ip" \
     flash_eraseall /dev/mtd0\; \
     /tmp/$kupd_name init /tmp/$k_arch_name\; \
     rm -f /tmp/$kupd_name /tmp/$k_arch_name\; \
@@ -105,13 +105,13 @@ sudo rm -rf rootfs/local/data
 sudo tar xf "$lfs_arch" -C rootfs/local
 
 echo "* Update the root file system"
-sudo sshpass -p "$passwd" rsync -axh --inplace --delete --info=progress2 rootfs/ "$user"@"$ip":/ 2>/dev/null
-sudo sshpass -p "$passwd" rsync -axh --delete rootfs/ "$user"@"$ip":/
+sudo sshpass -p "$passwd" rsync -axh --inplace --delete --info=progress2 -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" rootfs/ "$user"@"$ip":/ 2>/dev/null
+sudo sshpass -p "$passwd" rsync -axh --delete -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" rootfs/ "$user"@"$ip":/
 
 echo "* Update the local file system"
-sudo sshpass -p "$passwd" rsync -axh --delete --info=progress2 rootfs/ "$user"@"$ip":/
+sudo sshpass -p "$passwd" rsync -axh --delete --info=progress2 -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" rootfs/ "$user"@"$ip":/
 
 echo "* Closing..."
-sshpass -p "$passwd" ssh root@"$ip" sync
+sshpass -p "$passwd" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@"$ip" sync
 
 echo "* Done."

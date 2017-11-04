@@ -714,17 +714,10 @@ cloner_shar:
 
 # Build the sysupdate for MECT Remote Services configuration.
 .PHONY: sysupdate_mrs
-sysupdate_mrs: MRS_COMPONENTS := \
-    usr/sbin/rs_notify_alert.sh \
-
 sysupdate_mrs:
-	test -n '$(MRS_COMPONENTS)'
-	for f in $(MRS_COMPONENTS:%=$(MECT_LTIB_RFSDIR)/%); do test -r $$f; done
 	rm -f $(MECT_SYSUPD_VPN)
 	cat $(MECT_SYSUPD_VPN_PRE) > $(MECT_SYSUPD_VPN)
-	cd $(MECT_LTIB_RFSDIR); sudo shar -x $(MRS_COMPONENTS) >> $(MECT_SYSUPD_VPN)
-	tail -1 $(MECT_SYSUPD_VPN) | grep -q '^exit 0$$'
-	sed -i '$$ d' $(MECT_SYSUPD_VPN)
+	if tail -1 $(MECT_SYSUPD_VPN) | grep -q '^exit 0$$'; then sed -i '$$ d' $(MECT_SYSUPD_VPN); fi
 	cat $(MECT_SYSUPD_VPN_POST) >> $(MECT_SYSUPD_VPN)
 
 

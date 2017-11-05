@@ -11,7 +11,6 @@ MNTDIR=/tmp/mnt
 SHADOWFILE="/etc/shadow"
 RFSVFILE="/rootfs_version"
 SNFILE="/etc/serial.conf"
-LUS="/usr/sbin/rsync-mect.sh"
 CRONTAB="/local/var/spool/cron/crontabs/root"
 OVPNCONF="/etc/openvpn"
 OVPNRC="/etc/rc.d/init.d/openvpn"

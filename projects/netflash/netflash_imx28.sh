@@ -111,7 +111,7 @@ sudo sshpass -p "$passwd" rsync -axh --delete -e "ssh -o StrictHostKeyChecking=n
 echo "* Update the local file system"
 sudo sshpass -p "$passwd" rsync -axh --delete --info=progress2 -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" rootfs/local/ "$user"@"$ip":/local/
 
-echo "* Closing..."
-sshpass -p "$passwd" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@"$ip" sync
+echo "* Closing and rebooting target..."
+sshpass -p "$passwd" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@"$ip" /bin/sync\; /sbin/reboot
 
 echo "* Done."

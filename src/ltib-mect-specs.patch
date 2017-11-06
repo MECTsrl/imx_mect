@@ -4977,7 +4977,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,176 @@
+@@ -10,40 +10,180 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -5104,6 +5104,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/etc/services
 +%attr(0400,root,root) %{pfx}/etc/shadow
 +%attr(0755,root,root) %{pfx}/usr/bin/fcrts.sh
++%attr(0755,root,root) %{pfx}/usr/sbin/ovpn-mect-down.sh
++%attr(0755,root,root) %{pfx}/usr/sbin/ovpn-mect-up.sh
 +%attr(0755,root,root) %{pfx}/usr/sbin/rs_notify_alert.sh
 +%attr(0755,root,root) %{pfx}/usr/sbin/usb3g.sh
 +%attr(0755,root,root) %{pfx}/usr/sbin/wifi.sh
@@ -5150,6 +5152,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/etc/services
 +%attr(0400,root,root) %{pfx}/etc/shadow
 +%attr(0755,root,root) %{pfx}/usr/bin/fcrts.sh
++%attr(0755,root,root) %{pfx}/usr/sbin/ovpn-mect-up.sh
++%attr(0755,root,root) %{pfx}/usr/sbin/ovpn-mect-down.sh
 +%attr(0755,root,root) %{pfx}/usr/sbin/rs_notify_alert.sh
 +%attr(0755,root,root) %{pfx}/usr/sbin/usb3g.sh
 +%attr(0755,root,root) %{pfx}/usr/sbin/wifi.sh

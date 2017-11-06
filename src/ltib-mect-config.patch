@@ -22214,20 +22214,17 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/ppp/ip-down ltib/config/platform/imx/merge/local/etc/ppp/ip-down
 --- ltib.reference/config/platform/imx/merge/local/etc/ppp/ip-down
 +++ ltib/config/platform/imx/merge/local/etc/ppp/ip-down
-@@ -0,0 +1,9 @@
+@@ -0,0 +1,6 @@
 +#!/bin/sh
 +
 +statd=/var/pppd
 +test -d $statd || mkdir -p $statd
 +
 +env > $statd/down.stat
-+
-+# Stop any ongoing alert push for MECT Remote Services.
-+test -x /usr/sbin/rs_notify_alert.sh && /usr/sbin/rs_notify_alert.sh stop
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/ppp/ip-up ltib/config/platform/imx/merge/local/etc/ppp/ip-up
 --- ltib.reference/config/platform/imx/merge/local/etc/ppp/ip-up
 +++ ltib/config/platform/imx/merge/local/etc/ppp/ip-up
-@@ -0,0 +1,18 @@
+@@ -0,0 +1,15 @@
 +#!/bin/sh
 +
 +statd=/var/pppd
@@ -22243,9 +22240,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		test -n "$DNS2" && echo "nameserver $DNS2" >> $rc
 +	fi
 +fi
-+
-+# Restart alert push for MECT Remote Services.
-+test -x /usr/sbin/rs_notify_alert.sh && /usr/sbin/rs_notify_alert.sh restart &
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/local/etc/ppp/peers/usb3g ltib/config/platform/imx/merge/local/etc/ppp/peers/usb3g
 --- ltib.reference/config/platform/imx/merge/local/etc/ppp/peers/usb3g
 +++ ltib/config/platform/imx/merge/local/etc/ppp/peers/usb3g
@@ -22430,6 +22424,22 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#!/bin/sh
 +
 +exec /local/root/fcrts
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/ovpn-mect-down.sh ltib/config/platform/imx/merge/usr/sbin/ovpn-mect-down.sh
+--- ltib.reference/config/platform/imx/merge/usr/sbin/ovpn-mect-down.sh
++++ ltib/config/platform/imx/merge/usr/sbin/ovpn-mect-down.sh
+@@ -0,0 +1,4 @@
++#!/bin/sh
++
++# Stop any ongoing alert push for MECT Remote Services.
++test -x /usr/sbin/rs_notify_alert.sh && /usr/sbin/rs_notify_alert.sh stop
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/ovpn-mect-up.sh ltib/config/platform/imx/merge/usr/sbin/ovpn-mect-up.sh
+--- ltib.reference/config/platform/imx/merge/usr/sbin/ovpn-mect-up.sh
++++ ltib/config/platform/imx/merge/usr/sbin/ovpn-mect-up.sh
+@@ -0,0 +1,4 @@
++#!/bin/sh
++
++# Restart alert push for MECT Remote Services.
++test -x /usr/sbin/rs_notify_alert.sh && /usr/sbin/rs_notify_alert.sh restart &
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/rs_notify_alert.sh ltib/config/platform/imx/merge/usr/sbin/rs_notify_alert.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/rs_notify_alert.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/rs_notify_alert.sh

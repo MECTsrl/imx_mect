@@ -862,7 +862,7 @@ target_mfg_upd:
 	install -m 644 $(MECT_FTPDIR)/fdisk-u.input $(MECT_MFGDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(MECT_FTPDIR)/ucl.xml $(MECT_MFGDIR)/'OS firmware'/ucl.xml
 	sudo tar cf $(MECT_MFGDIR)/'OS firmware'/img/rootfs.tar -C $(MECT_RFSDIR) .
-	tar cf $(MECT_MFGDIR)/'OS firmware'/img/localfs.tar -C $(MECT_LFSDIR) .
+	sudo tar cf $(MECT_MFGDIR)/'OS firmware'/img/localfs.tar -C $(MECT_LFSDIR) .
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_MFGDIR)/'OS firmware'/img
 	install -m 644 $(MECT_BOOTDIR)/boot/updater_ivt.sb $(MECT_MFGDIR)/'OS firmware'/sys
 	rm -f $(MECT_MFGZIP)
@@ -882,7 +882,7 @@ target_mfg_upd:
 		var/spool/cron/crontabs/root \
 		flash/etc/ppp/chat-usb3g \
 		flash/etc/icinga/nrpe.cfg
-	tar cf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_LFSDIR) .
+	sudo tar cf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_LFSDIR) .
 	#
 	mkdir -p $(MECT_SYSUPDIR)/fs
 	tar xf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_SYSUPDIR)/fs

@@ -21425,7 +21425,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +	restart)
 +		stop
-+		sleep 1
++		sleep 5
 +		start
 +	;;
 +

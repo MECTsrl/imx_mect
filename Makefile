@@ -874,7 +874,8 @@ target_mfg_upd:
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_SYSUPDIR)
 	sudo rm -rf $(MECT_RFSDIR)/local/*
 	sudo tar cf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_RFSDIR) .
-	cd $(MECT_LFSDIR); sudo rm -rf flash/etc/sysconfig \
+	cd $(MECT_LFSDIR); sudo rm -rf \
+		flash/etc/sysconfig \
 		flash/root/hmi \
 		flash/control \
 		retentive \
@@ -885,8 +886,8 @@ target_mfg_upd:
 	sudo tar cf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_LFSDIR) .
 	#
 	mkdir -p $(MECT_SYSUPDIR)/fs
-	tar xf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_SYSUPDIR)/fs
-	tar xf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_SYSUPDIR)/fs/local
+	sudo tar xf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_SYSUPDIR)/fs
+	sudo tar xf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_SYSUPDIR)/fs/local
 	test ! -d $(MECT_SYSUPDIR)/fs/sysupdate
 	mkdir -p $(MECT_SYSUPDIR)/fs/sysupdate
 	test -d $(MECT_SYSUPDIR)/fs/sysupdate

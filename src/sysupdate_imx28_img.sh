@@ -120,6 +120,13 @@ fi
 losetup | grep -q . && umount $(losetup | awk -F: '{ print $1}')
 losetup | grep -q . && losetup -d $(losetup | awk -F: '{ print $1}')
 
+if expr "$RELEASE" : '3\.0\.1' > /dev/null; then
+    test -f /etc/rsync-mect.pwd && rm -f /etc/rsync-mect.pwd
+    test -f /local/var/spool/cron/crontabs/root.default && rm -f /local/var/spool/cron/crontabs/root.default
+    test -f /local/var/spool/cron/crontabs/root && rm -f /local/var/spool/cron/crontabs/root
+    test -f /usr/sbin/rsync-mect.sh && rm -f /usr/sbin/rsync-mect.sh
+fi
+
 echo "Recording all file system changes..." | tee /dev/tty1
 sync 2>&1 | tee /dev/tty1
 echo "done." | tee /dev/tty1

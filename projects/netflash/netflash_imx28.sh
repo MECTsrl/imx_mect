@@ -109,7 +109,8 @@ sudo sshpass -p "$passwd" rsync -axh --inplace --delete --info=progress2 -e "ssh
 sudo sshpass -p "$passwd" rsync -axh --delete -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" rootfs/ "$user"@"$ip":/
 
 echo "* Update the local file system"
-sudo sshpass -p "$passwd" rsync -axh --delete --info=progress2 -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" rootfs/local/ "$user"@"$ip":/local/
+sudo sshpass -p "$passwd" rsync -axh --inplace --delete --info=progress2 -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" rootfs/local/ "$user"@"$ip":/local/
+sudo sshpass -p "$passwd" rsync -axh --delete -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" rootfs/local/ "$user"@"$ip":/local/
 
 echo "* Closing and rebooting target..."
 sshpass -p "$passwd" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@"$ip" /bin/sync\; /sbin/reboot

@@ -1,0 +1,20 @@
+--- a/drivers/char/mxs-buzzer.c	2017-11-17 13:26:35.125385292 +0100
++++ b/drivers/char/mxs-buzzer.c	2017-11-17 15:09:21.608223293 +0100
+@@ -45,7 +45,7 @@
+ #if defined CONFIG_MECT_VAL01
+ #define BUZZER_CLOCK_CYCLE_IN_PERIOD 	749 //500Hz //374 1kHz //81 corresponds to a frequency for pwm = 3.5 Khz
+ #else
+-#define BUZZER_CLOCK_CYCLE_IN_PERIOD 	599
++#define BUZZER_CLOCK_CYCLE_IN_PERIOD 	3750 // @ (24MHz/64=2.667us)=10ms	599
+ #endif
+ 
+ #if defined CONFIG_MECT_VAL01
+@@ -148,7 +148,7 @@
+ #if defined CONFIG_MECT_VAL01
+ 	__raw_writel(BF_PWM_ACTIVEn_INACTIVE(duty_cycle) |
+ #else	
+-	__raw_writel(BF_PWM_ACTIVEn_INACTIVE(50) |
++	__raw_writel(BF_PWM_ACTIVEn_INACTIVE((BUZZER_CLOCK_CYCLE_IN_PERIOD/2)) | // 50%
+ #endif
+ 		     BF_PWM_ACTIVEn_ACTIVE(0),
+ 		     REGS_PWM_BASE + HW_PWM_ACTIVEn(3));

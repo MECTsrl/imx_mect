@@ -1210,7 +1210,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 3.0.0rc12
++Version         : 3.0.1
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3536,7 +3536,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v3.0.0rc12
++Version         : v3.0.1
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -4806,7 +4806,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v3.0.0rc12
++Version: v3.0.1
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

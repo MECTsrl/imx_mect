@@ -14,7 +14,7 @@
  	__raw_writel(BF_PWM_ACTIVEn_INACTIVE(duty_cycle) |
  #else	
 -	__raw_writel(BF_PWM_ACTIVEn_INACTIVE(50) |
-+	__raw_writel(BF_PWM_ACTIVEn_INACTIVE((BUZZER_CLOCK_CYCLE_IN_PERIOD/2)) | // 50%
++	__raw_writel(BF_PWM_ACTIVEn_INACTIVE(BUZZER_CLOCK_CYCLE_IN_PERIOD) | // 100%
  #endif
  		     BF_PWM_ACTIVEn_ACTIVE(0),
  		     REGS_PWM_BASE + HW_PWM_ACTIVEn(3));

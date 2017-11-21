@@ -41,12 +41,13 @@ usage ()
 arch="$1"
 test -z "$arch" && { usage; exit 1; }
 arch="$(realpath -L $arch)"
-test -r "$arch" || { echo "$prog: cannot read image archive $arch." >&2; exit 1; }
-echo "* Test the image archive."
-unzip -qt "$arch" || { echo "$prog: archive $arch integrity test failed." >&2; exit 1; }
 
 ip="$2"
 test -z "$ip" && { usage; exit 1; }
+
+test -r "$arch" || { echo "$prog: cannot read image archive $arch." >&2; exit 1; }
+echo "* Test the image archive."
+unzip -qt "$arch" || { echo "$prog: archive $arch integrity test failed." >&2; exit 1; }
 
 test -z "$user" && { echo "$prog: no target user name." >&2; exit 1; }
 test -z "$k_arch_name" && { echo "$prog: no kernel archive name." >&2; exit 1; }

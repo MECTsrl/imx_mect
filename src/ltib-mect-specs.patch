@@ -4977,7 +4977,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,181 @@
+@@ -10,40 +10,188 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -5064,6 +5064,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +# Symlink /etc/ppp to the RW /local file system.
 +( cd $RPM_BUILD_ROOT%{pfx}/etc; ln -sf /local/etc/ppp )
 +
++# Create directory /local/root/.ssh
++mkdir -p $RPM_BUILD_ROOT%{pfx}/local/root/.ssh
++# Symlink /etc/dropbear/authorized_keys in /local/root/.ssh
++( cd $RPM_BUILD_ROOT%{pfx}/local/root/.ssh; ln -sf /etc/dropbear/authorized_keys )
++
 +
  %Clean
 +export LC_ALL
@@ -5121,6 +5126,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/local/etc/sysconfig/net.conf
 +%{pfx}/local/root/make_usb_device
 +%dir %attr(0700,root,root) %{pfx}/local/root/.ssh
++%{pfx}/local/root/.ssh/authorized_keys
 +
 +
 +%Files rfs
@@ -5173,6 +5179,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/local/etc/sysconfig/net.conf
 +%{pfx}/local/root/make_usb_device
 +%dir %attr(0700,root,root) %{pfx}/local/root/.ssh
++%{pfx}/local/root/.ssh/authorized_keys
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 --- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 +++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec

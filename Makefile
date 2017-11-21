@@ -216,7 +216,6 @@ MECT_COMMON_RFSPKGS := \
 	lzo-rfs-2.03-0.$(MECT_TARGET_ARCH).rpm \
 	mac_sn-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	mect_plugins-rfs-$(MECT_BUILD_PLUGINSCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm \
-	merge-rfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 	modeps-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	mtd-utils-rfs-201006-1.$(MECT_TARGET_ARCH).rpm \
 	mysql-rfs-4.1.12-0.$(MECT_TARGET_ARCH).rpm \
@@ -247,12 +246,13 @@ MECT_COMMON_RFSPKGS := \
 	xenomai-rfs-2.6.0-1.$(MECT_TARGET_ARCH).rpm \
 	zip-rfs-3.0.0-0.$(MECT_TARGET_ARCH).rpm \
 	zlib-rfs-1.2.3-2.$(MECT_TARGET_ARCH).rpm \
+	merge-rfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 
 MECT_COMMON_RFSPKGS := $(MECT_COMMON_RFSPKGS:%=$(MECT_RPMDIR)/%)
 
 MECT_COMMON_LFSPKGS := \
-	merge-lfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 	local-1.0-1.$(MECT_TARGET_ARCH).rpm \
+	merge-lfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 
 MECT_COMMON_LFSPKGS := $(MECT_COMMON_LFSPKGS:%=$(MECT_RPMDIR)/%)
 

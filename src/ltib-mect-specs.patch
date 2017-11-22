@@ -8393,13 +8393,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 --- ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 +++ ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
-@@ -0,0 +1,200 @@
+@@ -0,0 +1,171 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define pkg_src  compat-drivers
 +%define pkg_rc   rc4
 +%define pkg_bld  su
-+%define dir_rtl  rtlwifi
-+%define dir_ath  ath9k_htc
 +
 +Summary         : Wi-Fi drivers ported from newer kernels.
 +Name            : wifi-drivers
@@ -8465,18 +8463,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+# Setup to compile the rtlwifi driver.
-+%setup -c -n %{name}-%{version}/%{dir_rtl}
-+cd %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
++%setup -n %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
 +%patch1 -p1
-+
-+# Setup to compile the ath9k_htc driver.
-+%setup -T -b 0 -c -n %{name}-%{version}/%{dir_ath}
-+cd %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
-+%patch1 -p1
-+
-+# Just reset RPM idea of top-level directory.
-+%setup -D -T -b 0 -c -n %{name}-%{version}
 +
 +
 +#################################################################
@@ -8484,33 +8472,23 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+# Build the rtlwifi driver.
-+cd %{dir_rtl}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
-+
 +./scripts/driver-select rtlwifi
-+
-+make -j`grep -c ^processor /proc/cpuinfo` \
++make -j$(nproc) \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
 +	ARCH=$LINTARCH \
-+	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
++	KLIB=${RPM_BUILD_ROOT}%{pfx} \
 +	KLIB_BUILD=${TOP}/rpm/BUILD/linux
-+
-+cd ../..
-+
-+# Build the ath9k_htc driver.
-+cd %{dir_ath}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
++./scripts/driver-select restore
 +
 +./scripts/driver-select ath9k_htc
-+
-+make -j`grep -c ^processor /proc/cpuinfo` \
++make -j$(nproc) \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
 +	ARCH=$LINTARCH \
-+	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
++	KLIB=${RPM_BUILD_ROOT}%{pfx} \
 +	KLIB_BUILD=${TOP}/rpm/BUILD/linux
-+
-+cd ../..
++./scripts/driver-select restore
 +
 +
 +#################################################################
@@ -8530,48 +8508,25 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +# Firmware for ath9k_htc driver
 +install -D -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{pfx}/lib/firmware/$(basename %{SOURCE2})
 +
-+# Install the rtlwifi driver.
-+cd %{dir_rtl}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
-+
-+make -j`grep -c ^processor /proc/cpuinfo` install \
-+	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
++./scripts/driver-select rtlwifi
++make -j$(nproc) install \
++	DESTDIR=$RPM_BUILD_ROOT%{pfx} \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
 +	ARCH=$LINTARCH \
-+	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
++	KLIB=${RPM_BUILD_ROOT}%{pfx} \
 +	KLIB_BUILD=${TOP}/rpm/BUILD/linux
++./scripts/driver-select restore
 +
-+cd ../..
-+
-+# Install the ath9k_htc driver.
-+cd %{dir_ath}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
-+
-+make -j`grep -c ^processor /proc/cpuinfo` install \
-+	DESTDIR=$RPM_BUILD_ROOT/%{pfx} \
++./scripts/driver-select ath9k_htc
++make -j$(nproc) install \
++	DESTDIR=$RPM_BUILD_ROOT%{pfx} \
 +	prefix=%{_prefix} \
 +	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
 +	ARCH=$LINTARCH \
-+	KLIB=${RPM_BUILD_ROOT}/%{pfx} \
++	KLIB=${RPM_BUILD_ROOT}%{pfx} \
 +	KLIB_BUILD=${TOP}/rpm/BUILD/linux
-+
-+cd ../..
-+
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+
-+sed -n '
-+    \,^%{pfx}/%{_lib}/modules/[0-9.]\+/updates/compat/, p;
-+    \,^%{pfx}/%{_lib}/modules/[0-9.]\+/updates/net/, p;
-+' all_files.lst > rfs_common_files.lst
-+
-+sed -n '
-+    \,^%{pfx}/%{_lib}/firmware/rtlwifi/rtl8192cufw\.bin, p;
-+    \,^%{pfx}/%{_lib}/modules/[0-9.]\+/updates/drivers/net/wireless/rtlwifi/, p;
-+' all_files.lst > rfs_rtlwifi_files.lst
-+
-+sed -n '
-+    \,^%{pfx}/%{_lib}/firmware/htc_9271\.fw, p;
-+    \,^%{pfx}/%{_lib}/modules/[0-9.]\+/updates/drivers/net/wireless/ath/, p;
-+' all_files.lst > rfs_ath9k_htc_files.lst
++./scripts/driver-select restore
 +
 +
 +#################################################################
@@ -8579,21 +8534,37 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+rm -rf $RPM_BUILD_ROOT/%{name}-%{version}
++rm -rf $RPM_BUILD_ROOT
 +
 +
 +#################################################################
-+%Files -f all_files.lst
++%Files
 +%defattr(-,root,root)
++%{pfx}/*
 +
-+%Files common-rfs -f rfs_common_files.lst
++%Files common-rfs
 +%defattr(-,root,root)
++%{pfx}/lib/modules/2.6.35.3/updates/compat/compat.ko
++%{pfx}/lib/modules/2.6.35.3/updates/compat/sch_codel.ko
++%{pfx}/lib/modules/2.6.35.3/updates/compat/sch_fq_codel.ko
++%{pfx}/lib/modules/2.6.35.3/updates/net/mac80211/mac80211.ko
++%{pfx}/lib/modules/2.6.35.3/updates/net/wireless/cfg80211.ko
 +
-+%Files rtlwifi-rfs -f rfs_rtlwifi_files.lst
++%Files rtlwifi-rfs
 +%defattr(-,root,root)
++%{pfx}/lib/firmware/rtlwifi/rtl8192cufw.bin
++%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/rtlwifi/rtl8192c/rtl8192c-common.ko
++%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/rtlwifi/rtl8192cu/rtl8192cu.ko
++%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/rtlwifi/rtlwifi.ko
 +
-+%Files ath9k_htc-rfs -f rfs_ath9k_htc_files.lst
++%Files ath9k_htc-rfs
 +%defattr(-,root,root)
++%{pfx}/lib/firmware/htc_9271.fw
++%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/ath/ath.ko
++%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/ath/ath9k/ath9k.ko
++%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/ath/ath9k/ath9k_common.ko
++%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/ath/ath9k/ath9k_htc.ko
++%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/ath/ath9k/ath9k_hw.ko
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec ltib/dist/lfs-5.1/wireless-tools/wireless-tools.spec
 --- ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec
 +++ ltib/dist/lfs-5.1/wireless-tools/wireless-tools.spec

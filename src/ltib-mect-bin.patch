@@ -1,6 +1,15 @@
 diff -aurN '--exclude=*.bak' '--exclude=*.swp' ltib.reference/bin/Ltibutils.pm ltib/bin/Ltibutils.pm
 --- ltib.reference/bin/Ltibutils.pm
 +++ ltib/bin/Ltibutils.pm
+@@ -234,7 +234,7 @@
+     my ($defs, $hr, @list) = @_;
+     local ($_, $1);
+     foreach (@list) {
+-        while( $hr->{$_} =~ m,(%{?([^}]+)}?),g ) {
++        while( $hr->{$_} =~ m,(%\{?([^\}]+)\}?),g ) {
+             my $rep = '';
+             if( defined $defs->{$2} ) {
+                 $rep = $defs->{$2};
 @@ -359,7 +359,7 @@
      return scalar @{$cf->{pp_list}} if $pp_list_tested;
      $pp_list_tested = 1;

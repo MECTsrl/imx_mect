@@ -1,0 +1,73 @@
+--- a/include/linux/mxs-buzzer.h	2017-11-23 11:00:27.423548818 +0000
++++ b/include/linux/mxs-buzzer.h	2017-11-23 11:00:05.739089275 +0000
+@@ -16,11 +16,4 @@
+ #define BUZZER_MAGIC 'b'
+ #define BUZZER_BEEP _IO(BUZZER_MAGIC, 0)
+ 
+-#if defined CONFIG_MECT_TPAC1005_480x272 
+-struct buzzer_mesg {
+-      unsigned int duration; //expressed in ms
+-      unsigned int volume;   // volume level 0-->100
+- };
+-#endif
+-
+ #endif
+--- a/drivers/char/mxs-buzzer.c	2017-11-22 11:56:50.816180338 +0000
++++ b/drivers/char/mxs-buzzer.c	2017-11-23 10:56:53.554996557 +0000
+@@ -43,10 +43,6 @@
+ #define SCALE_M		10
+ 
+ #define BUZZER_CLOCK_CYCLE_IN_PERIOD 3750 // @ (24MHz/64=2.667us)=10ms
+-#if defined CONFIG_MECT_TPAC1005_480x272
+-struct buzzer_mesg settings;
+-#else
+-#endif
+ 
+ static const struct file_operations buzzer_fops ={
+ 	.read = NULL,
+@@ -120,32 +116,16 @@
+ 	
+ }
+ 
+-#if defined CONFIG_MECT_TPAC1005_480x272
+-static int buzzer_beep(struct buzzer_dev *buzzer, struct buzzer_mesg settings)
+-{
+-	int duty_cycle = 0;
+-	
+-	duty_cycle = (((settings.volume * 10 + SCALE_Q)/SCALE_M) * BUZZER_CLOCK_CYCLE_IN_PERIOD)/100;
+-#else
+ static int buzzer_beep(struct buzzer_dev *buzzer, unsigned int duration)
+ {
+-#endif
+ 	int ret=0;
+ 	setup_timer(&(buzzer->bz_timer), buzzer_stop, 0 );
+ 
+-#if defined CONFIG_MECT_TPAC1005_480x272
+-	ret = mod_timer( &(buzzer->bz_timer), jiffies + msecs_to_jiffies(settings.duration) );
+-#else
+   	ret = mod_timer( &(buzzer->bz_timer), jiffies + msecs_to_jiffies(duration) );
+-#endif
+   	if (ret) 
+ 		printk(KERN_INFO "Error in mod_timer\n");	
+ 
+-#if defined CONFIG_MECT_TPAC1005_480x272
+-	__raw_writel(BF_PWM_ACTIVEn_INACTIVE(duty_cycle) |
+-#else	
+ 	__raw_writel(BF_PWM_ACTIVEn_INACTIVE(BUZZER_CLOCK_CYCLE_IN_PERIOD) |
+-#endif
+ 		     BF_PWM_ACTIVEn_ACTIVE(0),
+ 		     REGS_PWM_BASE + HW_PWM_ACTIVEn(3));
+ 
+@@ -176,12 +156,7 @@
+ 
+     switch (cmd) {
+         case BUZZER_BEEP:
+-#if defined CONFIG_MECT_TPAC1005_480x272
+-	    __copy_from_user(&settings, (void *)arg, sizeof(settings));
+-	    buzzer_beep(buzzer, settings);
+-#else
+             buzzer_beep(buzzer, (unsigned int)arg);
+-#endif
+             ret = 0;
+             break;
+ 	default:

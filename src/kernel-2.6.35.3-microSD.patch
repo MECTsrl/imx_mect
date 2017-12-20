@@ -1,0 +1,54 @@
+--- a/arch/arm/mach-mx28/device.c	2017-12-20 09:52:40.938538997 +0000
++++ b/arch/arm/mach-mx28/device.c	2017-12-20 14:00:13.990340505 +0000
+@@ -453,22 +453,31 @@
+ #if defined(CONFIG_MACH_MX28EVK)
+ #if defined(CONFIG_MECT_CUSTOMIZATION)
+ /* PWM3 is buzzer, PWM4 is free and MMC0_POWER is directly wired to Vcc */
+-#define MMC0_POWER	MXS_PIN_TO_GPIO(PINID_PWM4)
++/* only microSD so no write-protect */
++#undef MMC0_POWER
++#undef MMC0_WP
+ #else
+ #define MMC0_POWER	MXS_PIN_TO_GPIO(PINID_PWM3)
++#define MMC0_WP		MXS_PIN_TO_GPIO(PINID_SSP1_SCK)
+ #endif
+ #define MMC1_POWER	MXS_PIN_TO_GPIO(PINID_PWM4)
+-#define MMC0_WP		MXS_PIN_TO_GPIO(PINID_SSP1_SCK)
+ #define MMC1_WP		MXS_PIN_TO_GPIO(PINID_GPMI_RESETN)
+ #endif
+ 
+ static int mxs_mmc_get_wp_ssp0(void)
+ {
++#if defined(CONFIG_MECT_CUSTOMIZATION)
++	return 0;
++#else
+ 	return gpio_get_value(MMC0_WP);
++#endif
+ }
+ 
+ static int mxs_mmc_hw_init_ssp0(void)
+ {
++#if defined(CONFIG_MECT_CUSTOMIZATION)
++	return 0;
++#else
+ 	int ret = 0;
+ 
+ 	/* Configure write protect GPIO pin */
+@@ -493,13 +502,16 @@
+ 	gpio_free(MMC0_WP);
+ out_wp:
+ 	return ret;
++#endif
+ }
+ 
+ static void mxs_mmc_hw_release_ssp0(void)
+ {
++#if defined(CONFIG_MECT_CUSTOMIZATION)
++#else
+ 	gpio_free(MMC0_POWER);
+ 	gpio_free(MMC0_WP);
+-
++#endif
+ }
+ 
+ static void mxs_mmc_cmd_pullup_ssp0(int enable)

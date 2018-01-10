@@ -22449,8 +22449,13 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/rs_notify_alert.sh ltib/config/platform/imx/merge/usr/sbin/rs_notify_alert.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/rs_notify_alert.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/rs_notify_alert.sh
-@@ -0,0 +1,88 @@
+@@ -0,0 +1,97 @@
 +#!/bin/sh
++
++VPNSRVIP='10.1.0.1'
++VPNSRVPORT='8080'
++
++TUNNAME='tun_mrs'
 +
 +PIDD=/var/run
 +PIDFILE="$PIDD/$(/usr/bin/basename $0).pid"
@@ -22460,14 +22465,18 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +# Start the push unless already running.
 +start() {
-+	# Already running?
++        # Abort if no VPN.
++        /sbin/ip link show "$TUNNAME" 2>/dev/null | /bin/grep -q '\<UP\>' || return 0
++
++	# Abort if already running.
 +	test -r "$PIDFILE" && test -s "$PIDFILE" && test -d /proc/$(/bin/cat "$PIDFILE") && return 0
 +
++        # OK then, let's do our job!
 +	echo $$ > "$PIDFILE"
 +
-+	# Try to notify four more times.
++	# Try to notify four times in case of errors.
 +	for n in $(/usr/bin/seq 1 1 4); do
-+		msg="$(/usr/bin/wget -q -O - 'http://10.1.0.1:8080/log_sync.php?newalarm')"
++		msg="$(/usr/bin/wget -q -O - 'http://${VPNSRVIP}:${VPNSRVPORT}/log_sync.php?newalarm')"
 +		rv=$?
 +
 +		# Succeeded.

@@ -901,7 +901,7 @@ target_mfg_upd:
 	test -d $(MECT_SYSUPDIR)/fs/sysupdate
 	sudo cp --reflink=auto $(MECT_SYSUPDIR)/imx28_ivt_linux.sb $(MECT_SYSUPDIR)/fs/sysupdate
 	sudo cp --reflink=auto $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/fs/sysupdate
-	chmod 755 $(MECT_SYSUPDIR)/fs/sysupdate/$(notdir $(MECT_KOBS_TMPL))
+	sudo chmod 755 $(MECT_SYSUPDIR)/fs/sysupdate/$(notdir $(MECT_KOBS_TMPL))
 	#
 	if /sbin/losetup -a | grep -q $(MECT_SYSUPD_IMG); then \
 	    dev=`/sbin/losetup -a | grep $(MECT_SYSUPD_IMG)\$$ | awk '{ print $$1; }'`; \

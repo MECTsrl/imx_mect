@@ -216,6 +216,7 @@ MECT_COMMON_RFSPKGS := \
 	lzo-rfs-2.03-0.$(MECT_TARGET_ARCH).rpm \
 	mac_sn-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	mect_plugins-rfs-$(MECT_BUILD_PLUGINSCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm \
+	merge-rfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 	modeps-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	mtd-utils-rfs-201006-1.$(MECT_TARGET_ARCH).rpm \
 	mysql-rfs-4.1.12-0.$(MECT_TARGET_ARCH).rpm \
@@ -246,7 +247,6 @@ MECT_COMMON_RFSPKGS := \
 	xenomai-rfs-2.6.0-1.$(MECT_TARGET_ARCH).rpm \
 	zip-rfs-3.0.0-0.$(MECT_TARGET_ARCH).rpm \
 	zlib-rfs-1.2.3-2.$(MECT_TARGET_ARCH).rpm \
-	merge-rfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 
 MECT_COMMON_RFSPKGS := $(MECT_COMMON_RFSPKGS:%=$(MECT_RPMDIR)/%)
 
@@ -804,7 +804,7 @@ target_rfs: $(MECT_COMMON_RFSPKGS)
 		echo "RunTime: $(MECT_BUILD_ATCMCRT_BRANCH)/$(MECT_BUILD_ATCMCRT_TAG)"; \
 		echo "MectPlugin: $(MECT_BUILD_PLUGINSCRT_BRANCH)/$(MECT_BUILD_PLUGINSCRT_TAG)"; \
 		echo "MectApps: $(MECT_BUILD_APPSCRT_BRANCH)/$(MECT_BUILD_APPSCRT_TAG)"; \
-	) > $(MECT_RFSDIR)/$(MECT_RFS_VERSION_FILE)
+	) > $(MECT_RFSDIR)/$(MECT_RFS_VERSION_FILE) && sudo chown root:root $(MECT_RFSDIR)/$(MECT_RFS_VERSION_FILE)
 	# Target-specific tuning (better build target-specific packages?)
 	if test "$(MECT_BUILD_TARGET)" = "TPLC100_01_AA" -o "$(MECT_BUILD_TARGET)" = "TPLC100_01_AB"; then \
 		sudo rm -f $(MECT_RFSDIR)/usr/bin/ts_calibrate; \
@@ -818,7 +818,7 @@ target_lfs_flash target_lfs: MECT_LFSDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(
 target_lfs: $(MECT_COMMON_LFSPKGS)
 	test -n '$(MECT_BUILD_TARGET)'
 	sudo rm -rf $(MECT_LFSDIR)
-	mkdir -p $(MECT_LFSDIR)/var/lib/rpm $(MECT_LFSDIR)/tmp/ltib
+	sudo mkdir -p $(MECT_LFSDIR)/var/lib/rpm $(MECT_LFSDIR)/tmp/ltib
 	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_LFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_COMMON_LFSPKGS) $(MECT_LFSPKGS)
 	sudo rm -f $(MECT_LFSDIR)/var/lib/rpm/*
 	sudo rmdir $(MECT_LFSDIR)/var/lib/rpm
@@ -889,10 +889,10 @@ target_mfg_upd:
 	sudo tar xf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_SYSUPDIR)/fs
 	sudo tar xf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_SYSUPDIR)/fs/local
 	test ! -d $(MECT_SYSUPDIR)/fs/sysupdate
-	mkdir -p $(MECT_SYSUPDIR)/fs/sysupdate
+	sudo mkdir -p $(MECT_SYSUPDIR)/fs/sysupdate
 	test -d $(MECT_SYSUPDIR)/fs/sysupdate
-	cp --reflink=auto $(MECT_SYSUPDIR)/imx28_ivt_linux.sb $(MECT_SYSUPDIR)/fs/sysupdate
-	cp --reflink=auto $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/fs/sysupdate
+	sudo cp --reflink=auto $(MECT_SYSUPDIR)/imx28_ivt_linux.sb $(MECT_SYSUPDIR)/fs/sysupdate
+	sudo cp --reflink=auto $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/fs/sysupdate
 	chmod 755 $(MECT_SYSUPDIR)/fs/sysupdate/$(notdir $(MECT_KOBS_TMPL))
 	#
 	if /sbin/losetup -a | grep -q $(MECT_SYSUPD_IMG); then \

@@ -22465,11 +22465,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +# Start the push unless already running.
 +start() {
-+        # Abort if no VPN or if unexpected VPN peer IP.
-+        /sbin/ip addr show "$TUNNAME" 2>/dev/null | /bin/grep -q "\<peer ${VPNSRVIP}/32 scope global ${TUNNAME}\$" || return 0
-+
 +	# Abort if already running.
 +	test -r "$PIDFILE" && test -s "$PIDFILE" && test -d /proc/$(/bin/cat "$PIDFILE") && return 0
++
++        # Abort if no VPN or if unexpected VPN peer IP.
++        /sbin/ip addr show "$TUNNAME" 2>/dev/null | /bin/grep -q "\<peer ${VPNSRVIP}/32 scope global ${TUNNAME}\$" || return 0
 +
 +        # OK then, let's do our job!
 +	echo $$ > "$PIDFILE"

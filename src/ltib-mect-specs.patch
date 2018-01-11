@@ -4922,7 +4922,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,196 @@
+@@ -10,40 +10,199 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -5069,9 +5069,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/setup
 +%attr(0755,root,root) %{pfx}/etc/rc.d/rc.local
 +%{pfx}/etc/resolv.conf
++%{pfx}/etc/rsync-mect.pwd
 +%{pfx}/etc/services
 +%attr(0400,root,root) %{pfx}/etc/shadow
 +%attr(0755,root,root) %{pfx}/usr/bin/fcrts.sh
++%attr(0755,root,root) %{pfx}/usr/sbin/rsync-mect.sh
 +%attr(0755,root,root) %{pfx}/usr/sbin/usb3g.sh
 +%attr(0755,root,root) %{pfx}/usr/sbin/wifi.sh
 +%{pfx}/local/etc/icinga/nrpe.cfg
@@ -5084,6 +5086,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/local/etc/sysconfig/lang_table.csv
 +%{pfx}/local/etc/sysconfig/net.conf
 +%{pfx}/local/root/make_usb_device
++%{pfx}/local/var/spool/cron/crontabs/root.default
 +
 +
 +%Files rfs

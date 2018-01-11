@@ -12,6 +12,13 @@ if ! test -d "$OVPNCONF"; then
 fi
 test -d "$OVPNCONF" || do_exit "no OpenVPN configuration directory." | tee /dev/tty1
 
+# VPN-enabled (VPN certificate exists)?
+if test -s "${OVPNCONF}/${SN}.ovpn"; then
+    keep_root_pwd=1        # Do not change root password.
+else
+    keep_root_pwd=0        # Change root password.
+fi
+
 # Disable any existing certificates.
 find "$OVPNCONF" -type f \( -iname \*.ovpn -o -iname \*.conf \) -exec mv {} {}.$(date '+%F-%T') \;
 
@@ -22,7 +29,10 @@ test -s "${OVPNCONF}/${SN}.ovpn" || do_exit "cannot install the OpenVPN certific
 # Change the default (development) root password.
 #
 
-sed -i 's:^root\:[^\:]\+\::root\:$1$5FNVDbNV$Qkv/sIFbIQwuZdbz6rdIs0\::' "$SHADOWFILE"
+# Change root password unless expplicitly required not to.
+if test "$keep_root_pwd" -ne 1; then
+    sed -i 's:^root\:[^\:]\+\::root\:$1$5FNVDbNV$Qkv/sIFbIQwuZdbz6rdIs0\::' "$SHADOWFILE"
+fi
 
 # Activate configuration changes.
 "$OVPNRC" stop; sleep 1; "$OVPNRC" start

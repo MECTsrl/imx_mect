@@ -251,8 +251,8 @@ MECT_COMMON_RFSPKGS := \
 MECT_COMMON_RFSPKGS := $(MECT_COMMON_RFSPKGS:%=$(MECT_RPMDIR)/%)
 
 MECT_COMMON_LFSPKGS := \
-	merge-lfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 	local-1.0-1.$(MECT_TARGET_ARCH).rpm \
+	merge-lfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 
 MECT_COMMON_LFSPKGS := $(MECT_COMMON_LFSPKGS:%=$(MECT_RPMDIR)/%)
 
@@ -693,10 +693,11 @@ cloner_shar:
 	cat $(MECT_SYSCLONE_POST_TMPL) >> $(MECT_SYSCLONE_SHAR)
 	mkdir -p $(MECT_SYSCLONE_SHDIR)
 	test -d "$(MECT_SYSCLONE_SHDIR)"
-	if /sbin/losetup | grep -q $(MECT_SYSCLONE_IMG); then \
-	    dev=`/sbin/losetup | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
+	if /sbin/losetup -a | grep -q $(MECT_SYSCLONE_IMG); then \
+	    dev=`/sbin/losetup -a | grep $(MECT_SYSCLONE_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
+	sync
 	dd if=/dev/zero of=$(MECT_SYSCLONE_IMG) bs=1k count=`du -s $(MECT_SYSCLONE_DIR) | awk '{ print int($$1 * 1.5); }'`
 	/sbin/mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L cloner $(MECT_SYSCLONE_IMG)
 	rm -rf $(MECT_SYSCLONE_LOOP); mkdir -p $(MECT_SYSCLONE_LOOP)
@@ -869,7 +870,7 @@ target_mfg_upd:
 	install -m 644 $(MECT_FTPDIR)/fdisk-u.input $(MECT_MFGDIR)/'OS firmware'/sys/fdisk-u.input
 	install -m 644 $(MECT_FTPDIR)/ucl.xml $(MECT_MFGDIR)/'OS firmware'/ucl.xml
 	sudo tar cf $(MECT_MFGDIR)/'OS firmware'/img/rootfs.tar -C $(MECT_RFSDIR) .
-	tar cf $(MECT_MFGDIR)/'OS firmware'/img/localfs.tar -C $(MECT_LFSDIR) .
+	sudo tar cf $(MECT_MFGDIR)/'OS firmware'/img/localfs.tar -C $(MECT_LFSDIR) .
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_MFGDIR)/'OS firmware'/img
 	install -m 644 $(MECT_BOOTDIR)/boot/updater_ivt.sb $(MECT_MFGDIR)/'OS firmware'/sys
 	rm -f $(MECT_MFGZIP)
@@ -881,7 +882,8 @@ target_mfg_upd:
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_SYSUPDIR)
 	sudo rm -rf $(MECT_RFSDIR)/local/*
 	sudo tar cf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_RFSDIR) .
-	cd $(MECT_LFSDIR); sudo rm -rf flash/etc/sysconfig \
+	cd $(MECT_LFSDIR); sudo rm -rf \
+		flash/etc/sysconfig \
 		flash/root/hmi \
 		flash/control \
 		retentive \
@@ -889,11 +891,11 @@ target_mfg_upd:
 		var/spool/cron/crontabs/root \
 		flash/etc/ppp/chat-usb3g \
 		flash/etc/icinga/nrpe.cfg
-	tar cf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_LFSDIR) .
+	sudo tar cf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_LFSDIR) .
 	#
 	mkdir -p $(MECT_SYSUPDIR)/fs
-	tar xf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_SYSUPDIR)/fs
-	tar xf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_SYSUPDIR)/fs/local
+	sudo tar xf $(MECT_SYSUPDIR)/rootfs.tar -C $(MECT_SYSUPDIR)/fs
+	sudo tar xf $(MECT_SYSUPDIR)/localfs.tar -C $(MECT_SYSUPDIR)/fs/local
 	test ! -d $(MECT_SYSUPDIR)/fs/sysupdate
 	mkdir -p $(MECT_SYSUPDIR)/fs/sysupdate
 	test -d $(MECT_SYSUPDIR)/fs/sysupdate
@@ -901,8 +903,8 @@ target_mfg_upd:
 	cp --reflink=auto $(MECT_KOBS_TMPL) $(MECT_SYSUPDIR)/fs/sysupdate
 	chmod 755 $(MECT_SYSUPDIR)/fs/sysupdate/$(notdir $(MECT_KOBS_TMPL))
 	#
-	if /sbin/losetup | grep -q $(MECT_SYSUPD_IMG); then \
-	    dev=`/sbin/losetup | grep $(MECT_SYSUPD_IMG)\$$ | awk '{ print $$1; }'`; \
+	if /sbin/losetup -a | grep -q $(MECT_SYSUPD_IMG); then \
+	    dev=`/sbin/losetup -a | grep $(MECT_SYSUPD_IMG)\$$ | awk '{ print $$1; }'`; \
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
 	sync

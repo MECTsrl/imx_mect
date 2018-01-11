@@ -6980,7 +6980,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +114,175 @@
+@@ -31,24 +114,176 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -7137,6 +7137,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/usr/bin/stop
 +%{pfx}/usr/lib
 +%{pfx}/usr/share/udhcpc/default.script
++%{pfx}/var
 +%{pfx}/var/ftp/bin
 +%{pfx}/var/ftp/etc
 +%{pfx}/var/ftp/lib

@@ -3,9 +3,13 @@
 # Execution trace
 set -x
 
+SYSTMPDIR="/tmp"
+MYTMPDIR="${SYSTMPDIR}/$(basename $0).$$"
 MNTDIR="/tmp/mnt"               # Set in /etc/rc.d/init.d/S10setup
 IMGDIR="/tmp/sysupdate"
 SUDIR="sysupdate"               # sysupdate-specific dir within the image
+PASSWDDIR="/etc"
+PASSWD="shadow"
 
 trap cleanup EXIT
 cleanup()
@@ -16,6 +20,8 @@ cleanup()
 
         losetup | grep -q . && umount $(losetup | awk -F: '{ print $1}')
         losetup | grep -q . && losetup -d $(losetup | awk -F: '{ print $1}')
+
+        rm -rf "$MYTMPDIR"
 
         sync
 }
@@ -69,6 +75,11 @@ expr "$RELEASE" : @@THIS_VERSION_MAJ_MIN@@ > /dev/null || expr "$RELEASE" : 2\\.
 UPDIMG="${MNTDIR}/img_sysupdate-@@THIS_VERSION@@-${TARGET}.ext2"
 test -r "$UPDIMG" || do_exit "cannot find an update for ${TARGET}."
 
+# Set up the temporary directory.
+mkdir -p "$MYTMPDIR"
+test -d "$MYTMPDIR" || do_exit "cannot create temporary direcctory ${MYTMPDIR}."
+chmod 700 "$MYTMPDIR"
+
 # Clean idle setups.
 losetup | grep -q . && losetup -d $(losetup | awk -F: '{ print $1}')
 
@@ -88,7 +99,7 @@ echo "" | tee /dev/tty1
 
 # Update the kernel.
 if test -s ${IMGDIR}/${SUDIR}/imx28_ivt_linux.sb; then
-	test -x ${IMGDIR}/${SUDIR}/kobs-ng || do_exit "cannot find \"${IMGDIR}/${SUDIR}/kobs-ng.\""
+	test -x ${IMGDIR}/${SUDIR}/kobs-ng || do_exit "cannot find ${IMGDIR}/${SUDIR}/kobs-ng."
 
 	echo "Updating the Linux kernel..." | tee /dev/tty1
 	if test "$TARGET" = TPAC1006; then
@@ -102,10 +113,25 @@ fi
 
 # Update the root file system.
 echo "Updating the root file system..." | tee /dev/tty1
+
+# Save password file (for root password).
+cp "${PASSWDDIR}/${PASSWD}" "$MYTMPDIR"
+
 # root file system is now mounted RW, see /etc/rc.d/init.d/S10setup
 rsync -a --exclude "$SUDIR" --exclude local --inplace ${IMGDIR}/ / 2> /dev/null | tee /dev/tty1
 rsync -a --exclude "$SUDIR" --exclude local ${IMGDIR}/ / 2>&1 | tee /dev/tty1
 /sbin/ldconfig -r / 2>&1 | tee /dev/tty1
+
+if test -s "${PASSWDDIR}/${PASSWD}"; then
+    sed -i '/^root:/ d' "${PASSWDDIR}/${PASSWD}"
+    if test "$( grep ^root: ${PASSWDDIR}/${PASSWD} | wc -l )" = "0"; then
+        grep ^root: "${MYTMPDIR}/${PASSWD}" >> "${PASSWDDIR}/${PASSWD}"
+        test "$( grep ^root: ${PASSWDDIR}/${PASSWD} | wc -l )" = "1" || echo "cannot preserve root password." | tee /dev/tty1
+    else
+        echo "cannot preserve root password." | tee /dev/tty1
+    fi
+fi
+
 echo "done." | tee /dev/tty1
 
 # Update the local file system.

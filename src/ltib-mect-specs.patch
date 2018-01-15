@@ -1210,7 +1210,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 3.0.6
++Version         : 3.0.8
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3536,7 +3536,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v3.0.6
++Version         : v3.0.8
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -4806,7 +4806,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v3.0.6
++Version: v3.0.8
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -8350,7 +8350,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 --- ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 +++ ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
-@@ -0,0 +1,200 @@
+@@ -0,0 +1,204 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define pkg_src  compat-drivers
 +%define pkg_rc   rc4
@@ -8368,7 +8368,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Group           : System Environment/Kernel
 +URL             : https://www.kernel.org/pub/linux/kernel/projects/backports/stable/v%{version}-%{pkg_rc}/%{pkg_src}-%{version}-%{release}-%{pkg_bld}.tar.xz
 +Source          : %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}.tar.xz
-+Source1         : firmware-realtek_20160110-1_all.deb
++Source1         : linux-firmware-20171215-82.git2451bb22.fc27.noarch.rpm
 +Source2         : htc_9271.fw
 +Patch1          : %{pkg_src}-3.9-rc4-2-su-no_depmod_etc.patch
 +BuildRoot       : %{_tmppath}/%{name}
@@ -8481,11 +8481,15 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +# Firmware for rtlwifi driver
 +cd $RPM_BUILD_ROOT%{pfx}
-+ar -p %{SOURCE1} data.tar.xz | tar xJvf - $( ar -p %{SOURCE1} data.tar.xz | tar tJf - | grep 8192cu )
-+cd -
++rpm2cpio %{SOURCE1} | cpio -diuv \*/rtl8192cufw_TMSC.bin
++install -D -m 644 usr/lib/firmware/rtlwifi/rtl8192cufw_TMSC.bin $RPM_BUILD_ROOT%{pfx}/lib/firmware/rtlwifi/rtl8192cufw.bin
 +
 +# Firmware for ath9k_htc driver
++# NOTE archive firmware is too new for driver (v1.4.0 vs v1.3.0)
 +install -D -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{pfx}/lib/firmware/$(basename %{SOURCE2})
++
++rm -rf usr
++cd -
 +
 +# Install the rtlwifi driver.
 +cd %{dir_rtl}/%{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}

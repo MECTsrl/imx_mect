@@ -58,7 +58,7 @@ test -z "$lfs_arch_name" && { echo "$prog: no local file system archive name." >
 kupd="$(realpath -L $kupd)"
 test -x "$kupd" || { echo "$prog: cannot kernel updater program $kupd_name." >&2; exit 1; }
 
-unpackdir="$(mktemp -p $(pwd) -d $(basename $0).XXXXXXXXXX)"
+unpackdir="$(mktemp -p /tmp -d $(basename $0).XXXXXXXXXX)"
 test -d "$unpackdir" || { echo "$prog: cannot create working directory $unpackdir." >&2; exit 1; }
 
 echo "* Unpack the image archive."

@@ -90,8 +90,8 @@ echo "* Program the kernel."
 sshpass -p "$passwd" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@"$ip" \
     flash_eraseall /dev/mtd0\; \
     /tmp/$kupd_name init /tmp/$k_arch_name\; \
-    rm -f /tmp/$kupd_name /tmp/$k_arch_name\; \
-    mount -orw,remount /
+    /bin/rm -f /tmp/$kupd_name /tmp/$k_arch_name\; \
+    /bin/mount -orw,remount /
 
 echo "* Extract the root file system contents."
 rm -rf rootfs

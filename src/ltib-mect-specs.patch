@@ -7024,7 +7024,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +114,176 @@
+@@ -31,24 +114,180 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -7072,27 +7072,31 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +export LC_ALL
 +LC_ALL=C
 +
-+DESTDIR=$RPM_BUILD_ROOT/%{pfx} 
++DESTDIR=$RPM_BUILD_ROOT%{pfx} 
  
  %Install
 +export LC_ALL
 +LC_ALL=C
 +
-+DESTDIR=$RPM_BUILD_ROOT/%{pfx} 
++DESTDIR=$RPM_BUILD_ROOT%{pfx} 
 +
  rm -rf $RPM_BUILD_ROOT
-+
- make DESTDIR=$RPM_BUILD_ROOT/%{pfx} install
+-make DESTDIR=$RPM_BUILD_ROOT/%{pfx} install
 -if [ -z "$PKG_SKELL_WANT_TERMINFO" ]
 -then
 -    rm -rf $RPM_BUILD_ROOT/%{pfx}/usr/share/terminfo
 -fi
 +
-+test -z "$PKG_SKELL_WANT_TERMINFO" && rm -rf $RPM_BUILD_ROOT/%{pfx}%{_prefix}/share/terminfo
++make DESTDIR=$RPM_BUILD_ROOT%{pfx} install
 +
-+tar xjvf %{SOURCE2} -C $RPM_BUILD_ROOT/%{pfx}
-+tar xjvf %{SOURCE3} -C $RPM_BUILD_ROOT/%{pfx}
-+install -m 755 -D %{SOURCE4} $RPM_BUILD_ROOT/%{pfx}%{_bindir}/`basename %{SOURCE4}`
++test -z "$PKG_SKELL_WANT_TERMINFO" && rm -rf $RPM_BUILD_ROOT%{pfx}%{_prefix}/share/terminfo
++
++tar xjvf %{SOURCE2} -C $RPM_BUILD_ROOT%{pfx}
++tar xjvf %{SOURCE3} -C $RPM_BUILD_ROOT%{pfx}
++install -m 755 -D %{SOURCE4} $RPM_BUILD_ROOT%{pfx}%{_bindir}/`basename %{SOURCE4}`
++
++# TODO: compile md5sum and symlink it to sing (if necessary).
++ln -s sign $RPM_BUILD_ROOT%{pfx}/usr/bin/md5sum
  
  %Clean
 -rm -rf $RPM_BUILD_ROOT
@@ -7177,7 +7181,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/tmp
 +%{pfx}/update
 +%{pfx}/usr/bin/gdbserver
-+%{pfx}/usr/bin/sign
++%{pfx}/usr/bin/md5sum
++%{pfx}/usr/bin/stop
 +%{pfx}/usr/bin/stop
 +%{pfx}/usr/lib
 +%{pfx}/usr/share/udhcpc/default.script

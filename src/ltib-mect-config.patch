@@ -21174,13 +21174,18 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/mdev ltib/config/platform/imx/merge/etc/rc.d/init.d/mdev
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/mdev
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/mdev
-@@ -0,0 +1,38 @@
+@@ -0,0 +1,50 @@
 +#!/bin/sh
 +
 +test -x /sbin/mdev || exit 0
 +
 +case "$1" in
 +    start)
++        for c in '' $( ls /sys/bus/usb/devices/[0-9]-[0-9]/bConfigurationValue )
++        do
++            test -n "$c" && echo 0 > "$c"
++        done
++                                                                  
 +        echo "/sbin/mdev" > /proc/sys/kernel/hotplug
 +
 +        if ! grep -q 'devtmpfs /dev devtmpfs ' /proc/mounts; then
@@ -21202,9 +21207,16 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +                mkdir /dev/shm
 +        fi
++
++        for c in '' $( ls /sys/bus/usb/devices/[0-9]-[0-9]/bConfigurationValue )
++        do
++            test -n "$c" && echo 1 > "$c"
++        done
 +        ;;
++
 +    stop)
 +        ;;
++
 +    *)
 +        echo "Usage: /etc/rc.d/init.d/mdev {start|stop}"
 +        echo 

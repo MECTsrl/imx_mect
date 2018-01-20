@@ -4977,7 +4977,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,188 @@
+@@ -10,40 +10,190 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -5100,6 +5100,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/crond
 +%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/iptables
 +%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/mac_sn
++%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/mdev
 +%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/network
 +%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/openvpn
 +%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/S10setup
@@ -5150,6 +5151,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/crond
 +%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/iptables
 +%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/mac_sn
++%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/mdev
 +%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/network
 +%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/openvpn
 +%attr(0755,root,root) %{pfx}/etc/rc.d/init.d/S10setup
@@ -6916,7 +6918,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/skell/skell.spec ltib/dist/lfs-5.1/skell/skell.spec
 --- ltib.reference/dist/lfs-5.1/skell/skell.spec
 +++ ltib/dist/lfs-5.1/skell/skell.spec
-@@ -9,20 +9,103 @@
+@@ -9,20 +9,104 @@
  Packager        : Steve Papacharalambous/Stuart Hughes
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
@@ -6973,6 +6975,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Patch48         : skell-1.18-remove_passwd_group.patch
 +Patch49         : skell-1.18-remove_services.patch
 +Patch50         : skell-1.18-remove_shadow.patch
++Patch51         : skell-1.18-remove-rc-mdev-script.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -7024,7 +7027,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +114,180 @@
+@@ -31,24 +115,180 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -7067,6 +7070,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%patch48 -p1
 +%patch49 -p1
 +%patch50 -p1
++%patch51 -p1
  
  %Build
 +export LC_ALL
@@ -7141,7 +7145,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/etc/rc.d/init.d/filesystems
 +%{pfx}/etc/rc.d/init.d/hostname
 +%{pfx}/etc/rc.d/init.d/inetd
-+%{pfx}/etc/rc.d/init.d/mdev
 +%{pfx}/etc/rc.d/init.d/modules
 +%{pfx}/etc/rc.d/init.d/mount-proc-sys
 +%{pfx}/etc/rc.d/init.d/portmap

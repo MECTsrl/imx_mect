@@ -1,0 +1,42 @@
+diff -aurN skell-1.18/etc/rc.d/init.d/mdev skell-1.18-mtl/etc/rc.d/init.d/mdev
+--- skell-1.18/etc/rc.d/init.d/mdev	2018-01-20 17:24:08.000000000 +0100
++++ skell-1.18-mtl/etc/rc.d/init.d/mdev	1970-01-01 01:00:00.000000000 +0100
+@@ -1,38 +0,0 @@
+-#!/bin/sh
+-
+-test -x /sbin/mdev || exit 0
+-
+-case "$1" in
+-    start)
+-        echo "/sbin/mdev" > /proc/sys/kernel/hotplug
+-
+-        if ! grep -q 'devtmpfs /dev devtmpfs ' /proc/mounts; then
+-                # put /dev in a tmpfs
+-                mount -n -o mode=0755 -t tmpfs mdev /dev
+-
+-                # Create static device nodes in /dev
+-                mknod /dev/console c 5 1
+-                chmod 600 /dev/console
+-                mknod /dev/null c 1 3
+-                chmod 666 /dev/null
+-
+-                # make and mount devpts
+-                mkdir /dev/pts
+-                mount -n -t devpts devpts /dev/pts
+-
+-                echo "Starting the hotplug events dispatcher mdev"
+-                /sbin/mdev -s
+-
+-                mkdir /dev/shm
+-        fi
+-        ;;
+-    stop)
+-        ;;
+-    *)
+-        echo "Usage: /etc/rc.d/init.d/mdev {start|stop}"
+-        echo 
+-        exit 1
+-        ;;
+-esac
+-
+-exit 0

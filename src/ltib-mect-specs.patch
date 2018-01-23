@@ -8402,7 +8402,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 --- ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 +++ ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
-@@ -0,0 +1,178 @@
+@@ -0,0 +1,179 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define pkg_src  compat-drivers
 +%define pkg_rc   rc4
@@ -8511,9 +8511,10 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +# Firmware for rtlwifi driver
 +cd $RPM_BUILD_ROOT%{pfx}
 +
++RTLFW=rtl8192cufw_B.bin
 +# Use host rpm2cpio, LTIB rpm2cpio is too old.
-+/usr/bin/rpm2cpio %{SOURCE1} | cpio -diuv \*/rtl8192cufw_TMSC.bin
-+install -D -m 644 usr/lib/firmware/rtlwifi/rtl8192cufw_TMSC.bin $RPM_BUILD_ROOT%{pfx}/lib/firmware/rtlwifi/rtl8192cufw.bin
++/usr/bin/rpm2cpio %{SOURCE1} | cpio -diuv \*/${RTLFW}
++install -D -m 644 usr/lib/firmware/rtlwifi/${RTLFW} $RPM_BUILD_ROOT%{pfx}/lib/firmware/rtlwifi/rtl8192cufw.bin
 +
 +# Firmware for ath9k_htc driver
 +# NOTE archive firmware is too new for driver (v1.4.0 vs v1.3.0)

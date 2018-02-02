@@ -8402,25 +8402,23 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 --- ltib.reference/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
 +++ ltib/dist/lfs-5.1/wifi-drivers/wifi-drivers.spec
-@@ -0,0 +1,179 @@
+@@ -0,0 +1,170 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
-+%define pkg_src  compat-drivers
-+%define pkg_rc   rc4
-+%define pkg_bld  su
++%define src_arch backports
 +
 +Summary         : Wi-Fi drivers ported from newer kernels.
 +Name            : wifi-drivers
-+Version         : 3.9
-+Release         : 2
++Version         : 3.12.8
++Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
 +Group           : System Environment/Kernel
-+URL             : https://www.kernel.org/pub/linux/kernel/projects/backports/stable/v%{version}-%{pkg_rc}/%{pkg_src}-%{version}-%{release}-%{pkg_bld}.tar.xz
-+Source          : %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}.tar.xz
++URL             : http://www.kernel.org/pub/linux/kernel/projects/backports/stable/v%{version}/%{src_arch}-%{version}-%{release}.tar.xz
++Source          : %{src_arch}-%{version}-%{release}.tar.xz
 +Source1         : linux-firmware-20171215-82.git2451bb22.fc27.noarch.rpm
-+Source2         : htc_9271.fw
-+Patch1          : %{pkg_src}-3.9-rc4-2-su-no_depmod_etc.patch
++Patch1          : backports-3.12.8-1-no_power_save_mode.patch
++Patch2          : backports-3.12.8-1-no_depmod.patch
 +BuildRoot       : %{_tmppath}/%{name}
 +Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -8449,17 +8447,18 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%name} package contents trimmed to just the files that are
 +needed at run time on the target for the ath9k_htc driver.
 +
-+%Package rtlwifi-rfs
-+Summary         : Run time files for the rtlwifi driver.
++%Package rt5370-rfs
++Summary         : Run time files for the rt5370 driver.
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
 +Group           : System Environment/Kernel
 +Requires        : %{name}-common-rfs
 +AutoReqProv     : no
 +
-+%Description rtlwifi-rfs
++%Description rt5370-rfs
 +%name} package contents trimmed to just the files that are
-+needed at run time on the target for the rtlwifi driver.
++needed at run time on the target for the driver for the
++RT5370 chipset.
 +
 +
 +%Description
@@ -8469,81 +8468,74 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +#################################################################
 +%Prep
-+export LC_ALL
-+LC_ALL=C
++export LC_ALL=C
 +
-+%setup -n %{pkg_src}-%{version}-%{pkg_rc}-%{release}-%{pkg_bld}
++%setup -n %{src_arch}-%{version}-%{release}
 +%patch1 -p1
++%patch2 -p1
 +
 +
 +#################################################################
 +%Build
-+export LC_ALL
-+LC_ALL=C
++export LC_ALL=C
 +
-+./scripts/driver-select rtlwifi
-+make -j$(nproc) \
-+	prefix=%{_prefix} \
-+	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
-+	ARCH=$LINTARCH \
-+	KLIB=${RPM_BUILD_ROOT}%{pfx} \
-+	KLIB_BUILD=${TOP}/rpm/BUILD/linux
-+./scripts/driver-select restore
++export PATH=$UNSPOOF_PATH
 +
-+./scripts/driver-select ath9k_htc
 +make -j$(nproc) \
-+	prefix=%{_prefix} \
-+	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
-+	ARCH=$LINTARCH \
-+	KLIB=${RPM_BUILD_ROOT}%{pfx} \
-+	KLIB_BUILD=${TOP}/rpm/BUILD/linux
-+./scripts/driver-select restore
++    prefix=%{_prefix} \
++    CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
++    ARCH=$LINTARCH \
++    KLIB=${TOP}/rootfs/lib/modules/%{kversion} \
++    KLIB_BUILD=${TOP}/rpm/BUILD/linux \
++    defconfig-wifi
++
++make -j$(nproc) \
++    prefix=%{_prefix} \
++    CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
++    ARCH=$LINTARCH \
++    KLIB=${TOP}/rootfs/lib/modules/%{kversion} \
++    KLIB_BUILD=${TOP}/rpm/BUILD/linux \
++    oldconfig
++
++export PATH=$SPOOF_PATH
++
++make -j$(nproc) \
++    prefix=%{_prefix} \
++    CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
++    ARCH=$LINTARCH \
++    KLIB=${RPM_BUILD_ROOT}%{pfx} \
++    KLIB_BUILD=${TOP}/rpm/BUILD/linux \
 +
 +
 +#################################################################
 +%Install
-+export LC_ALL
-+LC_ALL=C
++export LC_ALL=C
 +
 +rm -rf $RPM_BUILD_ROOT
 +mkdir -p $RPM_BUILD_ROOT%{pfx}
 +
-+# Firmware for rtlwifi driver
++# Firmware for rtl8192cu driver
 +cd $RPM_BUILD_ROOT%{pfx}
 +
-+RTLFW=rtl8192cufw_B.bin
-+# Use host rpm2cpio, LTIB rpm2cpio is too old.
-+/usr/bin/rpm2cpio %{SOURCE1} | cpio -diuv \*/${RTLFW}
-+install -D -m 644 usr/lib/firmware/rtlwifi/${RTLFW} $RPM_BUILD_ROOT%{pfx}/lib/firmware/rtlwifi/rtl8192cufw.bin
++# Use the host rpm2cpio since the LTIB rpm2cpio is too old.
++ATHFW=htc_9271.fw
++RTFW=rt2870.bin
++/usr/bin/rpm2cpio %{SOURCE1} | cpio -diuv \*/${ATHFW} \*/${RTFW}
++install -D -m 644 usr/lib/firmware/${ATHFW} $RPM_BUILD_ROOT%{pfx}/lib/firmware/${ATHFW}
++install -D -m 644 usr/lib/firmware/${RTFW} $RPM_BUILD_ROOT%{pfx}/lib/firmware/${RTFW}
 +
-+# Firmware for ath9k_htc driver
-+# NOTE archive firmware is too new for driver (v1.4.0 vs v1.3.0)
-+install -D -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{pfx}/lib/firmware/$(basename %{SOURCE2})
-+
-+rm -rf usr      # Make sure that in usr is only our cpio output!
++rm -rf usr      # Make sure it holds ONLY the cpio output!
 +cd -
 +
 +mkdir -p $RPM_BUILD_ROOT%{pfx}/usr/sbin
 +
-+./scripts/driver-select rtlwifi
-+make -j$(nproc) install \
-+	DESTDIR=$RPM_BUILD_ROOT%{pfx} \
-+	prefix=%{_prefix} \
-+	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
-+	ARCH=$LINTARCH \
-+	KLIB=${RPM_BUILD_ROOT}%{pfx} \
-+	KLIB_BUILD=${TOP}/rpm/BUILD/linux
-+./scripts/driver-select restore
-+
-+./scripts/driver-select ath9k_htc
-+make -j$(nproc) install \
-+	DESTDIR=$RPM_BUILD_ROOT%{pfx} \
-+	prefix=%{_prefix} \
-+	CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
-+	ARCH=$LINTARCH \
-+	KLIB=${RPM_BUILD_ROOT}%{pfx} \
-+	KLIB_BUILD=${TOP}/rpm/BUILD/linux
-+./scripts/driver-select restore
++make \
++    prefix=%{_prefix} \
++    CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/${TOOLCHAIN_PREFIX} \
++    ARCH=$LINTARCH \
++    KLIB=${RPM_BUILD_ROOT}%{pfx} \
++    KLIB_BUILD=${TOP}/rpm/BUILD/linux \
++    install
 +
 +
 +#################################################################
@@ -8562,17 +8554,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Files common-rfs
 +%defattr(-,root,root)
 +%{pfx}/lib/modules/2.6.35.3/updates/compat/compat.ko
-+%{pfx}/lib/modules/2.6.35.3/updates/compat/sch_codel.ko
-+%{pfx}/lib/modules/2.6.35.3/updates/compat/sch_fq_codel.ko
 +%{pfx}/lib/modules/2.6.35.3/updates/net/mac80211/mac80211.ko
 +%{pfx}/lib/modules/2.6.35.3/updates/net/wireless/cfg80211.ko
-+
-+%Files rtlwifi-rfs
-+%defattr(-,root,root)
-+%{pfx}/lib/firmware/rtlwifi/rtl8192cufw.bin
-+%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/rtlwifi/rtl8192c/rtl8192c-common.ko
-+%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/rtlwifi/rtl8192cu/rtl8192cu.ko
-+%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/rtlwifi/rtlwifi.ko
 +
 +%Files ath9k_htc-rfs
 +%defattr(-,root,root)
@@ -8582,6 +8565,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/ath/ath9k/ath9k_common.ko
 +%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/ath/ath9k/ath9k_htc.ko
 +%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/ath/ath9k/ath9k_hw.ko
++
++%Files rt5370-rfs
++%defattr(-,root,root)
++%{pfx}/lib/firmware/rt2870.bin
++%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/rt2x00/rt2800lib.ko
++%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/rt2x00/rt2800usb.ko
++%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/rt2x00/rt2x00lib.ko
++%{pfx}/lib/modules/2.6.35.3/updates/drivers/net/wireless/rt2x00/rt2x00usb.ko
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec ltib/dist/lfs-5.1/wireless-tools/wireless-tools.spec
 --- ltib.reference/dist/lfs-5.1/wireless-tools/wireless-tools.spec
 +++ ltib/dist/lfs-5.1/wireless-tools/wireless-tools.spec

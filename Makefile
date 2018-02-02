@@ -239,9 +239,9 @@ MECT_COMMON_RFSPKGS := \
 	tslib-rfs-1.0-3.$(MECT_TARGET_ARCH).rpm \
 	usb-modeswitch-data-rfs-20160112-1.$(MECT_TARGET_ARCH).rpm \
 	usb-modeswitch-rfs-2.3.0-1.$(MECT_TARGET_ARCH).rpm \
-	wifi-drivers-ath9k_htc-rfs-3.9-2.$(MECT_TARGET_ARCH).rpm \
-	wifi-drivers-common-rfs-3.9-2.$(MECT_TARGET_ARCH).rpm \
-	wifi-drivers-rtlwifi-rfs-3.9-2.$(MECT_TARGET_ARCH).rpm \
+	wifi-drivers-ath9k_htc-rfs-3.12.8-1.$(MECT_TARGET_ARCH).rpm \
+	wifi-drivers-common-rfs-3.12.8-1.$(MECT_TARGET_ARCH).rpm \
+	wifi-drivers-rt5370-rfs-3.12.8-1.$(MECT_TARGET_ARCH).rpm \
 	wireless_tools-rfs-29-1.$(MECT_TARGET_ARCH).rpm \
 	wpa_supplicant-rfs-0.5.9-1.$(MECT_TARGET_ARCH).rpm \
 	xenomai-rfs-2.6.0-1.$(MECT_TARGET_ARCH).rpm \

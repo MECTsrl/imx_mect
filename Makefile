@@ -809,6 +809,7 @@ target_rfs: $(MECT_COMMON_RFSPKGS)
 	if test "$(MECT_BUILD_TARGET)" = "TPLC100_01_AA" -o "$(MECT_BUILD_TARGET)" = "TPLC100_01_AB"; then \
 		sudo rm -f $(MECT_RFSDIR)/usr/bin/ts_calibrate; \
 	fi
+	sudo depmod -ae -F $(MECT_LTIBDIR)/rootfs/boot/System.map -b $(MECT_RFSDIR) 2.6.35.3
 	sudo du -sh --apparent-size $(MECT_RFSDIR)
 
 # Build the target-specific local file system.

@@ -1,0 +1,10 @@
+diff -ruN a/defconfigs/rtlwifi b/defconfigs/rtlwifi
+--- a/defconfigs/rtlwifi	2014-01-19 18:13:37.000000000 +0000
++++ b/defconfigs/rtlwifi	2018-01-27 21:20:31.030067907 +0000
+@@ -1,5 +1,5 @@
+ CPTCFG_CFG80211=m
+-CPTCFG_CFG80211_DEFAULT_PS=y
++# CPTCFG_CFG80211_DEFAULT_PS is not set
+ CPTCFG_CFG80211_DEBUGFS=y
+ CPTCFG_CFG80211_WEXT=y
+ CPTCFG_MAC80211=m

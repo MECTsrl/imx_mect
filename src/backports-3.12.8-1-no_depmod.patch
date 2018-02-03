@@ -1,0 +1,16 @@
+diff -ruN a/Makefile.real b/Makefile.real
+--- a/Makefile.real	2014-01-19 18:13:37.000000000 +0000
++++ b/Makefile.real	2018-01-27 21:38:19.635252637 +0000
+@@ -87,12 +87,6 @@
+ 	@$(MAKE) -C $(KLIB_BUILD) M=$(BACKPORT_PWD)			\
+ 		INSTALL_MOD_DIR=$(KMODDIR) $(KMODPATH_ARG)		\
+ 		modules_install
+-	@./scripts/blacklist.sh $(KLIB)/ $(KLIB)/$(KMODDIR)
+-	@./scripts/compress_modules.sh $(KLIB)/$(KMODDIR)
+-	@./scripts/check_depmod.sh
+-	@./scripts/backport_firmware_install.sh
+-	@/sbin/depmod -a
+-	@./scripts/update-initramfs.sh $(KLIB)
+ 	@echo
+ 	@echo Your backported driver modules should be installed now.
+ 	@echo Reboot.

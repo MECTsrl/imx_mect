@@ -21527,7 +21527,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +            test -d $mntdir || { mntdir=/local/sd_card; mkdir -p $mntdir; }
 +
-+            if mount -orw /dev/$mntpoint $mntdir 2>/dev/null; then
++            if mount -orw,sync /dev/$mntpoint $mntdir 2>/dev/null; then
 +                echo "Mounted SD card device to $mntpoint"
 +
 +                # Set up the SD card if already recognised.

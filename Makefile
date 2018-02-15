@@ -627,6 +627,7 @@ ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 		TPAC1008_02_AD \
 		TPAC1008_02_AE \
 		TPAC1008_02_AF \
+		TPAC1008_03_AC \
 		TPLC100_01_AA \
 		TPLC100_01_AB \
 

@@ -409,7 +409,7 @@ all: env downloads setup build image target_dev sysupdate_mrs
 env:
 	set -e; for p in $(MECT_UTILS); do which $$p; done
 	if test "`uname -m`" = x86_64; then \
-		sudo apt-get install lib32bz2-1.0 lib32ncurses5 lib32z1 libc6-dev-i386; \
+		sudo apt-get $(MECT_APTGET_AUTOUPDATE) install lib32bz2-1.0 lib32ncurses5 lib32z1 libc6-dev-i386; \
 		sudo ln -sf /usr/lib/x86_64-linux-gnu/librt.so /usr/lib/librt.so; \
 	fi
 	if test -d $(MECT_LTIBDIR); then \
@@ -419,7 +419,7 @@ env:
 		echo "Aborting."; \
 		exit 1; \
 	fi
-	sudo apt-get install $(MECT_PACKAGES)
+	sudo apt-get $(MECT_APTGET_AUTOUPDATE) install $(MECT_PACKAGES)
 
 # Initial downloads (toolchain, LTIB, LTIB patches, spec files patches, ...)
 .PHONY: downloads

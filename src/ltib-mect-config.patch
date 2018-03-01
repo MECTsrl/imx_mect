@@ -22686,10 +22686,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +        options="$options defaultroute"
 +    fi
 +
-+    options="$options user \"$USERP0\" password \"$PASSWORDP0\""
-+
 +    /bin/rm -f /dev/ppp
 +    /bin/mknod -m 0666 /dev/ppp c 108 0
++
++    options="$options user \"$USERP0\" password \"$PASSWORDP0\""
 +
 +    eval /sbin/pppd call $peerfile $options
 +}

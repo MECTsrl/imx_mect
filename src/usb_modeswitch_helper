@@ -25,8 +25,6 @@ if test "$DEVTYPE" = "usb_device"; then
 
                     sleep 1
 
-                    /usr/sbin/usb3g.sh start
-
                     break
                 fi
 
@@ -35,19 +33,13 @@ if test "$DEVTYPE" = "usb_device"; then
         fi
     elif test "$ACTION" = "remove"; then
         modprobe -r option
-    else
-        exit 0
     fi
-elif test \( "$MDEV" = "ttyUSB0" \) -o \( "$MDEV" = "ttyUSB1" \) -o \( "$MDEV" = "ttyUSB2" \); then
+elif test \( "$MDEV" = "ttyUSB0" \); then
     test "$SUBSYSTEM" = "usb-serial" || exit 0
 
     if test "$ACTION" = "add"; then
         /usr/sbin/usb3g.sh start
     elif test "$ACTION" = "remove"; then
         /usr/sbin/usb3g.sh stop
-    else
-        exit 0
     fi
-else
-    exit 0
 fi

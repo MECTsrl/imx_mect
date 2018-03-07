@@ -20520,9 +20520,9 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/iptables.default ltib/config/platform/imx/merge/etc/iptables.default
 --- ltib.reference/config/platform/imx/merge/etc/iptables.default
 +++ ltib/config/platform/imx/merge/etc/iptables.default
-@@ -0,0 +1,28 @@
+@@ -0,0 +1,24 @@
 +*filter
-+:INPUT ACCEPT [0:0]
++:INPUT DROP [0:0]
 +:FORWARD ACCEPT [0:0]
 +:OUTPUT ACCEPT [18:2180]
 +-A INPUT -i lo -j ACCEPT 
@@ -20543,10 +20543,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +-A INPUT -p tcp -m tcp --dport 5900 -j ACCEPT 
 +# ATCMControl_RunTimeSystem control
 +-A INPUT -p tcp -m tcp --dport 17290 -j ACCEPT 
-+#
-+# Discard everything else
-+#
-+-A INPUT -j DROP
 +#
 +COMMIT
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/mdev.conf ltib/config/platform/imx/merge/etc/mdev.conf

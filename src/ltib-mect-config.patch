@@ -4061,11 +4061,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_MECT_TPAC1005_480x272 is not set
 +# CONFIG_MECT_TPAC1006_320x240 is not set
 +# CONFIG_MECT_TPAC1006_640x480 is not set
-+# CONFIG_MECT_TPAC1007_480x272 is not set
-+CONFIG_MECT_TPAC1008_800x480=y
-+CONFIG_MECT_PRODUCT="MECT TPAC1008/TP1070 800x480 panel"
++CONFIG_MECT_TPAC1007_480x272=y
++# CONFIG_MECT_TPAC1008_800x480 is not set
++CONFIG_MECT_PRODUCT="MECT TPAC1007/TPLC100 480x272 panel"
 +CONFIG_MECT_GPIO_POWERFAIL=y
-+CONFIG_MECT_RAISING_PWRFAIL=y
++# CONFIG_MECT_RAISING_PWRFAIL is not set
 +CONFIG_MXS_ICOLL=y
 +CONFIG_MXS_EARLY_CONSOLE=y
 +CONFIG_MXS_DMA_ENGINE=y
@@ -5272,8 +5272,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_FB_MXS=y
 +# CONFIG_FB_MXS_LCD_HH057 is not set
 +# CONFIG_FB_MXS_LCD_HH057_640x480 is not set
-+CONFIG_FB_MXS_LCD_FRMK7=y
-+# CONFIG_FB_MXS_LCD_TM043 is not set
++# CONFIG_FB_MXS_LCD_FRMK7 is not set
++CONFIG_FB_MXS_LCD_TM043=y
 +# CONFIG_FB_MXS_LCD_RK043 is not set
 +# CONFIG_FB_MXS_LCD_43WVF1G is not set
 +# CONFIG_FB_MXS_LCD_LMS430 is not set
@@ -5313,8 +5313,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_LOGO_MECT_CLUT224 is not set
 +# CONFIG_LOGO_MECT_320x240 is not set
 +# CONFIG_LOGO_MECT_640x480 is not set
-+# CONFIG_LOGO_MECT_480x272 is not set
-+CONFIG_LOGO_MECT_800x480=y
++CONFIG_LOGO_MECT_480x272=y
++# CONFIG_LOGO_MECT_800x480 is not set
 +CONFIG_SOUND=m
 +# CONFIG_SOUND_OSS_CORE is not set
 +CONFIG_SND=m
@@ -21504,7 +21504,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
-@@ -0,0 +1,214 @@
+@@ -0,0 +1,219 @@
 +#!/bin/sh
 +
 +mntdir=/local/sd_card
@@ -21581,7 +21581,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +            ln -s sd_card/control 2>/dev/null
 +        fi
 +
++	# align root if first time
 +        test -d /local/sd_card/root || rsync -ax /local/flash/root/ /local/sd_card/root/
++	# anyway sync fcrts (from sysupdate)
++	rsync -ax /local/flash/root/fcrts /local/sd_card/root/fcrts
 +        if [ "`readlink root`" != "sd_card/root" ]; then
 +            rm -f root
 +            ln -s sd_card/root 2>/dev/null
@@ -21604,6 +21607,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +        cd /local 2>/dev/null
 +
++	# create and align data if first time
++        test -d /local/sd_card/data || rsync -ax /local/flash/data/ /local/sd_card/data/
 +        if [ "`readlink data`" != "sd_card/data" ]; then
 +            rm -f data
 +            ln -s sd_card/data 2>/dev/null

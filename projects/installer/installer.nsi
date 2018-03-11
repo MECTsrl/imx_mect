@@ -40,6 +40,7 @@ Var DO_UPDATE           # We update an older version.
 Var OLD_UNINSTKEY       # Uninstall key for the old version
 Var OLD_VERSION         # Old version number
 Var OLD_RUNNAME         # Old version program name
+Var OLD_UNINSTPROG      # Old version uninstaller
 Var OLD_UNINSTNAME      # Old version uninstaller name
 Var OLD_MECTSUITEBAT    # Old version script name
 Var OLD_MECTSUITEVBS    # Old version script name
@@ -86,6 +87,53 @@ ${If} $0 != "admin"             # Require admin rights on NT4+
 ${EndIf}
 !macroend
 
+# Get the last part of a string after a specified
+# character. Useful to get file extensions, last file name or
+# last directory part.
+#
+# Usage
+# 
+# Push "C:\program files\geoffrey\files"
+# Push "\"
+# Call GetAfterChar
+# Pop $R0
+# 
+# $R0 is now "files" Push "." instead of "\" to get a file
+# extension or perhaps "/" for URL.
+# 
+# The return value is empty "" if the input char was not found.
+Function GetAfterChar
+    Exch $0 ; chop char
+    Exch
+    Exch $1 ; input string
+    Push $2
+    Push $3
+    StrCpy $2 0
+    loop:
+        IntOp $2 $2 - 1
+        StrCpy $3 $1 1 $2
+        StrCmp $3 "" 0 +3
+            StrCpy $0 ""
+            Goto exit2
+        StrCmp $3 $0 exit1
+        Goto loop
+    exit1:
+        IntOp $2 $2 + 1
+        StrCpy $0 $1 "" $2
+    exit2:
+        Pop $3
+        Pop $2
+        Pop $1
+        Exch $0 ; output
+FunctionEnd
+
+# Check if there are spaces (" ") in the path.
+#
+# Usage
+#
+# Push "C:\program files\geoffrey\files"
+# Call CheckForSpaces
+# Pop $R0	# Number of spaces
 Function CheckForSpaces
     Exch $R0
     Push $R1
@@ -120,6 +168,30 @@ Function CheckForSpaces
     Exch $R0
 FunctionEnd
 
+# outputs the relative index position from the start or end
+# of a string, where a substring is located. (Case insensitive)
+#
+# Syntax
+#
+# ${StrLoc} "ResultVar" "String" "SubString" "StartPoint"
+# 
+# ResultVar
+#     Variable where the relative position index of SubString
+#     inside String is returned, according to StartPoint. This
+#     value is always smaller or equal than String's length. If
+#     SubString is not found, an empty value is returned.
+# 
+# String
+#     String where to search for SubString.
+# 
+# SubString
+#     String to search in String.
+# 
+# StartPoint(>|<)
+#     Start position where the search begins and the counter
+#     starts. > = String's start, < = String's end. Default
+#     is >.
+#
 !define StrLoc "!insertmacro StrLoc"
 !macro StrLoc ResultVar String SubString StartPoint
     Push "${String}"
@@ -192,6 +264,7 @@ Function StrLoc
     Exch $R0
 FunctionEnd
 
+# Customize the behavior of the default NSIS diretory page.
 Function DirectoryEnter
     Var /GLOBAL OLD_KEY_POS
 
@@ -216,22 +289,30 @@ Function DirectoryEnter
             ${EndIf}
 
             readRegStr $INSTDIR HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\$OLD_UNINSTKEY" "InstallLocation"
+
             strCpy $OLD_RUNNAME "${APPNAME}-v$OLD_VERSION"              # SYNC WITH ${UNINSTNAME}
-            readRegStr $OLD_UNINSTNAME HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\$OLD_UNINSTKEY" "UninstallString"
+
+            readRegStr $OLD_UNINSTPROG HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\$OLD_UNINSTKEY" "UninstallString"
+            push $OLD_UNINSTPROG
+            push "\"
+            call GetAfterChar
+            pop $OLD_UNINSTNAME
+
             strCpy $OLD_MECTSUITEBAT "${APPNAME}-$OLD_VERSION-run.bat"  # SYNC WITH ${MECTSUITEBAT}
+
             strCpy $OLD_MECTSUITEVBS "${APPNAME}-$OLD_VERSION-exec.vbs" # SYNC WITH ${MECTSUITEVBS}
 
             strCpy $DO_UPDATE "1"
 
             messageBox MB_YESNO|MB_ICONEXCLAMATION \
-                'Will upgrade the installation$\nfrom v$OLD_VERSION to v${VERSION}.$\n$\n\
+                'Will upgrade the software$\nfrom v$OLD_VERSION to v${VERSION}.$\n$\n\
                 Continue?' IDYES ok_to_update
                 quit
             ok_to_update:
 
             ${If} ${FileExists} '${ROAMINGAPPDATAD}\${QTPROJECT}\*'
                 messageBox MB_YESNO|MB_ICONEXCLAMATION \
-                    'Will be deleted the configuration data in:$\n$\n${ROAMINGAPPDATAD}\${QTPROJECT}$\n$\n$\n\
+                    'The upgrade will delete the configuration data in:$\n$\n${ROAMINGAPPDATAD}\${QTPROJECT}$\n$\n$\n\
                     Continue?' IDYES ok_to_remove_qtc_configuration
                     quit
                 ok_to_remove_qtc_configuration:
@@ -247,6 +328,7 @@ Function DirectoryEnter
     strCpy $DO_UPDATE "0"
 FunctionEnd
 
+# Checks the user input on the default NSIS diretory page.
 Function DirectoryLeave
     # FIXME Other installation paths should be supported as well.
     ${If} $INSTDIR != "C:\Qt485"
@@ -374,7 +456,7 @@ section "install"
         #
         file '/oname=$TEMP\${PERL_INST}' '${PERL_INST}'
         ClearErrors
-        execWait '"msiexec" /i "$TEMP\${PERL_INST}"'
+        execWait '"msiexec" /i "$TEMP\${PERL_INST}" /q'
         ifErrors 0 PERLnoError
             messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing Perl.$\n$\nPress OK to abort the installation.'
             quit
@@ -498,14 +580,16 @@ FONTINnoError:
     # Set up the Start menu and the Desktop.
     #
     ${If} $DO_UPDATE == "1"
-        delete "$SMPROGRAMS\${COMPANYNAME}\$OLD_RUNNAME.lnk"
-        delete "$SMPROGRAMS\${COMPANYNAME}\$OLD_UNINSTNAME.lnk"
+        rmDir /r "$SMPROGRAMS\${COMPANYNAME}"
+
         delete "$DESKTOP\$OLD_RUNNAME.lnk"
-        rmDir "$SMPROGRAMS\${COMPANYNAME}"
+	sleep 5000              # Allow Windows to update the desktop.
+
+        delete "$OLD_UNINSTNAME"
     ${EndIf}
 
     createDirectory "$SMPROGRAMS\${COMPANYNAME}"
-    createShortCut "$SMPROGRAMS\${COMPANYNAME}\${RUNNAME}.lnk" "$INSTDIR\${QTC_DIR}\${MECTSUITEVBS}" "" "$INSTDIR\${ICONNAME}"
+    createShortCut "$SMPROGRAMS\${COMPANYNAME}\${RUNNAME}.lnk" "$INSTDIR\${MECTSUITEVBS}" "" "$INSTDIR\${ICONNAME}"
     createShortCut "$SMPROGRAMS\${COMPANYNAME}\${UNINSTNAME}.lnk" "$INSTDIR\${UNINSTNAME}" "" "$INSTDIR\${ICONNAME}"
     createShortCut "$DESKTOP\${RUNNAME}.lnk" "$INSTDIR\${MECTSUITEVBS}" "" "$INSTDIR\${ICONNAME}"
 
@@ -606,15 +690,14 @@ sectionEnd
 #
 
 function un.onInit
-
     setShellVarContext all
 
     #Verify the uninstaller - last chance to back out
-    messageBox MB_OKCANCEL "Do you want to permanantly remove ${APPNAME}?" IDOK next
+    messageBox MB_OKCANCEL|MB_ICONQUESTION \
+	"Do you want to permanantly remove ${APPNAME} v${VERSION}?" IDOK next
         abort
-next:
+    next:
     !insertmacro VerifyUserIsAdmin
-
 functionEnd
 
 section "uninstall"

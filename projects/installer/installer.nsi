@@ -397,7 +397,14 @@ section "install"
     file '/oname=$TEMP\7z.dll' 7z.dll
 
     # Skip these if we just update.
+    #
     ${If} $DO_UPDATE != "1"
+        ##########################################
+        ###                                    ###
+        ### Run only for setup, NOT for update ###
+        ###                                    ###
+        ##########################################
+
         # Install PLC Engineering.
         #
         file '/oname=$TEMP\${PLCARCH}' '${PLCARCH}'
@@ -407,14 +414,14 @@ section "install"
         ifErrors 0 PLCEXnoError
             messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${PLCARCH}$\n$\nPress OK to abort the installation.'
             quit
-    PLCEXnoError:
+        PLCEXnoError:
         delete '$TEMP\${PLCARCH}'
         ClearErrors
         execWait '$TEMP\PLC\ATCMcontrol_Engineering_v2.20.02.4018\Setup.exe'
         ifErrors 0 PLCnoError
             messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing PLC Engineering.$\n$\nPress OK to abort the installation.'
             quit
-    PLCnoError:
+        PLCnoError:
         rmDir /r '$TEMP\PLC'
 
         # Collect the PLC Engineering executable and full path.
@@ -449,68 +456,79 @@ section "install"
         ifErrors 0 PLCHELPnoError
             messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${PLCHELP_ARC}$\n$\nPress OK to abort the installation.'
             quit
-    PLCHELPnoError:
+        PLCHELPnoError:
         delete '$TEMP\${PLCHELP_ARC}'
 
         # Install Active Perl.
         #
         file '/oname=$TEMP\${PERL_INST}' '${PERL_INST}'
         ClearErrors
-        execWait '"msiexec" /i "$TEMP\${PERL_INST}" /q'
+        execWait '"msiexec" /i "$TEMP\${PERL_INST}"'
         ifErrors 0 PERLnoError
             messageBox MB_OK|MB_ICONEXCLAMATION 'Error installing Perl.$\n$\nPress OK to abort the installation.'
             quit
-    PERLnoError:
+        PERLnoError:
         rmDir /r '$TEMP\${PERL_INST}'
-
-        # Install the target compilation toolchain.
-        #
-        file '/oname=$TEMP\${CSXC_ARC}' '${CSXC_ARC}'
-        ClearErrors
-        execWait '"$TEMP\7zG.exe" x -y "$TEMP\${CSXC_ARC}"'
-        ifErrors 0 INSTCSXCnoError
-            messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${CSXC_ARC}$\n$\nPress OK to abort the installation.'
-            quit
-    INSTCSXCnoError:
-        delete '$TEMP\${CSXC_ARC}'
-
-        # CAN
-        file '/oname=$TEMP\${CANARCH}' '${CANARCH}'
-        ClearErrors
-        execWait '"$TEMP\unzip.exe" -o "$TEMP\${CANARCH}"'
-        ifErrors 0 CANnoError
-            messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${CANARCH}$\n$\nPress OK to abort the installation.'
-            quit
-    CANnoError:
-        delete '$TEMP\${CANARCH}'
     ${Else}
         readRegStr $PLCWINBIN HKLM "Software\Softing\Products\61" "VersionFile"
     ${EndIf}
 
-    # MECT apps
+    #################################################
+    ###                                           ###
+    ### Common installs for BOTH setup and update ###
+    ###                                           ###
+    #################################################
+
+    # Install the target compilation toolchain.
+    #
+    file '/oname=$TEMP\${CSXC_ARC}' '${CSXC_ARC}'
+    ClearErrors
+    execWait '"$TEMP\7zG.exe" x -y "$TEMP\${CSXC_ARC}"'
+    ifErrors 0 INSTCSXCnoError
+        messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${CSXC_ARC}$\n$\nPress OK to abort the installation.'
+        quit
+    INSTCSXCnoError:
+    delete '$TEMP\${CSXC_ARC}'
+
+    # Install CAN configurator
+    #
+    file '/oname=$TEMP\${CANARCH}' '${CANARCH}'
+    ClearErrors
+    execWait '"$TEMP\unzip.exe" -o "$TEMP\${CANARCH}"'
+    ifErrors 0 CANnoError
+        messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${CANARCH}$\n$\nPress OK to abort the installation.'
+        quit
+    CANnoError:
+    delete '$TEMP\${CANARCH}'
+
+    # Install MECT apps
+    #
     file '${MECTAPPSBALL}'
 
-    # Bulk base: Qt host, Qt Creator, root FS target, qmake target, etc.
+    # Install bulk base: Qt host, Qt Creator, root FS target, qmake target, etc.
+    #
     file '/oname=$TEMP\${BULK_ARC_BASE}' '${BULK_ARC_BASE}'
     ClearErrors
     execWait '"$TEMP\7zG.exe" x -y "$TEMP\${BULK_ARC_BASE}"'
     ifErrors 0 INSTBASEnoError
         messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${BULK_ARC_BASE}$\n$\nPress OK to abort the installation.'
         quit
-INSTBASEnoError:
+    INSTBASEnoError:
     delete '$TEMP\${BULK_ARC_BASE}'
 
-    # Bulk update: Qt host, Qt Creator, root FS target, qmake target, etc.
+    # Install bulk update: Qt host, Qt Creator, root FS target, qmake target, etc.
+    #
     file '/oname=$TEMP\${BULK_ARC_UPDATE}' '${BULK_ARC_UPDATE}'
     ClearErrors
     execWait '"$TEMP\7zG.exe" x -y "$TEMP\${BULK_ARC_UPDATE}"'
     ifErrors 0 INSTUPDATEnoError
         messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${BULK_ARC_UPDATE}$\n$\nPress OK to abort the installation.'
         quit
-INSTUPDATEnoError:
+    INSTUPDATEnoError:
     delete '$TEMP\${BULK_ARC_UPDATE}'
 
     # Patch Qt x86 installation.
+    #
     setOutPath $INSTDIR\${QTH_DIR}
 # NOTE Apparently qtbinpatcher exits with error if it has nothing to do.
 ###     ClearErrors
@@ -522,6 +540,7 @@ INSTUPDATEnoError:
     setOutPath $INSTDIR
 
     # Patch Qt ARM installation.
+    #
     setOutPath $INSTDIR\${QTH_ARM_DIR}
 # NOTE Apparently qtbinpatcher exits with error if it has nothing to do.
 ###     ClearErrors
@@ -533,13 +552,14 @@ INSTUPDATEnoError:
     setOutPath $INSTDIR
 
     # Qt Creator default setup
+    #
     file '/oname=$TEMP\${QTPROJECT}.7z' '${QTPROJECT}.7z'
     ClearErrors
     execWait '"$TEMP\7zG.exe" x -y "$TEMP\${QTPROJECT}.7z"'
     ifErrors 0 QTPnoError
         messageBox MB_OK|MB_ICONEXCLAMATION 'Error extracting$\n$TEMP\${QTPROJECT}.7z$\n$\nPress OK to abort the installation.'
         quit
-QTPnoError:
+    QTPnoError:
     delete '$TEMP\${QTPROJECT}.7z'
 
     # Install the additional fonts.
@@ -550,13 +570,13 @@ QTPnoError:
     execWait '"$TEMP\7zG.exe" x -y -o"$TEMP" "$TEMP\${FONTS_ARC}"'
     ifErrors 0 FONTEXnoError
         messageBox MB_OK|MB_ICONEXCLAMATION 'Cannot install the fonts.$\n$\nPress OK to continue.'
-FONTEXnoError:
+    FONTEXnoError:
     delete '$TEMP\${FONTS_ARC}'
     ClearErrors
     execWait '"$SYSDIR\CScript.exe" $TEMP\Fonts\install.vbs $TEMP\ //e:vbscript //B //NOLOGO'
     ifErrors 0 FONTINnoError
         messageBox MB_OK|MB_ICONEXCLAMATION 'Cannot install the fonts.$\n$\nPress OK to continue.'
-FONTINnoError:
+    FONTINnoError:
     rmDir /r '$TEMP\Fonts'
 
     # Remove old or empty Qt Creator configuration.

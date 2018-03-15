@@ -119,7 +119,7 @@ if [ -e $SESSIONFILE ]
 then
 . $SESSIONFILE
 . $PWDFILE
-if [ $PASSWORD != "" ] && [ "$PWDSUPERUSER" = "$PASSWORD" ]
+if [ $PASSWORD != "" ] && [ "$PWDSUPERUSER" = "$PASSWORD" -o "$PWDADMIN" = "$PASSWORD" ]
 then
 cat <<EOF
 <input class=bottoni type="submit" value="Delete" name="delete">

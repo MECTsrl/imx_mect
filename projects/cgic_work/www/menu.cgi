@@ -157,7 +157,7 @@ cat <<EOF
 					<input class=bottoni type="button" value="Manage password" onclick="window.location.href='managepwd.cgi'">
 			</td>
 EOF
-if [ "$PASSWORD" != "" ] && [ "$PASSWORD" = "$PWDSUPERUSER" ] || [ "$PASSWORD" = "$PWDADMIN" ]
+if [ "$PASSWORD" != "" ] && [ "$PASSWORD" = "$PWDSUPERUSER" -o "$PASSWORD" = "$PWDADMIN" ]
 then
 cat <<EOF
 			<td>

@@ -1,5 +1,5 @@
 
-            MectSuite v3.0.0 Software Main Licenses
+            MectSuite Software Main Licenses
 
 Software by MECTsrl:
 

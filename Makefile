@@ -604,6 +604,7 @@ spec_setup:
 
 MECT_IMAGES := \
 	TP1043_01_A \
+	TP1043_02_A \
 	TP1057_01_A \
 	TP1070_01_A \
 	TP1070_01_C \
@@ -617,6 +618,7 @@ ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 
 	MECT_IMAGES += \
 		TP1043_01_B \
+		TP1043_02_B \
 		TP1057_01_B \
 		TP1070_01_B \
 		TPAC1005 \

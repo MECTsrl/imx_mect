@@ -192,6 +192,8 @@ MECT_RFSPKG_USBSERIAL_ZIO := kernel-rfs-usbserial-zio-2.6.35.3-imx_1.1.0.$(MECT_
 #
 
 MECT_COMMON_RFSPKGS := \
+	alsa-lib-rfs-1.0.24.1-0.$(MECT_TARGET_ARCH).rpm \
+	alsa-utils-rfs-1.0.24.2-0.$(MECT_TARGET_ARCH).rpm \
 	base_libs-rfs-1.2-1.$(MECT_TARGET_ARCH).rpm \
 	boa-rfs-0.94.14rc21-1.$(MECT_TARGET_ARCH).rpm \
 	busybox-rfs-1.15.0-1.$(MECT_TARGET_ARCH).rpm \

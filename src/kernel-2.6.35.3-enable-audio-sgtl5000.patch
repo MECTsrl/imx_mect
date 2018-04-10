@@ -1,0 +1,74 @@
+diff -aurN a/arch/arm/mach-mx28/Kconfig b/arch/arm/mach-mx28/Kconfig
+--- a/arch/arm/mach-mx28/Kconfig	2018-04-07 21:08:00.952921820 +0000
++++ b/arch/arm/mach-mx28/Kconfig	2018-04-07 14:09:54.635361737 +0000
+@@ -25,11 +25,11 @@
+ 	  Say Y to select mDDR memory
+ 
+ config MECT_CUSTOMIZATION
+-	bool "Mect customization for i.mx28 evk board"
++	bool "MECT customization for i.MX28 EVK board"
+ 	depends on MACH_MX28EVK
+ 	default y
+ 	help
+-	  Say Y to select the Mect modification (can, rs485) 
++	  Say Y to select the MECT changes (CAN, RS485) 
+ 
+ choice
+ 	prompt "Select MECT board type"
+@@ -46,7 +46,7 @@
+ 	select KEYBOARD_GPIO
+ 	select MXS_AUART0_DEVICE_ENABLE
+ 	help
+-	  Say Y to select the Mect panel TPAC1005_480x272 (modification: display, ethernet, logo...) 
++	  Say Y to select the MECT panel TPAC1005_480x272 (changes: display, Ethernet, logo...) 
+ 
+ config MECT_TPAC1006_320x240
+ 	bool "MECT TPAC1006/TP1057 320x240 panel"
+@@ -57,7 +57,7 @@
+ 	select SPI_MXS
+ 	select MXS_AUART3_DEVICE_ENABLE
+ 	help
+-	  Say Y to select the Mect panel TPAC1006_320x240 (modification: display, logo...) 
++	  Say Y to select the MECT panel TPAC1006_320x240 (changes: display, logo...) 
+ 
+ config MECT_TPAC1006_640x480
+ 	bool "MECT TPAC1006/TP1057HR 640x480 panel"
+@@ -68,7 +68,7 @@
+ 	select SPI_MXS
+ 	select MXS_AUART3_DEVICE_ENABLE
+ 	help
+-	  Say Y to select the Mect panel TPAC1006_640x480 (modification: display, logo...) 
++	  Say Y to select the MECT panel TPAC1006_640x480 (changes: display, logo...) 
+ 
+ config MECT_TPAC1007_480x272
+ 	bool "MECT TPAC1007 480x272 panel"
+@@ -80,7 +80,7 @@
+ 	select MXS_AUART0_DEVICE_ENABLE
+ 	select MXS_AUART3_DEVICE_ENABLE
+ 	help
+-	  Say Y to select the Mect panel TPAC1007_480x272 (modification: display, logo...) 
++	  Say Y to select the MECT panel TPAC1007_480x272 (changes: display, logo...) 
+ 
+ config MECT_TPAC1008_800x480
+ 	bool "MECT TPAC1008/TP1070 800x480 panel"
+@@ -92,7 +92,7 @@
+ 	select MXS_AUART0_DEVICE_ENABLE
+ 	select MXS_AUART3_DEVICE_ENABLE
+ 	help
+-	  Say Y to select the Mect panel TPAC1008_800x480 (modification: ethernet, logo...) 
++	  Say Y to select the MECT panel TPAC1008_800x480 (changes: ethernet, logo...) 
+ 
+ endchoice
+ 
+diff -aurN a/arch/arm/mach-mx28/mx28evk.c b/arch/arm/mach-mx28/mx28evk.c
+--- a/arch/arm/mach-mx28/mx28evk.c	2018-04-07 21:07:58.714898789 +0000
++++ b/arch/arm/mach-mx28/mx28evk.c	2018-04-07 20:46:39.806803442 +0000
+@@ -42,7 +42,7 @@
+ #include "mx28evk.h"
+ 
+ static struct i2c_board_info __initdata mxs_i2c_device[] = {
+-//	{ I2C_BOARD_INFO("sgtl5000-i2c", 0xa), .flags = I2C_M_TEN },
++	{ I2C_BOARD_INFO("sgtl5000-i2c", 0xa), .flags = I2C_M_TEN },
+ 	{ I2C_BOARD_INFO("rs5c372a", 0x32) },
+ };
+ 

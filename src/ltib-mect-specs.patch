@@ -6,7 +6,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : v2.011
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -105,7 +105,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : v2.011
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -258,6 +258,271 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +%Files rfs -f rfs_files.lst
 +%defattr(-,root,root)
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/alsa-lib/alsa-lib.spec ltib/dist/lfs-5.1/alsa-lib/alsa-lib.spec
+--- ltib.reference/dist/lfs-5.1/alsa-lib/alsa-lib.spec
++++ ltib/dist/lfs-5.1/alsa-lib/alsa-lib.spec
+@@ -13,34 +13,148 @@
+ #Patch1          : alsa-lib-1.0.18-relink.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed %{name} for root file system requirements.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : System Environment/Libraries
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents limited to just the files
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
+ #%patch0 -p1
+ #%patch1 -p1
+ 
+ %Build
++export LC_ALL
++LC_ALL=C
++
+ config_args="--disable-python"
+-if [ "$GNUTARCH" = m68knommu ]
+-then
+-    config_args="$config_args --disable-shared" 
+-fi
++test "$GNUTARCH" = m68knommu && config_args="$config_args --disable-shared" 
+ ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} $config_args
+-make
++make -j$(nproc)
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+ rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
+ rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/alsa-lib/*/*.la
+ 
+ %Clean
+-rm -rf $RPM_BUILD_ROOT
++export LC_ALL
++LC_ALL=C
+ 
++rm -rf $RPM_BUILD_ROOT
+ 
+ %Files
+ %defattr(-,root,root)
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/bin/aserver
++%{pfx}/usr/lib/alsa-lib
++%{pfx}/usr/lib/alsa-lib/smixer
++%{pfx}/usr/lib/alsa-lib/smixer/smixer-ac97.so
++%{pfx}/usr/lib/alsa-lib/smixer/smixer-hda.so
++%{pfx}/usr/lib/alsa-lib/smixer/smixer-sbase.so
++%{pfx}/usr/lib/libasound.so
++%{pfx}/usr/lib/libasound.so.2
++%{pfx}/usr/lib/libasound.so.2.0.0
++%{pfx}/usr/share/aclocal
++%{pfx}/usr/share/aclocal/alsa.m4
++%{pfx}/usr/share/alsa
++%{pfx}/usr/share/alsa/alsa.conf
++%{pfx}/usr/share/alsa/cards
++%{pfx}/usr/share/alsa/cards/AACI.conf
++%{pfx}/usr/share/alsa/cards/aliases.alisp
++%{pfx}/usr/share/alsa/cards/aliases.conf
++%{pfx}/usr/share/alsa/cards/ATIIXP.conf
++%{pfx}/usr/share/alsa/cards/ATIIXP-MODEM.conf
++%{pfx}/usr/share/alsa/cards/ATIIXP-SPDMA.conf
++%{pfx}/usr/share/alsa/cards/AU8810.conf
++%{pfx}/usr/share/alsa/cards/AU8820.conf
++%{pfx}/usr/share/alsa/cards/AU8830.conf
++%{pfx}/usr/share/alsa/cards/Audigy2.conf
++%{pfx}/usr/share/alsa/cards/Audigy.conf
++%{pfx}/usr/share/alsa/cards/Aureon51.conf
++%{pfx}/usr/share/alsa/cards/Aureon71.conf
++%{pfx}/usr/share/alsa/cards/CA0106.conf
++%{pfx}/usr/share/alsa/cards/CMI8338.conf
++%{pfx}/usr/share/alsa/cards/CMI8338-SWIEC.conf
++%{pfx}/usr/share/alsa/cards/CMI8738-MC6.conf
++%{pfx}/usr/share/alsa/cards/CMI8738-MC8.conf
++%{pfx}/usr/share/alsa/cards/CMI8788.conf
++%{pfx}/usr/share/alsa/cards/CS46xx.conf
++%{pfx}/usr/share/alsa/cards/EMU10K1.conf
++%{pfx}/usr/share/alsa/cards/EMU10K1X.conf
++%{pfx}/usr/share/alsa/cards/ENS1370.conf
++%{pfx}/usr/share/alsa/cards/ENS1371.conf
++%{pfx}/usr/share/alsa/cards/ES1968.conf
++%{pfx}/usr/share/alsa/cards/FM801.conf
++%{pfx}/usr/share/alsa/cards/GUS.conf
++%{pfx}/usr/share/alsa/cards/HDA-Intel.conf
++%{pfx}/usr/share/alsa/cards/ICE1712.conf
++%{pfx}/usr/share/alsa/cards/ICE1724.conf
++%{pfx}/usr/share/alsa/cards/ICH4.conf
++%{pfx}/usr/share/alsa/cards/ICH.conf
++%{pfx}/usr/share/alsa/cards/ICH-MODEM.conf
++%{pfx}/usr/share/alsa/cards/Maestro3.conf
++%{pfx}/usr/share/alsa/cards/NFORCE.conf
++%{pfx}/usr/share/alsa/cards/PC-Speaker.conf
++%{pfx}/usr/share/alsa/cards/PMac.conf
++%{pfx}/usr/share/alsa/cards/PMacToonie.conf
++%{pfx}/usr/share/alsa/cards/PS3.conf
++%{pfx}/usr/share/alsa/cards/RME9636.conf
++%{pfx}/usr/share/alsa/cards/RME9652.conf
++%{pfx}/usr/share/alsa/cards/SB-XFi.conf
++%{pfx}/usr/share/alsa/cards/SI7018
++%{pfx}/usr/share/alsa/cards/SI7018.conf
++%{pfx}/usr/share/alsa/cards/SI7018/sndoc-mixer.alisp
++%{pfx}/usr/share/alsa/cards/SI7018/sndop-mixer.alisp
++%{pfx}/usr/share/alsa/cards/TRID4DWAVENX.conf
++%{pfx}/usr/share/alsa/cards/USB-Audio.conf
++%{pfx}/usr/share/alsa/cards/VIA686A.conf
++%{pfx}/usr/share/alsa/cards/VIA8233A.conf
++%{pfx}/usr/share/alsa/cards/VIA8233.conf
++%{pfx}/usr/share/alsa/cards/VIA8237.conf
++%{pfx}/usr/share/alsa/cards/VX222.conf
++%{pfx}/usr/share/alsa/cards/VXPocket440.conf
++%{pfx}/usr/share/alsa/cards/VXPocket.conf
++%{pfx}/usr/share/alsa/cards/YMF744.conf
++%{pfx}/usr/share/alsa/pcm
++%{pfx}/usr/share/alsa/pcm/center_lfe.conf
++%{pfx}/usr/share/alsa/pcm/default.conf
++%{pfx}/usr/share/alsa/pcm/dmix.conf
++%{pfx}/usr/share/alsa/pcm/dpl.conf
++%{pfx}/usr/share/alsa/pcm/dsnoop.conf
++%{pfx}/usr/share/alsa/pcm/front.conf
++%{pfx}/usr/share/alsa/pcm/hdmi.conf
++%{pfx}/usr/share/alsa/pcm/iec958.conf
++%{pfx}/usr/share/alsa/pcm/modem.conf
++%{pfx}/usr/share/alsa/pcm/rear.conf
++%{pfx}/usr/share/alsa/pcm/side.conf
++%{pfx}/usr/share/alsa/pcm/surround40.conf
++%{pfx}/usr/share/alsa/pcm/surround41.conf
++%{pfx}/usr/share/alsa/pcm/surround50.conf
++%{pfx}/usr/share/alsa/pcm/surround51.conf
++%{pfx}/usr/share/alsa/pcm/surround71.conf
++%{pfx}/usr/share/alsa/smixer.conf
++%{pfx}/usr/share/alsa/sndo-mixer.alisp
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/alsa-utils/alsa-utils.spec ltib/dist/lfs-5.1/alsa-utils/alsa-utils.spec
+--- ltib.reference/dist/lfs-5.1/alsa-utils/alsa-utils.spec
++++ ltib/dist/lfs-5.1/alsa-utils/alsa-utils.spec
+@@ -13,6 +13,20 @@
+ #Patch2          : alsa-utils-1.0.11rc2-ldl.patch
+ BuildRoot       : %{_tmppath}/%{name}
+ Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed %{name} for root file system requirements.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/System
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents limited to just the files
++needed at run time on the target.
++
+ 
+ %Description
+ %{summary}
+@@ -21,34 +35,70 @@
+ #   (see linux/include/sound/version.h)
+ 
+ %Prep
++export LC_ALL
++LC_ALL=C
++
+ %setup
+ #%patch1 -p1
+ #%patch2 -p1
+ 
+ %Build
+-if [ -n "$UCLIBC" ]
+-then
+-    config_opts='gt_cv_func_gnugettext1_libintl=no'
+-fi
+-if [ "$GNUTARCH" = m68knommu ]
+-then
+-eval $config_opts \
+-./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} -C --disable-shared
++export LC_ALL
++LC_ALL=C
++
++test -n "$UCLIBC" && config_opts='gt_cv_func_gnugettext1_libintl=no'
++if [ "$GNUTARCH" = m68knommu ]; then
++    eval $config_opts \
++        ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} -C --disable-shared
+ else
+-eval $config_opts \
+-./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} -C --disable-xmlto --with-curses=ncurses
++    eval $config_opts \
++        ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build} -C --disable-xmlto --with-curses=ncurses
+ fi
+-make
++make -j$(nproc)
+ 
+ %Install
++export LC_ALL
++LC_ALL=C
++
+ rm -rf $RPM_BUILD_ROOT
+ make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
+ rm -f $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/*.la
+ 
+ %Clean
+-rm -rf $RPM_BUILD_ROOT
++export LC_ALL
++LC_ALL=C
+ 
++rm -rf $RPM_BUILD_ROOT
+ 
+ %Files
+ %defattr(-,root,root)
+ %{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/bin/aconnect
++%{pfx}/usr/bin/alsaloop
++%{pfx}/usr/bin/alsamixer
++%{pfx}/usr/bin/alsaucm
++%{pfx}/usr/bin/amidi
++%{pfx}/usr/bin/amixer
++%{pfx}/usr/bin/aplay
++%{pfx}/usr/bin/aplaymidi
++%{pfx}/usr/bin/arecord
++%{pfx}/usr/bin/arecordmidi
++%{pfx}/usr/bin/aseqdump
++%{pfx}/usr/bin/aseqnet
++%{pfx}/usr/bin/iecset
++%{pfx}/usr/bin/speaker-test
++%{pfx}/usr/sbin/alsaconf
++%{pfx}/usr/sbin/alsactl
++%{pfx}/usr/share/alsa
++%{pfx}/usr/share/alsa/init
++%{pfx}/usr/share/alsa/init/00main
++%{pfx}/usr/share/alsa/init/default
++%{pfx}/usr/share/alsa/init/hda
++%{pfx}/usr/share/alsa/init/help
++%{pfx}/usr/share/alsa/init/info
++%{pfx}/usr/share/alsa/init/test
++%{pfx}/usr/share/alsa/speaker-test
++%{pfx}/usr/share/alsa/speaker-test/sample_map.csv
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec ltib/dist/lfs-5.1/base_libs/base_libs.spec
 --- ltib.reference/dist/lfs-5.1/base_libs/base_libs.spec
 +++ ltib/dist/lfs-5.1/base_libs/base_libs.spec
@@ -1210,7 +1475,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 3.1.0
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3536,7 +3801,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v3.1.0
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -5030,7 +5295,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v3.1.0
++Version: 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -5746,18 +6011,22 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  make -j1 install DESTDIR=$RPM_BUILD_ROOT/%{pfx} includedir=%{_prefix}/include/ncurses libdir=%{_prefix}/lib mandir=%{_mandir}
  
-@@ -94,12 +117,24 @@
+@@ -59,8 +82,7 @@
+ done
+ mv $RPM_BUILD_ROOT/%{pfx}/%{_mandir}/tack.1 $RPM_BUILD_ROOT/%{pfx}/%{_mandir}/man1
+ 
+-if [ "$PKG_NCURSES_WANT_REDUCED_SET" = "y" ]
+-then
++if [ "$PKG_NCURSES_WANT_REDUCED_SET" = "y" ]; then
+     echo "Only installing minimal terminfo, saving >5Meg"
+     USR_SHARE=$RPM_BUILD_ROOT/%{pfx}/%{_prefix}/share
+     
+@@ -94,7 +116,13 @@
      rm -rf $USR_SHARE/termtemp
  fi
  
-+cd %{_builddir}/%{name}-%{version}
-+( cd $RPM_BUILD_ROOT > /dev/null; find .%{pfx} \( \( -not -type d \) -o \( -type d -empty \) \) -print | sed 's/^\.//' ) > all_files.lst
-+sed '
-+    \,^%{pfx}%{_mandir}, d;
-+    \,^%{pfx}%{_includedir}, d;
-+    \,^%{pfx}%{_datadir}/terminfo, d;
-+    /\.l\?a$/ d;
-+' all_files.lst > rfs_files.lst
++# For alsa-util
++ln -s libncurses.so $RPM_BUILD_ROOT/%{pfx}/usr/lib/libtinfo.so
 +
  %Clean
 +export LC_ALL
@@ -5766,14 +6035,42 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  rm -rf $RPM_BUILD_ROOT
  
  
--%Files
-+%Files -f all_files.lst
+@@ -102,4 +130,34 @@
  %defattr(-,root,root)
--%{pfx}/*
--
+ %{pfx}/*
  
-+%Files rfs -f rfs_files.lst
+-
++%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/bin/captoinfo
++%{pfx}/usr/bin/clear
++%{pfx}/usr/bin/infocmp
++%{pfx}/usr/bin/infotocap
++%{pfx}/usr/bin/reset
++%{pfx}/usr/bin/tack
++%{pfx}/usr/bin/tic
++%{pfx}/usr/bin/toe
++%{pfx}/usr/bin/tput
++%{pfx}/usr/bin/tset
++%{pfx}/usr/lib/libcurses.so
++%{pfx}/usr/lib/libform.so
++%{pfx}/usr/lib/libform.so.5
++%{pfx}/usr/lib/libform.so.5.3
++%{pfx}/usr/lib/libmenu.so
++%{pfx}/usr/lib/libmenu.so.5
++%{pfx}/usr/lib/libmenu.so.5.3
++%{pfx}/usr/lib/libncurses.so
++%{pfx}/usr/lib/libncurses.so.5
++%{pfx}/usr/lib/libncurses.so.5.3
++%{pfx}/usr/lib/libpanel.so
++%{pfx}/usr/lib/libpanel.so.5
++%{pfx}/usr/lib/libpanel.so.5.3
++%{pfx}/usr/lib/libtinfo.so
++%{pfx}/usr/lib/terminfo
++%{pfx}/usr/share/tabset/std
++%{pfx}/usr/share/tabset/stdcrt
++%{pfx}/usr/share/tabset/vt100
++%{pfx}/usr/share/tabset/vt300
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/nrpe/nrpe.spec ltib/dist/lfs-5.1/nrpe/nrpe.spec
 --- ltib.reference/dist/lfs-5.1/nrpe/nrpe.spec
 +++ ltib/dist/lfs-5.1/nrpe/nrpe.spec

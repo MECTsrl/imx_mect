@@ -625,8 +625,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_PKG_ATK is not set
 +# CONFIG_PKG_AUTOCONF is not set
 +# CONFIG_PKG_AUTOMAKE is not set
-+# CONFIG_PKG_ALSA_LIB is not set
-+# CONFIG_PKG_ALSA_UTILS is not set
++CONFIG_PKG_ALSA_LIB=y
++CONFIG_PKG_ALSA_UTILS=y
 +# CONFIG_PKG_BASH is not set
 +# CONFIG_PKG_BIND is not set
 +# CONFIG_PKG_BINUTILS is not set
@@ -1326,8 +1326,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#undef CONFIG_PKG_ATK
 +#undef CONFIG_PKG_AUTOCONF
 +#undef CONFIG_PKG_AUTOMAKE
-+#undef CONFIG_PKG_ALSA_LIB
-+#undef CONFIG_PKG_ALSA_UTILS
++#define CONFIG_PKG_ALSA_LIB 1
++#define CONFIG_PKG_ALSA_UTILS 1
 +#undef CONFIG_PKG_BASH
 +#undef CONFIG_PKG_BIND
 +#undef CONFIG_PKG_BINUTILS
@@ -3012,8 +3012,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_PKG_ATK is not set
 +# CONFIG_PKG_AUTOCONF is not set
 +# CONFIG_PKG_AUTOMAKE is not set
-+# CONFIG_PKG_ALSA_LIB is not set
-+# CONFIG_PKG_ALSA_UTILS is not set
++CONFIG_PKG_ALSA_LIB=y
++CONFIG_PKG_ALSA_UTILS=y
 +# CONFIG_PKG_BASH is not set
 +# CONFIG_PKG_BIND is not set
 +# CONFIG_PKG_BINUTILS is not set
@@ -18858,7 +18858,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  Summary         : Linux kernel (core of the Linux operating system)
  Name            : kernel
-@@ -12,22 +14,662 @@
+@@ -12,22 +14,664 @@
  Packager        : Rob Herring
  Group           : System Environment/Kernel
  Source          : %{pkg_name}-%{version}.tar.bz2
@@ -18945,6 +18945,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +Patch105        : kernel-2.6.35.3-buzzer_10ms.patch
 +Patch106        : kernel-2.6.35.3-buzzer_no_TPAC1005.patch
 +Patch107        : kernel-2.6.35.3-microSD.patch
++Patch108        : kernel-2.6.35.3-enable-audio-sgtl5000.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -19524,6 +19525,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +%patch105 -p1
 +%patch106 -p1
 +%patch107 -p1
++%patch108 -p1
  
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/main.lkc ltib/config/platform/imx/main.lkc
 --- ltib.reference/config/platform/imx/main.lkc

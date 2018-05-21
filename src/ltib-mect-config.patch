@@ -20077,7 +20077,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/conf/boa.conf ltib/config/platform/imx/merge/etc/conf/boa.conf
 --- ltib.reference/config/platform/imx/merge/etc/conf/boa.conf
 +++ ltib/config/platform/imx/merge/etc/conf/boa.conf
-@@ -0,0 +1,240 @@
+@@ -0,0 +1,241 @@
 +# Boa v0.94 configuration file
 +# File format has not changed from 0.93
 +# File format has changed little from 0.92
@@ -20151,7 +20151,8 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#  process if the receiving end of a pipe stops reading."
 +#ErrorLog "|/usr/sbin/cronolog --symlink=/var/log/boa/error_log /var/log/boa/error-%Y%m%d.log"
 +
-+ErrorLog /var/log/boa/error_log
++# ErrorLog /var/log/boa/error_log
++ErrorLog /dev/null
 +
 +# AccessLog: The location of the access log file. If this does not
 +# start with /, it is considered relative to the server root.
@@ -20164,7 +20165,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#  process if the receiving end of a pipe stops reading."
 +#AccessLog  "|/usr/sbin/cronolog --symlink=/var/log/boa/access_log /var/log/boa/access-%Y%m%d.log"
 +
-+AccessLog /var/log/boa/access_log
++# AccessLog /var/log/boa/access_log
 +
 +# CGILog /var/log/boa/cgi_log
 +# CGILog: The location of the CGI stderr log file. If this does not

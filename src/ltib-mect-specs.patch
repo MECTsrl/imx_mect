@@ -1475,7 +1475,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 0.0
++Version         : 3.1.2
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3795,7 +3795,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1491 @@
+@@ -0,0 +1,1546 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define rhtbtr resources-hack-to-build-the-rpm
 +
@@ -4131,6 +4131,20 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Prefix          : %{pfx}/TPAC1008_03_AC/local
 +
 +%Description lfs-TPAC1008_03_AC
++%{name} package contents limited to just the run-times needed
++on the target.
++
++# TPLC050_01_AA
++#
++%Package lfs-TPLC050_01_AA
++Summary         : Trimmed %{name} to just the run-times needed for local file system.
++Vendor          : MECT s.r.l.
++Packager        : Francesco Mandracci
++Group           : Applications/System
++AutoReqProv     : no
++Prefix          : %{pfx}/TPLC050_01_AA/local
++
++%Description lfs-TPLC050_01_AA
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
@@ -4599,6 +4613,24 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
++# TPLC050_01_AA
++#
++d=TPLC050_01_AA/Simple
++if test -d $d; then
++	cd $d
++
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
++	$MECT_QT_INSTALL_DIR/bin/qmake \
++		-spec qws/linux-g++-mx \
++		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
++		"DEFINES+=TARGET_ARM" \
++		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
++		Simple.pro
++	make -j1
++
++	cd -
++fi
++
 +# TPLC100_01_AA
 +#
 +d=TPLC100_01_AA/Simple
@@ -5013,6 +5045,21 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
++# TPLC050_01_AA
++#
++d=TPLC050_01_AA/Simple
++if test -d $d; then
++	cd $d
++
++	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPLC050_01_AA/local/root/hmi
++	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPLC050_01_AA/local/etc/sysconfig/Crosstable.csv
++	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPLC050_01_AA/local/etc/sysconfig/img/splash.png
++	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPLC050_01_AA/local/etc/sysconfig/system.ini
++	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPLC050_01_AA/local/data/customtrend/trend1.csv
++
++	cd -
++fi
++
 +# TPLC100_01_AA
 +#
 +d=TPLC100_01_AA/Simple
@@ -5267,6 +5314,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPAC1008_03_AC/local/data/customtrend/trend1.csv
 +%{pfx}/TPAC1008_03_AC/local/etc/sysconfig/iomap0.cmg
 +%{pfx}/TPAC1008_03_AC/local/etc/sysconfig/network0.cmg
++
++%files lfs-TPLC050_01_AA
++%defattr(-,root,root)
++%{pfx}/TPLC050_01_AA/local/root/hmi
++%{pfx}/TPLC050_01_AA/local/etc/sysconfig/Crosstable.csv
++%{pfx}/TPLC050_01_AA/local/etc/sysconfig/img/splash.png
++%{pfx}/TPLC050_01_AA/local/etc/sysconfig/system.ini
++%{pfx}/TPLC050_01_AA/local/data/customtrend/trend1.csv
 +
 +%files lfs-TPLC100_01_AA
 +%defattr(-,root,root)

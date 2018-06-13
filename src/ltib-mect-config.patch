@@ -20809,7 +20809,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
-@@ -0,0 +1,161 @@
+@@ -0,0 +1,162 @@
 +#!/bin/sh
 +
 +start() {
@@ -20821,6 +20821,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	export TSLIB_CALIBFILE=/etc/pointercal
 +
 +	# Qt variables
++	export QWS_KEYBOARD="TTY"
 +	export QWS_MOUSE_PROTO=tslib:$TSLIB_TSDEVICE
 +	export QT_QWS_FONTDIR=/usr/lib/fonts
 +	export POINTERCAL_FILE=$TSLIB_CALIBFILE

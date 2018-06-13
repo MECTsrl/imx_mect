@@ -133,6 +133,7 @@ install:
 	@mkdir -p $(BIN_DIR)
 	$(foreach file,$(CGI_LIST),install -D -m 0755 www/$(file) $(BIN_DIR)/$(file);)
 	$(foreach file,$(DATA_LIST),install -D -m 0644 www/$(file) $(BIN_DIR)/$(file);)
+	ln -s /root/webmi $(BIN_DIR)/
 
 clean:
 	@rm -f *.o

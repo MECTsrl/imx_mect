@@ -1352,7 +1352,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cgic_work/cgic_work.spec ltib/dist/lfs-5.1/cgic_work/cgic_work.spec
 --- ltib.reference/dist/lfs-5.1/cgic_work/cgic_work.spec
 +++ ltib/dist/lfs-5.1/cgic_work/cgic_work.spec
-@@ -0,0 +1,113 @@
+@@ -0,0 +1,114 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Support for web-based reporting and configuration
@@ -1466,6 +1466,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/usr/share/www/updatetime.cgi
 +%{pfx}/usr/share/www/upgrade.cgi
 +%{pfx}/usr/share/www/upload.cgi
++%{pfx}/usr/share/www/webmi
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cloner/cloner.spec ltib/dist/lfs-5.1/cloner/cloner.spec
 --- ltib.reference/dist/lfs-5.1/cloner/cloner.spec
 +++ ltib/dist/lfs-5.1/cloner/cloner.spec

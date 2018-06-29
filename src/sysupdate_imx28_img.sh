@@ -118,7 +118,7 @@ echo "Updating the root file system..." | tee /dev/tty1
 cp "${PASSWDDIR}/${PASSWD}" "$MYTMPDIR"
 
 # root file system is now mounted RW, see /etc/rc.d/init.d/S10setup
-rsync -a --exclude "$SUDIR" --exclude local --inplace ${IMGDIR}/ / 2> /dev/null | tee /dev/tty1
+rsync -a --exclude "$SUDIR" --exclude local ${IMGDIR}/ / 2> /dev/null | tee /dev/tty1
 rsync -a --exclude "$SUDIR" --exclude local ${IMGDIR}/ / 2>&1 | tee /dev/tty1
 /sbin/ldconfig -r / 2>&1 | tee /dev/tty1
 
@@ -137,7 +137,7 @@ echo "done." | tee /dev/tty1
 # Update the local file system.
 if test -d ${IMGDIR}/local; then
 	echo "Updating the local file system..." | tee /dev/tty1
-	rsync -a --inplace ${IMGDIR}/local/ /local/ 2> /dev/null | tee /dev/tty1
+	rsync -a ${IMGDIR}/local/ /local/ 2> /dev/null | tee /dev/tty1
 	rsync -a ${IMGDIR}/local/ /local/ 2>&1 | tee /dev/tty1
 	echo "done." | tee /dev/tty1
 fi

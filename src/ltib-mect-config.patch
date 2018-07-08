@@ -21443,16 +21443,18 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/openvpn ltib/config/platform/imx/merge/etc/rc.d/init.d/openvpn
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/openvpn
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/openvpn
-@@ -0,0 +1,57 @@
+@@ -0,0 +1,59 @@
 +#!/bin/sh
 +
 +EXE=/usr/sbin/openvpn
++SAFE=/usr/sbin/openvpn-safe.sh
 +CONFD=/etc/openvpn
 +CONFEXT="conf ovpn"
 +PIDD=/var/run
 +
 +start() {
 +	test -x "$EXE" || exit 1
++	test -x "$SAFE" || exit 1
 +	test -d "$CONFD" || exit 1
 +	test -d "$PIDD" || exit 1
 +
@@ -21465,7 +21467,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +			/sbin/modprobe tun	# Make sure that the module is loaded
 +
-+			"$EXE" --daemon --writepid "$pidfile" --cd "$CONFD" --config $(/usr/bin/basename $c)
++			"$SAFE" --writepid "$pidfile" --cd "$CONFD" --config $(/usr/bin/basename $c) &
 +		done
 +	done
 +}
@@ -22490,6 +22492,27 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#!/bin/sh
 +
 +exec /local/root/fcrts
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/openvpn-safe.sh ltib/config/platform/imx/merge/usr/sbin/openvpn-safe.sh
+--- ltib.reference/config/platform/imx/merge/usr/sbin/openvpn-safe.sh
++++ ltib/config/platform/imx/merge/usr/sbin/openvpn-safe.sh
+@@ -0,0 +1,17 @@
++#!/bin/sh
++
++EXE=/usr/sbin/openvpn
++
++# Restart OpenVPN if it exits with error.
++#
++
++while :; do
++    # Start the actual OpenVPN process.
++    $EXE "$@"
++
++    # Done if normal exit.
++    test $? -eq 0 && break
++
++    # Wait a while before attempting to restart.
++    sleep 60
++done
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/usr/sbin/ovpn-mect-down.sh ltib/config/platform/imx/merge/usr/sbin/ovpn-mect-down.sh
 --- ltib.reference/config/platform/imx/merge/usr/sbin/ovpn-mect-down.sh
 +++ ltib/config/platform/imx/merge/usr/sbin/ovpn-mect-down.sh

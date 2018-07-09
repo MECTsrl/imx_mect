@@ -114,8 +114,9 @@ fi
 # Update the root file system.
 echo "Updating the root file system..." | tee /dev/tty1
 
-# Save password file (for root password).
+# Save password file (for root password) and authorized_keys (for public ssh keys).
 cp "${PASSWDDIR}/${PASSWD}" "$MYTMPDIR"
+cp /etc/dropbear/authorized_keys "$MYTMPDIR/authorized_keys"
 
 # root file system is now mounted RW, see /etc/rc.d/init.d/S10setup
 rsync -aHc --exclude "$SUDIR" --exclude local ${IMGDIR}/ / 2> /dev/null | tee /dev/tty1
@@ -131,6 +132,8 @@ if test -s "${PASSWDDIR}/${PASSWD}"; then
         echo "cannot preserve root password." | tee /dev/tty1
     fi
 fi
+sed -i '/root@vpndev.vpn-smily.com/ d' "$MYTMPDIR/authorized_keys"
+cat "$MYTMPDIR/authorized_keys" >> /etc/dropbear/authorized_keys
 
 echo "done." | tee /dev/tty1
 

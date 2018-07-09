@@ -812,7 +812,8 @@ target_rfs: $(MECT_COMMON_RFSPKGS)
 		echo "MectApps: $(MECT_BUILD_APPSCRT_BRANCH)/$(MECT_BUILD_APPSCRT_TAG)"; \
 	) > $(MECT_RFSDIR)/$(MECT_RFS_VERSION_FILE) && sudo chown root:root $(MECT_RFSDIR)/$(MECT_RFS_VERSION_FILE)
 	# Target-specific tuning (better build target-specific packages?)
-	if test "$(MECT_BUILD_TARGET)" = "TPLC100_01_AA" -o "$(MECT_BUILD_TARGET)" = "TPLC100_01_AB"; then \
+	if test "$(MECT_BUILD_TARGET)" = "TPLC100_01_AA" -o "$(MECT_BUILD_TARGET)" = "TPLC100_01_AB"; \
+		-o "$(MECT_BUILD_TARGET)" = "TPLC050_01_AA" -o "$(MECT_BUILD_TARGET)" = "TPLC050_01_AB"; then \
 		sudo rm -f $(MECT_RFSDIR)/usr/bin/ts_calibrate; \
 	fi
 	sudo depmod -ae -F $(MECT_LTIBDIR)/rootfs/boot/System.map -b $(MECT_RFSDIR) 2.6.35.3

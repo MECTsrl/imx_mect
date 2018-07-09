@@ -20674,7 +20674,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +LOCAL_ETC_DIR="/local/etc/sysconfig"
 +
-+logfile=$mntdir/update.log
++logfile="$mntdir/update_$(date -Iseconds | sed 's/:/-/g').log"
 +
 +start() {
 +	sleep 1

@@ -20523,31 +20523,49 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/iptables.default ltib/config/platform/imx/merge/etc/iptables.default
 --- ltib.reference/config/platform/imx/merge/etc/iptables.default
 +++ ltib/config/platform/imx/merge/etc/iptables.default
-@@ -0,0 +1,24 @@
+@@ -0,0 +1,42 @@
 +*filter
 +:INPUT DROP [0:0]
 +:FORWARD ACCEPT [0:0]
 +:OUTPUT ACCEPT [18:2180]
 +-A INPUT -i lo -j ACCEPT 
 +#
-+# Accept input connections for selected services
++# normally enabled services
++#
++# ICMP ping
++-A INPUT -p icmp --icmp-type 0 -j ACCEPT
++-A INPUT -p icmp --icmp-type 8 -j ACCEPT
 +#
 +# SSH
 +-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT 
-+# Telnet
-+-A INPUT -p tcp -m tcp --dport 23 -j ACCEPT 
-+# HTTP
-+-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT 
++-A INPUT -p tcp -m tcp --sport 22 -j ACCEPT
++#
 +# Modbus TCP Server
 +-A INPUT -p tcp -m tcp --dport 502 -j ACCEPT 
-+# NRPE
-+-A INPUT -p tcp -m tcp --dport 5666 -j ACCEPT 
++#
 +# VNC :0
 +-A INPUT -p tcp -m tcp --dport 5900 -j ACCEPT 
++#
 +# ATCMControl_RunTimeSystem control
 +-A INPUT -p tcp -m tcp --dport 17290 -j ACCEPT 
 +#
++# OpenVPN smily
++-A INPUT -p tcp -m tcp --sport 443 -j ACCEPT 
++-A INPUT -p udp -m udp --sport 53 -j ACCEPT 
++#
++# normally disabled services
++#
++# Telnet
++#-A INPUT -p tcp -m tcp --dport 23 -j ACCEPT 
++#
++# HTTP
++#-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT 
++#
++# NRPE
++#-A INPUT -p tcp -m tcp --dport 5666 -j ACCEPT 
++#
 +COMMIT
++
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/mdev.conf ltib/config/platform/imx/merge/etc/mdev.conf
 --- ltib.reference/config/platform/imx/merge/etc/mdev.conf
 +++ ltib/config/platform/imx/merge/etc/mdev.conf

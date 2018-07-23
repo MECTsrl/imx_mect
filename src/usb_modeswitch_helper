@@ -15,26 +15,26 @@ if test "$DEVTYPE" = "usb_device"; then
             usb_modeswitch -v $ms_vendor -p $ms_product -f "$ms_data"
         else
 	    modprobe -r option
-            sleep 5     # Allow other drivers take over the new device (e.g., Wi-Fi).
-            modprobe option
+            sleep 5     # Allow other drivers to take over the device (e.g., Wi-Fi).
+            if ! test -e /dev/ttyUSB0; then
+                modprobe option
 
-            optconf=/sys/bus/usb-serial/drivers/option1/new_id
-            for n in $(seq 1 1 5); do
-                if test -f "$optconf"; then
-                    echo "$ms_vendor $ms_product" > "$optconf"
+                optconf="/sys/bus/usb-serial/drivers/option1/new_id"
+                for n in $(seq 1 1 5); do
+                    if test -f "$optconf"; then
+	                echo "$ms_vendor $ms_product" > "$optconf"
+
+                        break
+	            fi
 
                     sleep 1
-
-                    break
-                fi
-
-                sleep 1
-            done
+                done
+            fi
         fi
     elif test "$ACTION" = "remove"; then
         modprobe -r option
     fi
-elif test \( "$MDEV" = "ttyUSB0" \); then
+elif test "$MDEV" = "ttyUSB0"; then
     test "$SUBSYSTEM" = "usb-serial" || exit 0
 
     if test "$ACTION" = "add"; then

@@ -131,7 +131,7 @@ if test -s "${PASSWDDIR}/${PASSWD}"; then
         echo "cannot preserve root password." | tee /dev/tty1
     fi
 fi
-sed -i '/root@vpndev.vpn-smily.com/ d' "$MYTMPDIR/authorized_keys"
+sed -i '/root@vpndev\.vpn-smily\.com/ d' "$MYTMPDIR/authorized_keys"
 cat "$MYTMPDIR/authorized_keys" >> /etc/dropbear/authorized_keys
 
 echo "done." | tee /dev/tty1

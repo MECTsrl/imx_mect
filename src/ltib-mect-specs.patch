@@ -1,7 +1,7 @@
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/4c_runtime/4c_runtime.spec ltib/dist/lfs-5.1/4c_runtime/4c_runtime.spec
 --- ltib.reference/dist/lfs-5.1/4c_runtime/4c_runtime.spec
 +++ ltib/dist/lfs-5.1/4c_runtime/4c_runtime.spec
-@@ -0,0 +1,95 @@
+@@ -0,0 +1,117 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : ATCM control runtime system application
@@ -14,15 +14,29 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Group           : Applications/File
 +URL             : http://www.mect.it/
 +BuildRoot       : %{_tmppath}/%{name}
-+Prefix          : %{pfx}/local
++Prefix          : %{pfx}
 +AutoReqProv     : no
 +
 +
-+%Package lfs
++%Package rfs
 +Summary         : Trimmed %{name} to just the run-times needed in the root file system.
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
 +Group           : Applications/File
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++%description rfs
++%{name} package contents limited to just the run-times needed
++on the target.
++
++
++%Package lfs
++Summary         : Trimmed %{name} to just the run-times needed in the local file system.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/File
++Prefix          : %{pfx}/local
 +AutoReqProv     : no
 +
 +%description lfs
@@ -34,6 +48,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +ATCM control runtime system provides the run-time execution
 +environment for the PLC applications built using the ATCM
 +control engineering SDK.
++
 +
 +%prep
 +export LC_ALL
@@ -79,11 +94,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +if ! test -r bin/fcrts; then
 +	# Target was not build, create dummy placeholder.
-+	install -D -m 0644 /dev/null $RPM_BUILD_ROOT/%{pfx}/local/root/fcrts
++        install -D -m 0644 /dev/null $RPM_BUILD_ROOT/%{pfx}/usr/bin/fcrts
 +else
 +	# Install the real thing.
-+	install -D -m 0755 bin/fcrts $RPM_BUILD_ROOT/%{pfx}/local/root/fcrts
++        install -D -m 0755 bin/fcrts $RPM_BUILD_ROOT/%{pfx}/usr/bin/fcrts
 +fi
++install -d -m 0755 $RPM_BUILD_ROOT/%{pfx}/local/root
++ln -s /usr/bin/fcrts $RPM_BUILD_ROOT/%{pfx}/local/root/fcrts
 +
 +
 +%clean
@@ -93,6 +110,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%files
 +%defattr(-,root,root)
 +%{pfx}/local/root/fcrts
++%{pfx}/usr/bin/fcrts
++
++%files rfs
++%defattr(-,root,root)
++%{pfx}/usr/bin/fcrts
 +
 +%files lfs
 +%defattr(-,root,root)
@@ -100,7 +122,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/ATCMcontrol_RunTimeSystem/ATCMcontrol_RunTimeSystem.spec ltib/dist/lfs-5.1/ATCMcontrol_RunTimeSystem/ATCMcontrol_RunTimeSystem.spec
 --- ltib.reference/dist/lfs-5.1/ATCMcontrol_RunTimeSystem/ATCMcontrol_RunTimeSystem.spec
 +++ ltib/dist/lfs-5.1/ATCMcontrol_RunTimeSystem/ATCMcontrol_RunTimeSystem.spec
-@@ -0,0 +1,82 @@
+@@ -0,0 +1,103 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : ATCM control runtime system application
@@ -113,15 +135,29 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Group           : Applications/File
 +URL             : http://www.mect.it/
 +BuildRoot       : %{_tmppath}/%{name}
-+Prefix          : %{pfx}/local
++Prefix          : %{pfx}
 +AutoReqProv     : no
 +
 +
-+%Package lfs
++%Package rfs
 +Summary         : Trimmed %{name} to just the run-times needed in the root file system.
 +Vendor          : MECT s.r.l.
 +Packager        : Mihai Lazarescu
 +Group           : Applications/File
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++%description rfs
++%{name} package contents limited to just the run-times needed
++on the target.
++
++
++%Package lfs
++Summary         : Trimmed %{name} to just the run-times needed in the local file system.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/File
++Prefix          : %{pfx}/local
 +AutoReqProv     : no
 +
 +%description lfs
@@ -169,7 +205,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +rm -rf $RPM_BUILD_ROOT
 +
 +mkdir -p $RPM_BUILD_ROOT/%{pfx}/local
-+install -D -m 0755 bin/fcrts $RPM_BUILD_ROOT/%{pfx}/local/root/fcrts
++install -D -m 0755 bin/fcrts $RPM_BUILD_ROOT/%{pfx}/usr/bin/fcrts
++install -d -m 0755 $RPM_BUILD_ROOT/%{pfx}/local/root
++ln -s /usr/bin/fcrts $RPM_BUILD_ROOT/%{pfx}/local/root/fcrts
 +
 +
 +%clean
@@ -179,6 +217,11 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%files
 +%defattr(-,root,root)
 +%{pfx}/local/root/fcrts
++%{pfx}/usr/bin/fcrts
++
++%files rfs
++%defattr(-,root,root)
++%{pfx}/usr/bin/fcrts
 +
 +%files lfs
 +%defattr(-,root,root)

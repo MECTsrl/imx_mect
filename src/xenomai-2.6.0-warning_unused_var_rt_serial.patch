@@ -1,11 +1,11 @@
-diff -aurN a/ksrc/drivers/serial/rt_imx_mxs_auart.c b/ksrc/drivers/serial/rt_imx_mxs_auart.c
 --- a/ksrc/drivers/serial/rt_imx_mxs_auart.c	2018-09-05 15:55:28.336495338 +0000
-+++ b/ksrc/drivers/serial/rt_imx_mxs_auart.c	2018-09-05 16:44:37.823063676 +0000
-@@ -1191,7 +1191,6 @@
++++ bvers/serial/rt_imx_mxs_auart.c	2018-09-05 22:11:32.084599019 +0000
+@@ -1191,8 +1191,6 @@
  	struct rt_imx_mxs_auart_port *port;
  	uint64_t *in_history;
  	rtdm_lockctx_t lock_ctx;
 -	RT_ALARM_INFO rts_deassert_info;
- 	int retval;
+-	int retval;
  
  	ctx = (struct rt_imx_mxs_auart_ctx *)context->dev_private;
+ 	port = ctx->port;

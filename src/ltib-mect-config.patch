@@ -18934,7 +18934,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +Patch53         : xenomai-2.6.0-rtser_mect_no_rts_on_internal_uart.patch
 +Patch54         : xenomai-2.6.0-rtser_mect_flush.patch
 +Patch55         : xenomai-2.6.0-fix_rt_serial_concurrent_close_lockup.patch
-+Patch56         : xenomai-2.6.0-warning_rts_deassert_info.patch
++Patch56         : xenomai-2.6.0-warning_unused_var_rt_serial.patch
 +Patch99         : xenomai-2.6.0-fix-scriptpath-calculation.patch
 +
 +# Generic kernel patches

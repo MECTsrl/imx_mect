@@ -94,8 +94,12 @@ MECT_RPMBUILDDIR = $(MECT_RPMBASEDIR)/BUILD
 export MECT_RPMDIR = $(MECT_RPMBASEDIR)/RPMS/$(MECT_TARGET_ARCH)
 # Top-level directory for target image build receipts
 MECT_MKIMGDIR := $(CURDIR)/targets
-# Top-level directory fo target device images
+# Top-level directory for target device images
 export MECT_IMGDIR := $(CURDIR)/images
+# Sub-directory for MFGtools images
+MECT_MFGTOOLSDIR := mfgtools
+# Sub-directory for sysupdate images and scripts
+MECT_SYSUPDATEDIR := sysupdate
 # Projects directory
 MECT_PRJDIR := $(CURDIR)/projects
 # Utility to compare current target images with a given reference set.
@@ -121,7 +125,7 @@ MECT_SYSCLONE_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_cloner.sh
 MECT_SYSCLONE_PRE_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_pre.sh
 MECT_SYSCLONE_POST_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_post.sh
 MECT_SYSCLONE_SHAR := $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).sh
-MECT_SYSCLONE_SHDIR := $(MECT_IMGDIR)/cloner_$(MECT_BUILD_RELEASE)
+MECT_SYSCLONE_SHDIR := $(MECT_IMGDIR)/cloner
 MECT_SYSCLONE_SH = $(MECT_SYSCLONE_SHDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).sh
 MECT_SYSCLONE_IMG = $(MECT_SYSCLONE_SHDIR)/img_cloner_$(MECT_BUILD_RELEASE).ext2
 MECT_SYSCLONE_LOOP = $(MECT_SYSCLONE_SHDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).loop
@@ -130,7 +134,7 @@ MECT_SYSCLONE_DIR := $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE)/temp
 MECT_KOBS_TMPL := $(MECT_FTPDIR)/kobs-ng
 # sysupdate for MECT Remote Services configuration
 MECT_SYSUPD_VPN_PRE := $(MECT_FTPDIR)/sysupdate_vpn_pre.sh
-MECT_SYSUPD_VPN = $(MECT_IMGDIR)/sysupdate_vpn_$(MECT_BUILD_RELEASE).sh
+MECT_SYSUPD_VPN = $(MECT_IMGDIR)/vpn/sysupdate_vpn_$(MECT_BUILD_RELEASE).sh
 MECT_SYSUPD_VPN_POST := $(MECT_FTPDIR)/sysupdate_vpn_post.sh
 
 # Extension of the MD5 checksums for the downloads.
@@ -726,6 +730,7 @@ cloner_shar:
 .PHONY: sysupdate_mrs
 sysupdate_mrs:
 	rm -f $(MECT_SYSUPD_VPN)
+	mkdir -p $(dir $(MECT_SYSUPD_VPN))
 	cat $(MECT_SYSUPD_VPN_PRE) > $(MECT_SYSUPD_VPN)
 	if tail -1 $(MECT_SYSUPD_VPN) | grep -q '^exit 0$$'; then sed -i '$$ d' $(MECT_SYSUPD_VPN); fi
 	cat $(MECT_SYSUPD_VPN_POST) >> $(MECT_SYSUPD_VPN)
@@ -858,8 +863,8 @@ target_lfs_flash:
 .PHONY: target_mfg_upd
 target_mfg_upd: MECT_TGTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)
 target_mfg_upd: MECT_MFGDIR = $(MECT_TGTDIR)/$(shell basename $(MECT_TGTDIR) | sed 's/\./_/g')
-target_mfg_upd: MECT_MFGZIP = $(shell readlink -m $(MECT_MFGDIR)/../../$(notdir $(MECT_MFGDIR)).zip)
-target_mfg_upd: MECT_SYSUPD_IMG = $(shell readlink -m $(MECT_MFGDIR)/../../img_sysupdate-$(MECT_BUILD_RELEASE)-$(MECT_BUILD_TARGET).ext2)
+target_mfg_upd: MECT_MFGZIP = $(shell readlink -m $(MECT_MFGDIR)/../../$(MECT_MFGTOOLSDIR)/$(notdir $(MECT_MFGDIR)).zip)
+target_mfg_upd: MECT_SYSUPD_IMG = $(shell readlink -m $(MECT_MFGDIR)/../../$(MECT_SYSUPDATEDIR)/img_sysupdate-$(MECT_BUILD_RELEASE)-$(MECT_BUILD_TARGET).ext2)
 target_mfg_upd: MECT_SYSUPD_LOOP = $(shell readlink -m $(MECT_MFGDIR)/../../sysupdate_$(MECT_BUILD_RELEASE)_$(MECT_BUILD_TARGET).loop)
 target_mfg_upd: MECT_SYSUPDIR = $(shell readlink -m $(MECT_MFGDIR)/../../$(MECT_BUILD_TARGET))
 target_mfg_upd: MECT_BOOTDIR = $(MECT_TGTDIR)/boot
@@ -878,6 +883,7 @@ target_mfg_upd:
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_MFGDIR)/'OS firmware'/img
 	install -m 644 $(MECT_BOOTDIR)/boot/updater_ivt.sb $(MECT_MFGDIR)/'OS firmware'/sys
 	rm -f $(MECT_MFGZIP)
+	mkdir -p $(dir $(MECT_MFGZIP))
 	cd $(MECT_MFGDIR); zip -0r $(MECT_MFGZIP) *
 	#
 	sudo rm -rf $(MECT_SYSUPDIR)
@@ -912,6 +918,7 @@ target_mfg_upd:
 	    if test -n "$$dev"; then sudo umount "$$dev"; fi; \
 	fi
 	sync
+	mkdir -p $(dir $(MECT_SYSUPD_IMG))
 	dd if=/dev/zero of=$(MECT_SYSUPD_IMG) bs=1k count=`du -s $(MECT_SYSUPDIR)/fs | awk '{ print int($$1 * 1.5); }'`
 	/sbin/mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L sysupdate_$(MECT_BUILD_TARGET) $(MECT_SYSUPD_IMG)
 	rm -rf $(MECT_SYSUPD_LOOP); mkdir -p $(MECT_SYSUPD_LOOP)
@@ -921,7 +928,7 @@ target_mfg_upd:
 	rmdir $(MECT_SYSUPD_LOOP)
 	/sbin/e2fsck -fy $(MECT_SYSUPD_IMG); test $$? -le 3
 	/sbin/resize2fs -Mp $(MECT_SYSUPD_IMG)
-	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/; s/@@THIS_VERSION_MAJ_MIN@@/$(MECT_BUILD_VER_MAJ_MIN)/' $(MECT_SYSUPD_IMG_TMPL) > $(MECT_IMGDIR)/$(MECT_SYSUPD_IMG_SH)
+	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/; s/@@THIS_VERSION_MAJ_MIN@@/$(MECT_BUILD_VER_MAJ_MIN)/' $(MECT_SYSUPD_IMG_TMPL) > $(MECT_IMGDIR)/$(MECT_SYSUPDATEDIR)/$(MECT_SYSUPD_IMG_SH)
 	sudo rm -rf $(MECT_SYSUPDIR)/fs $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_SYSUPDIR) $(shell readlink -m $(MECT_SYSUPDIR)/../$(notdir $(MECT_KOBS_TMPL))) $(MECT_TGTDIR)
 
 # Build the archive for target-specific development.

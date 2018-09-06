@@ -1,9 +1,9 @@
 
-# Add/replace the new OpenVPN certificate.
+# Add/replace new OpenVPN certificates.
 #
 
-# Any OpenVPN certificate for this device?
-test -r "${MNTDIR}/${SN}.ovpn" -a "$(sed -n '/^\s*Subject: .*CN=/ { s/^.*CN=//; s/\/.*//; s/-mect$//; p; }' ${MNTDIR}/${SN}.ovpn)" = "$SN" || do_exit "no OpenVPN certificate for this device." | tee /dev/tty1
+# Any certificates for this device?
+ls "${MNTDIR}/${SN}"*".ovpn" 2>/dev/null | grep -q . || do_exit "no certificate for this device."
 
 # Make sure that OpenVPN configuration directory exists.
 if ! test -d "$OVPNCONF"; then
@@ -16,8 +16,10 @@ test -d "$OVPNCONF" || do_exit "no OpenVPN configuration directory." | tee /dev/
 find "$OVPNCONF" -type f \( -iname \*.ovpn -o -iname \*.conf \) -exec mv {} {}.$(date '+%F-%T') \;
 
 # Install the new certificate.
-install -m 644 "${MNTDIR}/${SN}.ovpn" "${OVPNCONF}/${SN}.ovpn"
-test -s "${OVPNCONF}/${SN}.ovpn" || do_exit "cannot install the OpenVPN certificate." | tee /dev/tty1
+ls "${MNTDIR}/${SN}"*".ovpn" 2>/dev/null | while read c; do
+    install -m 644 "$c" "${OVPNCONF}/$(basename $c)"
+    test -s "${OVPNCONF}/$(basename $c)" || do_exit "cannot install $(basename $c) certificate." | tee /dev/tty1
+done
 
 # Change the default (development) root password.
 #

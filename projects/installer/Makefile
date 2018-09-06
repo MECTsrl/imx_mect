@@ -117,7 +117,11 @@ all:
 	$(INSTALLSCR)
 	#
 	# Install the installer (if called from the main Makefile).
-	if test -n "$(MECT_IMGDIR)"; then cp -a --reflink=auto $(INSTALLPRG) $(MECT_IMGDIR); fi
+	test -n "$(MECT_IMGDIR)"
+	test -n "$(MECT_WINDIR)"
+	mkdir -p "$(MECT_IMGDIR)/$(MECT_WINDIR)"
+	rm -f "$(MECT_IMGDIR)/$(MECT_WINDIR)/$(INSTALLPRG)"
+	cp -a --reflink=auto $(INSTALLPRG) "$(MECT_IMGDIR)/$(MECT_WINDIR)"
 
 
 .PHONY: clean

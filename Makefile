@@ -100,6 +100,8 @@ export MECT_IMGDIR := $(CURDIR)/images
 MECT_MFGTOOLSDIR := mfgtools
 # Sub-directory for sysupdate images and scripts
 MECT_SYSUPDATEDIR := sysupdate
+# Sub-directory for Windows installer
+export MECT_WINDIR := installer
 # Projects directory
 MECT_PRJDIR := $(CURDIR)/projects
 # Utility to compare current target images with a given reference set.

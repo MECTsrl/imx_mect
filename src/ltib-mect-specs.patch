@@ -6509,7 +6509,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/openssl/openssl.spec ltib/dist/lfs-5.1/openssl/openssl.spec
 --- ltib.reference/dist/lfs-5.1/openssl/openssl.spec
 +++ ltib/dist/lfs-5.1/openssl/openssl.spec
-@@ -3,23 +3,46 @@
+@@ -1,25 +1,47 @@
+-%define base %(echo %{_prefix} | sed -e s,/usr.*$,,)
+ %define pfx /opt/freescale/rootfs/%{_target_cpu}
  
  Summary         : Secure Sockets Layer toolkit
  Name            : openssl
@@ -6557,7 +6559,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  case $ENDIAN in
      big)
          XTRA_OPTS="-DB_ENDIAN"
-@@ -42,33 +65,52 @@
+@@ -42,33 +64,52 @@
         OSSL_ARCH="linux-$LINTARCH"
         ;;
  esac

@@ -6557,7 +6557,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  case $ENDIAN in
      big)
          XTRA_OPTS="-DB_ENDIAN"
-@@ -42,33 +65,51 @@
+@@ -42,33 +65,52 @@
         OSSL_ARCH="linux-$LINTARCH"
         ;;
  esac
@@ -6608,6 +6608,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +%Files rfs
 +%defattr(-,root,root)
++%{pfx}/usr/bin/openssl
 +%{pfx}/usr/lib/engines/lib4758cca.so
 +%{pfx}/usr/lib/engines/libaep.so
 +%{pfx}/usr/lib/engines/libatalla.so

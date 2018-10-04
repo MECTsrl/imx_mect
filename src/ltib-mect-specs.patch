@@ -6706,6 +6706,100 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%defattr(-,root,root)
 +%{pfx}/usr/sbin/openvpn
 +%{pfx}/usr/lib/openvpn/plugins/openvpn-plugin-down-root.so
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/pjproject/pjproject.spec ltib/dist/lfs-5.1/pjproject/pjproject.spec
+--- ltib.reference/dist/lfs-5.1/pjproject/pjproject.spec
++++ ltib/dist/lfs-5.1/pjproject/pjproject.spec
+@@ -0,0 +1,90 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary         : SIP, Media, and NAT Traversal Library
++Name            : pjproject
++Version         : 2.8
++Release         : 1
++License         : GPL
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/System
++Source          : %{name}-%{version}.tar.bz2
++BuildRoot       : %{_tmppath}/%{name}
++Prefix          : %{pfx}
++AutoReqProv     : no
++
++
++%Package rfs
++Summary         : Trimmed %{name} for root file system requirements.
++Vendor          : MECT s.r.l.
++Packager        : Mihai Lazarescu
++Group           : Applications/System
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents limited to just the files
++needed at run time on the target.
++
++
++%Description
++%{summary}
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++%setup
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++LD=gcc
++export LD
++
++LDFLAGS="-L$DEV_IMAGE/usr/lib"
++export LDFLAGS
++
++./configure \
++    --prefix=%{_prefix} \
++    --host=$CFGHOST \
++    --build=%{_build} \
++    --disable-video \
++    --disable-bcg729 \
++    --disable-ffmpeg \
++    --disable-libwebrtc \
++    --disable-libyuv \
++    --disable-opencore-amr \
++    --disable-openh264 \
++    --disable-opus \
++    --disable-sdl \
++    --disable-silk \
++    --disable-ssl \
++    --disable-v412 \
++    --disable-v4l2 \
++
++make -j1 dep
++make -j1
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++make DESTDIR=$RPM_BUILD_ROOT/%{pfx} install
++install -m 755 -D pjsip-apps/bin/pjsua-arm-none-linux-gnueabi $RPM_BUILD_ROOT/%{pfx}/usr/bin/pjsua
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++%Files
++%defattr(-,root,root)
++%{pfx}/*
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/bin/pjsua
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec
 --- ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec
 +++ ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec

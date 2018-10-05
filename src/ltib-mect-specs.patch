@@ -6709,7 +6709,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/pjproject/pjproject.spec ltib/dist/lfs-5.1/pjproject/pjproject.spec
 --- ltib.reference/dist/lfs-5.1/pjproject/pjproject.spec
 +++ ltib/dist/lfs-5.1/pjproject/pjproject.spec
-@@ -0,0 +1,90 @@
+@@ -0,0 +1,129 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : SIP, Media, and NAT Traversal Library
@@ -6761,6 +6761,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +    --prefix=%{_prefix} \
 +    --host=$CFGHOST \
 +    --build=%{_build} \
++    --enable-shared \
++    --disable-speex-codec \
++    --disable-speex-aec \
++    --disable-ilbc-codec \
++    --disable-g711-codec \
++    --disable-g711-plc \
++    --disable-l16-codec \
 +    --disable-video \
 +    --disable-bcg729 \
 +    --disable-ffmpeg \
@@ -6800,6 +6807,38 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%Files rfs
 +%defattr(-,root,root)
 +%{pfx}/usr/bin/pjsua
++%{pfx}/usr/lib/libg7221codec.so
++%{pfx}/usr/lib/libg7221codec.so.2
++%{pfx}/usr/lib/libgsmcodec.so
++%{pfx}/usr/lib/libgsmcodec.so.2
++%{pfx}/usr/lib/libpjlib-util.so
++%{pfx}/usr/lib/libpjlib-util.so.2
++%{pfx}/usr/lib/libpjmedia-audiodev.so
++%{pfx}/usr/lib/libpjmedia-audiodev.so.2
++%{pfx}/usr/lib/libpjmedia-codec.so
++%{pfx}/usr/lib/libpjmedia-codec.so.2
++%{pfx}/usr/lib/libpjmedia.so
++%{pfx}/usr/lib/libpjmedia.so.2
++%{pfx}/usr/lib/libpjmedia-videodev.so
++%{pfx}/usr/lib/libpjmedia-videodev.so.2
++%{pfx}/usr/lib/libpjnath.so
++%{pfx}/usr/lib/libpjnath.so.2
++%{pfx}/usr/lib/libpjsip-simple.so
++%{pfx}/usr/lib/libpjsip-simple.so.2
++%{pfx}/usr/lib/libpjsip.so
++%{pfx}/usr/lib/libpjsip.so.2
++%{pfx}/usr/lib/libpjsip-ua.so
++%{pfx}/usr/lib/libpjsip-ua.so.2
++%{pfx}/usr/lib/libpj.so
++%{pfx}/usr/lib/libpj.so.2
++%{pfx}/usr/lib/libpjsua2.so
++%{pfx}/usr/lib/libpjsua2.so.2
++%{pfx}/usr/lib/libpjsua.so
++%{pfx}/usr/lib/libpjsua.so.2
++%{pfx}/usr/lib/libresample.so
++%{pfx}/usr/lib/libresample.so.2
++%{pfx}/usr/lib/libsrtp.so
++%{pfx}/usr/lib/libsrtp.so.2
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec
 --- ltib.reference/dist/lfs-5.1/pkgconfig/pkgconfig.spec
 +++ ltib/dist/lfs-5.1/pkgconfig/pkgconfig.spec

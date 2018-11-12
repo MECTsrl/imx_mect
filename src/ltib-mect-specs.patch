@@ -7346,7 +7346,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	-qt-gfx-transformed \
 +	-qt-gfx-vnc \
 +	-qt-kbd-tty \
-+	-openssl \
++	-openssl -continue \
 +	-release \
 +	-shared \
 +	-sm \

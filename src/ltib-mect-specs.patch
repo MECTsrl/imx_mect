@@ -1519,7 +1519,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 0.0
++Version         : 3.1.6
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -7294,7 +7294,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  # Unset compiler to prevent gcc being used when the cross
  # tools should be used. (Trolltech issue# 138807)
-@@ -185,32 +188,115 @@
+@@ -185,32 +188,116 @@
  # Unset PLATFORM because this is used as host machine.
  unset PLATFORM
  
@@ -7346,6 +7346,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	-qt-gfx-transformed \
 +	-qt-gfx-vnc \
 +	-qt-kbd-tty \
++	-openssl \
 +	-release \
 +	-shared \
 +	-sm \

@@ -3662,11 +3662,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac.config
-@@ -0,0 +1,2528 @@
+@@ -0,0 +1,2532 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Apr 30 00:06:45 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -4649,6 +4648,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_EEPROM_LEGACY is not set
 +# CONFIG_EEPROM_MAX6875 is not set
 +CONFIG_EEPROM_93CX6=m
++
++#
++# FRAM support
++#
++CONFIG_FRAM_FM25L04B=m
 +# CONFIG_IWMC3200TOP is not set
 +CONFIG_HAVE_IDE=y
 +# CONFIG_IDE is not set
@@ -6194,11 +6198,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1005_480x272.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1005_480x272.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1005_480x272.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1005_480x272.config
-@@ -0,0 +1,2526 @@
+@@ -0,0 +1,2530 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Apr 30 00:06:45 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -7181,6 +7184,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_EEPROM_LEGACY is not set
 +# CONFIG_EEPROM_MAX6875 is not set
 +CONFIG_EEPROM_93CX6=m
++
++#
++# FRAM support
++#
++CONFIG_FRAM_FM25L04B=m
 +# CONFIG_IWMC3200TOP is not set
 +CONFIG_HAVE_IDE=y
 +# CONFIG_IDE is not set
@@ -8724,11 +8732,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_320x240.config
-@@ -0,0 +1,2528 @@
+@@ -0,0 +1,2532 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Apr 30 00:06:45 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -9711,6 +9718,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_EEPROM_LEGACY is not set
 +# CONFIG_EEPROM_MAX6875 is not set
 +CONFIG_EEPROM_93CX6=m
++
++#
++# FRAM support
++#
++CONFIG_FRAM_FM25L04B=m
 +# CONFIG_IWMC3200TOP is not set
 +CONFIG_HAVE_IDE=y
 +# CONFIG_IDE is not set
@@ -11256,11 +11268,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1006_640x480.config
-@@ -0,0 +1,2528 @@
+@@ -0,0 +1,2532 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Apr 30 00:06:45 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -12243,6 +12254,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_EEPROM_LEGACY is not set
 +# CONFIG_EEPROM_MAX6875 is not set
 +CONFIG_EEPROM_93CX6=m
++
++#
++# FRAM support
++#
++CONFIG_FRAM_FM25L04B=m
 +# CONFIG_IWMC3200TOP is not set
 +CONFIG_HAVE_IDE=y
 +# CONFIG_IDE is not set
@@ -13788,11 +13804,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1007_480x272.config
-@@ -0,0 +1,2528 @@
+@@ -0,0 +1,2532 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Apr 30 00:06:45 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -14775,6 +14790,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_EEPROM_LEGACY is not set
 +# CONFIG_EEPROM_MAX6875 is not set
 +CONFIG_EEPROM_93CX6=m
++
++#
++# FRAM support
++#
++CONFIG_FRAM_FM25L04B=m
 +# CONFIG_IWMC3200TOP is not set
 +CONFIG_HAVE_IDE=y
 +# CONFIG_IDE is not set
@@ -16320,11 +16340,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 --- ltib.reference/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
 +++ ltib/config/platform/imx/kernel-2.6.35-imx28-tpac1008_800x480.config
-@@ -0,0 +1,2528 @@
+@@ -0,0 +1,2532 @@
 +#
 +# Automatically generated make config: don't edit
 +# Linux kernel version: 2.6.35.3
-+# Sat Apr 30 00:06:45 2016
 +#
 +CONFIG_ARM=y
 +CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -17307,6 +17326,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# CONFIG_EEPROM_LEGACY is not set
 +# CONFIG_EEPROM_MAX6875 is not set
 +CONFIG_EEPROM_93CX6=m
++
++#
++# FRAM support
++#
++CONFIG_FRAM_FM25L04B=m
 +# CONFIG_IWMC3200TOP is not set
 +CONFIG_HAVE_IDE=y
 +# CONFIG_IDE is not set
@@ -18861,7 +18885,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  Summary         : Linux kernel (core of the Linux operating system)
  Name            : kernel
-@@ -12,22 +14,666 @@
+@@ -12,22 +14,668 @@
  Packager        : Rob Herring
  Group           : System Environment/Kernel
  Source          : %{pkg_name}-%{version}.tar.bz2
@@ -18950,6 +18974,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +Patch106        : kernel-2.6.35.3-buzzer_no_TPAC1005.patch
 +Patch107        : kernel-2.6.35.3-microSD.patch
 +Patch108        : kernel-2.6.35.3-enable-audio-sgtl5000.patch
++Patch109        : kernel-2.6.35.3-fram.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no
@@ -19531,6 +19556,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +%patch106 -p1
 +%patch107 -p1
 +%patch108 -p1
++%patch109 -p1
  
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/main.lkc ltib/config/platform/imx/main.lkc
 --- ltib.reference/config/platform/imx/main.lkc

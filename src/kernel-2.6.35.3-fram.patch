@@ -1,6 +1,6 @@
 diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c
 --- original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c	2018-10-23 21:57:58.449412333 +0000
-+++ linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c	2018-11-17 10:25:55.479080278 +0000
++++ linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c	2018-11-17 11:14:06.376525669 +0000
 @@ -80,6 +80,14 @@
  		//.mode = SPI_MODE_3, /* Do not overwrite the standard configuration otherwise spi  won't setup */
  	},
@@ -18,11 +18,12 @@ diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c linux-2.6.35.3/a
  static void spi_device_init(void)
 diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c
 --- original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c	2018-10-23 21:57:58.422411989 +0000
-+++ linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c	2018-11-17 10:24:26.417115456 +0000
-@@ -1373,6 +1373,15 @@
++++ linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c	2018-11-18 22:19:12.358249755 +0000
+@@ -1373,6 +1373,17 @@
  	 .voltage	= PAD_3_3V,
  	 .drive 	= 1,
  	 },
++#if defined(CONFIG_FRAM_FM25L04B) || defined(CONFIG_FRAM_FM25L04B_MODULE)
 +	{
 +	 .name	= "SSP2 SS2",
 +	 .id	= PINID_SSP2_SS2,
@@ -32,13 +33,14 @@ diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c linux-2.6.3
 +	 .drive 	= 1,
 +	 .output	= 1,
 +	 },
++#endif
  };
  #endif
  
-diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c
---- original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c	2018-11-16 21:13:41.891077714 +0000
-@@ -0,0 +1,447 @@
+diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/drivers/misc/fram/fm25l04.c
+--- original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c	1970-01-01 00:00:00.000000000 +0000
++++ linux-2.6.35.3/drivers/misc/fram/fm25l04.c	2018-11-18 22:17:42.924163762 +0000
+@@ -0,0 +1,449 @@
 +#include <linux/init.h>
 +#include <linux/module.h>
 +#include <linux/ioctl.h>
@@ -55,6 +57,12 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +#include <linux/spi/spidev.h>
 +
 +#include <asm/uaccess.h>
++
++
++
++#define DEBUG 1
++
++
 +
 +#define FM25L04_MAJOR 152
 +
@@ -80,6 +88,7 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +
 +/* Functions to read/write registers */
 +#include <asm/io.h>
++
 +/* Base address of configuration registers */
 +#define HW_REG_BASE_ADDR        0x80018000
 +static void __iomem *pinctrl_base = 0;
@@ -91,7 +100,6 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +#define HW_PINCTRL_DOUT2_CLR    0x728
 +/* Output enabe */
 +#define HW_PINCTRL_DOE2_SET     0xb24
-+#define HW_PINCTRL_DOE2_CLR     0xb28
 +/* Pin 21 */
 +#define HW_PINCTRL_PIN21_VAL    0x00200000
 +
@@ -153,7 +161,6 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +
 +    /* Assert F-RAM nCS. */
 +    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_CLR);
-+    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOE2_SET);
 +
 +    spi_sync(chip->spi, &msg);
 +
@@ -161,7 +168,6 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +
 +    /* Deassert F-RAM nCS. */
 +    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_SET);
-+    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOE2_SET);
 +
 +    if (copy_to_user(usrbuf, chip->buffer, count))
 +        return -EINVAL;
@@ -172,14 +178,14 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +    return r_count;
 +}
 +
-+#if 0
++#if DEBUG
 +static int
 +check_en(struct fm25l04 *chip)
 +{
 +    char buf[1] = { 0 };
 +    chip->cmd[0] = CMD_RDSR;
 +    spi_write_then_read(chip->spi, chip->cmd, 1, buf, 1);
-+    printk("status register is %0x%x\n,WEL is \n,BP1 is %d,BP2 is %d", buf[0], buf[0] & 0x02, buf[0] & 0x04, buf[0] & 0x08);
++    printk("status register is 0x%02x\nWEL is %d, BP1 is %d, BP2 is %d\n", buf[0], buf[0] & 0x02, buf[0] & 0x04, buf[0] & 0x08);
 +
 +    return buf[0];
 +}
@@ -214,13 +220,14 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +
 +    /* Assert F-RAM nCS. */
 +    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_CLR);
-+    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOE2_SET);
 +
 +    /* write enable */
 +    chip->cmd[0] = CMD_WREN;
 +    spi_write(chip->spi, chip->cmd, 1);
 +
-+    //check_en(chip);
++#if DEBUG
++    check_en(chip);
++#endif
 +
 +    spi_message_init(&msg);
 +    memset(st, 0, sizeof(st));
@@ -237,9 +244,8 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +
 +    spi_sync(chip->spi, &msg);
 +
-+    /* TODO MTL: deassert CS. */
++    /* Deassert F-RAM nCS. */
 +    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_SET);
-+    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOE2_SET);
 +
 +    mutex_unlock(&chip->lock);
 +
@@ -354,7 +360,9 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +    struct device *dev;
 +    struct fm25l04 *chip;
 +
-+    printk("fm25l04_probe: enter\n");
++#if DEBUG
++    printk("%s:%u enter\n", __FUNCTION__, __LINE__);
++#endif
 +
 +    /* Allocate driver data */
 +    chip = kzalloc(sizeof(*chip), GFP_KERNEL);
@@ -379,11 +387,9 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +        kfree(chip);
 +    }
 +
-+    /*
-+     * Set up chip select GPIO.
-+     */
-+    /* Set pin BANK2_PIN21 function to ssp2_d2. */
-+    __raw_writel(HW_PINCTRL_MUXSEL5_VAL, pinctrl_base + HW_PINCTRL_MUXSEL5_SET);
++    /* Deassert F-RAM nCS. */
++    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_SET);
++    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOE2_SET);
 +
 +    mutex_unlock(&device_list_lock);
 +
@@ -395,7 +401,9 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +{
 +    struct fm25l04 *chip = spi_get_drvdata(spi);
 +
-+    printk("fm25l04_remove: enter\n");
++#if DEBUG
++    printk("%s:%u enter\n", __FUNCTION__, __LINE__);
++#endif
 +
 +    /* Make sure ops on existing fds can abort cleanly. */
 +    spin_lock_irq(&chip->spi_lock);
@@ -430,11 +438,11 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +{
 +    int status;
 +
-+    printk("fm25l04_init: enter\n");
++#if DEBUG
++    printk("%s:%u enter\n", __FUNCTION__, __LINE__);
++#endif
 +
 +    pinctrl_base = ioremap(HW_REG_BASE_ADDR, SZ_8K);
-+
-+    printk("fm25l04_init: register_chrdev...\n");
 +
 +    status = register_chrdev(FM25L04_MAJOR, "spi", &fm25l04_fops);
 +    if (status < 0) {
@@ -442,8 +450,6 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +
 +        return status;
 +    }
-+
-+    printk("fm25l04_init: class_create...\n");
 +
 +    fm25l04_class = class_create(THIS_MODULE, "fm25l04");
 +    if (IS_ERR(fm25l04_class)) {
@@ -454,8 +460,6 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +        return PTR_ERR(fm25l04_class);
 +    }
 +
-+    printk("fm25l04_init: spi_register_driver...\n");
-+
 +    status = spi_register_driver(&fm25l04_driver);
 +    if (status < 0) {
 +        printk("fm25l04_init: spi_register_driver FAILED\n");
@@ -464,15 +468,15 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +        unregister_chrdev(FM25L04_MAJOR, fm25l04_driver.driver.name);
 +    }
 +
-+    printk("fm25l04_init: spi_register_driver status %d\n", status);
-+
 +    return status;
 +}
 +
 +static void __exit
 +fm25l04_exit(void)
 +{
-+    printk("fm25l04_exit: enter\n");
++#if DEBUG
++    printk("%s:%u enter\n", __FUNCTION__, __LINE__);
++#endif
 +
 +    spi_unregister_driver(&fm25l04_driver);
 +    class_destroy(fm25l04_class);
@@ -488,7 +492,7 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04_drv.c linux-2.6.35.
 +MODULE_ALIAS("spi:fm25l04");
 diff -aurN original/linux-2.6.35.3/drivers/misc/fram/Kconfig linux-2.6.35.3/drivers/misc/fram/Kconfig
 --- original/linux-2.6.35.3/drivers/misc/fram/Kconfig	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.35.3/drivers/misc/fram/Kconfig	2018-11-12 19:25:53.486466300 +0000
++++ linux-2.6.35.3/drivers/misc/fram/Kconfig	2018-11-17 11:14:06.377525680 +0000
 @@ -0,0 +1,13 @@
 +menu "FRAM support"
 +
@@ -505,12 +509,12 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/Kconfig linux-2.6.35.3/driv
 +endmenu
 diff -aurN original/linux-2.6.35.3/drivers/misc/fram/Makefile linux-2.6.35.3/drivers/misc/fram/Makefile
 --- original/linux-2.6.35.3/drivers/misc/fram/Makefile	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.35.3/drivers/misc/fram/Makefile	2018-11-12 19:25:53.486466300 +0000
++++ linux-2.6.35.3/drivers/misc/fram/Makefile	2018-11-18 22:09:14.647991800 +0000
 @@ -0,0 +1 @@
-+obj-$(CONFIG_FRAM_FM25L04B)	+= fm25l04_drv.o
++obj-$(CONFIG_FRAM_FM25L04B)	+= fm25l04.o
 diff -aurN original/linux-2.6.35.3/drivers/misc/Kconfig linux-2.6.35.3/drivers/misc/Kconfig
 --- original/linux-2.6.35.3/drivers/misc/Kconfig	2018-10-23 21:57:56.957393335 +0000
-+++ linux-2.6.35.3/drivers/misc/Kconfig	2018-11-12 19:25:53.486466300 +0000
++++ linux-2.6.35.3/drivers/misc/Kconfig	2018-11-17 11:14:06.379525701 +0000
 @@ -373,6 +373,7 @@
  
  source "drivers/misc/c2port/Kconfig"
@@ -521,7 +525,7 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/Kconfig linux-2.6.35.3/drivers/m
  
 diff -aurN original/linux-2.6.35.3/drivers/misc/Makefile linux-2.6.35.3/drivers/misc/Makefile
 --- original/linux-2.6.35.3/drivers/misc/Makefile	2018-10-23 21:57:55.686377151 +0000
-+++ linux-2.6.35.3/drivers/misc/Makefile	2018-11-12 19:25:53.487466311 +0000
++++ linux-2.6.35.3/drivers/misc/Makefile	2018-11-17 11:14:06.379525701 +0000
 @@ -32,6 +32,7 @@
  obj-$(CONFIG_MXS_PERFMON)	+= mxs-perfmon.o
  obj-$(CONFIG_MECT_GPIO_POWERFAIL) +=gpio_pwrfail.o
@@ -530,65 +534,31 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/Makefile linux-2.6.35.3/drivers/
  obj-y				+= cb710/
  obj-$(CONFIG_VMWARE_BALLOON)	+= vmware_balloon.o
  obj-$(CONFIG_ANDROID_PMEM)	+= pmem.o
-diff -aurN original/linux-2.6.35.3/drivers/spi/spi.c linux-2.6.35.3/drivers/spi/spi.c
---- original/linux-2.6.35.3/drivers/spi/spi.c	2010-08-20 18:55:55.000000000 +0000
-+++ linux-2.6.35.3/drivers/spi/spi.c	2018-11-12 19:25:53.487466311 +0000
-@@ -260,6 +260,8 @@
- 	struct device *d;
- 	int status;
- 
-+	printk("%s: master: bus: %d, cs#: %u, dmaa: %u, modeb: %u, flags: 0x%02x\n", __FUNCTION__, spi->master->bus_num, spi->master->num_chipselect, spi->master->dma_alignment, spi->master->mode_bits, spi->master->flags);
-+	printk("%s: device: speed: %u, cs: %u, mode: %u, bpw: %u, irq: %d, alias: %s\n", __FUNCTION__, spi->max_speed_hz, spi->chip_select, spi->mode, spi->bits_per_word, spi->irq, spi->modalias);
- 	/* Chipselects are numbered 0..max; validate. */
- 	if (spi->chip_select >= spi->master->num_chipselect) {
- 		dev_err(dev, "cs%d >= max %d\n",
 diff -aurN original/linux-2.6.35.3/drivers/spi/spi_mxs.c linux-2.6.35.3/drivers/spi/spi_mxs.c
 --- original/linux-2.6.35.3/drivers/spi/spi_mxs.c	2018-10-23 21:57:55.203371001 +0000
-+++ linux-2.6.35.3/drivers/spi/spi_mxs.c	2018-11-12 19:25:53.488466322 +0000
-@@ -39,6 +39,8 @@
- #include <mach/system.h>
- #include <mach/hardware.h>
- 
-+#include <mach/gpio.h>
-+
- #include "spi_mxs.h"
- 
- #ifndef BF_SSP_CTRL0_XFER_COUNT
-@@ -61,7 +63,7 @@
- 
- /* 0 means DMA modei(recommended, default), !0 - PIO mode */
- static int pio /* = 0 */ ;
--static int debug;
-+static int debug /* FIXME MTL REMOVE init! */ = 1;;
- 
- /**
-  * mxs_spi_init_hw
-@@ -227,7 +229,8 @@
++++ linux-2.6.35.3/drivers/spi/spi_mxs.c	2018-11-18 22:16:46.733481444 +0000
+@@ -227,7 +229,10 @@
  	c0 |= (write ? 0 : BM_SSP_CTRL0_READ);
  	c0 |= BM_SSP_CTRL0_DATA_XFER;
  
 -	c0 |= mxs_spi_cs(cs);
-+	//if (cs == 0)        // MTL: Handle only SPI CS
++#if defined(CONFIG_FRAM_FM25L04B) || defined(CONFIG_FRAM_FM25L04B_MODULE)
++	if (cs == 0)        // Handle only SPI own CS
++#endif
 +		c0 |= mxs_spi_cs(cs);
  
  	if (ss->ver_major > 3) {
  		xfer_size = BF_SSP_XFER_SIZE_XFER_COUNT(len);
-@@ -377,6 +380,9 @@
- 	first = last = 0;
- 
- 	cs = m->spi->chip_select;
-+	// FIXME MTL DEBUG
-+	if (cs >= 1)
-+		printk("%s: MTL: modalias: %s\n", __FUNCTION__, m->spi->modalias);
- 
- 	list_for_each_entry_safe(t, tmp_t, &m->transfers, transfer_list) {
- 
-@@ -598,7 +604,7 @@
+@@ -598,7 +601,11 @@
  	}
  
  	master->bus_num = dev->id + 1;
 -	master->num_chipselect = 1;
-+	master->num_chipselect = 2;             // FIXME MTL
++#if defined(CONFIG_FRAM_FM25L04B) || defined(CONFIG_FRAM_FM25L04B_MODULE)
++	master->num_chipselect = 2;
++#else
++	master->num_chipselect = 1;
++#endif
  
  	/* SPI controller initializations */
  	err = mxs_spi_init_hw(ss);

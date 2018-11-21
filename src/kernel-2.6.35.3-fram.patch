@@ -60,7 +60,7 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +
 +
 +
-+#define DEBUG 1
++#define DEBUG 0
 +
 +
 +
@@ -537,18 +537,6 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/Makefile linux-2.6.35.3/drivers/
 diff -aurN original/linux-2.6.35.3/drivers/spi/spi_mxs.c linux-2.6.35.3/drivers/spi/spi_mxs.c
 --- original/linux-2.6.35.3/drivers/spi/spi_mxs.c	2018-10-23 21:57:55.203371001 +0000
 +++ linux-2.6.35.3/drivers/spi/spi_mxs.c	2018-11-18 22:16:46.733481444 +0000
-@@ -227,7 +229,10 @@
- 	c0 |= (write ? 0 : BM_SSP_CTRL0_READ);
- 	c0 |= BM_SSP_CTRL0_DATA_XFER;
- 
--	c0 |= mxs_spi_cs(cs);
-+#if defined(CONFIG_FRAM_FM25L04B) || defined(CONFIG_FRAM_FM25L04B_MODULE)
-+	if (cs == 0)        // Handle only SPI own CS
-+#endif
-+		c0 |= mxs_spi_cs(cs);
- 
- 	if (ss->ver_major > 3) {
- 		xfer_size = BF_SSP_XFER_SIZE_XFER_COUNT(len);
 @@ -598,7 +601,11 @@
  	}
  

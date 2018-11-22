@@ -1,6 +1,6 @@
 diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c
 --- original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c	2018-10-23 21:57:58.449412333 +0000
-+++ linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c	2018-11-17 11:14:06.376525669 +0000
++++ linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c	2018-11-21 18:38:52.978840080 +0000
 @@ -80,6 +80,14 @@
  		//.mode = SPI_MODE_3, /* Do not overwrite the standard configuration otherwise spi  won't setup */
  	},
@@ -10,7 +10,7 @@ diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c linux-2.6.35.3/a
 +		.modalias = "fm25l04",          /* Name of spi_driver for this device */
 +		.max_speed_hz = 1*1000*1000,    /* Keep lower for reliable communication */
 +		.bus_num = 1,                   /* Framework bus number */
-+		.chip_select = 1,               /* Chip select GPIO SSP2_SS2 */
++		.chip_select = 1,               /* GPIO SSP2_SS2 */
 +	},
 +#endif
  };
@@ -18,8 +18,8 @@ diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c linux-2.6.35.3/a
  static void spi_device_init(void)
 diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c
 --- original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c	2018-10-23 21:57:58.422411989 +0000
-+++ linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c	2018-11-18 22:19:12.358249755 +0000
-@@ -1373,6 +1373,17 @@
++++ linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c	2018-11-22 09:22:14.421822863 +0000
+@@ -1373,6 +1373,18 @@
  	 .voltage	= PAD_3_3V,
  	 .drive 	= 1,
  	 },
@@ -32,6 +32,7 @@ diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c linux-2.6.3
 +	 .voltage	= PAD_3_3V,
 +	 .drive 	= 1,
 +	 .output	= 1,
++	 .data	= 1,
 +	 },
 +#endif
  };
@@ -39,8 +40,8 @@ diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c linux-2.6.3
  
 diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/drivers/misc/fram/fm25l04.c
 --- original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.35.3/drivers/misc/fram/fm25l04.c	2018-11-18 22:17:42.924163762 +0000
-@@ -0,0 +1,449 @@
++++ linux-2.6.35.3/drivers/misc/fram/fm25l04.c	2018-11-22 09:55:02.509500945 +0000
+@@ -0,0 +1,459 @@
 +#include <linux/init.h>
 +#include <linux/module.h>
 +#include <linux/ioctl.h>
@@ -60,7 +61,7 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +
 +
 +
-+#define DEBUG 0
++#define DEBUG 1
 +
 +
 +
@@ -118,8 +119,7 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +static DEFINE_MUTEX(device_list_lock);
 +
 +static unsigned bufsiz = 512;           /* FM25L04 */
-+module_param(bufsiz, uint, S_IRUGO);
-+MODULE_PARM_DESC(bufsiz, "data bytes in longest supported SPI message");
++static unsigned debug = 0;
 +
 +
 +/*
@@ -226,7 +226,8 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +    spi_write(chip->spi, chip->cmd, 1);
 +
 +#if DEBUG
-+    check_en(chip);
++	if (debug)
++		check_en(chip);
 +#endif
 +
 +    spi_message_init(&msg);
@@ -361,7 +362,8 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +    struct fm25l04 *chip;
 +
 +#if DEBUG
-+    printk("%s:%u enter\n", __FUNCTION__, __LINE__);
++	if (debug)
++		printk("%s:%u enter\n", __FUNCTION__, __LINE__);
 +#endif
 +
 +    /* Allocate driver data */
@@ -402,7 +404,8 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +    struct fm25l04 *chip = spi_get_drvdata(spi);
 +
 +#if DEBUG
-+    printk("%s:%u enter\n", __FUNCTION__, __LINE__);
++	if (debug)
++		printk("%s:%u enter\n", __FUNCTION__, __LINE__);
 +#endif
 +
 +    /* Make sure ops on existing fds can abort cleanly. */
@@ -439,7 +442,8 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +    int status;
 +
 +#if DEBUG
-+    printk("%s:%u enter\n", __FUNCTION__, __LINE__);
++	if (debug)
++		printk("%s:%u enter\n", __FUNCTION__, __LINE__);
 +#endif
 +
 +    pinctrl_base = ioremap(HW_REG_BASE_ADDR, SZ_8K);
@@ -475,7 +479,8 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +fm25l04_exit(void)
 +{
 +#if DEBUG
-+    printk("%s:%u enter\n", __FUNCTION__, __LINE__);
++	if (debug)
++		printk("%s:%u enter\n", __FUNCTION__, __LINE__);
 +#endif
 +
 +    spi_unregister_driver(&fm25l04_driver);
@@ -485,6 +490,12 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +
 +module_init(fm25l04_init);
 +module_exit(fm25l04_exit);
++module_param(bufsiz, uint, S_IRUGO);
++MODULE_PARM_DESC(bufsiz, "data bytes in longest supported SPI message");
++#if DEBUG
++module_param(debug, uint, S_IRUGO);
++MODULE_PARM_DESC(debug, "whether to print some debug messages");
++#endif
 +
 +MODULE_DESCRIPTION("FM25L04 driver");
 +MODULE_AUTHOR("yangql_hqhop");
@@ -492,7 +503,7 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +MODULE_ALIAS("spi:fm25l04");
 diff -aurN original/linux-2.6.35.3/drivers/misc/fram/Kconfig linux-2.6.35.3/drivers/misc/fram/Kconfig
 --- original/linux-2.6.35.3/drivers/misc/fram/Kconfig	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.35.3/drivers/misc/fram/Kconfig	2018-11-17 11:14:06.377525680 +0000
++++ linux-2.6.35.3/drivers/misc/fram/Kconfig	2018-11-21 09:01:02.557435915 +0000
 @@ -0,0 +1,13 @@
 +menu "FRAM support"
 +
@@ -509,12 +520,12 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/Kconfig linux-2.6.35.3/driv
 +endmenu
 diff -aurN original/linux-2.6.35.3/drivers/misc/fram/Makefile linux-2.6.35.3/drivers/misc/fram/Makefile
 --- original/linux-2.6.35.3/drivers/misc/fram/Makefile	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.35.3/drivers/misc/fram/Makefile	2018-11-18 22:09:14.647991800 +0000
++++ linux-2.6.35.3/drivers/misc/fram/Makefile	2018-11-21 09:01:02.557435915 +0000
 @@ -0,0 +1 @@
 +obj-$(CONFIG_FRAM_FM25L04B)	+= fm25l04.o
 diff -aurN original/linux-2.6.35.3/drivers/misc/Kconfig linux-2.6.35.3/drivers/misc/Kconfig
 --- original/linux-2.6.35.3/drivers/misc/Kconfig	2018-10-23 21:57:56.957393335 +0000
-+++ linux-2.6.35.3/drivers/misc/Kconfig	2018-11-17 11:14:06.379525701 +0000
++++ linux-2.6.35.3/drivers/misc/Kconfig	2018-11-21 09:01:02.558435925 +0000
 @@ -373,6 +373,7 @@
  
  source "drivers/misc/c2port/Kconfig"
@@ -525,7 +536,7 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/Kconfig linux-2.6.35.3/drivers/m
  
 diff -aurN original/linux-2.6.35.3/drivers/misc/Makefile linux-2.6.35.3/drivers/misc/Makefile
 --- original/linux-2.6.35.3/drivers/misc/Makefile	2018-10-23 21:57:55.686377151 +0000
-+++ linux-2.6.35.3/drivers/misc/Makefile	2018-11-17 11:14:06.379525701 +0000
++++ linux-2.6.35.3/drivers/misc/Makefile	2018-11-21 09:01:02.558435925 +0000
 @@ -32,6 +32,7 @@
  obj-$(CONFIG_MXS_PERFMON)	+= mxs-perfmon.o
  obj-$(CONFIG_MECT_GPIO_POWERFAIL) +=gpio_pwrfail.o
@@ -536,16 +547,15 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/Makefile linux-2.6.35.3/drivers/
  obj-$(CONFIG_ANDROID_PMEM)	+= pmem.o
 diff -aurN original/linux-2.6.35.3/drivers/spi/spi_mxs.c linux-2.6.35.3/drivers/spi/spi_mxs.c
 --- original/linux-2.6.35.3/drivers/spi/spi_mxs.c	2018-10-23 21:57:55.203371001 +0000
-+++ linux-2.6.35.3/drivers/spi/spi_mxs.c	2018-11-18 22:16:46.733481444 +0000
-@@ -598,7 +601,11 @@
++++ linux-2.6.35.3/drivers/spi/spi_mxs.c	2018-11-21 18:51:51.931392724 +0000
+@@ -598,7 +598,11 @@
  	}
  
  	master->bus_num = dev->id + 1;
--	master->num_chipselect = 1;
 +#if defined(CONFIG_FRAM_FM25L04B) || defined(CONFIG_FRAM_FM25L04B_MODULE)
 +	master->num_chipselect = 2;
 +#else
-+	master->num_chipselect = 1;
+ 	master->num_chipselect = 1;
 +#endif
  
  	/* SPI controller initializations */

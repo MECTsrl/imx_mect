@@ -1,6 +1,6 @@
 diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c
 --- original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c	2018-10-23 21:57:58.449412333 +0000
-+++ linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c	2018-11-21 18:38:52.978840080 +0000
++++ linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c	2018-11-22 20:58:59.893071231 +0000
 @@ -80,6 +80,14 @@
  		//.mode = SPI_MODE_3, /* Do not overwrite the standard configuration otherwise spi  won't setup */
  	},
@@ -18,7 +18,7 @@ diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c linux-2.6.35.3/a
  static void spi_device_init(void)
 diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c
 --- original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c	2018-10-23 21:57:58.422411989 +0000
-+++ linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c	2018-11-22 09:22:14.421822863 +0000
++++ linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c	2018-11-22 20:58:59.893071231 +0000
 @@ -1373,6 +1373,18 @@
  	 .voltage	= PAD_3_3V,
  	 .drive 	= 1,
@@ -40,8 +40,8 @@ diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk_pins.c linux-2.6.3
  
 diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/drivers/misc/fram/fm25l04.c
 --- original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.35.3/drivers/misc/fram/fm25l04.c	2018-11-22 09:55:02.509500945 +0000
-@@ -0,0 +1,459 @@
++++ linux-2.6.35.3/drivers/misc/fram/fm25l04.c	2018-11-28 21:28:42.416826551 +0000
+@@ -0,0 +1,462 @@
 +#include <linux/init.h>
 +#include <linux/module.h>
 +#include <linux/ioctl.h>
@@ -61,7 +61,7 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +
 +
 +
-+#define DEBUG 1
++#define DEBUG 0
 +
 +
 +
@@ -105,21 +105,23 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +#define HW_PINCTRL_PIN21_VAL    0x00200000
 +
 +struct fm25l04 {
-+    struct spi_device *spi;
-+    struct mutex lock;
-+    spinlock_t spi_lock;
-+    struct list_head device_entry;
-+    struct cdev cdev;
-+    dev_t devt;
-+    unsigned users;
-+    unsigned char *buffer;
-+    unsigned char cmd[CMD_SZ];
++	struct spi_device *spi;
++	struct mutex lock;
++	spinlock_t spi_lock;
++	struct list_head device_entry;
++	struct cdev cdev;
++	dev_t devt;
++	unsigned users;
++	unsigned char *buffer;
++	unsigned char cmd[CMD_SZ];
 +};
 +static LIST_HEAD(device_list);
 +static DEFINE_MUTEX(device_list_lock);
 +
 +static unsigned bufsiz = 512;           /* FM25L04 */
++#if DEBUG
 +static unsigned debug = 0;
++#endif
 +
 +
 +/*
@@ -130,64 +132,61 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +static ssize_t
 +fm25l04_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
 +{
-+    struct fm25l04 *chip;
-+    int r_count = 0;
-+    struct spi_transfer st[2];
-+    struct spi_message msg;
-+    unsigned char temp[CP_SZ];
-+    unsigned char __user *usrbuf = NULL;
++	struct fm25l04 *chip;
++	int r_count = 0;
++	struct spi_transfer st[2];
++	struct spi_message msg;
++	unsigned char temp[CP_SZ];
++	unsigned char __user *usrbuf = NULL;
 +
-+    if (count > bufsiz)
-+        return -EMSGSIZE;
++	if (count > bufsiz)
++		return -EMSGSIZE;
 +
-+    chip = filp->private_data;
-+    mutex_lock(&chip->lock);
-+    if (copy_from_user(temp, buf, CP_SZ))
-+        return -EINVAL;
++	chip = filp->private_data;
++	mutex_lock(&chip->lock);
++	if (copy_from_user(temp, buf, CP_SZ))
++		return -EINVAL;
 +
-+    spi_message_init(&msg);
-+    memset(st, 0, sizeof(st));
++	spi_message_init(&msg);
++	memset(st, 0, sizeof(st));
 +
-+    chip->cmd[0] = CMD_READ | temp[0];  // High address
-+    chip->cmd[1] = temp[1];             // Low address
++	chip->cmd[0] = CMD_READ | temp[0];  // High address
++	chip->cmd[1] = temp[1];             // Low address
 +
-+    st[0].tx_buf = chip->cmd;
-+    st[0].len = CMD_SZ;
-+    spi_message_add_tail(&st[0], &msg);
++	st[0].tx_buf = chip->cmd;
++	st[0].len = CMD_SZ;
++	spi_message_add_tail(&st[0], &msg);
 +
-+    st[1].rx_buf = chip->buffer;        // Returned buffer
-+    st[1].len = count;                  // Number of reads
-+    spi_message_add_tail(&st[1], &msg);
++	st[1].rx_buf = chip->buffer;        // Returned buffer
++	st[1].len = count;                  // Number of reads
++	spi_message_add_tail(&st[1], &msg);
 +
-+    /* Assert F-RAM nCS. */
-+    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_CLR);
++	/* Assert F-RAM nCS. */
++	__raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_CLR);
++	spi_sync(chip->spi, &msg);
++	__raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_SET);
 +
-+    spi_sync(chip->spi, &msg);
++	usrbuf = (unsigned char __user *)(temp[2] | (temp[3] << 8) | (temp[4] << 16) | (temp[5] << 24));
 +
-+    usrbuf = (unsigned char __user *)(temp[2] | (temp[3] << 8) | (temp[4] << 16) | (temp[5] << 24));
++	if (copy_to_user(usrbuf, chip->buffer, count))
++		return -EINVAL;
 +
-+    /* Deassert F-RAM nCS. */
-+    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_SET);
++	mutex_unlock(&chip->lock);
++	r_count = msg.actual_length - 2;
 +
-+    if (copy_to_user(usrbuf, chip->buffer, count))
-+        return -EINVAL;
-+
-+    mutex_unlock(&chip->lock);
-+    r_count = msg.actual_length - 2;
-+
-+    return r_count;
++	return r_count;
 +}
 +
 +#if DEBUG
 +static int
 +check_en(struct fm25l04 *chip)
 +{
-+    char buf[1] = { 0 };
-+    chip->cmd[0] = CMD_RDSR;
-+    spi_write_then_read(chip->spi, chip->cmd, 1, buf, 1);
-+    printk("status register is 0x%02x\nWEL is %d, BP1 is %d, BP2 is %d\n", buf[0], buf[0] & 0x02, buf[0] & 0x04, buf[0] & 0x08);
++	char buf[1] = { 0 };
++	chip->cmd[0] = CMD_RDSR;
++	spi_write_then_read(chip->spi, chip->cmd, 1, buf, 1);
++	printk("status register is 0x%02x\nWEL is %d, BP1 is %d, BP2 is %d\n", buf[0], buf[0] & 0x02, buf[0] & 0x04, buf[0] & 0x08);
 +
-+    return buf[0];
++	return buf[0];
 +}
 +#endif
 +
@@ -199,157 +198,161 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +static ssize_t
 +fm25l04_write(struct file *filp, const char __user * buf, size_t count, loff_t * f_pos)
 +{
-+    struct fm25l04 *chip;
-+    struct spi_transfer st[2];
-+    struct spi_message msg;
-+    int w_count = 0;
-+    unsigned char temp[CP_SZ];
-+    unsigned char __user *usrbuf = NULL;
++	struct fm25l04 *chip;
++	struct spi_transfer st[2];
++	struct spi_message msg;
++	int w_count = 0;
++	unsigned char temp[CP_SZ];
++	unsigned char __user *usrbuf = NULL;
 +
-+    if (count > bufsiz)
-+        return -EMSGSIZE;
++	if (count > bufsiz)
++		return -EMSGSIZE;
 +
-+    chip = filp->private_data;
-+    mutex_lock(&chip->lock);
-+    if (copy_from_user(temp, buf, CP_SZ))
-+        return -EINVAL;
++	chip = filp->private_data;
++	mutex_lock(&chip->lock);
++	if (copy_from_user(temp, buf, CP_SZ))
++		return -EINVAL;
 +
-+    usrbuf = (unsigned char __user *)(temp[2] | (temp[3] << 8) | (temp[4] << 16) | (temp[5] << 24));
-+    if (copy_from_user(chip->buffer, usrbuf, count))
-+        return -EINVAL;
++	usrbuf = (unsigned char __user *)(temp[2] | (temp[3] << 8) | (temp[4] << 16) | (temp[5] << 24));
++	if (copy_from_user(chip->buffer, usrbuf, count))
++		return -EINVAL;
 +
-+    /* Assert F-RAM nCS. */
-+    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_CLR);
-+
-+    /* write enable */
-+    chip->cmd[0] = CMD_WREN;
-+    spi_write(chip->spi, chip->cmd, 1);
++	/* write enable */
++	chip->cmd[0] = CMD_WREN;
++	/* Assert F-RAM nCS. */
++	__raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_CLR);
++	spi_write(chip->spi, chip->cmd, 1);
++	__raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_SET);
 +
 +#if DEBUG
-+	if (debug)
++	if (debug) {
++		/* Assert F-RAM nCS. */
++		__raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_CLR);
 +		check_en(chip);
++		__raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_SET);
++	}
 +#endif
 +
-+    spi_message_init(&msg);
-+    memset(st, 0, sizeof(st));
-+    chip->cmd[0] = CMD_WRETE | temp[0]; // High address
-+    chip->cmd[1] = temp[1];             // Low address
++	spi_message_init(&msg);
++	memset(st, 0, sizeof(st));
++	chip->cmd[0] = CMD_WRETE | temp[0]; // High address
++	chip->cmd[1] = temp[1];             // Low address
 +
-+    st[0].tx_buf = chip->cmd;
-+    st[0].len = CMD_SZ;
-+    spi_message_add_tail(&st[0], &msg);
++	st[0].tx_buf = chip->cmd;
++	st[0].len = CMD_SZ;
++	spi_message_add_tail(&st[0], &msg);
 +
-+    st[1].tx_buf = chip->buffer;
-+    st[1].len = count;
-+    spi_message_add_tail(&st[1], &msg);
++	st[1].tx_buf = chip->buffer;
++	st[1].len = count;
++	spi_message_add_tail(&st[1], &msg);
 +
-+    spi_sync(chip->spi, &msg);
++	/* Assert F-RAM nCS. */
++	__raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_CLR);
++	spi_sync(chip->spi, &msg);
++	__raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_SET);
 +
-+    /* Deassert F-RAM nCS. */
-+    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_SET);
++	mutex_unlock(&chip->lock);
 +
-+    mutex_unlock(&chip->lock);
++	w_count = msg.actual_length - 2;
 +
-+    w_count = msg.actual_length - 2;
-+
-+    return w_count;
++	return w_count;
 +}
 +
 +static long
 +fm25l04_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 +{
-+    return 0;
++	return 0;
 +}
 +
 +static int
 +fm25l04_open(struct inode *inode, struct file *filp)
 +{
-+    struct fm25l04 *chip;
-+    int status = -ENXIO;
++	struct fm25l04 *chip;
++	int status = -ENXIO;
 +
-+    mutex_lock(&device_list_lock);
-+    list_for_each_entry(chip, &device_list, device_entry) {
-+        if (chip->devt == inode->i_rdev) {
-+            status = 0;
++	mutex_lock(&device_list_lock);
++	list_for_each_entry(chip, &device_list, device_entry) {
++		if (chip->devt == inode->i_rdev) {
++			status = 0;
 +
-+            break;
-+        }
-+    }
++			break;
++		}
++	}
 +
-+    if (status == 0) {
-+        if (!chip->buffer) {
-+            chip->buffer = kmalloc(bufsiz, GFP_KERNEL);
-+            if (!chip->buffer) {
-+                dev_dbg(&chip->spi->dev, "open/ENOMEM\n");
-+                status = -ENOMEM;
-+            }
-+        }
++	if (status == 0) {
++		if (!chip->buffer) {
++			chip->buffer = kmalloc(bufsiz, GFP_KERNEL);
++			if (!chip->buffer) {
++				dev_dbg(&chip->spi->dev, "open/ENOMEM\n");
++				status = -ENOMEM;
++			}
++		}
 +
-+        if (status == 0) {
-+            chip->users++;
-+            filp->private_data = chip;
-+            nonseekable_open(inode, filp);
-+        }
-+    }
-+    else {
-+        pr_debug("spidev: nothing for minor %d\n", iminor(inode));
-+    }
++		if (status == 0) {
++			chip->users++;
++			filp->private_data = chip;
++			nonseekable_open(inode, filp);
++		}
++	}
++	else {
++		pr_debug("spidev: nothing for minor %d\n", iminor(inode));
++	}
 +
-+    mutex_unlock(&device_list_lock);
++	mutex_unlock(&device_list_lock);
 +
-+    return status;
++	return status;
 +}
 +
 +static int
 +fm25l04_release(struct inode *inode, struct file *filp)
 +{
-+    struct fm25l04 *chip;
-+    int status = 0;
++	struct fm25l04 *chip;
++	int status = 0;
 +
-+    mutex_lock(&device_list_lock);
-+    chip = filp->private_data;
-+    filp->private_data = NULL;
++	mutex_lock(&device_list_lock);
++	chip = filp->private_data;
++	filp->private_data = NULL;
 +
-+    /* Last close? */
-+    chip->users--;
-+    if (!chip->users) {
-+        int dofree;
++	/* Last close? */
++	chip->users--;
++	if (!chip->users) {
++		int dofree;
 +
-+        kfree(chip->buffer);
-+        chip->buffer = NULL;
++		kfree(chip->buffer);
++		chip->buffer = NULL;
 +
-+        /* ...after we unbound from the underlying device? */
-+        spin_lock_irq(&chip->spi_lock);
-+        dofree = (chip->spi == NULL);
-+        spin_unlock_irq(&chip->spi_lock);
++		/* ...after we unbound from the underlying device? */
++		spin_lock_irq(&chip->spi_lock);
++		dofree = (chip->spi == NULL);
++		spin_unlock_irq(&chip->spi_lock);
 +
-+        if (dofree)
-+            kfree(chip);
-+    }
-+    mutex_unlock(&device_list_lock);
++		if (dofree)
++			kfree(chip);
++	}
++	mutex_unlock(&device_list_lock);
 +
-+    return status;
++	return status;
 +}
 +
 +loff_t
 +no_llseek(struct file * file, loff_t offset, int origin)
 +{
-+    return -ESPIPE;
++	return -ESPIPE;
 +}
 +
 +static const struct file_operations fm25l04_fops = {
-+    .owner = THIS_MODULE,
-+    /*
-+     * REVISIT switch to aio primitives, so that userspace gets
-+     * more complete API coverage.  It'll simplify things too,
-+     * except for the locking.
-+     */
-+    .write = fm25l04_write,
-+    .read = fm25l04_read,
-+    .unlocked_ioctl = fm25l04_ioctl,
-+    .open = fm25l04_open,
-+    .release = fm25l04_release,
-+    .llseek = no_llseek,
++	.owner = THIS_MODULE,
++	/*
++	 * REVISIT switch to aio primitives, so that userspace gets
++	 * more complete API coverage.  It'll simplify things too,
++	 * except for the locking.
++	 */
++	.write = fm25l04_write,
++	.read = fm25l04_read,
++	.unlocked_ioctl = fm25l04_ioctl,
++	.open = fm25l04_open,
++	.release = fm25l04_release,
++	.llseek = no_llseek,
 +};
 +
 +static struct class *fm25l04_class;
@@ -357,122 +360,122 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +static int __devinit
 +fm25l04_probe(struct spi_device *spi)
 +{
-+    int status;
-+    struct device *dev;
-+    struct fm25l04 *chip;
++	int status;
++	struct device *dev;
++	struct fm25l04 *chip;
 +
 +#if DEBUG
 +	if (debug)
 +		printk("%s:%u enter\n", __FUNCTION__, __LINE__);
 +#endif
 +
-+    /* Allocate driver data */
-+    chip = kzalloc(sizeof(*chip), GFP_KERNEL);
-+    if (!chip)
-+        return -ENOMEM;
++	/* Allocate driver data */
++	chip = kzalloc(sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
 +
-+    chip->spi = spi;
-+    spin_lock_init(&chip->spi_lock);
-+    mutex_init(&chip->lock);
-+    INIT_LIST_HEAD(&chip->device_entry);
++	chip->spi = spi;
++	spin_lock_init(&chip->spi_lock);
++	mutex_init(&chip->lock);
++	INIT_LIST_HEAD(&chip->device_entry);
 +
-+    mutex_lock(&device_list_lock);
-+    chip->devt = MKDEV(FM25L04_MAJOR, 0);       /* Minor == 0 */
-+    dev = device_create(fm25l04_class, &spi->dev, chip->devt, chip, "fm25l04");
-+    status = IS_ERR(dev) ? PTR_ERR(dev) : 0;
++	mutex_lock(&device_list_lock);
++	chip->devt = MKDEV(FM25L04_MAJOR, 0);       /* Minor == 0 */
++	dev = device_create(fm25l04_class, &spi->dev, chip->devt, chip, "fm25l04");
++	status = IS_ERR(dev) ? PTR_ERR(dev) : 0;
 +
-+    if (status == 0) {
-+        list_add(&chip->device_entry, &device_list);
-+        spi_set_drvdata(spi, chip);
-+    }
-+    else {
-+        kfree(chip);
-+    }
++	if (status == 0) {
++		list_add(&chip->device_entry, &device_list);
++		spi_set_drvdata(spi, chip);
++	}
++	else {
++		kfree(chip);
++	}
 +
-+    /* Deassert F-RAM nCS. */
-+    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_SET);
-+    __raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOE2_SET);
++	/* Deassert F-RAM nCS. */
++	__raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOUT2_SET);
++	__raw_writel(HW_PINCTRL_PIN21_VAL, pinctrl_base + HW_PINCTRL_DOE2_SET);
 +
-+    mutex_unlock(&device_list_lock);
++	mutex_unlock(&device_list_lock);
 +
-+    return status;
++	return status;
 +}
 +
 +static int __devexit
 +fm25l04_remove(struct spi_device *spi)
 +{
-+    struct fm25l04 *chip = spi_get_drvdata(spi);
++	struct fm25l04 *chip = spi_get_drvdata(spi);
 +
 +#if DEBUG
 +	if (debug)
 +		printk("%s:%u enter\n", __FUNCTION__, __LINE__);
 +#endif
 +
-+    /* Make sure ops on existing fds can abort cleanly. */
-+    spin_lock_irq(&chip->spi_lock);
-+    chip->spi = NULL;
-+    spi_set_drvdata(spi, NULL);
-+    spin_unlock_irq(&chip->spi_lock);
++	/* Make sure ops on existing fds can abort cleanly. */
++	spin_lock_irq(&chip->spi_lock);
++	chip->spi = NULL;
++	spi_set_drvdata(spi, NULL);
++	spin_unlock_irq(&chip->spi_lock);
 +
-+    /* Prevent new opens. */
-+    mutex_lock(&device_list_lock);
-+    list_del(&chip->device_entry);
++	/* Prevent new opens. */
++	mutex_lock(&device_list_lock);
++	list_del(&chip->device_entry);
 +
-+    device_destroy(fm25l04_class, chip->devt);
-+    if (chip->users == 0)
-+        kfree(chip);
-+    mutex_unlock(&device_list_lock);
++	device_destroy(fm25l04_class, chip->devt);
++	if (chip->users == 0)
++		kfree(chip);
++	mutex_unlock(&device_list_lock);
 +
-+    return 0;
++	return 0;
 +}
 +
 +static struct spi_driver fm25l04_driver = {
-+    .probe = fm25l04_probe,
-+    .remove = fm25l04_remove,
-+    //.id_table = fm25l04_id_table,
-+    .driver = {
-+               .name = "fm25l04",
-+               .owner = THIS_MODULE,
-+    },
++	.probe = fm25l04_probe,
++	.remove = fm25l04_remove,
++	//.id_table = fm25l04_id_table,
++	.driver = {
++			.name = "fm25l04",
++			.owner = THIS_MODULE,
++	},
 +};
 +
 +static int __init
 +fm25l04_init(void)
 +{
-+    int status;
++	int status;
 +
 +#if DEBUG
 +	if (debug)
 +		printk("%s:%u enter\n", __FUNCTION__, __LINE__);
 +#endif
 +
-+    pinctrl_base = ioremap(HW_REG_BASE_ADDR, SZ_8K);
++	pinctrl_base = ioremap(HW_REG_BASE_ADDR, SZ_8K);
 +
-+    status = register_chrdev(FM25L04_MAJOR, "spi", &fm25l04_fops);
-+    if (status < 0) {
-+        printk("fm25l04_init: register_chrdev FAILED\n");
++	status = register_chrdev(FM25L04_MAJOR, "spi", &fm25l04_fops);
++	if (status < 0) {
++		printk("fm25l04_init: register_chrdev FAILED\n");
 +
-+        return status;
-+    }
++		return status;
++	}
 +
-+    fm25l04_class = class_create(THIS_MODULE, "fm25l04");
-+    if (IS_ERR(fm25l04_class)) {
-+        printk("fm25l04_init: class_create FAILED\n");
++	fm25l04_class = class_create(THIS_MODULE, "fm25l04");
++	if (IS_ERR(fm25l04_class)) {
++		printk("fm25l04_init: class_create FAILED\n");
 +
-+        unregister_chrdev(FM25L04_MAJOR, fm25l04_driver.driver.name);
++		unregister_chrdev(FM25L04_MAJOR, fm25l04_driver.driver.name);
 +
-+        return PTR_ERR(fm25l04_class);
-+    }
++		return PTR_ERR(fm25l04_class);
++	}
 +
-+    status = spi_register_driver(&fm25l04_driver);
-+    if (status < 0) {
-+        printk("fm25l04_init: spi_register_driver FAILED\n");
++	status = spi_register_driver(&fm25l04_driver);
++	if (status < 0) {
++		printk("fm25l04_init: spi_register_driver FAILED\n");
 +
-+        class_destroy(fm25l04_class);
-+        unregister_chrdev(FM25L04_MAJOR, fm25l04_driver.driver.name);
-+    }
++		class_destroy(fm25l04_class);
++		unregister_chrdev(FM25L04_MAJOR, fm25l04_driver.driver.name);
++	}
 +
-+    return status;
++	return status;
 +}
 +
 +static void __exit
@@ -483,9 +486,9 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +		printk("%s:%u enter\n", __FUNCTION__, __LINE__);
 +#endif
 +
-+    spi_unregister_driver(&fm25l04_driver);
-+    class_destroy(fm25l04_class);
-+    unregister_chrdev(FM25L04_MAJOR, fm25l04_driver.driver.name);
++	spi_unregister_driver(&fm25l04_driver);
++	class_destroy(fm25l04_class);
++	unregister_chrdev(FM25L04_MAJOR, fm25l04_driver.driver.name);
 +}
 +
 +module_init(fm25l04_init);
@@ -494,7 +497,7 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +MODULE_PARM_DESC(bufsiz, "data bytes in longest supported SPI message");
 +#if DEBUG
 +module_param(debug, uint, S_IRUGO);
-+MODULE_PARM_DESC(debug, "whether to print some debug messages");
++MODULE_PARM_DESC(debug, "activate RDSR and print some debug messages");
 +#endif
 +
 +MODULE_DESCRIPTION("FM25L04 driver");
@@ -503,7 +506,7 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/fm25l04.c linux-2.6.35.3/dr
 +MODULE_ALIAS("spi:fm25l04");
 diff -aurN original/linux-2.6.35.3/drivers/misc/fram/Kconfig linux-2.6.35.3/drivers/misc/fram/Kconfig
 --- original/linux-2.6.35.3/drivers/misc/fram/Kconfig	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.35.3/drivers/misc/fram/Kconfig	2018-11-21 09:01:02.557435915 +0000
++++ linux-2.6.35.3/drivers/misc/fram/Kconfig	2018-11-22 20:58:59.895071253 +0000
 @@ -0,0 +1,13 @@
 +menu "FRAM support"
 +
@@ -520,12 +523,12 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/fram/Kconfig linux-2.6.35.3/driv
 +endmenu
 diff -aurN original/linux-2.6.35.3/drivers/misc/fram/Makefile linux-2.6.35.3/drivers/misc/fram/Makefile
 --- original/linux-2.6.35.3/drivers/misc/fram/Makefile	1970-01-01 00:00:00.000000000 +0000
-+++ linux-2.6.35.3/drivers/misc/fram/Makefile	2018-11-21 09:01:02.557435915 +0000
++++ linux-2.6.35.3/drivers/misc/fram/Makefile	2018-11-22 20:58:59.895071253 +0000
 @@ -0,0 +1 @@
 +obj-$(CONFIG_FRAM_FM25L04B)	+= fm25l04.o
 diff -aurN original/linux-2.6.35.3/drivers/misc/Kconfig linux-2.6.35.3/drivers/misc/Kconfig
 --- original/linux-2.6.35.3/drivers/misc/Kconfig	2018-10-23 21:57:56.957393335 +0000
-+++ linux-2.6.35.3/drivers/misc/Kconfig	2018-11-21 09:01:02.558435925 +0000
++++ linux-2.6.35.3/drivers/misc/Kconfig	2018-11-22 20:58:59.895071253 +0000
 @@ -373,6 +373,7 @@
  
  source "drivers/misc/c2port/Kconfig"
@@ -536,7 +539,7 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/Kconfig linux-2.6.35.3/drivers/m
  
 diff -aurN original/linux-2.6.35.3/drivers/misc/Makefile linux-2.6.35.3/drivers/misc/Makefile
 --- original/linux-2.6.35.3/drivers/misc/Makefile	2018-10-23 21:57:55.686377151 +0000
-+++ linux-2.6.35.3/drivers/misc/Makefile	2018-11-21 09:01:02.558435925 +0000
++++ linux-2.6.35.3/drivers/misc/Makefile	2018-11-22 20:58:59.896071263 +0000
 @@ -32,6 +32,7 @@
  obj-$(CONFIG_MXS_PERFMON)	+= mxs-perfmon.o
  obj-$(CONFIG_MECT_GPIO_POWERFAIL) +=gpio_pwrfail.o
@@ -547,7 +550,7 @@ diff -aurN original/linux-2.6.35.3/drivers/misc/Makefile linux-2.6.35.3/drivers/
  obj-$(CONFIG_ANDROID_PMEM)	+= pmem.o
 diff -aurN original/linux-2.6.35.3/drivers/spi/spi_mxs.c linux-2.6.35.3/drivers/spi/spi_mxs.c
 --- original/linux-2.6.35.3/drivers/spi/spi_mxs.c	2018-10-23 21:57:55.203371001 +0000
-+++ linux-2.6.35.3/drivers/spi/spi_mxs.c	2018-11-21 18:51:51.931392724 +0000
++++ linux-2.6.35.3/drivers/spi/spi_mxs.c	2018-11-28 21:36:53.059817080 +0000
 @@ -598,7 +598,11 @@
  	}
  

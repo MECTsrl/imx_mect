@@ -4652,7 +4652,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#
 +# FRAM support
 +#
-+CONFIG_FRAM_FM25L04B=m
++CONFIG_FRAM_FM25L04B=y
 +# CONFIG_IWMC3200TOP is not set
 +CONFIG_HAVE_IDE=y
 +# CONFIG_IDE is not set
@@ -7188,7 +7188,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#
 +# FRAM support
 +#
-+CONFIG_FRAM_FM25L04B=m
++CONFIG_FRAM_FM25L04B=y
 +# CONFIG_IWMC3200TOP is not set
 +CONFIG_HAVE_IDE=y
 +# CONFIG_IDE is not set
@@ -9722,7 +9722,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#
 +# FRAM support
 +#
-+CONFIG_FRAM_FM25L04B=m
++CONFIG_FRAM_FM25L04B=y
 +# CONFIG_IWMC3200TOP is not set
 +CONFIG_HAVE_IDE=y
 +# CONFIG_IDE is not set
@@ -12258,7 +12258,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#
 +# FRAM support
 +#
-+CONFIG_FRAM_FM25L04B=m
++CONFIG_FRAM_FM25L04B=y
 +# CONFIG_IWMC3200TOP is not set
 +CONFIG_HAVE_IDE=y
 +# CONFIG_IDE is not set
@@ -14794,7 +14794,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#
 +# FRAM support
 +#
-+CONFIG_FRAM_FM25L04B=m
++CONFIG_FRAM_FM25L04B=y
 +# CONFIG_IWMC3200TOP is not set
 +CONFIG_HAVE_IDE=y
 +# CONFIG_IDE is not set
@@ -17330,7 +17330,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +#
 +# FRAM support
 +#
-+CONFIG_FRAM_FM25L04B=m
++CONFIG_FRAM_FM25L04B=y
 +# CONFIG_IWMC3200TOP is not set
 +CONFIG_HAVE_IDE=y
 +# CONFIG_IDE is not set

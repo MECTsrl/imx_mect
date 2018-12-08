@@ -1,6 +1,6 @@
 diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c
 --- original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c	2018-10-23 21:57:58.449412333 +0000
-+++ linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c	2018-12-08 17:57:01.277518003 +0000
++++ linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c	2018-12-08 20:00:04.968966836 +000y
 @@ -80,6 +80,14 @@
  		//.mode = SPI_MODE_3, /* Do not overwrite the standard configuration otherwise spi  won't setup */
  	},
@@ -8,7 +8,7 @@ diff -aurN original/linux-2.6.35.3/arch/arm/mach-mx28/mx28evk.c linux-2.6.35.3/a
 +#if defined(CONFIG_FRAM_FM25L04B) || defined(CONFIG_FRAM_FM25L04B_MODULE)
 +	{
 +		.modalias = "fm25l04",          /* Name of spi_driver for this device */
-+		.max_speed_hz = 1*1000*1000,    /* Keep lower for reliable communication */
++		.max_speed_hz = 10*1000*1000,   /* Keep lower for reliable communication */
 +		.bus_num = 1,                   /* Framework bus number */
 +		.chip_select = 1,               /* GPIO SSP2_SS2 */
 +	},

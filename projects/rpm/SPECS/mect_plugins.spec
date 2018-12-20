@@ -103,6 +103,7 @@ rm -rf $RPM_BUILD_ROOT
 %{MECT_RFSDIR}/usr/include/store_extract.h
 %{MECT_RFSDIR}/usr/include/store_filter.h
 %{MECT_RFSDIR}/usr/include/time_set.h
+%{MECT_RFSDIR}/usr/include/timepopup.h
 %{MECT_RFSDIR}/usr/include/trend.h
 %{MECT_RFSDIR}/usr/include/trend_option.h
 %{MECT_RFSDIR}/usr/include/trend_other.h

@@ -69,7 +69,7 @@ TARGET="`awk '/^Target/ { print $2; }' /rootfs_version`"
 test -n "$TARGET" || do_exit "cannot find the system type."
 
 # Check the compatibility of the update with the installed version.
-expr "$RELEASE" : 3\\.1\\.5 > /dev/null || do_exit "cannot update the installed version ${RELEASE}, only 3.1.5 is supported."
+expr "$RELEASE" : 3\\.1\\.5 > /dev/null || expr "$RELEASE" : 3\\.1\\.6 > /dev/null || expr "$RELEASE" : 3\\.1\\.7 > /dev/null || do_exit "cannot update the installed version ${RELEASE}, only 3.1.{5,6,7} are supported."
 
 # Start the update.
 #
@@ -115,6 +115,7 @@ cat << EOF > /etc/iptables
 # OpenVPN smily
 -A INPUT -p tcp -m tcp --sport 443 -j ACCEPT
 -A INPUT -p udp -m udp --sport 53 -j ACCEPT
+-A INPUT -p tcp -m tcp --sport 8080 -j ACCEPT
 
 # ICMP ping
 -A INPUT -p icmp --icmp-type 0 -j ACCEPT
@@ -123,9 +124,6 @@ cat << EOF > /etc/iptables
 # DHCP
 -A INPUT -p udp -m udp --sport 67 -j ACCEPT
 -A INPUT -p udp -m udp --dport 68 -j ACCEPT
-
-# HTTP per allarmi
--A INPUT -p tcp -m tcp --sport 8080 -j ACCEPT
 
 # disabled services
 

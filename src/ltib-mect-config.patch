@@ -20739,7 +20739,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		if /bin/mount -orw $usbdev $mntdir
 +		then
 +			rm -f $logfile
-+			echo "current mount point is $usbdev" | tee -a $logfile
++			echo "current mount point is $usbdev"
 +		else
 +			echo "Cannot mount the USB storage device."
 +			exit 0

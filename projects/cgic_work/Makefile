@@ -73,7 +73,7 @@ DATA_LIST = \
 	select-template.html \
 	.passwd
 
-CGIC_LIST = upgrade.cgi getdatesinterval extract updateall.cgi
+CGIC_LIST = upgrade.cgi getdatesinterval extract updateall.cgi get_log.cgi
 
 CGI_LIST = $(CGISH_LIST) $(CGIC_LIST)
 
@@ -128,6 +128,9 @@ getdatesinterval: getdatesinterval.c
 
 extract: store_extract.c
 	$(CC) $(ARCH_INCLUDE) $(CFLAGS) -DSTANDALONE store_extract.c -o www/extract
+
+get_log.cgi: get_log.c
+	$(CC) $(ARCH_INCLUDE) $(CFLAGS) -DSTANDALONE get_log.c -o www/get_log.cgi
 
 install:
 	@mkdir -p $(BIN_DIR)

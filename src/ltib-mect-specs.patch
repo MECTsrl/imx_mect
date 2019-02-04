@@ -6,7 +6,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : 0.0
++Version         : v2.015
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -127,7 +127,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : 0.0
++Version         : v2.015
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -1395,7 +1395,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cgic_work/cgic_work.spec ltib/dist/lfs-5.1/cgic_work/cgic_work.spec
 --- ltib.reference/dist/lfs-5.1/cgic_work/cgic_work.spec
 +++ ltib/dist/lfs-5.1/cgic_work/cgic_work.spec
-@@ -0,0 +1,114 @@
+@@ -0,0 +1,115 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Support for web-based reporting and configuration
@@ -1483,6 +1483,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/usr/share/www/filesmanager.cgi
 +%{pfx}/usr/share/www/formatsdcard.cgi
 +%{pfx}/usr/share/www/getdatesinterval
++%{pfx}/usr/share/www/get_log.cgi
 +%{pfx}/usr/share/www/index.cgi
 +%{pfx}/usr/share/www/info.cgi
 +%{pfx}/usr/share/www/lan_config.cgi
@@ -1519,7 +1520,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 0.0
++Version         : 3.1.7
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3993,7 +3994,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : 0.0
++Version         : v3.1.7
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -5656,7 +5657,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: 0.0
++Version: v3.1.7
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

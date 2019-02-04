@@ -138,6 +138,10 @@ MECT_KOBS_TMPL := $(MECT_FTPDIR)/kobs-ng
 MECT_SYSUPD_VPN_PRE := $(MECT_FTPDIR)/sysupdate_vpn_pre.sh
 MECT_SYSUPD_VPN = $(MECT_IMGDIR)/vpn/sysupdate_vpn_$(MECT_BUILD_RELEASE).sh
 MECT_SYSUPD_VPN_POST := $(MECT_FTPDIR)/sysupdate_vpn_post.sh
+# sysupdate for hardening (security enhancement)
+MECT_SYSUPD_HARDENING_SRC := $(MECT_FTPDIR)/sysupdate_hardening.sh
+MECT_SYSUPD_HARDENING = $(MECT_IMGDIR)/hardening/sysupdate_hardening_$(MECT_BUILD_RELEASE).sh
+
 
 # Extension of the MD5 checksums for the downloads.
 MECT_MD5EXT := md5
@@ -413,7 +417,7 @@ endif
 
 
 .PHONY: all
-all: env downloads setup build image target_dev sysupdate_mrs
+all: env downloads setup build image target_dev sysupdate_mrs sysupdate_hardening
 
 # Set up the build environment.
 .PHONY: env
@@ -738,6 +742,12 @@ sysupdate_mrs:
 	if tail -1 $(MECT_SYSUPD_VPN) | grep -q '^exit 0$$'; then sed -i '$$ d' $(MECT_SYSUPD_VPN); fi
 	cat $(MECT_SYSUPD_VPN_POST) >> $(MECT_SYSUPD_VPN)
 
+# copy the sysupdate for hardening (security enhancement)
+.PHONY: sysupdate_hardening
+sysupdate_hardening:
+	rm -f $(MECT_SYSUPD_HARDENING)
+	mkdir -p $(dir $(MECT_SYSUPD_HARDENING))
+	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/' $(MECT_SYSUPD_HARDENING_SRC) > $(MECT_SYSUPD_HARDENING)
 
 PHONY: wininst
 wininst: MECT_DOWNLOADS := \

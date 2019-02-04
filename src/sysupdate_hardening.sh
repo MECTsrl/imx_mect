@@ -69,7 +69,7 @@ TARGET="`awk '/^Target/ { print $2; }' /rootfs_version`"
 test -n "$TARGET" || do_exit "cannot find the system type."
 
 # Check the compatibility of the update with the installed version.
-expr "$RELEASE" : 3\\.1\\.5 > /dev/null || expr "$RELEASE" : 3\\.1\\.6 > /dev/null || expr "$RELEASE" : 3\\.1\\.7 > /dev/null || do_exit "cannot update the installed version ${RELEASE}, only 3.1.{5,6,7} are supported."
+expr "$RELEASE" : @@THIS_VERSION@@ > /dev/null || do_exit "cannot update the installed version ${RELEASE}, only @@THIS_VERSION@@ is supported."
 
 # Start the update.
 #
@@ -112,7 +112,7 @@ cat << EOF > /etc/iptables
 # ATCMControl_RunTimeSystem control
 -A INPUT -p tcp -m tcp --dport 17290 -j ACCEPT
 
-# OpenVPN smily
+# OpenVPN sMily
 -A INPUT -p tcp -m tcp --sport 443 -j ACCEPT
 -A INPUT -p udp -m udp --sport 53 -j ACCEPT
 -A INPUT -p tcp -m tcp --sport 8080 -j ACCEPT

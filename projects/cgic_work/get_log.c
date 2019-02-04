@@ -425,39 +425,31 @@ int searchForValuesInRow(char* buffer, struct name_list *var_list, char* date_fr
             if (var_list->index[v] == column )
             {
 
-                if (strcmp(token,"-") == 0)
-                {
-                    // quando il valore è "-" scrivo niente
-                    break;
-                }
-
                 if (first_value)
                 {  ///////////////////////// qui delta skip
 
                     // alla prima colonna buona scrivo l'intestazione
                     printf(",\n");
-                    printf("\"%s\": {\n", row_datetime);
+                    printf("\"%s\": [", row_datetime);
                     first_value = 0;
                 } else {
-                    printf(",\n");
+                    printf(",");
                 }
 
-                /////////////qui delta average
-                /////////////
-
-
-                printf("   \"%s\": ", var_list->name[v]);
-                if (strcmp(token,"Nan")==0 || strcmp(token,"NaN")==0 || strcmp(token,"NaN")==0)
+               // printf("   \"%s\": ", var_list->name[v]);
+                if (strcasecmp(token,"Nan")==0)
                 {
                     // normalizziamo la stringa per i NaN
                     printf("\"NaN\"");
 
                 }
-                else
+
+                else// print anche dei "-"
                 {
-                    printf("%s", token);  
+                    printf("%s", token);
 
                 }
+
                //strcpy(tx_datetime,row_datetime);
 
                //strcpy(tx_datetime,row_datetime);
@@ -479,8 +471,8 @@ int searchForValuesInRow(char* buffer, struct name_list *var_list, char* date_fr
     if (! first_value)
     {
         // chiusura solo se abbiamo scritto qualcosa
-        printf("\n}\n");
-
+        printf("] \n");
+// { \"variables\}":
     }
 
     return 0; // continue

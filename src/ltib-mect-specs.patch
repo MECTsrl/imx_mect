@@ -6,7 +6,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : v2.015
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -127,7 +127,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : v2.015
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -1520,7 +1520,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 3.1.7
++Version         : 3.1.8
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3988,13 +3988,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1660 @@
+@@ -0,0 +1,1715 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define rhtbtr resources-hack-to-build-the-rpm
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v3.1.7
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -4142,6 +4142,20 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Prefix          : %{pfx}/TP1070_02_E/local
 +
 +%Description lfs-TP1070_02_E
++%{name} package contents limited to just the run-times needed
++on the target.
++
++# TP1070_02_F
++#
++%Package lfs-TP1070_02_F
++Summary         : Trimmed %{name} to just the run-times needed for local file system.
++Vendor          : MECT s.r.l.
++Packager        : Francesco Mandracci
++Group           : Applications/System
++AutoReqProv     : no
++Prefix          : %{pfx}/TP1070_02_F/local
++
++%Description lfs-TP1070_02_F
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
@@ -4585,6 +4599,24 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +# TP1070_02_E
 +#
 +d=TP1070_02_E/Simple
++if test -d $d; then
++	cd $d
++
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
++	$MECT_QT_INSTALL_DIR/bin/qmake \
++		-spec qws/linux-g++-mx \
++		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
++		"DEFINES+=TARGET_ARM" \
++		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
++		Simple.pro
++	make -j1
++
++	cd -
++fi
++
++# TP1070_02_F
++#
++d=TP1070_02_F/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -5081,6 +5113,21 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
++# TP1070_02_F
++#
++d=TP1070_02_F/Simple
++if test -d $d; then
++	cd $d
++
++	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_02_F/local/root/hmi
++	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_02_F/local/etc/sysconfig/Crosstable.csv
++	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_02_F/local/etc/sysconfig/img/splash.png
++	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_02_F/local/etc/sysconfig/system.ini
++	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_02_F/local/data/customtrend/trend1.csv
++
++	cd -
++fi
++
 +# TPAC1007_03
 +#
 +d=TPAC1007_03/Simple
@@ -5476,6 +5523,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TP1070_02_E/local/etc/sysconfig/system.ini
 +%{pfx}/TP1070_02_E/local/data/customtrend/trend1.csv
 +
++%files lfs-TP1070_02_F
++%defattr(-,root,root)
++%{pfx}/TP1070_02_F/local/root/hmi
++%{pfx}/TP1070_02_F/local/etc/sysconfig/Crosstable.csv
++%{pfx}/TP1070_02_F/local/etc/sysconfig/img/splash.png
++%{pfx}/TP1070_02_F/local/etc/sysconfig/system.ini
++%{pfx}/TP1070_02_F/local/data/customtrend/trend1.csv
++
 +%files lfs-TPAC1007_03
 +%defattr(-,root,root)
 +%{pfx}/TPAC1007_03/local/root/hmi
@@ -5657,7 +5712,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v3.1.7
++Version: 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

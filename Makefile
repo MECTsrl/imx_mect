@@ -23,7 +23,7 @@ MECT_BUILD_ATCMCRT_BRANCH := mect_suite_3.0
 export MECT_BUILD_ATCMCRT_TAG :=0.0# v2.016
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_CAN_BRANCH := mect_suite_3.0
-MECT_BUILD_ATCMCRT_CAN_REV := HEAD#261
+MECT_BUILD_ATCMCRT_CAN_REV := HEAD#262
 MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
 # git branch and tag for the mect_plugins project
@@ -624,6 +624,7 @@ MECT_IMAGES := \
 	TP1070_01_A \
 	TP1070_01_C \
 	TP1070_02_E \
+	TP1070_02_F \
 	TPAC1007_03 \
 	TPAC1007_04_AA \
 	TPAC1007_04_AB \

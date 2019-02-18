@@ -161,7 +161,7 @@ int main(void)
     {
         searchForValues(date_from, date_to, &var_list);//////delta qui
     }
-    printf("}\n");
+    printf("\n}\n");
 
     return 0;
 }
@@ -326,12 +326,8 @@ void searchForValues(char *date_from, char *date_to, struct name_list *var_list)
             if (searchForValuesInRow(buffer, var_list, date_from, date_to, isFirstFile, isLastFile))//,tx_datetime,delta))//////delta qui
             {
                 // skip the other rows
-
-
                 break;
             }
-
-
         }
 
          ///---------------------------
@@ -443,11 +439,13 @@ int searchForValuesInRow(char* buffer, struct name_list *var_list, char* date_fr
                     printf("\"NaN\"");
 
                 }
-
-                else// print anche dei "-"
+                else if (strcmp(token, "-") == 0)
+                {
+                    printf("\"\"");
+                }
+                else
                 {
                     printf("%s", token);
-
                 }
 
                //strcpy(tx_datetime,row_datetime);
@@ -471,7 +469,7 @@ int searchForValuesInRow(char* buffer, struct name_list *var_list, char* date_fr
     if (! first_value)
     {
         // chiusura solo se abbiamo scritto qualcosa
-        printf("] \n");
+        printf("]");
 // { \"variables\}":
     }
 

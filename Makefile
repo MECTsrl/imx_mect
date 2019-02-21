@@ -4,8 +4,8 @@ export LC_ALL := C
 
 # MECT Suite version
 export MECT_BUILD_MAJOR := 3
-export MECT_BUILD_MINOR := 1
-export MECT_BUILD_BUILD := 9
+export MECT_BUILD_MINOR := 2
+export MECT_BUILD_BUILD := 0
 export MECT_BUILD_RELEASE = $(MECT_BUILD_MAJOR).$(MECT_BUILD_MINOR).$(MECT_BUILD_BUILD)
 
 # ---------------------------

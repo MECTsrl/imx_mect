@@ -23640,6 +23640,32 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		exit 1
 +	;;
 +esac
+diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/inetd ltib/config/platform/imx/merge/etc/rc.d/init.d/inetd
+--- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/inetd
++++ ltib/config/platform/imx/merge/etc/rc.d/init.d/inetd
+@@ -0,0 +1,22 @@
++#!/bin/sh
++
++if [ ! -x /usr/sbin/inetd ]
++then
++    exit 0
++fi
++
++if [ "$1" = "stop" -o "$1" = "restart" ]
++then
++    echo "Stopping inetd: "
++    if [ -e /var/run/inetd.pid ]
++    then
++        kill $(cat /var/run/inetd.pid)
++    fi
++fi
++
++if [ "$1" = "start" -o "$1" = "restart" ]
++then
++    echo "Starting inetd: "
++    /usr/sbin/inetd $INETD_ARGS
++fi
++
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/iptables ltib/config/platform/imx/merge/etc/rc.d/init.d/iptables
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/iptables
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/iptables

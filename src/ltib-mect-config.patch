@@ -23408,7 +23408,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/autoexec
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/autoexec
-@@ -0,0 +1,162 @@
+@@ -0,0 +1,145 @@
 +#!/bin/sh
 +
 +start() {
@@ -23426,7 +23426,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +	export POINTERCAL_FILE=$TSLIB_CALIBFILE
 +
 +	# Make sure / is mounted R/O
-+	mount -oro,remount /
++	mount -o remount,ro /
 +
 +	# Fix for RK43 (Rocktech) clock phase
 +	if grep -q TPAC1007 /proc/cpuinfo && test `cat /etc/serial.conf` -ge 2017000000; then
@@ -23443,53 +23443,36 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		fi
 +	fi
 +
-+	if test -x /local/root/systool -a ! -x /local/root/factory_test; then
-+		echo "Starting systool application."
-+
-+		/local/root/systool -qws > /dev/null 2>&1
-+
-+		echo "Started."
-+	fi
-+
 +	# if factory test is preset and executable, start it
-+	if test -x /local/root/factory_test; then
-+		echo "Starting factory test application."
++	if test -x /local/root/hmi_only; then
++		echo "Starting hmi_only application."
 +
-+		/local/root/factory_test -qws > /dev/null 2>&1 &
-+
-+		echo "Started."
-+	elif test -x /local/root/keyGenerator; then
-+		echo "Starting keyGenerator application."
-+
-+		/local/root/keyGenerator -qws > /dev/null 2>&1 &
-+
-+		echo "Started."
-+	elif test -x /local/root/fcrts; then
-+		echo "Starting PLC run-time support."
-+
-+		if test -x /usr/bin/fcrts.sh; then
-+			/usr/bin/fcrts.sh > /dev/null 2>&1 &
-+		else
-+			/local/root/fcrts > /dev/null 2>&1 &
-+		fi
++		/local/root/hmi_only -qws > /dev/null 2>&1 &
 +
 +		echo "Started."
 +	else
-+		echo "No PLC run-time support."
-+	fi
++	    if test -x /usr/bin/fcrts; then
++		echo "Starting PLC run-time support."
 +
-+	if test -x /local/root/hmi; then
++		/usr/bin/fcrts > /dev/null 2>&1 &
++
++		echo "Started."
++	    else
++		echo "No PLC run-time support."
++	    fi
++	    if test -x /local/root/hmi; then
 +		echo "Starting HMI."
 +
 +		/local/root/hmi > /dev/null 2>&1 &
-+	elif test -x /usr/bin/splash; then
++	    elif test -x /usr/bin/splash; then
 +		echo "Starting splash screen."
 +
 +		/usr/bin/splash -qws --text "<font color=\"blue\"><h1>No HMI on the target</h1></font><BR>`ifconfig eth0 | head -1`<BR>`ifconfig eth0 | head -2 | tail -1`" --dimension 12 > /dev/null 2>&1 &
-+	else
++	    else
 +		echo "No HMI."
 +
 +		dd if=/dev/zero of=/dev/fb0 > /dev/null 2>&1
++	    fi
 +	fi
 +
 +	echo "Done."
@@ -23500,11 +23483,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +stop() {
 +	echo -n "Shutting down 'autoexec' programs... "
 +
-+	progs="keyGenerator factory_test fcrts hmi ts_calibrate splash"
++	progs="hmi_only fcrts hmi ts_calibrate splash"
 +
 +	# Wait a while for the programs to terminate.
 +	active=0
-+	for t in $(/usr/bin/seq 1 1 5); do
++	for t in 1 2 3 4 5; do
 +		# Make sure the screen stays blanked.
 +		/bin/dd if=/dev/zero of=/dev/fb0 > /dev/null 2>&1
 +

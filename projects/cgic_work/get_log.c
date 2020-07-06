@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -28,7 +28,7 @@ unsigned delta;
 int usage(void); //HTML
 void searchForLimitsAndNames(char *date_from, char *date_to, struct name_list *var_list);
 void searchForValues(char *date_from, char *date_to, struct name_list *var_list);
-int searchForValuesInRow(char* buffer, struct name_list *var_list, char *date_from, char *date_to,
+int searchForValuesInRow(char* buffer, struct name_list *var_list, char *date_from, char *date_to, char *date_Duplicate,
                          int isFirstFile, int isLastFile);//, char *tx_datetime, unsigned delta);
 char *strtok_csv(char *string, const char *separators, char **savedptr);
 void deltaAdder(char* date,unsigned delta);
@@ -49,7 +49,7 @@ int main(void)
     //strcpy(query,"from=2018-11-10T17:13:00&to=2018-11-19T17:28:00&vars=SysImpActiveEnergy_0,Life_node08,SysExpActiveEnergy_1,SysImpActiveEnergy_7,SysExpActiveEnergy_0,MPT91_Temperatura,SysActivePower_8");//&DigIn_7_node13&Life_node08&SysExpActiveEnergy_0&MPT91_Temperatura");//DEBUG
     //strcpy(query,"from=2018-11-23T22:13:00&to=2018-11-26T23:59:11&*");
     //strcpy(query,"vars=*");
-    //strcpy(query,"from=2018-09-13T01:00:00&to=2018-11-14T23:59:59&vars=SysImpActiveEnergy_0");
+    //strcpy(query_string,"from=2018-09-13T01:00:00&to=2018-11-14T23:59:59&vars=SysImpActiveEnergy_0");
     //strcpy(query,"from=*&to=2018-11-25T01:00:00&vars=SysImpActiveEnergy_0");
     //if (query==NULL)
     //DEBUG
@@ -95,8 +95,8 @@ int main(void)
     if (ptr != NULL)
     {
         if (ptr[8] != '0') {
-           sscanf(ptr,"delta_s=%u",&delta);
-            }
+            sscanf(ptr,"delta_s=%u",&delta);
+        }
         else{
             delta=1;
         }
@@ -169,17 +169,19 @@ int main(void)
 void searchForValues(char *date_from, char *date_to, struct name_list *var_list)
 {
     // int delta=DELTA;
-  ///---------------------------
+    ///---------------------------
     fprintf(stderr, "searching for variables values in logs:\n");
     fprintf(stderr, "\tfrom: %s\n", date_from);
     fprintf(stderr, "\tto: %s\n", date_to);
-  ///---------------------------
+    ///---------------------------
     struct dirent **entries = NULL;
     FILE *fp = NULL;
     char buffer[BUFF_SIZE];
     int n,i,v;
+    char date_Duplicate[DATE_LENGHT];
+    date_Duplicate[0] = '\0';
 
-     strncpy(tx_datetime, date_from, DATE_LENGHT-1);
+    strncpy(tx_datetime, date_from, DATE_LENGHT-1);
 
     //fa una scan della cartella e ordina in modo alfabetico
     n = scandir(FILEPATH,&entries,0,alphasort);
@@ -226,7 +228,7 @@ void searchForValues(char *date_from, char *date_to, struct name_list *var_list)
             // l'ultimo file presente, quindi consideriamo solo fino a mezzanotte
             sprintf(next_file_date, "%04u-%02u-%02uT%02u:%02u:%02u", year, mon, day+1, 00, 00, 00); // day+1 solo per strcmp()
         }
-///---------------------------
+        ///---------------------------
         int isFirstFile = 0;
         if (strcmp(file_date, date_from) <= 0)
         {
@@ -243,7 +245,7 @@ void searchForValues(char *date_from, char *date_to, struct name_list *var_list)
                 break; // log troppo recenti, smetto
             isLastFile = 1; // ultimo file di log da considerare
         }
-//-----------------------------
+        //-----------------------------
         // lettura dei file
         sprintf(pathname, "%s/%s",FILEPATH, entries[i]->d_name);
         fp = fopen(pathname,"r");
@@ -275,7 +277,7 @@ void searchForValues(char *date_from, char *date_to, struct name_list *var_list)
             fprintf(stderr, "\t\tmissing 'time', found '%s'\n", token);
             goto close_file;
         }
-///---------------------------
+        ///---------------------------
         // parsing variable names
         // associo gli indici validi per questo file di log
         int column = 1; // dopo date e time
@@ -285,7 +287,7 @@ void searchForValues(char *date_from, char *date_to, struct name_list *var_list)
             // azzero gli indici (da altre righe)
             var_list->index[v] = 0;
         }
-///---------------------------
+        ///---------------------------
         while ((token = strtok_csv(NULL, SEPARATOR, &savedptr)) != NULL)
         {
             int found = 0;
@@ -310,11 +312,11 @@ void searchForValues(char *date_from, char *date_to, struct name_list *var_list)
                 ++indexes;
             }
             ++column;
-                ///---------------------------
+            ///---------------------------
         }
 
         // ok, done with header
-            ///---------------------------
+        ///---------------------------
         if (indexes == 0) {
             fprintf(stderr, "\t\tno occurencies found\n");
             goto close_file;
@@ -323,14 +325,14 @@ void searchForValues(char *date_from, char *date_to, struct name_list *var_list)
         // read rows
         while (fgets(buffer, BUFF_SIZE, fp) != NULL)
         {
-            if (searchForValuesInRow(buffer, var_list, date_from, date_to, isFirstFile, isLastFile))//,tx_datetime,delta))//////delta qui
+            if (searchForValuesInRow(buffer, var_list, date_from, date_to, date_Duplicate, isFirstFile, isLastFile))//,tx_datetime,delta))//////delta qui
             {
                 // skip the other rows
                 break;
             }
         }
 
-         ///---------------------------
+        ///---------------------------
         // done with log file
     close_file:
         fclose(fp);
@@ -345,7 +347,7 @@ exit_function:
 }
 
 //Data Reader
-int searchForValuesInRow(char* buffer, struct name_list *var_list, char* date_from, char* date_to,
+int searchForValuesInRow(char* buffer, struct name_list *var_list, char* date_from, char* date_to, char* date_Duplicate,
                          int isFirstFile, int isLastFile)//,char *tx_datetime ,unsigned delta)
 {
     int v;
@@ -354,6 +356,7 @@ int searchForValuesInRow(char* buffer, struct name_list *var_list, char* date_fr
 
     //delta=DELTA;
     int first_value;
+    int duplicateCounter = 0;
 
 
     char *token = NULL;
@@ -396,85 +399,122 @@ int searchForValuesInRow(char* buffer, struct name_list *var_list, char* date_fr
         return 1; // skip file
     }
 
+    //printf("[\"%s\"]", row_datetime);
     // parsing variable values
     int column = 1; // dopo date e time
     first_value = 1;
 
 
 
-  if(delta==1){
+    if(delta==1){
         strcpy(tx_datetime,row_datetime);
     }
 
 
-   if((strcmp(row_datetime,tx_datetime)>=0)){
-    while ((token = strtok_csv(NULL, SEPARATOR, &savedptr)) != NULL) //////////////////qui delta
-    {
-        if (token[0] == '\0' || strlen(token) > TAG_LEN)
-        {
-            fprintf(stderr, "\t\twrong variable '%s'\n", token);
-            break;
+    if((strcmp(row_datetime,tx_datetime)>=0)){
+
+        int i;
+        int rowValueOK = 0;
+
+        char** tmpValArray = (char**)malloc(var_list->number * sizeof(char*));
+
+        for( i=0; i<var_list->number; i++ ) {
+            tmpValArray[i] = (char*)malloc(128+1);
+            strcpy(tmpValArray[i],"");
         }
 
-        for (v=0; v < var_list->number; ++v)
+        while ((token = strtok_csv(NULL, SEPARATOR, &savedptr)) != NULL) //////////////////qui delta
         {
-            if (var_list->index[v] == column )
+            if (token[0] == '\0' || strlen(token) > TAG_LEN)
             {
+                fprintf(stderr, "\t\twrong variable '%s'\n", token);
+                break;
+            }
 
+            for (v=0; v < var_list->number; ++v)
+            {
+                if (var_list->index[v] == column )
+                {
+
+                    /*if (first_value)
+                    {  ///////////////////////// qui delta skip
+
+                        // alla prima colonna buona scrivo l'intestazione
+                        printf(",\n");
+                        printf("\"%s\": [", row_datetime);
+                        first_value = 0;
+                    } else {
+                        printf(",");
+                    }*/
+
+                    // printf("   \"%s\": ", var_list->name[v]);
+                    if (strcasecmp(token,"Nan")==0)
+                    {
+                        // normalizziamo la stringa per i NaN
+                       //printf("\"NaN\"");
+                        strcpy(tmpValArray[v],"NaN");
+                        rowValueOK = 1;
+                    }
+                    else if (strcmp(token, "-") == 0)
+                    {
+                       // printf("\"\"");
+                       strcpy(tmpValArray[v],"-");
+                       //rowValueOK = 0;
+                    }
+                    else
+                    {
+                       //printf("%s", token);
+                       strcpy(tmpValArray[v],token);
+                       rowValueOK = 1;
+
+                    }
+                    //strcpy(tx_datetime,row_datetime);
+
+                    //strcpy(tx_datetime,row_datetime);
+                    break; // next column
+
+                }
+            }
+            ++column;
+        }
+
+        for (i = 0; i < var_list->number; ++i) {
+            if(rowValueOK == 1) {
                 if (first_value)
                 {  ///////////////////////// qui delta skip
 
                     // alla prima colonna buona scrivo l'intestazione
                     printf(",\n");
-                    printf("\"%s\": [", row_datetime);
+                    if(strcmp(row_datetime,date_Duplicate) == 0) {
+                        duplicateCounter++;
+                        printf("\"%s.%03d\": [", row_datetime,duplicateCounter);
+                    } else {
+                        printf("\"%s\": [", row_datetime);
+                        strcpy(date_Duplicate,row_datetime);
+                    }
                     first_value = 0;
                 } else {
                     printf(",");
                 }
-
-               // printf("   \"%s\": ", var_list->name[v]);
-                if (strcasecmp(token,"Nan")==0)
-                {
-                    // normalizziamo la stringa per i NaN
-                    printf("\"NaN\"");
-
-                }
-                else if (strcmp(token, "-") == 0)
-                {
-                    printf("\"\"");
-                }
-                else
-                {
-                    printf("%s", token);
-                }
-
-               //strcpy(tx_datetime,row_datetime);
-
-               //strcpy(tx_datetime,row_datetime);
-                break; // next column
-
-               }
+                printf("\"%s\"", tmpValArray[i]);
+            }
+            free(tmpValArray[i]);
         }
-        ++column;
+        free(tmpValArray);
 
+        do{
+            deltaAdder(tx_datetime,delta);
+        }
+        while(strcmp(tx_datetime,row_datetime)<0);
     }
-    do{
-           deltaAdder(tx_datetime,delta);
-      }
-      while(strcmp(tx_datetime,row_datetime)<0);
-  }
-
-
 
     if (! first_value)
     {
         // chiusura solo se abbiamo scritto qualcosa
         printf("]");
-// { \"variables\}":
+        // { \"variables\}":
     }
-
     return 0; // continue
-
 }
 
 void deltaAdder(char* date,unsigned delta)
@@ -518,15 +558,13 @@ void deltaAdder(char* date,unsigned delta)
         }
 
     }
-   /* sprintf(tmpdate,"%04u-%02u-%02uT%02u:%02u:%02u",time_struct.tm_year+1900,time_struct.tm_mon+1,time_struct.tm_mday,
+    /* sprintf(tmpdate,"%04u-%02u-%02uT%02u:%02u:%02u",time_struct.tm_year+1900,time_struct.tm_mon+1,time_struct.tm_mday,
             time_struct.tm_hour,time_struct.tm_min,time_struct.tm_sec);*/
     //strftime(tmpdate,DATE_LENGHT,"%Y-%m-%dT%H:%M:%S",&time_struct);
     //oppure
-   strftime(tx_datetime,DATE_LENGHT,"%FT%T",&time_struct);
+    strftime(tx_datetime,DATE_LENGHT,"%FT%T",&time_struct);
 
 }
-
-
 
 void searchForLimitsAndNames(char *date_from, char *date_to, struct name_list *var_list)
 {
@@ -567,7 +605,7 @@ void searchForLimitsAndNames(char *date_from, char *date_to, struct name_list *v
 
         // recupero i tempi dal nome del file
         sscanf(entries[i]->d_name,"%u_%u_%u_%u_%u_%u.log", &year, &mon, &day, &hours, &minutes, &seconds);
-///---------------------------
+        ///---------------------------
         // eventualmente recupero i limiti di tempo dai nomi dei file
         if (i == 2 && searching_for_first_log)
         {
@@ -585,7 +623,7 @@ void searchForLimitsAndNames(char *date_from, char *date_to, struct name_list *v
         // leggo gli header solo se necessario
         if (!searching_for_variable_names)
             continue;
-///---------------------------
+        ///---------------------------
         // escludo i log fuori dall'intervallo di tempo dato
         sprintf(file_date, "%04u-%02u-%02uT%02u:%02u:%02u", year, mon, day, hours, minutes, seconds);
         char next_file_date[DATE_LENGHT];
@@ -597,7 +635,7 @@ void searchForLimitsAndNames(char *date_from, char *date_to, struct name_list *v
             unsigned xhours = 0;
             unsigned xminutes = 0;
             unsigned xseconds = 0;
-///---------------------------
+            ///---------------------------
             sscanf(entries[i + 1]->d_name,"%u_%u_%u_%u_%u_%u.log", &xyear, &xmon, &xday, &xhours, &xminutes, &xseconds);
             sprintf(next_file_date, "%04u-%02u-%02uT%02u:%02u:%02u", xyear, xmon, xday, xhours, xminutes, xseconds);
         } else {
@@ -614,7 +652,7 @@ void searchForLimitsAndNames(char *date_from, char *date_to, struct name_list *v
             // fprintf(stderr, "\tskipping too new log '%s'\n", pathname);
             break; // log troppo recenti, smetto
         }
-///---------------------------
+        ///---------------------------
         // lettura dei file
         sprintf(pathname, "%s/%s", FILEPATH , entries[i]->d_name);
         fp = fopen(pathname,"r");
@@ -665,7 +703,7 @@ void searchForLimitsAndNames(char *date_from, char *date_to, struct name_list *v
                     break;
                 }
             }
-       ///---------------------------
+            ///---------------------------
             // aggiungo le nuove variabili
             if (! found)
             {

@@ -15,31 +15,31 @@ export MECT_BUILD_RELEASE = $(MECT_BUILD_MAJOR).$(MECT_BUILD_MINOR).$(MECT_BUILD
 MECT_BUILD_IMXMECT_BRANCH := mect_suite_3.0
 # imx_mect tag used by ltib_update make target
 # Set to 0.0 to checkout HEAD
-MECT_BUILD_IMXMECT_TAG := v$(MECT_BUILD_RELEASE)
+MECT_BUILD_IMXMECT_TAG :=0.0# v$(MECT_BUILD_RELEASE)
 
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := mect_suite_3.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_ATCMCRT_TAG := v2.018
+export MECT_BUILD_ATCMCRT_TAG :=0.0# v2.018
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_CAN_BRANCH := mect_suite_3.0
-MECT_BUILD_ATCMCRT_CAN_REV := 265
+MECT_BUILD_ATCMCRT_CAN_REV := HEAD#265
 MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_3.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_PLUGINSCRT_TAG := v$(MECT_BUILD_RELEASE)
+export MECT_BUILD_PLUGINSCRT_TAG :=0.0# v$(MECT_BUILD_RELEASE)
 
 # git branch and tag for the mect_apps project
 MECT_BUILD_APPSCRT_BRANCH := mect_suite_3.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_APPSCRT_TAG := v$(MECT_BUILD_RELEASE)
+export MECT_BUILD_APPSCRT_TAG :=0.0# v$(MECT_BUILD_RELEASE)
 
 # git branch and tag for the cloner project
 MECT_BUILD_CLONERCRT_BRANCH := mect_suite_3.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_CLONERCRT_TAG := v$(MECT_BUILD_RELEASE)
+export MECT_BUILD_CLONERCRT_TAG :=0.0# v$(MECT_BUILD_RELEASE)
 
 # Mandatory prefix for all target device names
 MECT_TARGET_PREFIX := MECT_
@@ -141,6 +141,15 @@ MECT_SYSUPD_VPN_POST := $(MECT_FTPDIR)/sysupdate_vpn_post.sh
 # sysupdate for hardening (security enhancement)
 MECT_SYSUPD_HARDENING_SRC := $(MECT_FTPDIR)/sysupdate_hardening.sh
 MECT_SYSUPD_HARDENING = $(MECT_IMGDIR)/hardening/sysupdate_hardening_$(MECT_BUILD_RELEASE).sh
+# sysupdate for Password Reset
+MECT_SYSUPD_PASSRESET_SRC := $(MECT_FTPDIR)/sysupdate_passwordreset.sh
+MECT_SYSUPD_PASSRESET = $(MECT_IMGDIR)/utilities/sysupdate_passwordreset_$(MECT_BUILD_RELEASE).sh
+# sysupdate for ethernet configuration reset
+MECT_SYSUPD_NETRESET_SRC := $(MECT_FTPDIR)/sysupdate_netreset.sh
+MECT_SYSUPD_NETRESET = $(MECT_IMGDIR)/utilities/sysupdate_netreset_$(MECT_BUILD_RELEASE).sh
+# sysupdate for calibration reset
+MECT_SYSUPD_CALRESET_SRC := $(MECT_FTPDIR)/sysupdate_calreset.sh
+MECT_SYSUPD_CALRESET = $(MECT_IMGDIR)/utilities/sysupdate_calreset_$(MECT_BUILD_RELEASE).sh
 
 
 # Extension of the MD5 checksums for the downloads.
@@ -417,7 +426,7 @@ endif
 
 
 .PHONY: all
-all: env downloads setup build image target_dev sysupdate_mrs sysupdate_hardening
+all: env downloads setup build image target_dev sysupdate_mrs sysupdate_hardening sysupdate_passwordreset sysupdate_netreset sysupdate_calreset
 
 # Set up the build environment.
 .PHONY: env
@@ -620,7 +629,6 @@ spec_setup:
 MECT_IMAGES := \
 	TP1043_01_A \
 	TP1043_02_A \
-	TP1057_01_A \
 	TP1070_01_A \
 	TP1070_01_C \
 	TP1070_02_E \
@@ -629,7 +637,8 @@ MECT_IMAGES := \
 	TPAC1007_04_AA \
 	TPAC1007_04_AB \
 	TPAC1007_04_AC \
-	TPAC1007_LV \
+	TPAC1007_04_AD \
+	TPAC1007_04_AE \
 	TPLC050_01_AA \
 
 ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
@@ -637,11 +646,8 @@ ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 	MECT_IMAGES += \
 		TP1043_01_B \
 		TP1043_02_B \
-		TP1057_01_B \
 		TP1070_01_B \
 		TPAC1005 \
-		TPAC1006 \
-		TPAC1008_01 \
 		TPAC1008_02_AA \
 		TPAC1008_02_AB \
 		TPAC1008_02_AD \
@@ -749,6 +755,27 @@ sysupdate_hardening:
 	rm -f $(MECT_SYSUPD_HARDENING)
 	mkdir -p $(dir $(MECT_SYSUPD_HARDENING))
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_HARDENING_SRC) > $(MECT_SYSUPD_HARDENING)
+	
+# copy the sysupdate for password reset
+.PHONY: sysupdate_passwordreset
+sysupdate_passwordreset:
+	rm -f $(MECT_SYSUPD_PASSRESET)
+	mkdir -p $(dir $(MECT_SYSUPD_PASSRESET))
+	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_PASSRESET_SRC) > $(MECT_SYSUPD_PASSRESET)
+	
+# copy the sysupdate for net configuration reset
+.PHONY: sysupdate_netreset
+sysupdate_netreset:
+	rm -f $(MECT_SYSUPD_NETRESET)
+	mkdir -p $(dir $(MECT_SYSUPD_NETRESET))
+	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_NETRESET_SRC) > $(MECT_SYSUPD_NETRESET)
+
+# copy the sysupdate for net configuration reset
+.PHONY: sysupdate_calreset
+sysupdate_calreset:
+	rm -f $(MECT_SYSUPD_CALRESET)
+	mkdir -p $(dir $(MECT_SYSUPD_CALRESET))
+	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_CALRESET_SRC) > $(MECT_SYSUPD_CALRESET)
 
 PHONY: wininst
 wininst: MECT_DOWNLOADS := \

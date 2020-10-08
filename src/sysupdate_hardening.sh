@@ -103,6 +103,9 @@ cat << EOF > /etc/iptables
 # HTTP
 -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT 
 
+# Modbus TCP Client
+-A INPUT -p tcp -m tcp --sport 502 -j ACCEPT
+
 # Modbus TCP Server
 -A INPUT -p tcp -m tcp --dport 502 -j ACCEPT
 
@@ -115,7 +118,7 @@ cat << EOF > /etc/iptables
 # OpenVPN sMily
 -A INPUT -p tcp -m tcp --sport 443 -j ACCEPT
 -A INPUT -p udp -m udp --sport 53 -j ACCEPT
--A INPUT -p tcp -m tcp --sport 8080 -j ACCEPT
+-A INPUT -p tcp -m tcp -s 10.1.0.1 --sport 8080 -j ACCEPT
 
 # ICMP ping
 -A INPUT -p icmp --icmp-type 0 -j ACCEPT
@@ -124,6 +127,10 @@ cat << EOF > /etc/iptables
 # DHCP
 -A INPUT -p udp -m udp --sport 67 -j ACCEPT
 -A INPUT -p udp -m udp --dport 68 -j ACCEPT
+
+# NTP
+-A INPUT -p udp -m udp --sport 123 -j ACCEPT
+-A INPUT -p udp -m udp --dport 123 -j ACCEPT
 
 # disabled services
 

@@ -1,0 +1,66 @@
+diff -urN a/arch/arm/mach-mx28/Kconfig b/arch/arm/mach-mx28/Kconfig
+--- a/arch/arm/mach-mx28/Kconfig	2021-01-26 17:21:02.107385918 +0100
++++ b/arch/arm/mach-mx28/Kconfig	2021-01-26 14:59:54.164344081 +0100
+@@ -106,6 +106,19 @@
+ 	help
+ 	  Say Y to select the MECT panel TPAC1008_800x480 (changes: ethernet, logo...) 
+ 
++config MECT_TPX1070_800x480
++	bool "MECT TPX1070 800x480 panel"
++	depends on MECT_CUSTOMIZATION
++	select FB_MXS_LCD_FRMK7
++	select LOGO_MECT_800x480
++	select RTC_DRV_DS1390
++	select SPI_MXS
++	select MXS_AUART0_DEVICE_ENABLE
++	select MXS_AUART2_DEVICE_ENABLE
++	select MXS_AUART3_DEVICE_ENABLE
++	help
++	  Say Y to select the MECT panel TPX1070_800x480 (changes: uart2) 
++
+ endchoice
+ 
+ config MECT_PRODUCT
+diff -urN a/arch/arm/mach-mx28/mx28evk_pins.c b/arch/arm/mach-mx28/mx28evk_pins.c
+--- a/arch/arm/mach-mx28/mx28evk_pins.c	2021-01-26 17:21:02.107385918 +0100
++++ b/arch/arm/mach-mx28/mx28evk_pins.c	2021-01-26 17:08:12.233546280 +0100
+@@ -82,6 +82,30 @@
+ 	 .fun   = PIN_FUN1,
+ 	 },
+ #endif
++#ifdef CONFIG_MXS_AUART2_DEVICE_ENABLE
++	{
++	 .name  = "AUART2.RX",
++	 .id    = PINID_AUART2_RX,
++	 .fun   = PIN_FUN1,
++	 },
++	{
++	 .name  = "AUART2.TX",
++	 .id    = PINID_AUART2_TX,
++	 .fun   = PIN_FUN1,
++	 },
++/*
++	{
++	 .name  = "AUART2.CTS",
++	 .id    = PINID_AUART2_CTS,
++	 .fun   = PIN_FUN1,
++	 },
++	{
++	 .name  = "AUART3.RTS",
++	 .id    = PINID_AUART3_RTS,
++	 .fun   = PIN_FUN1,
++	 },
++*/
++#else
+ 	{
+ 	 .name = "usb0",
+ 	 .id = PINID_AUART2_TX, /* Power enable pin*/
+@@ -96,7 +120,7 @@
+ 	 .data  = 1,
+ 	 .output = 1,
+ 	 },
+-
++#endif
+ #if defined(CONFIG_USB_OTG)
+ 	 {
+ 	 .name 	= "usb0_id",

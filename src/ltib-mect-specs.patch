@@ -1520,7 +1520,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 3.1.8
++Version         : 3.2.3
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3988,7 +3988,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1541 @@
+@@ -0,0 +1,1602 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define rhtbtr resources-hack-to-build-the-rpm
 +
@@ -4103,20 +4103,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
-+# TP1070_02_E
-+#
-+%Package lfs-TP1070_02_E
-+Summary         : Trimmed %{name} to just the run-times needed for local file system.
-+Vendor          : MECT s.r.l.
-+Packager        : Francesco Mandracci
-+Group           : Applications/System
-+AutoReqProv     : no
-+Prefix          : %{pfx}/TP1070_02_E/local
-+
-+%Description lfs-TP1070_02_E
-+%{name} package contents limited to just the run-times needed
-+on the target.
-+
 +# TP1070_02_F
 +#
 +%Package lfs-TP1070_02_F
@@ -4128,6 +4114,34 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Prefix          : %{pfx}/TP1070_02_F/local
 +
 +%Description lfs-TP1070_02_F
++%{name} package contents limited to just the run-times needed
++on the target.
++
++# TPX1070_03_D
++#
++%Package lfs-TPX1070_03_D
++Summary         : Trimmed %{name} to just the run-times needed for local file system.
++Vendor          : MECT s.r.l.
++Packager        : Francesco Mandracci
++Group           : Applications/System
++AutoReqProv     : no
++Prefix          : %{pfx}/TPX1070_03_D/local
++
++%Description lfs-TPX1070_03_D
++%{name} package contents limited to just the run-times needed
++on the target.
++
++# TPX1070_03_E
++#
++%Package lfs-TPX1070_03_E
++Summary         : Trimmed %{name} to just the run-times needed for local file system.
++Vendor          : MECT s.r.l.
++Packager        : Francesco Mandracci
++Group           : Applications/System
++AutoReqProv     : no
++Prefix          : %{pfx}/TPX1070_03_E/local
++
++%Description lfs-TPX1070_03_E
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
@@ -4518,9 +4532,9 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+# TP1070_02_E
++# TP1070_02_F
 +#
-+d=TP1070_02_E/Simple
++d=TP1070_02_F/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4536,9 +4550,27 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+# TP1070_02_F
++# TPX1070_03_D
 +#
-+d=TP1070_02_F/Simple
++d=TPX1070_03_D/Simple
++if test -d $d; then
++	cd $d
++
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
++	$MECT_QT_INSTALL_DIR/bin/qmake \
++		-spec qws/linux-g++-mx \
++		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
++		"DEFINES+=TARGET_ARM" \
++		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
++		Simple.pro
++	make -j1
++
++	cd -
++fi
++
++# TPX1070_03_E
++#
++d=TPX1070_03_E/Simple
 +if test -d $d; then
 +	cd $d
 +
@@ -4972,21 +5004,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
-+# TP1070_02_E
-+#
-+d=TP1070_02_E/Simple
-+if test -d $d; then
-+	cd $d
-+
-+	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TP1070_02_E/local/root/hmi
-+	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TP1070_02_E/local/etc/sysconfig/Crosstable.csv
-+	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_02_E/local/etc/sysconfig/img/splash.png
-+	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_02_E/local/etc/sysconfig/system.ini
-+	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_02_E/local/data/customtrend/trend1.csv
-+
-+	cd -
-+fi
-+
 +# TP1070_02_F
 +#
 +d=TP1070_02_F/Simple
@@ -4998,6 +5015,39 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TP1070_02_F/local/etc/sysconfig/img/splash.png
 +	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TP1070_02_F/local/etc/sysconfig/system.ini
 +	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TP1070_02_F/local/data/customtrend/trend1.csv
++
++	cd -
++fi
++
++# TPX1070_03_D
++#
++d=TPX1070_03_D/Simple
++if test -d $d; then
++	cd $d
++
++	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPX1070_03_D/local/root/hmi
++	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPX1070_03_D/local/etc/sysconfig/Crosstable.csv
++	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPX1070_03_D/local/etc/sysconfig/img/splash.png
++	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPX1070_03_D/local/etc/sysconfig/system.ini
++	install -m644 -D config/trend1.csv     $RPM_BUILD_ROOT%{pfx}/TPX1070_03_D/local/data/customtrend/trend1.csv
++
++	cd -
++fi
++
++# TPX1070_03_E
++#
++d=TPX1070_03_E/Simple
++if test -d $d; then
++	cd $d
++
++	install -m755 -D hmi                     $RPM_BUILD_ROOT%{pfx}/TPX1070_03_E/local/root/hmi
++	install -m644 -D sounds/Front_Center.wav $RPM_BUILD_ROOT%{pfx}/TPX1070_03_E/local/root/Front_Center.wav
++	install -m644 -D sounds/Front_Left.wav   $RPM_BUILD_ROOT%{pfx}/TPX1070_03_E/local/root/Front_Left.wav
++	install -m644 -D sounds/Front_Right.wav  $RPM_BUILD_ROOT%{pfx}/TPX1070_03_E/local/root/Front_Right.wav
++	install -m644 -D config/Crosstable.csv   $RPM_BUILD_ROOT%{pfx}/TPX1070_03_E/local/etc/sysconfig/Crosstable.csv
++	install -m644 -D config/splash.png       $RPM_BUILD_ROOT%{pfx}/TPX1070_03_E/local/etc/sysconfig/img/splash.png
++	install -m644 -D config/system.ini       $RPM_BUILD_ROOT%{pfx}/TPX1070_03_E/local/etc/sysconfig/system.ini
++	install -m644 -D config/trend1.csv       $RPM_BUILD_ROOT%{pfx}/TPX1070_03_E/local/data/customtrend/trend1.csv
 +
 +	cd -
 +fi
@@ -5354,14 +5404,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TP1070_01_C/local/etc/sysconfig/system.ini
 +%{pfx}/TP1070_01_C/local/data/customtrend/trend1.csv
 +
-+%files lfs-TP1070_02_E
-+%defattr(-,root,root)
-+%{pfx}/TP1070_02_E/local/root/hmi
-+%{pfx}/TP1070_02_E/local/etc/sysconfig/Crosstable.csv
-+%{pfx}/TP1070_02_E/local/etc/sysconfig/img/splash.png
-+%{pfx}/TP1070_02_E/local/etc/sysconfig/system.ini
-+%{pfx}/TP1070_02_E/local/data/customtrend/trend1.csv
-+
 +%files lfs-TP1070_02_F
 +%defattr(-,root,root)
 +%{pfx}/TP1070_02_F/local/root/hmi
@@ -5369,6 +5411,25 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TP1070_02_F/local/etc/sysconfig/img/splash.png
 +%{pfx}/TP1070_02_F/local/etc/sysconfig/system.ini
 +%{pfx}/TP1070_02_F/local/data/customtrend/trend1.csv
++
++%files lfs-TPX1070_03_D
++%defattr(-,root,root)
++%{pfx}/TPX1070_03_D/local/root/hmi
++%{pfx}/TPX1070_03_D/local/etc/sysconfig/Crosstable.csv
++%{pfx}/TPX1070_03_D/local/etc/sysconfig/img/splash.png
++%{pfx}/TPX1070_03_D/local/etc/sysconfig/system.ini
++%{pfx}/TPX1070_03_D/local/data/customtrend/trend1.csv
++
++%files lfs-TPX1070_03_E
++%defattr(-,root,root)
++%{pfx}/TPX1070_03_E/local/root/hmi
++%{pfx}/TPX1070_03_E/local/root/Front_Center.wav
++%{pfx}/TPX1070_03_E/local/root/Front_Left.wav
++%{pfx}/TPX1070_03_E/local/root/Front_Right.wav
++%{pfx}/TPX1070_03_E/local/etc/sysconfig/Crosstable.csv
++%{pfx}/TPX1070_03_E/local/etc/sysconfig/img/splash.png
++%{pfx}/TPX1070_03_E/local/etc/sysconfig/system.ini
++%{pfx}/TPX1070_03_E/local/data/customtrend/trend1.csv
 +
 +%files lfs-TPAC1007_03
 +%defattr(-,root,root)
@@ -5530,7 +5591,6 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPLC100_01_AB/local/etc/sysconfig/system.ini
 +%{pfx}/TPLC100_01_AB/local/data/customtrend/trend1.csv
 +%{pfx}/TPLC100_01_AB/local/etc/sysconfig/iomap0.cmg
-+%{pfx}/TPLC100_01_AB/local/etc/sysconfig/network0.cmg
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 --- ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 +++ ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec

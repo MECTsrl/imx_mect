@@ -38,7 +38,7 @@ PLC_ARC := PLC.zip
 PLC_ATHW := ATHW119_4CVM.kad
 PLC_ATCM_COMMON := ATCM_Common.4cl
 FONTS_ARC := Fonts.7z
-PLCHELP_ARC := Engineering_Help_1.zip
+PLCHELP_ARC := Engineering_Help_3.zip
 
 UNZIP_EXE := unzip.exe
 UN7ZIPG_EXE := 7zG.exe

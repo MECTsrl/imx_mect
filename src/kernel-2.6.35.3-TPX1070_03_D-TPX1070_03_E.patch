@@ -1,6 +1,6 @@
 diff -urN a/arch/arm/mach-mx28/Kconfig b/arch/arm/mach-mx28/Kconfig
---- a/arch/arm/mach-mx28/Kconfig	2021-01-26 17:21:02.107385918 +0100
-+++ b/arch/arm/mach-mx28/Kconfig	2021-01-26 14:59:54.164344081 +0100
+--- a/arch/arm/mach-mx28/Kconfig	2021-01-28 11:38:36.185478630 +0100
++++ b/arch/arm/mach-mx28/Kconfig	2021-01-28 11:35:02.324114928 +0100
 @@ -106,6 +106,19 @@
  	help
  	  Say Y to select the MECT panel TPAC1008_800x480 (changes: ethernet, logo...) 
@@ -22,13 +22,13 @@ diff -urN a/arch/arm/mach-mx28/Kconfig b/arch/arm/mach-mx28/Kconfig
  
  config MECT_PRODUCT
 diff -urN a/arch/arm/mach-mx28/mx28evk_pins.c b/arch/arm/mach-mx28/mx28evk_pins.c
---- a/arch/arm/mach-mx28/mx28evk_pins.c	2021-01-26 17:21:02.107385918 +0100
-+++ b/arch/arm/mach-mx28/mx28evk_pins.c	2021-01-26 17:08:12.233546280 +0100
-@@ -82,6 +82,30 @@
+--- a/arch/arm/mach-mx28/mx28evk_pins.c	2021-01-28 11:38:36.185478630 +0100
++++ b/arch/arm/mach-mx28/mx28evk_pins.c	2021-01-28 15:50:01.930445322 +0100
+@@ -82,6 +82,42 @@
  	 .fun   = PIN_FUN1,
  	 },
  #endif
-+#ifdef CONFIG_MXS_AUART2_DEVICE_ENABLE
++#ifdef CONFIG_MXS_AUART2_DEVICE_ENABLE /* TPX1070_03_D TPX1070_03_E */
 +	{
 +	 .name  = "AUART2.RX",
 +	 .id    = PINID_AUART2_RX,
@@ -39,23 +39,35 @@ diff -urN a/arch/arm/mach-mx28/mx28evk_pins.c b/arch/arm/mach-mx28/mx28evk_pins.
 +	 .id    = PINID_AUART2_TX,
 +	 .fun   = PIN_FUN1,
 +	 },
-+/*
 +	{
 +	 .name  = "AUART2.CTS",
-+	 .id    = PINID_AUART2_CTS,
++	 .id    = PINID_AUART2_CTS, /* not connected */
 +	 .fun   = PIN_FUN1,
 +	 },
 +	{
-+	 .name  = "AUART3.RTS",
-+	 .id    = PINID_AUART3_RTS,
++	 .name  = "AUART2.RTS",
++	 .id    = PINID_AUART2_RTS, /* not connected */
 +	 .fun   = PIN_FUN1,
 +	 },
-+*/
++	{
++	 .name = "FastIO_7",
++	 .id = PINID_AUART1_RX,
++	 .fun = PIN_GPIO,
++	 .data = 0,
++	 .output = 1,
++	 },
++	{
++	 .name = "FastIO_8",
++	 .id = PINID_AUART1_TX,
++	 .fun = PIN_GPIO,
++	 .data = 0,
++	 .output = 1,
++	 },
 +#else
  	{
  	 .name = "usb0",
  	 .id = PINID_AUART2_TX, /* Power enable pin*/
-@@ -96,7 +120,7 @@
+@@ -96,7 +132,7 @@
  	 .data  = 1,
  	 .output = 1,
  	 },
@@ -64,3 +76,109 @@ diff -urN a/arch/arm/mach-mx28/mx28evk_pins.c b/arch/arm/mach-mx28/mx28evk_pins.
  #if defined(CONFIG_USB_OTG)
  	 {
  	 .name 	= "usb0_id",
+diff -urN a/arch/arm/mach-mx28/power.c b/arch/arm/mach-mx28/power.c
+--- a/arch/arm/mach-mx28/power.c	2021-01-28 11:38:32.877228104 +0100
++++ b/arch/arm/mach-mx28/power.c	2021-01-28 13:54:20.758455462 +0100
+@@ -315,19 +315,27 @@
+ 
+ static int vbus5v_enable(struct mxs_regulator *sreg)
+ {
++#ifndef CONFIG_MXS_AUART2_DEVICE_ENABLE
+ 	gpio_set_value(USB_POWER_ENABLE, 1);
++#endif
+ 	return 0;
+ }
+ 
+ static int vbus5v_disable(struct mxs_regulator *sreg)
+ {
++#ifndef CONFIG_MXS_AUART2_DEVICE_ENABLE
+ 	gpio_set_value(USB_POWER_ENABLE, 0);
++#endif
+ 	return 0;
+ }
+ 
+ static int vbus5v_is_enabled(struct mxs_regulator *sreg)
+ {
++#ifndef CONFIG_MXS_AUART2_DEVICE_ENABLE
+ 	return gpio_get_value(USB_POWER_ENABLE);
++#else
++	return 1;
++#endif
+ }
+ 
+ 
+@@ -576,7 +584,9 @@
+ 	mxs_platform_add_regulator("charger", 1);
+ 	mxs_platform_add_regulator("power-test", 1);
+ 	mxs_platform_add_regulator("cpufreq", 1);
++#ifndef CONFIG_MXS_AUART2_DEVICE_ENABLE
+ 	gpio_direction_output(USB_POWER_ENABLE, 0);
++#endif
+ 	return 0;
+ }
+ postcore_initcall(regulators_init);
+diff -urN a/arch/arm/mach-mx28/usb_dr.c b/arch/arm/mach-mx28/usb_dr.c
+--- a/arch/arm/mach-mx28/usb_dr.c	2021-01-28 11:38:32.877228104 +0100
++++ b/arch/arm/mach-mx28/usb_dr.c	2021-01-28 13:47:27.939268417 +0100
+@@ -57,8 +57,10 @@
+ 	/* USB_POWER_ENABLE_PIN have request at pin init*/
+ 	if (pdata->phy_regs != USBPHY1_PHYS_ADDR) {
+ 		pr_debug("%s: on is %d\n", __func__, on);
++#ifndef CONFIG_MXS_AUART2_DEVICE_ENABLE
+ 		gpio_direction_output(USB_POWER_ENABLE, on);
+ 		gpio_set_value(USB_POWER_ENABLE, on);
++#endif
+ 	}
+ }
+ 
+diff -urN a/drivers/misc/gpio_pwrfail.c b/drivers/misc/gpio_pwrfail.c
+--- a/drivers/misc/gpio_pwrfail.c	2021-01-28 11:38:36.161476814 +0100
++++ b/drivers/misc/gpio_pwrfail.c	2021-01-28 13:45:38.565161664 +0100
+@@ -208,9 +208,10 @@
+ 			set_irq_type(gpio_to_irq(pwrfail->gpio), IRQ_TYPE_EDGE_FALLING);
+ 		
+ 		//usb disable
++#ifndef CONFIG_MXS_AUART2_DEVICE_ENABLE
+ 			gpio_direction_output(MXS_PIN_TO_GPIO(PINID_AUART2_TX), 0);
+ 			gpio_set_value(MXS_PIN_TO_GPIO(PINID_AUART2_TX), 0);
+-
++#endif
+ 		//lan disable 
+ #if defined CONFIG_MECT_CUSTOMIZATION
+ 		        gpio_direction_output(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), 1);
+@@ -280,9 +281,10 @@
+ 		set_irq_type(gpio_to_irq(pwrfail->gpio), IRQ_TYPE_EDGE_RISING);
+ 		
+ 		//enable USB
++#ifndef CONFIG_MXS_AUART2_DEVICE_ENABLE
+ 		gpio_direction_output(MXS_PIN_TO_GPIO(PINID_AUART2_TX), 1);
+ 		gpio_set_value(MXS_PIN_TO_GPIO(PINID_AUART2_TX), 1);
+-
++#endif
+ 		//__raw_writel(BM_USBPHY_CTRL_CLKGATE, REGS_USBPHY0_BASE + HW_USBPHY_CTRL_CLR);
+ 		//__raw_writel(BM_USBPHY_CTRL_CLKGATE, REGS_USBPHY1_BASE + HW_USBPHY_CTRL_CLR);
+ 
+@@ -359,9 +361,10 @@
+ 
+ 		
+ 		//usb disable
++#ifndef CONFIG_MXS_AUART2_DEVICE_ENABLE
+ 			gpio_direction_output(MXS_PIN_TO_GPIO(PINID_AUART2_TX), 0);
+ 			gpio_set_value(MXS_PIN_TO_GPIO(PINID_AUART2_TX), 0);
+-
++#endif
+ 		//lan disable 
+ #if defined CONFIG_MECT_CUSTOMIZATION
+ 		        gpio_direction_output(MXS_PIN_TO_GPIO(PINID_SSP1_DATA3), 1);
+@@ -435,9 +438,10 @@
+ 		#endif
+ 		
+ 		//enable USB
++#ifndef CONFIG_MXS_AUART2_DEVICE_ENABLE
+ 		gpio_direction_output(MXS_PIN_TO_GPIO(PINID_AUART2_TX), 1);
+ 		gpio_set_value(MXS_PIN_TO_GPIO(PINID_AUART2_TX), 1);
+-
++#endif
+ 		//__raw_writel(BM_USBPHY_CTRL_CLKGATE, REGS_USBPHY0_BASE + HW_USBPHY_CTRL_CLR);
+ 		//__raw_writel(BM_USBPHY_CTRL_CLKGATE, REGS_USBPHY1_BASE + HW_USBPHY_CTRL_CLR);
+ 

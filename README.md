@@ -1,15 +1,7 @@
 # LTIB installation for MECT operator panels based on Freescale i.MX28 processors
 
-The build downloads, configures and installs the LTIB image build environment and the Codesurcery target toolchain for the MECT operator panels based on Freescale i.MX28 processors:
+The build downloads, configures and installs the LTIB image build environment and the Codesurcery target toolchain for the MECT operator panels based on Freescale i.MX28 processors [TP/TPAC/TPLC/TPX](https://www.mect.it/en/products/control-systems).
 
-- with on-board I/O:
-[TPAC1007](http://www.mect.it/en/products/control-and-automation/operator-panels-with-plcpac/tpac1007/),
-[TPAC1006](http://www.mect.it/en/products/control-and-automation/operator-panels-with-plcpac/tpac1006/),
-[TPAC1008](http://www.mect.it/en/products/control-and-automation/operator-panels-with-plcpac/tpac1008/)
-- with RTU only:
-[TP1043](http://www.mect.it/en/products/control-and-automation/operator-panels/tp1043/),
-[TP1057](http://www.mect.it/en/products/control-and-automation/operator-panels/tp1057/),
-[TP1070](http://www.mect.it/en/products/control-and-automation/operator-panels/tp1070/)
 
 ## Build instructions
 

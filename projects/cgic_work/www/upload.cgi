@@ -36,13 +36,13 @@ if [ "$REQUEST_METHOD" = "POST" ]; then
   if [ -s $TMPOUT.1 ]
   then
 
-#    if [ "$RCPTBL" != "1" ] && [ "$RCPZIP" != "1" ] && [ "$LOGSTBL" != "1" ] && [ "$TRENDTBL" != "1" ]; then
+    if [ "$RCPTBL" != "1" ] && [ "$RCPZIP" != "1" ] && [ "$LOGSTBL" != "1" ] && [ "$TRENDTBL" != "1" ] && [ "$SPLASH" != "1" ]; then
 	/etc/rc.d/init.d/autoexec stop > /dev/null 2>&1
 	if [ -x /usr/bin/splash ]
 	then
 		/usr/bin/splash --text "Updating ..." --dimension 42 -qws > /dev/null 2>&1 &
 	fi
-#    fi
+    fi
 
   # SYSUPDATE
   if [ "$SYSUPD" == "1" ]
@@ -244,7 +244,7 @@ cat <<EOF
 <tbody>
 <tr>
 <td>
-    Success to upload $MSG.
+    Upload $MSG successful.
 EOF
 cat <<EOF
 </td>
@@ -252,14 +252,14 @@ cat <<EOF
 EOF
 fi
 
-#    if [ "$RCPTBL" != "1" ] && [ "$RCPZIP" != "1" ] && [ "$LOGSTBL" != "1" ] && [ "$TRENDTBL" != "1" ]; then
+    if [ "$RCPTBL" != "1" ] && [ "$RCPZIP" != "1" ] && [ "$LOGSTBL" != "1" ] && [ "$TRENDTBL" != "1" ] && [ "$SPLASH" != "1" ]; then
 	if [ -x /usr/bin/splash ]
 	then
 		killall splash
 	fi
 	/etc/rc.d/init.d/autoexec start > /dev/null 2>&1
         echo "Restarting the application."
-#    fi
+    fi
 
 cat <<EOF
 <tr>
@@ -268,9 +268,17 @@ cat <<EOF
 <form>
  <input class=bottoni type="button" value="Home" onclick="window.location.href='menu.cgi'">
 EOF
-    if [ "$RCPTBL" != "1" ] && [ "$RCPZIP" != "1" ]; then
-        echo "<input class=bottoni type=\"button\" value=\"Restart\" onclick=\"window.location.href='reboot.cgi?COMMAND=RESTART'\">"
-        echo "<input class=bottoni type=\"button\" value=\"Reboot\" onclick=\"window.location.href='reboot.cgi?COMMAND=REBOOT'\">"
+    if [ "$SPLASH" = "1" ]; then
+	echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='config_manager.cgi'\">"
+	echo "<input class=bottoni type=\"button\" value=\"Reboot\" onclick=\"window.location.href='reboot.cgi?COMMAND=REBOOT'\">"
+    elif [ "$LOGSTBL" = "1" ]; then
+        echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='logs_manager.cgi'\">"
+    elif [ "$TRENDTBL" = 1 ]; then
+        echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='filebrowser.cgi?ROOT_DIR=$TREND_DIR'\">"
+    elif [ "$RCPTBL" = "1" ] || [ "$RCPZIP" = "1" ]; then
+        echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='filebrowser.cgi?ROOT_DIR=$RECIPE_DIR'\">"
+    else
+     	echo "<input class=bottoni type=\"button\" value=\"Reboot\" onclick=\"window.location.href='reboot.cgi?COMMAND=REBOOT'\">"
     fi
 cat <<EOF
 </form>

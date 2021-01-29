@@ -38,7 +38,7 @@ cat <<EOF
 <form name="sei" method="POST" enctype="multipart/form-data" action="upload.cgi">
 	<tr align="right">
 		<td>
-			Choose splash file:
+			Choose splash file (.png):
 		</td>
 		<td>
 			<input type="file" name="SPLASH" required>

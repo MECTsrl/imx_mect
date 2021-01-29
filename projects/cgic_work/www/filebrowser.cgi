@@ -133,50 +133,67 @@ cat <<EOF
 
 </div> <!-- end div form -->
 <BR>
+<form name="tre" method="POST" enctype="multipart/form-data" action="upload.cgi">
+<table style="border:solid 2px #335970;" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >
+EOF
+	
+if [ "$ROOT_DIR" == "$RECIPE_DIR" ]
+then
+	echo "<tbody>"
+	echo "<tr>"
+	echo "<td>"
+	echo "<input type="file" name=\"RCPZIP\" accept=\"application/zip\" required>"
+	echo "</td>"
+	echo "<td>"
+	echo "<input class=bottoni type=\"submit\" value=\"Upload Recipes\">"
+	echo "</td>"
+	echo "</tr>"
+	echo "</tbody>"
+#elif [ "$ROOT_DIR" == "$----------------------------------" ]
+#then
+#	echo "<td>"
+#	echo "<input type=\"file\" name=\"LOGSTBL\" required>"
+#	echo "</td>"
+#	echo "<td>"
+#	echo "<input class=bottoni type=\"submit\" value=\"Update Partial logs\">"
+#	echo "</td>"	
+#elif [ "$ROOT_DIR" == "$ALARMS_DIR" ]
+#then
+#	echo "<td>"
+#	echo "<input type=\"file\" name=\"LOGSTBL\" required>"
+#	echo "</td>"
+#	echo "<td>"
+#	echo "<input class=bottoni type=\"submit\" value=\"Update Partial logs\">"
+#	echo "</td>"
+
+elif [ "$ROOT_DIR" == "$TREND_DIR" ]
+then
+	echo "</tbody>"
+	echo "<tr>"
+	echo "<td>"
+	echo "<input type="file" name=\"TRENDTBL\" accept=\"application/csv\" required>"
+	echo "</td>"
+	echo "<td>"
+	echo "<input class=bottoni type=\"submit\" value=\"Upload Trends\">"
+	echo "</td>"
+	echo "</tr>"
+	echo "</tbody>"
+
+#elif [ "$ROOT_DIR" == "$SCREENSHOT_DIR" ]
+#then 	
+#    	echo "<td>"
+#	echo "<input type=\"file\" name=\"LOGSTBL\" required>"
+#	echo "</td>"
+#	echo "<td>"
+#	echo "<input class=bottoni type=\"submit\" value=\"Update Partial logs\">"
+#	echo "</td>"
+fi	
+cat <<EOF		
+</tbody>
+</table>
+</form>
 EOF
 echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='$HOME_PAGE'\">"
-if [ "`dirname $ROOT_DIR`" != "." ]
-then
-	echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='filebrowser.cgi?ROOT_DIR=`dirname $ROOT_DIR`'\">"
-else
-	if [ `echo $ROOT_DIR | grep ^$RECIPE_DIR` ]
-	then
-		if [ "$ROOT_DIR" == "$RECIPE_DIR" ]
-		then
-			echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='recipes_manager.cgi'\">"
-		else
-			echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='recipes_manager.cgi'\">"
-		fi
-	else
-		if [ `echo $ROOT_DIR | grep ^$ALARMS_DIR` ]
-		then
-			if [ "$ROOT_DIR" == "$ALARMS_DIR" ]
-			then
-				echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='$HOME_PAGE'\">"
-			else
-				echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='filebrowser.cgi?ROOT_DIR=$ALARMS_DIR'\">"
-			fi
-		else
-			if [ `echo $ROOT_DIR | grep ^$STORE_DIR` ]
-			then
-				echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='logs_filter.cgi'\">"
-			else
-				if [ "$ROOT_DIR" == "$TREND_DIR" ]
-				then
-					echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='trend_manager.cgi'\">"
-				else
-					if [ "$ROOT_DIR" == "$SCREENSHOT_DIR" ]
-					then
-						echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='trend_manager.cgi'\">"
-					else
-						echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='trend_manager.cgi'\">"
-					fi
-				fi
-			fi
-		fi
-	fi
-fi
-
 cat <<EOF
 </center>
 </div> <!-- end div content -->

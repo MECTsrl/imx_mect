@@ -14,7 +14,7 @@ else
 	then
 		MSG="Rebooting the system..."
 		TIMEOUT=20
-		NEXTPAGE="index.cgi"
+		NEXTPAGE="${IPADDR}/index.cgi"
 	else
 		MSG="Invalid command."
 		TIMEOUT=2
@@ -28,7 +28,7 @@ Content-Type: text/html
 <html>
 	<head>
 EOM
-	echo "<meta http-equiv=\"refresh\" content=\"$TIMEOUT;url=$NEXTPAGE\">"
+	echo "<meta http-equiv=\"refresh\" content=\"$TIMEOUT;url=http://$NEXTPAGE\">"
 cat <<EOM
 	<title>$TARGET_NAME REMOTE MANAGEMENT</title>
 	<link rel="stylesheet" type="text/css" href="style.css">

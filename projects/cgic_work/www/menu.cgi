@@ -134,16 +134,19 @@ cat <<EOF
 <tbody>
 		<tr>
 			<td>
-					<input class=bottoni type="button" value="Alarms" onclick="window.location.href='alarms_manager.cgi'">
+					<input class=bottoni type="button" value="Alarms" onclick="window.location.href='filebrowser.cgi?ROOT_DIR=$ALARMS_DIR'">
 			</td>
 			<td>
-					<input class=bottoni type="button" value="Logs" onclick="window.location.href='logs_manager.cgi'">
+					<input class=bottoni type="button" value="Logs" onclick="window.location.href='filebrowser.cgi?ROOT_DIR=$STORE_DIR'">
 			</td>
 			<td>
-					<input class=bottoni type="button" value="Trend" onclick="window.location.href='trend_manager.cgi'">
+					<input class=bottoni type="button" value="Trend" onclick="window.location.href='filebrowser.cgi?ROOT_DIR=$TREND_DIR'">
 			</td>
 			<td>
-					<input class=bottoni type="button" value="Recipes" onclick="window.location.href='recipes_manager.cgi'">
+					<input class=bottoni type="button" value="Recipes" onclick="window.location.href='filebrowser.cgi?ROOT_DIR=$RECIPE_DIR'">
+			</td>
+			<td>
+					<input class=bottoni type=button value=Screenshot onclick="window.location.href='filebrowser.cgi?ROOT_DIR=$SCREENSHOT_DIR'">
 			</td>
 		</tr>
 </tbody>
@@ -161,7 +164,7 @@ if [ "$PASSWORD" != "" ] && [ "$PASSWORD" = "$PWDSUPERUSER" -o "$PASSWORD" = "$P
 then
 cat <<EOF
 			<td>
-					<input class=bottoni type="button" value="Update firmware" onclick="window.location.href='upgrade.cgi'">
+					<input class=bottoni type="button" value="Execute Script" onclick="window.location.href='upgrade.cgi'">
 			</td>
 EOF
 fi

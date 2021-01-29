@@ -37,6 +37,9 @@ NETCONF="/local/etc/sysconfig/net.conf"
 MACCONF="/etc/mac.conf"
 SERIALCONF="/etc/serial.conf"
 
+IPADDR="`grep 'IPADDR0=' ${NETCONF} | cut -d'=' -f2 `"
+
+
 SIGN=/usr/bin/sign
 
 PWDUSER=""

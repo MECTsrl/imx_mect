@@ -6,11 +6,22 @@
 
 [ -f "$NETCONF" ] && . "$NETCONF"
 
-eval `echo "$NAMESERVER01" | sed 's/$//' | awk -F. '{ f = $1 == 0 ? 1 : $1; print "DN11=" f "\nDN12=" $2 "\nDN13=" $3 "\nDN14=" $4}'`
-eval `echo "$NAMESERVER02" | sed 's/$//' | awk -F. '{ f = $1 == 0 ? 1 : $1; print "DN21=" f "\nDN22=" $2 "\nDN23=" $3 "\nDN24=" $4}'`
-eval `echo "$IPADDR0" | sed 's/$//' | awk -F. '{ print "IP1=" $1 "\nIP2=" $2 "\nIP3=" $3 "\nIP4=" $4}'`
-eval `echo "$NETMASK0" | sed 's/$//' | awk -F. '{ f = $1 == 0 ? 1 : $1; print "NM1=" f "\nNM2=" $2 "\nNM3=" $3 "\nNM4=" $4}'`
-eval `echo "$GATEWAY0" | sed 's/$//' | awk -F. '{ f = $1 == 0 ? 1 : $1; print "GW1=" f "\nGW2=" $2 "\nGW3=" $3 "\nGW4=" $4}'`
+#eval `echo "$NAMESERVER01" | sed 's/
+#$//' | awk -F. '{ f = $1 == 0 ? 1 : $1; print "DN11=" f "\nDN12=" $2 "\nDN13=" $3 "\nDN14=" $4}'`
+#eval `echo "$NAMESERVER02" | sed 's/
+#$//' | awk -F. '{ f = $1 == 0 ? 1 : $1; print "DN21=" f "\nDN22=" $2 "\nDN23=" $3 "\nDN24=" $4}'`
+#eval `echo "$IPADDR0" | sed 's/
+#$//' | awk -F. '{ print "IP1=" $1 "\nIP2=" $2 "\nIP3=" $3 "\nIP4=" $4}'`
+#eval `echo "$NETMASK0" | sed 's/
+#$//' | awk -F. '{ f = $1 == 0 ? 1 : $1; print "NM1=" f "\nNM2=" $2 "\nNM3=" $3 "\nNM4=" $4}'`
+#eval `echo "$GATEWAY0" | sed 's/
+#$//' | awk -F. '{ f = $1 == 0 ? 1 : $1; print "GW1=" f "\nGW2=" $2 "\nGW3=" $3 "\nGW4=" $4}'`
+
+IP=`grep 'IPADDR0=' $NETCONF  | cut -d'=' -f2 `
+NM=`grep 'NETMASK0=' $NETCONF  | cut -d'=' -f2 `
+GW=`grep 'GATEWAY0=' $NETCONF  | cut -d'=' -f2 `
+DN1=`grep 'NAMESERVER01=' $NETCONF  | cut -d'=' -f2 `
+DN2=`grep 'NAMESERVER02=' $NETCONF  | cut -d'=' -f2 `
 
 #initialize unset value
 [ -n "$DN11" ] || DN11=1
@@ -51,28 +62,30 @@ cat <<EOF
 		</div>
         <div id="content">
             <div id="form"> 
-                <form action="lan_setup.cgi" method="POST">
+                
                     <fieldset>
                         <legend>Network Configuration</legend>
                         <table>
-                        <tbody>
+                        <tbody>          
                         <tr>
-	                        <td>
-    	                    <label>Static: </label>
-        	                </td>
-                        </tr>
-                        <tr>
+
 EOF
-$WWW_DIR/select $IP1 $IP2 $IP3 $IP4 $NM1 $NM2 $NM3 $NM4 $GW1 $GW2 $GW3 $GW4 $DN11 $DN12 $DN13 $DN14 $DN21 $DN22 $DN23 $DN24 < $WWW_DIR/select-template.html > /tmp/select.html
-cat /tmp/select.html
-rm -f /tmp/select.html
+echo "<div id=\"eth0\" class=\"container\">"
+echo "<label>ETHERNET 0 Static: </label><br>"
+echo "<form action=\"lan_setup.cgi\" method=\"POST\">"
+     echo "<div><label>IP:	   </label><input name=\"ip\" type=\"text\" minlength=\"7\" maxlength=\"15\" size=\"15\" placeholder=\"xxx.xxx.xxx.xxx\" value=$IP  pattern=\"^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$\"></div><br>"
+     echo "<div><label>NM:	 </label><input name=\"nm\" type=\"text\" minlength=\"7\" maxlength=\"15\" size=\"15\" placeholder=\"xxx.xxx.xxx.xxx\"value=$NM  pattern=\"^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$\"></div><br>"
+     echo "<div><label>GW:	</label><input name=\"gw\" type=\"text\" minlength=\"7\" maxlength=\"15\" size=\"15\" placeholder=\"xxx.xxx.xxx.xxx\"value=$GW  pattern=\"^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$\"></div><br>"
+     echo "<div><label>DN1:	</label><input name=\"dn1\" type=\"text\" minlength=\"7\" maxlength=\"15\" size=\"15\" placeholder=\"xxx.xxx.xxx.xxx\" value=$DN1  pattern=\"^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$\"></div><br>"
+     echo "<div><label>DN2:	</label><input name=\"dn2\" type=\"text\" minlength=\"7\" maxlength=\"15\" size=\"15\" placeholder=\"xxx.xxx.xxx.xxx\" value=$DN2  pattern=\"^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$\"></div><br>"
+     echo "<input class=bottoni type=\"submit\" value=\"Apply\"></form>"
+     echo "</div>"
 cat <<EOF
                         </tr>
                         </tbody>
                         </table>
-					<input class=bottoni type="submit" value="Apply">
+					
                     </fieldset>
-                 </form>
 			</div> <!-- end div form -->
 EOF
 echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='$HOME_PAGE'\">"

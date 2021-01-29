@@ -24,15 +24,15 @@ position: absolute;
 bottom: 0;
 width: 100%;
 padding: 0.5em 0;
-background-color: #335970;
-color: #CCFFFF;
+background-color: #3f51b5;
+color: #3f51b5;
 text-align: center;
 border-top: 2px solid red;
 }
 div#header {
-background-color: #335970;
-color: #CCFFFF;
-border-bottom: 2px solid red;
+background-color: #3f51b5;
+color: #3f51b5;
+border-bottom: 2px inset grey;
 }
 div.buttons {
 margin-top: 1em;
@@ -47,11 +47,11 @@ padding-left: 0.5em;
 font: bold 2.0em/70px Verdana,arial,sans-serif;
 }
 div#header h1 {
-background-color: #335970;
-color: #CFF;
+background-color: #3f51b5;
+color: #fff;
 }
 h2 {
-color: #CCFFFF;
+color: #fff;
 font: bold 1.5em/40px Verdana,arial,sans-serif;
 }
 div#footer a {
@@ -63,9 +63,11 @@ div#content {
 padding: 1em 1em 5em;
 }
 .bottoni {
-background-color: #335970;
+background-color: #eeeeee;
 font-family: Verdana,arial,sans-serif;
-color: #CCFFFF;
+color: black;
 font-weight: bold;
-width: 200;
+width: 180;
+height: 50;
+border-radius: 10px;
 }

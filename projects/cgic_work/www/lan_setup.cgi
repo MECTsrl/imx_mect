@@ -8,14 +8,15 @@ DATA=`cat`
 
 for x in `echo $DATA | tr "&" "\n"`; do
 	eval $x
-done
+done 
 
-echo MAC0="$MAC0"                            > $NETCONF
-echo IPADDR0="$IP1.$IP2.$IP3.$IP4"          >> $NETCONF
-echo NETMASK0="$NM1.$NM2.$NM3.$NM4"         >> $NETCONF
-echo GATEWAY0="$GW1.$GW2.$GW3.$GW4"         >> $NETCONF
-echo NAMESERVER01="$DN11.$DN12.$DN13.$DN14" >> $NETCONF
-echo NAMESERVER02="$DN21.$DN22.$DN23.$DN24" >> $NETCONF
+if [ $ip != '' ]; then
+echo MAC0="$MAC0"       > $NETCONF
+echo IPADDR0=$ip       >> $NETCONF
+echo NETMASK0=$nm      >> $NETCONF
+echo GATEWAY0=$gw      >> $NETCONF
+echo NAMESERVER01=$dn1 >> $NETCONF
+echo NAMESERVER02=$dn2 >> $NETCONF
 echo MAC1="$MAC1"                           >> $NETCONF
 echo IPADDR1="$IPADDR1"                     >> $NETCONF
 echo NETMASK1="$NETMASK1"                   >> $NETCONF
@@ -23,27 +24,19 @@ echo GATEWAY1="$GATEWAY1"                   >> $NETCONF
 echo NAMESERVER11="$NAMESERVER11"           >> $NETCONF
 echo NAMESERVER12="$NAMESERVER12"           >> $NETCONF
 sync
-
-/etc/rc.d/init.d/autoexec stop > /dev/null 2>&1
-if [ -x /usr/bin/splash ]
-then
-	/usr/bin/splash --text "Modify network ..." --dimension 42 -qws > /dev/null 2>&1 &
 fi
-# not working
-/etc/rc.d/init.d/network restart
+
+cat $NETCONF | grep $ip
 if [ $? == 0 ]
 then
+	REFRESH="<meta http-equiv=\"refresh\" content=\"1;url=http://$ip/lan_config.cgi\">" 
 	TABLE="<table style=\"border:solid 2px #335970;\" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >"
-	MSG="Network setting updated. Reboot the system to apply the modification."
+	MSG="Network setting updated, Reboot for the changes to take effect."
 else
 	TABLE="<table style=\"border:solid 2px #FF0000;\" bgcolor=#fffbff cellspacing=10 cellpadding=4 align=center >"
 	MSG="Problem to update network settings"
+	
 fi
-if [ -x /usr/bin/splash ]
-then
-	killall splash
-fi
-/etc/rc.d/init.d/autoexec start > /dev/null 2>&1
 
 cat <<EOF
 Content-Type: text/html

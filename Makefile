@@ -5,7 +5,7 @@ export LC_ALL := C
 # MECT Suite version
 export MECT_BUILD_MAJOR := 3
 export MECT_BUILD_MINOR := 2
-export MECT_BUILD_BUILD := 3
+export MECT_BUILD_BUILD := 6
 export MECT_BUILD_RELEASE = $(MECT_BUILD_MAJOR).$(MECT_BUILD_MINOR).$(MECT_BUILD_BUILD)
 
 # ---------------------------
@@ -20,26 +20,26 @@ MECT_BUILD_IMXMECT_TAG :=0.0# v$(MECT_BUILD_RELEASE)
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := mect_suite_3.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_ATCMCRT_TAG :=0.0# v2.019
+export MECT_BUILD_ATCMCRT_TAG := v2.019
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_CAN_BRANCH := mect_suite_3.0
-MECT_BUILD_ATCMCRT_CAN_REV := HEAD#267
+MECT_BUILD_ATCMCRT_CAN_REV := 269
 MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
 # git branch and tag for the mect_plugins project
 MECT_BUILD_PLUGINSCRT_BRANCH := mect_suite_3.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_PLUGINSCRT_TAG :=0.0# v$(MECT_BUILD_RELEASE)
+export MECT_BUILD_PLUGINSCRT_TAG := v$(MECT_BUILD_RELEASE)
 
 # git branch and tag for the mect_apps project
 MECT_BUILD_APPSCRT_BRANCH := mect_suite_3.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_APPSCRT_TAG :=0.0# v$(MECT_BUILD_RELEASE)
+export MECT_BUILD_APPSCRT_TAG := v$(MECT_BUILD_RELEASE)
 
 # git branch and tag for the cloner project
 MECT_BUILD_CLONERCRT_BRANCH := mect_suite_3.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_CLONERCRT_TAG :=0.0# v$(MECT_BUILD_RELEASE)
+export MECT_BUILD_CLONERCRT_TAG := v$(MECT_BUILD_RELEASE)
 
 # Mandatory prefix for all target device names
 MECT_TARGET_PREFIX := MECT_
@@ -645,7 +645,6 @@ MECT_IMAGES := \
 ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 
 	MECT_IMAGES += \
-		TP1043_01_B \
 		TP1043_02_B \
 		TP1070_01_B \
 		TPAC1005 \

@@ -5,7 +5,7 @@ export LC_ALL := C
 # MECT Suite version
 export MECT_BUILD_MAJOR := 3
 export MECT_BUILD_MINOR := 2
-export MECT_BUILD_BUILD := 6
+export MECT_BUILD_BUILD := 7
 export MECT_BUILD_RELEASE = $(MECT_BUILD_MAJOR).$(MECT_BUILD_MINOR).$(MECT_BUILD_BUILD)
 
 # ---------------------------
@@ -15,15 +15,15 @@ export MECT_BUILD_RELEASE = $(MECT_BUILD_MAJOR).$(MECT_BUILD_MINOR).$(MECT_BUILD
 MECT_BUILD_IMXMECT_BRANCH := mect_suite_3.0
 # imx_mect tag used by ltib_update make target
 # Set to 0.0 to checkout HEAD
-MECT_BUILD_IMXMECT_TAG :=0.0# v$(MECT_BUILD_RELEASE)
+MECT_BUILD_IMXMECT_TAG := v$(MECT_BUILD_RELEASE)
 
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := mect_suite_3.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_ATCMCRT_TAG := v2.019
+export MECT_BUILD_ATCMCRT_TAG := v2.020
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_CAN_BRANCH := mect_suite_3.0
-MECT_BUILD_ATCMCRT_CAN_REV := 269
+MECT_BUILD_ATCMCRT_CAN_REV := 270
 MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
 # git branch and tag for the mect_plugins project

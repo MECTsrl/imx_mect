@@ -1395,7 +1395,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cgic_work/cgic_work.spec ltib/dist/lfs-5.1/cgic_work/cgic_work.spec
 --- ltib.reference/dist/lfs-5.1/cgic_work/cgic_work.spec
 +++ ltib/dist/lfs-5.1/cgic_work/cgic_work.spec
-@@ -0,0 +1,115 @@
+@@ -0,0 +1,116 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary         : Support for web-based reporting and configuration
@@ -1484,6 +1484,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/usr/share/www/formatsdcard.cgi
 +%{pfx}/usr/share/www/getdatesinterval
 +%{pfx}/usr/share/www/get_log.cgi
++%{pfx}/usr/share/www/get_trends.cgi
 +%{pfx}/usr/share/www/index.cgi
 +%{pfx}/usr/share/www/info.cgi
 +%{pfx}/usr/share/www/lan_config.cgi

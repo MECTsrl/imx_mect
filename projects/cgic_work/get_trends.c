@@ -193,7 +193,7 @@ void trendExplorer(struct name_list *trend_list)
       } else {
           // ok, done with header
           // read rows
-          if(i > 2) {
+          if(i > 3) {
               printf("\n,{");
           }
           printf("\"filename\": \"%s\" ,", entries[i]->d_name);
@@ -217,23 +217,23 @@ void trendExplorer(struct name_list *trend_list)
               tokenFile = strtok_csv(bufferFile, SEPARATOR, &savedptrFile);
 
               if(tokenFile != NULL || tokenFile != "\0" ) {
-                  printf("\"enabled\": %d,", atoi(tokenFile));
+                  printf("\"enabled\": %d", atoi(tokenFile));
               } else {
-                  printf("\"enabled\": 0,");
+                  printf("\"enabled\": 0");
               }
 
               while ((tokenFile = strtok_csv(NULL, SEPARATOR, &savedptrFile)) != NULL)
               {
                   if(counter == 0) {
-                      printf("\"id\": \"%s\",", tokenFile);
+                      printf(",\"id\": \"%s\"", tokenFile);
                   } else if(counter == 1) {
-                      printf("\"color\": \"%s\",", tokenFile);
+                      printf(",\"color\": \"%s\"", tokenFile);
                   } else if(counter == 2) {
-                      printf("\"min\": \"%s\",",tokenFile);
+                      printf(",\"min\": \"%s\"",tokenFile);
                   } else if(counter == 3) {
-                      printf("\"max\": \"%s\",",tokenFile);
+                      printf(",\"max\": \"%s\"",tokenFile);
                   } else if(counter == 4) {
-                      printf("\"name\": \"%s\"", tokenFile);
+                      printf(",\"name\": \"%s\"", tokenFile);
                   } else {
                       break;
                   }

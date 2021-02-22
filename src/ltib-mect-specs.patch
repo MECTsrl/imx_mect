@@ -6,7 +6,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : 0.0
++Version         : v2.021
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -127,7 +127,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : 0.0
++Version         : v2.021
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -1521,7 +1521,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 3.2.3
++Version         : 3.2.7
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3995,7 +3995,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : 0.0
++Version         : v3.2.7
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -5600,7 +5600,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: 0.0
++Version: v3.2.7
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -5716,7 +5716,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/merge/merge.spec ltib/dist/lfs-5.1/merge/merge.spec
 --- ltib.reference/dist/lfs-5.1/merge/merge.spec
 +++ ltib/dist/lfs-5.1/merge/merge.spec
-@@ -10,40 +10,192 @@
+@@ -10,40 +10,194 @@
  Group           : System Environment/Utilities
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
@@ -5828,6 +5828,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/etc/fstab
 +%{pfx}/etc/group
 +%{pfx}/etc/inetd.conf
++%{pfx}/etc/iptables
 +%{pfx}/etc/iptables.default
 +%{pfx}/etc/ltib-release
 +%{pfx}/etc/mdev.conf
@@ -5880,6 +5881,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/etc/fstab
 +%{pfx}/etc/group
 +%{pfx}/etc/inetd.conf
++%{pfx}/etc/iptables
 +%{pfx}/etc/iptables.default
 +%{pfx}/etc/ltib-release
 +%{pfx}/etc/mdev.conf

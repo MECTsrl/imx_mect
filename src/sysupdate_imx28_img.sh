@@ -132,6 +132,7 @@ if test -s "${PASSWDDIR}/${PASSWD}"; then
     fi
 fi
 sed -i '/root@vpndev\.vpn-smily\.com/ d' "$MYTMPDIR/authorized_keys"
+sed -i '/xFieeICN3L4w== jolly_key/ d' "$MYTMPDIR/authorized_keys"
 cat "$MYTMPDIR/authorized_keys" >> /etc/dropbear/authorized_keys
 
 echo "done." | tee /dev/tty1

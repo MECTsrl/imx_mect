@@ -85,7 +85,7 @@ all:
 	# Bulk install archive (Qt x86, Qt ARM, Qt Creator, root FS, ...)
 	cp --reflink=auto $(SRCDIR)/$(QT_ARCHIVE_BASE) $(BULK_ARC_BASE)
 	cp --reflink=auto $(SRCDIR)/$(QT_ARCHIVE_UPDATE) $(BULK_ARC_UPDATE)
-        7zr a  $(BULK_ARC_UPDATE) ~/keys
+	7zr a  $(BULK_ARC_UPDATE) ~/keys
 	#
 	# QtProject template
 	cp --reflink=auto $(SRCDIR)/$(QTPROJECT).7z .

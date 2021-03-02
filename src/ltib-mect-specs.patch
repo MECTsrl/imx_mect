@@ -6,7 +6,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : v2.021
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -127,7 +127,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : v2.021
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -1521,7 +1521,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 3.3.0
++Version         : 3.3.1
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3995,7 +3995,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v3.3.0
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -5600,7 +5600,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: v3.3.0
++Version: 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -8524,7 +8524,22 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  export HOSTNAME="${SYSCFG_HOSTNAME:-$PLATFORM}"
  export NTP_SERVER="$SYSCFG_NTP_SERVER"
-@@ -145,74 +148,17 @@
+@@ -135,84 +138,27 @@
+ # net interface $i
+ export $(echo SYSCFG_IFACE$i)=y
+ export $(echo INTERFACE$i)="$(eval echo \$$(echo SYSCFG_NET_INTERFACE$i))"
+-export $(echo IPADDR$i)="$(eval echo \$$(echo SYSCFG_IPADDR$i))"
+-export $(echo NETMASK$i)="$(eval echo \$$(echo SYSCFG_NET_MASK$i))"
+-export $(echo BROADCAST$i)="$(eval echo \$$(echo SYSCFG_NET_BROADCAST$i))"
+-export $(echo GATEWAY$i)="$(eval echo \$$(echo SYSCFG_NET_GATEWAY$i))"
+-export $(echo NAMESERVER$i)="$(eval echo \$$(echo SYSCFG_NAMESERVER$i))"
++#export $(echo IPADDR$i)="$(eval echo \$$(echo SYSCFG_IPADDR$i))"
++#export $(echo NETMASK$i)="$(eval echo \$$(echo SYSCFG_NET_MASK$i))"
++#export $(echo BROADCAST$i)="$(eval echo \$$(echo SYSCFG_NET_BROADCAST$i))"
++#export $(echo GATEWAY$i)="$(eval echo \$$(echo SYSCFG_NET_GATEWAY$i))"
++#export $(echo NAMESERVER$i)="$(eval echo \$$(echo SYSCFG_NAMESERVER$i))"
+ EOF
+ 	fi
      fi
  done
  

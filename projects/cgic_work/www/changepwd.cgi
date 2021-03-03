@@ -37,7 +37,7 @@ cat <<EOF
 </tr>
 <tr>
 <td>
-			<h1>$TARGET_NAME REMOTE MANAGEMENT</h1>
+			<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;"> $TARGET_NAME REMOTE MANAGEMENT</h1>
 </td>
 </tr>
 </table>
@@ -51,7 +51,7 @@ EOF
 echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='$HOME_PAGE'\">"
 cat <<EOF
 EOF
-echo "         <div id=\"footer\"><h2>$COMPANY_NAME</h2></div>"
+echo "         <div id=\"footer\"><h2></h2></div>"
 cat <<EOF
 	</div> <!-- end div container -->
 </body>
@@ -76,7 +76,7 @@ cat <<EOF
 </tr>
 <tr>
 <td>
-			<h1>$TARGET_NAME REMOTE MANAGEMENT</h1>
+			<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;"> $TARGET_NAME REMOTE MANAGEMENT</h1>
 </td>
 </tr>
 </table>
@@ -89,7 +89,7 @@ cat <<EOF
 EOF
 echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='$HOME_PAGE'\">"
 cat <<EOF
-		<div id="footer"><h2>$COMPANY_NAME</h2></div> 
+		<div id="footer"><h2></h2></div> 
 	</div> <!-- end div container -->
 </body>
 </html>
@@ -111,7 +111,7 @@ cat <<EOF
 </tr>
 <tr>
 <td>
-				<h1>$TARGET_NAME REMOTE MANAGEMENT</h1>
+				<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;"> $TARGET_NAME REMOTE MANAGEMENT</h1>
 </td>
 </tr>
 </table>
@@ -126,7 +126,7 @@ cat <<EOF
 EOF
 echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='$HOME_PAGE'\">"
 cat <<EOF
-		<div id="footer"><h2>$COMPANY_NAME</h2></div> 
+		<div id="footer"><h2></h2></div> 
 	</div> <!-- end div container -->
 </body>
 </html>
@@ -149,7 +149,7 @@ cat <<EOF
 </tr>
 <tr>
 <td>
-				<h1>$TARGET_NAME REMOTE MANAGEMENT</h1>
+				<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;"> $TARGET_NAME REMOTE MANAGEMENT</h1>
 </td>
 </tr>
 </table>
@@ -164,7 +164,7 @@ cat <<EOF
 EOF
 echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='$HOME_PAGE'\">"
 cat <<EOF
-		<div id="footer"><h2>$COMPANY_NAME</h2></div> 
+		<div id="footer"><h2></h2></div> 
 	</div> <!-- end div container -->
 </body>
 </html>

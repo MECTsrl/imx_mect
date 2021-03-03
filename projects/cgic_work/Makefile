@@ -64,6 +64,7 @@ CGISH_LIST = \
 	reset_passwords.cgi \
 	select \
 	style.css \
+	logo.png \
 	trend_manager.cgi \
 	underconstruction.cgi \
 	updatetime.cgi \
@@ -111,6 +112,7 @@ reset_passwords.cgi:
 select:
 select-template.html:
 style.css:
+logo.png:
 trend_manager.cgi:
 underconstruction.cgi:
 updatetime.cgi:

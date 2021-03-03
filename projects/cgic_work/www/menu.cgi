@@ -34,6 +34,10 @@ cat <<EOF
 <body>
 	<div id="container">
 		<div id="header">
+			<h1>                                                                 
+			<img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;">     
+			</h1> 
+		</div>
 <table width="100%">
 <tr align="right">
 <td>
@@ -66,7 +70,6 @@ echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window
 cat <<EOF
 </center>
 EOF
-echo "         <div id=\"footer\"><h2>$COMPANY_NAME</h2></div>"
 cat <<EOF
 	</div> <!-- end div container -->
 </body>
@@ -102,7 +105,7 @@ cat <<EOF
 </tr>
 <tr>
 <td>
-<h1>$TARGET_NAME REMOTE MANAGEMENT</h1>
+<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;">  $TARGET_NAME REMOTE MANAGEMENT</h1>
 </td>
 </tr>
 </table>
@@ -205,9 +208,9 @@ cat <<EOF
 </div> <!-- end div form -->
 </div> <!-- end div content -->
 EOF
-echo "         <div id=\"footer\"><h2>$COMPANY_NAME</h2></div>"
 cat <<EOF
 </div> <!-- end div container -->
+<div id="footer"><h2></h2></div> 
 </body>
 </html>
 

@@ -71,7 +71,7 @@ EOF
 cat <<EOF
 </center>
 EOF
-echo "         <div id=\"footer\"><h2>$COMPANY_NAME</h2></div>"
+echo "         <div id=\"footer\"><h2></h2></div>"
 cat <<EOF
 	</div> <!-- end div container -->
 </body>

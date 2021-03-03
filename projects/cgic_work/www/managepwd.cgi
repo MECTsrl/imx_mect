@@ -23,7 +23,7 @@ cat <<EOF
 </tr>
 <tr>
 <td>
-<h1>$TARGET_NAME PASSWORD MANAGEMENT</h1>
+<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;"> $TARGET_NAME PASSWORD MANAGEMENT</h1>
 </td>
 </tr>
 </table>
@@ -69,7 +69,7 @@ cat <<EOF
 </center>
 </div> <!-- end div content -->
 EOF
-echo "         <div id=\"footer\"><h2>$COMPANY_NAME</h2></div>"
+echo "         <div id=\"footer\"><h2></h2></div>"
 cat <<EOF
 </div> <!-- end div container -->
 </body>

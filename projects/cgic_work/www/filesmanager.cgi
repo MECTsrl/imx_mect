@@ -1,5 +1,20 @@
 #!/bin/sh
 
+decodeURL() {
+echo $1 | sed ' s/%20/\ /g; s/%21/\!/g; s/%22/\"/g;
+		s/%23/\#/g; s/%24/\$/g; s/%25/\%/g; 
+		s/%26/\&/g; s/%27/\ /g; s/%28/\(/g;
+		s/%29/\)/g; s/%2A/\*/g; s/%2B/\+/g;
+		s/%2C/\,/g; s/%2D/\-/g; s/%2E/\./g;
+		s/%2F/\//g; s/%3A/\:/g; s/%3B/\;/g;
+		s/%3C/\</g; s/%3D/\=/g; s/%3E/\>/g;
+		s/%3F/\?/g; s/%40/\@/g; s/%5B/\[/g;
+		s/%5C/\\/g; s/%5D/\]/g; s/%5E/\^/g;
+		s/%5F/\_/g; s/%60/\ /g; s/%7B/\{/g;
+		s/%7C/\|/g; s/%7D/\}/g; s/%7E/\~/g;
+		'
+}
+
 DATA=`cat`
 
 . ./load.cgi
@@ -11,6 +26,7 @@ for x in `echo $DATA | tr "&" "\n"`; do
    then
    	  FULLPATHFILE=`echo $x | cut -d= -f2 | sed s/'%2F'/'\/'/g`
 	  FILE=`basename $FULLPATHFILE`
+	  FILE=$(decodeURL $FILE)
    	  DIRECTORY=`dirname $FULLPATHFILE`
    	  FILESTOACTION="$FILESTOACTION $FILE "
 	  if [ "$DIRECTORY" == "$BASE_DIR/$ALARMS_DIR" ]
@@ -65,7 +81,7 @@ cat <<EOF
 </tr>
 <tr>
 <td>
-<h1>REMOTE UPDATER</h1>
+<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;"> REMOTE UPDATER</h1>
 </td>
 </tr>
 </table>
@@ -89,7 +105,7 @@ cat <<EOF
 </center>
 </div>                                                                                
 EOF
-echo "         <div id=\"footer\"><h2>$COMPANY_NAME</h2></div>"
+echo "         <div id=\"footer\"><h2></h2></div>"
 cat <<EOF
 </body>
 </html>
@@ -162,7 +178,7 @@ cat <<EOF
 </tr>
 <tr>
 <td>
-<h1>REMOTE UPDATER</h1>
+<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;"> REMOTE UPDATER</h1>
 </td>
 </tr>
 </table>
@@ -186,7 +202,7 @@ cat <<EOF
 </center>
 </div>                                                                                
 EOF
-echo "         <div id=\"footer\"><h2>$COMPANY_NAME</h2></div>"
+echo "         <div id=\"footer\"><h2></h2></div>"
 cat <<EOF
 </body>
 </html>
@@ -216,7 +232,7 @@ cat <<EOF
 </tr>
 <tr>
 <td>
-<h1>REMOTE UPDATER</h1>
+<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;">  REMOTE UPDATER</h1>
 </td>
 </tr>
 </table>
@@ -241,7 +257,7 @@ cat <<EOF
 </center>
 </div>                                                                                
 EOF
-echo "         <div id=\"footer\"><h2>$COMPANY_NAME</h2></div>"
+echo "         <div id=\"footer\"><h2></h2></div>"
 cat <<EOF
 </body>
 </html>

@@ -46,7 +46,7 @@ cat <<EOM
 </tr>
 <tr>
 <td>
-				<h1>$TARGET_NAME REMOTE MANAGEMENT</h1>
+				<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;"> $TARGET_NAME REMOTE MANAGEMENT</h1>
 </td>
 </tr>
 </table>
@@ -57,7 +57,7 @@ echo "      <H1>$MSG</H1>"
 cat <<EOM
 			</center>
 		</div>
-		<div id="footer"><h2>$COMPANY_NAME</h2></div> 
+		<div id="footer"><h2></h2></div> 
 	</body>
 </html>
 EOM

@@ -150,7 +150,9 @@ MECT_SYSUPD_NETRESET = $(MECT_IMGDIR)/utilities/sysupdate_netreset_$(MECT_BUILD_
 # sysupdate for calibration reset
 MECT_SYSUPD_CALRESET_SRC := $(MECT_FTPDIR)/sysupdate_calreset.sh
 MECT_SYSUPD_CALRESET = $(MECT_IMGDIR)/utilities/sysupdate_calreset_$(MECT_BUILD_RELEASE).sh
-
+# sysupdate for micropython
+MECT_SYSUPD_MICROPYTHON_SRC := $(MECT_FTPDIR)/sysupdate_micropython_v1.14.sh
+MECT_SYSUPD_MICROPYTHON = $(MECT_IMGDIR)/utilities/sysupdate_micropython_v1.14.sh
 
 # Extension of the MD5 checksums for the downloads.
 MECT_MD5EXT := md5
@@ -426,7 +428,7 @@ endif
 
 
 .PHONY: all
-all: env downloads setup build image target_dev sysupdate_mrs sysupdate_hardening sysupdate_passwordreset sysupdate_netreset sysupdate_calreset
+all: env downloads setup build image target_dev sysupdate_mrs sysupdate_hardening sysupdate_passwordreset sysupdate_netreset sysupdate_calreset sysupdate_micropython
 
 # Set up the build environment.
 .PHONY: env
@@ -777,6 +779,12 @@ sysupdate_calreset:
 	mkdir -p $(dir $(MECT_SYSUPD_CALRESET))
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_CALRESET_SRC) > $(MECT_SYSUPD_CALRESET)
 
+# copy the sysupdate for micropython
+.PHONY: sysupdate_micropython
+sysupdate_micropython:
+	rm -f $(MECT_SYSUPD_MICROPYTHON)
+	mkdir -p $(dir $(MECT_SYSUPD_MICROPYTHON))
+	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_MICROPYTHON_SRC) > $(MECT_SYSUPD_MICROPYTHON)
 PHONY: wininst
 wininst: MECT_DOWNLOADS := \
 	    7z.dll \

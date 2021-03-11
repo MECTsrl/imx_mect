@@ -7940,7 +7940,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  %setup
  %patch1 -p1
  %patch2 -p1
-@@ -31,24 +115,180 @@
+@@ -31,24 +115,182 @@
  %patch5 -p1
  %patch6 -p1
  %patch7 -p1
@@ -8077,6 +8077,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/lib/modules
 +%{pfx}/local/control
 +%{pfx}/local/data/alarms
++%{pfx}/local/data/files
 +%{pfx}/local/data/customstore
 +%{pfx}/local/data/recipe
 +%{pfx}/local/data/store
@@ -8123,6 +8124,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%defattr(-,root,root)
 +%{pfx}/local/control
 +%{pfx}/local/data/alarms
++%{pfx}/local/data/files
 +%{pfx}/local/data/customstore
 +%{pfx}/local/data/recipe
 +%{pfx}/local/data/store

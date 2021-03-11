@@ -7835,7 +7835,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  Group           : System Environment/Utilities
  Source          : %{name}-%{version}.tar.gz
 +Source2         : rootfs_patch-1.2.tar.bz2
-+Source3         : skell-local-1.6.tar.bz2
++Source3         : skell-local-1.7.tar.bz2
 +Source4         : gdbserver
  Patch1          : skell-1.18-dropbear_args.patch
 -Patch2          : skell-1.17-imx.patch

@@ -35,27 +35,25 @@ Content-Type: text/html
 
 <html>
 <head>
-<title>$TARGET_NAME RESET SDCARD</title>
+<title>$TARGET_NAME Format SDcard</title>
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 	<div id="container">
 		<div id="header">
-<table width="100%">
-<tr align="right">
-<td>
+			<table width="100%">
+				<tr align="left">
+					<td>
+						<h1><img src="$LOGO_NAME" style="width:240px;height:136px;float=left;vertical-align:middle;">  $TARGET_NAME Format SDcard</h1>
+					</td>
+					<td>
 EOF
 . ./info.cgi
 cat <<EOF
-</td>
-</tr>
-<tr>
-<td>
-			<h1>$TARGET_NAME RESET SDCARD</h1>
-</td>
-</tr>
-</table>
-		</div>
+					</td>
+				</tr>
+			</table>
+		</div> <!-- end div header -->
 		<div id="content">
 			<H1>
 EOF

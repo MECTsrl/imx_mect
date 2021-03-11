@@ -30,27 +30,25 @@ Content-Type: text/html
 EOM
 	echo "<meta http-equiv=\"refresh\" content=\"$TIMEOUT;url=http://$NEXTPAGE\">"
 cat <<EOM
-	<title>$TARGET_NAME REMOTE MANAGEMENT</title>
+	<title>$TARGET_NAME Reboot</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body>
 		<div id="container">
-			<div id="header">
-<table width="100%">
-<tr align="right">
-<td>
-EOM
+		<div id="header">
+			<table width="100%">
+				<tr align="left">
+					<td>
+						<h1><img src="$LOGO_NAME" style="width:240px;height:136px;float=left;vertical-align:middle;">  $TARGET_NAME Reboot</h1>
+					</td>
+					<td>
+EOF
 . ./info.cgi
-cat <<EOM
-</td>
-</tr>
-<tr>
-<td>
-				<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;"> $TARGET_NAME REMOTE MANAGEMENT</h1>
-</td>
-</tr>
-</table>
-			</div>
+cat <<EOF
+					</td>
+				</tr>
+			</table>
+		</div> <!-- end div header -->
 			<center>
 EOM
 echo "      <H1>$MSG</H1>"

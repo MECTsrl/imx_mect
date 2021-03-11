@@ -14,22 +14,20 @@ Content-Type: text/html
 </head>
 <body>
 <div id="container">
-<div id="header">
-<table width="100%">
-<tr align="right">
-<td>
+		<div id="header">
+			<table width="100%">
+				<tr align="left">
+					<td>
+						<h1><img src="$LOGO_NAME" style="width:240px;height:136px;float=left;vertical-align:middle;">  Column Select</h1>
+					</td>
+					<td>
 EOF
 . ./info.cgi
 cat <<EOF
-</td>
-</tr>
-<tr>
-<td>
-<h1>COLUMN SELECTED</h1>
-</td>
-</tr>
-</table>
-</div>
+					</td>
+				</tr>
+			</table>
+		</div> <!-- end div header -->
 <center>
 <div id="content">
 <table style="border:solid 2px #335970;" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >
@@ -57,7 +55,7 @@ cat <<EOF
 </div>                                                                                
 EOF
 echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='$HOME_PAGE'\">"
-echo "      <input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='logs_filter.cgi'\">"
+echo "      <input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='filebrowser.cgi?ROOT_DIR=store'\">"
 cat <<EOF
 </center>
 </div>                                                                                

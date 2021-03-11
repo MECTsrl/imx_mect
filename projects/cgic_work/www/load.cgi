@@ -17,6 +17,7 @@ export POINTERCAL_FILE=$TSLIB_CALIBFILE
 
 WWW_DIR="/usr/share/www"
 TARGET_NAME=""
+LOGO_NAME="splash.img"
 COMPANY_NAME="MECT"
 HOME_PAGE="menu.cgi"
 BASE_DIR="/local/data"

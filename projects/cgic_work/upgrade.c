@@ -16,19 +16,28 @@ static void ShowForm()
 	fprintf(cgiOut, "<html>\n");
 	
 	fprintf(cgiOut, "<head>\n");
-	fprintf(cgiOut, "<title>REMOTE UPDATER</title>\n");
+	fprintf(cgiOut, "<title>Script Loader</title>\n");
 	fprintf(cgiOut, "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n");
 	fprintf(cgiOut, "</head>\n");
 	
 	fprintf(cgiOut, "<body>\n");
 
-	fprintf(cgiOut, "<div id=\"container\">\n");
-	fprintf(cgiOut, "<div id=\"header\">\n");
-	fprintf(cgiOut, "<h1>UPGRADE</h1>\n");
-	fprintf(cgiOut, "</div>\n");
+	fprintf(cgiOut, "<div id=\"header\">");
+	fprintf(cgiOut, "<table width=\"100%\">");
+	fprintf(cgiOut, "<tr align=\"left\">");
+	fprintf(cgiOut, "<td>");
+	fprintf(cgiOut, "<h1><img src=\"$LOGO_NAME\" style=\"width:240px;height:136px;float=left;vertical-align:middle;\">  $TARGET_NAME Men&ugrave;</h1>");
+	fprintf(cgiOut, "</td>");
+	fprintf(cgiOut, "<td>");
+	fprintf(cgiOut, "EOF");
+	fprintf(cgiOut, ". ./info.cgi");
+	fprintf(cgiOut, "cat <<EOF");
+	fprintf(cgiOut, "</td>");
+	fprintf(cgiOut, "</tr>");
+	fprintf(cgiOut, "</table>");
+	fprintf(cgiOut, "</div> <!-- end div header -->");
 	fprintf(cgiOut, "<div id=\"content\">\n");
 	fprintf(cgiOut, "<div id=\"form\">\n"); 
-
 	fprintf(cgiOut, "<table style=\"border:solid 2px #335970;\" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >\n");
 	fprintf(cgiOut, "<tbody>\n");
 	fprintf(cgiOut, "<tr>\n");

@@ -12,27 +12,25 @@ Content-Type: text/html
 
 <html>
   <head>
-    <title>$TARGET_NAME REMOTE MANAGEMENT</title>
+    <title>$TARGET_NAME Remote Management</title>
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
     <div id="container">
-      <div id="header">
-<table width="100%">
-<tr align="right">
-<td>
+		<div id="header">
+			<table width="100%">
+				<tr align="left">
+					<td>
+						<h1><img src="$LOGO_NAME" style="width:240px;height:136px;float=left;vertical-align:middle;">  $TARGET_NAME Remote Management</h1>
+					</td>
+					<td>
 EOF
 . ./info.cgi
 cat <<EOF
-</td>
-</tr>
-<tr>
-<td>
-        <h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;"> $TARGET_NAME REMOTE MANAGEMENT</h1>
-</td>
-</tr>
-</table>
-      </div>
+					</td>
+				</tr>
+			</table>
+		</div> <!-- end div header -->
       <div id="content">
         <center>
           <div id="form">

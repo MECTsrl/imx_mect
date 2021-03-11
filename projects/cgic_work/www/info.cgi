@@ -1,14 +1,14 @@
 #!/bin/sh
 
 cat <<EOM
-				<table STYLE="color:#CFF;">
+				<table STYLE="color:#FFFFFF;width:100%">
 					<tbody>
 						<tr>
 EOM
 if  [ "$PASSWORD" != "" ] && [ "$PASSWORD" == "$PWDADMIN" ]
 then
 cat <<EOM
-							<td>
+							<td style="text-align:right;width:100%">
 								<b>Login:</b>
 							</td>
 							<td>
@@ -30,12 +30,13 @@ EOM
 		if [ "$PASSWORD" != "" ] && [ "$PASSWORD" == "$PWDSUPERUSER" ]
 		then
 cat <<EOM
-							<td>
+							<td style="text-align:right;width:100%">
 								<b>Login:</b>
 							</td>
 							<td>
 								SuperUser
 							</td>
+						</tr>	
 EOM
 		else
 			PASSWORD='IVALID'
@@ -43,15 +44,19 @@ EOM
 	fi
 fi
 cat <<EOM
-							<td>
+							<tr>
+							<td style="text-align:right;width:100%">
 								<b>IP:</b>
 							</td>
 							<td>
+							
 EOM
 cat $NETCONF | grep IPADDR0 | cut -d\= -f2 | sed s/\"//g
 cat <<EOM
 							</td>
-							<td>
+							</tr>
+							<tr>
+							<td style="text-align:right;width:100%">
 								<b>MAC:</b>
 							</td>
 							<td>
@@ -59,7 +64,9 @@ EOM
 cat $MACCONF | grep MAC0 | cut -d\= -f2 | sed s/\"//g
 cat <<EOM
 							</td>
-							<td>
+							</tr>
+							<tr>
+							<td style="text-align:right;width:100%">
 								<b>S/N:</b>
 							</td>
 							<td>
@@ -71,8 +78,11 @@ else
 fi
 cat <<EOM
 							</td>
+							
+							</tr>
+							
 						</tr>
 					</tbody>  
-				</table>
+				</table></br>
 EOM
 

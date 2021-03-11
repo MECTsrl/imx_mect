@@ -65,27 +65,25 @@ Content-Type: text/html
 
 <html>
 <head>
-<title> REMOTE UPDATER </title>
+<title> Files Manager </title>
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 <div id="container">
-<div id="header">
-<table width="100%">
-<tr align="right">
-<td>
+		<div id="header">
+			<table width="100%">
+				<tr align="left">
+					<td>
+						<h1><img src="$LOGO_NAME" style="width:240px;height:136px;float=left;vertical-align:middle;">  $TARGET_NAME Files Manager</h1>
+					</td>
+					<td>
 EOF
 . $OLD_DIR/info.cgi
 cat <<EOF
-</td>
-</tr>
-<tr>
-<td>
-<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;"> REMOTE UPDATER</h1>
-</td>
-</tr>
-</table>
-</div>
+					</td>
+				</tr>
+			</table>
+		</div> <!-- end div header -->
 <center>
 <div id="content">
 <table style="border:solid 2px #335970;" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >
@@ -167,22 +165,20 @@ Content-Type: text/html
 </head>
 <body>
 <div id="container">
-<div id="header">
-<table width="100%">
-<tr align="right">
-<td>
+		<div id="header">
+			<table width="100%">
+				<tr align="left">
+					<td>
+						<h1><img src="$LOGO_NAME" style="width:240px;height:136px;float=left;vertical-align:middle;">  $TARGET_NAME Files Manager</h1>
+					</td>
+					<td>
 EOF
 . $OLD_DIR/info.cgi
 cat <<EOF
-</td>
-</tr>
-<tr>
-<td>
-<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;"> REMOTE UPDATER</h1>
-</td>
-</tr>
-</table>
-</div>
+					</td>
+				</tr>
+			</table>
+		</div> <!-- end div header -->
 <center>
 <div id="content">
 <table style="border:solid 2px #335970;" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >
@@ -221,22 +217,20 @@ Content-Type: text/html
 </head>
 <body>
 <div id="container">
-<div id="header">
-<table width="100%">
-<tr align="right">
-<td>
+		<div id="header">
+			<table width="100%">
+				<tr align="left">
+					<td>
+						<h1><img src="$LOGO_NAME" style="width:240px;height:136px;float=left;vertical-align:middle;">  $TARGET_NAME Files Manager</h1>
+					</td>
+					<td>
 EOF
 . $OLD_DIR/info.cgi
 cat <<EOF
-</td>
-</tr>
-<tr>
-<td>
-<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;">  REMOTE UPDATER</h1>
-</td>
-</tr>
-</table>
-</div>
+					</td>
+				</tr>
+			</table>
+		</div> <!-- end div header -->
 <center>
 <div id="content">
 

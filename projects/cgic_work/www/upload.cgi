@@ -203,27 +203,25 @@ Content-Type: text/html
 
 <html>
 <head>
-<title>$TARGET_NAME REMOTE UPDATER</title>
+<title>$TARGET_NAME Upload</title>
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 <div id="container">
-<div id="header">
-<table width="100%">
-<tr align="right">
-<td>
+		<div id="header">
+			<table width="100%">
+				<tr align="left">
+					<td>
+						<h1><img src="$LOGO_NAME" style="width:240px;height:136px;float=left;vertical-align:middle;">  $TARGET_NAME Upload</h1>
+					</td>
+					<td>
 EOF
 . ./info.cgi
 cat <<EOF
-</td>
-</tr>
-<tr>
-<td>
-<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;"> $TARGET_NAME REMOTE UPDATER</h1>
-</td>
-</tr>
-</table>
-</div>
+					</td>
+				</tr>
+			</table>
+		</div> <!-- end div header -->
 <div id="content">
 EOF
 
@@ -272,7 +270,7 @@ EOF
 	echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='config_manager.cgi'\">"
 	echo "<input class=bottoni type=\"button\" value=\"Reboot\" onclick=\"window.location.href='reboot.cgi?COMMAND=REBOOT'\">"
     elif [ "$LOGSTBL" = "1" ]; then
-        echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='logs_manager.cgi'\">"
+        echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='filebrowser.cgi?ROOT_DIR=$STORE_DIR'\">"
     elif [ "$TRENDTBL" = 1 ]; then
         echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.location.href='filebrowser.cgi?ROOT_DIR=$TREND_DIR'\">"
     elif [ "$RCPTBL" = "1" ] || [ "$RCPZIP" = "1" ]; then

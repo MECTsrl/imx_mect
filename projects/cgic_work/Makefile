@@ -64,7 +64,6 @@ CGISH_LIST = \
 	reset_passwords.cgi \
 	select \
 	style.css \
-	logo.png \
 	trend_manager.cgi \
 	underconstruction.cgi \
 	updatetime.cgi \
@@ -112,7 +111,6 @@ reset_passwords.cgi:
 select:
 select-template.html:
 style.css:
-logo.png:
 trend_manager.cgi:
 underconstruction.cgi:
 updatetime.cgi:
@@ -142,6 +140,7 @@ install:
 	$(foreach file,$(CGI_LIST),install -D -m 0755 www/$(file) $(BIN_DIR)/$(file);)
 	$(foreach file,$(DATA_LIST),install -D -m 0644 www/$(file) $(BIN_DIR)/$(file);)
 	ln -s /root/webmi $(BIN_DIR)/
+	ln -s /local/etc/sysconfig/img/splash.png $(BIN_DIR)/splash.img
 
 clean:
 	@rm -f *.o

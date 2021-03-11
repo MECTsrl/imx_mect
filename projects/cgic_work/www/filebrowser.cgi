@@ -8,7 +8,7 @@ Content-Type: text/html
 
 <html>
 <head>
-<title>$TARGET_NAME REMOTE UPDATER</title>
+<title>$TARGET_NAME Files Manager</title>
 <link rel="stylesheet" type="text/css" href="style.css">
 EOF
 eval $QUERY_STRING
@@ -36,22 +36,20 @@ function toggle(source) {
 </head>
 <body>
 <div id="container">
-<div id="header">
-<table width="100%">
-<tr align="right">
-<td>
+		<div id="header">
+			<table width="100%">
+				<tr align="left">
+					<td>
+						<h1><img src="$LOGO_NAME" style="width:240px;height:136px;float=left;vertical-align:middle;">  $TARGET_NAME Files Manager</h1>
+					</td>
+					<td>
 EOF
 . ./info.cgi
 cat <<EOF
-</td>
-</tr>
-<tr>
-<td>
-<h1><img src="logo.png" style="width:95px;height:90pxfloat=left;vertical-align:middle;"> $TARGET_NAME REMOTE UPDATER</h1>
-</td>
-</tr>
-</table>
-</div>
+					</td>
+				</tr>
+			</table>
+		</div> <!-- end div header -->
 <div id="content">
 <center>
 <div id="form">
@@ -139,24 +137,18 @@ EOF
 	
 if [ "$ROOT_DIR" == "$RECIPE_DIR" ]
 then
-	echo "<tbody>"
-	echo "<tr>"
-	echo "<td>"
-	echo "<input type="file" name=\"RCPZIP\" accept=\"application/zip\" required>"
-	echo "</td>"
-	echo "<td>"
-	echo "<input class=bottoni type=\"submit\" value=\"Upload Recipes\">"
-	echo "</td>"
-	echo "</tr>"
-	echo "</tbody>"
-#elif [ "$ROOT_DIR" == "$----------------------------------" ]
-#then
-#	echo "<td>"
-#	echo "<input type=\"file\" name=\"LOGSTBL\" required>"
-#	echo "</td>"
-#	echo "<td>"
-#	echo "<input class=bottoni type=\"submit\" value=\"Update Partial logs\">"
-#	echo "</td>"	
+cat <<EOF
+        <tbody>
+        <tr>
+        <td>
+        <input type="file" name="RCPZIP" accept="application/zip" required>
+        </td>
+        <td>
+        <input class=bottoni type="submit" value="Upload Recipe">
+        </td>
+        </tr>
+        </tbody>
+EOF
 #elif [ "$ROOT_DIR" == "$ALARMS_DIR" ]
 #then
 #	echo "<td>"
@@ -168,17 +160,18 @@ then
 
 elif [ "$ROOT_DIR" == "$TREND_DIR" ]
 then
-	echo "</tbody>"
-	echo "<tr>"
-	echo "<td>"
-	echo "<input type="file" name=\"TRENDTBL\" accept=\"application/csv\" required>"
-	echo "</td>"
-	echo "<td>"
-	echo "<input class=bottoni type=\"submit\" value=\"Upload Trends\">"
-	echo "</td>"
-	echo "</tr>"
-	echo "</tbody>"
-
+cat <<EOF
+        </tbody>
+        <tr>
+        <td>
+        <input type="file" name="TRENDTBL" accept="application/csv" required>
+        </td>
+        <td>
+        <input class=bottoni type="submit" value="Upload Trends">
+        </td>
+        </tr>
+        </tbody>
+EOF
 #elif [ "$ROOT_DIR" == "$SCREENSHOT_DIR" ]
 #then 	
 #    	echo "<td>"
@@ -187,12 +180,51 @@ then
 #	echo "<td>"
 #	echo "<input class=bottoni type=\"submit\" value=\"Update Partial logs\">"
 #	echo "</td>"
+
 fi	
 cat <<EOF		
 </tbody>
 </table>
 </form>
 EOF
+if [ "$ROOT_DIR" == "$STORE_DIR" ]
+then
+cat <<EOF
+	<BR>	
+	<fieldset>
+	<legend>Custom Store manager</legend><br>
+	<form action="filesmanager.cgi" method="POST">
+	<table style="border:solid 2px #335970;" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >
+	<tr>
+EOF
+head -1 `ls $BASE_DIR/$STORE_DIR/* | tail -1` | awk 'BEGIN{FS=";"}{for (i = 1; i <= NF; i++) {gsub(/[ \t]+/, "", $i); print $i;}}' > $BASE_DIR/$PARTIAL_STORE_DIR/Total.csv
+for x in `ls $BASE_DIR/$PARTIAL_STORE_DIR`; do
+		echo "<td>"
+		echo "<input type=\"checkbox\" name=\"partialStore\" value=\"$BASE_DIR/$PARTIAL_STORE_DIR/$x\">"
+		echo "<a href=\"display_csv.cgi?CSV_FILE=$BASE_DIR/$PARTIAL_STORE_DIR/$x\">`echo $x`</a>"
+		echo "</td>"
+done
+cat<<EOF
+	</tr>
+	</table>
+	<BR>
+	<input class=bottoni type="submit" value="Download" name="download">
+	</form>
+	<BR>
+	<form name="StorePost" method="POST" enctype="multipart/form-data" action="upload.cgi">
+	<table style="border:solid 2px #335970;" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >
+        <td>
+        <input type="file" name="LOGSTBL" required>
+        </td>
+        <td>
+        <input class=bottoni type="submit" value="Upload Partial logs">
+        </td>
+        </tbody>
+	</table>
+	</form> 
+	</fieldset>
+EOF
+fi
 echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='$HOME_PAGE'\">"
 cat <<EOF
 </center>

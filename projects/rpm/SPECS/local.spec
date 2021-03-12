@@ -44,6 +44,7 @@ sudo rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %attr(0755, root, root) %dir %{pfx}/local/control
 %attr(0755, root, root) %dir %{pfx}/local/data/store
+%attr(0755, root, root) %dir %{pfx}/local/data/files
 %attr(0755, root, root) %dir %{pfx}/local/data/trends
 %attr(0755, root, root) %dir %{pfx}/local/sd_card
 %attr(0755, root, root) %dir %{pfx}/local/update

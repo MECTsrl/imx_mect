@@ -48,9 +48,6 @@ cat <<EOF
 EOF
 echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='$HOME_PAGE'\">"
 cat <<EOF
-EOF
-echo "         <div id=\"footer\"><h2></h2></div>"
-cat <<EOF
 	</div> <!-- end div container -->
 </body>
 </html>
@@ -85,7 +82,6 @@ cat <<EOF
 EOF
 echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='$HOME_PAGE'\">"
 cat <<EOF
-		<div id="footer"><h2></h2></div> 
 	</div> <!-- end div container -->
 </body>
 </html>
@@ -120,7 +116,6 @@ cat <<EOF
 EOF
 echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='$HOME_PAGE'\">"
 cat <<EOF
-		<div id="footer"><h2></h2></div> 
 	</div> <!-- end div container -->
 </body>
 </html>
@@ -156,7 +151,6 @@ cat <<EOF
 EOF
 echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='$HOME_PAGE'\">"
 cat <<EOF
-		<div id="footer"><h2></h2></div> 
 	</div> <!-- end div container -->
 </body>
 </html>

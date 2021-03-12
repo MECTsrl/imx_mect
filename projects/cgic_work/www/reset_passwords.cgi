@@ -61,9 +61,6 @@ EOF
 echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window.location.href='index.cgi'\">"
 cat <<EOF
 </center>
-EOF
-echo "         <div id=\"footer\"><h2></h2></div>"
-cat <<EOF
 	</div> <!-- end div container -->
 </body>
 </html>

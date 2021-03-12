@@ -107,9 +107,6 @@ cat <<EOF
 </div>    
 </center>
 </div>                                                                                
-EOF
-echo "         <div id=\"footer\"><h2></h2></div>"
-cat <<EOF
 </body>
 </html>
 

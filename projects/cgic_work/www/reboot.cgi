@@ -55,7 +55,6 @@ echo "      <H1>$MSG</H1>"
 cat <<EOM
 			</center>
 		</div>
-		<div id="footer"><h2></h2></div> 
 	</body>
 </html>
 EOM

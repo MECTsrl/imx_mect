@@ -66,9 +66,6 @@ cat <<EOF
 </form>
 </center>
 </div> <!-- end div content -->
-EOF
-echo "         <div id=\"footer\"><h2></h2></div>"
-cat <<EOF
 </div> <!-- end div container -->
 </body>
 </html>

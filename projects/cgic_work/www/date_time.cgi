@@ -152,7 +152,6 @@ echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window
 cat <<EOF				
 			</div>
 			</center>
-			<div id="footer"><h2></h2></div> 
 			</div>
 		</div>
 	</body>

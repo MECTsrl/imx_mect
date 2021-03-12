@@ -73,9 +73,6 @@ echo "      <input class=bottoni type=\"button\" value=\"Home\" onclick=\"window
 cat <<EOF
 </center>
 </div> <!-- end div content -->
-EOF
-echo "         <div id=\"footer\"><h2></h2></div>"
-cat <<EOF
 </div> <!-- end div container -->
 </body>
 </html>

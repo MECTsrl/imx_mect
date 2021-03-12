@@ -100,9 +100,6 @@ echo "<input class=bottoni type=\"button\" value=\"Back\" onclick=\"window.locat
 cat <<EOF
 </center>
 </div>                                                                                
-EOF
-echo "         <div id=\"footer\"><h2></h2></div>"
-cat <<EOF
 </body>
 </html>
 EOF

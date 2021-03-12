@@ -26,12 +26,12 @@ static void ShowForm()
 	fprintf(cgiOut, "<table width=\"100%\">");
 	fprintf(cgiOut, "<tr align=\"left\">");
 	fprintf(cgiOut, "<td>");
-	fprintf(cgiOut, "<h1><img src=\"$LOGO_NAME\" style=\"width:240px;height:136px;float=left;vertical-align:middle;\">  $TARGET_NAME Men&ugrave;</h1>");
+	fprintf(cgiOut, "<h1><img src=\"$LOGO_NAME\" style=\"width:240px;height:136px;float=left;vertical-align:middle;\">Script Loader</h1>");
 	fprintf(cgiOut, "</td>");
 	fprintf(cgiOut, "<td>");
-	fprintf(cgiOut, "EOF");
-	fprintf(cgiOut, ". ./info.cgi");
-	fprintf(cgiOut, "cat <<EOF");
+	fprintf(cgiOut, "EOF\n");
+	fprintf(cgiOut, ". ./info.cgi\n");
+	fprintf(cgiOut, "cat <<EOF\n");
 	fprintf(cgiOut, "</td>");
 	fprintf(cgiOut, "</tr>");
 	fprintf(cgiOut, "</table>");

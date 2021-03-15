@@ -37,13 +37,6 @@ tar xjvf %{SOURCE0} -C $RPM_BUILD_ROOT%{pfx}/local
 cd $RPM_BUILD_ROOT%{pfx}/local/root
 rm -f fcrts fcrts.4c_runtime fcrts.ATCMcontrol_RunTimeSystem
 
-mkdir -p $RPM_BUILD_ROOT%{pfx}/local/flash/root/sqldrivers
-ln -s /usr/lib/libqsqlite.so       $RPM_BUILD_ROOT%{pfx}/local/flash/root/sqldrivers/
-ln -s /usr/lib/libqsqlmysql.so     $RPM_BUILD_ROOT%{pfx}/local/flash/root/sqldrivers/
-ln -s /usr/lib/libsqlite3.so       $RPM_BUILD_ROOT%{pfx}/local/flash/root/sqldrivers/
-ln -s /usr/lib/libsqlite3.so.0     $RPM_BUILD_ROOT%{pfx}/local/flash/root/sqldrivers/
-ln -s /usr/lib/libsqlite3.so.0.8.6 $RPM_BUILD_ROOT%{pfx}/local/flash/root/sqldrivers/
-
 %clean
 sudo rm -rf $RPM_BUILD_ROOT
 

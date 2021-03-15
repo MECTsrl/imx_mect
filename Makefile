@@ -903,6 +903,14 @@ target_lfs_flash:
 	! test -d $(MECT_LFSDIR)/flash
 	sudo mkdir $(MECT_LFSDIR)/flash
 	sudo mv $(MECT_LFSDIR)/root $(MECT_LFSDIR)/etc $(MECT_LFSDIR)/control $(MECT_LFSDIR)/data $(MECT_LFSDIR)/flash
+	#
+	sudo mkdir $(MECT_LFSDIR)/flash/root/sqldrivers
+	sudo ln -s /usr/lib/libqsqlite.so       $(MECT_LFSDIR)/flash/root/sqldrivers/
+	sudo ln -s /usr/lib/libqsqlmysql.so     $(MECT_LFSDIR)/flash/root/sqldrivers/
+	sudo ln -s /usr/lib/libsqlite3.so       $(MECT_LFSDIR)/flash/root/sqldrivers/
+	sudo ln -s /usr/lib/libsqlite3.so.0     $(MECT_LFSDIR)/flash/root/sqldrivers/
+	sudo ln -s /usr/lib/libsqlite3.so.0.8.6 $(MECT_LFSDIR)/flash/root/sqldrivers/
+	#
 	sudo ln -s flash/root $(MECT_LFSDIR)/root
 	sudo ln -s flash/etc $(MECT_LFSDIR)/etc
 	sudo ln -s flash/control $(MECT_LFSDIR)/control

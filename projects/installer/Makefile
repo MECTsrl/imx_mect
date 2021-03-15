@@ -36,6 +36,7 @@ CSXC_DIR = $(basename $(CSXC_ARC))
 CAN_ARC := ATCM.zip
 PLC_ARC := PLC.zip
 PLC_ATHW := ATHW119_4CVM.kad
+PLC_ATCM_COMMON_VER := ATCM_Common_2.4cl
 PLC_ATCM_COMMON := ATCM_Common.4cl
 FONTS_ARC := Fonts.7z
 PLCHELP_ARC := Engineering_Help_3.zip
@@ -70,7 +71,7 @@ all:
 	# PLC Engineering
 	cp --reflink=auto $(SRCDIR)/$(PLC_ARC) .
 	cp --reflink=auto $(SRCDIR)/$(PLC_ATHW) .
-	cp --reflink=auto $(SRCDIR)/$(PLC_ATCM_COMMON) .
+	cp --reflink=auto $(SRCDIR)/$(PLC_ATCM_COMMON_VER) ./$(PLC_ATCM_COMMON)
 	cp --reflink=auto $(SRCDIR)/$(PLCHELP_ARC) .
 	#
 	# Code Sourcery ARM cross compiler installer

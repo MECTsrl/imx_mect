@@ -5,7 +5,7 @@ export LC_ALL := C
 # MECT Suite version
 export MECT_BUILD_MAJOR := 3
 export MECT_BUILD_MINOR := 3
-export MECT_BUILD_BUILD := 2
+export MECT_BUILD_BUILD := 3
 export MECT_BUILD_RELEASE = $(MECT_BUILD_MAJOR).$(MECT_BUILD_MINOR).$(MECT_BUILD_BUILD)
 
 # ---------------------------
@@ -791,7 +791,7 @@ wininst: MECT_DOWNLOADS := \
 	    7zG.exe \
 	    ActivePerl-5.16.3.1603-MSWin32-x86-296746.msi \
 	    arm-2011.03-41-arm-none-linux-gnueabi.exe \
-	    ATCM_Common.4cl \
+	    ATCM_Common_2.4cl \
 	    ATCM.zip \
 	    ATHW119_4CVM.kad \
 	    Engineering_Help_3.zip \

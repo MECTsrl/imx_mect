@@ -49,11 +49,4 @@ sudo rm -rf $RPM_BUILD_ROOT
 %attr(0755, root, root) %dir %{pfx}/local/sd_card
 %attr(0755, root, root) %dir %{pfx}/local/update
 
-%attr(0777, root, root) %dir %{pfx}/local/flash/root/sqldrivers
-%{pfx}/local/flash/root/sqldrivers/libqsqlite.so
-%{pfx}/local/flash/root/sqldrivers/libqsqlmysql.so
-%{pfx}/local/flash/root/sqldrivers/libsqlite3.so
-%{pfx}/local/flash/root/sqldrivers/libsqlite3.so.0
-%{pfx}/local/flash/root/sqldrivers/libsqlite3.so.0.8.6
-
 %{pfx}/local/retentive

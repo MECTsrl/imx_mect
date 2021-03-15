@@ -85,11 +85,11 @@ cat <<EOF
 <input type="checkbox" onClick="toggle(this)" /> Toggle All<br/>
 
 <BR>
-<table style="border:solid 2px #335970;" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >
+<table style="border:solid 2px #335970; width: 100%;" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >
 <tbody>
 <tr>
 EOF
-COLUMN_NB=6
+COLUMN_NB=3
 i=0
 for x in `ls $BASE_DIR/$ROOT_DIR/`; do
 	i=$((i+1))
@@ -194,7 +194,7 @@ cat <<EOF
 	<fieldset>
 	<legend>Custom Store manager</legend><br>
 	<form action="filesmanager.cgi" method="POST">
-	<table style="border:solid 2px #335970;" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >
+	<table style="border:solid 2px #335970; width: 100%;" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >
 	<tr>
 EOF
 head -1 `ls $BASE_DIR/$STORE_DIR/* | tail -1` | awk 'BEGIN{FS=";"}{for (i = 1; i <= NF; i++) {gsub(/[ \t]+/, "", $i); print $i;}}' > $BASE_DIR/$PARTIAL_STORE_DIR/Total.csv
@@ -212,7 +212,7 @@ cat<<EOF
 	</form>
 	<BR>
 	<form name="StorePost" method="POST" enctype="multipart/form-data" action="upload.cgi">
-	<table style="border:solid 2px #335970;" bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >
+	<table style="border:solid 2px #335970; " bgcolor=#f1fbff cellspacing=10 cellpadding=4 align=center >
         <td>
         <input type="file" name="LOGSTBL" required>
         </td>

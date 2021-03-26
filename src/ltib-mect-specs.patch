@@ -3990,7 +3990,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1602 @@
+@@ -0,0 +1,1654 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define rhtbtr resources-hack-to-build-the-rpm
 +
@@ -4147,6 +4147,19 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{name} package contents limited to just the run-times needed
 +on the target.
 +
++# TPX1043_03_C
++#
++%Package lfs-TPX1043_03_C
++Summary         : Trimmed %{name} to just the run-times needed for local file system.
++Vendor          : MECT s.r.l.
++Packager        : Francesco Mandracci
++Group           : Applications/System
++AutoReqProv     : no
++Prefix          : %{pfx}/TPX1043_03_C/local
++
++%Description lfs-TPX1043_03_C
++%{name} package contents limited to just the run-times needed
++on the target.
 +# TPAC1007_03
 +#
 +%Package lfs-TPAC1007_03
@@ -4588,6 +4601,23 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
++# TPX1043_03_C
++#
++d=TPX1043_03_C/Simple
++if test -d $d; then
++	cd $d
++
++	$MECT_QT_INSTALL_DIR/bin/lrelease Simple.pro
++	$MECT_QT_INSTALL_DIR/bin/qmake \
++		-spec qws/linux-g++-mx \
++		"INCLUDEPATH+=${MECT_RFSDIR}/usr/include ${MECT_RFSDIR}/usr/src/linux/include" \
++		"DEFINES+=TARGET_ARM" \
++		"QMAKE_LIBDIR+=${MECT_RFSDIR}/usr/lib" \
++		Simple.pro
++	make -j1
++
++	cd -
++fi
 +# TPAC1007_03
 +#
 +d=TPAC1007_03/Simple
@@ -5054,6 +5084,20 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd -
 +fi
 +
++# TPX1043_03_C
++#
++d=TPX1043_03_C/Simple
++if test -d $d; then
++	cd $d
++
++	install -m755 -D hmi                     $RPM_BUILD_ROOT%{pfx}/TPX1043_03_C/local/root/hmi
++	install -m644 -D config/Crosstable.csv   $RPM_BUILD_ROOT%{pfx}/TPX1043_03_C/local/etc/sysconfig/Crosstable.csv
++	install -m644 -D config/splash.png       $RPM_BUILD_ROOT%{pfx}/TPX1043_03_C/local/etc/sysconfig/img/splash.png
++	install -m644 -D config/system.ini       $RPM_BUILD_ROOT%{pfx}/TPX1043_03_C/local/etc/sysconfig/system.ini
++	install -m644 -D config/trend1.csv       $RPM_BUILD_ROOT%{pfx}/TPX1043_03_C/local/data/customtrend/trend1.csv
++
++	cd -
++fi
 +# TPAC1007_03
 +#
 +d=TPAC1007_03/Simple
@@ -5432,6 +5476,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPX1070_03_E/local/etc/sysconfig/img/splash.png
 +%{pfx}/TPX1070_03_E/local/etc/sysconfig/system.ini
 +%{pfx}/TPX1070_03_E/local/data/customtrend/trend1.csv
++
++%files lfs-TPX1043_03_C
++%defattr(-,root,root)
++%{pfx}/TPX1043_03_C/local/root/hmi
++%{pfx}/TPX1043_03_C/local/etc/sysconfig/Crosstable.csv
++%{pfx}/TPX1043_03_C/local/etc/sysconfig/img/splash.png
++%{pfx}/TPX1043_03_C/local/etc/sysconfig/system.ini
++%{pfx}/TPX1043_03_C/local/data/customtrend/trend1.csv
 +
 +%files lfs-TPAC1007_03
 +%defattr(-,root,root)

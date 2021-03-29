@@ -146,6 +146,7 @@ void trendExplorer(struct name_list *trend_list)
   int firstLine = 0;
 
   int n,i;
+  int rowIndex = 0;
 
   n = scandir(CUSTOMTRENDPATH,&entries,0,alphasort);
 
@@ -193,8 +194,9 @@ void trendExplorer(struct name_list *trend_list)
       } else {
           // ok, done with header
           // read rows
-          if(i > 3) {
+          if(rowIndex > 3) {
               printf("\n,{");
+              rowIndex = 0;
           }
           printf("\"filename\": \"%s\" ,", entries[i]->d_name);
           printf("\"track\": [ ");
@@ -241,6 +243,7 @@ void trendExplorer(struct name_list *trend_list)
               }
               printf("}");
               firstLine = 1;
+              rowIndex++;
           }
           printf("\n]}");
 
@@ -367,3 +370,4 @@ char *strtok_csv(char *string, const char *separators, char **savedptr)
     }
     return p;
 }
+

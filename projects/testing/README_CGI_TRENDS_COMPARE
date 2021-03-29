@@ -1,0 +1,27 @@
+Requirements:
+
+1) Install python3 and pip
+
+	sudo apt-get install python3
+	sudo apt install python3-pip
+	
+2) Install Pandas
+	pip3 install pandas 
+	
+
+How to:
+
+1) Run the script with the tpac IP as argument 
+	python3 cgi_trends_compare.py 192.168.5.122
+	
+2) Wait for the magic
+
+3) A data_difference_trends.diff file will be create with the differences between the json from the cgi and all trend files from the "customtrend" dir
+
+
+	
+	
+	
+	
+	
+		 	

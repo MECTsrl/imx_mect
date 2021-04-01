@@ -5653,7 +5653,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version: 0.0
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

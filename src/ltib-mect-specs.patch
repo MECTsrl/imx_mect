@@ -8151,7 +8151,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/update
 +%{pfx}/usr/bin/gdbserver
 +%{pfx}/usr/bin/md5sum
-+%{pfx}/usr/bin/stop
++%{pfx}/usr/bin/sign
 +%{pfx}/usr/bin/stop
 +%{pfx}/usr/lib
 +%{pfx}/usr/share/udhcpc/default.script

@@ -124,11 +124,13 @@ MECT_SYSUPD_IMG_TMPL := $(MECT_FTPDIR)/sysupdate_imx28_img.sh
 MECT_SYSUPD_IMG_SH := sysupdate_img_$(MECT_BUILD_RELEASE).sh
 # System cloner for all targets
 MECT_SYSCLONE_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_cloner.sh
+MECT_SYSCLONE_UPDATE_TMPL := $(MECT_PRJDIR)/cloner/_ysupdate_img.sh
 MECT_SYSCLONE_PRE_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_pre.sh
 MECT_SYSCLONE_POST_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_post.sh
 MECT_SYSCLONE_SHAR := $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).sh
 MECT_SYSCLONE_SHDIR := $(MECT_IMGDIR)/cloner
 MECT_SYSCLONE_SH = $(MECT_SYSCLONE_SHDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).sh
+MECT_SYSCLONE_UPDATE_SH = $(MECT_SYSCLONE_SHDIR)/_ysupdate_img_$(MECT_BUILD_RELEASE).sh
 MECT_SYSCLONE_IMG = $(MECT_SYSCLONE_SHDIR)/img_cloner_$(MECT_BUILD_RELEASE).ext2
 MECT_SYSCLONE_LOOP = $(MECT_SYSCLONE_SHDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).loop
 MECT_SYSCLONE_DIR := $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE)/temp
@@ -643,6 +645,7 @@ MECT_IMAGES := \
 	TPLC050_01_AA \
 	TPX1070_03_D \
 	TPX1070_03_E \
+	TPX1043_03_C \
 
 ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 
@@ -696,6 +699,7 @@ cloner_shar: CLONER_COMPONENTS := \
     /usr/bin/flash_eraseall \
     /usr/lib/fonts \
     /usr/lib/libATCMinputdialog.so \
+    /usr/lib/libATCMcommon.so \
     /usr/lib/libfreetype.so.6 \
     /usr/lib/libglib-2.0.so.0 \
     /usr/lib/libgmodule-2.0.so.0 \
@@ -710,9 +714,10 @@ cloner_shar: CLONER_COMPONENTS := \
     /usr/lib/ts \
     /usr/share/cloner/excludes_localfs.lst \
     /usr/share/cloner/excludes_rootfs.lst \
+    /usr/share/cloner/Simples
 
 cloner_shar: CLONER_COMPONENTS := $(CLONER_COMPONENTS:%=$(MECT_LTIB_RFSDIR)%)
-cloner_shar:
+cloner_shar: $(MECT_IMAGES)
 	test -n '$(CLONER_COMPONENTS)'
 	rm -rf $(MECT_SYSCLONE_SHAR) $(MECT_SYSCLONE_DIR) $(MECT_SYSCLONE_SHDIR)
 	mkdir -p $(MECT_SYSCLONE_DIR)
@@ -731,15 +736,16 @@ cloner_shar:
 	sync
 	dd if=/dev/zero of=$(MECT_SYSCLONE_IMG) bs=1k count=`du -s $(MECT_SYSCLONE_DIR) | awk '{ print int($$1 * 1.5); }'`
 	/sbin/mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L cloner $(MECT_SYSCLONE_IMG)
-	rm -rf $(MECT_SYSCLONE_LOOP); mkdir -p $(MECT_SYSCLONE_LOOP)
+	mkdir -p $(MECT_SYSCLONE_LOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSCLONE_IMG) $(MECT_SYSCLONE_LOOP)
 	sudo rsync -av --delete --inplace --exclude lost+found $(MECT_SYSCLONE_DIR)/ $(MECT_SYSCLONE_LOOP)/
 	sudo umount $(MECT_SYSCLONE_LOOP)
-	rmdir $(MECT_SYSCLONE_LOOP)
+	rm -rf $(MECT_SYSCLONE_LOOP)
 	/sbin/e2fsck -fy $(MECT_SYSCLONE_IMG); test $$? -le 3
 	/sbin/resize2fs -Mp $(MECT_SYSCLONE_IMG)
 	install -m 644 $(MECT_SYSCLONE_TMPL) $(MECT_SYSCLONE_SH)
 	sed -i 's/@@CLONER_VERSION@@/$(MECT_BUILD_RELEASE)/' $(MECT_SYSCLONE_SH)
+	install -m 644 $(MECT_SYSCLONE_UPDATE_TMPL) $(MECT_SYSCLONE_UPDATE_SH)
 	rm -rf $(dir $(MECT_SYSCLONE_DIR))
 
 # Build the sysupdate for MECT Remote Services configuration.
@@ -915,6 +921,10 @@ target_lfs_flash:
 	sudo ln -s flash/etc $(MECT_LFSDIR)/etc
 	sudo ln -s flash/control $(MECT_LFSDIR)/control
 	sudo ln -s flash/data $(MECT_LFSDIR)/data
+	#
+	# CLONER SIMPLES
+	mkdir -p $(MECT_SYSCLONE_DIR)/Simples/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)
+	sudo tar cf $(MECT_SYSCLONE_DIR)/Simples/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)/localfs.tar -C $(MECT_LFSDIR) .
 
 # Build the target-specific project for Freescale manufacturing tool.
 .PHONY: target_mfg_upd
@@ -937,6 +947,7 @@ target_mfg_upd:
 	install -m 644 $(MECT_FTPDIR)/ucl.xml $(MECT_MFGDIR)/'OS firmware'/ucl.xml
 	sudo tar cf $(MECT_MFGDIR)/'OS firmware'/img/rootfs.tar -C $(MECT_RFSDIR) .
 	sudo tar cf $(MECT_MFGDIR)/'OS firmware'/img/localfs.tar -C $(MECT_LFSDIR) .
+	#
 	install -m 644 $(MECT_BOOTDIR)/boot/imx28_ivt_linux.sb $(MECT_MFGDIR)/'OS firmware'/img
 	install -m 644 $(MECT_BOOTDIR)/boot/updater_ivt.sb $(MECT_MFGDIR)/'OS firmware'/sys
 	rm -f $(MECT_MFGZIP)

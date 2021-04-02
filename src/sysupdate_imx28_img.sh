@@ -77,7 +77,7 @@ test -r "$UPDIMG" || do_exit "cannot find an update for ${TARGET}."
 
 # Set up the temporary directory.
 mkdir -p "$MYTMPDIR"
-test -d "$MYTMPDIR" || do_exit "cannot create temporary direcctory ${MYTMPDIR}."
+test -d "$MYTMPDIR" || do_exit "cannot create temporary directory ${MYTMPDIR}."
 chmod 700 "$MYTMPDIR"
 
 # Clean idle setups.
@@ -141,6 +141,9 @@ echo "done." | tee /dev/tty1
 if test -d ${IMGDIR}/local; then
 	echo "Updating the local file system..." | tee /dev/tty1
 	rsync -aHc ${IMGDIR}/local/ /local/ 2>&1 | tee /dev/tty1
+	if test -d /local/flash/data; then
+		mkdir -p /local/flash/data/files
+	fi
 	echo "done." | tee /dev/tty1
 fi
 

@@ -1516,7 +1516,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/cloner/cloner.spec ltib/dist/lfs-5.1/cloner/cloner.spec
 --- ltib.reference/dist/lfs-5.1/cloner/cloner.spec
 +++ ltib/dist/lfs-5.1/cloner/cloner.spec
-@@ -0,0 +1,77 @@
+@@ -0,0 +1,78 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +
@@ -1577,7 +1577,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +install -m 644 -D excludes_localfs.lst $RPM_BUILD_ROOT%{pfx}/usr/share/cloner/excludes_localfs.lst
 +install -m 644 -D excludes_rootfs.lst $RPM_BUILD_ROOT%{pfx}/usr/share/cloner/excludes_rootfs.lst
 +
-+
++mkdir -p $RPM_BUILD_ROOT%{pfx}/usr/share/cloner/Simples
 +%Clean
 +export LC_ALL
 +LC_ALL=C
@@ -1594,6 +1594,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/sbin/cloner
 +%{pfx}/usr/share/cloner/excludes_localfs.lst
 +%{pfx}/usr/share/cloner/excludes_rootfs.lst
++%{pfx}/usr/share/cloner/Simples
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec ltib/dist/lfs-5.1/dhcp/dhcp.spec
 --- ltib.reference/dist/lfs-5.1/dhcp/dhcp.spec
 +++ ltib/dist/lfs-5.1/dhcp/dhcp.spec

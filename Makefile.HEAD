@@ -122,15 +122,14 @@ MECT_KERNEL_CONF := $(MECT_LTIBDIR)/config/platform/imx/kernel-2.6.35-imx28-tpac
 # Script to update target file systems
 MECT_SYSUPD_IMG_TMPL := $(MECT_FTPDIR)/sysupdate_imx28_img.sh
 MECT_SYSUPD_IMG_SH := sysupdate_img_$(MECT_BUILD_RELEASE).sh
+MECT_SYSCLONE_UPDATE_SH := _ysupdate_img_$(MECT_BUILD_RELEASE).sh
 # System cloner for all targets
 MECT_SYSCLONE_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_cloner.sh
-MECT_SYSCLONE_UPDATE_TMPL := $(MECT_PRJDIR)/cloner/_ysupdate_img.sh
 MECT_SYSCLONE_PRE_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_pre.sh
 MECT_SYSCLONE_POST_TMPL := $(MECT_PRJDIR)/cloner/sysupdate_script_post.sh
 MECT_SYSCLONE_SHAR := $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).sh
 MECT_SYSCLONE_SHDIR := $(MECT_IMGDIR)/cloner
 MECT_SYSCLONE_SH = $(MECT_SYSCLONE_SHDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).sh
-MECT_SYSCLONE_UPDATE_SH = $(MECT_SYSCLONE_SHDIR)/_ysupdate_img_$(MECT_BUILD_RELEASE).sh
 MECT_SYSCLONE_IMG = $(MECT_SYSCLONE_SHDIR)/img_cloner_$(MECT_BUILD_RELEASE).ext2
 MECT_SYSCLONE_LOOP = $(MECT_SYSCLONE_SHDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE).loop
 MECT_SYSCLONE_DIR := $(MECT_IMGDIR)/sysupdate_cloner_$(MECT_BUILD_RELEASE)/temp
@@ -745,7 +744,6 @@ cloner_shar: $(MECT_IMAGES)
 	/sbin/resize2fs -Mp $(MECT_SYSCLONE_IMG)
 	install -m 644 $(MECT_SYSCLONE_TMPL) $(MECT_SYSCLONE_SH)
 	sed -i 's/@@CLONER_VERSION@@/$(MECT_BUILD_RELEASE)/' $(MECT_SYSCLONE_SH)
-	install -m 644 $(MECT_SYSCLONE_UPDATE_TMPL) $(MECT_SYSCLONE_UPDATE_SH)
 	rm -rf $(dir $(MECT_SYSCLONE_DIR))
 
 # Build the sysupdate for MECT Remote Services configuration.
@@ -997,6 +995,7 @@ target_mfg_upd:
 	/sbin/e2fsck -fy $(MECT_SYSUPD_IMG); test $$? -le 3
 	/sbin/resize2fs -Mp $(MECT_SYSUPD_IMG)
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/; s/@@THIS_VERSION_MAJ_MIN@@/$(MECT_BUILD_VER_MAJ_MIN)/' $(MECT_SYSUPD_IMG_TMPL) > $(MECT_IMGDIR)/$(MECT_SYSUPDATEDIR)/$(MECT_SYSUPD_IMG_SH)
+	cp $(MECT_IMGDIR)/$(MECT_SYSUPDATEDIR)/$(MECT_SYSUPD_IMG_SH) $(MECT_SYSCLONE_SHDIR)/$(MECT_SYSCLONE_UPDATE_SH)
 	sudo rm -rf $(MECT_SYSUPDIR)/fs $(MECT_RFSDIR) $(MECT_LFSDIR) $(MECT_BOOTDIR) $(MECT_SYSUPDIR) $(shell readlink -m $(MECT_SYSUPDIR)/../$(notdir $(MECT_KOBS_TMPL))) $(MECT_TGTDIR)
 
 # Build the archive for target-specific development.

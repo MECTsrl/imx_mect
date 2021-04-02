@@ -642,9 +642,9 @@ MECT_IMAGES := \
 	TPAC1007_04_AD \
 	TPAC1007_04_AE \
 	TPLC050_01_AA \
+	TPX1043_03_C \
 	TPX1070_03_D \
 	TPX1070_03_E \
-	TPX1043_03_C \
 
 ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
 

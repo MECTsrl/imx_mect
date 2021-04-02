@@ -718,7 +718,7 @@ cloner_shar: CLONER_COMPONENTS := \
 cloner_shar: CLONER_COMPONENTS := $(CLONER_COMPONENTS:%=$(MECT_LTIB_RFSDIR)%)
 cloner_shar: $(MECT_IMAGES)
 	test -n '$(CLONER_COMPONENTS)'
-	rm -rf $(MECT_SYSCLONE_SHAR) $(MECT_SYSCLONE_DIR) $(MECT_SYSCLONE_SHDIR)
+	rm -rf $(MECT_SYSCLONE_SHAR) $(MECT_SYSCLONE_SHDIR)
 	mkdir -p $(MECT_SYSCLONE_DIR)
 	rsync -aLv $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)/ --exclude \*.la
 	#cp $(MECT_SYSCLONE_PRE_TMPL) $(MECT_SYSCLONE_SHAR)
@@ -735,6 +735,7 @@ cloner_shar: $(MECT_IMAGES)
 	sync
 	dd if=/dev/zero of=$(MECT_SYSCLONE_IMG) bs=1k count=`du -s $(MECT_SYSCLONE_DIR) | awk '{ print int($$1 * 1.5); }'`
 	/sbin/mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L cloner $(MECT_SYSCLONE_IMG)
+	rm -rf $(MECT_SYSCLONE_LOOP)
 	mkdir -p $(MECT_SYSCLONE_LOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSCLONE_IMG) $(MECT_SYSCLONE_LOOP)
 	sudo rsync -av --delete --inplace --exclude lost+found $(MECT_SYSCLONE_DIR)/ $(MECT_SYSCLONE_LOOP)/

@@ -679,7 +679,7 @@ image: cloner_shar $(MECT_DEFAULT_IMAGE)
 # Recurse to properly evaluate the targets.
 .PHONY: images
 images: cloner_shar
-	$(MAKE) $@_do
+	$(MAKE) -f Makefile.HEAD $@_do
 
 images_do: $(MECT_IMAGES)
 
@@ -718,7 +718,7 @@ cloner_shar: CLONER_COMPONENTS := \
 cloner_shar: CLONER_COMPONENTS := $(CLONER_COMPONENTS:%=$(MECT_LTIB_RFSDIR)%)
 cloner_shar: $(MECT_IMAGES)
 	test -n '$(CLONER_COMPONENTS)'
-	rm -rf $(MECT_SYSCLONE_SHAR) $(MECT_SYSCLONE_DIR) $(MECT_SYSCLONE_SHDIR)
+	rm -rf $(MECT_SYSCLONE_SHAR) $(MECT_SYSCLONE_SHDIR)
 	mkdir -p $(MECT_SYSCLONE_DIR)
 	rsync -aLv $(CLONER_COMPONENTS) $(MECT_KOBS_TMPL) $(MECT_SYSCLONE_DIR)/ --exclude \*.la
 	#cp $(MECT_SYSCLONE_PRE_TMPL) $(MECT_SYSCLONE_SHAR)
@@ -735,6 +735,7 @@ cloner_shar: $(MECT_IMAGES)
 	sync
 	dd if=/dev/zero of=$(MECT_SYSCLONE_IMG) bs=1k count=`du -s $(MECT_SYSCLONE_DIR) | awk '{ print int($$1 * 1.5); }'`
 	/sbin/mke2fs -t ext2 -F -m 0 -i 1024 -b 1024 -L cloner $(MECT_SYSCLONE_IMG)
+	rm -rf $(MECT_SYSCLONE_LOOP)
 	mkdir -p $(MECT_SYSCLONE_LOOP)
 	sudo mount -o loop -t ext2 $(MECT_SYSCLONE_IMG) $(MECT_SYSCLONE_LOOP)
 	sudo rsync -av --delete --inplace --exclude lost+found $(MECT_SYSCLONE_DIR)/ $(MECT_SYSCLONE_LOOP)/
@@ -839,7 +840,7 @@ target_boot: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)
 target_boot: MECT_BOOTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)/boot
 target_boot: $(MECT_COMMON_RFSPKGS)
 	test -n '$(MECT_BUILD_TARGET)' -a -n '$(MECT_KERNEL_TARGET_CONF)'
-	$(MAKE) MECT_BUILD_TARGET=$(MECT_BUILD_TARGET) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
+	$(MAKE) -f Makefile.HEAD MECT_BUILD_TARGET=$(MECT_BUILD_TARGET) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
 	sudo rm -rf $(MECT_BOOTDIR)
 	mkdir -p $(MECT_BOOTDIR)/var/lib/rpm
 	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_BOOTDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_RPMDIR)/imx-bootlets-src-mfg-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-2.6.35.3-1.1.0.$(MECT_TARGET_ARCH).rpm
@@ -854,7 +855,7 @@ target_rfs: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$
 target_rfs: MECT_RFSDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)/rootfs
 target_rfs: $(MECT_COMMON_RFSPKGS)
 	test -n '$(MECT_BUILD_TARGET)' -a -n '$(MECT_KERNEL_TARGET_CONF)'
-	$(MAKE) MECT_BUILD_TARGET=$(MECT_BUILD_TARGET) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
+	$(MAKE) -f Makefile.HEAD MECT_BUILD_TARGET=$(MECT_BUILD_TARGET) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
 	sudo rm -rf $(MECT_RFSDIR)
 	mkdir -p $(MECT_RFSDIR)/var/lib/rpm $(MECT_RFSDIR)/tmp/ltib
 	sudo $(MECT_FSDIR)/ltib/usr/bin/rpm --nodeps --root $(MECT_RFSDIR) --prefix / --define '_tmppath /tmp/ltib' --dbpath /var/lib/rpm --ignorearch -Uvh --excludedocs $(MECT_COMMON_RFSPKGS) $(MECT_RFSPKGS) $(subst /kernel-rfs-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_TARGET_RFSPKGS))
@@ -896,7 +897,7 @@ target_lfs: $(MECT_COMMON_LFSPKGS)
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_LFSDIR)/var
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_LFSDIR)/tmp/ltib
 	sudo rmdir --ignore-fail-on-non-empty $(MECT_LFSDIR)/tmp
-	$(MAKE) target_lfs_flash
+	$(MAKE) -f Makefile.HEAD target_lfs_flash
 	sudo du -sh --apparent-size $(MECT_LFSDIR)
 
 # Customize local file system layout for switch between FLASH/SD card.
@@ -1044,7 +1045,7 @@ ltib_update:
 	if test -n '$(MECT_BUILD_IMXMECT_TAG)' -a '$(MECT_BUILD_IMXMECT_TAG)' != '0.0'; then git checkout tags/$(MECT_BUILD_IMXMECT_TAG); fi
 	if ! test -d $(MECT_LTIBDIR_REF); then \
 		mv $(MECT_LTIBDIR) $(MECT_LTIBDIR).precious; \
-		$(MAKE) ltib_inst ltib_patch; \
+		$(MAKE) -f Makefile.HEAD ltib_inst ltib_patch; \
 		rm -rf $(MECT_LTIBDIR); \
 		mv $(MECT_LTIBDIR).precious $(MECT_LTIBDIR); \
 	fi
@@ -1061,7 +1062,7 @@ ltib_update:
 	cp $(MECT_LTIBDIR_PATCH)/.tmpconfig.h $(MECT_LTIBDIR)/.tmpconfig.h
 	cp -a $(MECT_LTIBDIR_PATCH)/ltib $(MECT_LTIBDIR)/ltib
 	rm -rf $(MECT_LTIBDIR_PATCH)
-	$(MAKE) spec_setup
+	$(MAKE) -f Makefile.HEAD spec_setup
 
 
 # Create reference images for use to check future builds

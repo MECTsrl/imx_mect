@@ -20,10 +20,10 @@ MECT_BUILD_IMXMECT_TAG := v$(MECT_BUILD_RELEASE)
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := mect_suite_3.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_ATCMCRT_TAG := v2.024
+export MECT_BUILD_ATCMCRT_TAG := v2.025
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_CAN_BRANCH := mect_suite_3.0
-MECT_BUILD_ATCMCRT_CAN_REV := 275
+MECT_BUILD_ATCMCRT_CAN_REV := 276
 MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
 # git branch and tag for the mect_plugins project

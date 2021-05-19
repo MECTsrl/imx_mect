@@ -1,0 +1,45 @@
+diff -urN a/arch/arm/mach-mx28/mx28evk_pins.c b/arch/arm/mach-mx28/mx28evk_pins.c
+--- a/arch/arm/mach-mx28/mx28evk_pins.c	2021-05-18 11:53:14.903118225 +0200
++++ b/arch/arm/mach-mx28/mx28evk_pins.c	2021-05-18 11:44:26.241105251 +0200
+@@ -103,20 +103,6 @@
+ 	 .id    = PINID_AUART2_RTS, /* not connected */
+ 	 .fun   = PIN_FUN1,
+ 	 },
+-	{
+-	 .name = "FastIO_7",
+-	 .id = PINID_AUART1_RX,
+-	 .fun = PIN_GPIO,
+-	 .data = 0,
+-	 .output = 1,
+-	 },
+-	{
+-	 .name = "FastIO_8",
+-	 .id = PINID_AUART1_TX,
+-	 .fun = PIN_GPIO,
+-	 .data = 0,
+-	 .output = 1,
+-	 },
+ #else
+ 	{
+ 	 .name = "usb0",
+@@ -133,6 +119,20 @@
+ 	 .output = 1,
+ 	 },
+ #endif
++    {
++     .name = "FastIO_7",
++     .id = PINID_AUART1_RX,
++     .fun = PIN_GPIO,
++     .data = 0,
++     .output = 1,
++     },
++    {
++     .name = "FastIO_8",
++     .id = PINID_AUART1_TX,
++     .fun = PIN_GPIO,
++     .data = 0,
++     .output = 1,
++     },
+ #if defined(CONFIG_USB_OTG)
+ 	 {
+ 	 .name 	= "usb0_id",

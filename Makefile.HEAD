@@ -5,7 +5,7 @@ export LC_ALL := C
 # MECT Suite version
 export MECT_BUILD_MAJOR := 3
 export MECT_BUILD_MINOR := 3
-export MECT_BUILD_BUILD := 7
+export MECT_BUILD_BUILD := 8
 export MECT_BUILD_RELEASE = $(MECT_BUILD_MAJOR).$(MECT_BUILD_MINOR).$(MECT_BUILD_BUILD)
 
 # ---------------------------
@@ -645,24 +645,19 @@ MECT_IMAGES := \
 	TPX1043_03_C \
 	TPX1070_03_D \
 	TPX1070_03_E \
-
-ifneq ($(wildcard $(MECT_PRJDIR)/4c_runtime/.*),)
-
-	MECT_IMAGES += \
-		TP1043_02_B \
-		TP1070_01_B \
-		TPAC1005 \
-		TPAC1008_02_AA \
-		TPAC1008_02_AB \
-		TPAC1008_02_AD \
-		TPAC1008_02_AE \
-		TPAC1008_02_AF \
-		TPAC1008_03_AC \
-		TPAC1008_03_AD \
-		TPLC100_01_AA \
-		TPLC100_01_AB \
-
-endif
+	\
+	TP1043_02_B \
+	TP1070_01_B \
+	TPAC1005 \
+	TPAC1008_02_AA \
+	TPAC1008_02_AB \
+	TPAC1008_02_AD \
+	TPAC1008_02_AE \
+	TPAC1008_02_AF \
+	TPAC1008_03_AC \
+	TPAC1008_03_AD \
+	TPLC100_01_AA \
+	TPLC100_01_AB
 
 # Image-specific settings and targets
 $(foreach img,$(MECT_IMAGES),$(eval include $(MECT_MKIMGDIR)/Makefile-$(img).in))

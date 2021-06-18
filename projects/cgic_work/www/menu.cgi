@@ -37,7 +37,7 @@ cat <<EOF
 			<table width="100%">
 				<tr align="left">
 					<td>
-						<h1><img src="$LOGO_NAME" style="width:240px;height:136px;float=left;vertical-align:middle;">  $TARGET_NAME Menu</h1>
+						<h1><img src="$LOGO_NAME" style="width:auto;height:136px;float=left;vertical-align:middle;">  $TARGET_NAME Menu</h1>
 					</td>
 					<td>
 EOF
@@ -92,7 +92,7 @@ Content-Type: text/html
 			<table width="100%">
 				<tr align="left">
 					<td>
-						<h1><img src="$LOGO_NAME" style="width:240px;height:136px;float=left;vertical-align:middle;">  $TARGET_NAME Menu</h1>
+						<h1><img src="$LOGO_NAME" style="width:auto;height:136px;float=left;vertical-align:middle;">  $TARGET_NAME Menu</h1>
 					</td>
 					<td>
 EOF

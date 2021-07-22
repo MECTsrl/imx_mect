@@ -6,7 +6,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : 0.0
++Version         : v2.025
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -127,7 +127,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : 0.0
++Version         : v2.025
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -1522,7 +1522,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 3.3.1
++Version         : 3.3.8
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3991,13 +3991,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1654 @@
+@@ -0,0 +1,1655 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define rhtbtr resources-hack-to-build-the-rpm
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : 0.0
++Version         : v3.3.8
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -5646,6 +5646,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/TPLC100_01_AB/local/etc/sysconfig/system.ini
 +%{pfx}/TPLC100_01_AB/local/data/customtrend/trend1.csv
 +%{pfx}/TPLC100_01_AB/local/etc/sysconfig/iomap0.cmg
++%{pfx}/TPLC100_01_AB/local/etc/sysconfig/network0.cmg
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 --- ltib.reference/dist/lfs-5.1/mect_plugins/mect_plugins.spec
 +++ ltib/dist/lfs-5.1/mect_plugins/mect_plugins.spec
@@ -5654,7 +5655,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version         : 0.0
++Version         : v3.3.8
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

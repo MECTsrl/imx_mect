@@ -6,7 +6,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : 4c_runtime
-+Version         : v2.025
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -127,7 +127,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : ATCM control runtime system application
 +Name            : ATCMcontrol_RunTimeSystem
-+Version         : v2.025
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -1522,7 +1522,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 3.3.8
++Version         : 3.3.9
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -3991,13 +3991,13 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
 --- ltib.reference/dist/lfs-5.1/mect_apps/mect_apps.spec
 +++ ltib/dist/lfs-5.1/mect_apps/mect_apps.spec
-@@ -0,0 +1,1655 @@
+@@ -0,0 +1,1657 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +%define rhtbtr resources-hack-to-build-the-rpm
 +
 +Summary         : Default HMI application.
 +Name            : mect_apps
-+Version         : v3.3.8
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -5191,6 +5191,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	cd $d
 +
 +	install -m755 -D hmi                   $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AE/local/root/hmi
++	install -m644 -D hmi.ini               $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AE/local/root/hmi.ini
 +	install -m644 -D config/Crosstable.csv $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AE/local/etc/sysconfig/Crosstable.csv
 +	install -m644 -D config/splash.png     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AE/local/etc/sysconfig/img/splash.png
 +	install -m644 -D config/system.ini     $RPM_BUILD_ROOT%{pfx}/TPAC1007_04_AE/local/etc/sysconfig/system.ini
@@ -5537,6 +5538,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%files lfs-TPAC1007_04_AE
 +%defattr(-,root,root)
 +%{pfx}/TPAC1007_04_AE/local/root/hmi
++%{pfx}/TPAC1007_04_AE/local/root/hmi.ini
 +%{pfx}/TPAC1007_04_AE/local/etc/sysconfig/Crosstable.csv
 +%{pfx}/TPAC1007_04_AE/local/etc/sysconfig/img/splash.png
 +%{pfx}/TPAC1007_04_AE/local/etc/sysconfig/system.ini
@@ -5655,7 +5657,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Custom Qt plugins for HMI development.
 +Name            : mect_plugins
-+Version         : v3.3.8
++Version         : 0.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.

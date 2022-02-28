@@ -5,7 +5,7 @@ export LC_ALL := C
 # MECT Suite version
 export MECT_BUILD_MAJOR := 3
 export MECT_BUILD_MINOR := 3
-export MECT_BUILD_BUILD := 8
+export MECT_BUILD_BUILD := 10
 export MECT_BUILD_RELEASE = $(MECT_BUILD_MAJOR).$(MECT_BUILD_MINOR).$(MECT_BUILD_BUILD)
 
 # ---------------------------
@@ -20,10 +20,10 @@ MECT_BUILD_IMXMECT_TAG :=0.0# v$(MECT_BUILD_RELEASE)
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := mect_suite_3.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_ATCMCRT_TAG :=0.0# v2.025
+export MECT_BUILD_ATCMCRT_TAG :=0.0# v2.026
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_CAN_BRANCH := mect_suite_3.0
-MECT_BUILD_ATCMCRT_CAN_REV := HEAD#276
+MECT_BUILD_ATCMCRT_CAN_REV := HEAD#278
 MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
 # git branch and tag for the mect_plugins project
@@ -1070,16 +1070,16 @@ ifeq ($(MECT_REF_IMG),)
 images_check: MECT_REF_IMG := $(GI)
 endif
 images_check:
-	if test -z "$(MECT_REF_IMG)" -o ! -d "$(MECT_REF_IMG)"; then \
-		echo "ERROR: no image reference directory ($(MECT_REF_IMG))."; \
+	if test -z "$(MECT_REF_IMG)/mfgtools" -o ! -d "$(MECT_REF_IMG)/mfgtools"; then \
+		echo "ERROR: no image reference directory ($(MECT_REF_IMG)/mfgtools)."; \
 		exit 1; \
 	fi
 	test -s '$(MECT_IMG_TESTER)'
-	for i in "" $(MECT_IMGDIR)/*$(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; do \
+	for i in "" $(MECT_IMGDIR)/mfgtools/*$(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; do \
 		test -z "$$i" -o ! -s "$$i" && continue; \
 		echo ""; \
 		echo "Checking $$i..."; \
-		sudo sh $(MECT_IMG_TESTER) "$(MECT_REF_IMG)" "$$i" $(MECT_TMPDIR) $(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; \
+		sudo sh $(MECT_IMG_TESTER) "$(MECT_REF_IMG)/mfgtools" "$$i" $(MECT_TMPDIR) $(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; \
 	done
 
 

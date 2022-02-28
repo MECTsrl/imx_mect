@@ -1070,16 +1070,16 @@ ifeq ($(MECT_REF_IMG),)
 images_check: MECT_REF_IMG := $(GI)
 endif
 images_check:
-	if test -z "$(MECT_REF_IMG)" -o ! -d "$(MECT_REF_IMG)"; then \
-		echo "ERROR: no image reference directory ($(MECT_REF_IMG))."; \
+	if test -z "$(MECT_REF_IMG)/mfgtools" -o ! -d "$(MECT_REF_IMG)/mfgtools"; then \
+		echo "ERROR: no image reference directory ($(MECT_REF_IMG)/mfgtools)."; \
 		exit 1; \
 	fi
 	test -s '$(MECT_IMG_TESTER)'
-	for i in "" $(MECT_IMGDIR)/*$(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; do \
+	for i in "" $(MECT_IMGDIR)/mfgtools/*$(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; do \
 		test -z "$$i" -o ! -s "$$i" && continue; \
 		echo ""; \
 		echo "Checking $$i..."; \
-		sudo sh $(MECT_IMG_TESTER) "$(MECT_REF_IMG)" "$$i" $(MECT_TMPDIR) $(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; \
+		sudo sh $(MECT_IMG_TESTER) "$(MECT_REF_IMG)/mfgtools" "$$i" $(MECT_TMPDIR) $(MECT_REL_PREFIX)$(MECT_GOLD_REL).zip; \
 	done
 
 

@@ -12,8 +12,8 @@ if ! test -d "$OVPNCONF"; then
 fi
 test -d "$OVPNCONF" || do_exit "no OpenVPN configuration directory." | tee /dev/tty1
 
-# Disable any existing certificates.
-find "$OVPNCONF" -type f \( -iname \*.ovpn -o -iname \*.conf \) -exec mv {} {}.$(date '+%F-%T') \;
+# Remove any existing certificates.
+find "$OVPNCONF" -type f \( -iname \*.ovpn -o -iname \*.conf \) -exec rm {}  \;
 
 # Install the new certificate.
 ls "${MNTDIR}/${SN}"*".ovpn" 2>/dev/null | while read c; do

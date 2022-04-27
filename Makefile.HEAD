@@ -4,8 +4,8 @@ export LC_ALL := C
 
 # MECT Suite version
 export MECT_BUILD_MAJOR := 3
-export MECT_BUILD_MINOR := 3
-export MECT_BUILD_BUILD := 13
+export MECT_BUILD_MINOR := 4
+export MECT_BUILD_BUILD := 0
 export MECT_BUILD_RELEASE = $(MECT_BUILD_MAJOR).$(MECT_BUILD_MINOR).$(MECT_BUILD_BUILD)
 
 # ---------------------------
@@ -20,10 +20,10 @@ MECT_BUILD_IMXMECT_TAG :=0.0# v$(MECT_BUILD_RELEASE)
 # git branch and tag for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_BRANCH := mect_suite_3.0
 # Set to 0.0 to checkout HEAD
-export MECT_BUILD_ATCMCRT_TAG :=0.0# v2.027
+export MECT_BUILD_ATCMCRT_TAG :=0.0# v2.028
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
 MECT_BUILD_ATCMCRT_CAN_BRANCH := mect_suite_3.0
-MECT_BUILD_ATCMCRT_CAN_REV := HEAD#279
+MECT_BUILD_ATCMCRT_CAN_REV := HEAD#281
 MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
 # git branch and tag for the mect_plugins project

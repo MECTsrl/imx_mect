@@ -154,6 +154,9 @@ MECT_SYSUPD_CALRESET = $(MECT_IMGDIR)/utilities/sysupdate_calreset_$(MECT_BUILD_
 # sysupdate for micropython
 MECT_SYSUPD_MICROPYTHON_SRC := $(MECT_FTPDIR)/sysupdate_micropython_v1.14.sh
 MECT_SYSUPD_MICROPYTHON = $(MECT_IMGDIR)/utilities/sysupdate_micropython_v1.14.sh
+# sysupdate for MQTT
+MECT_SYSUPD_MQTT_SRC := $(MECT_FTPDIR)/sysupdate_mosquitto_v2.0.14.sh
+MECT_SYSUPD_MQTT = $(MECT_IMGDIR)/utilities/sysupdate_mosquitto_v2.0.14.sh
 
 # Extension of the MD5 checksums for the downloads.
 MECT_MD5EXT := md5
@@ -429,7 +432,7 @@ endif
 
 
 .PHONY: all
-all: env downloads setup build image target_dev sysupdate_mrs sysupdate_hardening sysupdate_passwordreset sysupdate_netreset sysupdate_calreset sysupdate_micropython
+all: env downloads setup build image target_dev sysupdate_mrs sysupdate_hardening sysupdate_passwordreset sysupdate_netreset sysupdate_calreset sysupdate_micropython sysupdate_mqtt
 
 # Set up the build environment.
 .PHONY: env
@@ -785,6 +788,12 @@ sysupdate_micropython:
 	rm -f $(MECT_SYSUPD_MICROPYTHON)
 	mkdir -p $(dir $(MECT_SYSUPD_MICROPYTHON))
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_MICROPYTHON_SRC) > $(MECT_SYSUPD_MICROPYTHON)
+# copy the sysupdate for mqtt
+.PHONY: sysupdate_mqtt
+sysupdate_mqtt:
+	rm -f $(MECT_SYSUPD_MQTT)
+	mkdir -p $(dir $(MECT_SYSUPD_MQTT))
+	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_MQTT_SRC) > $(MECT_SYSUPD_MQTT)
 PHONY: wininst
 wininst: MECT_DOWNLOADS := \
 	    7z.dll \

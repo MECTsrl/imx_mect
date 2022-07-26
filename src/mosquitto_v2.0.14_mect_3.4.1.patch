@@ -1,0 +1,363 @@
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/apps/db_dump/Makefile mosquitto/apps/db_dump/Makefile
+--- mosquitto_v2.0.14/apps/db_dump/Makefile	2022-07-26 15:04:33.091719721 +0200
++++ mosquitto/apps/db_dump/Makefile	2022-05-03 15:16:10.246325909 +0200
+@@ -22,7 +22,7 @@
+ 
+ .PHONY: all clean reallyclean
+ 
+-all : mosquitto_db_dump
++all : # mosquitto_db_dump
+ 
+ mosquitto_db_dump : ${OBJS}
+ 	${CROSS_COMPILE}${CC} $^ -o $@ ${LDFLAGS} ${LIBS}
+I file binari mosquitto_v2.0.14/client/client_props.o e mosquitto/client/client_props.o sono diversi
+I file binari mosquitto_v2.0.14/client/client_shared.o e mosquitto/client/client_shared.o sono diversi
+I file binari mosquitto_v2.0.14/client/mosquitto_pub e mosquitto/client/mosquitto_pub sono diversi
+I file binari mosquitto_v2.0.14/client/mosquitto_rr e mosquitto/client/mosquitto_rr sono diversi
+I file binari mosquitto_v2.0.14/client/mosquitto_sub e mosquitto/client/mosquitto_sub sono diversi
+I file binari mosquitto_v2.0.14/client/pub_client.o e mosquitto/client/pub_client.o sono diversi
+I file binari mosquitto_v2.0.14/client/pub_shared.o e mosquitto/client/pub_shared.o sono diversi
+I file binari mosquitto_v2.0.14/client/rr_client.o e mosquitto/client/rr_client.o sono diversi
+I file binari mosquitto_v2.0.14/client/sub_client.o e mosquitto/client/sub_client.o sono diversi
+I file binari mosquitto_v2.0.14/client/sub_client_output.o e mosquitto/client/sub_client_output.o sono diversi
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/config.mk mosquitto/config.mk
+--- mosquitto_v2.0.14/config.mk	2022-07-26 15:04:33.095719739 +0200
++++ mosquitto/config.mk	2022-05-03 15:40:05.422317585 +0200
+@@ -21,12 +21,12 @@
+ # Disabling this will also mean that passwords must be stored in plain text. It
+ # is strongly recommended that you only disable WITH_TLS if you are not using
+ # password authentication at all.
+-WITH_TLS:=yes
++WITH_TLS:=no
+ 
+ # Comment out to disable TLS/PSK support in the broker and client. Requires
+ # WITH_TLS=yes.
+ # This must be disabled if using openssl < 1.0.
+-WITH_TLS_PSK:=yes
++WITH_TLS_PSK:=no
+ 
+ # Comment out to disable client threading support.
+ WITH_THREADING:=yes
+@@ -35,13 +35,13 @@
+ # to connect to other brokers and subscribe/publish to topics. You probably
+ # want to leave this included unless you want to save a very small amount of
+ # memory size and CPU time.
+-WITH_BRIDGE:=yes
++WITH_BRIDGE:=no
+ 
+ # Comment out to remove persistent database support from the broker. This
+ # allows the broker to store retained messages and durable subscriptions to a
+ # file periodically and on shutdown. This is usually desirable (and is
+ # suggested by the MQTT spec), but it can be disabled if required.
+-WITH_PERSISTENCE:=yes
++WITH_PERSISTENCE:=no
+ 
+ # Comment out to remove memory tracking support from the broker. If disabled,
+ # mosquitto won't track heap memory usage nor export '$SYS/broker/heap/current
+@@ -73,7 +73,7 @@
+ WITH_EC:=yes
+ 
+ # Build man page documentation by default.
+-WITH_DOCS:=yes
++WITH_DOCS:=no
+ 
+ # Build with client support for SOCK5 proxy.
+ WITH_SOCKS:=yes
+@@ -108,7 +108,7 @@
+ WITH_UNIX_SOCKETS:=yes
+ 
+ # Build mosquitto_sub with cJSON support
+-WITH_CJSON:=yes
++WITH_CJSON:=no
+ 
+ # Build mosquitto with support for the $CONTROL topics.
+ WITH_CONTROL:=yes
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/docker/1.5/Dockerfile mosquitto/docker/1.5/Dockerfile
+--- mosquitto_v2.0.14/docker/1.5/Dockerfile	2022-07-26 15:04:33.095719739 +0200
++++ mosquitto/docker/1.5/Dockerfile	2022-05-03 13:01:59.354372600 +0200
+@@ -42,9 +42,8 @@
+     export GNUPGHOME="$(mktemp -d)" && \
+     found=''; \
+     for server in \
+-        ha.pool.sks-keyservers.net \
++        hkps://keys.openpgp.org \
+         hkp://keyserver.ubuntu.com:80 \
+-        hkp://p80.pool.sks-keyservers.net:80 \
+         pgp.mit.edu \
+     ; do \
+         echo "Fetching GPG key $GPG_KEYS from $server"; \
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/docker/1.5-openssl/Dockerfile mosquitto/docker/1.5-openssl/Dockerfile
+--- mosquitto_v2.0.14/docker/1.5-openssl/Dockerfile	2022-07-26 15:04:33.095719739 +0200
++++ mosquitto/docker/1.5-openssl/Dockerfile	2022-05-03 13:01:59.354372600 +0200
+@@ -1,4 +1,4 @@
+-FROM alpine:3.12
++FROM alpine:3.14
+ 
+ LABEL maintainer="Roger Light <roger@atchoo.org>" \
+     description="Eclipse Mosquitto MQTT Broker"
+@@ -40,9 +40,8 @@
+     export GNUPGHOME="$(mktemp -d)" && \
+     found=''; \
+     for server in \
+-        ha.pool.sks-keyservers.net \
++        htps://keys.openpgp.org \
+         hkp://keyserver.ubuntu.com:80 \
+-        hkp://p80.pool.sks-keyservers.net:80 \
+         pgp.mit.edu \
+     ; do \
+         echo "Fetching GPG key $GPG_KEYS from $server"; \
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/docker/1.6/Dockerfile mosquitto/docker/1.6/Dockerfile
+--- mosquitto_v2.0.14/docker/1.6/Dockerfile	2022-07-26 15:04:33.095719739 +0200
++++ mosquitto/docker/1.6/Dockerfile	2022-05-03 13:01:59.354372600 +0200
+@@ -45,9 +45,8 @@
+     export GNUPGHOME="$(mktemp -d)" && \
+     found=''; \
+     for server in \
+-        ha.pool.sks-keyservers.net \
++        hkps://keys.openpgp.org \
+         hkp://keyserver.ubuntu.com:80 \
+-        hkp://p80.pool.sks-keyservers.net:80 \
+         pgp.mit.edu \
+     ; do \
+         echo "Fetching GPG key $GPG_KEYS from $server"; \
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/docker/1.6-openssl/Dockerfile mosquitto/docker/1.6-openssl/Dockerfile
+--- mosquitto_v2.0.14/docker/1.6-openssl/Dockerfile	2022-07-26 15:04:33.095719739 +0200
++++ mosquitto/docker/1.6-openssl/Dockerfile	2022-05-03 13:01:59.354372600 +0200
+@@ -45,9 +45,8 @@
+     export GNUPGHOME="$(mktemp -d)" && \
+     found=''; \
+     for server in \
+-        ha.pool.sks-keyservers.net \
++        hkps://keys.openpgp.org \
+         hkp://keyserver.ubuntu.com:80 \
+-        hkp://p80.pool.sks-keyservers.net:80 \
+         pgp.mit.edu \
+     ; do \
+         echo "Fetching GPG key $GPG_KEYS from $server"; \
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/docker/2.0/Dockerfile mosquitto/docker/2.0/Dockerfile
+--- mosquitto_v2.0.14/docker/2.0/Dockerfile	2022-07-26 15:04:33.095719739 +0200
++++ mosquitto/docker/2.0/Dockerfile	2022-05-03 13:01:59.354372600 +0200
+@@ -3,8 +3,8 @@
+ LABEL maintainer="Roger Light <roger@atchoo.org>" \
+     description="Eclipse Mosquitto MQTT Broker"
+ 
+-ENV VERSION=2.0.13 \
+-    DOWNLOAD_SHA256=9cf83a558f1588e8798edd8647b1632af88e88ef2cd45054e903c517df5bd2cd \
++ENV VERSION=2.0.14 \
++    DOWNLOAD_SHA256=d0dde8fdb12caf6e2426b4f28081919a2fce3448773bdb8af0d3cd5fe5776925 \
+     GPG_KEYS=A0D6EEA1DCAE49A635A3B2F0779B22DFB3E717B7 \
+     LWS_VERSION=4.2.1 \
+     LWS_SHA256=842da21f73ccba2be59e680de10a8cce7928313048750eb6ad73b6fa50763c51
+@@ -46,9 +46,8 @@
+     export GNUPGHOME="$(mktemp -d)" && \
+     found=''; \
+     for server in \
+-        ha.pool.sks-keyservers.net \
++        hkps://keys.openpgp.org \
+         hkp://keyserver.ubuntu.com:80 \
+-        hkp://p80.pool.sks-keyservers.net:80 \
+         pgp.mit.edu \
+     ; do \
+         echo "Fetching GPG key $GPG_KEYS from $server"; \
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/docker/2.0-openssl/Dockerfile mosquitto/docker/2.0-openssl/Dockerfile
+--- mosquitto_v2.0.14/docker/2.0-openssl/Dockerfile	2022-07-26 15:04:33.095719739 +0200
++++ mosquitto/docker/2.0-openssl/Dockerfile	2022-05-03 13:01:59.354372600 +0200
+@@ -3,8 +3,8 @@
+ LABEL maintainer="Roger Light <roger@atchoo.org>" \
+     description="Eclipse Mosquitto MQTT Broker"
+ 
+-ENV VERSION=2.0.13 \
+-    DOWNLOAD_SHA256=9cf83a558f1588e8798edd8647b1632af88e88ef2cd45054e903c517df5bd2cd \
++ENV VERSION=2.0.14 \
++    DOWNLOAD_SHA256=d0dde8fdb12caf6e2426b4f28081919a2fce3448773bdb8af0d3cd5fe5776925 \
+     GPG_KEYS=A0D6EEA1DCAE49A635A3B2F0779B22DFB3E717B7 \
+     LWS_VERSION=4.2.1 \
+     LWS_SHA256=842da21f73ccba2be59e680de10a8cce7928313048750eb6ad73b6fa50763c51
+@@ -46,9 +46,8 @@
+     export GNUPGHOME="$(mktemp -d)" && \
+     found=''; \
+     for server in \
+-        ha.pool.sks-keyservers.net \
++        hkps://keys.openpgp.org \
+         hkp://keyserver.ubuntu.com:80 \
+-        hkp://p80.pool.sks-keyservers.net:80 \
+         pgp.mit.edu \
+     ; do \
+         echo "Fetching GPG key $GPG_KEYS from $server"; \
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/docker/generic/Dockerfile mosquitto/docker/generic/Dockerfile
+--- mosquitto_v2.0.14/docker/generic/Dockerfile	2022-07-26 15:04:33.095719739 +0200
++++ mosquitto/docker/generic/Dockerfile	2022-05-03 13:01:59.358372600 +0200
+@@ -63,9 +63,8 @@
+     export GNUPGHOME="$(mktemp -d)" && \
+     found=''; \
+     for server in \
+-        ha.pool.sks-keyservers.net \
++        hkps://keys.openpgp.org \
+         hkp://keyserver.ubuntu.com:80 \
+-        hkp://p80.pool.sks-keyservers.net:80 \
+         pgp.mit.edu \
+     ; do \
+         echo "Fetching GPG key $GPG_KEYS from $server"; \
+I file binari mosquitto_v2.0.14/lib/actions.o e mosquitto/lib/actions.o sono diversi
+I file binari mosquitto_v2.0.14/lib/callbacks.o e mosquitto/lib/callbacks.o sono diversi
+I file binari mosquitto_v2.0.14/lib/connect.o e mosquitto/lib/connect.o sono diversi
+I file binari mosquitto_v2.0.14/lib/cpp/libmosquittopp.so.1 e mosquitto/lib/cpp/libmosquittopp.so.1 sono diversi
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/lib/cpp/Makefile mosquitto/lib/cpp/Makefile
+--- mosquitto_v2.0.14/lib/cpp/Makefile	2022-07-26 15:04:33.099719757 +0200
++++ mosquitto/lib/cpp/Makefile	2022-05-03 14:55:08.218333228 +0200
+@@ -1,5 +1,11 @@
+ include ../../config.mk
+ 
++CC  = /opt/CodeSourcery/bin/arm-none-linux-gnueabi-g
++CXX = /opt/CodeSourcery/bin/arm-none-linux-gnueabi-g++
++AR  = /opt/CodeSourcery/bin/arm-none-linux-gnueabi-ar
++AS  = /opt/CodeSourcery/bin/arm-none-linux-gnueabi-gcc
++LD  = /opt/CodeSourcery/bin/arm-none-linux-gnueabi-gcc
++
+ ifneq ($(UNAME),SunOS)
+ 	LIB_LDFLAGS:=$(LDFLAGS) -Wl,-soname,libmosquittopp.so.${SOVERSION}
+ endif
+@@ -20,7 +26,7 @@
+ 	ln -sf libmosquittopp.so.${SOVERSION} "${DESTDIR}${libdir}/libmosquittopp.so"
+ ifeq ($(WITH_STATIC_LIBRARIES),yes)
+ 	$(INSTALL) libmosquittopp.a "${DESTDIR}${libdir}/libmosquittopp.a"
+-	${CROSS_COMPILE}${STRIP} -g --strip-unneeded "${DESTDIR}${libdir}/libmosquittopp.a"
++	${STRIP} -g --strip-unneeded "${DESTDIR}${libdir}/libmosquittopp.a"
+ endif
+ 	$(INSTALL) -d "${DESTDIR}${incdir}/"
+ 	$(INSTALL) mosquittopp.h "${DESTDIR}${incdir}/mosquittopp.h"
+@@ -38,11 +44,11 @@
+ 	-rm -f *.o libmosquittopp.so.${SOVERSION} libmosquittopp.a
+ 
+ libmosquittopp.so.${SOVERSION} : mosquittopp.o
+-	${CROSS_COMPILE}$(CXX) -shared $(LIB_LDFLAGS) $< -o $@ ../libmosquitto.so.${SOVERSION} $(LIB_LIDADD)
++	$(CXX) -shared $(LIB_LDFLAGS) $< -o $@ ../libmosquitto.so.${SOVERSION} $(LIB_LIDADD)
+ 
+ libmosquittopp.a : mosquittopp.o
+-	${CROSS_COMPILE}$(AR) cr $@ $^
++	$(AR) cr $@ $^
+ 
+ mosquittopp.o : mosquittopp.cpp mosquittopp.h
+-	${CROSS_COMPILE}$(CXX) $(LIB_CPPFLAGS) $(LIB_CXXFLAGS) -c $< -o $@
++	$(CXX) $(LIB_CPPFLAGS) $(LIB_CXXFLAGS) -c $< -o $@
+ 
+I file binari mosquitto_v2.0.14/lib/cpp/mosquittopp.o e mosquitto/lib/cpp/mosquittopp.o sono diversi
+I file binari mosquitto_v2.0.14/lib/handle_auth.o e mosquitto/lib/handle_auth.o sono diversi
+I file binari mosquitto_v2.0.14/lib/handle_connack.o e mosquitto/lib/handle_connack.o sono diversi
+I file binari mosquitto_v2.0.14/lib/handle_disconnect.o e mosquitto/lib/handle_disconnect.o sono diversi
+I file binari mosquitto_v2.0.14/lib/handle_ping.o e mosquitto/lib/handle_ping.o sono diversi
+I file binari mosquitto_v2.0.14/lib/handle_pubackcomp.o e mosquitto/lib/handle_pubackcomp.o sono diversi
+I file binari mosquitto_v2.0.14/lib/handle_publish.o e mosquitto/lib/handle_publish.o sono diversi
+I file binari mosquitto_v2.0.14/lib/handle_pubrec.o e mosquitto/lib/handle_pubrec.o sono diversi
+I file binari mosquitto_v2.0.14/lib/handle_pubrel.o e mosquitto/lib/handle_pubrel.o sono diversi
+I file binari mosquitto_v2.0.14/lib/handle_suback.o e mosquitto/lib/handle_suback.o sono diversi
+I file binari mosquitto_v2.0.14/lib/handle_unsuback.o e mosquitto/lib/handle_unsuback.o sono diversi
+I file binari mosquitto_v2.0.14/lib/helpers.o e mosquitto/lib/helpers.o sono diversi
+I file binari mosquitto_v2.0.14/lib/libmosquitto.so.1 e mosquitto/lib/libmosquitto.so.1 sono diversi
+I file binari mosquitto_v2.0.14/lib/logging_mosq.o e mosquitto/lib/logging_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/loop.o e mosquitto/lib/loop.o sono diversi
+I file binari mosquitto_v2.0.14/lib/memory_mosq.o e mosquitto/lib/memory_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/messages_mosq.o e mosquitto/lib/messages_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/misc_mosq.o e mosquitto/lib/misc_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/mosquitto.o e mosquitto/lib/mosquitto.o sono diversi
+I file binari mosquitto_v2.0.14/lib/net_mosq.o e mosquitto/lib/net_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/net_mosq_ocsp.o e mosquitto/lib/net_mosq_ocsp.o sono diversi
+I file binari mosquitto_v2.0.14/lib/options.o e mosquitto/lib/options.o sono diversi
+I file binari mosquitto_v2.0.14/lib/packet_datatypes.o e mosquitto/lib/packet_datatypes.o sono diversi
+I file binari mosquitto_v2.0.14/lib/packet_mosq.o e mosquitto/lib/packet_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/property_mosq.o e mosquitto/lib/property_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/read_handle.o e mosquitto/lib/read_handle.o sono diversi
+I file binari mosquitto_v2.0.14/lib/send_connect.o e mosquitto/lib/send_connect.o sono diversi
+I file binari mosquitto_v2.0.14/lib/send_disconnect.o e mosquitto/lib/send_disconnect.o sono diversi
+I file binari mosquitto_v2.0.14/lib/send_mosq.o e mosquitto/lib/send_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/send_publish.o e mosquitto/lib/send_publish.o sono diversi
+I file binari mosquitto_v2.0.14/lib/send_subscribe.o e mosquitto/lib/send_subscribe.o sono diversi
+I file binari mosquitto_v2.0.14/lib/send_unsubscribe.o e mosquitto/lib/send_unsubscribe.o sono diversi
+I file binari mosquitto_v2.0.14/lib/socks_mosq.o e mosquitto/lib/socks_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/srv_mosq.o e mosquitto/lib/srv_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/strings_mosq.o e mosquitto/lib/strings_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/thread_mosq.o e mosquitto/lib/thread_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/time_mosq.o e mosquitto/lib/time_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/tls_mosq.o e mosquitto/lib/tls_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/utf8_mosq.o e mosquitto/lib/utf8_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/util_mosq.o e mosquitto/lib/util_mosq.o sono diversi
+I file binari mosquitto_v2.0.14/lib/util_topic.o e mosquitto/lib/util_topic.o sono diversi
+I file binari mosquitto_v2.0.14/lib/will_mosq.o e mosquitto/lib/will_mosq.o sono diversi
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/Makefile mosquitto/Makefile
+--- mosquitto_v2.0.14/Makefile	2022-07-26 15:04:33.091719721 +0200
++++ mosquitto/Makefile	2022-05-03 14:50:45.942334749 +0200
+@@ -1,5 +1,17 @@
+ include config.mk
+ 
++CC  = /opt/CodeSourcery/bin/arm-none-linux-gnueabi-g
++CXX = /opt/CodeSourcery/bin/arm-none-linux-gnueabi-g++
++AR  = /opt/CodeSourcery/bin/arm-none-linux-gnueabi-ar
++AS  = /opt/CodeSourcery/bin/arm-none-linux-gnueabi-gcc
++LD  = /opt/CodeSourcery/bin/arm-none-linux-gnueabi-gcc
++RM  = rm
++MD  = mkdir
++GD  = ../gnu_dep
++G2D = ../gnu2vs
++CRD = ../CreatDir
++DED = ../DelDir
++
+ DIRS=lib apps client plugins src
+ DOCDIRS=man
+ DISTDIRS=man
+@@ -63,7 +75,7 @@
+ 	$(error Please compile using CMake on Mac OS X)
+ endif
+ 
+-	set -e; for d in ${DIRS}; do $(MAKE) -C $${d}; done
++	set -e; for d in ${DIRS}; do $(MAKE) CROSS_COMPILE=$(CC) -C $${d}; done
+ 
+ clean :
+ 	set -e; for d in ${DIRS}; do $(MAKE) -C $${d} clean; done
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/plugins/auth-by-ip/Makefile mosquitto/plugins/auth-by-ip/Makefile
+--- mosquitto_v2.0.14/plugins/auth-by-ip/Makefile	2022-07-26 15:04:33.103719777 +0200
++++ mosquitto/plugins/auth-by-ip/Makefile	2022-05-03 15:31:38.910320523 +0200
+@@ -4,7 +4,7 @@
+ 
+ PLUGIN_NAME=mosquitto_auth_by_ip
+ 
+-all : binary
++all : # binary
+ 
+ binary : ${PLUGIN_NAME}.so
+ 
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/plugins/message-timestamp/Makefile mosquitto/plugins/message-timestamp/Makefile
+--- mosquitto_v2.0.14/plugins/message-timestamp/Makefile	2022-07-26 15:04:33.103719777 +0200
++++ mosquitto/plugins/message-timestamp/Makefile	2022-05-03 15:32:21.802320274 +0200
+@@ -4,7 +4,7 @@
+ 
+ PLUGIN_NAME=mosquitto_message_timestamp
+ 
+-all : binary
++all : # binary
+ 
+ binary : ${PLUGIN_NAME}.so
+ 
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/plugins/payload-modification/Makefile mosquitto/plugins/payload-modification/Makefile
+--- mosquitto_v2.0.14/plugins/payload-modification/Makefile	2022-07-26 15:04:33.103719777 +0200
++++ mosquitto/plugins/payload-modification/Makefile	2022-05-03 15:32:59.618320055 +0200
+@@ -4,7 +4,7 @@
+ 
+ PLUGIN_NAME=mosquitto_payload_modification
+ 
+-all : binary
++all : # binary
+ 
+ binary : ${PLUGIN_NAME}.so
+ 
+diff '--exclude=.git' '--exclude=.github' '--exclude=original.git' '--exclude=original.github' -b -uNr mosquitto_v2.0.14/www/pages/documentation/dynamic-security.md mosquitto/www/pages/documentation/dynamic-security.md
+--- mosquitto_v2.0.14/www/pages/documentation/dynamic-security.md	2022-07-26 15:04:33.123719871 +0200
++++ mosquitto/www/pages/documentation/dynamic-security.md	2022-05-03 13:01:59.390372600 +0200
+@@ -15,7 +15,7 @@
+ ## Introduction
+ 
+ The Dynamic Security plugin is a Mosquitto plugin which provides role based
+-authentication and access control features that can updated whilst the broker
++authentication and access control features that can be updated whilst the broker
+ is running, using a special topic based API.
+ 
+ It is supported since Mosquitto 2.0, and should be available in all

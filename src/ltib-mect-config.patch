@@ -28964,7 +28964,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  PKG_XFREE86                      = XFree86
  PKG_PYTHON                       = python
  PKG_PKGCONFIG                    = pkgconfig
-@@ -407,6 +412,28 @@
+@@ -407,6 +412,29 @@
  PKG_LIBOGG                       = libogg
  PKG_QT_X11                       = qt-x11
  PKG_QT_EMBEDDED                  = qt-embedded
@@ -28990,6 +28990,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +PKG_NAGIOS_PLUGINS               = nagios-plugins
 +PKG_NRPE                         = nrpe
 +PKG_PJPROJECT                    = pjproject
++PKG_MOSQUITTO                    = mosquitto
  
  # leave these as the last 3 packages in the build order
  PKG_SYSCONFIG                    = sysconfig

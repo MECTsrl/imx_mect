@@ -475,7 +475,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/.config ltib/config/platform/imx/.config
 --- ltib.reference/config/platform/imx/.config
 +++ ltib/config/platform/imx/.config
-@@ -0,0 +1,671 @@
+@@ -0,0 +1,672 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -919,6 +919,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# Settings applications
 +#
 +CONFIG_PKG_PJPROJECT=y
++CONFIG_PKG_MOSQUITTO=y
 +# CONFIG_PKG_READLINE is not set
 +# CONFIG_PKG_RPM is not set
 +# CONFIG_PKG_RNG_TOOLS is not set
@@ -2864,7 +2865,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/defconfig.dev ltib/config/platform/imx/defconfig.dev
 --- ltib.reference/config/platform/imx/defconfig.dev
 +++ ltib/config/platform/imx/defconfig.dev
-@@ -0,0 +1,671 @@
+@@ -0,0 +1,672 @@
 +#
 +# Automatically generated make config: don't edit
 +# LTIB version: 8.1.2
@@ -3308,6 +3309,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +# Settings applications
 +#
 +CONFIG_PKG_PJPROJECT=y
++CONFIG_PKG_MOSQUITTO=y
 +# CONFIG_PKG_READLINE is not set
 +# CONFIG_PKG_RPM is not set
 +# CONFIG_PKG_RNG_TOOLS is not set
@@ -28857,7 +28859,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  menu "Applications"
  config PKG_QTOPIA_WANT_APP_CALCULATOR
-@@ -2987,6 +3164,11 @@
+@@ -2987,6 +3164,16 @@
         from source.  Note that these tools will take about 76MB in $HOME.
  endmenu
  
@@ -28866,10 +28868,15 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +    help
 +      SIP, Media, and NAT Traversal Library
 +
++config PKG_MOSQUITTO
++    bool "mosquitto"
++    help
++      MQTT library
++
  config PKG_READLINE
      depends CAP_HAS_MMU
      bool "readline"
-@@ -3346,7 +3528,7 @@
+@@ -3346,7 +3533,7 @@
      bool "totem-pl-parser"
      select PKG_EVOLUTION_DATA_SERVER
      select PKG_GTK2
@@ -28878,7 +28885,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3487,11 +3669,21 @@
+@@ -3487,11 +3674,21 @@
      depends CAP_HAS_MMU
      bool "wireless-tools"
      help
@@ -28901,7 +28908,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_XFSPROGS
      bool "xfsprogs"
      help
-@@ -3862,6 +4054,11 @@
+@@ -3862,6 +4059,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  

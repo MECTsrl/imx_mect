@@ -5982,6 +5982,111 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%{pfx}/local/root/make_usb_device
 +%dir %attr(0700,root,root) %{pfx}/local/root/.ssh
 +%{pfx}/local/root/.ssh/authorized_keys
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mosquitto/mosquitto.spec ltib/dist/lfs-5.1/mosquitto/mosquitto.spec
+--- ltib.reference/dist/lfs-5.1/mosquitto/mosquitto.spec
++++ ltib/dist/lfs-5.1/mosquitto/mosquitto.spec
+@@ -0,0 +1,101 @@
++%define pfx /opt/freescale/rootfs/%{_target_cpu}
++
++Summary		: Eclipse Mosquitto - An open source MQTT broker 
++Name		: mosquitto
++Version		: 2.0.14
++Release		: 1
++License		: GPL
++Vendor		: Freescale
++Packager	: Andrea Sansoè
++Group		: System Environment/Base
++URL		: https://mosquitto.org/
++# Source	: %{name}-%{version}.tar.gz
++Source		: %{name}-v%{version}_mect_3.4.1.tar.gz
++Patch0		: %{name}_v%{version}_mect_3.4.1.patch
++BuildRoot	: %{_tmppath}/%{name}
++Prefix		: %{pfx}
++AutoReqProv     : no
++
++%Package rfs
++Summary         : Trimmed %{name} for root file system requirements.
++Vendor          : MECT s.r.l.
++Packager        : Andrea Sansoè
++Group		: System Environment/Base
++AutoReqProv     : no
++
++%Description rfs
++%{name} package contents limited to just the files
++needed at run time on the target.
++
++
++%Description
++%{summary}
++See also https://github.com/eclipse/mosquitto
++
++%Prep
++export LC_ALL
++LC_ALL=C
++
++%setup
++
++# %patch0 -p1
++# %patch1 -p1
++
++%Build
++export LC_ALL
++LC_ALL=C
++
++# ./configure --prefix=%{_prefix} --host=$CFGHOST --build=%{_build}
++# make
++
++%Install
++export LC_ALL
++LC_ALL=C
++
++# rm -rf $RPM_BUILD_ROOT
++# make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
++# find $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/ -name "*.la" | xargs rm -f
++rsync -Havx usr/bin/     $RPM_BUILD_ROOT/%{pfx}/usr/bin/
++rsync -Havx usr/include/ $RPM_BUILD_ROOT/%{pfx}/usr/include/
++rsync -Havx usr/lib/     $RPM_BUILD_ROOT/%{pfx}/usr/lib/
++
++
++%Clean
++export LC_ALL
++LC_ALL=C
++
++rm -rf $RPM_BUILD_ROOT
++
++%Files
++%defattr(-,root,root)
++%{pfx}/usr/bin/mosquitto_rr
++%{pfx}/usr/bin/mosquitto_pub
++%{pfx}/usr/bin/mosquitto_sub
++%{pfx}/usr/include/mosquitto_plugin.h
++%{pfx}/usr/include/mqtt_protocol.h
++%{pfx}/usr/include/mosquittopp.h
++%{pfx}/usr/include/mosquitto.h
++%{pfx}/usr/include/mosquitto_broker.h
++%{pfx}/usr/lib/libmosquitto.so.1
++%{pfx}/usr/lib/libmosquittopp.so.1
++%{pfx}/usr/lib/libmosquittopp.so.2.0.14
++%{pfx}/usr/lib/libmosquitto.so.2.0.14
++%{pfx}/usr/lib/libmosquittopp.so
++%{pfx}/usr/lib/libmosquitto.so
++
++%Files rfs
++%defattr(-,root,root)
++%{pfx}/usr/bin/mosquitto_rr
++%{pfx}/usr/bin/mosquitto_pub
++%{pfx}/usr/bin/mosquitto_sub
++%{pfx}/usr/include/mosquitto_plugin.h
++%{pfx}/usr/include/mqtt_protocol.h
++%{pfx}/usr/include/mosquittopp.h
++%{pfx}/usr/include/mosquitto.h
++%{pfx}/usr/include/mosquitto_broker.h
++%{pfx}/usr/lib/libmosquitto.so.1
++%{pfx}/usr/lib/libmosquittopp.so.1
++%{pfx}/usr/lib/libmosquittopp.so.2.0.14
++%{pfx}/usr/lib/libmosquitto.so.2.0.14
++%{pfx}/usr/lib/libmosquittopp.so
++%{pfx}/usr/lib/libmosquitto.so
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 --- ltib.reference/dist/lfs-5.1/mtd-utils/mtd-utils.spec
 +++ ltib/dist/lfs-5.1/mtd-utils/mtd-utils.spec

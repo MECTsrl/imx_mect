@@ -5985,7 +5985,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/mosquitto/mosquitto.spec ltib/dist/lfs-5.1/mosquitto/mosquitto.spec
 --- ltib.reference/dist/lfs-5.1/mosquitto/mosquitto.spec
 +++ ltib/dist/lfs-5.1/mosquitto/mosquitto.spec
-@@ -0,0 +1,101 @@
+@@ -0,0 +1,102 @@
 +%define pfx /opt/freescale/rootfs/%{_target_cpu}
 +
 +Summary		: Eclipse Mosquitto - An open source MQTT broker 
@@ -6043,6 +6043,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +# rm -rf $RPM_BUILD_ROOT
 +# make install DESTDIR=$RPM_BUILD_ROOT/%{pfx}
 +# find $RPM_BUILD_ROOT/%{pfx}/%{_prefix}/lib/ -name "*.la" | xargs rm -f
++mkdir -p $RPM_BUILD_ROOT/%{pfx}/usr
 +rsync -Havx usr/bin/     $RPM_BUILD_ROOT/%{pfx}/usr/bin/
 +rsync -Havx usr/include/ $RPM_BUILD_ROOT/%{pfx}/usr/include/
 +rsync -Havx usr/lib/     $RPM_BUILD_ROOT/%{pfx}/usr/lib/

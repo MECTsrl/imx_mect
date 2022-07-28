@@ -245,7 +245,7 @@ MECT_COMMON_RFSPKGS := \
 	mect_plugins-rfs-$(MECT_BUILD_PLUGINSCRT_TAG)-1.$(MECT_TARGET_ARCH).rpm \
 	merge-rfs-0.1-1.$(MECT_TARGET_ARCH).rpm \
 	modeps-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
-	mosquitto-rfs-2.0.14-1.$(MECT_TARGET_ARCH).rpm \
+	mosquitto-rfs-2.0.14_mect-1.$(MECT_TARGET_ARCH).rpm \
 	mtd-utils-rfs-201006-1.$(MECT_TARGET_ARCH).rpm \
 	mysql-rfs-4.1.12-0.$(MECT_TARGET_ARCH).rpm \
 	nagios-plugins-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \

@@ -5998,8 +5998,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +Group		: System Environment/Base
 +URL		: https://mosquitto.org/
 +# Source	: %{name}-%{version}.tar.gz
-+Source		: %{name}-v%{version}_mect_3.4.1.tar.gz
-+Patch0		: %{name}_v%{version}_mect_3.4.1.patch
++Source		: %{name}-%{version}_mect.tar.gz
++Patch0		: %{name}-%{version}_mect.patch
 +BuildRoot	: %{_tmppath}/%{name}
 +Prefix		: %{pfx}
 +AutoReqProv     : no

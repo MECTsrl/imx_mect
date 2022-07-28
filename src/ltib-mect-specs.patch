@@ -5990,16 +5990,16 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary		: Eclipse Mosquitto - An open source MQTT broker 
 +Name		: mosquitto
-+Version		: 2.0.14
++#Version	: 2.0.14
++Version		: 2.0.14_mect
 +Release		: 1
 +License		: GPL
 +Vendor		: Freescale
 +Packager	: Andrea Sansoè
 +Group		: System Environment/Base
 +URL		: https://mosquitto.org/
-+# Source	: %{name}-%{version}.tar.gz
-+Source		: %{name}-%{version}_mect.tar.gz
-+Patch0		: %{name}-%{version}_mect.patch
++Source		: %{name}-%{version}.tar.gz
++Patch0		: %{name}-%{version}.patch
 +BuildRoot	: %{_tmppath}/%{name}
 +Prefix		: %{pfx}
 +AutoReqProv     : no

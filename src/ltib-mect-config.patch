@@ -2417,8 +2417,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +CONFIG_FEATURE_MDEV_EXEC=y
 +CONFIG_FEATURE_MDEV_LOAD_FIRMWARE=y
  CONFIG_MKSWAP=y
--# CONFIG_FEATURE_MKSWAP_UUID is not set
-+CONFIG_FEATURE_MKSWAP_UUID is not set
+ # CONFIG_FEATURE_MKSWAP_UUID is not set
  CONFIG_MORE=y
 +CONFIG_FEATURE_USE_TERMIOS=y
 +CONFIG_VOLUMEID=y

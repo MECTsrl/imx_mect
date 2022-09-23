@@ -26735,14 +26735,15 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
-@@ -0,0 +1,219 @@
+@@ -0,0 +1,220 @@
 +#!/bin/sh
 +
 +mntdir=/local/sd_card
-+
 +IGNORE="$mntdir/.ignore"
 +APPLICATION="$mntdir/.application"
 +STORAGE="$mntdir/.extrastorage"
++SWAPDIR="$mntdir/swap"
++SWAPFILE="$SWAPDIR/swapfile"
 +
 +SD_MODE=0
 +

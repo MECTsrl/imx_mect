@@ -25,10 +25,22 @@ void sdcard::on_pushButtonIgnore_clicked()
 
 void sdcard::on_pushButtonApplication_clicked()
 {
-    exit(2);
+    int nRes = 2;
+
+    // Add Combobox value if Swap file is selected
+    if (ui->chkSwap->isChecked())  {
+        nRes += ui->comboBox->currentText().toInt();
+    }
+    exit(nRes);
 }
 
 void sdcard::on_pushButtonStore_clicked()
 {
-    exit(3);
+    int nRes = 3;
+
+    // Add Combobox value if Swap file is selected
+    if (ui->chkSwap->isChecked())  {
+        nRes += ui->comboBox->currentText().toInt();
+    }
+    exit(nRes);
 }

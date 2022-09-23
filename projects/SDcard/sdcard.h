@@ -2,6 +2,7 @@
 #define SDCARD_H
 
 #include <QWidget>
+#include <QString>
 
 namespace Ui {
 class sdcard;
@@ -17,15 +18,14 @@ public:
     
 private slots:
     void on_pushButtonIgnore_clicked();
-
     void on_pushButtonApplication_clicked();
-
     void on_pushButtonStore_clicked();
-
     void on_pushButtonRemind_clicked();
 
 private:
+    void updateSwapSize(QString swapSize);
     Ui::sdcard *ui;
+    QString swapSizeFile;
 };
 
 #endif // SDCARD_H

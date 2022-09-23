@@ -26764,7 +26764,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +                # Set up the SD card if already recognised.
 +                if [ -e $IGNORE ]; then
-+                    SD_MODE=1   # application
++                    SD_MODE=1   # ignore
 +                elif [ -e $APPLICATION ]; then
 +                    SD_MODE=2   # application
 +                elif [ -e $STORAGE ]; then

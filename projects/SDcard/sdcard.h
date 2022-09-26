@@ -13,7 +13,7 @@ class sdcard : public QWidget
     Q_OBJECT
     
 public:
-    explicit sdcard(QWidget *parent = 0);
+    explicit sdcard(bool isExt3, QWidget *parent = 0);
     ~sdcard();
     
 private slots:

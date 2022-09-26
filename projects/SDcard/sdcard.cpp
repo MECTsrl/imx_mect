@@ -2,18 +2,30 @@
 #include "ui_sdcard.h"
 #include <QFile>
 
+
 // SD Mount Point
 
-sdcard::sdcard(QWidget *parent) :
+sdcard::sdcard(bool isExt3, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::sdcard)
 {
     ui->setupUi(this);
-    swapSizeFile = QString("/local/sd_card/.swap_size");
+    QString   swapPath = QString("/local/sd_card/swap");
+    if (isExt3)  {
+        // Create Swap Path
+        QDir swapDir(swapPath);
+        if (! swapDir.exists())  {
+            swapDir.mkpath(swapPath);
+        }
+    }
     // Clean Previous Size file
+    swapSizeFile = QString("%1/.swap_size") .arg(swapPath);
     if (QFile::exists(swapSizeFile))  {
         QFile::remove(swapSizeFile);
     }
+    // Enabling SD Card EXT Swap Params
+    ui->chkSwap->setVisible(isExt3);
+    ui->comboBox->setVisible(isExt3);
 }
 
 sdcard::~sdcard()

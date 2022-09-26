@@ -1,6 +1,7 @@
 #include "sdcard.h"
 #include "ui_sdcard.h"
 #include <QFile>
+#include <QDir>
 
 
 // SD Mount Point

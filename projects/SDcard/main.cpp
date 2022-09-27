@@ -26,13 +26,13 @@ int main(int argc, char *argv[])
     sprintf(vncString, "Multi: VNC:0:size=%dx%d Transformed:rot%d", width, height, rotation);
 
     // Param 1 == 1 ---> IsExt3
-    if (argc > 2)  {
+    if (argc > 1)  {
         if (strcmp(argv[1], "1") == 0)  {
             isExt3 = true;
         }
     }
-
-    int myargc = argc + 4;
+    // Ignore external parameters, force to 4 to enable VNC
+    int myargc = 4;
     char *myargv[] =
     {
         argv[0],

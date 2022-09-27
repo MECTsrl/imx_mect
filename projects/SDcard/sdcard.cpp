@@ -33,7 +33,7 @@ sdcard::sdcard(bool isExt3, QWidget *parent) :
     }
     // Names of Swap files
     swapSizeFile = QString("%1/.swap_size") .arg(swapPath);
-    swapFile = QString("%1/swap") .arg(swapPath);
+    swapFile = QString("%1/swap_file") .arg(swapPath);
     // Clean Previous files
     cleanUp();
     // Enabling SD Card EXT Swap Params
@@ -83,6 +83,7 @@ void sdcard::on_pushButtonApplication_clicked()
 void sdcard::on_pushButtonStore_clicked()
 {
 
+    nExitCode = 3;
     // Add Combobox value if Swap file is selected
     if (ui->chkSwap->isChecked())  {
         createSwap(ui->comboBox->currentText());

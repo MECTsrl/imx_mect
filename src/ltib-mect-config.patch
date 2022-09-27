@@ -26735,7 +26735,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
 --- ltib.reference/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
 +++ ltib/config/platform/imx/merge/etc/rc.d/init.d/sdcheck
-@@ -0,0 +1,247 @@
+@@ -0,0 +1,243 @@
 +#!/bin/sh
 +
 +mntdir=/local/sd_card
@@ -26745,11 +26745,10 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +SD_MODE=0
 +#Swap File Management (only if ext3 SD Card)
 +SWAPDIR="$mntdir/swap"
-+SWAPFILE="$SWAPDIR/swapfile"
++SWAPFILE="$SWAPDIR/swap_file"
 +SWAPSIZE="$SWAPDIR/.swap_size"
 +SD_ISEXT3=""
 +SD_EXT3=""
-+SD_NEW=0
 +
 +start() {
 +    # Check if there is an SD card.
@@ -26770,9 +26769,9 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +		 SD_ISEXT3=`mount|grep 'sd_card'|grep 'ext3'`
 +		 if test -n "$SD_ISEXT3"  ; then
 +                    echo "SD card is ext3"
-+                    SD_EXT3="1";
++                    SD_EXT3="1"
 +                else
-+                    SD_EXT3="0";
++                    SD_EXT3="0"
 +                    echo "SD card is NOT ext3 or no SD card"
 +                fi
 +                    
@@ -26784,7 +26783,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +                elif [ -e $STORAGE ]; then
 +                    SD_MODE=3   # storage
 +                else
-+                    SD_NEW=1
 +                    # Touchscreen variables
 +                    
 +                    export TSLIB_CONFFILE=/usr/etc/ts.conf
@@ -26799,7 +26797,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +                    export POINTERCAL_FILE=$TSLIB_CALIBFILE
 +
 +                    # Ask for instructions if the SD card is not recognised.
-+                    /usr/bin/SDcard "$SD_EXT3" -qws
++                    /usr/bin/SDcard "$SD_EXT3"
 +                    SD_MODE=$?                    
 +                    
 +                fi
@@ -26908,7 +26906,6 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +
 +        echo "Updated the links."
 +        if [ "$SD_MODE" == 1 ]; then
-+	    SD_NEW=0
 +            echo "Ignore the SDcard."
 +            touch $IGNORE
 +            umount $mntdir
@@ -26916,14 +26913,13 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +        fi
 +    fi
 +
-+    # Checking if swap file has to be created
-+    if  [ "$SD_NEW" == 1 ]; then
-+        if [ -e $SWAPSIZE ]; then
-+           echo "Creating Swap File"
-+        else
-+           echo "No Swap needed"        
-+        fi    
-+    fi
++    # Checking if swap file has to be used
++    if [ -e $SWAPFILE ]; then
++       echo "Using Swap File"
++       /sbin/swapon $SWAPFILE
++    else
++       echo "No Swap needed"        
++    fi    
 +}
 +
 +stop() {

@@ -26914,11 +26914,11 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 +    fi
 +
 +    # Checking if swap file has to be used
-+    if [ -e $SWAPFILE ]; then
++    if [ -e $SWAPFILE -a $SD_EXT3 == "1" ]; then
 +       echo "Using Swap File"
 +       /sbin/swapon $SWAPFILE
 +    else
-+       echo "No Swap needed"        
++       echo "No Swap file present or no EXT3 SD card"        
 +    fi    
 +}
 +

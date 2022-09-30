@@ -146,7 +146,7 @@ MECT_SYSUPD_HARDENING = $(MECT_IMGDIR)/hardening/sysupdate_hardening_$(MECT_BUIL
 MECT_SYSUPD_PASSRESET_SRC := $(MECT_FTPDIR)/sysupdate_passwordreset.sh
 MECT_SYSUPD_PASSRESET = $(MECT_IMGDIR)/utilities/sysupdate_passwordreset_$(MECT_BUILD_RELEASE).sh
 # sysupdate for ethernet configuration reset
-MECT_SYSUPD_NETRESET_SRC := $(MECT_FTPDIR)/sysupdate_netreset.sh
+MECT_SYSUPD_NETRESET_SRC := $(MECT_FTPDIR)/sysupdate_netreset_pre.sh
 MECT_SYSUPD_NETRESET = $(MECT_IMGDIR)/utilities/sysupdate_netreset_$(MECT_BUILD_RELEASE).sh
 # sysupdate for calibration reset
 MECT_SYSUPD_CALRESET_SRC := $(MECT_FTPDIR)/sysupdate_calreset.sh
@@ -774,9 +774,11 @@ sysupdate_passwordreset:
 sysupdate_netreset:
 	rm -f $(MECT_SYSUPD_NETRESET)
 	mkdir -p $(dir $(MECT_SYSUPD_NETRESET))
+	cat $(MECT_LTIB_RFSDIR)/local/etc/sysconfig/net.conf > $(dir $(MECT_SYSUPD_NETRESET))/net.conf
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_NETRESET_SRC) > $(MECT_SYSUPD_NETRESET)
+	uuencode $(dir $(MECT_SYSUPD_NETRESET))/net.conf >> $(MECT_SYSUPD_NETRESET)
 
-# copy the sysupdate for net configuration reset
+# copy the sysupdate for screen calibration reset
 .PHONY: sysupdate_calreset
 sysupdate_calreset:
 	rm -f $(MECT_SYSUPD_CALRESET)

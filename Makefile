@@ -774,9 +774,12 @@ sysupdate_passwordreset:
 sysupdate_netreset:
 	rm -f $(MECT_SYSUPD_NETRESET)
 	mkdir -p $(dir $(MECT_SYSUPD_NETRESET))
-	cat $(MECT_LTIB_RFSDIR)/local/etc/sysconfig/net.conf > $(dir $(MECT_SYSUPD_NETRESET))/net.conf
+	#get network configuration from generic image
+	cat $(MECT_LTIB_RFSDIR)/local/etc/sysconfig/net.conf > $(dir $(MECT_SYSUPD_NETRESET))net.conf
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_NETRESET_SRC) > $(MECT_SYSUPD_NETRESET)
-	uuencode $(dir $(MECT_SYSUPD_NETRESET))/net.conf >> $(MECT_SYSUPD_NETRESET)
+	#add network configuration to sysupdate
+	uuencode $(dir $(MECT_SYSUPD_NETRESET))net.conf /tmp/ram/net.conf >> $(MECT_SYSUPD_NETRESET)
+	rm -f $(dir $(MECT_SYSUPD_NETRESET))net.conf
 
 # copy the sysupdate for screen calibration reset
 .PHONY: sysupdate_calreset

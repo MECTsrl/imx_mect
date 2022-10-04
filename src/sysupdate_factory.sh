@@ -97,15 +97,6 @@ test -d "$IMGDIR" || do_exit "cannot create image directory ${IMGDIR}."
 mount -o ro,loop "$UPDIMG" "$IMGDIR" || do_exit "cannot mount cloner image ${CLONEIMG}."
 
 # Start the update.
-# Cleaning up /local/data
-echo "Clean Storage files" | tee /dev/tty1
-rm -rf /local/data 2>&1 | tee /dev/tty1
-mkdir -p /local/data 2>&1 | tee /dev/tty1
-
-#Clean Retentive
-echo "Clean Retentive" | tee /dev/tty1
-dd if=/dev/zero of=/local/retentive bs=768 count=1 2>&1 | tee /dev/tty1
-
 #Remove all hmi files
 rm -rf /local
 # Update the local file system.
@@ -114,10 +105,17 @@ echo "Restoring  @@THIS_VERSION@@ Simple Application on the $TARGET." | tee /dev
 echo "" | tee /dev/tty1
 if test -d ${IMGDIR}/local; then
 	echo "Updating the local file system..." | tee /dev/tty1
-	rsync -aHc  ${IMGDIR}/local/ /local/ 2>&1 | tee /dev/tty1
+	rsync -aHc  ${IMGDIR}/local/ /local/  --exclude flash/root/fcrts --exclude flash/etc/sysconfig/net.conf --exclude flash/etc/wpa_supplicant/default.conf --exclude flash/etc/ppp --exclude var/spool/cron/crontabs/root --exclude sd_card  2>&1 | tee /dev/tty1
 	echo "done." | tee /dev/tty1
 fi
+# Cleaning up /local/data
+echo "Clean Storage files" | tee /dev/tty1
+rm -rf /local/data 2>&1 | tee /dev/tty1
+mkdir -p /local/data 2>&1 | tee /dev/tty1
 
+#Clean Retentive
+echo "Clean Retentive" | tee /dev/tty1
+dd if=/dev/zero of=/local/retentive bs=768 count=1 2>&1 | tee /dev/tty1
 
 # Cleaning up.
 losetup | grep -q . && umount $(losetup | awk -F: '{ print $1}')

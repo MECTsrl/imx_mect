@@ -3,7 +3,7 @@
 #sysupdate_factory: Same as sysupdate_imx28_img but only restore Simple application like does Cloner
 
 # Execution trace
-set -x
+# set -x
 
 SYSTMPDIR="/tmp"
 MYTMPDIR="${SYSTMPDIR}/$(basename $0).$$"
@@ -71,8 +71,8 @@ TARGET="`awk '/^Target/ { print $2; }' /rootfs_version`"
 test -n "$TARGET" || do_exit "cannot find the system type."
 
 # Check the compatibility of the update with the installed version (Only whitin current Version).
-if [ $RELEASE != @@THIS_VERSION_MAJ_MIN@@ ]; then
-   do_exit "cannot update the installed version ${RELEASE} with @@THIS_VERSION_MAJ_MIN@@."
+if [ $RELEASE != '@@THIS_VERSION@@' ]; then
+   do_exit "cannot update the installed version ${RELEASE} with @@THIS_VERSION@@."
 fi
 #expr "$RELEASE" : @@THIS_VERSION_MAJ_MIN@@ > /dev/null || expr "$RELEASE" : 3\\.3 > /dev/null || expr "$RELEASE" : 3\\.2 > /dev/null || expr "$RELEASE" : 3\\.1 > /dev/null || do_exit "cannot update the installed version ${RELEASE}."
 
@@ -98,7 +98,7 @@ mount -o ro,loop "$UPDIMG" "$IMGDIR" || do_exit "cannot mount cloner image ${CLO
 
 # Start the update.
 #Remove all hmi files
-rm -rf /local
+rm -f /local/hmi*
 # Update the local file system.
 # FIX: Come gestire gli Exclude di Cloner --exclude hmi*
 echo "Restoring  @@THIS_VERSION@@ Simple Application on the $TARGET." | tee /dev/tty1

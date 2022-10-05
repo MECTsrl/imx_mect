@@ -37,7 +37,7 @@ do_exit()
 }
 
 
-test -s "$NETFILE" -a -r "$NETFILE" || do_exit "missing the password file."
+test -s "$NETFILE" -a -r "$NETFILE" || do_exit "missing the network config file."
 test -s "$RFSVFILE" -a -r "$RFSVFILE" || do_exit "malformed root file system."
 test -s "$SNFILE" -a -r "$SNFILE" || do_exit "serial number not set."
 

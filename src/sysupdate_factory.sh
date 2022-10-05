@@ -53,11 +53,12 @@ if ! test -r /rootfs_version; then
 	do_exit "malformed root file system."
 fi
 
-# Stop most of the running processes.
+# Stop most of the running processes and watchdog.
 /etc/rc.d/init.d/autoexec stop
 /etc/rc.d/init.d/crond stop
 /etc/rc.d/init.d/boa stop
 /etc/rc.d/init.d/inetd stop
+/sbin/devmem 0x80056008 32 0x00000010
 
 # Collect info on installed system
 #
@@ -99,6 +100,7 @@ mount -o ro,loop "$UPDIMG" "$IMGDIR" || do_exit "cannot mount cloner image ${CLO
 # Start the update.
 #Remove all hmi files
 rm -f /local/hmi*
+
 # Update the local file system.
 # FIX: Come gestire gli Exclude di Cloner --exclude hmi*
 echo "Restoring  @@THIS_VERSION@@ Simple Application on the $TARGET." | tee /dev/tty1

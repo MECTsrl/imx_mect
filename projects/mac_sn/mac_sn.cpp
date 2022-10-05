@@ -61,7 +61,7 @@ mac_sn::mac_sn(QWidget *parent) :
         ui->pushButtonMACeth0_2->setText("1F");
         ui->pushButtonMACeth0_3->setText("64");
         ui->pushButtonMACeth0_4->setText("30");
-        ui->pushButtonMACeth0_5->setText("90");
+        ui->pushButtonMACeth0_5->setText("");
         ui->pushButtonMACeth0_6->setText("");
         fp = fopen(MAC_ADDRESS_FILE, "r");
         if (fp != NULL)
@@ -104,7 +104,7 @@ mac_sn::mac_sn(QWidget *parent) :
         ui->pushButtonMACeth1_2->setText("1F");
         ui->pushButtonMACeth1_3->setText("64");
         ui->pushButtonMACeth1_4->setText("30");
-        ui->pushButtonMACeth1_5->setText("90");
+        ui->pushButtonMACeth1_5->setText("");
         ui->pushButtonMACeth1_6->setText("");
         fp = fopen(MAC_ADDRESS_FILE, "r");
         if (fp != NULL)

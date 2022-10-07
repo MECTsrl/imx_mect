@@ -159,7 +159,9 @@ MECT_SYSUPD_MQTT_SRC := $(MECT_FTPDIR)/sysupdate_mosquitto_v2.0.14.sh
 MECT_SYSUPD_MQTT = $(MECT_IMGDIR)/utilities/sysupdate_mosquitto_v2.0.14.sh
 # sysupdate for Factory Reset (like Clonet reset app to Simple)
 MECT_SYSUPD_FACTORY_SRC := $(MECT_FTPDIR)/sysupdate_factory.sh
-MECT_SYSUPD_FACTORY = $(MECT_IMGDIR)/utilities/sysupdate_factory_$(MECT_BUILD_RELEASE).sh
+MECT_SYSUPD_FACTORY_DIR := $(MECT_IMGDIR)/sysupdate_factory
+MECT_SYSUPD_FACTORY = $(MECT_SYSUPD_FACTORY_DIR)/sysupdate_factory_$(MECT_BUILD_RELEASE).sh
+MECT_SYSUPD_FACTORY_IMG = $(MECT_SYSUPD_FACTORY_DIR)/_ysupdate_factory_$(MECT_BUILD_RELEASE).ext2
 # Extension of the MD5 checksums for the downloads.
 MECT_MD5EXT := md5
 
@@ -796,17 +798,21 @@ sysupdate_micropython:
 	rm -f $(MECT_SYSUPD_MICROPYTHON)
 	mkdir -p $(dir $(MECT_SYSUPD_MICROPYTHON))
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_MICROPYTHON_SRC) > $(MECT_SYSUPD_MICROPYTHON)
+	
 # copy the sysupdate for mqtt
 .PHONY: sysupdate_mqtt
 sysupdate_mqtt:
 	rm -f $(MECT_SYSUPD_MQTT)
 	mkdir -p $(dir $(MECT_SYSUPD_MQTT))
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_MQTT_SRC) > $(MECT_SYSUPD_MQTT)
+	
 .PHONY: sysupdate_factory
 sysupdate_factory:
 	rm -f $(MECT_SYSUPD_FACTORY)
 	mkdir -p $(dir $(MECT_SYSUPD_FACTORY))
-	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_FACTORY_SRC) > $(MECT_SYSUPD_FACTORY)	
+	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_FACTORY_SRC) > $(MECT_SYSUPD_FACTORY)
+	cp $(MECT_SYSCLONE_IMG) $(MECT_SYSUPD_FACTORY_IMG) 
+	
 PHONY: wininst
 wininst: MECT_DOWNLOADS := \
 	    7z.dll \

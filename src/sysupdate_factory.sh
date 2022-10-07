@@ -6,12 +6,10 @@
 # set -x
 
 SYSTMPDIR="/tmp"
-MYTMPDIR="${SYSTMPDIR}/$(basename $0).$$"
-MNTDIR="/tmp/mnt"               # Set in /etc/rc.d/init.d/S10setup
+WORKDIR="$(dirname $0)"
+FACTORY_IMG=${WORKDIR}/_ysupdate_factory_@@THIS_VERSION@@.ext2
 IMGDIR="/tmp/sysupdate"
-SUDIR="sysupdate"               # sysupdate-specific dir within the image
-PASSWDDIR="/etc"
-PASSWD="shadow"
+RAMDIR="/tmp/ramdisk"
 
 trap cleanup EXIT
 cleanup()
@@ -23,7 +21,6 @@ cleanup()
         losetup | grep -q . && umount $(losetup | awk -F: '{ print $1}')
         losetup | grep -q . && losetup -d $(losetup | awk -F: '{ print $1}')
 
-        rm -rf "$MYTMPDIR"
 
         sync
 }
@@ -57,13 +54,13 @@ fi
 /etc/rc.d/init.d/autoexec stop
 /etc/rc.d/init.d/crond stop
 /etc/rc.d/init.d/boa stop
-/etc/rc.d/init.d/inetd stop
+#/etc/rc.d/init.d/inetd stop
 /sbin/devmem 0x80056008 32 0x00000010
 
 # Collect info on installed system
 #
 
-# Image version
+# Mect Suite version
 RELEASE="`awk '/^Release/ { print $2; }' /rootfs_version`"
 test -n "$RELEASE" || do_exit "cannot find the installed version."
 
@@ -75,53 +72,77 @@ test -n "$TARGET" || do_exit "cannot find the system type."
 if [ $RELEASE != '@@THIS_VERSION@@' ]; then
    do_exit "cannot update the installed version ${RELEASE} with @@THIS_VERSION@@."
 fi
-#expr "$RELEASE" : @@THIS_VERSION_MAJ_MIN@@ > /dev/null || expr "$RELEASE" : 3\\.3 > /dev/null || expr "$RELEASE" : 3\\.2 > /dev/null || expr "$RELEASE" : 3\\.1 > /dev/null || do_exit "cannot update the installed version ${RELEASE}."
 
-# Check if we have an update for the running target.
-UPDIMG="${MNTDIR}/img_sysupdate-@@THIS_VERSION@@-${TARGET}.ext2"
-test -r "$UPDIMG" || do_exit "cannot find an update for ${TARGET}."
+# Checking SD Card and umount Swap File if present
+sd_mount_point="/local/sd_card"
+SWAP_FILE="$sd_mount_point/swap/swap_file"
+sd_device_path="/dev/mmcblk0"
+if [ -e $sd_device_path ]; then
+   echo "Found an SD Raw Device: $sd_device_path" | tee /dev/tty1
+   SD_PRESENT=`mount|grep $sd_mount_point`
+   if test -n "$SD_PRESENT"  ; then
+      echo "Found an ext3 SD card mounted: $sd_mount_point" | tee /dev/tty1
+      if [ -e "$SWAP_FILE" ]; then
+         echo "Stop Swap File" | tee /dev/tty1
+         swapoff $SWAP_FILE
+      else
+         echo "No Swap file present" | tee /dev/tty1
+      fi
+      echo "Umount SD Card $sd_mount_point" | tee /dev/tty1
+      umount $sd_mount_point
+   else
+      echo "No SD card mounted" | tee /dev/tty1
+   fi
+else
+   echo "No SD card detected" | tee /dev/tty1
+fi
 
-# Set up the temporary directory.
-mkdir -p "$MYTMPDIR"
-test -d "$MYTMPDIR" || do_exit "cannot create temporary directory ${MYTMPDIR}."
-chmod 700 "$MYTMPDIR"
+#remount root_fs in ro mode
+mount -o remount,ro /
 
-# Clean idle setups.
-losetup | grep -q . && losetup -d $(losetup | awk -F: '{ print $1}')
+# Check presence of ext2 file
+test -e "$FACTORY_IMG"  || do_exit "cannot find ext2 file ${FACTORY_IMG}."
 
 # Prepare sysupdate image mount point.
 test -d "$IMGDIR" && rm -rf "$IMGDIR"
 mkdir -p "$IMGDIR"
-test -d "$IMGDIR" || do_exit "cannot create image directory ${IMGDIR}."
+test -d "$IMGDIR" || do_exit "cannot create image mount directory ${IMGDIR}."
 
 # Mount the sysupdate image.
-mount -o ro,loop "$UPDIMG" "$IMGDIR" || do_exit "cannot mount cloner image ${CLONEIMG}."
+losetup | grep -q . && losetup -d $(losetup | awk -F: '{ print $1}')
+mount -o ro,loop "$FACTORY_IMG" "$IMGDIR" || do_exit "*** ERROR: cannot mount  image ${CLONEIMG}."
 
-# Start the update.
-#Remove all hmi files
-rm -f /local/hmi*
+# Check if we have an update for the running target.
+UPDIMG="${IMGDIR}/Simples/${TARGET}_ms@@THIS_VERSION@@/localfs.tar"
+test -r "$UPDIMG" || do_exit "cannot find an update for ${TARGET}."
+
+echo "Found local archive for target $TARGET" | tee /dev/tty1
+echo "" | tee /dev/tty1
+
+#create Ram Disk to expand localfs.tar
+test -d "$RAMDIR" && rm -rf "$RAMDIR"
+mkdir -p "$RAMDIR"
+test -d "$RAMDIR" || do_exit "cannot create ram disk directory ${RAMDIR}."
+mount -t tmpfs -o size=48M tmpfs $RAMDIR || do_exit "*** ERROR: cannot mount  ram disk ${CLONEIMG}."
+
+#expanding  localfs.tar
+echo "Expanding: $UPDIMG"  | tee /dev/tty1
+tar xf $UPDIMG -C $RAMDIR 2>&1 | tee /dev/tty1
+echo "" | tee /dev/tty1
 
 # Update the local file system.
 # FIX: Come gestire gli Exclude di Cloner --exclude hmi*
 echo "Restoring  @@THIS_VERSION@@ Simple Application on the $TARGET." | tee /dev/tty1
 echo "" | tee /dev/tty1
-if test -d ${IMGDIR}/local; then
-	echo "Updating the local file system..." | tee /dev/tty1
-	rsync -aHc  ${IMGDIR}/local/ /local/  --exclude flash/root/fcrts --exclude flash/etc/sysconfig/net.conf --exclude flash/etc/wpa_supplicant/default.conf --exclude flash/etc/ppp --exclude var/spool/cron/crontabs/root --exclude sd_card  2>&1 | tee /dev/tty1
-	echo "done." | tee /dev/tty1
+
+# Update the local file system.
+if find $RAMDIR -mindepth 1 -maxdepth 1 | read; then
+   echo "Updating the local file system..." | tee /dev/tty1
+   rsync -Havxc --delete --exclude .ssh --exclude flash/root/fcrts --exclude flash/etc/sysconfig/net.conf --exclude flash/etc/wpa_supplicant/default.conf --exclude flash/etc/ppp --exclude var/spool/cron/crontabs/root --exclude flash/data/alarms --exclude sd_card ${RAMDIR}/ /local/  2>&1 
+   echo "" | tee /dev/tty1
+else
+   do_exit "*** ERROR: ${RAMDIR} is Empty!"
 fi
-# Cleaning up /local/data
-echo "Clean Storage files" | tee /dev/tty1
-rm -rf /local/data 2>&1 | tee /dev/tty1
-mkdir -p /local/data 2>&1 | tee /dev/tty1
-
-#Clean Retentive
-echo "Clean Retentive" | tee /dev/tty1
-dd if=/dev/zero of=/local/retentive bs=768 count=1 2>&1 | tee /dev/tty1
-
-# Cleaning up.
-losetup | grep -q . && umount $(losetup | awk -F: '{ print $1}')
-losetup | grep -q . && losetup -d $(losetup | awk -F: '{ print $1}')
 
 echo "Recording all file system changes..." | tee /dev/tty1
 sync 2>&1 | tee /dev/tty1

@@ -67,6 +67,7 @@ test -z "$TARGET" && do_exit "cannot find the device type."
 # Device serial number
 SN="$(cat "$SNFILE")"
 test -z "$SN" && do_exit "cannot find device serial number."
+echo "Board Serial Number: ${SN}"  | tee /dev/tty1
 
 # OpenVPN RC script
 test -s "$OVPNRC" || do_exit "missing OpenVPN control script (RC)."

@@ -48,6 +48,7 @@ fi
 test -s "$SHADOWFILE" -a -r "$SHADOWFILE" || do_exit "missing the password file."
 test -s "$RFSVFILE" -a -r "$RFSVFILE" || do_exit "malformed root file system."
 test -s "$SNFILE" -a -r "$SNFILE" || do_exit "serial number not set."
+echo "Board Serial Number: ${SN}"  | tee /dev/tty1
 
 # Collect info about the installed system.
 #

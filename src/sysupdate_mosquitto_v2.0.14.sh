@@ -64,6 +64,12 @@ test -n "$TARGET" || do_exit "cannot find the system type."
 # Check the compatibility of the update with the installed version (3.3 and 3.4).
 expr "$RELEASE" : 3\\.4 > /dev/null || expr "$RELEASE" : 3\\.3 > /dev/null || do_exit "cannot update the installed version ${RELEASE}."
 
+#Board Serial Number 
+SNFILE="/etc/serial.conf"
+if test -s "$SNFILE"; then
+	SN="$(cat "$SNFILE")"
+	echo "Board Serial Number: ${SN}"  | tee /dev/tty1
+fi
 
 #killing hmi & application
 /etc/rc.d/init.d/autoexec stop

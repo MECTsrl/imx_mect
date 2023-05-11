@@ -66,7 +66,12 @@ TARGET="`awk '/^Target/ { print $2; }' /rootfs_version`"
 test -n "$TARGET" || do_exit "cannot find the system type."
 
 # Start the update.
-
+#Board Serial Number 
+SNFILE="/etc/serial.conf"
+if test -s "$SNFILE"; then
+	SN="$(cat "$SNFILE")"
+	echo "Board Serial Number: ${SN}"  | tee /dev/tty1
+fi
 
 # Set up the temporary directory.
 if [ -d /tmp/mnt ]

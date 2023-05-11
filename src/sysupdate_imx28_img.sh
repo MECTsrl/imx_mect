@@ -94,6 +94,13 @@ mount -o ro,loop "$UPDIMG" "$IMGDIR" || do_exit "cannot mount cloner image ${CLO
 # Start the update.
 #
 
+#Board Serial Number 
+SNFILE="/etc/serial.conf"
+if test -s "$SNFILE"; then
+	SN="$(cat "$SNFILE")"
+	echo "Board Serial Number: ${SN}"  | tee /dev/tty1
+fi
+
 echo "Updating the $TARGET to version @@THIS_VERSION@@." | tee /dev/tty1
 echo "" | tee /dev/tty1
 

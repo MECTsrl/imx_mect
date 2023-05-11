@@ -73,6 +73,13 @@ if [ $RELEASE != '@@THIS_VERSION@@' ]; then
    do_exit "cannot update the installed version ${RELEASE} with @@THIS_VERSION@@."
 fi
 
+#Board Serial Number 
+SNFILE="/etc/serial.conf"
+if test -s "$SNFILE"; then
+	SN="$(cat "$SNFILE")"
+	echo "Board Serial Number: ${SN}"  | tee /dev/tty1
+fi
+
 # Checking SD Card and umount Swap File if present
 sd_mount_point="/local/sd_card"
 SWAP_FILE="$sd_mount_point/swap/swap_file"

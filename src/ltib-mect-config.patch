@@ -28748,7 +28748,23 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_OPENSSH_WANT_HACKABLE_KEYS
      depends CAP_HAS_MMU
      depends PKG_OPENSSH
-@@ -2673,6 +2739,27 @@
+@@ -2607,6 +2673,7 @@
+         select PKG_FONTCONFIG
+         select PKG_GLIB2
+         select PKG_ZLIB
++        select PKG_OPENSSL
+         bool "Qt Embedded"
+         help
+            Qt will be installed as Embedded.
+@@ -2659,6 +2726,7 @@
+         select PKG_FONTCONFIG
+         select PKG_GLIB2
+         select PKG_ZLIB
++        select PKG_OPENSSL
+         bool "Qt using X11"
+         help
+            Qt Graphics will be diplayed under X11.
+@@ -2673,6 +2741,27 @@
      default n
      help
         Enable Phonon library.
@@ -28776,7 +28792,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  endmenu
  
  menu "Qtopia"
-@@ -2711,7 +2798,7 @@
+@@ -2711,7 +2800,7 @@
      default n
      help
         Select y here if you want Qtopia to use USB mouse by default.
@@ -28785,7 +28801,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_QTOPIA_WANT_TSLIB
      depends CAP_HAS_MMU
      depends PKG_QTOPIA || PKG_QTOPIA_4
-@@ -2767,6 +2854,96 @@
+@@ -2767,6 +2856,96 @@
         Some host tools are not used when building Qtopia within ltib.
         Not building these tools saves time when building.  Select y here
         to enable designer, linguist, and assistant GUI tools.
@@ -28882,7 +28898,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  
  menu "Applications"
  config PKG_QTOPIA_WANT_APP_CALCULATOR
-@@ -2987,6 +3164,16 @@
+@@ -2987,6 +3166,16 @@
         from source.  Note that these tools will take about 76MB in $HOME.
  endmenu
  
@@ -28899,7 +28915,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_READLINE
      depends CAP_HAS_MMU
      bool "readline"
-@@ -3346,7 +3533,7 @@
+@@ -3346,7 +3535,7 @@
      bool "totem-pl-parser"
      select PKG_EVOLUTION_DATA_SERVER
      select PKG_GTK2
@@ -28908,7 +28924,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
      select PKG_GCONF_DBUS
      select PKG_LIBXML2
      help
-@@ -3487,11 +3674,21 @@
+@@ -3487,11 +3676,21 @@
      depends CAP_HAS_MMU
      bool "wireless-tools"
      help
@@ -28931,7 +28947,7 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
  config PKG_XFSPROGS
      bool "xfsprogs"
      help
-@@ -3862,6 +4059,11 @@
+@@ -3862,6 +4061,11 @@
        Zlib is a general-purpose, patent-free, lossless data compression
        library which is used by many different programs.
  

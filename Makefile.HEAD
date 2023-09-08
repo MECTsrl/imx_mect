@@ -442,6 +442,7 @@ all: env downloads setup build image target_dev sysupdate_mrs sysupdate_hardenin
 # Set up the build environment.
 .PHONY: env
 env:
+	$(info "###########################################----> env")
 	set -e; for p in $(MECT_UTILS); do which $$p; done
 	if test "`uname -m`" = x86_64; then \
 		sudo apt-get $(MECT_APTGET_AUTOUPDATE) install lib32bz2-1.0 lib32ncurses5 lib32z1 libc6-dev-i386; \
@@ -466,6 +467,7 @@ $(MECT_FTPDIR):
 # Remove the existing MD5s to force the download of the changed archives (if any).
 .PHONY: downloads_fc
 downloads_fc:
+	$(info "############################################----> downloads_fc")
 	for f in "" $(MECT_DOWNLOADS); do \
 		test -z "$$f" && continue; \
 		rm -f $$f.$(MECT_MD5EXT); \
@@ -481,6 +483,7 @@ ltib_setup: ltib_inst ltib_patch
 
 .PHONY: ltib_inst
 ltib_inst: $(MECT_TMPDIR) downloads
+	$(info "###########################################----> ltib_inst")
 	rm -rf $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR)
 	tar xzvf $(MECT_FTPDIR)/$(MECT_LTIB_EVKARCH) -C $(MECT_TMPDIR)
 	cd $(MECT_TMPDIR)/$(MECT_LTIB_EVKDIR); patch -p1 < $(MECT_FTPDIR)/$(MECT_LTIBINST_TARGETDIR_PATHCH)
@@ -495,6 +498,7 @@ $(MECT_TMPDIR):
 
 .PHONY: ltib_patch
 ltib_patch: downloads
+	$(info "###########################################----> ltib_patch")
 	test -d $(MECT_LTIBDIR)
 	cd $(MECT_LTIBDIR); cp $(MECT_FTPDIR)/$(MECT_LTIB_UBUNTU_12_04_PATCH) .
 	cd $(MECT_LTIBDIR); cp $(MECT_FTPDIR)/$(MECT_LTIB_UBUNTU_12_04_PATCH_INCLUDE_SYS_PATCH) .
@@ -521,6 +525,7 @@ build: ltib_build projects_build
 
 .PHONY: ltib_build
 ltib_build: hosttools
+	$(info "###########################################----> ltib_build")
 	test -n "$(LOGNAME)"
 	sudo rm -rf $(MECT_FSDIR)/rootfs
 	sudo rm -rf $(MECT_FSDIR)/rpm/BUILD
@@ -536,6 +541,7 @@ hosttools: downloads toolchain qt
 # Set up the toolchain.
 .PHONY: toolchain
 toolchain:
+	$(info "###########################################----> toolchain")
 	sudo rm -rf $(MECT_CSXCUNPACK) $(MECT_CSXCDIR)
 	tar xjvf $(MECT_FTPDIR)/$(MECT_CSXCARCH)
 	sudo mv $(MECT_CSXCUNPACK) $(MECT_CSXCDIR)
@@ -547,6 +553,7 @@ toolchain:
 # Set up host Qt.
 .PHONY: qt
 qt:
+	$(info "###########################################----> qt")
 	test -n "$(LOGNAME)"
 	mkdir -p $(MECT_TMPRPMDIR) $(MECT_LTIBDIR)/rpm/SOURCES
 	for f in $(MECT_FSPKG); do cp $$f $(MECT_LTIBDIR)/rpm/SOURCES; done
@@ -559,6 +566,7 @@ qt:
 # Set up the local projects: ATCMcontrol_RunTimeSystem.
 .PHONY: projects_setup_ATCMcontrol_RunTimeSystem
 projects_setup_ATCMcontrol_RunTimeSystem:
+	$(info "###########################################----> projects_setup_ATCMcontrol_RunTimeSystem")
 	test -d $(MECT_PRJDIR)
 	test -n '$(MECT_BUILD_ATCMCRT_BRANCH)'
 	cd $(MECT_PRJDIR); if test -d ATCMcontrol_RunTimeSystem; then cd ATCMcontrol_RunTimeSystem; git reset --hard origin/master; git fetch; else git clone https://github.com/MECTsrl/ATCMcontrol_RunTimeSystem.git ATCMcontrol_RunTimeSystem; fi
@@ -574,6 +582,7 @@ projects_setup_ATCMcontrol_RunTimeSystem:
 # Set up the local projects: mect_plugins.
 .PHONY: projects_setup_mect_plugins
 projects_setup_mect_plugins:
+	$(info "###########################################----> projects_setup_mect_plugins")
 	test -d $(MECT_PRJDIR)
 	test -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'
 	cd $(MECT_PRJDIR); if test -d mect_plugins; then cd mect_plugins; git reset --hard origin/master; git fetch; else git clone https://github.com/MECTsrl/mect_plugins.git mect_plugins; fi
@@ -583,6 +592,7 @@ projects_setup_mect_plugins:
 # Set up the local projects: mect_apps.
 .PHONY: projects_setup_mect_apps
 projects_setup_mect_apps:
+	$(info "###########################################----> projects_setup_mect_apps")
 	test -d projects
 	test -n '$(MECT_BUILD_APPSCRT_BRANCH)'
 	cd projects; if test -d mect_apps; then cd mect_apps; git reset --hard origin/master; git fetch; else git clone https://github.com/MECTsrl/mect_apps.git mect_apps; fi
@@ -592,6 +602,7 @@ projects_setup_mect_apps:
 # Set up the local projects: cloner.
 .PHONY: projects_setup_cloner
 projects_setup_cloner:
+	$(info "###########################################----> projects_setup_cloner")
 	test -d $(MECT_PRJDIR)
 	test -n '$(MECT_BUILD_PLUGINSCRT_BRANCH)'
 	cd $(MECT_PRJDIR); if test -d cloner; then cd cloner; git reset --hard origin/master; git fetch; else git clone https://github.com/MECTsrl/cloner.git cloner; fi
@@ -605,6 +616,7 @@ projects_setup: projects_setup_ATCMcontrol_RunTimeSystem projects_setup_mect_plu
 # Build the local projects.
 .PHONY: projects_build
 projects_build:
+	$(info "###########################################----> projects_build")
 	test -d $(MECT_PRJDIR)
 	$(MAKE) -C projects clean all
 
@@ -616,6 +628,7 @@ projects: projects_setup projects_build
 .PHONY: spec_setup
 spec_setup: MECT_LTIBSPECDIR := $(MECT_LTIBDIR)/dist/lfs-5.1
 spec_setup:
+	$(info "###########################################----> spec_setup")
 	for s in ATCMcontrol_RunTimeSystem/ATCMcontrol_RunTimeSystem.spec 4c_runtime/4c_runtime.spec; do \
 		test -w $(MECT_LTIBSPECDIR)/$$s || continue; \
 		sed -i 's|^\s*\(Version\s*:\).*|\1 $(MECT_BUILD_ATCMCRT_TAG)|I' $(MECT_LTIBSPECDIR)/$$s; \
@@ -720,6 +733,7 @@ cloner_shar: CLONER_COMPONENTS := \
 
 cloner_shar: CLONER_COMPONENTS := $(CLONER_COMPONENTS:%=$(MECT_LTIB_RFSDIR)%)
 cloner_shar: $(MECT_IMAGES)
+	$(info "###########################################----> cloner_shar") 
 	test -n '$(CLONER_COMPONENTS)'
 	rm -rf $(MECT_SYSCLONE_SHAR)
 	mkdir -p $(MECT_SYSCLONE_DIR)
@@ -753,6 +767,7 @@ cloner_shar: $(MECT_IMAGES)
 # Build the sysupdate for MECT Remote Services configuration.
 .PHONY: sysupdate_mrs
 sysupdate_mrs:
+	$(info "###########################################----> sysupdate_mrs")
 	rm -f $(MECT_SYSUPD_VPN)
 	mkdir -p $(dir $(MECT_SYSUPD_VPN))
 	cat $(MECT_SYSUPD_VPN_PRE) > $(MECT_SYSUPD_VPN)
@@ -762,6 +777,7 @@ sysupdate_mrs:
 # copy the sysupdate for hardening (security enhancement)
 .PHONY: sysupdate_hardening
 sysupdate_hardening:
+	$(info "###########################################----> sysupdate_hardening")
 	rm -f $(MECT_SYSUPD_HARDENING)
 	mkdir -p $(dir $(MECT_SYSUPD_HARDENING))
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_HARDENING_SRC) > $(MECT_SYSUPD_HARDENING)
@@ -769,6 +785,7 @@ sysupdate_hardening:
 # copy the sysupdate for password reset
 .PHONY: sysupdate_passwordreset
 sysupdate_passwordreset:
+	$(info "###########################################----> sysupdate_passwordreset")
 	rm -f $(MECT_SYSUPD_PASSRESET)
 	mkdir -p $(dir $(MECT_SYSUPD_PASSRESET))
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_PASSRESET_SRC) > $(MECT_SYSUPD_PASSRESET)
@@ -776,6 +793,7 @@ sysupdate_passwordreset:
 # copy the sysupdate for net configuration reset
 .PHONY: sysupdate_netreset
 sysupdate_netreset:
+	$(info "###########################################----> sysupdate_netreset")
 	rm -f $(MECT_SYSUPD_NETRESET)
 	mkdir -p $(dir $(MECT_SYSUPD_NETRESET))
 	#get network configuration from generic image
@@ -788,6 +806,7 @@ sysupdate_netreset:
 # copy the sysupdate for screen calibration reset
 .PHONY: sysupdate_calreset
 sysupdate_calreset:
+	$(info "###########################################----> sysupdate_calreset")
 	rm -f $(MECT_SYSUPD_CALRESET)
 	mkdir -p $(dir $(MECT_SYSUPD_CALRESET))
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_CALRESET_SRC) > $(MECT_SYSUPD_CALRESET)
@@ -795,6 +814,7 @@ sysupdate_calreset:
 # copy the sysupdate for micropython
 .PHONY: sysupdate_micropython
 sysupdate_micropython:
+	$(info "###########################################----> sysupdate_micropython")
 	rm -f $(MECT_SYSUPD_MICROPYTHON)
 	mkdir -p $(dir $(MECT_SYSUPD_MICROPYTHON))
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_MICROPYTHON_SRC) > $(MECT_SYSUPD_MICROPYTHON)
@@ -802,12 +822,14 @@ sysupdate_micropython:
 # copy the sysupdate for mqtt
 .PHONY: sysupdate_mqtt
 sysupdate_mqtt:
+	$(info "###########################################----> sysupdate_mqtt")
 	rm -f $(MECT_SYSUPD_MQTT)
 	mkdir -p $(dir $(MECT_SYSUPD_MQTT))
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_MQTT_SRC) > $(MECT_SYSUPD_MQTT)
 	
 .PHONY: sysupdate_factory
 sysupdate_factory:
+	$(info "###########################################----> sysupdate_factory")
 	rm -f $(MECT_SYSUPD_FACTORY)
 	mkdir -p $(dir $(MECT_SYSUPD_FACTORY))
 	sed 's/@@THIS_VERSION@@/$(MECT_BUILD_RELEASE)/g' $(MECT_SYSUPD_FACTORY_SRC) > $(MECT_SYSUPD_FACTORY)
@@ -833,6 +855,7 @@ wininst: MECT_DOWNLOADS := \
 wininst: MECT_DOWNLOADS += $(MECT_DOWNLOADS:%=%.$(MECT_MD5EXT))
 wininst: MECT_DOWNLOADS := $(MECT_DOWNLOADS:%=$(MECT_FTPDIR)/%)
 wininst:
+	$(info "###########################################----> wininst")
 	make MECT_DOWNLOADS="$(MECT_DOWNLOADS)" downloads
 	test -f $(MECT_PRJDIR)/installer/Makefile
 	make -C $(MECT_PRJDIR)/installer
@@ -862,6 +885,7 @@ $(MECT_LTIB_KERNEL_TS_RPM):
 target_boot: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
 target_boot: MECT_BOOTDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)/boot
 target_boot: $(MECT_COMMON_RFSPKGS)
+	$(info "###########################################----> target_boot")
 	test -n '$(MECT_BUILD_TARGET)' -a -n '$(MECT_KERNEL_TARGET_CONF)'
 	$(MAKE) MECT_BUILD_TARGET=$(MECT_BUILD_TARGET) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
 	sudo rm -rf $(MECT_BOOTDIR)
@@ -877,6 +901,7 @@ target_boot: $(MECT_COMMON_RFSPKGS)
 target_rfs: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
 target_rfs: MECT_RFSDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)/rootfs
 target_rfs: $(MECT_COMMON_RFSPKGS)
+	$(info "###########################################----> target_rfs")
 	test -n '$(MECT_BUILD_TARGET)' -a -n '$(MECT_KERNEL_TARGET_CONF)'
 	$(MAKE) MECT_BUILD_TARGET=$(MECT_BUILD_TARGET) MECT_KERNEL_TARGET_CONF=$(MECT_KERNEL_TARGET_CONF) $(MECT_KERNELRPM)
 	sudo rm -rf $(MECT_RFSDIR)
@@ -910,6 +935,7 @@ target_rfs: $(MECT_COMMON_RFSPKGS)
 target_lfs: MECT_KERNELRPM = $(subst /kernel-,/kernel-rfs-$(MECT_TARGET_PREFIX)$(MECT_BUILD_TARGET)-,$(MECT_LTIB_KERNEL_RPM))
 target_lfs_flash target_lfs: MECT_LFSDIR = $(MECT_IMGDIR)/$(MECT_BUILD_TARGET)$(MECT_REL_PREFIX)$(MECT_BUILD_RELEASE)/localfs
 target_lfs: $(MECT_COMMON_LFSPKGS)
+	$(info "###########################################----> target_lfs")
 	test -n '$(MECT_BUILD_TARGET)'
 	sudo rm -rf $(MECT_LFSDIR)
 	sudo mkdir -p $(MECT_LFSDIR)/var/lib/rpm $(MECT_LFSDIR)/tmp/ltib
@@ -926,6 +952,7 @@ target_lfs: $(MECT_COMMON_LFSPKGS)
 # Customize local file system layout for switch between FLASH/SD card.
 .PHONY: target_lfs_flash
 target_lfs_flash:
+	$(info "###########################################----> target_lfs_flash")
 	test -n '$(MECT_LFSDIR)'
 	test -d $(MECT_LFSDIR)
 	! test -d $(MECT_LFSDIR)/flash
@@ -961,6 +988,7 @@ target_mfg_upd: MECT_RFSDIR = $(MECT_TGTDIR)/rootfs
 target_mfg_upd: MECT_LFSDIR = $(MECT_TGTDIR)/localfs
 target_mfg_upd: MECT_BUILD_VER_MAJ_MIN := $(shell echo $(MECT_BUILD_RELEASE) | sed 's/^\([0-9]\+\.[0-9]\+\).*/\1/; s/\./\\\\\\\\./g')
 target_mfg_upd:
+	$(info "###########################################----> target_mfg_upd")
 	test -n '$(MECT_BUILD_TARGET)' -a -n '$(MECT_FTPDIR)'
 	sudo rm -rf $(MECT_MFGDIR)
 	mkdir -p $(MECT_MFGDIR)/'OS firmware'/img $(MECT_MFGDIR)/'OS firmware'/sys $(MECT_TGTDIR)
@@ -1026,6 +1054,7 @@ target_mfg_upd:
 # Build the archive for target-specific development.
 .PHONY: target_dev
 target_dev:
+	$(info "###########################################----> target_dev")
 	test -n '$(MECT_IMGDIR)'
 	sudo rm -rf $(MECT_IMGDIR)/dev $(MECT_IMGDIR)/rootfs_dev.zip
 	-for d in /usr/include /usr/lib /lib /usr/src/linux/include; do \
@@ -1063,6 +1092,7 @@ ltib_genpatch_bin: $(MECT_LTIBDIR_REF)/bin
 
 .PHONY: ltib_update
 ltib_update:
+	$(info "###########################################----> ltib_update")
 	git fetch origin
 	git reset --hard origin/master
 	if test -n '$(MECT_BUILD_IMXMECT_BRANCH)'; then git checkout $(MECT_BUILD_IMXMECT_BRANCH); git pull; fi
@@ -1098,6 +1128,7 @@ ifeq ($(MECT_REF_IMG),)
 images_check: MECT_REF_IMG := $(GI)
 endif
 images_check:
+	$(info "###########################################----> images_check")
 	if test -z "$(MECT_REF_IMG)/mfgtools" -o ! -d "$(MECT_REF_IMG)/mfgtools"; then \
 		echo "ERROR: no image reference directory ($(MECT_REF_IMG)/mfgtools)."; \
 		exit 1; \
@@ -1116,6 +1147,7 @@ images_check:
 
 .PHONY: stage_images
 stage_images:
+	$(info "###########################################----> stage_images")
 	test -d $(MECT_TESTSHARE) -a -w $(MECT_TESTSHARE)
 	mount | grep -q ' $(MECT_TESTSHARE) '
 	rsync -ahP $(MECT_IMGDIR)/ $(MECT_TESTSHARE)/$(MECT_TESTNAME)$(MECT_BUILD_RELEASE)/
@@ -1126,6 +1158,7 @@ stage_images:
 
 .PHONY: clean_projects
 clean_projects:
+	$(info "###########################################----> clean_projects")
 	if test -d $(MECT_PRJDIR); then $(MAKE) -C $(MECT_PRJDIR) clean; fi
 
 .PHONY: clean
@@ -1135,6 +1168,7 @@ clean: clean_projects
 
 .PHONY: distclean
 distclean: clean
+	$(info "###########################################----> distclean") 
 	if which ccache > /dev/null; then ccache -C; fi
 	sudo rm -rf $(MECT_IMGDIR) $(MECT_LTIBDIR_REF)
 

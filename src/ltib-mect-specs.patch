@@ -7403,7 +7403,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  
  # Unset compiler to prevent gcc being used when the cross
  # tools should be used. (Trolltech issue# 138807)
-@@ -185,32 +188,116 @@
+@@ -185,32 +188,117 @@
  # Unset PLATFORM because this is used as host machine.
  unset PLATFORM
  
@@ -7455,7 +7455,8 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	-qt-gfx-transformed \
 +	-qt-gfx-vnc \
 +	-qt-kbd-tty \
-+	-openssl -continue \
++	-openssl -I %{toolchain_install_dir}/include \
++	-no-icu \
 +	-release \
 +	-shared \
 +	-sm \
@@ -7537,6 +7538,17 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +%defattr(-,root,root)
 +
 +%endif
+diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qt/qt-x11.spec ltib/dist/lfs-5.1/qt/qt-x11.spec
+--- ltib.reference/dist/lfs-5.1/qt/qt-x11.spec
++++ ltib/dist/lfs-5.1/qt/qt-x11.spec
+@@ -100,6 +100,7 @@
+ QMAKE_INCDIR          = $RPM_BUILD_DIR/../../rootfs/usr/include $RPM_BUILD_DIR/../../rootfs/usr/include/glib-2.0 $RPM_BUILD_DIR/../../rootfs/usr/lib/glib-2.0/include/ \
+ 			$RPM_BUILD_DIR/../../rootfs/usr/include/gstreamer-0.10/ $RPM_BUILD_DIR/../../rootfs/usr/include/libxml2/ $RPM_BUILD_DIR/../../rootfs/usr/include/freetype2
+ QMAKE_LIBDIR          = $RPM_BUILD_DIR/../../rootfs/usr/lib
++QMAKE_INCDIR          = $RPM_BUILD_DIR/../../rootfs/usr/include
+ QMAKE_INCDIR_X11      = $RPM_BUILD_DIR/../../rootfs/usr/include/X11
+ QMAKE_LIBDIR_X11      = $RPM_BUILD_DIR/../../rootfs/usr/lib
+ QMAKE_INCDIR_QT       = \$\$[QT_INSTALL_HEADERS]
 diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 --- ltib.reference/dist/lfs-5.1/qwt/qwt-multiaxes.spec
 +++ ltib/dist/lfs-5.1/qwt/qwt-multiaxes.spec

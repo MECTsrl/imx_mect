@@ -55,13 +55,14 @@ mac_sn::mac_sn(QWidget *parent) :
     // prima serie      70-B3-D5-62-80-00 70-B3-D5-62-8F-FF
     // seconda serie    70-B3-D5-7C-40-00 70-B3-D5-7C-4F-FF
     // terza serie      8C:1F:64:30:90:00 8C:1F:64:30:9F:FF
+    // quarta serie     8C:1F:64:54:B0:00 8C:1F:64:54:BF:FF
 
 
         ui->pushButtonMACeth0_1->setText("8C");
         ui->pushButtonMACeth0_2->setText("1F");
         ui->pushButtonMACeth0_3->setText("64");
-        ui->pushButtonMACeth0_4->setText("30");
-        ui->pushButtonMACeth0_5->setText("");
+        ui->pushButtonMACeth0_4->setText("54");
+        ui->pushButtonMACeth0_5->setText("B0");
         ui->pushButtonMACeth0_6->setText("");
         fp = fopen(MAC_ADDRESS_FILE, "r");
         if (fp != NULL)
@@ -99,12 +100,13 @@ mac_sn::mac_sn(QWidget *parent) :
     // prima serie      70-B3-D5-62-80-00 70-B3-D5-62-8F-FF
     // seconda serie    70-B3-D5-7C-40-00 70-B3-D5-7C-4F-FF
     // terza serie      8C:1F:64:30:90:00 8C:1F:64:30:9F:FF
+    // quarta serie     8C:1F:64:54:B0:00 8C:1F:64:54:BF:FF
 
         ui->pushButtonMACeth1_1->setText("8C");
         ui->pushButtonMACeth1_2->setText("1F");
         ui->pushButtonMACeth1_3->setText("64");
-        ui->pushButtonMACeth1_4->setText("30");
-        ui->pushButtonMACeth1_5->setText("");
+        ui->pushButtonMACeth1_4->setText("54");
+        ui->pushButtonMACeth1_5->setText("B0");
         ui->pushButtonMACeth1_6->setText("");
         fp = fopen(MAC_ADDRESS_FILE, "r");
         if (fp != NULL)

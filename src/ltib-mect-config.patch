@@ -2661,9 +2661,9 @@ diff -aurN '--exclude=.config.old' '--exclude=*.config.dev' '--exclude=*.bak' '-
 -CONFIG_NETSTAT=y
 +# CONFIG_NAMEIF is not set
 +# CONFIG_FEATURE_NAMEIF_EXTENDED is not set
-+# CONFIG_NC is not set
-+# CONFIG_NC_SERVER is not set
-+# CONFIG_NC_EXTRA is not set
++CONFIG_NC=y
++CONFIG_NC_SERVER=y
++CONFIG_NC_EXTRA=y
 +# CONFIG_NETSTAT is not set
  # CONFIG_FEATURE_NETSTAT_WIDE is not set
  # CONFIG_FEATURE_NETSTAT_PRG is not set

@@ -35,7 +35,7 @@ LTIB is built and installed as an unprivileged user, but it requires root privil
 
 1. Clone this repository in the build directory created in the previous step (copy-paste the appropriate *clone URL* from the GitHub site):
 
-        git clone <clone URL> ~/imx_mect
+        git clone <clone URL> -b mect_suite_3.5  ~/imx_mect
 
 1. Install the toolchain and LTIB, and build the target image packages (RPMs):
 

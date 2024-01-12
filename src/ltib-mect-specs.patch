@@ -1522,7 +1522,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +
 +Summary         : Clone/restore MECT TPAC software
 +Name            : cloner
-+Version         : 3.4.3
++Version         : 3.5.0
 +Release         : 1
 +License         : GPL
 +Vendor          : MECT s.r.l.
@@ -7455,7 +7455,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	-qt-gfx-transformed \
 +	-qt-gfx-vnc \
 +	-qt-kbd-tty \
-+	-openssl -I %{toolchain_install_dir}/include \
++	-openssl -continue \
 +	-no-icu \
 +	-release \
 +	-shared \

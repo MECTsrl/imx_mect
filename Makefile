@@ -52,9 +52,11 @@ MECT_DEFAULT_IMAGE := TPAC1007_04_AD
 # Qt and related versions
 MECT_QT_VERSION := 4.8.5
 MECT_QWT_VERSION := 6.1-multiaxes
+MECT_OPENSSL_VERSION := 1.0.1s
 
 MECT_BUILD_QTVERSION = $(MECT_QT_VERSION)
 MECT_BUILD_QWTVERSION = $(MECT_QWT_VERSION)
+MECT_BUILD_OPENSSLVER = $(MECT_OPENSSL_VERSION)
 
 # Name of the root file system version file
 MECT_RFS_VERSION_FILE := rootfs_version
@@ -255,7 +257,7 @@ MECT_COMMON_RFSPKGS := \
 	nagios-plugins-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
 	ncurses-rfs-5.3-1.$(MECT_TARGET_ARCH).rpm \
 	nrpe-rfs-2.15-1.$(MECT_TARGET_ARCH).rpm \
-	openssl-rfs-1.0.1s-1.$(MECT_TARGET_ARCH).rpm \
+	openssl-rfs-$(MECT_OPENSSL_VERSION)-1.$(MECT_TARGET_ARCH).rpm \
 	openvpn-rfs-2.4.4-1.$(MECT_TARGET_ARCH).rpm \
 	pjproject-rfs-2.8-1.$(MECT_TARGET_ARCH).rpm \
 	ppp-rfs-2.4.4-1.$(MECT_TARGET_ARCH).rpm \
@@ -350,15 +352,19 @@ MECT_LTIB_QT_PATCH1 = qt-everywhere-opensource-src-4.8.5-1394522957.patch
 MECT_LTIB_QT_PATCH2 = qt-everywhere-opensource-src-4.8.5-1420823826.patch
 MECT_LTIB_QT_PATCH3 = qt-everywhere-opensource-src-4.8.5-1420823825.patch
 
+MECT_LTIB_OPENSSL_ARCH = openssl-1.0.1s.tar.gz
+MECT_LTIB_OPENSSL_PATCH1 = openssl-1.0.1s-fix_parallel_build.patch
 
 # Extra packages to copy in $(LTIBPKGDIR)
 MECT_FSPKG_DL := \
 	$(MECT_LTIB_QT_ARCH) \
+	$(MECT_LTIB_OPENSSL_ARCH) \
 	$(MECT_LTIB_QT_PATCH2) \
 
 MECT_FSPKG := \
 	$(MECT_LTIB_QT_PATCH1) \
 	$(MECT_LTIB_QT_PATCH3) \
+	$(MECT_LTIB_OPENSSL_PATCH1) \
 
 MECT_FSPKG := $(MECT_FSPKG) $(MECT_FSPKG_DL)
 
@@ -557,9 +563,18 @@ qt:
 	test -n "$(LOGNAME)"
 	mkdir -p $(MECT_TMPRPMDIR) $(MECT_LTIBDIR)/rpm/SOURCES
 	for f in $(MECT_FSPKG); do cp $$f $(MECT_LTIBDIR)/rpm/SOURCES; done
+	#
+	# rpmbuild --dbpath /home/fmandracci/mect_suite_3.5/imx_mect/ltib/rootfs//var/lib/rpm --target arm --define '_unpackaged_files_terminate_build 0' --define '_target_cpu arm' --define '__strip strip' --define '_topdir /home/fmandracci/mect_suite_3.5/imx_mect/ltib/rpm' --define '_prefix /usr' --define '_tmppath /home/fmandracci/mect_suite_3.5/imx_mect/ltib/tmp' --define '_rpmdir /home/fmandracci/mect_suite_3.5/imx_mect/ltib/rpm/RPMS'  --define '_mandir /usr/share/man' --define '_sysconfdir /etc' --define '_localstatedir /var' -bb --clean --rmsource  /home/fmandracci/mect_suite_3.5/imx_mect/ltib/dist/lfs-5.1/openssl/openssl.spec
+	PATH=/usr/lib/ccache:$(PATH) LINTARCH=arm rpmbuild --define '_arch arm' --define '_topdir $(MECT_LTIBDIR)/rpm' --dbpath $(MECT_TMPRPMDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_rpmdir $(MECT_TMPRPMDIR)/RPMS' -bb --clean --rmsource $(MECT_LTIBDIR)/dist/lfs-5.1/openssl/openssl.spec
+	# read -p "######### rpmbuid openssl done, press any key to continue " dummy
+	-sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb -e --allmatches --nodeps --define '_tmppath $(MECT_LTIBDIR)/tmp' openssl 2>/dev/null
+	sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb --ignorearch -ivh --force --nodeps --excludedocs --define '_tmppath $(MECT_LTIBDIR)/tmp' $(MECT_TMPRPMDIR)/RPMS/$(MECT_TARGET_ARCH)/openssl-$(MECT_BUILD_OPENSSLVER)-*.$(MECT_TARGET_ARCH).rpm
+	# read -p "######### rpm -i openssl done, press any key to continue " dummy
 	PATH=/usr/lib/ccache:$(PATH) rpmbuild --define 'toolchain 1' --define 'toolchain_install_dir $(MECT_QT_INSTALL_DIR)' --define '_topdir $(MECT_LTIBDIR)/rpm' --dbpath $(MECT_TMPRPMDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_prefix /opt' --define '_rpmdir $(MECT_TMPRPMDIR)/RPMS' -bb --clean --rmsource $(MECT_LTIBDIR)/dist/lfs-5.1/qt/qt-embedded.spec
+	read -p "######### rpmbuid qt done, press any key to continue " dummy
 	-sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb -e --allmatches --nodeps --define '_tmppath $(MECT_LTIBDIR)/tmp' qt-embedded 2>/dev/null
 	sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb --ignorearch -ivh --force --nodeps --excludedocs --define '_tmppath $(MECT_LTIBDIR)/tmp' $(MECT_TMPRPMDIR)/RPMS/$(MECT_TARGET_ARCH)/qt-embedded-$(MECT_BUILD_QTVERSION)-*.$(MECT_TARGET_ARCH).rpm
+	# read -p "######### rpm -i qt  done, press any key to continue " dummy
 	sudo chown -R $(LOGNAME).$(shell groups | awk '{print $$1}') $(MECT_TMPRPMDIR)
 
 

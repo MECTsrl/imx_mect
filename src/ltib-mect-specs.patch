@@ -7339,7 +7339,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -QT                     += core gui network
 -QMAKE_INCREMENTAL_STYLE = sublib
 +%if %{?toolchain:1}%{!?toolchain:0}
-+QMAKE_INCDIR                   = %{toolchain_install_dir}/include %{toolchain_install_dir}/include/glib-2.0 %{toolchain_install_dir}/lib/glib-2.0/include/
++QMAKE_INCDIR                   = %{toolchain_install_dir}/include %{toolchain_install_dir}/include/glib-2.0 %{toolchain_install_dir}/lib/glib-2.0/include/ /opt/freescale/rootfs/arm/usr/include
 +QMAKE_LIBDIR                   = %{toolchain_install_dir}/lib
 +QMAKE_LIBS                     =
 +%else
@@ -7455,7 +7455,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 +	-qt-gfx-transformed \
 +	-qt-gfx-vnc \
 +	-qt-kbd-tty \
-+	-openssl -continue \
++	-openssl \
 +	-no-icu \
 +	-release \
 +	-shared \

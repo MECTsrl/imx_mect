@@ -22,7 +22,7 @@ MECT_BUILD_ATCMCRT_BRANCH := mect_suite_3.5
 # Set to 0.0 to checkout HEAD
 export MECT_BUILD_ATCMCRT_TAG :=0.0# v2.030
 # svn branch and release for the ATCMcontrol_RunTimeSystem project
-MECT_BUILD_ATCMCRT_CAN_BRANCH := mect_suite_3.5
+MECT_BUILD_ATCMCRT_CAN_BRANCH := mect_suite_3.0# FIXME: use mect_suite_3.5
 MECT_BUILD_ATCMCRT_CAN_REV := HEAD#285
 MECT_BUILD_ATCMCRT_CAN_URL := svn://192.168.0.254/4c_runtime/branches
 
@@ -50,9 +50,10 @@ MECT_REL_PREFIX := _ms
 MECT_DEFAULT_IMAGE := TPAC1007_04_AD
 
 # Qt and related versions
-MECT_QT_VERSION := 4.8.5
+MECT_QT_VERSION := 4.8.7
 MECT_QWT_VERSION := 6.1-multiaxes
 MECT_OPENSSL_VERSION := 1.0.1s
+# NB: per poter usare openssl-1.0.2u bisogna riscrivere la patch openssl-1.0.1s-fix_parallel_build.patch
 
 MECT_BUILD_QTVERSION = $(MECT_QT_VERSION)
 MECT_BUILD_QWTVERSION = $(MECT_QWT_VERSION)
@@ -261,7 +262,7 @@ MECT_COMMON_RFSPKGS := \
 	openvpn-rfs-2.4.4-1.$(MECT_TARGET_ARCH).rpm \
 	pjproject-rfs-2.8-1.$(MECT_TARGET_ARCH).rpm \
 	ppp-rfs-2.4.4-1.$(MECT_TARGET_ARCH).rpm \
-	qt-embedded-rfs-4.8.5-1.$(MECT_TARGET_ARCH).rpm \
+	qt-embedded-rfs-$(MECT_QT_VERSION)-1.$(MECT_TARGET_ARCH).rpm \
 	qwt-rfs-6.1-1_multiaxes.$(MECT_TARGET_ARCH).rpm \
 	rsync-rfs-2.6.5-1.$(MECT_TARGET_ARCH).rpm \
 	SDcard-rfs-1.0-1.$(MECT_TARGET_ARCH).rpm \
@@ -347,13 +348,13 @@ MECT_LTIB_UBUNTU_12_04_PATCH_INCLUDE_SYS_PATCH = ubuntu-ltib-patch-include-sys-i
 
 # LTIB qt spec file (MECT patch)
 export MECT_QT_INSTALL_DIR = /opt/Trolltech
-MECT_LTIB_QT_ARCH = qt-everywhere-opensource-src-4.8.5.tar.gz
-MECT_LTIB_QT_PATCH1 = qt-everywhere-opensource-src-4.8.5-1394522957.patch
-MECT_LTIB_QT_PATCH2 = qt-everywhere-opensource-src-4.8.5-1420823826.patch
-MECT_LTIB_QT_PATCH3 = qt-everywhere-opensource-src-4.8.5-1420823825.patch
+MECT_LTIB_QT_ARCH = qt-everywhere-opensource-src-$(MECT_QT_VERSION).tar.gz
+MECT_LTIB_QT_PATCH1 = qt-everywhere-opensource-src-$(MECT_QT_VERSION)-1394522957.patch
+MECT_LTIB_QT_PATCH2 = qt-everywhere-opensource-src-$(MECT_QT_VERSION)-1420823826.patch
+MECT_LTIB_QT_PATCH3 = qt-everywhere-opensource-src-$(MECT_QT_VERSION)-1420823825.patch
 
-MECT_LTIB_OPENSSL_ARCH = openssl-1.0.1s.tar.gz
-MECT_LTIB_OPENSSL_PATCH1 = openssl-1.0.1s-fix_parallel_build.patch
+MECT_LTIB_OPENSSL_ARCH = openssl-$(MECT_OPENSSL_VERSION).tar.gz
+MECT_LTIB_OPENSSL_PATCH1 = openssl-$(MECT_OPENSSL_VERSION)-fix_parallel_build.patch
 
 # Extra packages to copy in $(LTIBPKGDIR)
 MECT_FSPKG_DL := \
@@ -571,10 +572,10 @@ qt:
 	sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb --ignorearch -ivh --force --nodeps --excludedocs --define '_tmppath $(MECT_LTIBDIR)/tmp' $(MECT_TMPRPMDIR)/RPMS/$(MECT_TARGET_ARCH)/openssl-$(MECT_BUILD_OPENSSLVER)-*.$(MECT_TARGET_ARCH).rpm
 	# read -p "######### rpm -i openssl done, press any key to continue " dummy
 	PATH=/usr/lib/ccache:$(PATH) rpmbuild --define 'toolchain 1' --define 'toolchain_install_dir $(MECT_QT_INSTALL_DIR)' --define '_topdir $(MECT_LTIBDIR)/rpm' --dbpath $(MECT_TMPRPMDIR)/rpmdb --target arm --define '_target_cpu arm' --define '_prefix /opt' --define '_rpmdir $(MECT_TMPRPMDIR)/RPMS' -bb --clean --rmsource $(MECT_LTIBDIR)/dist/lfs-5.1/qt/qt-embedded.spec
-	read -p "######### rpmbuid qt done, press any key to continue " dummy
+	# read -p "######### rpmbuid qt done, press any key to continue " dummy
 	-sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb -e --allmatches --nodeps --define '_tmppath $(MECT_LTIBDIR)/tmp' qt-embedded 2>/dev/null
 	sudo rpm --force-debian --root / --dbpath $(MECT_TMPRPMDIR)/rpmdb --ignorearch -ivh --force --nodeps --excludedocs --define '_tmppath $(MECT_LTIBDIR)/tmp' $(MECT_TMPRPMDIR)/RPMS/$(MECT_TARGET_ARCH)/qt-embedded-$(MECT_BUILD_QTVERSION)-*.$(MECT_TARGET_ARCH).rpm
-	# read -p "######### rpm -i qt  done, press any key to continue " dummy
+	read -p "######### rpm -i qt  done, press any key to continue " dummy
 	sudo chown -R $(LOGNAME).$(shell groups | awk '{print $$1}') $(MECT_TMPRPMDIR)
 
 

@@ -7100,7 +7100,7 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
 -Release         : 0
 -License         : GNU GPL
 +Name            : qt-embedded
-+Version         : 4.8.5
++Version         : 4.8.7
 +Release         : 1
 +License         : LGPL v2.1
  Vendor          : Freescale

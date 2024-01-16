@@ -69,7 +69,7 @@ TARGET="`awk '/^Target/ { print $2; }' /rootfs_version`"
 test -n "$TARGET" || do_exit "cannot find the system type."
 
 # Check the compatibility of the update with the installed version.
-expr "$RELEASE" : @@THIS_VERSION_MAJ_MIN@@ > /dev/null || expr "$RELEASE" : 3\\.4 > /dev/null || expr "$RELEASE" : 3\\.3 > /dev/null || expr "$RELEASE" : 3\\.2 > /dev/null || expr "$RELEASE" : 3\\.1 > /dev/null || do_exit "cannot update the installed version ${RELEASE}."
+expr "$RELEASE" : @@THIS_VERSION_MAJ_MIN@@ > /dev/null || expr "$RELEASE" : 3\\.5 > /dev/null || do_exit "cannot update the installed version ${RELEASE}."
 
 # Check if we have an update for the running target.
 UPDIMG="${MNTDIR}/img_sysupdate-@@THIS_VERSION@@-${TARGET}.ext2"

@@ -6625,14 +6625,14 @@ diff -aurN '--exclude=*-orig.spec' '--exclude=*.bak' '--exclude=*.swp' ltib.refe
  Summary         : Secure Sockets Layer toolkit
  Name            : openssl
 -Version         : 1.0.1c
-+Version         : 1.0.1s
++Version         : 1.0.2u
  Release         : 1
  License         : BSD style
  Vendor          : Freescale
  Packager        : Stuart Hughes
  Group           : System Environment/Libraries
  Source          : %{name}-%{version}.tar.gz
-+Patch1          : openssl-1.0.1s-fix_parallel_build.patch
++Patch1          : openssl-%{version}-fix_parallel_build.patch
  BuildRoot       : %{_tmppath}/%{name}
  Prefix          : %{pfx}
 +AutoReqProv     : no

@@ -52,8 +52,7 @@ MECT_DEFAULT_IMAGE := TPAC1007_04_AD
 # Qt and related versions
 MECT_QT_VERSION := 4.8.7
 MECT_QWT_VERSION := 6.1-multiaxes
-MECT_OPENSSL_VERSION := 1.0.1s
-# NB: per poter usare openssl-1.0.2u bisogna riscrivere la patch openssl-1.0.1s-fix_parallel_build.patch
+MECT_OPENSSL_VERSION := 1.0.2u
 
 MECT_BUILD_QTVERSION = $(MECT_QT_VERSION)
 MECT_BUILD_QWTVERSION = $(MECT_QWT_VERSION)

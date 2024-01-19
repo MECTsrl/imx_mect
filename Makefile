@@ -862,9 +862,9 @@ wininst: MECT_DOWNLOADS := \
 	    Engineering_Help_3.zip \
 	    Fonts.7z \
 	    PLC.zip \
-	    Qt485.7z \
-	    Qt485_upd_rev$(MECT_BUILD_RELEASE).7z \
-	    QtProject.7z \
+	    Qt487.7z \
+	    Qt487_upd_rev$(MECT_BUILD_RELEASE).7z \
+	    QtProject_487.7z \
 	    sourcery-g++-lite.7z \
 	    unzip.exe
 wininst: MECT_DOWNLOADS += $(MECT_DOWNLOADS:%=%.$(MECT_MD5EXT))

@@ -50,7 +50,7 @@ RequestExecutionLevel admin
  
 # Installation directory
 #InstallDir "C:\${COMPANYNAME}\${APPNAME}-v${VERSION}"
-InstallDir              "C:\Qt485"      # FIXME: FORCED
+InstallDir              "C:\Qt487"      # FIXME: FORCED
 
 # NOTE: always in DOS format
 LicenseData "license.txt"
@@ -331,11 +331,11 @@ FunctionEnd
 # Checks the user input on the default NSIS diretory page.
 Function DirectoryLeave
     # FIXME Other installation paths should be supported as well.
-    ${If} $INSTDIR != "C:\Qt485"
+    ${If} $INSTDIR != "C:\Qt487"
         messageBox MB_OK|MB_ICONEXCLAMATION \
-            'Error: Only the installation in C:\Qt485 is supported.$\n\
+            'Error: Only the installation in C:\Qt487 is supported.$\n\
             $\n\
-            Please select C:\Qt485 for the installation path and retry.'
+            Please select C:\Qt487 for the installation path and retry.'
         Abort
     ${EndIf}
  
@@ -699,7 +699,7 @@ section "install"
 
     # Set up the path.
     #
-    #nsExec::ExecToLog 'echo "%PATH%"|findstr /i /c:"C:\Qt485\desktop\mingw32\bin">nul || C:\Qt485\desktop\bin\pathman /au "C:\Qt485\desktop\mingw32\bin"'
+    #nsExec::ExecToLog 'echo "%PATH%"|findstr /i /c:"C:\Qt487\desktop\mingw32\bin">nul || C:\Qt487\desktop\bin\pathman /au "C:\Qt487\desktop\mingw32\bin"'
     execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\desktop\mingw32\bin"'
     execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\${CSXC_DIR}\bin"'
 

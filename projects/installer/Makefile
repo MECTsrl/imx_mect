@@ -1,6 +1,6 @@
 QTH_DIR := desktop
 QTH_IMX_DIR := imx28
-QTH_ARM_DIR := imx28\\qt-everywhere-opensource-src-4.8.5
+QTH_ARM_DIR := imx28\\qt-everywhere-opensource-src-4.8.7
 QTC_DIR := desktop
 SRCDIR := ../../src
 MECTAPPS_DIR := ../mect_apps
@@ -27,8 +27,8 @@ BULK_ARC_BASE = $(APPNAME)-$(MECT_BUILD_RELEASE)-base.7z
 BULK_ARC_UPDATE = $(APPNAME)-$(MECT_BUILD_RELEASE)-update.7z
 INSTALLPRG = $(APPNAME)-$(MECT_BUILD_RELEASE)-installer.exe
 
-QT_ARCHIVE_BASE := Qt485.7z
-QT_ARCHIVE_UPDATE := Qt485_upd_rev$(MECT_BUILD_RELEASE).7z
+QT_ARCHIVE_BASE := Qt487.7z
+QT_ARCHIVE_UPDATE := Qt487_upd_rev$(MECT_BUILD_RELEASE).7z
 QTPROJECT := QtProject
 
 CSXC_ARC := sourcery-g++-lite.7z
@@ -89,7 +89,7 @@ all:
 	7zr a  $(BULK_ARC_UPDATE) ~/keys
 	#
 	# QtProject template
-	cp --reflink=auto $(SRCDIR)/$(QTPROJECT).7z .
+	cp --reflink=auto $(SRCDIR)/$(QTPROJECT)_487.7z $(QTPROJECT).7z
 	#
 	# Fonts
 	cp --reflink=auto $(SRCDIR)/$(FONTS_ARC) .

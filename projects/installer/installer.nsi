@@ -702,6 +702,7 @@ section "install"
     #nsExec::ExecToLog 'echo "%PATH%"|findstr /i /c:"C:\Qt487\desktop\mingw32\bin">nul || C:\Qt487\desktop\bin\pathman /au "C:\Qt487\desktop\mingw32\bin"'
     execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\desktop\bin"'
     execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\desktop\mingw32\bin"'
+    execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\desktop\mingw32\i686-w64-mingw32\bin"'
     execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\${CSXC_DIR}\bin"'
 
 sectionEnd

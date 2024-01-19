@@ -666,7 +666,7 @@ section "install"
     fileWrite $9 '    If Not Exist "${ROAMINGAPPDATA}\${QTPROJECT}\*" xcopy "$INSTDIR\${QTPROJECT}" "${ROAMINGAPPDATA}\${QTPROJECT}\" /E /Y /B$\r$\n'
     fileWrite $9 ':setup_done$\r$\n'
     fileWrite $9 "$\r$\n"
-    fileWrite $9 '"$INSTDIR\${QTC_DIR}\bin\${MECTSUITEMAIN}"$\r$\n'
+    fileWrite $9 '"$INSTDIR\${QTC_DIR}\QtCreator\bin\${MECTSUITEMAIN}"$\r$\n'
     fileWrite $9 "$\r$\n"
     fileWrite $9 "exit$\r$\n"
     fileClose $9

@@ -703,6 +703,7 @@ section "install"
     execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\desktop\bin"'
     execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\desktop\mingw32\bin"'
     execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\desktop\mingw32\i686-w64-mingw32\bin"'
+    execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\desktop\QtCreator\bin"'
     execWait '"$INSTDIR\desktop\bin\pathman" /au "$INSTDIR\${CSXC_DIR}\bin"'
 
 sectionEnd
@@ -774,6 +775,9 @@ section "uninstall"
     # Clean up the path.
     #
     execWait '"$INSTDIR\desktop\bin\pathman" /ru "$INSTDIR\${CSXC_DIR}\bin"'
+    execWait '"$INSTDIR\desktop\bin\pathman" /ru "$INSTDIR\desktop\QtCreator\bin"'
+    execWait '"$INSTDIR\desktop\bin\pathman" /ru "$INSTDIR\desktop\mingw32\i686-w64-mingw32\bin"'
     execWait '"$INSTDIR\desktop\bin\pathman" /ru "$INSTDIR\desktop\mingw32\bin"'
+    execWait '"$INSTDIR\desktop\bin\pathman" /ru "$INSTDIR\desktop\bin"'
 
 sectionEnd
